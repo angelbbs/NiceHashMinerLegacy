@@ -45,6 +45,7 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceBTCValue = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBalanceBTCCode = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBalanceDollarText = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelBalanceDollarValue = new System.Windows.Forms.ToolStripStatusLabel();
             this.linkLabelCheckStats = new System.Windows.Forms.LinkLabel();
             this.labelWorkerName = new System.Windows.Forms.Label();
             this.textBoxWorkerName = new System.Windows.Forms.TextBox();
@@ -64,7 +65,6 @@ namespace NiceHashMiner
             this.labelBitcoinAddressNew = new System.Windows.Forms.Label();
             this.textBoxBTCAddress_new = new System.Windows.Forms.TextBox();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.toolStripStatusLabelBalanceDollarValue = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -182,6 +182,12 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceDollarText.Name = "toolStripStatusLabelBalanceDollarText";
             this.toolStripStatusLabelBalanceDollarText.Size = new System.Drawing.Size(31, 17);
             this.toolStripStatusLabelBalanceDollarText.Text = "0.00";
+            // 
+            // toolStripStatusLabelBalanceDollarValue
+            // 
+            this.toolStripStatusLabelBalanceDollarValue.Name = "toolStripStatusLabelBalanceDollarValue";
+            this.toolStripStatusLabelBalanceDollarValue.Size = new System.Drawing.Size(16, 17);
+            this.toolStripStatusLabelBalanceDollarValue.Text = "...";
             // 
             // linkLabelCheckStats
             // 
@@ -383,12 +389,6 @@ namespace NiceHashMiner
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(595, 146);
             this.devicesListViewEnableControl1.TabIndex = 109;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
-            // 
-            // toolStripStatusLabelBalanceDollarValue
-            // 
-            this.toolStripStatusLabelBalanceDollarValue.Name = "toolStripStatusLabelBalanceDollarValue";
-            this.toolStripStatusLabelBalanceDollarValue.Size = new System.Drawing.Size(16, 17);
-            this.toolStripStatusLabelBalanceDollarValue.Text = "...";
             // 
             // Form_Main
             // 

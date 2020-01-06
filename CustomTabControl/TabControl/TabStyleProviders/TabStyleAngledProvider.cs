@@ -69,8 +69,11 @@ namespace System.Windows.Forms
             else if (this.HotTrack && index == this._TabControl.ActiveIndex)
             {
                 //      Enable hot tracking
-                dark = Form.ActiveForm.BackColor;
-                light = dark;
+                if (Form.ActiveForm != null)
+                {
+                    dark = Form.ActiveForm.BackColor;
+                    light = dark;
+                }
             }
 
             //      Get the correctly aligned gradient
