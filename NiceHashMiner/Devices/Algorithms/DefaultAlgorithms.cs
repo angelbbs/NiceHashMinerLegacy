@@ -500,6 +500,9 @@ namespace NiceHashMiner.Devices.Algorithms
                      new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, "")
                     {
                     },
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Eaglesong, "")
+                    {
+                    },
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

@@ -123,6 +123,11 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
                 nicehashstratum = " --proto stratum";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
+            {
+                algo = "eaglesong";
+                algoName = "eaglesong";
+            }
 
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
@@ -391,6 +396,14 @@ namespace NiceHashMiner.Miners
                 " --server daggerhashimoto.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3353 --ssl 0 --proto stratum" +
                 GetDevicesCommandString();
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
+            {
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo eaglesong" +
+                " --server ckb.2miners.com:6464 --user ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv" +
+                " --server eaglesong.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3381 --ssl 0" +
+                " --server eaglesong.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3381 --ssl 0" +
+                GetDevicesCommandString();
+            }
             return ret;
         }
 
@@ -553,7 +566,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 || MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 || MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 || MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 return GetNumber(outdata, LookForStart, "g/s");
-            } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+            } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto || MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
             {
                 return GetNumber(outdata, LookForStart, "h/s");
             } else
@@ -561,6 +574,7 @@ namespace NiceHashMiner.Miners
                 return GetNumber(outdata, LookForStart, LookForEnd);
             }
         }
+        //|  GPU0 58 C 378.05 MH/s    0/0  87 W  4.35 MH/W |
 
         protected double GetNumber(string outdata, string lookForStart, string lookForEnd)
         {

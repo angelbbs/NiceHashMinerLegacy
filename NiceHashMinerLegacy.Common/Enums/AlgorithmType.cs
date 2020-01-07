@@ -98,7 +98,8 @@
         GrinCuckarood29 = 44,
         BeamV2 = 45,
         X16RV2 = 46,
-        RandomX = 47
+        RandomX = 47,
+        Eaglesong = 48
 #endregion // NiceHashAPI
     }
 }
