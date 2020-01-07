@@ -60,6 +60,8 @@ namespace NiceHashMiner.Miners
                         return "cuckoo_ae";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
+                    case AlgorithmType.Eaglesong:
+                        return "eaglesong";
                     default:
                         return "";
                 }
@@ -117,6 +119,12 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://cuckoocycle." + myServers[1, 0] + nhsuff + ".nicehash.com:3376 -u1 " + user +
                     $" -o2 stratum+tcp://cuckoocycle." + myServers[2, 0] + nhsuff + ".nicehash.com:3376 -u2 " + user +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN ";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Eaglesong))
+            {
+                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://eaglesong." + myServers[1, 0] + nhsuff + ".nicehash.com:3381 -u1 " + user +
+                    $" -o2 stratum+tcp://eaglesong." + myServers[2, 0] + nhsuff + ".nicehash.com:3381 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN ";
             }
             cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
@@ -178,6 +186,12 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o stratum+tcp://ae.2miners.com:4040 -u ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.{worker} -o1 stratum+tcp://cuckoocycle." + myServers[0, 0] + nhsuff + ".nicehash.com:3376 -u1 " + username +
                     $" -o2 stratum+tcp://cuckoocycle." + myServers[1, 0] + nhsuff + ".nicehash.com:3376 -u2 " + username +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN ";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Eaglesong))
+            {
+                cmd = $"-a {AlgoName} -o stratum+tcp://ckb.2miners.com:6464 -u ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv -o1 stratum+tcp://eaglesong." + myServers[0, 0] + nhsuff + ".nicehash.com:3381 -u1 " + username +
+                    $" -o2 stratum+tcp://eaglesong." + myServers[1, 0] + nhsuff + ".nicehash.com:3381 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN ";
             }
             cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
