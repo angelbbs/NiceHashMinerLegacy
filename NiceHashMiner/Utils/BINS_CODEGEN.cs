@@ -11,11 +11,7 @@ namespace NiceHashMiner.Utils
         public static string[] ALL_FILES_BINS =
         {
             @"/vc_redist.x64.exe",
-            @"/xmr-stak/xmrstak_cuda_backend.dll",
-            @"/xmr-stak/xmrstak_opencl_backend.dll",
-            @"/xmr-stak/xmr-stak.exe",
             @"/xmrig/xmrig.exe",
-            @"/xmr-stak_heavy/xmr-stak.exe",
             @"/Fork_Fix_20.1.txt"
         };
 
