@@ -416,7 +416,7 @@ namespace NiceHashMiner
             this.Controls.Add(this.buttonStartMining);
             this.Enabled = false;
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(660, 316);
+            this.MinimumSize = new System.Drawing.Size(700, 316);
             this.Name = "Form_Main";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

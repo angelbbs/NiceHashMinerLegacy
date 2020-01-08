@@ -285,7 +285,7 @@
     "Form_Settings_ToolTip_DagGeneration": "Устанавливает режим загрузки Dag для ethminer.",
     "Form_Settings_General_UseIFTTT": "Исп. IFTTT",
     "Form_Settings_IFTTTAPIKey": "Ключ API IFTTT",
-    "AlgorithmsListView_Enabled": "Включён",
+    "AlgorithmsListView_Enabled": "Вкл.",
     "AlgorithmsListView_Algorithm": "Алгоритм",
     "AlgorithmsListView_Speed": "Скорость",
     "AlgorithmsListView_Ratio": "BTC/GH/дн соотношение",

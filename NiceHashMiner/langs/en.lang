@@ -293,7 +293,7 @@
         "Form_Settings_General_UseIFTTT": "Use IFTTT",
         "Form_Settings_IFTTTAPIKey": "IFTTT API Key",
         "Form_Settings_ElectricityCost": "Electricity Cost (/KWh)", 
-        "AlgorithmsListView_Enabled": "Enabled",
+        "AlgorithmsListView_Enabled": "On",
         "AlgorithmsListView_Algorithm": "Algorithm",
         "AlgorithmsListView_Speed": "Speed",
         "AlgorithmsListView_Ratio": "Ratio BTC/GH/Day",

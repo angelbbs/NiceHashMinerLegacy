@@ -74,8 +74,8 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // columnHeader0
             // 
-            this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 53;
+            this.columnHeader0.Text = "On";
+            this.columnHeader0.Width = 28;
             // 
             // columnHeader1
             // 
@@ -85,18 +85,18 @@ namespace NiceHashMiner.Forms.Components {
             // columnHeader2
             // 
             this.columnHeader2.Text = "Miner";
-            this.columnHeader2.Width = 100;
+            this.columnHeader2.Width = 82;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "Speed";
             this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeader3.Width = 88;
+            this.columnHeader3.Width = 152;
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "Secondary Speed";
-            this.columnHeader4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader4.Text = "Power";
+            this.columnHeader4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader4.Width = 88;
             // 
             // columnHeader5

@@ -205,11 +205,13 @@ namespace NiceHashMiner.Forms.Components
                 {
                     cPowerUsage = cPowerUsage + " W";
                 }
-
-                listViewDevices.Items[index].SubItems[1].Text = cTemp.Contains("-1") ? "--" : cTemp;
-                listViewDevices.Items[index].SubItems[2].Text = cLoad.Contains("-1") ? "--" : cLoad;
-                listViewDevices.Items[index].SubItems[3].Text = cFanSpeed.Contains("-1") ? "--" : cFanSpeed;
-                listViewDevices.Items[index].SubItems[4].Text = cPowerUsage.Contains("-1") ? "--" : cPowerUsage;
+                if (index > 0)
+                {
+                    listViewDevices.Items[index].SubItems[1].Text = cTemp.Contains("-1") ? "--" : cTemp;
+                    listViewDevices.Items[index].SubItems[2].Text = cLoad.Contains("-1") ? "--" : cLoad;
+                    listViewDevices.Items[index].SubItems[3].Text = cFanSpeed.Contains("-1") ? "--" : cFanSpeed;
+                    listViewDevices.Items[index].SubItems[4].Text = cPowerUsage.Contains("-1") ? "--" : cPowerUsage;
+                }
                 index++;
 
             }

@@ -212,7 +212,7 @@ namespace NiceHashMiner.Forms
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(381, 473);
+            this.buttonSaveClose.Location = new System.Drawing.Point(398, 473);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
@@ -224,7 +224,7 @@ namespace NiceHashMiner.Forms
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(303, 473);
+            this.buttonDefaults.Location = new System.Drawing.Point(320, 473);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
@@ -236,7 +236,7 @@ namespace NiceHashMiner.Forms
             // buttonCloseNoSave
             // 
             this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(519, 473);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(536, 473);
             this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(134, 23);
@@ -275,7 +275,7 @@ namespace NiceHashMiner.Forms
             this.tabControlGeneral.Location = new System.Drawing.Point(3, 1);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(660, 466);
+            this.tabControlGeneral.Size = new System.Drawing.Size(677, 466);
             this.tabControlGeneral.TabIndex = 47;
             // 
             // tabPageGeneral
@@ -289,7 +289,7 @@ namespace NiceHashMiner.Forms
             this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(652, 439);
+            this.tabPageGeneral.Size = new System.Drawing.Size(669, 439);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             // 
@@ -1737,7 +1737,7 @@ namespace NiceHashMiner.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(667, 509);
+            this.ClientSize = new System.Drawing.Size(684, 509);
             this.Controls.Add(this.tabControlGeneral);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
@@ -1745,7 +1745,7 @@ namespace NiceHashMiner.Forms
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(683, 548);
+            this.MinimumSize = new System.Drawing.Size(700, 548);
             this.Name = "Form_Settings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

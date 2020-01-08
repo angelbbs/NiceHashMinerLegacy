@@ -425,6 +425,8 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerBlake2s;
                     case AlgorithmType.Keccak:
                         return AlgorithmType.DaggerKeccak;
+                    case AlgorithmType.Eaglesong:
+                        return AlgorithmType.DaggerEaglesong;
                 }
             }
 

@@ -29,11 +29,11 @@ namespace NiceHashMiner.Forms.Components {
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
-            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.TextBox();
             this.secondaryFieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.field_PowerUsage = new NiceHashMiner.Forms.Components.Field();
+            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
+            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.TextBox();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
@@ -53,8 +53,8 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.secondaryFieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
+            this.flowLayoutPanel1.Controls.Add(this.secondaryFieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.field_PowerUsage);
             this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -63,6 +63,39 @@ namespace NiceHashMiner.Forms.Components {
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(276, 198);
             this.flowLayoutPanel1.TabIndex = 12;
+            // 
+            // secondaryFieldBoxBenchmarkSpeed
+            // 
+            this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
+            this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
+            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Speed (H/s):";
+            this.secondaryFieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 35);
+            this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
+            this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
+            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
+            // 
+            // fieldBoxBenchmarkSpeed
+            // 
+            this.fieldBoxBenchmarkSpeed.AutoSize = true;
+            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.fieldBoxBenchmarkSpeed.EntryText = "";
+            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
+            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 3);
+            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
+            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
+            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
+            // 
+            // field_PowerUsage
+            // 
+            this.field_PowerUsage.AutoSize = true;
+            this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
+            this.field_PowerUsage.EntryText = "";
+            this.field_PowerUsage.LabelText = "Power Usage (W):";
+            this.field_PowerUsage.Location = new System.Drawing.Point(3, 67);
+            this.field_PowerUsage.Name = "field_PowerUsage";
+            this.field_PowerUsage.Size = new System.Drawing.Size(278, 26);
+            this.field_PowerUsage.TabIndex = 15;
             // 
             // groupBoxExtraLaunchParameters
             // 
@@ -85,39 +118,6 @@ namespace NiceHashMiner.Forms.Components {
             this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
             this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(264, 65);
             this.richTextBoxExtraLaunchParameters.TabIndex = 17;
-            // 
-            // secondaryFieldBoxBenchmarkSpeed
-            // 
-            this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
-            this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
-            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Speed (H/s):";
-            this.secondaryFieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 3);
-            this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
-            this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
-            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
-            // 
-            // fieldBoxBenchmarkSpeed
-            // 
-            this.fieldBoxBenchmarkSpeed.AutoSize = true;
-            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.fieldBoxBenchmarkSpeed.EntryText = "";
-            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
-            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 35);
-            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
-            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
-            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
-            // 
-            // field_PowerUsage
-            // 
-            this.field_PowerUsage.AutoSize = true;
-            this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
-            this.field_PowerUsage.EntryText = "";
-            this.field_PowerUsage.LabelText = "Power Usage (W):";
-            this.field_PowerUsage.Location = new System.Drawing.Point(3, 67);
-            this.field_PowerUsage.Name = "field_PowerUsage";
-            this.field_PowerUsage.Size = new System.Drawing.Size(278, 26);
-            this.field_PowerUsage.TabIndex = 15;
             // 
             // AlgorithmSettingsControl
             // 

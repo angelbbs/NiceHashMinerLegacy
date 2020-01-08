@@ -30,18 +30,25 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 120;
         private int _benchmarkReadCount;
         private double _benchmarkSum;
+        private double _benchmarkSumSecond;
         //|  GPU0 63 C  53.8 Sol/s    4/0 127 W 0.42 Sol/W |
       //  private const string LookForStart = "total speed: ";
         private const string LookForStart = " c ";
+        private const string LookForStartDual = "h/s + ";
         private const string LookForEnd = "sol/s";
+        private const string LookForEndDual = "h/s  ";
         private const double DevFee = 2.0;
         string  gminer_var = "";
+        protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
 
 
-        public GMiner() : base("GMiner")
+        public GMiner(AlgorithmType secondaryAlgorithmType) : base("GMiner")
         {
             ConectionType = NhmConectionType.NONE;
             //IsNeverHideMiningWindow = true;
+            SecondaryAlgorithmType = secondaryAlgorithmType;
+            IsMultiType = true;
+            //Helpers.ConsolePrint(MinerTag(), "SecondaryAlgorithmType: " + SecondaryAlgorithmType.ToString());
         }
 
         public override void Start(string url, string btcAdress, string worker)
@@ -134,6 +141,25 @@ namespace NiceHashMiner.Miners
             {
                 nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
             }
+
+            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
+            {
+                return GetDevicesCommandString()
+                      + " --algo eth+ckb --server daggerhashimoto." + myServers[0, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
+                      + " --dserver eaglesong." + myServers[0, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
+                      + " --server daggerhashimoto." + myServers[1, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
+                      + " --dserver eaglesong." + myServers[1, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
+                      + " --server daggerhashimoto." + myServers[2, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
+                      + " --dserver eaglesong." + myServers[2, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
+                      + " --server daggerhashimoto." + myServers[3, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
+                      + " --dserver eaglesong." + myServers[3, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
+                      + " --server daggerhashimoto." + myServers[4, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
+                      + " --dserver eaglesong." + myServers[4, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
+                      + " --server daggerhashimoto." + myServers[5, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
+                      + " --dserver eaglesong." + myServers[5, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
+                      + " --api " + ApiPort;
+            }
+
 
             var ret = GetDevicesCommandString()
                       + " --algo " + algo + pers + " --server " + url.Split(':')[0]
@@ -399,9 +425,17 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo eaglesong" +
-                " --server ckb.2miners.com:6464 --user ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv" +
-                " --server eaglesong.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3381 --ssl 0" +
-                " --server eaglesong.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3381 --ssl 0" +
+                " --server ckb.2miners.com:6464 --user ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv --ssl 0" +
+                " --server eaglesong.eu" + nhsuff + ".nicehash.com:3381 --user " + username + " --ssl 0" +
+                " --server eaglesong.hk" + nhsuff + ".nicehash.com:3381 --user " + username + " --ssl 0" +
+                GetDevicesCommandString();
+            }
+            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
+            {
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo eth+ckb" +
+                " --server eth-eu.dwarfpool.com:8008 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.gminer --ssl 0 --proto proxy --dserver ckb.2miners.com:6464 --duser ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv" +
+                " --server daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.eu.nicehash.com:3381 --duser " + username + " --ssl 0" +
+                " --server daggerhashimoto.hk.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.hk.nicehash.com:3381 --duser " + username + " --ssl 0" +
                 GetDevicesCommandString();
             }
             return ret;
@@ -530,11 +564,15 @@ namespace NiceHashMiner.Miners
                         {
                             BenchLines.Add(line);
                             var lineLowered = line.ToLower();
-                           // Helpers.ConsolePrint(MinerTag(), lineLowered);
+                            Helpers.ConsolePrint(MinerTag(), lineLowered);
                             if (lineLowered.Contains(LookForStart))
                             {
                                 _benchmarkSum += GetNumber(lineLowered);
-                                ++_benchmarkReadCount;
+                                if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo)
+                                {
+                                    _benchmarkSumSecond += GetNumberSecond(lineLowered);
+                                }
+                                    ++_benchmarkReadCount;
                             }
                         }
                     }
@@ -542,6 +580,10 @@ namespace NiceHashMiner.Miners
                     if (_benchmarkReadCount > 0)
                     {
                         BenchmarkAlgorithm.BenchmarkSpeed = _benchmarkSum / _benchmarkReadCount;
+                        if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo)
+                        {
+                            dualBenchAlgo.SecondaryBenchmarkSpeed = _benchmarkSumSecond / _benchmarkReadCount;
+                        }
                     }
                 }
 
@@ -575,7 +617,11 @@ namespace NiceHashMiner.Miners
             }
         }
         //|  GPU0 58 C 378.05 MH/s    0/0  87 W  4.35 MH/W |
-
+        //|  GPU0 61 C  24.50 MH/s + 291.49 MH/s  1/0 + 0/0 113 W  216.79 KH/W |
+        protected double GetNumberSecond(string outdata)
+        {
+                return GetNumber(outdata, LookForStartDual, LookForEndDual);
+        }
         protected double GetNumber(string outdata, string lookForStart, string lookForEnd)
         {
             Helpers.ConsolePrint(MinerTag(), outdata);
@@ -640,6 +686,7 @@ namespace NiceHashMiner.Miners
             {
                 public int gpu_id { get; set; }
                 public double speed { get; set; }
+                public double speed2 { get; set; }
             }
             public Devices[] devices { get; set; }
         }
@@ -657,9 +704,22 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             //Helpers.ConsolePrint("try API...........", "");
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            ApiData ad;
+            
+            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
+            {
+                ad = new ApiData(AlgorithmType.DaggerEaglesong);
+                ad.AlgorithmID = AlgorithmType.DaggerHashimoto;
+                ad.SecondaryAlgorithmID = AlgorithmType.Eaglesong;
+            }
+            else
+            {
+                ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            }
+            //Helpers.ConsolePrint("GMINER API", "SecondaryAlgorithmType: " + SecondaryAlgorithmType.ToString() + " ad.AlgorithmID: " + ad.AlgorithmID.ToString() + " ad.SecondaryAlgorithmID: " + ad.SecondaryAlgorithmID.ToString());
             string ResponseFromGMiner;
             double total = 0;
+            double totalSec = 0;
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString()+"/stat");
@@ -690,10 +750,20 @@ namespace NiceHashMiner.Miners
                 for (var i = 0; i < resp.devices.Length; i++)
                 {
                     total = total + resp.devices[i].speed;
+                    if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
+                    {
+                        totalSec = totalSec + resp.devices[i].speed2;
+                    }
                 }
 
                 ad.Speed = total;
-                    if (ad.Speed == 0)
+                if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
+                {
+                    ad.SecondarySpeed = totalSec;
+                }
+
+
+                if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }

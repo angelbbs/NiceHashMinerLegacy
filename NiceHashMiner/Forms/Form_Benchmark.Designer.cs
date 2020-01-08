@@ -45,7 +45,7 @@ namespace NiceHashMiner.Forms {
             // 
             this.StartStopBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.StartStopBtn.BackColor = System.Drawing.SystemColors.Control;
-            this.StartStopBtn.Location = new System.Drawing.Point(486, 476);
+            this.StartStopBtn.Location = new System.Drawing.Point(516, 476);
             this.StartStopBtn.Name = "StartStopBtn";
             this.StartStopBtn.Size = new System.Drawing.Size(75, 23);
             this.StartStopBtn.TabIndex = 100;
@@ -56,7 +56,7 @@ namespace NiceHashMiner.Forms {
             // CloseBtn
             // 
             this.CloseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBtn.Location = new System.Drawing.Point(567, 476);
+            this.CloseBtn.Location = new System.Drawing.Point(597, 476);
             this.CloseBtn.Name = "CloseBtn";
             this.CloseBtn.Size = new System.Drawing.Size(75, 23);
             this.CloseBtn.TabIndex = 101;
@@ -142,14 +142,14 @@ namespace NiceHashMiner.Forms {
             this.algorithmsListView1.Location = new System.Drawing.Point(12, 192);
             this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(630, 203);
+            this.algorithmsListView1.Size = new System.Drawing.Size(660, 203);
             this.algorithmsListView1.TabIndex = 109;
             this.algorithmsListView1.Load += new System.EventHandler(this.algorithmsListView1_Load);
             // 
             // benchmarkOptions1
             // 
             this.benchmarkOptions1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.benchmarkOptions1.Location = new System.Drawing.Point(444, 15);
+            this.benchmarkOptions1.Location = new System.Drawing.Point(474, 15);
             this.benchmarkOptions1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.benchmarkOptions1.Name = "benchmarkOptions1";
             this.benchmarkOptions1.Size = new System.Drawing.Size(208, 112);
@@ -159,6 +159,7 @@ namespace NiceHashMiner.Forms {
             // 
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
             this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Benckmark";
             this.devicesListViewEnableControl1.IsInBenchmark = false;
@@ -167,7 +168,7 @@ namespace NiceHashMiner.Forms {
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(426, 164);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(456, 164);
             this.devicesListViewEnableControl1.TabIndex = 0;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
             // 
@@ -175,7 +176,7 @@ namespace NiceHashMiner.Forms {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(654, 511);
+            this.ClientSize = new System.Drawing.Size(684, 511);
             this.Controls.Add(this.checkBox_StartMiningAfterBenchmark);
             this.Controls.Add(this.radioButton_RE_SelectedUnbenchmarked);
             this.Controls.Add(this.radioButton_SelectedUnbenchmarked);
@@ -187,7 +188,7 @@ namespace NiceHashMiner.Forms {
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(620, 470);
+            this.MinimumSize = new System.Drawing.Size(700, 470);
             this.Name = "Form_Benchmark";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Benchmark";

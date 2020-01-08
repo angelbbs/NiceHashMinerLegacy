@@ -1608,7 +1608,8 @@ namespace NiceHashMiner
                     pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKeccak ||
                     pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerLbry ||
                     pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerPascal ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerSia)
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerSia ||
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerEaglesong)
                 {
                     strDual = "DUAL";
                 }

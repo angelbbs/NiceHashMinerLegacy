@@ -621,25 +621,40 @@ namespace NiceHashMiner.Miners
                     }
 
                     // set rates
-                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
+                    NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
+                    //if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
+                    if (ad != null)
                     {
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
-                        if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
+                        NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
+                        double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;
+                        //if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
                         {
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
+
                         }
                         // Deduct power costs
                         var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
                         groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
                         groupMiners.PowerRate = ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
+                        //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.DualAlgorithmType: " + groupMiners.DualAlgorithmType.ToString() +" SecondaryAlgorithmID: " + ad.SecondaryAlgorithmID.ToString() + " CurrentRate: " + groupMiners.CurrentRate.ToString() + "CurrentRateSec:" + CurrentRateSec.ToString());
                     }
                     else
                     {
                         groupMiners.CurrentRate = 0;
                         // set empty
-                        ad = new ApiData(groupMiners.AlgorithmType);
+                        //if (groupMiners.DualAlgorithmType != AlgorithmType.NONE || groupMiners.AlgorithmType == AlgorithmType.Eaglesong)
+                       // if (groupMiners.DualAlgorithmType == AlgorithmType.Eaglesong)
+                        {
+                            ad = new ApiData(groupMiners.DualAlgorithmType);
+                        }
+                        /*
+                        else
+                        {
+                            ad = new ApiData(groupMiners.AlgorithmType);
+                        }
+                        */
                     }
-
                     currentProfit += groupMiners.CurrentRate;
                     // Update GUI
                     _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad,

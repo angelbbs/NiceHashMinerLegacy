@@ -101,7 +101,7 @@ namespace NiceHashMiner.Miners
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
                 case MinerBaseType.GMiner:
-                    return new GMiner();
+                    return new GMiner(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.lolMiner:
                     return new lolMiner();
                 case MinerBaseType.WildRig:

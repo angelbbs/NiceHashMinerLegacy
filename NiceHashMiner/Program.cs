@@ -476,17 +476,19 @@ namespace NiceHashMiner
                 // check WMI
                 if (Helpers.IsWmiEnabled())
                 {
-                    if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
+                   // if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
                     {
                         Application.Run(new Form_Main());
                     }
                 }
+                
                 else
                 {
                     MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
                         International.GetText("Program_WMI_Error_Title"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                
             }
         }
     }

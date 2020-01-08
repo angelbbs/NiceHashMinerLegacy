@@ -68,7 +68,7 @@ namespace NiceHashMiner.Forms.Components {
             this.labelCurentcyPerDayVaue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCurentcyPerDayVaue.AutoSize = true;
-            this.labelCurentcyPerDayVaue.Location = new System.Drawing.Point(434, 16);
+            this.labelCurentcyPerDayVaue.Location = new System.Drawing.Point(456, 16);
             this.labelCurentcyPerDayVaue.Name = "labelCurentcyPerDayVaue";
             this.labelCurentcyPerDayVaue.Size = new System.Drawing.Size(61, 13);
             this.labelCurentcyPerDayVaue.TabIndex = 104;
@@ -78,7 +78,7 @@ namespace NiceHashMiner.Forms.Components {
             // 
             this.labelBTCRateValue.AutoSize = true;
             this.labelBTCRateValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelBTCRateValue.Location = new System.Drawing.Point(317, 16);
+            this.labelBTCRateValue.Location = new System.Drawing.Point(347, 16);
             this.labelBTCRateValue.Name = "labelBTCRateValue";
             this.labelBTCRateValue.Size = new System.Drawing.Size(112, 13);
             this.labelBTCRateValue.TabIndex = 105;
@@ -87,7 +87,7 @@ namespace NiceHashMiner.Forms.Components {
             // labelBTCRateIndicator
             // 
             this.labelBTCRateIndicator.AutoSize = true;
-            this.labelBTCRateIndicator.Location = new System.Drawing.Point(272, 16);
+            this.labelBTCRateIndicator.Location = new System.Drawing.Point(304, 16);
             this.labelBTCRateIndicator.Name = "labelBTCRateIndicator";
             this.labelBTCRateIndicator.Size = new System.Drawing.Size(33, 13);
             this.labelBTCRateIndicator.TabIndex = 106;
@@ -97,7 +97,7 @@ namespace NiceHashMiner.Forms.Components {
             // 
             this.labelSpeedValue.AutoSize = true;
             this.labelSpeedValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelSpeedValue.Location = new System.Drawing.Point(75, 16);
+            this.labelSpeedValue.Location = new System.Drawing.Point(73, 16);
             this.labelSpeedValue.Name = "labelSpeedValue";
             this.labelSpeedValue.Size = new System.Drawing.Size(30, 13);
             this.labelSpeedValue.TabIndex = 107;
