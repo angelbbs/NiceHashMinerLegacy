@@ -48,7 +48,7 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxMinerGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBoxMinerGroup.Location = new System.Drawing.Point(0, 0);
             this.groupBoxMinerGroup.Name = "groupBoxMinerGroup";
-            this.groupBoxMinerGroup.Size = new System.Drawing.Size(536, 40);
+            this.groupBoxMinerGroup.Size = new System.Drawing.Size(538, 40);
             this.groupBoxMinerGroup.TabIndex = 108;
             this.groupBoxMinerGroup.TabStop = false;
             this.groupBoxMinerGroup.Text = "Mining Devices { N/A } ";
@@ -68,7 +68,7 @@ namespace NiceHashMiner.Forms.Components {
             this.labelCurentcyPerDayVaue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCurentcyPerDayVaue.AutoSize = true;
-            this.labelCurentcyPerDayVaue.Location = new System.Drawing.Point(456, 16);
+            this.labelCurentcyPerDayVaue.Location = new System.Drawing.Point(464, 16);
             this.labelCurentcyPerDayVaue.Name = "labelCurentcyPerDayVaue";
             this.labelCurentcyPerDayVaue.Size = new System.Drawing.Size(61, 13);
             this.labelCurentcyPerDayVaue.TabIndex = 104;
@@ -78,7 +78,7 @@ namespace NiceHashMiner.Forms.Components {
             // 
             this.labelBTCRateValue.AutoSize = true;
             this.labelBTCRateValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelBTCRateValue.Location = new System.Drawing.Point(347, 16);
+            this.labelBTCRateValue.Location = new System.Drawing.Point(355, 16);
             this.labelBTCRateValue.Name = "labelBTCRateValue";
             this.labelBTCRateValue.Size = new System.Drawing.Size(112, 13);
             this.labelBTCRateValue.TabIndex = 105;
@@ -87,7 +87,7 @@ namespace NiceHashMiner.Forms.Components {
             // labelBTCRateIndicator
             // 
             this.labelBTCRateIndicator.AutoSize = true;
-            this.labelBTCRateIndicator.Location = new System.Drawing.Point(304, 16);
+            this.labelBTCRateIndicator.Location = new System.Drawing.Point(312, 16);
             this.labelBTCRateIndicator.Name = "labelBTCRateIndicator";
             this.labelBTCRateIndicator.Size = new System.Drawing.Size(33, 13);
             this.labelBTCRateIndicator.TabIndex = 106;
@@ -111,7 +111,7 @@ namespace NiceHashMiner.Forms.Components {
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Controls.Add(this.groupBoxMinerGroup);
             this.Name = "GroupProfitControl";
-            this.Size = new System.Drawing.Size(541, 43);
+            this.Size = new System.Drawing.Size(543, 43);
             this.groupBoxMinerGroup.ResumeLayout(false);
             this.groupBoxMinerGroup.PerformLayout();
             this.ResumeLayout(false);

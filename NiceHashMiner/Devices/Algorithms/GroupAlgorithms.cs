@@ -563,7 +563,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.GrinCuckarood29
                     });
             }
-
+            /*
             if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -571,6 +571,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.DaggerHashimoto
                     });
             }
+            */
             if (algoSettings.ContainsKey(MinerBaseType.teamredminer) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>

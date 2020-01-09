@@ -55,7 +55,10 @@ namespace NiceHashMiner.Miners.Parsing
                 new MinerOptionPackage(
                 MinerType.NBMiner,
                 new List<MinerOption>() {
-                    new MinerOption("nbminer_intensity", "--cuckoo-intensity", "0", MinerOptionFlagType.SingleParam)
+                    new MinerOption("nbminer_intensity", "--cuckoo-intensity", "0", MinerOptionFlagType.SingleParam),
+                    new MinerOption("nbminer_Intensity", "-i", "--intensity", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_DIntensity", "--di", "--secondary-intensity", "100", MinerOptionFlagType.MultiParam, ","),
+                     new MinerOption("nbminer_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, "")
                 },
                 new List<MinerOption>()
 
@@ -566,7 +569,9 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_color", "-c", "--color", "1", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_pec", "--pec", "--pec", "1", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_Intensity", "-i", "--intensity", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_DualIntensity", "-di", "--dual_intensity", "-1", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_OC", "--oc", "--oc", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("GMiner_electricity_cost", "--electricity_cost", "--electricity_cost", "0", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()
