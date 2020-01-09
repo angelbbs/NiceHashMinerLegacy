@@ -416,11 +416,12 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, ""),
+                    /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                     {
                         ExtraLaunchParameters = "--dual_intensity 100"
                     },
-
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
@@ -445,10 +446,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
-
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Eaglesong, "")
                     {
                     },
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
