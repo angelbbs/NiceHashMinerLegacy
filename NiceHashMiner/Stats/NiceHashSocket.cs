@@ -351,7 +351,7 @@ namespace NiceHashMiner.Stats
                 if (Configs.ConfigManager.GeneralConfig.NewPlatform)
                 {
                     protocol = 3;
-                    version = "NHML/1.9.2.15"; //
+                    version = "NHML/1.9.2.20"; //
                     if (ConfigManager.GeneralConfig.Send_actual_version_info)
                     {
                         version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
