@@ -154,6 +154,7 @@ namespace NiceHashMiner.Forms
             this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.Checkbox_Save_windows_size_and_position = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Main.SuspendLayout();
@@ -595,6 +596,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.Checkbox_Save_windows_size_and_position);
             this.groupBox_Misc.Controls.Add(this.label1);
             this.groupBox_Misc.Controls.Add(this.textBox_AutoStartMiningDelay);
             this.groupBox_Misc.Controls.Add(this.label_AutoStartMiningDelay);
@@ -1194,7 +1196,7 @@ namespace NiceHashMiner.Forms
             this.tabPageAdvanced1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageAdvanced1.Name = "tabPageAdvanced1";
             this.tabPageAdvanced1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageAdvanced1.Size = new System.Drawing.Size(652, 439);
+            this.tabPageAdvanced1.Size = new System.Drawing.Size(669, 439);
             this.tabPageAdvanced1.TabIndex = 2;
             this.tabPageAdvanced1.Text = "Advanced";
             // 
@@ -1648,7 +1650,7 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
             this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(652, 439);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(669, 439);
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             // 
@@ -1732,6 +1734,18 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
+            // Checkbox_Save_windows_size_and_position
+            // 
+            this.Checkbox_Save_windows_size_and_position.AutoSize = true;
+            this.Checkbox_Save_windows_size_and_position.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(4, 400);
+            this.Checkbox_Save_windows_size_and_position.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.Checkbox_Save_windows_size_and_position.Name = "Checkbox_Save_windows_size_and_position";
+            this.Checkbox_Save_windows_size_and_position.Size = new System.Drawing.Size(176, 17);
+            this.Checkbox_Save_windows_size_and_position.TabIndex = 380;
+            this.Checkbox_Save_windows_size_and_position.Text = "Save windows size and position";
+            this.Checkbox_Save_windows_size_and_position.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -1940,5 +1954,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_RunEthlargement;
         private System.Windows.Forms.Label label_RunEthlargement;
         private System.Windows.Forms.CheckBox checkBox_ShowFanAsPercent;
+        private System.Windows.Forms.CheckBox Checkbox_Save_windows_size_and_position;
     }
 }

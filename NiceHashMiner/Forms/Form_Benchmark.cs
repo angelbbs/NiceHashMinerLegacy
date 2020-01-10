@@ -723,10 +723,13 @@ namespace NiceHashMiner.Forms
                 }
             if (Form_Benchmark.ActiveForm != null)
             {
-                ConfigManager.GeneralConfig.BenchmarkFormHeight = Form_Benchmark.ActiveForm.Height;
-                ConfigManager.GeneralConfig.BenchmarkFormWidth = Form_Benchmark.ActiveForm.Width;
-                ConfigManager.GeneralConfig.BenchmarkFormTop = Form_Benchmark.ActiveForm.Top;
-                ConfigManager.GeneralConfig.BenchmarkFormLeft = Form_Benchmark.ActiveForm.Left;
+                if (ConfigManager.GeneralConfig.Save_windows_size_and_position)
+                {
+                    ConfigManager.GeneralConfig.BenchmarkFormHeight = Form_Benchmark.ActiveForm.Height;
+                    ConfigManager.GeneralConfig.BenchmarkFormWidth = Form_Benchmark.ActiveForm.Width;
+                    ConfigManager.GeneralConfig.BenchmarkFormTop = Form_Benchmark.ActiveForm.Top;
+                    ConfigManager.GeneralConfig.BenchmarkFormLeft = Form_Benchmark.ActiveForm.Left;
+                }
             }
             ConfigManager.GeneralConfigFileCommit();
         }

@@ -1339,11 +1339,14 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.SaveColumns();
             if (this != null)
             {
-                ConfigManager.GeneralConfig.FormWidth = this.Width;
-                if (this.Top + this.Left >= 1)
+                if (ConfigManager.GeneralConfig.Save_windows_size_and_position)
                 {
-                    ConfigManager.GeneralConfig.FormTop = this.Top;
-                    ConfigManager.GeneralConfig.FormLeft = this.Left;
+                    ConfigManager.GeneralConfig.FormWidth = this.Width;
+                    if (this.Top + this.Left >= 1)
+                    {
+                        ConfigManager.GeneralConfig.FormTop = this.Top;
+                        ConfigManager.GeneralConfig.FormLeft = this.Left;
+                    }
                 }
             }
             MinersManager.StopAllMiners();

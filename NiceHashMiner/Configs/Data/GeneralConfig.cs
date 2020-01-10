@@ -113,6 +113,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Force_mining_if_nonprofitable = true;
         public bool Additional_info_about_device = false;
         public bool Disable_extra_launch_parameter_checking = false;
+        public bool Save_windows_size_and_position = true;
 
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
