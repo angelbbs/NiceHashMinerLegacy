@@ -415,7 +415,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.GMiner,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, ""),
+                    //gminer broken
+                  //  new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, ""),
                     /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                     {

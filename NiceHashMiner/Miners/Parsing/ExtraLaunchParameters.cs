@@ -57,7 +57,7 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     new MinerOption("nbminer_intensity", "--cuckoo-intensity", "0", MinerOptionFlagType.SingleParam),
                     new MinerOption("nbminer_Intensity", "-i", "--intensity", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("nbminer_DIntensity", "--di", "--secondary-intensity", "100", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_DIntensity", "--di", "--secondary-intensity", "-1", MinerOptionFlagType.MultiParam, ","),
                      new MinerOption("nbminer_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, "")
                 },
                 new List<MinerOption>()
@@ -367,7 +367,7 @@ namespace NiceHashMiner.Miners.Parsing
                 }
             ),
             */
-            
+
             new MinerOptionPackage(
                 MinerType.XmrigAMD,
                 new List<MinerOption>() {
@@ -380,9 +380,9 @@ namespace NiceHashMiner.Miners.Parsing
                 },
                 new List<MinerOption>(){ }
              ),
-             
-             
-             
+
+
+
             new MinerOptionPackage(
                 MinerType.XmrigNVIDIA,
                 new List<MinerOption>() {
@@ -395,7 +395,7 @@ namespace NiceHashMiner.Miners.Parsing
                 },
                 new List<MinerOption>(){ }
              ),
-             
+
             new MinerOptionPackage(
                 MinerType.WildRig,
                 new List<MinerOption>() {
