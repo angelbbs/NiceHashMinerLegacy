@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,20 @@ namespace NiceHashMiner.Devices.Querying
         private readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
         private readonly List<string> _amdDeviceUuid = new List<string>();
 
+        private static string SafeGetProperty(ManagementBaseObject mbo, string key)
+        {
+            try
+            {
+                var o = mbo.GetPropertyValue(key);
+                if (o != null)
+                {
+                    return o.ToString();
+                }
+            }
+            catch { }
+
+            return "key is null";
+        }
 
         public AmdQuery(List<VideoControllerData> availControllers)
         {
@@ -41,7 +56,7 @@ namespace NiceHashMiner.Devices.Querying
             DriverCheck();
 
             var amdDevices = openCLSuccess ? ProcessDevices(openCLData) : new List<OpenCLDevice>();
-
+            
             Helpers.ConsolePrint(Tag, "QueryAMD END");
 
             return amdDevices;
@@ -114,7 +129,7 @@ namespace NiceHashMiner.Devices.Querying
                     $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {ComputeDeviceManager.Available.AmdOpenCLPlatformNum}");
                 break;
             }
-
+            
             if (!amdPlatformNumFound) return amdDevices;
 
             // get only AMD gpus
@@ -218,8 +233,38 @@ namespace NiceHashMiner.Devices.Querying
                     {
                         DeviceName = deviceName,
                         UUID = _busIdInfos[busID].Uuid,
-                        AdapterIndex = _busIdInfos[busID].Adl1Index
-                    };
+                        AdapterIndex = _busIdInfos[busID].Adl1Index,
+                        DeviceGlobalMemory = gpuRAM
+                };
+
+                    //PNPDeviceID PCI\VEN_1002&DEV_6811&SUBSYS_2015174B&REV_81\4&14486AD3&0&00E0       
+                    //UUID: PCI_VEN_1002&DEV_6811_14486AD3
+                    //*************
+                    string PnpDeviceID = "";
+                    ulong gpumem = 0;
+                    ulong gpumemadd = 1048576; //add 1MB to gpumem
+                    var moc = new ManagementObjectSearcher("root\\CIMV2",
+                        "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
+
+                    foreach (var manObj in moc)
+                    {
+                        ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
+                        PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
+                        gpumem = memTmp + gpumemadd‬;
+
+                    }
+
+                    if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
+                    {
+                        if (newAmdDev.DeviceGlobalMemory < gpumem)
+                        {
+                            Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
+                            newAmdDev.DeviceGlobalMemory = gpumem;
+                            dev._CL_DEVICE_GLOBAL_MEM_SIZE = gpumem;
+                        }
+                    }
+
+                    //*************
                     var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
                         .DisableDetectionAMD;
                     var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
@@ -257,8 +302,10 @@ namespace NiceHashMiner.Devices.Querying
                         stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
                         stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
                         stringBuilder.AppendLine($"\t\tNewUUID: {newAmdDev.NewUUID}");
-                        stringBuilder.AppendLine(
-                            $"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
+                        stringBuilder.AppendLine($"\t\tBusID: {newAmdDev.BusID}");
+                        stringBuilder.AppendLine($"\t\tDeviceID: {newAmdDev.DeviceID}");
+                        stringBuilder.AppendLine($"\t\tInfSection: {newAmdDev.InfSection}");
+                        stringBuilder.AppendLine($"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
                         stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
                     }
                     catch
@@ -290,8 +337,7 @@ namespace NiceHashMiner.Devices.Querying
                 vcd.Name.ToLower().Contains("firepro")).ToList();
             // sort by ram not ideal 
             amdVideoControllers.Sort((a, b) => (int) (a.AdapterRam - b.AdapterRam));
-            amdDevices.Sort((a, b) =>
-                (int) (a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
+            amdDevices.Sort((a, b) => (int) (a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
             var minCount = Math.Min(amdVideoControllers.Count, amdDevices.Count);
 
             for (var i = 0; i < minCount; ++i)

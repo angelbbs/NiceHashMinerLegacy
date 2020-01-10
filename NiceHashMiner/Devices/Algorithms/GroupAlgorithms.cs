@@ -572,6 +572,15 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
             */
+            /*
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.1))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.DaggerHashimoto
+                    });
+            }
+            */
             if (algoSettings.ContainsKey(MinerBaseType.teamredminer) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>

@@ -102,10 +102,6 @@
     </Link>
     <PostBuildEvent>
       <Command>
-        copy /Y "$(AMDAPPSDKROOT)bin\x86_64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
-        REM the path is absolute maybe fix
-        copy /Y "D:\Microsoft Visual Studio\2017\Enterprise\VC\Redist\MSVC\14.10.25008\x64\Microsoft.VC150.CRT\msvcp140.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
-        copy /Y "D:\Microsoft Visual Studio\2017\Enterprise\VC\Redist\MSVC\14.10.25008\x64\Microsoft.VC150.CRT\vcruntime140.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

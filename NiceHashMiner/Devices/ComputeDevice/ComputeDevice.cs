@@ -53,9 +53,10 @@ namespace NiceHashMiner.Devices
         public ulong AffinityMask { get; protected set; }
 
         // GPU extras
-        public readonly ulong GpuRam;
+        public ulong GpuRam;
         public readonly bool IsEtherumCapale;
         public static readonly ulong Memory3Gb = 3221225472;
+        public static readonly ulong Memory4Gb = 4293918720;
 
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;

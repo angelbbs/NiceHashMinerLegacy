@@ -17,7 +17,8 @@ namespace NiceHashMiner.Devices
         public int BusID => (int) _openClSubset.AMD_BUS_ID;
         public string DeviceName; // init this with the ADL
         public string UUID; // init this with the ADL, use PCI_VEN & DEV IDs
-        public ulong DeviceGlobalMemory => _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE;
+        //public ulong DeviceGlobalMemory => _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE;
+        public ulong DeviceGlobalMemory;
 
         //public bool UseOptimizedVersion { get; private set; }
         private readonly OpenCLDevice _openClSubset = new OpenCLDevice();
@@ -63,7 +64,7 @@ namespace NiceHashMiner.Devices
 
         public bool IsEtherumCapable()
         {
-            return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE >= ComputeDevice.Memory3Gb;
+            return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE >= ComputeDevice.Memory4Gb;
         }
     }
 }
