@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -144,16 +145,31 @@ namespace NiceHashMiner.Miners.Grouping
             var allAvaragers = new Dictionary<string, AveragerGroup>();
 
             // init empty avarager
+            string devName = "";
             foreach (var device in miningDevs)
             {
-                var devName = device.Device.Name;
+                if (ConfigManager.GeneralConfig.Group_same_devices)
+                {
+                    devName = device.Device.Name;
+                }
+                else
+                {
+                    devName = device.Device.Uuid;
+                }
                 allAvaragers[devName] = new AveragerGroup();
             }
 
             // fill avarager
             foreach (var device in miningDevs)
             {
-                var devName = device.Device.Name;
+                if (ConfigManager.GeneralConfig.Group_same_devices)
+                {
+                    devName = device.Device.Name;
+                }
+                else
+                {
+                    devName = device.Device.Uuid;
+                }
                 // add UUID
                 allAvaragers[devName].UuidList.Add(device.Device.Uuid);
                 allAvaragers[devName].AddAlgorithms(device.Algorithms);
