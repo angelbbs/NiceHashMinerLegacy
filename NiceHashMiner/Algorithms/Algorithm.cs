@@ -224,6 +224,7 @@ namespace NiceHashMiner.Algorithms
             profits.TryGetValue(NiceHashID, out var paying);
             CurNhmSmaDataVal = paying;
             CurrentProfit = CurNhmSmaDataVal * AvaragedSpeed * Mult;
+           // Helpers.ConsolePrint("PROFIT", AlgorithmName + " CurrentProfit: " + CurrentProfit.ToString());
             SubtractPowerFromProfit();
         }
 

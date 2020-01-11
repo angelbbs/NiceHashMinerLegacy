@@ -426,6 +426,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.Text = "Дополнительная информация об устройстве";
                 Checkbox_Save_windows_size_and_position.Text = "Сохранять позицию и размер окон";
                 checkBox_ShowFanAsPercent.Text = "Показать обороты вентилятора в процентах";
+                checkbox_Group_same_devices.Text = "Группировать одинаковые устройства";
                 checkBox_Force_mining_if_nonprofitable.Text = "Принудительный майнинг, если не прибыльно";
                 checkBox_Disable_extra_launch_parameter_checking.Text = "Отключить проверку дополнительных параметров";
                 checkBox_DisableDetectionCPU.Text = "Отключить определение CPU";
@@ -636,6 +637,9 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowFanAsPercent.BackColor = Form_Main._backColor;
                 checkBox_ShowFanAsPercent.ForeColor = Form_Main._textColor;
 
+                checkbox_Group_same_devices.BackColor = Form_Main._backColor;
+                checkbox_Group_same_devices.ForeColor = Form_Main._textColor;
+
                 checkBox_Disable_extra_launch_parameter_checking.BackColor = Form_Main._backColor;
                 checkBox_Disable_extra_launch_parameter_checking.ForeColor = Form_Main._textColor;
 
@@ -819,6 +823,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                // checkBox_AMD_DisableAMDTempControl.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -921,6 +926,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
+                checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
             }
@@ -1058,6 +1064,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
+            ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
            // ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
             ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;

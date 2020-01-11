@@ -62,6 +62,7 @@ namespace NiceHashMiner.Forms
             this.comboBox_ServiceLocation = new System.Windows.Forms.ComboBox();
             this.textBox_WorkerName = new System.Windows.Forms.TextBox();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.Checkbox_Save_windows_size_and_position = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_AutoStartMiningDelay = new System.Windows.Forms.TextBox();
             this.label_AutoStartMiningDelay = new System.Windows.Forms.Label();
@@ -154,7 +155,7 @@ namespace NiceHashMiner.Forms
             this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.Checkbox_Save_windows_size_and_position = new System.Windows.Forms.CheckBox();
+            this.checkbox_Group_same_devices = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Main.SuspendLayout();
@@ -635,6 +636,18 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // Checkbox_Save_windows_size_and_position
+            // 
+            this.Checkbox_Save_windows_size_and_position.AutoSize = true;
+            this.Checkbox_Save_windows_size_and_position.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(4, 400);
+            this.Checkbox_Save_windows_size_and_position.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.Checkbox_Save_windows_size_and_position.Name = "Checkbox_Save_windows_size_and_position";
+            this.Checkbox_Save_windows_size_and_position.Size = new System.Drawing.Size(176, 17);
+            this.Checkbox_Save_windows_size_and_position.TabIndex = 380;
+            this.Checkbox_Save_windows_size_and_position.Text = "Save windows size and position";
+            this.Checkbox_Save_windows_size_and_position.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -1507,6 +1520,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkbox_Group_same_devices);
             this.groupBox1.Controls.Add(this.checkBox_ShowFanAsPercent);
             this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionCPU);
@@ -1735,17 +1749,17 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
-            // Checkbox_Save_windows_size_and_position
+            // checkbox_Group_same_devices
             // 
-            this.Checkbox_Save_windows_size_and_position.AutoSize = true;
-            this.Checkbox_Save_windows_size_and_position.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(4, 400);
-            this.Checkbox_Save_windows_size_and_position.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.Checkbox_Save_windows_size_and_position.Name = "Checkbox_Save_windows_size_and_position";
-            this.Checkbox_Save_windows_size_and_position.Size = new System.Drawing.Size(176, 17);
-            this.Checkbox_Save_windows_size_and_position.TabIndex = 380;
-            this.Checkbox_Save_windows_size_and_position.Text = "Save windows size and position";
-            this.Checkbox_Save_windows_size_and_position.UseVisualStyleBackColor = true;
+            this.checkbox_Group_same_devices.AutoSize = true;
+            this.checkbox_Group_same_devices.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkbox_Group_same_devices.Location = new System.Drawing.Point(242, 65);
+            this.checkbox_Group_same_devices.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkbox_Group_same_devices.Name = "checkbox_Group_same_devices";
+            this.checkbox_Group_same_devices.Size = new System.Drawing.Size(123, 17);
+            this.checkbox_Group_same_devices.TabIndex = 402;
+            this.checkbox_Group_same_devices.Text = "Group same devices";
+            this.checkbox_Group_same_devices.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -1955,5 +1969,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label label_RunEthlargement;
         private System.Windows.Forms.CheckBox checkBox_ShowFanAsPercent;
         private System.Windows.Forms.CheckBox Checkbox_Save_windows_size_and_position;
+        private System.Windows.Forms.CheckBox checkbox_Group_same_devices;
     }
 }
