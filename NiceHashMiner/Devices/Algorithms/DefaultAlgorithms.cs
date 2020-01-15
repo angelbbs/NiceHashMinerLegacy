@@ -420,14 +420,13 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.GMiner,
                 new List<Algorithm>
                 {
-                    //gminer broken
-                  //  new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, ""),
-                    /*
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, ""),
+                    
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                     {
-                        ExtraLaunchParameters = "--dual_intensity 100"
+                        ExtraLaunchParameters = "--dual_intensity 0"
                     },
-                    */
+                    
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

@@ -405,7 +405,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
-                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin29" +
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckaroom29" +
                 " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
                 " --server grincuckarood29.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
                 " --server grincuckarood29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
