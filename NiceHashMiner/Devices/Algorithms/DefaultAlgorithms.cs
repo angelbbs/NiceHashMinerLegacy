@@ -443,6 +443,10 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroom, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.CuckooCycle, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

@@ -100,7 +100,8 @@
         BeamV2 = 45,
         X16RV2 = 46,
         RandomX = 47,
-        Eaglesong = 48
+        Eaglesong = 48,
+        Cuckaroom = 49
 #endregion // NiceHashAPI
     }
 }

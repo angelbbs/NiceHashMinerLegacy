@@ -181,6 +181,7 @@ namespace NiceHashMiner
                 case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
                 case AlgorithmType.CuckooCycle:
+                case AlgorithmType.Cuckaroom:
                     unit = "G/s ";
                     break;
                 default:

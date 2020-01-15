@@ -114,6 +114,12 @@ namespace NiceHashMiner.Miners
                 algo = "grin29";
                 algoName = "grincuckarood29";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
+            {
+                //algo = "grin29";
+                algo = "cuckaroom29";
+                algoName = "cuckaroom";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 algo = "grin31";
@@ -397,6 +403,14 @@ namespace NiceHashMiner.Miners
                 " --server grincuckarood29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
                 GetDevicesCommandString();
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
+            {
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin29" +
+                " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
+                " --server grincuckarood29.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
+                " --server grincuckarood29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
+                GetDevicesCommandString();
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin31" +
@@ -605,7 +619,11 @@ namespace NiceHashMiner.Miners
 
         protected double GetNumber(string outdata)
         {
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 || MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 || MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 || MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 || 
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 || 
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 || 
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 return GetNumber(outdata, LookForStart, "g/s");
             } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto || MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
