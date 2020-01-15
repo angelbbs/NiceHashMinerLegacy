@@ -115,6 +115,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Disable_extra_launch_parameter_checking = false;
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
+        public string MachineGuid = "";
 
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;

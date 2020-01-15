@@ -39,6 +39,47 @@ namespace NiceHashMinerLegacy.UUID
             var hexUuid = GetHexUUID(infoToHash);
             return $"{0}-{GetB64UUID(hexUuid)}";
         }
+        /*
+         public static string GetMachineGuidOrFallback()
+        {
+            string reg = null;
+            const string hklm = "HKEY_LOCAL_MACHINE";
+            const string keyPath = hklm + @"\SOFTWARE\Microsoft\Cryptography";
+            const string value = "MachineGuid";
+
+            try
+            {
+                var readValue = Registry.GetValue(keyPath, value, new object());
+                reg = (string)readValue;
+            }
+            catch (Exception e)
+            {
+//                Logger.Error("NHM.UUID", $"GetMachineGuid: {e.Message}");
+            }
+
+            if (reg == null || reg == "")
+            {
+                if (ConfigManager.GeneralConfig.MachineGuid != "")
+                {
+                    return ConfigManager.GeneralConfig.MachineGuid;
+                }
+                else
+                {
+                    ConfigManager.GeneralConfig.MachineGuid = System.Guid.NewGuid().ToString();
+                    return ConfigManager.GeneralConfig.MachineGuid;
+                }
+
+            } else 
+            {
+                ConfigManager.GeneralConfig.MachineGuid = reg;
+                return reg;
+            }
+                // fallback
+                //            Logger.Warn("NHM.UUID", $"GetMachineGuid FALLBACK");
+                return System.Guid.NewGuid().ToString();
+        }
+        */
+
 
         public static string GetMachineGuidOrFallback()
         {
