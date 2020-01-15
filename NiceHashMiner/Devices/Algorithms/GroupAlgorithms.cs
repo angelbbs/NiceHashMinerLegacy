@@ -378,6 +378,13 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.GrinCuckaroo29
                     });
             }
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.Cuckaroom
+                    });
+            }
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -385,6 +392,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.GrinCuckarood29
                     });
             }
+            /*
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -392,6 +400,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.GrinCuckaroo29
                     });
             }
+            */
             /*
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.GpuRam < 1024 * 1024 * 1024 * 7.4)
             {
@@ -561,6 +570,13 @@ namespace NiceHashMiner.Devices.Algorithms
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.GrinCuckarood29
+                    });
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.lolMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.Cuckaroom
                     });
             }
             /*

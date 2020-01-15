@@ -128,7 +128,18 @@ namespace NiceHashMiner.Miners
                                                                DeviceType.AMD) +
                              " --devices ";
             }
-
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
+            {
+                LastCommandLine = "--coin GRIN-C29M --pool " + url + ";cuckaroom." + myServers[1, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[2, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[3, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[4, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[5, 0] + nhsuff + ".nicehash.com" +
+                             " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
+                             " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
+                             " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
+                             " " +
+                             ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                               MiningSetup,
+                                                               DeviceType.AMD) +
+                             " --devices ";
+            }
             LastCommandLine += GetDevicesCommandString() + " ";//
             ProcessHandle = _Start();
         }
@@ -189,6 +200,15 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--coin GRIN-AD29 " +
                 " --pool grin.sparkpool.com;grincuckaroo29.usa" + nhsuff + ".nicehash.com --port 6666;3372 --user angelbbs@mail.ru." + worker + ";" + username + " --pass x;x" +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                MiningSetup,
+                                                DeviceType.AMD) +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
+            {
+                CommandLine = "--coin GRIN-C29M " +
+                " --pool grin.sparkpool.com;cuckaroom.usa" + nhsuff + ".nicehash.com --port 6666;3382 --user angelbbs@mail.ru." + worker + ";" + username + " --pass x;x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +

@@ -196,6 +196,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--asm 1 "
                             },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Cuckaroom, "Cuckaroom")
+                            {
+                                ExtraLaunchParameters = "--asm 1 "
+                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31")
                             {
                                 ExtraLaunchParameters = "--asm 1 "
@@ -375,6 +379,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29, "GrinCuckaroo29"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckarood29, "GrinCuckarood29"),
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroom, "Cuckaroom"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Eaglesong, "Eaglesong"),
