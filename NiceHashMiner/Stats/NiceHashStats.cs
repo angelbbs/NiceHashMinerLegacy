@@ -1047,7 +1047,11 @@ namespace NiceHashMiner.Stats
                             if (paying != 0 && (paying * 5 < Math.Abs(algo[1].Value<double>()) * mult || (paying / 5 > Math.Abs(algo[1].Value<double>() * mult))))
                             {
                                 Helpers.ConsolePrint("SMA API", "Bug found in: " + algoKey.ToString() + " " + paying.ToString() + "<>" + Math.Abs(algo[1].Value<double>() * mult));
-                                bug = true;
+                                if (Math.Abs(algo[1].Value<double>()) * mult == 0 || Math.Abs(algo[1].Value<double>()) * mult * 102 < paying)
+                                {
+                                    Helpers.ConsolePrint("SMA API", algoKey.ToString() + " paying sets to zero");
+                                    bug = false;
+                                } else bug = true;
                             }
                             else if (ConfigManager.GeneralConfig.UseNegativeProfit)
                             {
