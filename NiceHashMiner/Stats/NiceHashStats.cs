@@ -1027,6 +1027,7 @@ namespace NiceHashMiner.Stats
         private static void SetAlgorithmRates(JArray data, int mult = 1)
         {
             bool bug = false;
+            bool alg_zero = false;
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();
@@ -1035,6 +1036,7 @@ namespace NiceHashMiner.Stats
                     foreach (var algo in data)
                     {
                         bug = false;
+                        alg_zero = false;
                         var algoKey = (AlgorithmType)algo[0].Value<int>();
                         if (!NHSmaData.TryGetPaying(algoKey, out double paying))
                         {
@@ -1051,13 +1053,14 @@ namespace NiceHashMiner.Stats
                                 {
                                     Helpers.ConsolePrint("SMA API", algoKey.ToString() + " paying sets to zero");
                                     bug = false;
+                                    alg_zero = true;
                                 } else bug = true;
                             }
                             else if (ConfigManager.GeneralConfig.UseNegativeProfit)
                             {
                                 if (ConfigManager.GeneralConfig.MOPA5)
                                 {
-                                    if (bug == false) payingDict[algoKey] = Math.Max(Math.Abs(algo[1].Value<double>()) * mult, paying);
+                                    if (bug == false & alg_zero == false) payingDict[algoKey] = Math.Max(Math.Abs(algo[1].Value<double>()) * mult, paying);
                                 }
                                 else
                                 {
@@ -1068,7 +1071,7 @@ namespace NiceHashMiner.Stats
                             {
                                 if (ConfigManager.GeneralConfig.MOPA5)
                                 {
-                                    if (bug == false) payingDict[algoKey] = Math.Max(algo[1].Value<double>() * mult, paying);
+                                    if (bug == false & alg_zero == false) payingDict[algoKey] = Math.Max(algo[1].Value<double>() * mult, paying);
                                 }
                                 else
                                 {
