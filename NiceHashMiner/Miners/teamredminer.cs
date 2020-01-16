@@ -253,11 +253,11 @@ namespace NiceHashMiner.Miners
                 {
                     kspeed = 1;
                 }
-                if (outdata.Substring(0, 65).ToUpper().Contains("KH/S"))
+                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
                 {
                     kspeed = 1000;
                 }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MH/S"))
+                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
                 {
                     kspeed = 1000000;
                 }

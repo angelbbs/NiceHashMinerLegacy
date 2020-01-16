@@ -182,7 +182,10 @@ namespace NiceHashMiner.Miners
             benchmarkconfigHandle.StartInfo.CreateNoWindow = true;
             Thread.Sleep(250);
             Helpers.ConsolePrint(MinerTag(), "Start bench: " + benchmarkconfigHandle.StartInfo.FileName + benchmarkconfigHandle.StartInfo.Arguments);
-            benchmarkconfigHandle.Start();
+
+            try { benchmarkconfigHandle.Start();  }
+                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+            
 
             try
             {
