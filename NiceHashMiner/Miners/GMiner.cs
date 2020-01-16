@@ -111,7 +111,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                algo = "grin29";
+                algo = "cuckarood29";
                 algoName = "grincuckarood29";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
