@@ -1585,6 +1585,11 @@ namespace NiceHashMiner
             var strPlatform = "";
             var strDual = "SINGLE";
             var strAlgo = AlgorithmNiceHashNames.GetName(MiningSetup.CurrentAlgorithmType);
+            if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Eaglesong)
+            {
+                strAlgo = AlgorithmType.DaggerEaglesong.ToString();
+            }
+
 
             var minername = MinerDeviceName;
             int subStr;
