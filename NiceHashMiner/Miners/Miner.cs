@@ -353,6 +353,7 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             IsRunning = false;
             IsRunningNew = false;
+            Ethlargement.Stop();
             RunCMDBeforeOrAfterMining(false);
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
             {

@@ -425,7 +425,7 @@ namespace NiceHashMiner.Forms.Components
                                     {
                                         var copyBenchDropDownItem = new ToolStripMenuItem
                                         {
-                                            Text = cDev.Name,
+                                            Text = "GPU#" + cDev.Index.ToString() + " " + cDev.Name,
                                             Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
                                         };
                                         copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
@@ -434,7 +434,7 @@ namespace NiceHashMiner.Forms.Components
 
                                         var copyTuningDropDownItem = new ToolStripMenuItem
                                         {
-                                            Text = cDev.Name
+                                            Text = "GPU#" + cDev.Index.ToString() + " " + cDev.Name
                                             //Checked = cDev.UUID == CDevice.TuningCopyUUID
                                         };
                                         copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
