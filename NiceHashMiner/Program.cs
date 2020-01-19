@@ -510,7 +510,13 @@ namespace NiceHashMiner
                 {
                    // if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
                     {
-                        Application.Run(new Form_Main());
+                        try
+                        {
+                            Application.Run(new Form_Main());
+                        } catch (Exception e)
+                        {
+                            Helpers.ConsolePrint("NICEHASH", e.Message);
+                        }
                     }
                 }
                 
