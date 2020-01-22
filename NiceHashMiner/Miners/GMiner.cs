@@ -475,8 +475,8 @@ namespace NiceHashMiner.Miners
                 benchmarkTimer.Start();
 
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                var keepRunning = true;
-                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
+                
+                while (IsActiveProcess(BenchmarkHandle.Id))
                 {
                     if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 2)
                         || BenchmarkSignalQuit
@@ -509,7 +509,7 @@ namespace NiceHashMiner.Miners
                             break;
                         }
 
-                        keepRunning = false;
+                        //keepRunning = false;
                         break;
                     }
 

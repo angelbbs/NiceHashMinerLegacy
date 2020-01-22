@@ -253,7 +253,7 @@ namespace NiceHashMiner.Miners
                 // don't use wait for it breaks everything
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 var keepRunning = true;
-                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
+                while (IsActiveProcess(BenchmarkHandle.Id))
                 {
                     //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
                     //BenchmarkOutputErrorDataReceivedImpl(outdata);

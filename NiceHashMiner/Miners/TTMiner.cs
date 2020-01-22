@@ -346,8 +346,8 @@ namespace NiceHashMiner.Miners
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
-            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
-            
+            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds; ////PVS-Studio - stupid program! 
+
             if (elapsedSeconds < 15 && firstStart)
             {
                 return ad;

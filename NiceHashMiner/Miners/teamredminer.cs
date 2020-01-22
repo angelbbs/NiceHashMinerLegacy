@@ -283,7 +283,11 @@ namespace NiceHashMiner.Miners
                     {
                         count--;
                     }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
+                    if (count - 3 > 0)
+                    {
+                        BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3); ////PVS-Studio - stupid program! Выше условие на больше нуля
+                    }
+                    else BenchmarkAlgorithm.BenchmarkSpeed = 0d;
                     if (count >= TotalCount)
                     {
                         BenchmarkSignalFinnished = true;
@@ -331,7 +335,11 @@ namespace NiceHashMiner.Miners
                     {
                         count--;
                     }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
+                    if (count - 3 > 0)
+                    {
+                        BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
+                    }
+                    else BenchmarkAlgorithm.BenchmarkSpeed = 0d;
                     if (count >= TotalCount)
                     {
                         BenchmarkSignalFinnished = true;
@@ -379,7 +387,11 @@ namespace NiceHashMiner.Miners
                     {
                         count--;
                     }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
+                    if (count - 3 > 0)
+                    {
+                        BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
+                    }
+                    else BenchmarkAlgorithm.BenchmarkSpeed = 0d;
                     if (count >= TotalCount)
                     {
                         BenchmarkSignalFinnished = true;

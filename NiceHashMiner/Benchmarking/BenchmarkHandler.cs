@@ -90,7 +90,7 @@ namespace NiceHashMiner.Benchmarking
                     _claymoreZcashStatus.SetNext();
                     _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetTestExtraParams();
                     Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
-                    _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm));
+                    _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm)); //PVS-Studio - stupid program! not null direference!
                 }
 
                 if (_claymoreZcashStatus.HasTest() == false)

@@ -246,7 +246,7 @@ namespace NiceHashMiner.Miners
 
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 var keepRunning = true;
-                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
+                while (IsActiveProcess(BenchmarkHandle.Id))
                 {
                     if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 2)
                         || BenchmarkSignalQuit
@@ -428,9 +428,9 @@ namespace NiceHashMiner.Miners
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
+            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds; ////PVS-Studio - stupid program! 
 
-           // if (elapsedSeconds < 15 && firstStart)
+            // if (elapsedSeconds < 15 && firstStart)
             if (firstStart)
   //          if (ad.Speed <= 0.0001)
             {

@@ -11,7 +11,7 @@ namespace NiceHashMiner.Devices
 {
     public class CpuComputeDevice : ComputeDevice
     {
-        private readonly PerformanceCounter _cpuCounter;
+        //private readonly PerformanceCounter _cpuCounter;
 
         public override float Load
         {
@@ -88,20 +88,26 @@ namespace NiceHashMiner.Devices
                 string.Format(International.GetText("ComputeDevice_Short_Name_CPU"), cpuCount),
                 0)
         {
+            group = ""; //PVS-Studio
             Threads = threads;
             AffinityMask = affinityMask;
             Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             CPUDevice cpu = TryCPUDevice();
-            NewUuid = cpu.UUID;
+            if (cpu != null)
+            {
+                NewUuid = cpu.UUID;
+            }
+            else NewUuid = "0";
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             Index = ID; // Don't increment for CPU
-
+            /*
             _cpuCounter = new PerformanceCounter
             {
                 CategoryName = "Processor",
                 CounterName = "% Processor Time",
                 InstanceName = "_Total"
             };
+            */
         }
     }
 }
