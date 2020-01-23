@@ -92,7 +92,7 @@ namespace NiceHashMiner.Benchmarking
                     Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
                     _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm)); //PVS-Studio - stupid program! not null direference!
                 }
-
+                //need to delete
                 if (_claymoreZcashStatus.HasTest() == false)
                 {
                     rebenchSame = false;

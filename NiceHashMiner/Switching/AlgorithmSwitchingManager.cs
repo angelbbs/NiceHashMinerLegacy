@@ -24,7 +24,7 @@ namespace NiceHashMiner.Switching
         public event EventHandler<SmaUpdateEventArgs> SmaCheck;
 
         private Timer _smaCheckTimer;
-        private readonly Random _random = new Random();
+        private readonly Random _random = new Random();//?
 
         private int _ticksForStable;
         private int _ticksForUnstable;

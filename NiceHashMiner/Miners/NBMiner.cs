@@ -56,7 +56,7 @@ namespace NiceHashMiner.Miners
                     case AlgorithmType.GrinCuckaroo29:
                         return "cuckaroo";
                     case AlgorithmType.GrinCuckarood29:
-                        return "cuckarood"; //PVS-Studio - это не ошибка! Как хочу, так и пишу  
+                        return "cuckarood"; 
                     case AlgorithmType.Cuckaroom:
                         return "cuckarood";
                     case AlgorithmType.GrinCuckatoo31:
