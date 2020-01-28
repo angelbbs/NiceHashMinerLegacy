@@ -101,7 +101,8 @@
         X16RV2 = 46,
         RandomX = 47,
         Eaglesong = 48,
-        Cuckaroom = 49
-#endregion // NiceHashAPI
+        Cuckaroom = 49,
+        GrinCuckatoo32 = 50
+        #endregion // NiceHashAPI
     }
 }

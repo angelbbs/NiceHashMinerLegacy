@@ -203,6 +203,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31")
                             {
                                 ExtraLaunchParameters = "--asm 1 "
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
+                            {
+                                ExtraLaunchParameters = "--asm 1 "
                             }
                          //   new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
                         }

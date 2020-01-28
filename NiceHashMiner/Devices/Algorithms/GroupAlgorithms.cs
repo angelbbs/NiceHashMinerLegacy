@@ -579,6 +579,13 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.Cuckaroom
                     });
             }
+            if (algoSettings.ContainsKey(MinerBaseType.lolMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.2))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.GrinCuckatoo32
+                    });
+            }
             /*
             if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7))
             {

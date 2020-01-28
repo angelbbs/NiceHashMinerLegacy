@@ -116,6 +116,18 @@ namespace NiceHashMiner.Miners
                                                                DeviceType.AMD) +
                              " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
+            {
+                LastCommandLine = "--coin GRIN-C32 --pool " + url + ";grincuckatoo31." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[5, 0] + nhsuff + ".nicehash.com" +
+                             " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
+                             " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
+                             " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
+                             " " +
+                             ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                               MiningSetup,
+                                                               DeviceType.AMD) +
+                             " --devices ";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
                 LastCommandLine = "--coin GRIN-AD29 --pool " + url + ";grincuckarood29." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[5, 0] + nhsuff + ".nicehash.com" +
@@ -191,6 +203,15 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--coin GRIN-AT31 " +
                 " --pool grin.sparkpool.com;grincuckatoo31.usa" + nhsuff + ".nicehash.com --port 6667;3372 --user angelbbs@mail.ru." + worker + ";"+username+ " --pass x;x" +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                MiningSetup,
+                                                DeviceType.AMD) +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
+            {
+                CommandLine = "--coin GRIN-C32 " +
+                " --pool grin.2miners.com;grincuckatoo32.usa" + nhsuff + ".nicehash.com --port 3030;3383 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA." + worker + ";" + username + " --pass x;x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -450,6 +471,27 @@ namespace NiceHashMiner.Miners
                     try
                     {
                             speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        BenchmarkSignalFinnished = true;
+                        return false;
+                    }
+                    count++;
+                }
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
+            {
+                if (outdata.Contains("Average speed (30s):"))
+                {
+                    int i = outdata.IndexOf("Average speed (30s):");
+                    int k = outdata.IndexOf("g/s");
+                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
+                    try
+                    {
+                        speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
                     }
                     catch
                     {
