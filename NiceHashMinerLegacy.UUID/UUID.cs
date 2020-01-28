@@ -90,6 +90,7 @@ namespace NiceHashMinerLegacy.UUID
             try
             {
                 var readValue = Registry.GetValue(keyPath, value, new object());
+                Console.WriteLine("MachineGuid: " + (string)readValue);
                 return (string)readValue;
             }
             catch (Exception e)
@@ -97,8 +98,9 @@ namespace NiceHashMinerLegacy.UUID
 //                Logger.Error("NHM.UUID", $"GetMachineGuid: {e.Message}");
             }
             // fallback
-//            Logger.Warn("NHM.UUID", $"GetMachineGuid FALLBACK");
-            return System.Guid.NewGuid().ToString();
+            Console.WriteLine("Using cpuID: " + GetCpuID());
+            return GetCpuID();
+            //return System.Guid.NewGuid().ToString();
         }
 
         public static string GetCpuID()
