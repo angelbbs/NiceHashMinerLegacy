@@ -163,8 +163,7 @@ namespace NiceHashMiner.Miners
                + $" -o stratum+tcp://{algo}.{myServers[2, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[3, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[4, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[5, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x {platform}"
+               + $" -o stratum+tcp://{algo}.{myServers[5, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x {platform}"
                + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";

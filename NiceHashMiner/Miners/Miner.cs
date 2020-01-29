@@ -1079,7 +1079,11 @@ namespace NiceHashMiner
         { }
 
         protected abstract bool BenchmarkParseLine(string outdata);
-        public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "eu", "20003" }, { "in", "20004" }, { "br", "20005" } };
+        //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
+        public static string[,] myServers = { 
+            { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
+        };//need to reread config data?
+
         public static int PingServers()
         {
             Ping ping = new Ping();
