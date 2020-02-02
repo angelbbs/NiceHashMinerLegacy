@@ -24,6 +24,8 @@ namespace NiceHashMiner.Configs.Data
         public double DaggerOrderMaxPay = 0;
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";
+        public bool DivertRun = true;
+        public bool DivertLog = false;
 
         public bool DebugConsole = false;
         public bool NewPlatform = true;
@@ -179,6 +181,8 @@ namespace NiceHashMiner.Configs.Data
             AutoStartMining = false;
             AutoStartMiningDelay = 0;
             //LessThreads = 0;
+            DivertRun = true;
+            DivertLog = false;
             DebugConsole = false;
             HideMiningWindows = false;
             Lyra2z = false;

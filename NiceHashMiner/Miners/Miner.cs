@@ -26,6 +26,7 @@ using Timer = System.Timers.Timer;
 using System.Net.NetworkInformation;
 using System.Management;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Divert;
 
 namespace NiceHashMiner
 {
@@ -54,6 +55,7 @@ namespace NiceHashMiner
     {
         public string MinerBinPath;
         public int Pid = -1;
+        public IntPtr DivertHandle;
     }
 
     public abstract class Miner
@@ -299,6 +301,7 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         try
                         {
+                            Divert.DivertStop(pidData.DivertHandle);
                             process.Kill();
                             process.Close();
                             process.WaitForExit(1000 * 60 * 1);
@@ -422,6 +425,7 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
+                Divert.DivertStop(ProcessHandle.DivertHandle);
                 KillProcessAndChildren(pid);
 
                 if (ProcessHandle != null)
@@ -1235,10 +1239,29 @@ namespace NiceHashMiner
                     {
                         NiceHashStats.DeviceStatus_TickNew("MINING");
                     }
+                    string strPlatform = "";
+                    foreach (var pair in MiningSetup.MiningPairs)
+                    {
+                        if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                        {
+                            strPlatform = "NVIDIA";
+                        }
+                        else if (pair.Device.DeviceType == DeviceType.AMD)
+                        {
+                            strPlatform = "AMD";
+                        }
+                        else if (pair.Device.DeviceType == DeviceType.CPU)
+                        {
+                            strPlatform = "CPU";
+                        }
+                    }
+                    P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName, strPlatform, ConfigManager.GeneralConfig.DivertLog);
+
                     _currentPidData = new MinerPidData
                     {
                         MinerBinPath = P.StartInfo.FileName,
-                        Pid = P.Id
+                        Pid = P.Id,
+                        DivertHandle = P.DivertHandle
                     };
                     _allPidData.Add(_currentPidData);
 

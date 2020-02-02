@@ -125,7 +125,7 @@ namespace NiceHashMiner
             CTRL_SHUTDOWN_EVENT
         }
 
-        // A delegate type to be used as the handler routine 
+        // A delegate type to be used as the handler routine
         // for SetConsoleCtrlHandler.
         private delegate bool HandlerRoutine(CtrlTypes CtrlType);
 
@@ -135,6 +135,7 @@ namespace NiceHashMiner
         public ExitEventDelegate ExitEvent;
         public uint ExitCode;
         public int Id;
+        public IntPtr DivertHandle;
 
         private Thread _tHandle;
         private bool _bRunning;
