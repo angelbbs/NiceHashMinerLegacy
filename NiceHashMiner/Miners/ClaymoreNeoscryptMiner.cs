@@ -18,6 +18,7 @@ using NiceHashMinerLegacy.Common.Enums;
 namespace NiceHashMiner.Miners {
     public class ClaymoreNeoscryptMiner : ClaymoreBaseMiner
     {
+        private string[,] myServers = Form_Main.myServers;
         public ClaymoreNeoscryptMiner()
             : base("ClaymoreNeoscryptMiner") {
             LookForStart = "ns - total speed:";

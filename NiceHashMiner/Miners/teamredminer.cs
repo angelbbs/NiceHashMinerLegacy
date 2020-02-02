@@ -32,6 +32,7 @@ namespace NiceHashMiner.Miners
         private int TotalCount = 0;
         private double speed = 0;
         private double tmp = 0;
+        private string[,] myServers = Form_Main.myServers;
 
         public teamredminer()
             : base("teamredminer_AMD")

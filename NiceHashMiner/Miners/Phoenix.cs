@@ -38,6 +38,7 @@ namespace NiceHashMiner.Miners
         string cSpeed = "";
         int count = 0;
         string ResponseFromPhoenix;
+        private string[,] myServers = Form_Main.myServers;
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {

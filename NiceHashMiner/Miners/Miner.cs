@@ -152,6 +152,7 @@ namespace NiceHashMiner
         public static string BenchmarkStringAdd = "";
         public static string InBenchmark = "";
 
+
         protected virtual int GetMaxCooldownTimeInMilliseconds()
         {
             return 60 * 1000 * 10;  // 10 min
@@ -1083,13 +1084,11 @@ namespace NiceHashMiner
         { }
 
         protected abstract bool BenchmarkParseLine(string outdata);
-        //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
-        public static string[,] myServers = { 
-            { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
-        };//need to reread config data?
+
 
         public static int PingServers()
         {
+            string[,] myServers = Form_Main.myServers;
             Ping ping = new Ping();
             int serverId = 0;
             int bestServerId = 0;
@@ -1101,7 +1100,7 @@ namespace NiceHashMiner
             {
                 try
                 {
-                    server = "speedtest." + myServers[i, 0] + ".nicehash.com";
+                    server = "speedtest." + Globals.MiningLocation[i] + ".nicehash.com";
                     // Helpers.ConsolePrint("PingServers:", myServers[i,0]);
                     var pingReply = ping.Send(server, 1000);
                     if (pingReply.Status != IPStatus.TimedOut)
@@ -1125,7 +1124,7 @@ namespace NiceHashMiner
                 }
                 serverId++;
             }
-            string[,] tmpServers = { { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } }; ;
+            string[,] tmpServers = { { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } }; 
             int pingReplyTimeTmp;
             long bestReplyTimeTmp = 10000;
             int iTmp = 0;
@@ -1147,14 +1146,14 @@ namespace NiceHashMiner
                 bestReplyTimeTmp = 10000;
             }
 
-            myServers = tmpServers;
+            Form_Main.myServers = tmpServers;
             for (int i = 0; i < 6; i++)
             {
-                server = "speedtest." + myServers[i, 0] + ".nicehash.com";
-                Helpers.ConsolePrint("SortedServers", server + " ping: " + myServers[i, 1]);
+                server = "speedtest." + Form_Main.myServers[i, 0] + ".nicehash.com";
+                Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
             }
                
-             Helpers.ConsolePrint("PingServers", "BestServerId: " + bestServerId.ToString());
+             Helpers.ConsolePrint("PingServers", "BestServer: " + Globals.MiningLocation[bestServerId]);
             return bestServerId;
         }
         protected string GetServiceUrl(AlgorithmType algo)

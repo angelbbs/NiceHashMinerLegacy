@@ -29,6 +29,8 @@ namespace NiceHashMiner.Miners
         //private const string _lookForEnd = "n/a kh/s max";
         private const string _lookForEnd = "60s:";
         private int count = 0;
+        private string[,] myServers = Form_Main.myServers;
+
         public WildRig() : base("WildRig") {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
         }

@@ -34,6 +34,7 @@ namespace NiceHashMiner.Miners
         int count = 0;
         private double speed = 0;
         private double tmp = 0;
+        private string[,] myServers = Form_Main.myServers;
 
         public SRBMiner() : base("SRBMiner") {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;

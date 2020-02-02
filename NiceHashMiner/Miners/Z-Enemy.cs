@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners
 
         private double Total = 0;
         private const int TotalDelim = 2;
-
+        private string[,] myServers = Form_Main.myServers;
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.ZEnemy;
 
         protected override int GetMaxCooldownTimeInMilliseconds()

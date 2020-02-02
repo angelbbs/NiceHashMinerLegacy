@@ -35,7 +35,7 @@ namespace NiceHashMiner.Miners
         int count = 0;
         double speed = 0;
         private int _benchmarkTimeWait = 240;
-
+        private string[,] myServers = Form_Main.myServers;
         public lolMiner()
             : base("lolMiner_AMD")
         {

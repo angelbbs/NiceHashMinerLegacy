@@ -56,7 +56,7 @@ namespace NiceHashMiner.Miners
         private double prevSpeed = 0;
         private DateTime _started;
         private bool firstStart = true;
-
+        private string[,] myServers = Form_Main.myServers;
 
         public miniZ() : base("miniZ")
         {

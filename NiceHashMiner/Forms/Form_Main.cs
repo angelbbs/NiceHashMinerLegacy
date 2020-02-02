@@ -76,6 +76,11 @@ namespace NiceHashMiner
         public static Color _foreColor;
         public static Color _windowColor;
         public static Color _textColor;
+        //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
+        public static string[,] myServers = {
+            { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
+            //{ Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
+        };//need to reread config data?
 
         public Form_Main()
         {
@@ -1843,7 +1848,7 @@ namespace NiceHashMiner
         { 
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
             ConfigManager.GeneralConfigFileCommit();
-        }
+    }
 
         private void comboBoxLocation_DrawItem(object sender, DrawItemEventArgs e)
         {

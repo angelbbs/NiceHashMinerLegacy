@@ -32,6 +32,7 @@ namespace NiceHashMiner.Miners
         private System.Diagnostics.Process CMDconfigHandle;
         private string platform = "";
         string platform_prefix = "";
+        private string[,] myServers = Form_Main.myServers;
         public Xmrig() : base("Xmrig")
         { }
         public override void Start(string url, string btcAdress, string worker)
@@ -158,12 +159,13 @@ namespace NiceHashMiner.Miners
                 algo = "randomxmonero";
                 port = "3380";
                 variant = "";
-                return $" --algo=rx/0 -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
+                url = url.Replace("randomx", "randomxmonero");
+                return $" --algo=rx/0 -o {url} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
                + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[2, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[3, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[4, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[5, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x {platform}"
+               + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x {platform}"
                + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";
@@ -333,7 +335,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+                myServers[0, 0],
                 ConectionType);
             benchmarkTimeWait = time;
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())

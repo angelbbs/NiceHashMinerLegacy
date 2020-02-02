@@ -35,7 +35,7 @@ namespace NiceHashMiner.Miners
         double speed = 0;
         int count = 0;
         private int _benchmarkTimeWait = 120;
-
+        private string[,] myServers = Form_Main.myServers;
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.CryptoDredge;
 
         protected override int GetMaxCooldownTimeInMilliseconds()

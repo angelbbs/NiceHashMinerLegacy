@@ -26,6 +26,7 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
         private const string _lookForStart = "speed 10s/60s/15m";
         private const string _lookForEnd = "n/a h/s max";
+        private string[,] myServers = Form_Main.myServers;
 
         public XmrigAMD() : base("XmrigAMD") {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;

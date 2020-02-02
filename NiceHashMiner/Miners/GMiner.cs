@@ -40,7 +40,7 @@ namespace NiceHashMiner.Miners
         private const double DevFee = 2.0;
         string  gminer_var = "";
         protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
-
+        private string[,] myServers = Form_Main.myServers;
 
         public GMiner(AlgorithmType secondaryAlgorithmType) : base("GMiner")
         {
@@ -150,9 +150,10 @@ namespace NiceHashMiner.Miners
 
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
             {
+                var durl = url.Replace("daggerhashimoto", "eaglesong");
                 return GetDevicesCommandString()
-                      + " --algo eth+ckb --server daggerhashimoto." + myServers[0, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver eaglesong." + myServers[0, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
+                      + " --algo eth+ckb --server " + url + " --user " + username + " --ssl 0 --proto stratum"
+                      + " --dserver " + durl.Split(':')[0] + ":3381 --duser " + username + " --ssl 0"
                       + " --server daggerhashimoto." + myServers[1, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
                       + " --dserver eaglesong." + myServers[1, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
                       + " --server daggerhashimoto." + myServers[2, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
@@ -337,8 +338,8 @@ namespace NiceHashMiner.Miners
             _benchmarkTimeWait = time;
             var ret = "";
             var suff = "0_";
-            var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-               Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
+            //var server = Globals.GetLocationUrl(algorithm.NiceHashID,
+              // Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
             var btcAddress = Globals.GetBitcoinUser();
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
             string username = GetUsername(btcAddress, worker);

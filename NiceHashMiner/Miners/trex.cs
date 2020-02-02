@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners
     public class trex : Miner
     {
         private int _benchmarkTimeWait = 240;
-
+        private string[,] myServers = Form_Main.myServers;
         private const int TotalDelim = 2;
         public trex() : base("trex_NVIDIA")
         {

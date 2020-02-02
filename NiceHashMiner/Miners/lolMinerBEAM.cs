@@ -32,7 +32,7 @@ namespace NiceHashMiner.Miners
         Stopwatch _benchmarkTimer = new Stopwatch();
         int count = 0;
         double speed = 0;
-
+        private string[,] myServers = Form_Main.myServers;
         public lolMinerBEAM()
             : base("lolMinerBEAM")
         {

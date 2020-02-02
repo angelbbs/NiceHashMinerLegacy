@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners
 
             IsMultiType = true;
         }
-
+        private string[,] myServers = Form_Main.myServers;
         // the short form the miner uses for secondary algo in cmd line and log
         public string SecondaryShortName()
         {

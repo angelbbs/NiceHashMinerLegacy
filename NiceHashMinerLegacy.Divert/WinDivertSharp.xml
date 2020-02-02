@@ -1,0 +1,2701 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WinDivertSharp</name>
+    </assembly>
+    <members>
+        <member name="T:WinDivertSharp.IcmpV4Header">
+            <summary>
+            Represents an IPv4 Icmp header.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV4Header.Type">
+            <summary>
+            Gets or sets the ICMP type.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV4Header.Code">
+            <summary>
+            Gets or sets the ICMP subtype.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV4Header.Checksum">
+            <summary>
+            Gets or sets the checksum.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV4Header.Body">
+            <summary>
+            Gets or sets the body.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.IcmpV6Header">
+            <summary>
+            Represents an IPv6 Icmp header.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV6Header.Type">
+            <summary>
+            Gets or sets the ICMP type.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV6Header.Code">
+            <summary>
+            Gets or sets the ICMP subtype.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV6Header.Checksum">
+            <summary>
+            Gets or sets the checksum.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IcmpV6Header.Body">
+            <summary>
+            Gets or sets the body.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.IPv4Header">
+            <summary>
+            Represents an IPV4 header.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.bitvector1">
+            HdrLength : 4
+            Version : 4
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.TOS">
+            <summary>
+            Gets or sets the type of service.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.Length">
+            <summary>
+            Gets or sets the header length.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.Id">
+            <summary>
+            Gets or sets the ID.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.FragOff0">
+            <summary>
+            Private member for <see cref="P:WinDivertSharp.IPv4Header.FragOff"/>, <see cref="P:WinDivertSharp.IPv4Header.Mf"/>, <see cref="P:WinDivertSharp.IPv4Header.Df"/> and <see cref="P:WinDivertSharp.IPv4Header.Reserved"/>
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.TTL">
+            <summary>
+            Gets or sets the TTL.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.Protocol">
+            <summary>
+            Gets or sets the protocol.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header.Checksum">
+            <summary>
+            Gets or sets the checksum.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header._srcAddr">
+            <summary>
+            Private member for <see cref="P:WinDivertSharp.IPv4Header.SrcAddr"/>
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.SrcAddr">
+            <summary>
+            Gets or sets the source IP address.
+            </summary>
+            <exception cref="T:System.ArgumentException">
+            When setting, if the supplied address is a not a valid IPv4 address, the setter will throw.
+            </exception>
+        </member>
+        <member name="F:WinDivertSharp.IPv4Header._dstAddr">
+            <summary>
+            Private member for <see cref="P:WinDivertSharp.IPv4Header.DstAddr"/>
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.DstAddr">
+            <summary>
+            Gets or sets the destination IP address.
+            </summary>
+            <exception cref="T:System.ArgumentException">
+            When setting, if the supplied address is a not a valid IPv4 address, the setter will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.HdrLength">
+            <summary>
+            Gets or sets the header length.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.Version">
+            <summary>
+            Gets or sets the version.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.FragOff">
+            <summary>
+            Gets or sets the fragment offset for the given ipv4 header.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.Mf">
+            <summary>
+            Gets or sets whether or not given ipv4 header has the more fragments flag set.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.Df">
+            <summary>
+            Gets or sets whether or not given ipv4 header has the don't fragment flag set.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv4Header.Reserved">
+            <summary>
+            Gets or sets whether or not given ipv4 header has the reserved flag set.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.IPv6Header">
+            <summary>
+            Represents an IPV6 header.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv6Header.bitvector1">
+            TrafficClass0 : 4
+            Version : 4
+            FlowLabel0 : 4
+            TrafficClass1 : 4
+        </member>
+        <member name="F:WinDivertSharp.IPv6Header.FlowLabel1">
+            <summary>
+            Private member for <see cref="P:WinDivertSharp.IPv6Header.FlowLabel"/>
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv6Header.Length">
+            <summary>
+            Gets or sets the payload length.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv6Header.NextHdr">
+            <summary>
+            Gets or sets the next header type.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv6Header.HopLimit">
+            <summary>
+            Gets or sets the hop limit.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.IPv6Header._srcAddrA">
+            <summary>
+            Private member for <see cref="P:WinDivertSharp.IPv6Header.SrcAddr"/>
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.SrcAddr">
+            <summary>
+            Gets or sets the source IP address.
+            </summary>
+            <exception cref="T:System.ArgumentException">
+            When setting, if the supplied address is a not a valid IPv6 address, the setter will throw.
+            </exception>
+        </member>
+        <member name="F:WinDivertSharp.IPv6Header._dstAddrA">
+            <summary>
+            Private member for <see cref="P:WinDivertSharp.IPv6Header.DstAddr"/>
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.DstAddr">
+            <summary>
+            Gets or sets the destination IP address.
+            </summary>
+            <exception cref="T:System.ArgumentException">
+            When setting, if the supplied address is a not a valid IPv6 address, the setter will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.TrafficClass0">
+            <summary>
+            Private member for <see cref="P:WinDivertSharp.IPv6Header.TrafficClass"/>
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.Version">
+            <summary>
+            Gets or sets the version.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.FlowLabel0">
+            <summary>
+            Another private member for <see cref="P:WinDivertSharp.IPv6Header.FlowLabel"/>
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.TrafficClass1">
+            <summary>
+            Another private member for <see cref="P:WinDivertSharp.IPv6Header.TrafficClass"/>
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.TrafficClass">
+            <summary>
+            Gets or sets the traffic class value.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.IPv6Header.FlowLabel">
+            <summary>
+            Gets the flow label value.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.KnownProtocols">
+            <summary>
+            An enum of known, registered protocols tracked by the IANA via RFC 790.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.HopOpt">
+            <summary>
+             IPv6 Hop-by-Hop Option
+            </summary>
+            <remarks>
+             IPv6 Hop-by-Hop Option
+             RFC 8200
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Icmp">
+            <summary>
+             Internet Control Message Protocol
+            </summary>
+            <remarks>
+             Internet Control Message Protocol
+             RFC 792
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Igmp">
+            <summary>
+             Internet Group Management Protocol
+            </summary>
+            <remarks>
+             Internet Group Management Protocol
+             RFC 1112
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ggp">
+            <summary>
+             Gateway-to-Gateway Protocol
+            </summary>
+            <remarks>
+             Gateway-to-Gateway Protocol
+             RFC 823
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IpInIp">
+            <summary>
+             IP in IP (encapsulation)
+            </summary>
+            <remarks>
+             IP in IP (encapsulation)
+             RFC 2003
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.St">
+            <summary>
+             Internet Stream Protocol
+            </summary>
+            <remarks>
+             Internet Stream Protocol
+             RFC 1190, RFC 1819
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Tcp">
+            <summary>
+             Transmission Control Protocol
+            </summary>
+            <remarks>
+             Transmission Control Protocol
+             RFC 793
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Cbt">
+            <summary>
+             Core-based trees
+            </summary>
+            <remarks>
+             Core-based trees
+             RFC 2189
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Egp">
+            <summary>
+             Exterior Gateway Protocol
+            </summary>
+            <remarks>
+             Exterior Gateway Protocol
+             RFC 888
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Igp">
+            <summary>
+             Interior Gateway Protocol (any private interior gateway (used by Cisco for their IGRP))
+            </summary>
+            <remarks>
+             Interior Gateway Protocol (any private interior gateway (used by Cisco for their IGRP))
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.BbnRccMon">
+            <summary>
+             BBN RCC Monitoring
+            </summary>
+            <remarks>
+             BBN RCC Monitoring
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.NvpIi">
+            <summary>
+             Network Voice Protocol
+            </summary>
+            <remarks>
+             Network Voice Protocol
+             RFC 741
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Pup">
+            <summary>
+             Xerox PUP
+            </summary>
+            <remarks>
+             Xerox PUP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Argus">
+            <summary>
+             ARGUS
+            </summary>
+            <remarks>
+             ARGUS
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.EmCon">
+            <summary>
+             EMCON
+            </summary>
+            <remarks>
+             EMCON
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.XNet">
+            <summary>
+             Cross Net Debugger
+            </summary>
+            <remarks>
+             Cross Net Debugger
+             IEN 158
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Chaos">
+            <summary>
+             Chaos
+            </summary>
+            <remarks>
+             Chaos
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Udp">
+            <summary>
+             User Datagram Protocol
+            </summary>
+            <remarks>
+             User Datagram Protocol
+             RFC 768
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Mux">
+            <summary>
+             Multiplexing
+            </summary>
+            <remarks>
+             Multiplexing
+             IEN 90
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.DcnMeas">
+            <summary>
+             DCN Measurement Subsystems
+            </summary>
+            <remarks>
+             DCN Measurement Subsystems
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Hmp">
+            <summary>
+             Host Monitoring Protocol
+            </summary>
+            <remarks>
+             Host Monitoring Protocol
+             RFC 869
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Prm">
+            <summary>
+             Packet Radio Measurement
+            </summary>
+            <remarks>
+             Packet Radio Measurement
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.XnsIdp">
+            <summary>
+             XEROX NS IDP
+            </summary>
+            <remarks>
+             XEROX NS IDP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Trumk1">
+            <summary>
+             Trunk-1
+            </summary>
+            <remarks>
+             Trunk-1
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Trunk2">
+            <summary>
+             Trunk-2
+            </summary>
+            <remarks>
+             Trunk-2
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Leaf1">
+            <summary>
+             Leaf-1
+            </summary>
+            <remarks>
+             Leaf-1
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Leaf2">
+            <summary>
+             Leaf-2
+            </summary>
+            <remarks>
+             Leaf-2
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Rdp">
+            <summary>
+             Reliable Data Protocol
+            </summary>
+            <remarks>
+             Reliable Data Protocol
+             RFC 908
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Irtp">
+            <summary>
+             Internet Reliable Transaction Protocol
+            </summary>
+            <remarks>
+             Internet Reliable Transaction Protocol
+             RFC 938
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IsoTp4">
+            <summary>
+             ISO Transport Protocol Class 4
+            </summary>
+            <remarks>
+             ISO Transport Protocol Class 4
+             RFC 905
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.NetBlt">
+            <summary>
+             Bulk Data Transfer Protocol
+            </summary>
+            <remarks>
+             Bulk Data Transfer Protocol
+             RFC 998
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.MfeNsp">
+            <summary>
+             MFE Network Services Protocol
+            </summary>
+            <remarks>
+             MFE Network Services Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.MeridInp">
+            <summary>
+             MERIT Internodal Protocol
+            </summary>
+            <remarks>
+             MERIT Internodal Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Dccp">
+            <summary>
+             Datagram Congestion Control Protocol
+            </summary>
+            <remarks>
+             Datagram Congestion Control Protocol
+             RFC 4340
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.ThirdPartyConnect">
+            <summary>
+             Third Party Connect Protocol
+            </summary>
+            <remarks>
+             Third Party Connect Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Idpr">
+            <summary>
+             Inter-Domain Policy Routing Protocol
+            </summary>
+            <remarks>
+             Inter-Domain Policy Routing Protocol
+             RFC 1479
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Xtp">
+            <summary>
+             Xpress Transport Protocol
+            </summary>
+            <remarks>
+             Xpress Transport Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ddp">
+            <summary>
+             Datagram Delivery Protocol
+            </summary>
+            <remarks>
+             Datagram Delivery Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IdprCmtp">
+            <summary>
+             IDPR Control Message Transport Protocol
+            </summary>
+            <remarks>
+             IDPR Control Message Transport Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.TpPlusPlus">
+            <summary>
+             TP++ Transport Protocol
+            </summary>
+            <remarks>
+             TP++ Transport Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Il">
+            <summary>
+             IL Transport Protocol
+            </summary>
+            <remarks>
+             IL Transport Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IPv6">
+            <summary>
+             IPv6 Encapsulation
+            </summary>
+            <remarks>
+             IPv6 Encapsulation
+             RFC 2473
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Sdrp">
+            <summary>
+             Source Demand Routing Protocol
+            </summary>
+            <remarks>
+             Source Demand Routing Protocol
+             RFC 1940
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IPv6Route">
+            <summary>
+             Routing Header for IPv6
+            </summary>
+            <remarks>
+             Routing Header for IPv6
+             RFC 8200
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IPv6Frag">
+            <summary>
+             Fragment Header for IPv6
+            </summary>
+            <remarks>
+             Fragment Header for IPv6
+             RFC 8200
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Idrp">
+            <summary>
+             Inter-Domain Routing Protocol
+            </summary>
+            <remarks>
+             Inter-Domain Routing Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Rsvp">
+            <summary>
+             Resource Reservation Protocol
+            </summary>
+            <remarks>
+             Resource Reservation Protocol
+             RFC 2205
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Gres">
+            <summary>
+             Generic Routing Encapsulation
+            </summary>
+            <remarks>
+             Generic Routing Encapsulation
+             RFC 2784, RFC 2890
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Dsr">
+            <summary>
+             Dynamic Source Routing Protocol
+            </summary>
+            <remarks>
+             Dynamic Source Routing Protocol
+             RFC 4728
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Bna">
+            <summary>
+             Burroughs Network Architecture
+            </summary>
+            <remarks>
+             Burroughs Network Architecture
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Esp">
+            <summary>
+             Encapsulating Security Payload
+            </summary>
+            <remarks>
+             Encapsulating Security Payload
+             RFC 4303
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ah">
+            <summary>
+             Authentication Header
+            </summary>
+            <remarks>
+             Authentication Header
+             RFC 4302
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Inlsp">
+            <summary>
+             Integrated Net Layer Security Protocol
+            </summary>
+            <remarks>
+             Integrated Net Layer Security Protocol
+             TUBA
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Swipe">
+            <summary>
+             SwIPe
+            </summary>
+            <remarks>
+             SwIPe
+             IP with Encryption
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Narp">
+            <summary>
+             NBMA Address Resolution Protocol
+            </summary>
+            <remarks>
+             NBMA Address Resolution Protocol
+             RFC 1735
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Mobile">
+            <summary>
+             IP Mobility (Min Encap)
+            </summary>
+            <remarks>
+             IP Mobility (Min Encap)
+             RFC 2004
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Tlsp">
+            <summary>
+             Transport Layer Security Protocol (using Kryptonet key management)
+            </summary>
+            <remarks>
+             Transport Layer Security Protocol (using Kryptonet key management)
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Skip">
+            <summary>
+             Simple Key-Management for Internet Protocol
+            </summary>
+            <remarks>
+             Simple Key-Management for Internet Protocol
+             RFC 2356
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IPv6Icmp">
+            <summary>
+             ICMP for IPv6
+            </summary>
+            <remarks>
+             ICMP for IPv6
+             RFC 4443, RFC 4884
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IPv6NoNxt">
+            <summary>
+             No Next Header for IPv6
+            </summary>
+            <remarks>
+             No Next Header for IPv6
+             RFC 8200
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IPv6Opts">
+            <summary>
+             Destination Options for IPv6
+            </summary>
+            <remarks>
+             Destination Options for IPv6
+             RFC 8200
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.AnyHost">
+            <summary>
+            Any host
+            </summary>
+            <remarks>
+            Internal protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.CFTP">
+            <summary>
+             CFTP
+            </summary>
+            <remarks>
+             CFTP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.AnyLocalNetwork">
+            <summary>
+            Any local network
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.SatExpak">
+            <summary>
+             SATNET and Backroom EXPAK
+            </summary>
+            <remarks>
+             SATNET and Backroom EXPAK
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.KRYPTOLAN">
+            <summary>
+             Kryptolan
+            </summary>
+            <remarks>
+             Kryptolan
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.RVD">
+            <summary>
+             MIT Remote Virtual Disk Protocol
+            </summary>
+            <remarks>
+             MIT Remote Virtual Disk Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IPPC">
+            <summary>
+             Internet Pluribus Packet Core
+            </summary>
+            <remarks>
+             Internet Pluribus Packet Core
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.AnyDistributedFileSystem">
+            <summary>
+            Any distributed file system
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.SatMon">
+            <summary>
+             SATNET Monitoring
+            </summary>
+            <remarks>
+             SATNET Monitoring
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Visa">
+            <summary>
+             VISA Protocol
+            </summary>
+            <remarks>
+             VISA Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ipcu">
+            <summary>
+             Internet Packet Core Utility
+            </summary>
+            <remarks>
+             Internet Packet Core Utility
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.CPNX">
+            <summary>
+             Computer Protocol Network Executive
+            </summary>
+            <remarks>
+             Computer Protocol Network Executive
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.CPHB">
+            <summary>
+             Computer Protocol Heart Beat
+            </summary>
+            <remarks>
+             Computer Protocol Heart Beat
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.WSN">
+            <summary>
+             Wang Span Network
+            </summary>
+            <remarks>
+             Wang Span Network
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.PVP">
+            <summary>
+             Packet Video Protocol
+            </summary>
+            <remarks>
+             Packet Video Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.BrSatMon">
+            <summary>
+             Backroom SATNET Monitoring
+            </summary>
+            <remarks>
+             Backroom SATNET Monitoring
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.SunNd">
+            <summary>
+             SUN ND PROTOCOL-Temporary
+            </summary>
+            <remarks>
+             SUN ND PROTOCOL-Temporary
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.WbMon">
+            <summary>
+             WIDEBAND Monitoring
+            </summary>
+            <remarks>
+             WIDEBAND Monitoring
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.WbExpak">
+            <summary>
+             WIDEBAND EXPAK
+            </summary>
+            <remarks>
+             WIDEBAND EXPAK
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IsoIp">
+            <summary>
+             International Organization for Standardization Internet Protocol
+            </summary>
+            <remarks>
+             International Organization for Standardization Internet Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Vmtp">
+            <summary>
+             Versatile Message Transaction Protocol
+            </summary>
+            <remarks>
+             Versatile Message Transaction Protocol
+             RFC 1045
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.SecureVmtp">
+            <summary>
+             Secure Versatile Message Transaction Protocol
+            </summary>
+            <remarks>
+             Secure Versatile Message Transaction Protocol
+             RFC 1045
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Vines">
+            <summary>
+             VINES
+            </summary>
+            <remarks>
+             VINES
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ttp">
+            <summary>
+             TTP
+            </summary>
+            <remarks>
+             TTP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Iptm">
+            <summary>
+             Internet Protocol Traffic Manager
+            </summary>
+            <remarks>
+             Internet Protocol Traffic Manager
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.NsfNetIgp">
+            <summary>
+             NSFNET-IGP
+            </summary>
+            <remarks>
+             NSFNET-IGP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Dgp">
+            <summary>
+             Dissimilar Gateway Protocol
+            </summary>
+            <remarks>
+             Dissimilar Gateway Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Tcf">
+            <summary>
+             TCF
+            </summary>
+            <remarks>
+             TCF
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Eigrp">
+            <summary>
+             EIGRP
+            </summary>
+            <remarks>
+             EIGRP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ospf">
+            <summary>
+             Open Shortest Path First
+            </summary>
+            <remarks>
+             Open Shortest Path First
+             RFC 1583
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.SpriteRpc">
+            <summary>
+             Sprite RPC Protocol
+            </summary>
+            <remarks>
+             Sprite RPC Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Larp">
+            <summary>
+             Locus Address Resolution Protocol
+            </summary>
+            <remarks>
+             Locus Address Resolution Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Mtp">
+            <summary>
+             Multicast Transport Protocol
+            </summary>
+            <remarks>
+             Multicast Transport Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ax25">
+            <summary>
+             AX.25
+            </summary>
+            <remarks>
+             AX.25
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Os">
+            <summary>
+             KA9Q NOS compatible IP over IP tunneling
+            </summary>
+            <remarks>
+             KA9Q NOS compatible IP over IP tunneling
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Micp">
+            <summary>
+             Mobile Internetworking Control Protocol
+            </summary>
+            <remarks>
+             Mobile Internetworking Control Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.SccSp">
+            <summary>
+             Semaphore Communications Sec. Pro
+            </summary>
+            <remarks>
+             Semaphore Communications Sec. Pro
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.EtherIp">
+            <summary>
+             Ethernet-within-IP Encapsulation
+            </summary>
+            <remarks>
+             Ethernet-within-IP Encapsulation
+             RFC 3378
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Encap">
+            <summary>
+             Encapsulation Header
+            </summary>
+            <remarks>
+             Encapsulation Header
+             RFC 1241
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.AnyPrivateEncryptionScheme">
+            <summary>
+            Any private encryption scheme
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Gmtp">
+            <summary>
+             GMTP
+            </summary>
+            <remarks>
+             GMTP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ifmp">
+            <summary>
+             Ipsilon Flow Management Protocol
+            </summary>
+            <remarks>
+             Ipsilon Flow Management Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Pnni">
+            <summary>
+             PNNI over IP
+            </summary>
+            <remarks>
+             PNNI over IP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Pim">
+            <summary>
+             Protocol Independent Multicast
+            </summary>
+            <remarks>
+             Protocol Independent Multicast
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Aris">
+            <summary>
+             IBM's ARIS (Aggregate Route IP Switching) Protocol
+            </summary>
+            <remarks>
+             IBM's ARIS (Aggregate Route IP Switching) Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Scps">
+            <summary>
+             SCPS (Space Communications Protocol Standards)
+            </summary>
+            <remarks>
+             SCPS (Space Communications Protocol Standards)
+             SCPS-TP[2]
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Qnx">
+            <summary>
+             QNX
+            </summary>
+            <remarks>
+             QNX
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.AN">
+            <summary>
+             Active Networks
+            </summary>
+            <remarks>
+             Active Networks
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IpComp">
+            <summary>
+             IP Payload Compression Protocol
+            </summary>
+            <remarks>
+             IP Payload Compression Protocol
+             RFC 3173
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Snp">
+            <summary>
+             Sitara Networks Protocol
+            </summary>
+            <remarks>
+             Sitara Networks Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.CompaqPeer">
+            <summary>
+             Compaq Peer Protocol
+            </summary>
+            <remarks>
+             Compaq Peer Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IpxInIp">
+            <summary>
+             IPX in IP
+            </summary>
+            <remarks>
+             IPX in IP
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Vrrp">
+            <summary>
+             Virtual Router Redundancy Protocol, Common Address Redundancy Protocol (not IANA assigned)
+            </summary>
+            <remarks>
+             Virtual Router Redundancy Protocol, Common Address Redundancy Protocol (not IANA assigned)
+             VRRP:RFC 3768
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.PGM">
+            <summary>
+             PGM Reliable Transport Protocol
+            </summary>
+            <remarks>
+             PGM Reliable Transport Protocol
+             RFC 3208
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Any0HopProtocol">
+            <summary>
+            Any 0-hop protocol
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.L2Tp">
+            <summary>
+             Layer Two Tunneling Protocol Version 3
+            </summary>
+            <remarks>
+             Layer Two Tunneling Protocol Version 3
+             RFC 3931
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ddx">
+            <summary>
+             D-II Data Exchange (DDX)
+            </summary>
+            <remarks>
+             D-II Data Exchange (DDX)
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Iatp">
+            <summary>
+             Interactive Agent Transfer Protocol
+            </summary>
+            <remarks>
+             Interactive Agent Transfer Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Stp">
+            <summary>
+             Schedule Transfer Protocol
+            </summary>
+            <remarks>
+             Schedule Transfer Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Srp">
+            <summary>
+             SpectraLink Radio Protocol
+            </summary>
+            <remarks>
+             SpectraLink Radio Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Uti">
+            <summary>
+             Universal Transport Interface Protocol
+            </summary>
+            <remarks>
+             Universal Transport Interface Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Smp">
+            <summary>
+             Simple Message Protocol
+            </summary>
+            <remarks>
+             Simple Message Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Sm">
+            <summary>
+             Simple Multicast Protocol
+            </summary>
+            <remarks>
+             Simple Multicast Protocol
+             draft-perlman-simple-multicast-03
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Ptp">
+            <summary>
+             Performance Transparency Protocol
+            </summary>
+            <remarks>
+             Performance Transparency Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.IsIsOverIpv4">
+            <summary>
+             Intermediate System to Intermediate System (IS-IS) Protocol over IPv4
+            </summary>
+            <remarks>
+             Intermediate System to Intermediate System (IS-IS) Protocol over IPv4
+             RFC 1142 and RFC 1195
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Fire">
+            <summary>
+             Flexible Intra-AS Routing Environment
+            </summary>
+            <remarks>
+             Flexible Intra-AS Routing Environment
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Crtp">
+            <summary>
+             Combat Radio Transport Protocol
+            </summary>
+            <remarks>
+             Combat Radio Transport Protocol
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Crudp">
+            <summary>
+             Combat Radio User Datagram
+            </summary>
+            <remarks>
+             Combat Radio User Datagram
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.SSCOPMCE">
+            <summary>
+             Service-Specific Connection-Oriented Protocol in a Multilink and Connectionless Environment
+            </summary>
+            <remarks>
+             Service-Specific Connection-Oriented Protocol in a Multilink and Connectionless Environment
+             ITU-T Q.2111 (1999)
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Iplt">
+            <summary>
+            IPLT
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Sps">
+            <summary>
+             Secure Packet Shield
+            </summary>
+            <remarks>
+             Secure Packet Shield
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Pipe">
+            <summary>
+             Private IP Encapsulation within IP
+            </summary>
+            <remarks>
+             Private IP Encapsulation within IP
+             Expired I-D draft-petri-mobileip-pipe-00.txt
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Sctp">
+            <summary>
+             Stream Control Transmission Protocol
+            </summary>
+            <remarks>
+             Stream Control Transmission Protocol
+             RFC 4960
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Fc">
+            <summary>
+             Fibre Channel
+            </summary>
+            <remarks>
+             Fibre Channel
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.RsvpE2eIgnore">
+            <summary>
+             Reservation Protocol (RSVP) End-to-End Ignore
+            </summary>
+            <remarks>
+             Reservation Protocol (RSVP) End-to-End Ignore
+             RFC 3175
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.MobilityHeader">
+            <summary>
+             Mobility Extension Header for IPv6
+            </summary>
+            <remarks>
+             Mobility Extension Header for IPv6
+             RFC 6275
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.UdpLite">
+            <summary>
+             Lightweight User Datagram Protocol
+            </summary>
+            <remarks>
+             Lightweight User Datagram Protocol
+             RFC 3828
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.MplsInIp">
+            <summary>
+             Multiprotocol Label Switching Encapsulated in IP
+            </summary>
+            <remarks>
+             Multiprotocol Label Switching Encapsulated in IP
+             RFC 4023, RFC 5332
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Manet">
+            <summary>
+             MANET Protocols
+            </summary>
+            <remarks>
+             MANET Protocols
+             RFC 5498
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Hip">
+            <summary>
+             Host Identity Protocol
+            </summary>
+            <remarks>
+             Host Identity Protocol
+             RFC 5201
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Shim6">
+            <summary>
+             Site Multihoming by IPv6 Intermediation
+            </summary>
+            <remarks>
+             Site Multihoming by IPv6 Intermediation
+             RFC 5533
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Wesp">
+            <summary>
+             Wrapped Encapsulating Security Payload
+            </summary>
+            <remarks>
+             Wrapped Encapsulating Security Payload
+             RFC 5840
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.ROHC">
+            <summary>
+             Robust Header Compression
+            </summary>
+            <remarks>
+             Robust Header Compression
+             RFC 5856
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.ExperiementTest1">
+            <summary>
+             RFC 3692
+            </summary>
+            <remarks>
+             RFC 3692
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.ExperiementTest2">
+            <summary>
+             RFC 3692
+            </summary>
+            <remarks>
+             RFC 3692
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.KnownProtocols.Reserved">
+            <summary>
+            Reserved.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.TcpHeader">
+            <summary>
+            Represents a TCP header.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.SrcPort">
+            <summary>
+            Gets or sets the source port.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.DstPort">
+            <summary>
+            Gets or sets the destination port.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.SeqNum">
+            <summary>
+            Gets or sets the sequence number.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.AckNum">
+            <summary>
+            Gets or sets the acknowledgement number.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.bitvector1">
+            Reserved1 : 4
+            HdrLength : 4
+            Fin : 1
+            Syn : 1
+            Rst : 1
+            Psh : 1
+            Ack : 1
+            Urg : 1
+            Reserved2 : 2
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.Window">
+            <summary>
+            Gets or sets the window.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.Checksum">
+            <summary>
+            Gets or sets the checksum.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.TcpHeader.UrgPtr">
+            <summary>
+            Gets or sets the urgent pointer.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Reserved1">
+            <summary>
+            Gets or sets the first reserved bits.
+            </summary>
+            <remarks>
+            Should always be zero.
+            </remarks>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.HdrLength">
+            <summary>
+            Gets or sets the header length.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Fin">
+            <summary>
+            Gets or sets the fin flag.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Syn">
+            <summary>
+            Gets or sets the syn flag.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Rst">
+            <summary>
+            Gets or sets the reset flag.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Psh">
+            <summary>
+            Gets or sets the push flag.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Ack">
+            <summary>
+            Gets or sets the acknowledgement flag.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Urg">
+            <summary>
+            Gets or sets the urgent pointer flag.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.TcpHeader.Reserved2">
+            <summary>
+            Gets or sets the second reserved bits.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.UdpHeader">
+            <summary>
+            Represents a UDP header.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.UdpHeader.SrcPort">
+            <summary>
+            Gets or sets the source port.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.UdpHeader.DstPort">
+            <summary>
+            Gets or sets the destination port.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.UdpHeader.Length">
+            <summary>
+            Gets or sets the length.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.UdpHeader.Checksum">
+            <summary>
+            Gets or sets the checksum.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.WinAPI.WaitForSingleObjectResult">
+            <summary>
+            Defines return values that <seealso cref="M:WinDivertSharp.WinAPI.Kernel32.WaitForSingleObject(System.IntPtr,System.UInt32)"/> can return.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinAPI.WaitForSingleObjectResult.WaitAbandoned">
+             <summary>
+             The specified object is a mutex object that was not released by the thread that owned
+             the mutex object before the owning thread terminated. Ownership of the mutex object
+             is granted to the calling thread and the mutex state is set to nonsignaled.
+            
+             If the mutex was protecting persistent state information, you should check it for consistency.
+             </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinAPI.WaitForSingleObjectResult.WaitObject0">
+            <summary>
+            The state of the specified object is signaled.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinAPI.WaitForSingleObjectResult.WaitTimeout">
+            <summary>
+            The time-out interval elapsed, and the object's state is nonsignaled.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinAPI.WaitForSingleObjectResult.WaitFailed">
+            <summary>
+            The function has failed. To get extended error information, call <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error"/>.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.WinAPI.Kernel32">
+            <summary>
+            WinAPI methods from Kernel32.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinAPI.Kernel32.CreateEvent(System.IntPtr,System.Boolean,System.Boolean,System.IntPtr)">
+             <summary>
+             Creates or opens a named or unnamed event object
+             </summary>
+             <param name="lpEventAttributes">
+             A pointer to a SECURITY_ATTRIBUTES structure. If this parameter is NULL, the handle
+             cannot be inherited by child processes.
+             </param>
+             <param name="bManualReset">
+             If this parameter is TRUE, the function creates a manual-reset event object, which
+             requires the use of the ResetEvent function to set the event state to nonsignaled. If
+             this parameter is FALSE, the function creates an auto-reset event object, and system
+             automatically resets the event state to nonsignaled after a single waiting thread has
+             been released.
+             </param>
+             <param name="bInitialState">
+             If this parameter is TRUE, the initial state of the event object is signaled; otherwise,
+             it is nonsignaled.
+             </param>
+             <param name="lpName">
+             The name of the event object. The name is limited to MAX_PATH characters. Name comparison
+             is case sensitive.
+             </param>
+             <returns>
+             If the function succeeds, the return value is a handle to the event object. If the named
+             event object existed before the function call, the function returns a handle to the
+             existing object and GetLastError returns ERROR_ALREADY_EXISTS.
+            
+             If the function fails, the return value is NULL. To get extended error information, call <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" />.
+             </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinAPI.Kernel32.CloseHandle(System.IntPtr)">
+             <summary>
+             Closes an open object handle.
+             </summary>
+             <param name="hObject">
+             A valid handle to an open object.
+             </param>
+             <returns>
+             If the function succeeds, the return value is nonzero.
+            
+             If the function fails, the return value is zero.To get extended error information, call <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" />.
+            
+             If the application is running under a debugger, the function will throw an exception if
+             it receives either a handle value that is not valid or a pseudo-handle value. This can
+             happen if you close a handle twice, or if you call CloseHandle on a handle returned by
+             the FindFirstFile function instead of calling the FindClose function.
+             </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinAPI.Kernel32.WaitForSingleObject(System.IntPtr,System.UInt32)">
+             <summary>
+             Waits until the specified object is in the signaled state or the time-out interval elapses.
+             </summary>
+             <param name="hHandle">
+             A handle to the object. For a list of the object types whose handles can be specified,
+             see the following Remarks section.
+            
+             If this handle is closed while the wait is still pending, the function's behavior is undefined.
+             </param>
+             <param name="dwMilliseconds">
+             The time-out interval, in milliseconds. If a nonzero value is specified, the function waits until the object is signaled or the interval elapses. If dwMilliseconds is zero, the function does not enter a wait state if the object is not signaled; it always returns immediately. If dwMilliseconds is INFINITE, the function will return only when the object is signaled.
+             </param>
+             <returns>
+             If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values.
+             </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinAPI.Kernel32.GetOverlappedResult(System.IntPtr,System.Threading.NativeOverlapped@,System.UInt32@,System.Boolean)">
+            <summary>
+            Retrieves the results of an overlapped operation on the specified file, named pipe, or
+            communications device.
+            </summary>
+            <param name="hFile">
+            A handle to the file, named pipe, or communications device.
+            </param>
+            <param name="lpOverlapped">
+            A pointer to an OVERLAPPED structure that was specified when the overlapped operation was started.
+            </param>
+            <param name="lpNumberOfBytesTransferred">
+            A pointer to a variable that receives the number of bytes that were actually transferred by a read or write operation.
+            </param>
+            <param name="bWait">
+            If this parameter is TRUE, and the Internal member of the lpOverlapped structure is
+            STATUS_PENDING, the function does not return until the operation has been completed. If
+            this parameter is FALSE and the operation is still pending, the function returns FALSE
+            and the <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> function returns ERROR_IO_INCOMPLETE.
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="T:WinDivertSharp.WinDivert">
+            <summary>
+            The static WinDivert class contains all free functions defined in the WinDivert library.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)">
+            <summary>
+            Opens a WinDivert handle for the given filter. Unless otherwise specified by flags, any
+            packet that matches the filter will be diverted to the handle. Diverted packets can be
+            read by the application with <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />
+            </summary>
+            <param name="filter">
+            A packet filter string specified in the WinDivert filter language.
+            </param>
+            <param name="layer">
+            The layer.
+            </param>
+            <param name="priority">
+            The priority of the handle.
+            </param>
+            <param name="flags">
+            Additional flags.
+            </param>
+            <returns>
+            A valid WinDivert handle on success, or IntPtr.Zero if an error occurred. Use
+            <see cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+            </returns>
+            <remarks>
+            A typical application is only interested in a subset of all network traffic. In this case
+            the filter should match as closely as possible to the subset of interest. This avoids
+            unnecessary overheads introduced by diverting packets to the user-mode application. See
+            the filter language section for more information. The layer of the WinDivert handle is
+            determined by the layer parameter.
+            </remarks>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)">
+             <summary>
+             Receives a diverted packet that matched the filter passed to
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />. The
+             received packet is guaranteed to match the filter.
+             </summary>
+             <param name="handle">
+             A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />
+             </param>
+             <param name="packet">
+             A buffer for the captured packet.
+             </param>
+             <param name="address">
+             The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> of the captured packet.
+             </param>
+             <param name="readLen">
+             The total number of bytes written to packet.
+             </param>
+             <returns>
+             TRUE if a packet was successfully received, or FALSE if an error occurred. Use
+             <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+             </returns>
+             <remarks>
+             The contents of the captured packet are written to packet. If the captured packet is
+             larger than the packet buffer length, then the packet will be truncated. If recvLen is
+             non-NULL, then the total number of bytes written to packet is placed there. If non-NULL,
+             the address of the captured packet is written to pAddr.
+            
+             An application should call
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />
+             as soon as possible after a successful call to WinDivertOpen(). When a WinDivert handle
+             is open, any packet that matches the filter will be captured and queued until handled by
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />.
+             Packets are not queued indefinitely, and if not handled in a timely manner, any captured
+             packet may be dropped. The amount of time a packet is queued can be controlled with the
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSetParam(System.IntPtr,WinDivertSharp.WinDivertParam,System.UInt64)" /> function.
+            
+             Captured packets are guaranteed to have correct checksums, or pseudo checksums, as
+             indicated by the Pseudo*Checksum flags from the WINDIVERT_ADDRESS.
+            
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />
+             should not be used on any WinDivert handle created with the
+             <seealso cref="F:WinDivertSharp.WinDivertOpenFlags.Drop" /> set.
+             </remarks>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@)">
+             <summary>
+             Receives a diverted packet that matched the filter passed to
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />. The
+             received packet is guaranteed to match the filter.
+             </summary>
+             <param name="handle">
+             A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />
+             </param>
+             <param name="packet">
+             A buffer for the captured packet.
+             </param>
+             <param name="address">
+             The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> of the captured packet.
+             </param>
+             <returns>
+             TRUE if a packet was successfully received, or FALSE if an error occurred. Use
+             <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+             </returns>
+             <remarks>
+             The contents of the captured packet are written to packet. If the captured packet is
+             larger than the packet buffer length, then the packet will be truncated. If recvLen is
+             non-NULL, then the total number of bytes written to packet is placed there. If non-NULL,
+             the address of the captured packet is written to pAddr.
+            
+             An application should call
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />
+             as soon as possible after a successful call to WinDivertOpen(). When a WinDivert handle
+             is open, any packet that matches the filter will be captured and queued until handled by
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />.
+             Packets are not queued indefinitely, and if not handled in a timely manner, any captured
+             packet may be dropped. The amount of time a packet is queued can be controlled with the
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSetParam(System.IntPtr,WinDivertSharp.WinDivertParam,System.UInt64)" /> function.
+            
+             Captured packets are guaranteed to have correct checksums, or pseudo checksums, as
+             indicated by the Pseudo*Checksum flags from the WINDIVERT_ADDRESS.
+            
+             <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />
+             should not be used on any WinDivert handle created with the
+             <seealso cref="F:WinDivertSharp.WinDivertOpenFlags.Drop" /> set.
+             </remarks>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertRecvEx(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@,System.UInt32@,System.Threading.NativeOverlapped@)">
+            <summary>
+            This function is equivalent to
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />
+            except that it supports overlapped I/O via the lpOverlapped parameter.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />
+            </param>
+            <param name="packet">
+            A buffer for the captured packet.
+            </param>
+            <param name="flags">
+            Reserved, set to zero.
+            </param>
+            <param name="address">
+            The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> of the captured packet.
+            </param>
+            <param name="readLen">
+            The total number of bytes written to packet.
+            </param>
+            <param name="lpOverlapped">
+            An optional <seealso cref="T:System.Threading.NativeOverlapped" /> instance.
+            </param>
+            <returns>
+            TRUE if a packet was successfully received, or FALSE otherwise. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason. The error code
+            ERROR_IO_PENDING indicates that the overlapped operation has been successfully initiated
+            and that completion will be indicated at a later time. All other codes indicate an error.
+            </returns>
+            
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertRecvEx(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@,System.Threading.NativeOverlapped@)">
+            <summary>
+            This function is equivalent to
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@)" /> except
+            that it supports overlapped I/O via the lpOverlapped parameter.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />
+            </param>
+            <param name="packet">
+            A buffer for the captured packet.
+            </param>
+            <param name="flags">
+            Reserved, set to zero.
+            </param>
+            <param name="address">
+            The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> of the captured packet.
+            </param>
+            <param name="lpOverlapped">
+            An optional <seealso cref="T:System.Threading.NativeOverlapped" /> instance.
+            </param>
+            <returns>
+            TRUE if a packet was successfully received, or FALSE otherwise. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason. The error code
+            ERROR_IO_PENDING indicates that the overlapped operation has been successfully initiated
+            and that completion will be indicated at a later time. All other codes indicate an error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@)">
+            <summary>
+            Injects a packet into the network stack. The injected packet may be one received from
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />,
+            or a modified version, or a completely new packet. Injected packets can be captured and
+            diverted again by other WinDivert handles with lower priorities.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </param>
+            <param name="packet">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="packetLength">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="address">
+            The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> for the injected packet.
+            </param>
+            <returns>
+            TRUE if a packet was successfully injected, or FALSE if an error occurred. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@,System.UInt32@)">
+            <summary>
+            Injects a packet into the network stack. The injected packet may be one received from
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />,
+            or a modified version, or a completely new packet. Injected packets can be captured and
+            diverted again by other WinDivert handles with lower priorities.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </param>
+            <param name="packet">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="packetLength">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="address">
+            The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> for the injected packet.
+            </param>
+            <param name="sendLen">
+            The total number of bytes injected.
+            </param>
+            <returns>
+            TRUE if a packet was successfully injected, or FALSE if an error occurred. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertSendEx(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,System.UInt64,WinDivertSharp.WinDivertAddress@,System.UInt32@,System.Threading.NativeOverlapped@)">
+            <summary>
+            Injects a packet into the network stack. The injected packet may be one received from
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />,
+            or a modified version, or a completely new packet. Injected packets can be captured and
+            diverted again by other WinDivert handles with lower priorities.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </param>
+            <param name="packet">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="packetLength">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="flags">
+            Reserved, set to zero.
+            </param>
+            <param name="address">
+            The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> for the injected packet.
+            </param>
+            <param name="sendLen">
+            The total number of bytes injected.
+            </param>
+            <param name="lpOverlapped">
+            An optional <seealso cref="T:System.Threading.NativeOverlapped" /> instance.
+            </param>
+            <returns>
+            TRUE if a packet was successfully injected, or FALSE otherwise. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason. The error code
+            ERROR_IO_PENDING indicates that the overlapped operation has been successfully initiated
+            and that completion will be indicated at a later time. All other codes indicate an error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertSendEx(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,System.UInt64,WinDivertSharp.WinDivertAddress@)">
+            <summary>
+            Injects a packet into the network stack. The injected packet may be one received from
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />,
+            or a modified version, or a completely new packet. Injected packets can be captured and
+            diverted again by other WinDivert handles with lower priorities.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </param>
+            <param name="packet">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="packetLength">
+            A buffer containing the packet to be injected.
+            </param>
+            <param name="flags">
+            Reserved, set to zero.
+            </param>
+            <param name="address">
+            The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> for the injected packet.
+            </param>
+            <returns>
+            TRUE if a packet was successfully injected, or FALSE otherwise. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason. The error code
+            ERROR_IO_PENDING indicates that the overlapped operation has been successfully initiated
+            and that completion will be indicated at a later time. All other codes indicate an error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertClose(System.IntPtr)">
+            <summary>
+            Closes a WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </param>
+            <returns>
+            TRUE if successful, FALSE if an error occurred. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertSetParam(System.IntPtr,WinDivertSharp.WinDivertParam,System.UInt64)">
+            <summary>
+            Sets a WinDivert parameter.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </param>
+            <param name="param">
+            A <seealso cref="T:WinDivertSharp.WinDivertParam" />.
+            </param>
+            <param name="value">
+            The parameter's new value.
+            </param>
+            <returns>
+            TRUE if successful, FALSE if an error occurred. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertGetParam(System.IntPtr,WinDivertSharp.WinDivertParam,System.UInt64@)">
+            <summary>
+            Gets a WinDivert parameter.
+            </summary>
+            <param name="handle">
+            A valid WinDivert handle created by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,WinDivertSharp.WinDivertOpenFlags)" />.
+            </param>
+            <param name="param">
+            A <seealso cref="T:WinDivertSharp.WinDivertParam" />.
+            </param>
+            <param name="value">
+            The parameter's current value.
+            </param>
+            <returns>
+            TRUE if successful, FALSE if an error occurred. Use
+            <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> to get the reason for the error.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertHelperParsePacket(WinDivertSharp.WinDivertBuffer,System.UInt32)">
+            <summary>
+            Parses a raw packet (e.g. from
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />)
+            into the various packet headers and/or payloads that may or may not be present.
+            </summary>
+            <param name="packet">
+            The packet to be parsed.
+            </param>
+            <param name="packetDataLength">
+            The total length of the packet pPacket.
+            </param>
+            <returns>
+            TRUE if all expected (non-NULL) outputs were present, FALSE otherwise. Note that FALSE
+            may sometimes be a legitimate return value, e.g., when both ppIpHdr and ppIpv6Hdr are non-NULL.
+            </returns>
+            <remarks>
+            Each output parameter may be NULL or non-NULL. For non-NULL parameters, this function
+            will write the pointer to the corresponding header/payload if it exists, or will write
+            NULL otherwise. Any non-NULL pointer that is returned Is pointer into the original
+            pPacket packet, and, there is enough space in pPacket to fit the header. This function
+            does not do any verification of the header/payload contents beyond checking the header
+            length and any other minimal information required for parsing.
+            </remarks>
+            
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertHelperCalcChecksums(WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@,WinDivertSharp.WinDivertChecksumHelperParam)">
+            <summary>
+            (Re)calculates the checksum for any IPv4/ICMP/ICMPv6/TCP/UDP checksum present in the
+            given packet. Individual checksum calculations may be disabled via the appropriate flag.
+            Typically this function should be invoked on a modified packet before it is injected with <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />.
+            </summary>
+            <param name="packet">
+            The packet to be modified.
+            </param>
+            <param name="packetLength">
+            The total length of the packet pPacket.
+            </param>
+            <param name="address">
+            A reference to a <seealso cref="T:WinDivertSharp.WinDivertAddress" /> structure.
+            </param>
+            <param name="flags">
+            One or more <seealso cref="T:WinDivertSharp.WinDivertChecksumHelperParam" /> flags.
+            </param>
+            <returns>
+            The number of checksums calculated.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertHelperCalcChecksums(WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertChecksumHelperParam)">
+            <summary>
+            (Re)calculates the checksum for any IPv4/ICMP/ICMPv6/TCP/UDP checksum present in the
+            given packet. Individual checksum calculations may be disabled via the appropriate flag.
+            Typically this function should be invoked on a modified packet before it is injected with <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />.
+            </summary>
+            <param name="packet">
+            The packet to be modified.
+            </param>
+            <param name="packetLength">
+            The total length of the packet pPacket.
+            </param>
+            <param name="flags">
+            One or more <seealso cref="T:WinDivertSharp.WinDivertChecksumHelperParam" /> flags.
+            </param>
+            <returns>
+            The number of checksums calculated.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertHelperCheckFilter(System.String,WinDivertSharp.WinDivertLayer,System.String@,System.UInt32@)">
+            <summary>
+            Checks if the given packet filter string is valid with respect to the filter language. If
+            the filter is invalid, then a human readable description of the error is returned by
+            errorStr (if non-NULL), and the error's position is returned by errorPos (if non-NULL).
+            </summary>
+            <param name="filter">
+            The packet filter string to be checked.
+            </param>
+            <param name="layer">
+            The layer.
+            </param>
+            <param name="errorMessage">
+            The error description.
+            </param>
+            <param name="errorPosition">
+            The error position.
+            </param>
+            <returns>
+            TRUE if the packet filter string is valid, FALSE otherwise.
+            </returns>
+        </member>
+        <member name="M:WinDivertSharp.WinDivert.WinDivertHelperEvalFilter(System.String,WinDivertSharp.WinDivertLayer,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@)">
+             <summary>
+             </summary>
+             <param name="filter">
+             The packet filter string to be evaluated.
+             </param>
+             <param name="layer">
+             The layer.
+             </param>
+             <param name="packet">
+             The packet.
+             </param>
+             <param name="packetLen">
+             The total length of the packet.
+             </param>
+             <param name="address">
+             The <seealso cref="T:WinDivertSharp.WinDivertAddress" /> of the packet pPacket.
+             </param>
+             <returns>
+             TRUE if the packet matches the filter string, FALSE otherwise.
+             </returns>
+             <remarks>
+             Evaluates the given packet against the given packet filter string. This function returns
+             TRUE if the packet matches, and returns FALSE otherwise.
+            
+             This function also returns FALSE if an error occurs, in which case
+             <seealso cref="M:System.Runtime.InteropServices.Marshal.GetLastWin32Error" /> can be used to get the reason for the
+             error.Otherwise, if no error occurred, GetLastError() will return 0.
+            
+             Note that this function is relatively slow since the packet filter string will be (re)
+             compiled for each call. This function is mainly intended for debugging or testing purposes.
+             </remarks>
+        </member>
+        <member name="T:WinDivertSharp.WinDivertAddress">
+            <summary>
+            The WinDivertAddress structure represents the "address" of a captured or injected packet. The
+            address includes the packet's timestamp, network interfaces, direction and other information.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertAddress.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+            <remarks>
+            The Timestamp indicates when the packet was first captured by WinDivert. It uses the same
+            clock as QueryPerformanceCounter(). The Timestamp value is ignored by <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@)" />.
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertAddress.IfIdx">
+            <summary>
+            Gets or sets the interface index.
+            </summary>
+            <remarks>
+            Ignored for outbound packets
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertAddress.SubIfIdx">
+            <summary>
+            Gets or sets the sub-interface index.
+            </summary>
+            <remarks>
+            Ignored for outbound packets
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertAddress.bitvector1">
+            Direction : 1 
+            Loopback : 1 
+            Impostor : 1 
+            PseudoIPChecksum : 1 
+            PseudoTCPChecksum : 1
+            PseudoUDPChecksum : 1 
+            Reserved : 2
+        </member>
+        <member name="P:WinDivertSharp.WinDivertAddress.Direction">
+            <summary>
+            Gets or sets the direction.
+            </summary>
+            <remarks>
+            The Direction field is set to Outbound (0) for outbound packets, and Inbound (1) for
+            inbound packets. This field is ignored for forward packets.
+            </remarks>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertAddress.Loopback">
+            <summary>
+            Gets or sets whether or not the loopback flag is set.
+            </summary>
+            <remarks>
+            The Loopback flag is set for loopback packets. Note that Windows considers any packet
+            originating from, and destined to, the current machine to be a loopback packet, so
+            loopback packets are not limited to localhost addresses. Note that WinDivert considers
+            loopback packets to be outbound only, and will not capture loopback packets on the
+            inbound path.
+            </remarks>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertAddress.Impostor">
+            <summary>
+            Gets or sets the imposter flag.
+            </summary>
+            <remarks>
+            The Impostor flag is set for impostor packets. An impostor packet is any packet injected
+            by another driver rather than originating from the network or Windows TCP/IP stack.
+            Impostor packets are problematic since they can cause infinite loops, where a packet
+            injected by
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@)" />
+            is captured again by
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />.
+            For more information, see <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@)" />.
+            </remarks>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertAddress.PseudoIPChecksum">
+            <summary>
+            Gets or sets whether or not the packet uses pseudo IP checksums.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertAddress.PseudoTCPChecksum">
+            <summary>
+            Gets or sets whether or not the packet uses pseudo TCP checksums.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertAddress.PseudoUDPChecksum">
+            <summary>
+            Gets or sets whether or not the packet uses pseudo UDP checksums.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertAddress.Reset">
+            <summary>
+            Resets the structure.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.WinDivertBuffer">
+            <summary>
+            Represents a buffer to be used for sending, receiving and manipulating packets.
+            </summary>
+            <remarks>
+            This buffer must remain intact for as long as the user retains any structures generated from
+            it. The purpose of this object is to safely pin the buffer data inside. Nearly all other
+            classes constructed in the use of this library will be created with unsafe pointer-based
+            references that all require their source (the buffer) to be pinned in memory.
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertBuffer._buffer">
+            <summary>
+            The internal buffer object.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertBuffer.BufferPointer">
+            <summary>
+            The pinned pointer to the buffer.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertBuffer._bufferHandle">
+            <summary>
+            The GCHandle that provides our <see cref="F:WinDivertSharp.WinDivertBuffer.BufferPointer"/> member.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertBuffer.#ctor">
+            <summary>
+            Constructs a new buffer with the default max-packet size.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertBuffer.#ctor(System.Byte[])">
+            <summary>
+            Constructs a new buffer from the given raw buffer data.
+            </summary>
+            <param name="bufferData">
+            The raw buffer data to wrap.
+            </param>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertBuffer.#ctor(System.Int32)">
+            <summary>
+            Constructs a new buffer with the given size.
+            </summary>
+            <param name="bufferSize"></param>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertBuffer.Item(System.Int32)">
+            <summary>
+            Gets or sets the buffer value at the specified index.
+            </summary>
+            <param name="index">
+            The index.
+            </param>
+            <exception cref="T:System.IndexOutOfRangeException">
+            Will throw if the supplied index is out of range.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertBuffer.Item(System.UInt32)">
+            <summary>
+            Gets or sets the buffer value at the specified index.
+            </summary>
+            <param name="index">
+            The index.
+            </param>
+            <exception cref="T:System.IndexOutOfRangeException">
+            Will throw if the supplied index is out of range.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertBuffer.Length">
+            <summary>
+            Gets the length of the buffer.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertBuffer.Dispose(System.Boolean)">
+            <summary>
+            Disposes of the buffer.
+            </summary>
+            <param name="disposing">
+            Whether or not we're disposing.
+            </param>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertBuffer.Dispose">
+            <summary>
+            Disposes the buffer.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.WinDivertDirection">
+            <summary>
+            Represents a packet direction.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertDirection.Outbound">
+            <summary>
+            Packet is outbound on the network.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertDirection.Inbound">
+            <summary>
+            Packet is inbound on the network.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.WinDivertChecksumHelperParam">
+            <summary>
+            WinDivert checksum helper flags.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertChecksumHelperParam.All">
+            <summary>
+            Performs a full checksum calculation on the packet.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertChecksumHelperParam.NoIpChecksum">
+            <summary>
+            Skips IPv4 checksum calculations.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertChecksumHelperParam.NoIcmpChecksum">
+            <summary>
+            Skips Icmp V4 checksum calculations.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertChecksumHelperParam.NoIcmpV6Checksum">
+            <summary>
+            Skips Icmp V6 checksum calculations.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertChecksumHelperParam.NoTcpChecksum">
+            <summary>
+            Skips Tcp checksum calculations.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertChecksumHelperParam.NoUdpChecksum">
+            <summary>
+            Skips Udp checksum calculations.
+            </summary>
+        </member>
+        <member name="T:WinDivertSharp.WinDivertLayer">
+            <summary>
+            Represents which part of the networking layer a WinDivert handle is operating on.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertLayer.Network">
+            <summary>
+            Represents the networking layer sans forwarded packets.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertLayer.Forward">
+            <summary>
+            Represents forwarded packets exclusively on the network layer.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.#cctor">
+            <summary>
+            Static initializer to get our paths correct.
+            </summary>
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertOpen(System.String,WinDivertSharp.WinDivertLayer,System.Int16,System.UInt64)">
+             Return Type: HANDLE->void*
+            filter: char*
+            layer: WINDIVERT_LAYER->Anonymous_13846946_b76a_4250_9642_c2122691f126
+            priority: INT16->short
+            flags: UINT64->unsigned __int64
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertRecv(System.IntPtr,System.IntPtr,System.UInt32,WinDivertSharp.WinDivertAddress@,System.UInt32@)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            readLen: ref uint
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertRecvEx(System.IntPtr,System.IntPtr,System.UInt32,System.UInt64,WinDivertSharp.WinDivertAddress@,System.UInt32@,System.Threading.NativeOverlapped@)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            flags: UINT64->unsigned __int64
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            readLen: ref uint
+            lpOverlapped: LPOVERLAPPED->_OVERLAPPED*
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertSend(System.IntPtr,System.IntPtr,System.UInt32,WinDivertSharp.WinDivertAddress@,System.UInt32@)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            writeLen: ref uint
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertSendEx(System.IntPtr,System.IntPtr,System.UInt32,System.UInt64,WinDivertSharp.WinDivertAddress@,System.UInt32@,System.Threading.NativeOverlapped@)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            flags: UINT64->unsigned __int64
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            writeLen: ref uint
+            lpOverlapped: LPOVERLAPPED->_OVERLAPPED*
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertSendEx(System.IntPtr,System.IntPtr,System.UInt32,System.UInt64,WinDivertSharp.WinDivertAddress@,System.IntPtr,System.IntPtr)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            flags: UINT64->unsigned __int64
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            writeLen: ref uint
+            lpOverlapped: LPOVERLAPPED->_OVERLAPPED*
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertClose(System.IntPtr)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertSetParam(System.IntPtr,WinDivertSharp.WinDivertParam,System.UInt64)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+            param: WINDIVERT_PARAM->Anonymous_fff177c6_9a3b_4c59_b7f9_62aa58d87f4e
+            value: UINT64->unsigned __int64
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertGetParam(System.IntPtr,WinDivertSharp.WinDivertParam,System.UInt64@)">
+             Return Type: BOOL->int
+            handle: HANDLE->void*
+            param: WINDIVERT_PARAM->Anonymous_fff177c6_9a3b_4c59_b7f9_62aa58d87f4e
+            pValue: UINT64*
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertHelperParsePacket(System.IntPtr,System.UInt32,WinDivertSharp.IPv4Header**,WinDivertSharp.IPv6Header**,WinDivertSharp.IcmpV4Header**,WinDivertSharp.IcmpV6Header**,WinDivertSharp.TcpHeader**,WinDivertSharp.UdpHeader**,System.Byte**,System.UInt32@)">
+             Return Type: BOOL->int
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            ppIpHdr: PWINDIVERT_IPHDR*
+            ppIpv6Hdr: PWINDIVERT_IPV6HDR*
+            ppIcmpHdr: PWINDIVERT_ICMPHDR*
+            ppIcmpv6Hdr: PWINDIVERT_ICMPV6HDR*
+            ppTcpHdr: PWINDIVERT_TCPHDR*
+            ppUdpHdr: PWINDIVERT_UDPHDR*
+            ppData: PVOID*
+            pDataLen: ref uint
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertHelperCalcChecksums(System.IntPtr,System.UInt32,WinDivertSharp.WinDivertAddress@,System.UInt64)">
+             Return Type: UINT->unsigned int
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            flags: UINT64->unsigned __int64
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertHelperCalcChecksums(System.IntPtr,System.UInt32,System.IntPtr,System.UInt64)">
+             Return Type: UINT->unsigned int
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            flags: UINT64->unsigned __int64
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertHelperCalcChecksums(System.Byte*,System.UInt32,System.IntPtr,System.UInt64)">
+             Return Type: UINT->unsigned int
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+            flags: UINT64->unsigned __int64
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertHelperCheckFilter(System.String,WinDivertSharp.WinDivertLayer,System.Char**,System.UInt32@)">
+             Return Type: BOOL->int
+            filter: char*
+            layer: WINDIVERT_LAYER->Anonymous_13846946_b76a_4250_9642_c2122691f126
+            errorStr: char**
+            errorPos: ref uint
+        </member>
+        <member name="M:WinDivertSharp.WinDivertNative.WinDivertHelperEvalFilter(System.String,WinDivertSharp.WinDivertLayer,System.IntPtr,System.UInt32,WinDivertSharp.WinDivertAddress@)">
+             Return Type: BOOL->int
+            filter: char*
+            layer: WINDIVERT_LAYER->Anonymous_13846946_b76a_4250_9642_c2122691f126
+            pPacket: PVOID->void*
+            packetLen: UINT->unsigned int
+            pAddr: PWINDIVERT_ADDRESS->Anonymous_33ad92c9_0104_417e_989a_2fdd4b3efcc1*
+        </member>
+        <member name="T:WinDivertSharp.WinDivertOpenFlags">
+            <summary>
+            Represents flags that specialize how a WinDivert handle is opened.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertOpenFlags.None">
+            <summary>
+            No flags.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertOpenFlags.Sniff">
+            <summary>
+            Open in packet sniffing mode.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertOpenFlags.Drop">
+            <summary>
+            Open in packet dropping mode.
+            </summary>
+            <remarks>
+            This mode causes captured packets to be dropped if not reinjected post-capture.
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertOpenFlags.Debug">
+            <summary>
+            Open in debug mode.
+            </summary>
+            <remarks>
+            Causes the
+            <seealso cref="M:WinDivertSharp.WinDivert.WinDivertSend(System.IntPtr,WinDivertSharp.WinDivertBuffer,System.UInt32,WinDivertSharp.WinDivertAddress@)" />
+            method to block until the packet has left the network stack.
+            </remarks>
+        </member>
+        <member name="T:WinDivertSharp.WinDivertParam">
+            <summary>
+            Generic configuration params for an opened WinDivert handle.
+            </summary>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertParam.QueueLen">
+            <summary>
+            This option represents the maximum length of the packet queue for <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />.
+            </summary>
+            <remarks>
+            Currently the default value is 2048, the minimum is 16, and the maximum is 16384.
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertParam.QueueTime">
+            <summary>
+            This option represents the minimum time, in milliseconds, a packet can be queued before
+            it is automatically dropped.
+            </summary>
+            <remarks>
+            Packets cannot be queued indefinitely, and ideally, packets should be processed by the
+            application as soon as is possible. Note that this sets the minimum time a packet can be
+            queued before it can be dropped. The actual time may be exceed this value. Currently the
+            default value is 1000 (1s), the minimum is 20 (20ms), and the maximum is 8000 (8s).
+            </remarks>
+        </member>
+        <member name="F:WinDivertSharp.WinDivertParam.QueueSize">
+            <summary>
+            This option represents the maximum number of bytes that can be stored in the packet queue
+            for <seealso cref="M:WinDivertSharp.WinDivert.WinDivertRecv(System.IntPtr,WinDivertSharp.WinDivertBuffer,WinDivertSharp.WinDivertAddress@,System.UInt32@)" />.
+            </summary>
+            <remarks>
+            Currently the default value is 4194304 (4MB), the minimum is 65535 (64KB), and the
+            maximum is 33554432 (32MB).
+            </remarks>
+        </member>
+        <member name="T:WinDivertSharp.WinDivertParseResult">
+            <summary>
+            Represents the result of an attempt packet parsing operation.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.IPv4Header">
+            <summary>
+            Gets the parsed IPv4 header.
+            </summary>
+            <remarks>
+            Ensure that <seealso c="IsIPv4" /> is true before attempting access.
+            </remarks>
+            <exception c="NullerenceException">
+            If <see c="IsIPv4" /> is false, calling this property will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.IPv6Header">
+            <summary>
+            Gets the parsed IPv6 header.
+            </summary>
+            <remarks>
+            Ensure that <seealso c="IsIPv6" /> is true before attempting access.
+            </remarks>
+            <exception c="NullerenceException">
+            If <see c="IsIPv6" /> is false, calling this property will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.IcmpV4Header">
+            <summary>
+            Gets the parsed IcmpV4 header.
+            </summary>
+            <remarks>
+            Ensure that <seealso c="IsIcmpV4" /> is true before attempting access.
+            </remarks>
+            <exception c="NullerenceException">
+            If <see c="IsIcmpV4" /> is false, calling this property will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.IcmpV6Header">
+            <summary>
+            Gets the parsed IcmpV6 header.
+            </summary>
+            <remarks>
+            Ensure that <seealso c="IsIcmpV6" /> is true before attempting access.
+            </remarks>
+            <exception c="NullerenceException">
+            If <see c="IsIcmpV6" /> is false, calling this property will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.TcpHeader">
+            <summary>
+            Gets the parsed Tcp header.
+            </summary>
+            <remarks>
+            Ensure that <seealso c="IsTcp" /> is true before attempting access.
+            </remarks>
+            <exception c="NullerenceException">
+            If <see c="IsTcp" /> is false, calling this property will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.UdpHeader">
+            <summary>
+            Gets the parsed Udp header.
+            </summary>
+            <remarks>
+            Ensure that <seealso c="IsUdp" /> is true before attempting access.
+            </remarks>
+            <exception c="NullerenceException">
+            If <see c="IsUdp" /> is false, calling this property will throw.
+            </exception>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.PacketPayload">
+            <summary>
+            Gets the parsed packet payload, if any.
+            </summary>
+        </member>
+        <member name="P:WinDivertSharp.WinDivertParseResult.PacketPayloadLength">
+            <summary>
+            Gets the packet payload length;
+            </summary>
+        </member>
+    </members>
+</doc>

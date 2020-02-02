@@ -28,7 +28,7 @@ namespace NiceHashMiner.Miners
 
         private int TotalCount = 12;
         private double speed = 0;
-
+        private string[,] myServers = Form_Main.myServers;
         private double Total = 0;
         private const int TotalDelim = 2;
         private bool fapi = true;

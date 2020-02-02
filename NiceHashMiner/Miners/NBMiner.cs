@@ -46,6 +46,7 @@ namespace NiceHashMiner.Miners
         private double speed;
         private double speedSec;
         private int count;
+        private string[,] myServers = Form_Main.myServers;
 
         private string AlgoName
         {
