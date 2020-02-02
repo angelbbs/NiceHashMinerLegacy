@@ -139,7 +139,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
 
             //toolTip1.SetToolTip(textBox_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
-
+            /*
             toolTip1.SetToolTip(label_BitcoinAddressNew, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
@@ -158,7 +158,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(pictureBox_ServiceLocation,
                 International.GetText("Form_Settings_ToolTip_ServiceLocation"));
-
+*/
             toolTip1.SetToolTip(comboBox_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
             toolTip1.SetToolTip(label_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
             toolTip1.SetToolTip(pictureBox_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
@@ -420,7 +420,7 @@ namespace NiceHashMiner.Forms
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
               //  label_BitcoinAddress.Text = "Биткоин адрес (старая платформа)";
-                label_BitcoinAddressNew.Text = "Биткоин адрес:";
+                //label_BitcoinAddressNew.Text = "Биткоин адрес:";
                 checkBox_Allow_remote_management.Text = "Разрешить удаленное управление";
                 checkBox_Send_actual_version_info.Text = "Отправлять инфо о версии программы";
                 checkBox_Additional_info_about_device.Text = "Дополнительная информация об устройстве";
@@ -447,7 +447,7 @@ namespace NiceHashMiner.Forms
             radioButtonMOPA3.Checked = ConfigManager.GeneralConfig.MOPA3;
             radioButtonMOPA4.Checked = ConfigManager.GeneralConfig.MOPA4;
             radioButtonMOPA5.Checked = ConfigManager.GeneralConfig.MOPA5;
-
+            /*
             label_WorkerName.Text = International.GetText("WorkerName") + ":";
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
             {
@@ -464,7 +464,7 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
-
+            */
            
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
@@ -602,7 +602,7 @@ namespace NiceHashMiner.Forms
                     lbl.ForeColor = Form_Main._foreColor;
                 }
 
-                comboBox_ServiceLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                //comboBox_ServiceLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_TimeUnit.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 currencyConverterCombobox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_Language.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
@@ -653,11 +653,11 @@ namespace NiceHashMiner.Forms
                 {
                     label_RunEthlargement.ForeColor = Form_Main._foreColor;
                 }
-
+                /*
                 textBox_BitcoinAddressNew.BackColor = Form_Main._backColor;
                 textBox_BitcoinAddressNew.ForeColor = Form_Main._foreColor;
                 textBox_BitcoinAddressNew.BorderStyle = BorderStyle.FixedSingle;
-
+                */
                 textBox_APIBindPortStart.BackColor = Form_Main._backColor;
                 textBox_APIBindPortStart.ForeColor = Form_Main._foreColor;
                 textBox_APIBindPortStart.BorderStyle = BorderStyle.FixedSingle;
@@ -701,12 +701,13 @@ namespace NiceHashMiner.Forms
                 textBox_SwitchProfitabilityThreshold.BackColor = Form_Main._backColor;
                 textBox_SwitchProfitabilityThreshold.ForeColor = Form_Main._foreColor;
                 textBox_SwitchProfitabilityThreshold.BorderStyle = BorderStyle.FixedSingle;
-
+                /*
                 textBox_WorkerName.BackColor = Form_Main._backColor;
                 textBox_WorkerName.ForeColor = Form_Main._foreColor;
                 textBox_WorkerName.BorderStyle = BorderStyle.FixedSingle;
 
                 pictureBox_Info_BitcoinAddress.Image = NiceHashMiner.Properties.Resources.info_white_18;
+                */
                 pictureBox_AllowMultipleInstances.Image = NiceHashMiner.Properties.Resources.info_white_18;
                // pictureBox_AMD_DisableAMDTempControl.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_APIBindPortStart.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -732,7 +733,7 @@ namespace NiceHashMiner.Forms
                 pictureBox_NVIDIAP0State.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunAtStartup.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunScriptOnCUDA_GPU_Lost.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_ServiceLocation.Image = NiceHashMiner.Properties.Resources.info_white_18;
+               // pictureBox_ServiceLocation.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_ShowDriverVersionWarning.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_ShowInternetConnectionWarning.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_StartMiningWhenIdle.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -742,7 +743,7 @@ namespace NiceHashMiner.Forms
                 pictureBox_TimeUnit.Image = NiceHashMiner.Properties.Resources.info_white_18;
              //   pictureBox_Use3rdPartyMiners.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_UseIFTTT.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_WorkerName.Image = NiceHashMiner.Properties.Resources.info_white_18;
+               // pictureBox_WorkerName.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox1.Image = NiceHashMiner.Properties.Resources.info_white_18;
 
                 devicesListViewEnableControl1.BackColor = Form_Main._backColor;
@@ -831,8 +832,10 @@ namespace NiceHashMiner.Forms
             // Add EventHandler for all the general tab's textboxes
             {
                // textBox_BitcoinAddress.Leave += GeneralTextBoxes_Leave;
+               /*
                 textBox_BitcoinAddressNew.Leave += GeneralTextBoxes_Leave;
                 textBox_WorkerName.Leave += GeneralTextBoxes_Leave;
+                */
                 textBox_IFTTTKey.Leave += GeneralTextBoxes_Leave;
                 // these are ints only
                 textBox_SwitchMaxSeconds.Leave += GeneralTextBoxes_Leave;
@@ -863,7 +866,7 @@ namespace NiceHashMiner.Forms
             // Add EventHandler for all the general tab's textboxes
             {
                 comboBox_Language.Leave += GeneralComboBoxes_Leave;
-                comboBox_ServiceLocation.Leave += GeneralComboBoxes_Leave;
+               // comboBox_ServiceLocation.Leave += GeneralComboBoxes_Leave;
                 comboBox_TimeUnit.Leave += GeneralComboBoxes_Leave;
                 comboBox_ColorProfile.Leave += GeneralComboBoxes_Leave;
           //      comboBox_DagLoadMode.Leave += GeneralComboBoxes_Leave;
@@ -934,8 +937,10 @@ namespace NiceHashMiner.Forms
             // Textboxes
             {
                // textBox_BitcoinAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
+               /*
                 textBox_BitcoinAddressNew.Text = ConfigManager.GeneralConfig.BitcoinAddressNew;
                 textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
+                */
                 textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
                 textBox_IFTTTKey.Enabled = ConfigManager.GeneralConfig.UseIFTTT;
                 textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
@@ -995,7 +1000,7 @@ namespace NiceHashMiner.Forms
             // ComboBox
             {
                 comboBox_Language.SelectedIndex = (int) ConfigManager.GeneralConfig.Language;
-                comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
+                //comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
                 comboBox_ColorProfile.SelectedIndex = ConfigManager.GeneralConfig.ColorProfileIndex;
@@ -1164,11 +1169,12 @@ namespace NiceHashMiner.Forms
             IsChange = true;
            // if (ConfigManager.GeneralConfig.BitcoinAddress != textBox_BitcoinAddress.Text.Trim()) _isCredChange = true;
            // ConfigManager.GeneralConfig.BitcoinAddress = textBox_BitcoinAddress.Text.Trim();
+           /*
             if (ConfigManager.GeneralConfig.BitcoinAddressNew != textBox_BitcoinAddressNew.Text.Trim()) _isCredChange = true;
             ConfigManager.GeneralConfig.BitcoinAddressNew = textBox_BitcoinAddressNew.Text.Trim();
             if (ConfigManager.GeneralConfig.WorkerName != textBox_WorkerName.Text.Trim()) _isCredChange = true;
             ConfigManager.GeneralConfig.WorkerName = textBox_WorkerName.Text.Trim();
-
+            */
             ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper =
                 Helpers.ParseInt(textBox_SwitchMaxSeconds.Text);
             ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower = Helpers.ParseInt(textBox_SwitchMinSeconds.Text);
@@ -1216,7 +1222,7 @@ namespace NiceHashMiner.Forms
             if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.GeneralConfig.Language = (LanguageType) comboBox_Language.SelectedIndex;
-            ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
+            //ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.ColorProfileIndex = comboBox_ColorProfile.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
             /*
