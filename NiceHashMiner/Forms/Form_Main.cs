@@ -1847,8 +1847,7 @@ namespace NiceHashMiner
         private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
         { 
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-            ConfigManager.GeneralConfigFileCommit();
-    }
+        }
 
         private void comboBoxLocation_DrawItem(object sender, DrawItemEventArgs e)
         {

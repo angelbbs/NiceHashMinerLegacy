@@ -1,4 +1,4 @@
-# NiceHash Miner Legacy Fork Fix
+# Miner Legacy Fork Fix (for NiceHash)
 
 - [Introduction](#introduction)
 - [What are the benefits?](#benefits)
@@ -7,7 +7,7 @@
 - [Requirements](#requirements)
 - [How to get&run it?](#run)
 - [Where is the profit coming from?](#profit)
-- [How to run NiceHash Miner Legacy only when profitability is high enough?](#highprofit)
+- [How to run Miner Legacy Fork Fix (for NiceHash) only when profitability is high enough?](#highprofit)
 - [Additional options](#options)
 - [Troubleshooting](#troubleshooting)
 - [How to report bugs and issues?](#bugs)
@@ -15,21 +15,19 @@
 
 # <a name="introduction"></a> Introduction
 
-NiceHash Miner Legacy is a continuation of NiceHash Miner v1. This version is intended for experienced miners who want the quickest updates and highest hashrates, and are okay with some customization of the software and antivirus. If you are new to mining, please check out the new [NiceHash Miner v2](deprecated)(https://miner.nicehash.com/) for a simpler start at earning Bitcoins with your idle GPU & CPU.
+Miner Legacy Fork Fix (for NiceHash) is a fork of NiceHash Miner Legacy. This version is intended for experienced miners who want the quickest updates and highest hashrates, and are okay with some customization of the software and antivirus.
 
 
 <img src="Resources/NHML_screenshot.PNG" />
 
-Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> for updates on new versions and other important information.
-
 # <a name="benefits"></a> What are the benefits?
 
-NiceHash Miner Legacy is an advanced auto-miner that supports the latest algorithms and miners. No need to go through tons of configuration files, various mining software versions, configuration tuning or cryptocurrency coins market analysis. **Auto-tuning for best performance and efficiency**, automatic selection and runtime **automatic switching to most profitable cryptocurrency algorithm** are all integrated into NiceHash Miner Legacy and will enable you seamless, joyful and **profitable mining experience**.
+Miner Legacy Fork Fix (for NiceHash) is an advanced auto-miner that supports the latest algorithms and miners. No need to go through tons of configuration files, various mining software versions, configuration tuning or cryptocurrency coins market analysis. **Auto-tuning for best performance and efficiency**, automatic selection and runtime **automatic switching to most profitable cryptocurrency algorithm** are all integrated into Miner Legacy Fork Fix (for NiceHash) and will enable you seamless, joyful and **profitable mining experience**.
 
 # <a name="features"></a> Features
 
 - Easy one-click CPU mining for CPUs that support at least SSE2 (only works on Windows x64).
-- Easy one-click GPU mining for NVIDIA GPUs using microarchitecture (compute capability) SM 2.1/3.x/5.x/6.x.
+- Easy one-click GPU mining for NVIDIA GPUs using microarchitecture (compute capability) SM 2.1/3.x/5.x/6.x/7.x
 - Easy one-click GPU mining for AMD GPUs using any AMD GPU devices that supports OpenCL.
 - Support for multiple CPUs on multiple NUMAs with affinity adjustments to maximize mining speed.
 - Integrated support for Simple Multi-Algorithm. Always mine most profitable algorithm.
@@ -37,74 +35,78 @@ NiceHash Miner Legacy is an advanced auto-miner that supports the latest algorit
 - Optimized algorithms for AVX2 and AVX (CPU mining).
 - Watch-feature - automatically restart miner if crashed or hanged.
 - Display current rate and your balance in real time.
+- Failover servers support.
+- GPU overclock.
+- GPU and CPU monitoring.
+- Color themes.
 - Auto update notifications.
 - Much more...
 
 # <a name="gputuning"></a> GPU tuning
-GPU-tuning is a opensource project developed only for use with NHML Fork Fix. Use as part of other or similar projects is not allowed.
+GPU-tuning is a opensource project developed only for use with Miner Legacy Fork Fix (for NiceHash). Use as part of other or similar projects is not allowed.
 https://github.com/angelbbs/GPU-Tuning
 <img src="Resources/gputuning.png" />
 
 # <a name="requirements"></a> Requirements
 
 - **Windows** 7 or newer operating system **64-bit**
-- **[Note: Windows 10 is recommended and will provide you a much better user experience]**
 - For CPU mining a modern CPU with SSE2 support
 - For AMD mining any AMD GPU with OpenCL support
 - For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 2.1 or newer
 - **up-to-date patches** for OS
 - **up-to-date drivers** for all GPUs
 - **Reliable** internet connectivity
-- For GPU Mining, **paging file size** of 60% of your total GPU VRAM memory
+- For GPU Mining, **paging file size** of 100% of your total GPU VRAM memory
 - Personal **Bitcoin wallet**: https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet
 
 # <a name="run"></a> How to get&run it?
 
 All you have to do is download, extract and run the miner (no installation needed), choose the server location that is the **closest to your location**, run built-in benchmark and enter your Bitcoin wallet address where you want to get your coins sent at - and you are ready to start mining and maximizing your profit.
 
-<i>**Note**: .NET Framework 2.0 or higher and Microsoft Visual C++ Redistributable 2013 is required. No additional installations should be needed if you use Windows 7 or later. However, if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" target="_blank">Microsoft **.NET Framework 2.0**</a> and <a href="https://www.microsoft.com/en-us/download/details.aspx?id=40784" target="_blank">Microsoft **Visual C++ Redistributable 2013 (vcredist_x64.exe)**</a> (after installation a reboot might be required).</i>
+<i>**Note**: .NET Framework 4.7.2 or higher and Microsoft Visual C++ Redistributable 2013, 2015, 2017 is required. No additional installations should be needed if you use Windows 7 or later. However, if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install <a href="https://dotnet.microsoft.com/download/thank-you/net48-offline" target="_blank">Microsoft **.NET Framework 4.7.2**</a> and <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads" target="_blank">Microsoft **Visual C++ Redistributable (vcredist_x64.exe)**</a> (after installation a reboot might be required).</i>
 
 Detailed instructions:
-- Download binaries from here: https://github.com/angelbbs/NiceHashMinerLegacy/releases
+- Download binaries or setup file from here: https://github.com/angelbbs/NiceHashMinerLegacy/releases
 - Extract zip archive
 - Run NiceHashMinerLegacy.exe
 - After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly; for AMD GPUs we suggest you to run **Precise benchmark**
 - Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet.
 - You will receive Bitcoin payments according to our payments schedule: https://www.nicehash.com/help/when-and-how-do-you-get-paid
 
-**WARNING**: Due to specific requirements of the supporting back-end program "sgminer", you can **not** run NiceHash Miner Legacy through Windows RDP (Remote Desktop Protocol) if you are using **AMD GPUs**. If you still wish to use remote access to your computer while running NiceHash Miner Legacy we suggest you to use TeamViewer: https://www.teamviewer.com.
+**WARNING**: You can **not** run Miner Legacy Fork Fix (for NiceHash) through Windows RDP (Remote Desktop Protocol) if you are using **AMD GPUs**. If you still wish to use remote access to your computer while running Miner Legacy Fork Fix (for NiceHash) we suggest you to use TeamViewer: https://www.teamviewer.com.
 
 # <a name="profit"></a> Where is the profit coming from?
 
-As a back-end NiceHash Miner Legacy relies on the <a href="https://www.nicehash.com" target="_blank">NiceHash.com</a> service. By running NiceHash Miner Legacy you're essentially selling the hashing power of your CPUs & GPUs to hashing power buyers. Those are using the hashing power to mine various cryptocurrency coins and support decentralized blockchain networks - similar to cloud computing - only that by running NiceHash Miner Legacy you're actually being a provider for the cryptocurrency mining hashing power. You are being part of a global compute power network, **empowering decentralized digital currencies**.
+As a back-end Miner Legacy Fork Fix (for NiceHash) relies on the <a href="https://www.nicehash.com" target="_blank">NiceHash.com</a> service. By running Miner Legacy Fork Fix (for NiceHash) you're essentially selling the hashing power of your CPUs & GPUs to hashing power buyers. Those are using the hashing power to mine various cryptocurrency coins and support decentralized blockchain networks - similar to cloud computing - only that by running Miner Legacy Fork Fix (for NiceHash) you're actually being a provider for the cryptocurrency mining hashing power. You are being part of a global compute power network, **empowering decentralized digital currencies**.
 
-# <a name="highprofit"></a> How to run NiceHash Miner Legacy only when profitability is high enough?
-Profitability of mining can go up and down that may be unprofitable to mine especially places with high electricity cost. By using the "MinimumProfit" settings, NiceHashMinerLegacy will stop mining if the current profits are below the minimum amount (in USD). This will help you mine during "profitable" times only.
+# <a name="highprofit"></a> How to run Miner Legacy Fork Fix (for NiceHash) only when profitability is high enough?
+Profitability of mining can go up and down that may be unprofitable to mine especially places with high electricity cost. By using the "MinimumProfit" settings, Miner Legacy Fork Fix (for NiceHash) will stop mining if the current profits are below the minimum amount (in USD). This will help you mine during "profitable" times only.
 
 # <a name="options"></a> Additional options
 
-Click 'Settings' button. NiceHash Miner Legacy will be relaunched with the ability to modify configs. Alternatively, you can manually modify \configs\General.json for general settings and \configs\benchmark_XXX.json (XXX is your device UUID) files for device benchmark settings (close NiceHash Miner Legacy first).
+Click 'Settings' button. Miner Legacy Fork Fix (for NiceHash) will be relaunched with the ability to modify configs. Alternatively, you can manually modify \configs\General.json for general settings and \configs\benchmark_XXX.json (XXX is your device UUID) files for device benchmark settings (close Miner Legacy Fork Fix (for NiceHash)).
 
 ## General settings
 Parameter | Range | Description
 -----------------|----------|-------------------
-ConfigFileVersion | Version | This is to identify which version of NiceHashMinerLegacy did the config file is made from.
+ConfigFileVersion | Version | This is to identify which version of Miner Legacy Fork Fix (for NiceHash) did the config file is made from.
 ForkFixVersion | number | NHML Fork Fix Version (Do not change this value).
 DecreasePowerCost | true or false | On "true" show total profit minus cost consumption of electricity.
-lolMinerOldEnumeration | true or false | Change lolMiner Enumeration.
 NoForceTRexClose | true or false | On true disable t-rex force killing.
 UseNegativeProfit | true or false | On true program will used negative profit in sma.(NiceHash bug)
-Language | number | Language selection for NiceHashMinerLegacy GUI.
+Language | number | Language selection for Miner Legacy Fork Fix (for NiceHash) GUI.
 DisplayCurrency | valid 3 letter code | Converts to selected currency via http://fixer.io valid options are any supported via fixer.
 DebugConsole | true or false | When set to true, it displays debug console.
-BitcoinAddress | valid BTC address | The address that NiceHashMinerLegacy will mine to.
+DivertRun | true or false | Miner Legacy Fork Fix (for NiceHash) can divert dev fee on some miners. If you don't want to use this feature, set it to false.
+DivertLog | true or false | Enable or disable divert work to log file.
+BitcoinAddress | valid BTC address | The address that Miner Legacy Fork Fix (for NiceHash) will mine to.
 WorkerName | text | To identify the computer on NiceHash web UI.
 ServiceLocation | number | Used to select the location of the mining server.
 HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
-MinimizeToTray | true or false | When set to true, NiceHashMinerLegacy will minimize to the system tray.
+MinimizeToTray | true or false | When set to true, Miner Legacy Fork Fix (for NiceHash) will minimize to the system tray.
 ForceCPUExtension | 0, 1, 2, 3 or 4 | Force certain CPU extension miner. 0 is automatic, 1 for AVX2, 2 for AVX, 3 for AES and  4 for SSE2.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
-SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.
+SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide Miner Legacy Fork Fix (for NiceHash) users to have the exact same switching pattern.
 SwitchMinSecondsAMD | number | Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.
 MinerAPIQueryInterval | number | Amount of time between each API call to get the latest stats from miner.
 MinerRestartDelayMS | number | Amount of time to delay before trying to restart the miner.
@@ -119,19 +121,19 @@ DeviceDetection\DisableDetectionAMD | true or false | Set it to true if you woul
 AutoScaleBTCValues | true or false | Set it to true if you wish to see the BTC values autoscale to the appropriate scale.
 StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.
-LogToFile | true or false | Set it to true if you would like NiceHashMinerLegacy to log to a file.
+LogToFile | true or false | Set it to true if you would like Miner Legacy Fork Fix (for NiceHash) to log to a file.
 LogMaxFileSize | number | The maximum size (in bytes) of the log file before roll over.
 ShowDriverVersionWarning | true or false | Set to true if you would like to get a warning if less than ideal driver for mining is detected.
 ShowInternetConnectionWarning | true or false | Set to true if you would like to get a warning if the internet connection is not available.
-DisableWindowsErrorReporting | true or false | Set it to true if you would like to disable windows error reporting. This will allow NiceHashMinerLegacy to restart the miner in the case of the miner crashes.
+DisableWindowsErrorReporting | true or false | Set it to true if you would like to disable windows error reporting. This will allow Miner Legacy Fork Fix (for NiceHash) to restart the miner in the case of the miner crashes.
 UseNewSettingsPage | true or false | Set to true if you would like to use the new Settings form.
-NVIDIAP0State | true or false | When set to true, NiceHashMinerLegacy would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
+NVIDIAP0State | true or false | When set to true, Miner Legacy Fork Fix (for NiceHash) would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
 ethminerDefaultBlockHeight | number | A fallback number that will be used if API call fails. This is only used for benchmarking.
 EthminerDagGenerationType | 0, 1, 2, 3 | Set ethminer DAG mode generation 0 - SingleKeep, 1 - Single, 2 - Sequential, 3 - Parallel.
 ApiBindPortPoolStart | number | Set the starting value (default is 5100) for miners API ports. When a new miner is created it will use an avaliable API port starting from the ApiBindPortPoolStart and higher.
-MinimumProfit | number | If set to any value more than 0 (USD), NiceHashMinerLegacy will stop mining if the calculated profit falls below the set amount.
+MinimumProfit | number | If set to any value more than 0 (USD), Miner Legacy Fork Fix (for NiceHash) will stop mining if the calculated profit falls below the set amount.
 LastDevicesSettup | device settup list | This list is used for setting if a device is enabled or disabled.
-LastDevicesSettup\Enabled | true or false | Set to false if you would like to disable this device for benchmarking and mining by NiceHashMinerLegacy.
+LastDevicesSettup\Enabled | true or false | Set to false if you would like to disable this device for benchmarking and mining by Miner Legacy Fork Fix (for NiceHash).
 LastDevicesSettup\UUID | text | Used for unique identification purposes in the config file (**DO NOT EDIT**)
 LastDevicesSettup\Name | text | Used for identification purposes in the config file (**DO NOT EDIT**)
 
@@ -171,14 +173,14 @@ I am having issues with my AMD GPU drivers.
 When uninstalling or reinstalling display drivers we suggest you to use Guru 3D Display Driver Uninstaller. This utility will make sure you get a clean driver state. You can <a href="http://www.guru3d.com/files-details/display-driver-uninstaller-download.html" target="_blank">download it here</a>.
 If you are using Windows 10, the AMD installer utility is sometimes unable to install drivers, therefore you have to install them manually. Download and run diver installer, let it extract the archive and then cancel it when prompted to execute actual install. After this go to Control Panel / System / Device Manager, Right click on your GPU, choose to Update driver manually and point to c:\AMD\[driver version] folder to finish the manual driver installation.
 
-I'm getting "Always ask before opening this file" when running NiceHash Miner Legacy
-> Make sure you un-check the checkbox "Always ask before opening this file" when NiceHash Miner Legacy is starting cpuminer, ccminer or sgminer back-end programs. This is needed because back-end programs will be executed several times while NiceHash Miner Legacy is running (auto-switching according to profitability and in case programs hangs) and you have to make sure these programs will be to executed automatically without your intervention.
+I'm getting "Always ask before opening this file" when running Miner Legacy Fork Fix (for NiceHash)
+> Make sure you un-check the checkbox "Always ask before opening this file" when Miner Legacy Fork Fix (for NiceHash) is starting cpuminer, ccminer or sgminer back-end programs. This is needed because back-end programs will be executed several times while Miner Legacy Fork Fix (for NiceHash) is running (auto-switching according to profitability and in case programs hangs) and you have to make sure these programs will be to executed automatically without your intervention.
 
 Google Chrome is blocking the download of the application
-> Google Chrome falsely flags NiceHash Miner Legacy as a potentially unwanted program and thus prevents you from saving the program archive on your computer. This is an issue with Google Chrome and not with NiceHash Miner Legacy. Use another browser such as Firefox or Edge to download the file instead. Also, read 'My anti-virus is blocking the application' below.
+> Google Chrome falsely flags Miner Legacy Fork Fix (for NiceHash) as a potentially unwanted program and thus prevents you from saving the program archive on your computer. This is an issue with Google Chrome and not with Miner Legacy Fork Fix (for NiceHash). Use another browser such as Firefox or Edge to download the file instead. Also, read 'My anti-virus is blocking the application' below.
 
 My anti-virus is blocking the application
-> Some anti-virus software might block NiceHash Miner Legacy as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner Legacy has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/angelbbs/NiceHashMinerLegacy/releases. If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.
+> Some anti-virus software might block Miner Legacy Fork Fix (for NiceHash) as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into Miner Legacy Fork Fix (for NiceHash) has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/angelbbs/NiceHashMinerLegacy/releases. If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.
 
 I'm getting "Enqueueing kernel" errors on AMD GPUs
 > If you have very low amount of system memory (RAM), especially if lower than 4 GB, than you might encounter this kind of errors:
@@ -198,7 +200,7 @@ Benchmarks on particular algorithms keep getting terminated on AMD GPUs
 
 # <a name="bugs"></a> How to report bugs and issues?
 
-To report bugs and issues please use the GitHub issue reporting tool: https://github.com/angelbbs/NiceHashMinerLegacy/issues. Any bugs and issues reports are very much appreciated since it helps us to improve NiceHash Miner Legacy. Thank you.
+To report bugs and issues please use the GitHub issue reporting tool: https://github.com/angelbbs/NiceHashMinerLegacy/issues. Any bugs and issues reports are very much appreciated since it helps us to improve Miner Legacy Fork Fix (for NiceHash). Thank you.
 
 # <a name="references"></a> References
 
