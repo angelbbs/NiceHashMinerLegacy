@@ -36,7 +36,7 @@ namespace NiceHashMiner.Forms.Components
 
         public IBenchmarkCalculation BenchmarkCalculation { get; set; }
 
-        ComputeDevice _computeDevice;
+        internal static ComputeDevice _computeDevice;
 
         private class DefaultAlgorithmColorSeter : IListItemCheckColorSetter
         {
@@ -321,6 +321,24 @@ namespace NiceHashMiner.Forms.Components
             //}
         }
 
+        public void UpdateLvi()
+        {
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.Items)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        var algo = lvi.Tag as Algorithm;
+                        if (algo != null)
+                        {
+                                lvi.SubItems[RATIO].Text = algo.CurPayingRatio;
+                                lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                        }
+                    }
+                }
+            }
+        }
         public void RepaintStatus(bool isEnabled, string uuid)
         {
             if (_computeDevice != null && _computeDevice.Uuid == uuid)

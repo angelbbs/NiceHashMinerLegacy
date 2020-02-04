@@ -128,8 +128,6 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         #endregion
-
-        private System.Windows.Forms.ListView listViewAlgorithms;
         private System.Windows.Forms.ColumnHeader columnHeader0;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader3;
@@ -138,5 +136,6 @@ namespace NiceHashMiner.Forms.Components {
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        public System.Windows.Forms.ListView listViewAlgorithms;
     }
 }

@@ -302,7 +302,7 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         try
                         {
-                            Divert.DivertStop(pidData.DivertHandle);
+                            Divert.DivertStop(pidData.DivertHandle, pidData.Pid);
                             process.Kill();
                             process.Close();
                             process.WaitForExit(1000 * 60 * 1);
@@ -426,7 +426,7 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                Divert.DivertStop(ProcessHandle.DivertHandle);
+                Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id);
                 KillProcessAndChildren(pid);
 
                 if (ProcessHandle != null)

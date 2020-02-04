@@ -45,6 +45,7 @@ namespace NiceHashMiner.Forms
         private readonly RegistryKey _rkStartup;
 
         private bool _isStartupChanged = false;
+        private static Timer UpdateListView_timer;
 
         public Form_Settings()
         {
@@ -122,11 +123,22 @@ namespace NiceHashMiner.Forms
                 Helpers.ConsolePrint("SETTINGS", e.ToString());
             }
             Form_Settings.ActiveForm.Refresh();
+            if (UpdateListView_timer == null)
+            {
+                UpdateListView_timer = new Timer();
+                UpdateListView_timer.Tick += UpdateLvi_Tick;
+                UpdateListView_timer.Interval = 10000;
+                UpdateListView_timer.Start();
+            }
+        }
+        private void UpdateLvi_Tick(object sender, EventArgs e)
+        {
+            algorithmsListView1.UpdateLvi();
         }
 
-        #region Initializations
+            #region Initializations
 
-        private void InitializeToolTip()
+            private void InitializeToolTip()
         {
             // Setup Tooltips
             toolTip1.SetToolTip(comboBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
@@ -1335,13 +1347,22 @@ namespace NiceHashMiner.Forms
                 }
                 */
             }
-
+            if (UpdateListView_timer != null)
+            {
+                UpdateListView_timer.Stop();
+                UpdateListView_timer = null;
+            }
             Form_Settings.ActiveForm.Close();
          //   devicesListViewEnableControl1.Refresh();
         }
 
         private void ButtonCloseNoSave_Click(object sender, EventArgs e)
         {
+            if (UpdateListView_timer != null)
+            {
+                UpdateListView_timer.Stop();
+                UpdateListView_timer = null;
+            }
             IsChangeSaved = false;
             Close();
         }
@@ -1361,6 +1382,12 @@ namespace NiceHashMiner.Forms
                     e.Cancel = true;
                     return;
                 }
+            }
+
+            if (UpdateListView_timer != null)
+            {
+                UpdateListView_timer.Stop();
+                UpdateListView_timer = null;
             }
 
             if (Form_Benchmark.ActiveForm != null)
@@ -1937,6 +1964,17 @@ namespace NiceHashMiner.Forms
         private void textBox_SwitchProfitabilityThreshold_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form_Settings_Deactivate(object sender, EventArgs e)
+        {
+            /*
+            if (UpdateListView_timer != null)
+            {
+                UpdateListView_timer.Stop();
+                UpdateListView_timer = null;
+            }
+            */
         }
     }
 }

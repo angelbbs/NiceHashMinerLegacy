@@ -1658,6 +1658,7 @@ namespace NiceHashMiner.Forms
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Settings";
+            this.Deactivate += new System.EventHandler(this.Form_Settings_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form_Settings_Paint);
             this.tabControlGeneral.ResumeLayout(false);

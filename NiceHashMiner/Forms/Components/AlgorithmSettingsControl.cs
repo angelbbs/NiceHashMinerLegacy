@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -174,6 +175,7 @@ namespace NiceHashMiner.Forms.Components
             if (double.TryParse(fieldBoxBenchmarkSpeed.EntryText, out var value))
             {
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
+                //_currentlySelectedAlgorithm.CurPayingRate = value.ToString();
             }
             UpdateSpeedText();
         }
@@ -199,12 +201,26 @@ namespace NiceHashMiner.Forms.Components
 
         private void UpdateSpeedText()
         {
+            var speed = _currentlySelectedAlgorithm.BenchmarkSpeed;
             var secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryBenchmarkSpeed : 0;
             var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, secondarySpeed, _currentlySelectedAlgorithm.NiceHashID);
+            AlgorithmType algo = AlgorithmType.NONE;
+            if (_currentlySelectedAlgorithm.DualNiceHashID == AlgorithmType.DaggerEaglesong)
+            {
+                algo = AlgorithmType.Eaglesong;
+            }
+
+            NHSmaData.TryGetPaying(algo, out var payingSec);
+            NHSmaData.TryGetPaying(_currentlySelectedAlgorithm.NiceHashID, out var paying);
+
+            var payingRate = speed * paying * 0.000000001;
+            var payingRateSec = secondarySpeed * payingSec * 0.000000001;
+            var rate = (payingRate + payingRateSec).ToString("F8");
             // update lvi speed
             if (_currentlySelectedLvi != null)
             {
                 _currentlySelectedLvi.SubItems[SPEED].Text = speedString;
+                _currentlySelectedLvi.SubItems[RATE].Text = rate;
                 if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
                 {
                     _currentlySelectedLvi.SubItems[POWER].Text = _currentlySelectedAlgorithm.PowerUsage.ToString() + " Вт";
@@ -212,7 +228,6 @@ namespace NiceHashMiner.Forms.Components
                 {
                     _currentlySelectedLvi.SubItems[POWER].Text = _currentlySelectedAlgorithm.PowerUsage.ToString() + " W";
                 }
-
             }
         }
 

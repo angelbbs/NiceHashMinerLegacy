@@ -158,6 +158,16 @@ namespace NiceHashMiner.Algorithms
                 }
                 return rate;
             }
+            set
+            {
+                var rate = International.GetText("BenchmarkRatioRateN_A");
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
+                {
+                    double.TryParse(value, out var valueBench);
+                    var payingRate = valueBench * paying * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+            }
         }
 
         #endregion
