@@ -618,7 +618,7 @@ namespace NiceHashMiner.Stats
                    // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 10);
                     /*
                     FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                     StreamWriter w = new StreamWriter(fs);
@@ -691,7 +691,7 @@ namespace NiceHashMiner.Stats
                    //  Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 5);
                     /*
                     FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                     StreamWriter w = new StreamWriter(fs);
@@ -765,7 +765,7 @@ namespace NiceHashMiner.Stats
                  //   Helpers.ConsolePrint("SMA-DATA-API24h: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 1.1);
                     /*
                     FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                     StreamWriter w = new StreamWriter(fs);
@@ -796,7 +796,7 @@ namespace NiceHashMiner.Stats
         public static bool GetSmaAPI()
         {
 
-            if (ConfigManager.GeneralConfig.NewPlatform)
+            //if (ConfigManager.GeneralConfig.NewPlatform)
             {
                 if (ConfigManager.GeneralConfig.MOPA2)
                 {
@@ -812,15 +812,17 @@ namespace NiceHashMiner.Stats
                 }
                 if (ConfigManager.GeneralConfig.MOPA5)
                 {
-                    GetSmaAPICurrent(); //bug *10
-                    GetSmaAPI5m(); //bug *10
                     GetSmaAPI24h(); //bug *10
+                    GetSmaAPI5m(); //bug *10
+                    GetSmaAPICurrent(); //bug *10
                 }
             }
+            /*
             else
             {
                 return GetSmaAPICurrentOld();
             }
+            */
             return true;
         }
 
@@ -1024,7 +1026,7 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
         }
-        private static void SetAlgorithmRates(JArray data, int mult = 1)
+        private static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 1)
         {
             bool bug = false;
             bool alg_zero = false;
@@ -1046,9 +1048,30 @@ namespace NiceHashMiner.Stats
                         }
                         else
                         {
-                            if (paying != 0 && (paying * 5 < Math.Abs(algo[1].Value<double>()) * mult || (paying / 5 > Math.Abs(algo[1].Value<double>() * mult))))
+                            /*
+                            double treshold = 1;
+                            if (ConfigManager.GeneralConfig.MOPA2)
                             {
-                                Helpers.ConsolePrint("SMA API", "Bug found in: " + algoKey.ToString() + " " + paying.ToString() + "<>" + Math.Abs(algo[1].Value<double>() * mult));
+                                treshold = 10; //текущая больше стандартной в 10 раз
+                            }
+                            if (ConfigManager.GeneralConfig.MOPA3)
+                            {
+                                treshold = 5; //5м больше стандартной в 5 раз
+                            }
+                            if (ConfigManager.GeneralConfig.MOPA4)
+                            {
+                                treshold = 1.1; //24ч больше стандартной в 1.1 раза
+                            }
+                            if (ConfigManager.GeneralConfig.MOPA5)
+                            {
+                                treshold = 1.1; //наибольшая больше стандартной в 1.1 раза
+                            }
+                            */
+                            //если старая прибыльность (24ч) больше новой (30м), то игнорировать
+                            //if (paying != 0 && (paying * 5 < Math.Abs(algo[1].Value<double>()) * mult || (paying / 5 > Math.Abs(algo[1].Value<double>() * mult))))
+                            if (paying != 0 && (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ))
+                            {
+                                Helpers.ConsolePrint("SMA API", "Bug found in: " + algoKey.ToString() + " " + paying.ToString() + " < " + Math.Abs(algo[1].Value<double>()) * mult + " Old profitability is bigger than newer on " + (treshold*100-100).ToString() + "%. Ignoring");
                                 if (Math.Abs(algo[1].Value<double>()) * mult == 0 || Math.Abs(algo[1].Value<double>()) * mult * 102 < paying)
                                 {
                                     Helpers.ConsolePrint("SMA API", algoKey.ToString() + " paying sets to zero");

@@ -386,9 +386,20 @@ namespace NiceHashMiner
                 if (_benchmarkForm == null && (msIdle > (ConfigManager.GeneralConfig.MinIdleSeconds * 1000)))
                 {
                     Helpers.ConsolePrint("NICEHASH", "Entering idling state");
+                    /*
                     if (StartMining(false) != StartMiningReturnType.StartMining)
                     {
                         StopMining();
+                    }
+                    */
+                    _isManuallyStarted = true;
+                    if (StartMining(true) == StartMiningReturnType.ShowNoMining)
+                    {
+                        _isManuallyStarted = false;
+                        StopMining();
+                        MessageBox.Show(International.GetText("Form_Main_StartMiningReturnedFalse"),
+                            International.GetText("Warning_with_Exclamation"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }

@@ -1976,5 +1976,20 @@ namespace NiceHashMiner.Forms
             }
             */
         }
+
+        private void label_MinIdleSeconds_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox_MinIdleSeconds_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox_Misc_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

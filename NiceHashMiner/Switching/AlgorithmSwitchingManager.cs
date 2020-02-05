@@ -165,9 +165,15 @@ namespace NiceHashMiner.Switching
             // Random breaks down when called from multiple threads
             lock (_random)
             {
+                
                 _ticksForStable = StableRange.RandomInt(_random);
                 _ticksForUnstable = UnstableRange.RandomInt(_random);
                 _smaCheckTime = SmaCheckRange.RandomInt(_random);
+                /*
+                _ticksForStable = 5;
+                _ticksForUnstable = 5;
+                _smaCheckTime = 5;
+                */
             }
         }
 

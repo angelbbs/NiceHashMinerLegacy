@@ -19,7 +19,7 @@ namespace NiceHashMiner.Switching
     public static class NHSmaData
     {
         private const string Tag = "NHSMAData";
-        private const string CachedFile = "internals\\cached_sma.json";
+        private const string CachedFile = "configs\\cached_sma.json";
 
         public static bool Initialized { get; private set; }
         /// <summary>
@@ -202,7 +202,7 @@ namespace NiceHashMiner.Switching
             sma = null;
             return false;
         }
-        
+
         /// <summary>
         /// Attempt to get paying rate for an algorithm
         /// </summary>

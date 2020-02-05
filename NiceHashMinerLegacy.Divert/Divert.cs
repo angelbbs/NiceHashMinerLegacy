@@ -137,12 +137,13 @@ namespace NiceHashMinerLegacy.Divert
         {
             //Helpers.ConsolePrint("WinDivertSharp", "Divert START for process ID: " + processId.ToString() + " Miner: " + MinerName + " CurrentAlgorithmType: " + CurrentAlgorithmType);
             logging = log;
-            /*
-            for (int i = 0; i < processIdList.Count; i++)
+            if (processIdList.Count > 1)
             {
-                Helpers.ConsolePrint("WinDivertSharp", "processIdList " + processIdList[i].ToString());
+                for (int i = 0; i < processIdList.Count; i++)
+                {
+                    Helpers.ConsolePrint("WinDivertSharp", "processIdList " + processIdList[i].ToString());
+                }
             }
-            */
             if ( CurrentAlgorithmType == 47 && MinerName.ToLower() == "xmrig") //for testing. Disable in productuon
             {
                 return IntPtr.Zero;

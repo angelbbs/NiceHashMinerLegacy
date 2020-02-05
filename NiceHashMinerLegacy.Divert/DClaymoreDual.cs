@@ -165,7 +165,7 @@ namespace NiceHashMinerLegacy.Divert
             }
 
             WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 16384);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 8000);
+            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 1000);
             WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 33554432);
 
             RunDivert(DivertHandle, processId, CurrentAlgorithmType, MinerName, strPlatform);
@@ -278,8 +278,8 @@ namespace NiceHashMinerLegacy.Divert
                         {
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333) //us1.ethpool.org
                             {
-                                Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() +") -> Devfee connection to us1.ethpool.org");
-                                DevFeeIP = DevFeeIP1;
+                                DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
+                                Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() +") -> Devfee connection to us1.ethpool.org (" + DevFeeIP + ")");
                                 DevFeeIPName = DevFeeIPName1;
                                 DevFeePort = DevFeePort1;
 
@@ -290,8 +290,8 @@ namespace NiceHashMinerLegacy.Divert
                             }
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008) //eth-eu.dwarfpool.com
                             {
-                                Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") -> Devfee connection to eth-eu.dwarfpool.com");
-                                DevFeeIP = DevFeeIP2;
+                                DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
+                                Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") -> Devfee connection to eth-eu.dwarfpool.com (" + DevFeeIP + ")");
                                 DevFeeIPName = DevFeeIPName2;
                                 DevFeePort = DevFeePort2;
 
@@ -301,11 +301,12 @@ namespace NiceHashMinerLegacy.Divert
                                 DivertPort = DivertPort2;
                             }
                         }
-
+                        /*
                         try
                         {
                             System.Text.ASCIIEncoding ASCII = new System.Text.ASCIIEncoding();
                             IPHostEntry heserver = Dns.GetHostEntry(DevFeeIPName);
+
                             foreach (IPAddress curAdd in heserver.AddressList)
                             {
                                 if (curAdd.AddressFamily.ToString() == ProtocolFamily.InterNetwork.ToString())
@@ -319,7 +320,7 @@ namespace NiceHashMinerLegacy.Divert
                         {
                             Helpers.ConsolePrint("WinDivertSharp", "Exception: " + e.ToString());
                         }
-
+                        */
                         try
                         {
                             System.Text.ASCIIEncoding ASCII = new System.Text.ASCIIEncoding();
@@ -351,7 +352,7 @@ namespace NiceHashMinerLegacy.Divert
                         }
                         
                         if (addr.Direction == WinDivertDirection.Outbound &&
-                            parse_result.TcpHeader->DstPort == Divert.SwapOrder(DevFeePort) && parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &&
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == DevFeePort && parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &&
                             CheckParityConnections(processId, DevFeePort))
                         //if ((parse_result.TcpHeader->DstPort == Divert.SwapOrder(DevFeePort) && parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP) ||
                           //  (parse_result.TcpHeader->SrcPort == Divert.SwapOrder(DivertPort) && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP) &&
@@ -360,12 +361,16 @@ namespace NiceHashMinerLegacy.Divert
                             if (parse_result.PacketPayloadLength > 0)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
+                                goto Divert;//меняем данные в пакете
                             }
-                            goto Divert;//меняем данные в пакете
+                            else
+                            {
+                                goto changeSrcDst; //пакет пустой, меняем адреса
+                            }
                         }
 
                         if (addr.Direction == WinDivertDirection.Inbound &&
-                            parse_result.TcpHeader->SrcPort == Divert.SwapOrder(DivertPort) && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
+                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == DivertPort && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
                             CheckParityConnections(processId, DevFeePort))
                         //if ((parse_result.TcpHeader->DstPort == Divert.SwapOrder(DevFeePort) && parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP) ||
                         //  (parse_result.TcpHeader->SrcPort == Divert.SwapOrder(DivertPort) && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP) &&
@@ -374,11 +379,17 @@ namespace NiceHashMinerLegacy.Divert
                             if (parse_result.PacketPayloadLength > 0)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
+
+                                //goto Divert;//меняем данные в пакете
+                                goto changeSrcDst; //входящее соединение, только меняем адреса
                             }
-                            goto Divert;//меняем данные в пакете
+                            else
+                            {
+                                goto changeSrcDst; //пакет пустой, меняем адреса
+                            }
                         }
                         //********************************перехват
-                        Divert:
+Divert:
                         PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
 
                         int PacketLen = (int)parse_result.PacketPayloadLength;
@@ -388,8 +399,9 @@ namespace NiceHashMinerLegacy.Divert
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008 && !PacketPayloadData.Contains("eth_submitLogin") &&
                             CheckParityConnections(processId, parse_result.TcpHeader->SrcPort))
                         {
-                            modified = false;
-                            goto sendPacket;
+                            //modified = false;
+                            //goto sendPacket;
+                            goto changeSrcDst; //проверить
                         }
                         
                         if (parse_result.PacketPayloadLength > 1 & addr.Direction == WinDivertDirection.Outbound &
@@ -471,6 +483,7 @@ namespace NiceHashMinerLegacy.Divert
                                 File.WriteAllText(np.ToString() + "make-" + addr.Direction.ToString() + ".pkt", cpacket4);
                               */  
                         }
+changeSrcDst:
                         /*
                         Helpers.ConsolePrint("WinDivertSharp", "parse_result.TcpHeader->DstPort: " + parse_result.TcpHeader->DstPort.ToString() +
                             " SwapOrder(DevFeePort): " + SwapOrder(DevFeePort).ToString() +
@@ -479,7 +492,7 @@ namespace NiceHashMinerLegacy.Divert
                             " parse_result.TcpHeader->SrcPort: " + parse_result.TcpHeader->SrcPort.ToString() +
                             " CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processId, parse_result.TcpHeader->SrcPort).ToString());
                           */  
-                        if (parse_result.TcpHeader->DstPort == Divert.SwapOrder(DevFeePort) &&
+                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == DevFeePort &&
                                 addr.Direction == WinDivertDirection.Outbound &&
                                 parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &&
                                 CheckParityConnections(processId, parse_result.TcpHeader->SrcPort))//out to devfee
@@ -500,7 +513,7 @@ namespace NiceHashMinerLegacy.Divert
                             }
                         }
 
-                        if (parse_result.TcpHeader->SrcPort == Divert.SwapOrder(DivertPort) &&
+                        if (Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == DivertPort &&
                                 addr.Direction == WinDivertDirection.Inbound &&
                                 parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
                                 CheckParityConnections(processId, parse_result.TcpHeader->DstPort))
