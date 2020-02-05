@@ -165,6 +165,7 @@ namespace NiceHashMiner.Configs.Data
         public bool UseSmaCache = true;
 
         public int ColorProfileIndex = 0;
+        public int SwitchingAlgorithmsIndex = 2;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();
         public bool UseEthlargement = false;
 

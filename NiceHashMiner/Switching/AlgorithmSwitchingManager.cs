@@ -125,10 +125,13 @@ namespace NiceHashMiner.Switching
         private bool UpdateProfits(Dictionary<AlgorithmType, AlgorithmHistory> history, int ticks, StringBuilder sb)
         {
             var updated = false;
+            var cTicks = "min";
+            if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5) cTicks = "ticks";
+
 
             foreach (var algo in history.Keys)
             {
-                if (NHSmaData.TryGetPaying(algo, out var paying))
+                if (NHSmaData.TryGetPaying(algo, out var paying) && !algo.ToString().Contains("UNUSED"))
                 {
                     history[algo].Add(paying);
                     if (paying > _lastLegitPaying[algo])
@@ -138,13 +141,13 @@ namespace NiceHashMiner.Switching
                         if (i >= ticks)
                         {
                             _lastLegitPaying[algo] = paying;
-                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i} ticks for {algo}");
+                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i} {cTicks} for {algo}");
                         }
                         else
                         {
                             sb.AppendLine(
                                 $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5})," +
-                                $" higher for {i}/{ticks} ticks for {algo}"
+                                $" higher for {i}/{ticks} {cTicks} for {algo}"
                             );
                         }
                     } 
@@ -165,7 +168,6 @@ namespace NiceHashMiner.Switching
             // Random breaks down when called from multiple threads
             lock (_random)
             {
-                
                 _ticksForStable = StableRange.RandomInt(_random);
                 _ticksForUnstable = UnstableRange.RandomInt(_random);
                 _smaCheckTime = SmaCheckRange.RandomInt(_random);
@@ -174,6 +176,42 @@ namespace NiceHashMiner.Switching
                 _ticksForUnstable = 5;
                 _smaCheckTime = 5;
                 */
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 0)
+                {
+                    _smaCheckTime = 60;
+                    _ticksForStable = 1;
+                    _ticksForUnstable = 1;
+                }
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 1)
+                {
+                    _smaCheckTime = 60;
+                    _ticksForStable = 3;
+                    _ticksForUnstable = 3;
+                }
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 2)
+                {
+                    _smaCheckTime = 60;
+                    _ticksForStable = 5;
+                    _ticksForUnstable = 5;
+                }
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 3)
+                {
+                    _smaCheckTime = 60;
+                    _ticksForStable = 10;
+                    _ticksForUnstable = 10;
+                }
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 4)
+                {
+                        _smaCheckTime = 60;
+                        _ticksForStable = 15;
+                        _ticksForUnstable = 15;
+                }
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5)
+                {
+                    _ticksForStable = StableRange.RandomInt(_random);
+                    _ticksForUnstable = UnstableRange.RandomInt(_random);
+                    _smaCheckTime = SmaCheckRange.RandomInt(_random);
+                }
             }
         }
 

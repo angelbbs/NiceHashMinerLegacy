@@ -310,6 +310,12 @@ namespace NiceHashMiner.Forms.Components
                 listViewDevices.Columns[LOAD].Text = "Нагрузка";
                 listViewDevices.Columns[FAN].Text = "Об/мин";
                 listViewDevices.Columns[POWER].Text = "Потребление";
+            } else
+            {
+                listViewDevices.Columns[TEMP].Text = "Temp";
+                listViewDevices.Columns[LOAD].Text = "Load";
+                listViewDevices.Columns[FAN].Text = "Fan";
+                listViewDevices.Columns[POWER].Text = "Power";
             }
             listViewDevices.Columns[TEMP].Width = 0;
             listViewDevices.Columns[TEMP].TextAlign = HorizontalAlignment.Center; //не работает
@@ -356,6 +362,12 @@ namespace NiceHashMiner.Forms.Components
                 listViewDevices.Columns[LOAD].Text = "Нагрузка";
                 listViewDevices.Columns[FAN].Text = "Об/мин";
                 listViewDevices.Columns[POWER].Text = "Потребление";
+            } else
+            {
+                listViewDevices.Columns[TEMP].Text = "Temp";
+                listViewDevices.Columns[LOAD].Text = "Load";
+                listViewDevices.Columns[FAN].Text = "Fan";
+                listViewDevices.Columns[POWER].Text = "Power";
             }
 
             listViewDevices.Columns[ENABLED].Width = ConfigManager.GeneralConfig.ColumnENABLED;

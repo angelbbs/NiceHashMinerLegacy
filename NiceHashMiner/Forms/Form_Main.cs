@@ -1034,6 +1034,8 @@ namespace NiceHashMiner
                 }
             }
 
+            try
+            { 
             if (InvokeRequired)
             {
                 Invoke((Action)HideNotProfitable);
@@ -1042,6 +1044,11 @@ namespace NiceHashMiner
             {
                 label_NotProfitable.Visible = false;
                 label_NotProfitable.Invalidate();
+            }
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("Exception: ", e.ToString());
             }
         }
 

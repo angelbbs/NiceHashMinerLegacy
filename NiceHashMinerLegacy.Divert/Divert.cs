@@ -126,7 +126,7 @@ namespace NiceHashMinerLegacy.Divert
             return enc.GetBytes(str);
         }
 
-        public static List<int> processIdList = new List<int>();
+        public static List<uint> processIdList = new List<uint>();
         /*
         public void Add(int processId)
         {
@@ -152,10 +152,10 @@ namespace NiceHashMinerLegacy.Divert
 
             if (CurrentAlgorithmType == 20 && MinerName.ToLower() == "claymoredual") 
             {
-                processIdList.Add(processId);
+                processIdList.Add((uint)processId);
                 if (processIdList.Count > 1)
                 {
-                    Helpers.ConsolePrint("WinDivertSharp", "Mixed rig detected");
+                    Helpers.ConsolePrint("WinDivertSharp", "Mixed rig detected: " + processIdList.Count.ToString());
                 }
                 return DClaymoreDual.ClaymoreDualDivertStart(processId, CurrentAlgorithmType, MinerName, strPlatform);
             }
@@ -174,7 +174,7 @@ namespace NiceHashMinerLegacy.Divert
                 Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + DivertHandle.ToString() + " ProcessID: " + Pid.ToString());
                 Thread.Sleep(50);
             }
-            processIdList.Remove(Pid);
+            processIdList.Remove((uint)Pid);
         }
 
        

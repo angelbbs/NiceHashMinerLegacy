@@ -75,6 +75,7 @@ namespace NiceHashMinerLegacy.Divert
 
         internal static bool CheckParityConnections(int processId, ushort Port)
         {
+           // return true;
             Port = Divert.SwapOrder(Port);
             //Helpers.ConsolePrint("WinDivertSharp", "processId: " + processId.ToString() + " Port: " + Port.ToString());
             List<Connection> _allConnections = new List<Connection>();
@@ -82,14 +83,12 @@ namespace NiceHashMinerLegacy.Divert
             _allConnections.Clear();
             _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
 
-            if (Divert.processIdList.Count > 1)
+           // if (Divert.processIdList.Count > 1)
             {
                 for (int i = 1; i < _allConnections.Count; i++)
                 {
-                    if ((_allConnections[i].OwningPid == Divert.processIdList[0] ||
-                        _allConnections[i].OwningPid == (Divert.processIdList[1])) &
-                        _allConnections[i].LocalEndPoint.Port == Port &
-                        processName.ToLower() == "ethdcrminer64.exe")
+                    if (Divert.processIdList.Contains(_allConnections[i].OwningPid) &&
+                        _allConnections[i].LocalEndPoint.Port == Port)
                     {
                         /*
                         Helpers.ConsolePrint("WinDivertSharp", "CheckParityConnections: " + 
@@ -102,6 +101,7 @@ namespace NiceHashMinerLegacy.Divert
                     }
                 }
             }
+            /*
             else
             {
                 for (int i = 1; i < _allConnections.Count; i++)
@@ -116,7 +116,7 @@ namespace NiceHashMinerLegacy.Divert
                     }
                 }
             }
-
+            */
             _allConnections = null;
             return false;
         }
@@ -145,7 +145,7 @@ namespace NiceHashMinerLegacy.Divert
                 DivertPort2 = 8008;
 
                 //filter = "ip && tcp && (inbound ? (tcp.SrcPort == 3333 || tcp.SrcPort == 4444 || tcp.SrcPort == 8008) : (tcp.DstPort == 3333) || (tcp.DstPort == 8008) || (tcp.DstPort == 4444) || (tcp.DstPort == 5555))";//dagger
-                filter = "ip && tcp && (inbound ? (tcp.SrcPort == 3333 || tcp.SrcPort == 4444 || tcp.SrcPort == 8008) : (tcp.DstPort == 3333) || (tcp.DstPort == 8008) || (tcp.DstPort == 4444) || (tcp.DstPort == 5555))";//dagger
+                filter = "!loopback && (ip || tcp) && (inbound ? (tcp.SrcPort == 3333 || tcp.SrcPort == 4444 || tcp.SrcPort == 8008) : (tcp.DstPort == 3333) || (tcp.DstPort == 8008) || (tcp.DstPort == 4444) || (tcp.DstPort == 5555))";//dagger
 
                 uint errorPos = 0;
 
@@ -345,7 +345,7 @@ namespace NiceHashMinerLegacy.Divert
                             (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555) )
                         //    (CheckParityConnections(processId, parse_result.TcpHeader->DstPort) || CheckParityConnections(processId, parse_result.TcpHeader->SrcPort)))
                         {
-                            //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") " + "DROP SSL DEVFEE SESSION");
+                            Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") " + "SSL connection. No divert");
                             //continue;
                             modified = false;
                             goto sendPacket;
@@ -511,6 +511,7 @@ changeSrcDst:
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") -> packet: " + PacketPayloadData);
                             }
+                            modified = true;
                         }
 
                         if (Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == DivertPort &&
@@ -532,6 +533,7 @@ changeSrcDst:
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") <- packet: " + PacketPayloadData);
                             }
+                            modified = true;
                         }
 
 

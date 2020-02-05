@@ -36,7 +36,7 @@ namespace NiceHashMiner.Forms.Components
             secondaryFieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
             field_PowerUsage.SetInputModeDoubleOnly();
 
-           // field_PowerUsage.SetOnTextLeave(PowerUsage_Leave);
+            // field_PowerUsage.SetOnTextLeave(PowerUsage_Leave);
             field_PowerUsage.SetOnTextChanged(TextChangedPowerUsage);
             fieldBoxBenchmarkSpeed.SetOnTextChanged(TextChangedBenchmarkSpeed);
             secondaryFieldBoxBenchmarkSpeed.SetOnTextChanged(SecondaryTextChangedBenchmarkSpeed);
@@ -69,8 +69,12 @@ namespace NiceHashMiner.Forms.Components
             groupBoxExtraLaunchParameters.Text = International.GetText("Form_Settings_General_ExtraLaunchParameters");
             toolTip1.SetToolTip(groupBoxExtraLaunchParameters,
                 International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
-          //  toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
-
+            //  toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
+            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+            {
+                groupBoxSelectedAlgorithmSettings.Text = "Настройки выбранного алгоритма";
+                field_PowerUsage.InitLocale(toolTip1, "Потребляемая мощн. (Вт)", "Потребляемая мощность (Вт)");
+            }
 
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {

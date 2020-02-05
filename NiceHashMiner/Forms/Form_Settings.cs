@@ -450,7 +450,30 @@ namespace NiceHashMiner.Forms
                 radioButtonMOPA4.Text = "Средняя прибыльность за 24 часа";
                 radioButtonMOPA5.Text = "Наибольшая прибыльность по всем методам";
                 label1.Text = "Цветовой профиль (частично)";
+                groupBox1.Text = "Устройства";
+                //algorithmSettingsControl1.
+                //groupBoxSelectedAlgorithmSettings
+
+                label_switching_algorithms.Text = "Переключать алгоритмы";
+                //comboBox_switching_algorithms.Items.Add("немедленно (не рекомендуется)");
+                comboBox_switching_algorithms.Items.Add("через 1 мин");
+                comboBox_switching_algorithms.Items.Add("через 3 мин");
+                comboBox_switching_algorithms.Items.Add("через 5 мин");
+                comboBox_switching_algorithms.Items.Add("через 10 мин");
+                comboBox_switching_algorithms.Items.Add("через 15 мин");
+                comboBox_switching_algorithms.Items.Add("случайно (стандартный NHM)");
             }
+            else
+            {
+                //comboBox_switching_algorithms.Items.Add("immediately (not recommended)");
+                comboBox_switching_algorithms.Items.Add("after 1 min");
+                comboBox_switching_algorithms.Items.Add("after 3 min");
+                comboBox_switching_algorithms.Items.Add("after 5 min");
+                comboBox_switching_algorithms.Items.Add("after 10 min");
+                comboBox_switching_algorithms.Items.Add("after 15 min");
+                comboBox_switching_algorithms.Items.Add("random (standard NHM)");
+            }
+
 
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated;
 
@@ -587,6 +610,7 @@ namespace NiceHashMiner.Forms
                     lbl.ForeColor = Form_Main._foreColor;
                 }
 
+
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<GroupBox>())
                 {
                     lbl.BackColor = Form_Main._backColor;
@@ -619,6 +643,7 @@ namespace NiceHashMiner.Forms
                 currencyConverterCombobox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_Language.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_switching_algorithms.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 foreach (var lbl in this.tabPageGeneral.Controls.OfType<GroupBox>())
                 {
@@ -881,6 +906,7 @@ namespace NiceHashMiner.Forms
                // comboBox_ServiceLocation.Leave += GeneralComboBoxes_Leave;
                 comboBox_TimeUnit.Leave += GeneralComboBoxes_Leave;
                 comboBox_ColorProfile.Leave += GeneralComboBoxes_Leave;
+                comboBox_switching_algorithms.Leave += GeneralComboBoxes_Leave;
           //      comboBox_DagLoadMode.Leave += GeneralComboBoxes_Leave;
             }
 
@@ -1016,6 +1042,7 @@ namespace NiceHashMiner.Forms
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
                 comboBox_ColorProfile.SelectedIndex = ConfigManager.GeneralConfig.ColorProfileIndex;
+                comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
             }
         }
 
@@ -1236,6 +1263,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Language = (LanguageType) comboBox_Language.SelectedIndex;
             //ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.ColorProfileIndex = comboBox_ColorProfile.SelectedIndex;
+            ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = comboBox_switching_algorithms.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
             /*
             ConfigManager.GeneralConfig.EthminerDagGenerationType =
@@ -1793,7 +1821,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBox_Language_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            devicesListViewEnableControl1.InitLocale();
         }
 
         private void comboBox_Language_DrawItem(object sender, DrawItemEventArgs e)
@@ -1988,6 +2016,26 @@ namespace NiceHashMiner.Forms
         }
 
         private void groupBox_Misc_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox_switching_algorithms_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_ServiceLocation_DrawItem(sender, e);
+        }
+
+        private void textBox_MinerRestartDelayMS_TextChanged(object sender, EventArgs e)
         {
 
         }

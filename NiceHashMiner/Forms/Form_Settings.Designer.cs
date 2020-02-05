@@ -35,6 +35,12 @@ namespace NiceHashMiner.Forms
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.tabControlGeneral = new System.Windows.Forms.CustomTabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.groupBox_Idle = new System.Windows.Forms.GroupBox();
+            this.checkBox_StartMiningWhenIdle = new System.Windows.Forms.CheckBox();
+            this.pictureBox_StartMiningWhenIdle = new System.Windows.Forms.PictureBox();
+            this.label_MinIdleSeconds = new System.Windows.Forms.Label();
+            this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
+            this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
             this.checkBox_Force_mining_if_nonprofitable = new System.Windows.Forms.CheckBox();
             this.pictureBox_ElectricityCost = new System.Windows.Forms.PictureBox();
@@ -75,14 +81,12 @@ namespace NiceHashMiner.Forms
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
             this.pictureBox_DisableWindowsErrorReporting = new System.Windows.Forms.PictureBox();
             this.pictureBox_ShowDriverVersionWarning = new System.Windows.Forms.PictureBox();
-            this.pictureBox_StartMiningWhenIdle = new System.Windows.Forms.PictureBox();
             this.pictureBox_AutoScaleBTCValues = new System.Windows.Forms.PictureBox();
             this.pictureBox_AutoStartMining = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinimizeToTray = new System.Windows.Forms.PictureBox();
             this.pictureBox_HideMiningWindows = new System.Windows.Forms.PictureBox();
             this.checkBox_AutoScaleBTCValues = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableWindowsErrorReporting = new System.Windows.Forms.CheckBox();
-            this.checkBox_StartMiningWhenIdle = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowDriverVersionWarning = new System.Windows.Forms.CheckBox();
             this.groupBox_Logging = new System.Windows.Forms.GroupBox();
             this.label_LogMaxFileSize = new System.Windows.Forms.Label();
@@ -108,26 +112,25 @@ namespace NiceHashMiner.Forms
             this.radioButtonMOPA2 = new System.Windows.Forms.RadioButton();
             this.radioButtonMOPA1 = new System.Windows.Forms.RadioButton();
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
+            this.label_switching_algorithms = new System.Windows.Forms.Label();
             this.label_RunEthlargement = new System.Windows.Forms.Label();
             this.checkBox_RunEthlargement = new System.Windows.Forms.CheckBox();
+            this.comboBox_switching_algorithms = new System.Windows.Forms.ComboBox();
             this.pictureBox_MinerRestartDelayMS = new System.Windows.Forms.PictureBox();
             this.pictureBox_APIBindPortStart = new System.Windows.Forms.PictureBox();
             this.pictureBox_SwitchMaxSeconds = new System.Windows.Forms.PictureBox();
             this.pictureBox_SwitchProfitabilityThreshold = new System.Windows.Forms.PictureBox();
             this.pictureBox_SwitchMinSeconds = new System.Windows.Forms.PictureBox();
-            this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
-            this.label_MinIdleSeconds = new System.Windows.Forms.Label();
             this.label_SwitchMaxSeconds = new System.Windows.Forms.Label();
-            this.label_MinerRestartDelayMS = new System.Windows.Forms.Label();
             this.textBox_SwitchMinSeconds = new System.Windows.Forms.TextBox();
             this.label_APIBindPortStart = new System.Windows.Forms.Label();
+            this.label_MinerRestartDelayMS = new System.Windows.Forms.Label();
             this.textBox_SwitchProfitabilityThreshold = new System.Windows.Forms.TextBox();
+            this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.textBox_APIBindPortStart = new System.Windows.Forms.TextBox();
             this.label_SwitchMinSeconds = new System.Windows.Forms.Label();
-            this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.textBox_SwitchMaxSeconds = new System.Windows.Forms.TextBox();
-            this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkbox_Group_same_devices = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowFanAsPercent = new System.Windows.Forms.CheckBox();
@@ -143,13 +146,15 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
+            this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.groupBox_Idle = new System.Windows.Forms.GroupBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
+            this.groupBox_Idle.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartMiningWhenIdle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).BeginInit();
             this.groupBox_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).BeginInit();
@@ -164,7 +169,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableWindowsErrorReporting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDriverVersionWarning)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartMiningWhenIdle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoScaleBTCValues)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).BeginInit();
@@ -185,7 +189,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMaxSeconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSeconds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_NVIDIAP0State)).BeginInit();
@@ -193,7 +196,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVIDIA)).BeginInit();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            this.groupBox_Idle.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -285,6 +287,76 @@ namespace NiceHashMiner.Forms
             this.tabPageGeneral.Size = new System.Drawing.Size(669, 439);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
+            // 
+            // groupBox_Idle
+            // 
+            this.groupBox_Idle.Controls.Add(this.checkBox_StartMiningWhenIdle);
+            this.groupBox_Idle.Controls.Add(this.pictureBox_StartMiningWhenIdle);
+            this.groupBox_Idle.Controls.Add(this.label_MinIdleSeconds);
+            this.groupBox_Idle.Controls.Add(this.pictureBox_MinIdleSeconds);
+            this.groupBox_Idle.Controls.Add(this.textBox_MinIdleSeconds);
+            this.groupBox_Idle.Location = new System.Drawing.Point(6, 363);
+            this.groupBox_Idle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox_Idle.Name = "groupBox_Idle";
+            this.groupBox_Idle.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox_Idle.Size = new System.Drawing.Size(346, 70);
+            this.groupBox_Idle.TabIndex = 392;
+            this.groupBox_Idle.TabStop = false;
+            this.groupBox_Idle.Text = "Idle:";
+            // 
+            // checkBox_StartMiningWhenIdle
+            // 
+            this.checkBox_StartMiningWhenIdle.AutoSize = true;
+            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_StartMiningWhenIdle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_StartMiningWhenIdle.Name = "checkBox_StartMiningWhenIdle";
+            this.checkBox_StartMiningWhenIdle.Size = new System.Drawing.Size(125, 17);
+            this.checkBox_StartMiningWhenIdle.TabIndex = 322;
+            this.checkBox_StartMiningWhenIdle.Text = "StartMiningWhenIdle";
+            this.checkBox_StartMiningWhenIdle.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox_StartMiningWhenIdle
+            // 
+            this.pictureBox_StartMiningWhenIdle.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_StartMiningWhenIdle.Location = new System.Drawing.Point(199, 18);
+            this.pictureBox_StartMiningWhenIdle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_StartMiningWhenIdle.Name = "pictureBox_StartMiningWhenIdle";
+            this.pictureBox_StartMiningWhenIdle.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_StartMiningWhenIdle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_StartMiningWhenIdle.TabIndex = 364;
+            this.pictureBox_StartMiningWhenIdle.TabStop = false;
+            // 
+            // label_MinIdleSeconds
+            // 
+            this.label_MinIdleSeconds.AutoSize = true;
+            this.label_MinIdleSeconds.Location = new System.Drawing.Point(3, 41);
+            this.label_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_MinIdleSeconds.Name = "label_MinIdleSeconds";
+            this.label_MinIdleSeconds.Size = new System.Drawing.Size(86, 13);
+            this.label_MinIdleSeconds.TabIndex = 356;
+            this.label_MinIdleSeconds.Text = "MinIdleSeconds:";
+            this.label_MinIdleSeconds.Click += new System.EventHandler(this.label_MinIdleSeconds_Click);
+            // 
+            // pictureBox_MinIdleSeconds
+            // 
+            this.pictureBox_MinIdleSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinIdleSeconds.Location = new System.Drawing.Point(199, 38);
+            this.pictureBox_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_MinIdleSeconds.Name = "pictureBox_MinIdleSeconds";
+            this.pictureBox_MinIdleSeconds.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_MinIdleSeconds.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_MinIdleSeconds.TabIndex = 385;
+            this.pictureBox_MinIdleSeconds.TabStop = false;
+            this.pictureBox_MinIdleSeconds.Click += new System.EventHandler(this.pictureBox_MinIdleSeconds_Click);
+            // 
+            // textBox_MinIdleSeconds
+            // 
+            this.textBox_MinIdleSeconds.Location = new System.Drawing.Point(150, 38);
+            this.textBox_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_MinIdleSeconds.Name = "textBox_MinIdleSeconds";
+            this.textBox_MinIdleSeconds.Size = new System.Drawing.Size(36, 20);
+            this.textBox_MinIdleSeconds.TabIndex = 335;
+            this.textBox_MinIdleSeconds.TextChanged += new System.EventHandler(this.textBox_MinIdleSeconds_TextChanged);
             // 
             // groupBox_Main
             // 
@@ -509,7 +581,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.Controls.Add(this.checkBox_AutoScaleBTCValues);
             this.groupBox_Misc.Controls.Add(this.checkBox_DisableWindowsErrorReporting);
             this.groupBox_Misc.Controls.Add(this.checkBox_ShowDriverVersionWarning);
-            this.groupBox_Misc.Location = new System.Drawing.Point(358, 6);
+            this.groupBox_Misc.Location = new System.Drawing.Point(375, 6);
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -761,17 +833,6 @@ namespace NiceHashMiner.Forms
             this.pictureBox_ShowDriverVersionWarning.TabIndex = 364;
             this.pictureBox_ShowDriverVersionWarning.TabStop = false;
             // 
-            // pictureBox_StartMiningWhenIdle
-            // 
-            this.pictureBox_StartMiningWhenIdle.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_StartMiningWhenIdle.Location = new System.Drawing.Point(199, 18);
-            this.pictureBox_StartMiningWhenIdle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_StartMiningWhenIdle.Name = "pictureBox_StartMiningWhenIdle";
-            this.pictureBox_StartMiningWhenIdle.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_StartMiningWhenIdle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_StartMiningWhenIdle.TabIndex = 364;
-            this.pictureBox_StartMiningWhenIdle.TabStop = false;
-            // 
             // pictureBox_AutoScaleBTCValues
             // 
             this.pictureBox_AutoScaleBTCValues.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
@@ -837,17 +898,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_DisableWindowsErrorReporting.TabIndex = 324;
             this.checkBox_DisableWindowsErrorReporting.Text = "DisableWindowsErrorReporting";
             this.checkBox_DisableWindowsErrorReporting.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_StartMiningWhenIdle
-            // 
-            this.checkBox_StartMiningWhenIdle.AutoSize = true;
-            this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 19);
-            this.checkBox_StartMiningWhenIdle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_StartMiningWhenIdle.Name = "checkBox_StartMiningWhenIdle";
-            this.checkBox_StartMiningWhenIdle.Size = new System.Drawing.Size(125, 17);
-            this.checkBox_StartMiningWhenIdle.TabIndex = 322;
-            this.checkBox_StartMiningWhenIdle.Text = "StartMiningWhenIdle";
-            this.checkBox_StartMiningWhenIdle.UseVisualStyleBackColor = true;
             // 
             // checkBox_ShowDriverVersionWarning
             // 
@@ -1106,7 +1156,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxMOPA.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxMOPA.Name = "groupBoxMOPA";
             this.groupBoxMOPA.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxMOPA.Size = new System.Drawing.Size(641, 68);
+            this.groupBoxMOPA.Size = new System.Drawing.Size(658, 68);
             this.groupBoxMOPA.TabIndex = 396;
             this.groupBoxMOPA.TabStop = false;
             this.groupBoxMOPA.Text = "Method of obtaining profitability of algorithms:";
@@ -1173,31 +1223,44 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Miners
             // 
+            this.groupBox_Miners.Controls.Add(this.label_switching_algorithms);
             this.groupBox_Miners.Controls.Add(this.label_RunEthlargement);
             this.groupBox_Miners.Controls.Add(this.checkBox_RunEthlargement);
+            this.groupBox_Miners.Controls.Add(this.comboBox_switching_algorithms);
             this.groupBox_Miners.Controls.Add(this.pictureBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.pictureBox_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMaxSeconds);
             this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMinSeconds);
             this.groupBox_Miners.Controls.Add(this.label_SwitchMaxSeconds);
-            this.groupBox_Miners.Controls.Add(this.label_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.textBox_SwitchMinSeconds);
             this.groupBox_Miners.Controls.Add(this.label_APIBindPortStart);
+            this.groupBox_Miners.Controls.Add(this.label_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.textBox_SwitchProfitabilityThreshold);
+            this.groupBox_Miners.Controls.Add(this.textBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.label_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.textBox_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.label_SwitchMinSeconds);
             this.groupBox_Miners.Controls.Add(this.textBox_SwitchMaxSeconds);
-            this.groupBox_Miners.Controls.Add(this.textBox_MinerRestartDelayMS);
             this.groupBox_Miners.Location = new System.Drawing.Point(6, 6);
             this.groupBox_Miners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Miners.Name = "groupBox_Miners";
             this.groupBox_Miners.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Miners.Size = new System.Drawing.Size(641, 144);
+            this.groupBox_Miners.Size = new System.Drawing.Size(657, 144);
             this.groupBox_Miners.TabIndex = 389;
             this.groupBox_Miners.TabStop = false;
             this.groupBox_Miners.Text = "Miners:";
+            // 
+            // label_switching_algorithms
+            // 
+            this.label_switching_algorithms.AutoSize = true;
+            this.label_switching_algorithms.Location = new System.Drawing.Point(459, 14);
+            this.label_switching_algorithms.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_switching_algorithms.Name = "label_switching_algorithms";
+            this.label_switching_algorithms.Size = new System.Drawing.Size(103, 13);
+            this.label_switching_algorithms.TabIndex = 404;
+            this.label_switching_algorithms.Text = "Switching algorithms";
+            this.label_switching_algorithms.Click += new System.EventHandler(this.label2_Click);
             // 
             // label_RunEthlargement
             // 
@@ -1221,10 +1284,22 @@ namespace NiceHashMiner.Forms
             this.checkBox_RunEthlargement.UseVisualStyleBackColor = true;
             this.checkBox_RunEthlargement.CheckedChanged += new System.EventHandler(this.checkBox_RunEthlargement_CheckedChanged);
             // 
+            // comboBox_switching_algorithms
+            // 
+            this.comboBox_switching_algorithms.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_switching_algorithms.FormattingEnabled = true;
+            this.comboBox_switching_algorithms.Location = new System.Drawing.Point(464, 32);
+            this.comboBox_switching_algorithms.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBox_switching_algorithms.Name = "comboBox_switching_algorithms";
+            this.comboBox_switching_algorithms.Size = new System.Drawing.Size(171, 21);
+            this.comboBox_switching_algorithms.TabIndex = 403;
+            this.comboBox_switching_algorithms.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBox_switching_algorithms_DrawItem);
+            this.comboBox_switching_algorithms.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // pictureBox_MinerRestartDelayMS
             // 
             this.pictureBox_MinerRestartDelayMS.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinerRestartDelayMS.Location = new System.Drawing.Point(394, 15);
+            this.pictureBox_MinerRestartDelayMS.Location = new System.Drawing.Point(162, 59);
             this.pictureBox_MinerRestartDelayMS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinerRestartDelayMS.Name = "pictureBox_MinerRestartDelayMS";
             this.pictureBox_MinerRestartDelayMS.Size = new System.Drawing.Size(18, 18);
@@ -1235,7 +1310,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_APIBindPortStart
             // 
             this.pictureBox_APIBindPortStart.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_APIBindPortStart.Location = new System.Drawing.Point(617, 15);
+            this.pictureBox_APIBindPortStart.Location = new System.Drawing.Point(162, 15);
             this.pictureBox_APIBindPortStart.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_APIBindPortStart.Name = "pictureBox_APIBindPortStart";
             this.pictureBox_APIBindPortStart.Size = new System.Drawing.Size(18, 18);
@@ -1257,7 +1332,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_SwitchProfitabilityThreshold
             // 
             this.pictureBox_SwitchProfitabilityThreshold.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(617, 61);
+            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(617, 59);
             this.pictureBox_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_SwitchProfitabilityThreshold.Name = "pictureBox_SwitchProfitabilityThreshold";
             this.pictureBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(18, 18);
@@ -1268,36 +1343,13 @@ namespace NiceHashMiner.Forms
             // pictureBox_SwitchMinSeconds
             // 
             this.pictureBox_SwitchMinSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchMinSeconds.Location = new System.Drawing.Point(168, 59);
+            this.pictureBox_SwitchMinSeconds.Location = new System.Drawing.Point(394, 15);
             this.pictureBox_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_SwitchMinSeconds.Name = "pictureBox_SwitchMinSeconds";
             this.pictureBox_SwitchMinSeconds.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_SwitchMinSeconds.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_SwitchMinSeconds.TabIndex = 385;
             this.pictureBox_SwitchMinSeconds.TabStop = false;
-            // 
-            // pictureBox_MinIdleSeconds
-            // 
-            this.pictureBox_MinIdleSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinIdleSeconds.Location = new System.Drawing.Point(199, 38);
-            this.pictureBox_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_MinIdleSeconds.Name = "pictureBox_MinIdleSeconds";
-            this.pictureBox_MinIdleSeconds.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_MinIdleSeconds.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_MinIdleSeconds.TabIndex = 385;
-            this.pictureBox_MinIdleSeconds.TabStop = false;
-            this.pictureBox_MinIdleSeconds.Click += new System.EventHandler(this.pictureBox_MinIdleSeconds_Click);
-            // 
-            // label_MinIdleSeconds
-            // 
-            this.label_MinIdleSeconds.AutoSize = true;
-            this.label_MinIdleSeconds.Location = new System.Drawing.Point(3, 41);
-            this.label_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_MinIdleSeconds.Name = "label_MinIdleSeconds";
-            this.label_MinIdleSeconds.Size = new System.Drawing.Size(86, 13);
-            this.label_MinIdleSeconds.TabIndex = 356;
-            this.label_MinIdleSeconds.Text = "MinIdleSeconds:";
-            this.label_MinIdleSeconds.Click += new System.EventHandler(this.label_MinIdleSeconds_Click);
             // 
             // label_SwitchMaxSeconds
             // 
@@ -1309,42 +1361,51 @@ namespace NiceHashMiner.Forms
             this.label_SwitchMaxSeconds.TabIndex = 378;
             this.label_SwitchMaxSeconds.Text = "SwitchMaxSecs:";
             // 
-            // label_MinerRestartDelayMS
-            // 
-            this.label_MinerRestartDelayMS.AutoSize = true;
-            this.label_MinerRestartDelayMS.Location = new System.Drawing.Point(242, 15);
-            this.label_MinerRestartDelayMS.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_MinerRestartDelayMS.Name = "label_MinerRestartDelayMS";
-            this.label_MinerRestartDelayMS.Size = new System.Drawing.Size(113, 13);
-            this.label_MinerRestartDelayMS.TabIndex = 375;
-            this.label_MinerRestartDelayMS.Text = "MinerRestartDelayMS:";
-            // 
             // textBox_SwitchMinSeconds
             // 
-            this.textBox_SwitchMinSeconds.Location = new System.Drawing.Point(10, 78);
+            this.textBox_SwitchMinSeconds.Location = new System.Drawing.Point(241, 33);
             this.textBox_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_SwitchMinSeconds.Name = "textBox_SwitchMinSeconds";
-            this.textBox_SwitchMinSeconds.Size = new System.Drawing.Size(178, 20);
+            this.textBox_SwitchMinSeconds.Size = new System.Drawing.Size(173, 20);
             this.textBox_SwitchMinSeconds.TabIndex = 342;
             // 
             // label_APIBindPortStart
             // 
             this.label_APIBindPortStart.AutoSize = true;
-            this.label_APIBindPortStart.Location = new System.Drawing.Point(465, 15);
+            this.label_APIBindPortStart.Location = new System.Drawing.Point(10, 15);
             this.label_APIBindPortStart.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_APIBindPortStart.Name = "label_APIBindPortStart";
             this.label_APIBindPortStart.Size = new System.Drawing.Size(118, 13);
             this.label_APIBindPortStart.TabIndex = 357;
             this.label_APIBindPortStart.Text = "API Bind port pool start:";
             // 
+            // label_MinerRestartDelayMS
+            // 
+            this.label_MinerRestartDelayMS.AutoSize = true;
+            this.label_MinerRestartDelayMS.Location = new System.Drawing.Point(10, 59);
+            this.label_MinerRestartDelayMS.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_MinerRestartDelayMS.Name = "label_MinerRestartDelayMS";
+            this.label_MinerRestartDelayMS.Size = new System.Drawing.Size(113, 13);
+            this.label_MinerRestartDelayMS.TabIndex = 375;
+            this.label_MinerRestartDelayMS.Text = "MinerRestartDelayMS:";
+            // 
             // textBox_SwitchProfitabilityThreshold
             // 
-            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(465, 79);
+            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(464, 78);
             this.textBox_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_SwitchProfitabilityThreshold.Name = "textBox_SwitchProfitabilityThreshold";
             this.textBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(172, 20);
             this.textBox_SwitchProfitabilityThreshold.TabIndex = 333;
             this.textBox_SwitchProfitabilityThreshold.TextChanged += new System.EventHandler(this.textBox_SwitchProfitabilityThreshold_TextChanged);
+            // 
+            // textBox_MinerRestartDelayMS
+            // 
+            this.textBox_MinerRestartDelayMS.Location = new System.Drawing.Point(10, 78);
+            this.textBox_MinerRestartDelayMS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_MinerRestartDelayMS.Name = "textBox_MinerRestartDelayMS";
+            this.textBox_MinerRestartDelayMS.Size = new System.Drawing.Size(172, 20);
+            this.textBox_MinerRestartDelayMS.TabIndex = 340;
+            this.textBox_MinerRestartDelayMS.TextChanged += new System.EventHandler(this.textBox_MinerRestartDelayMS_TextChanged);
             // 
             // label_SwitchProfitabilityThreshold
             // 
@@ -1358,7 +1419,7 @@ namespace NiceHashMiner.Forms
             // 
             // textBox_APIBindPortStart
             // 
-            this.textBox_APIBindPortStart.Location = new System.Drawing.Point(465, 33);
+            this.textBox_APIBindPortStart.Location = new System.Drawing.Point(10, 33);
             this.textBox_APIBindPortStart.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_APIBindPortStart.Name = "textBox_APIBindPortStart";
             this.textBox_APIBindPortStart.Size = new System.Drawing.Size(172, 20);
@@ -1367,21 +1428,12 @@ namespace NiceHashMiner.Forms
             // label_SwitchMinSeconds
             // 
             this.label_SwitchMinSeconds.AutoSize = true;
-            this.label_SwitchMinSeconds.Location = new System.Drawing.Point(10, 59);
+            this.label_SwitchMinSeconds.Location = new System.Drawing.Point(238, 15);
             this.label_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_SwitchMinSeconds.Name = "label_SwitchMinSeconds";
             this.label_SwitchMinSeconds.Size = new System.Drawing.Size(83, 13);
             this.label_SwitchMinSeconds.TabIndex = 362;
             this.label_SwitchMinSeconds.Text = "SwitchMinSecs:";
-            // 
-            // textBox_MinIdleSeconds
-            // 
-            this.textBox_MinIdleSeconds.Location = new System.Drawing.Point(150, 38);
-            this.textBox_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_MinIdleSeconds.Name = "textBox_MinIdleSeconds";
-            this.textBox_MinIdleSeconds.Size = new System.Drawing.Size(36, 20);
-            this.textBox_MinIdleSeconds.TabIndex = 335;
-            this.textBox_MinIdleSeconds.TextChanged += new System.EventHandler(this.textBox_MinIdleSeconds_TextChanged);
             // 
             // textBox_SwitchMaxSeconds
             // 
@@ -1390,14 +1442,6 @@ namespace NiceHashMiner.Forms
             this.textBox_SwitchMaxSeconds.Name = "textBox_SwitchMaxSeconds";
             this.textBox_SwitchMaxSeconds.Size = new System.Drawing.Size(172, 20);
             this.textBox_SwitchMaxSeconds.TabIndex = 337;
-            // 
-            // textBox_MinerRestartDelayMS
-            // 
-            this.textBox_MinerRestartDelayMS.Location = new System.Drawing.Point(242, 33);
-            this.textBox_MinerRestartDelayMS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_MinerRestartDelayMS.Name = "textBox_MinerRestartDelayMS";
-            this.textBox_MinerRestartDelayMS.Size = new System.Drawing.Size(172, 20);
-            this.textBox_MinerRestartDelayMS.TabIndex = 340;
             // 
             // groupBox1
             // 
@@ -1416,7 +1460,7 @@ namespace NiceHashMiner.Forms
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox1.Size = new System.Drawing.Size(641, 117);
+            this.groupBox1.Size = new System.Drawing.Size(658, 117);
             this.groupBox1.TabIndex = 394;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
@@ -1585,21 +1629,10 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxAlgorithmSettings.Name = "groupBoxAlgorithmSettings";
             this.groupBoxAlgorithmSettings.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(639, 253);
+            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(657, 253);
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
-            // 
-            // buttonGPUtuning
-            // 
-            this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
-            this.buttonGPUtuning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonGPUtuning.Name = "buttonGPUtuning";
-            this.buttonGPUtuning.Size = new System.Drawing.Size(141, 23);
-            this.buttonGPUtuning.TabIndex = 394;
-            this.buttonGPUtuning.Text = "GPU tuning";
-            this.buttonGPUtuning.UseVisualStyleBackColor = true;
-            this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
             // 
             // algorithmsListView1
             // 
@@ -1614,14 +1647,25 @@ namespace NiceHashMiner.Forms
             this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
             this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(627, 169);
+            this.algorithmsListView1.Size = new System.Drawing.Size(645, 169);
             this.algorithmsListView1.TabIndex = 2;
+            // 
+            // buttonGPUtuning
+            // 
+            this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
+            this.buttonGPUtuning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonGPUtuning.Name = "buttonGPUtuning";
+            this.buttonGPUtuning.Size = new System.Drawing.Size(141, 23);
+            this.buttonGPUtuning.TabIndex = 394;
+            this.buttonGPUtuning.Text = "GPU tuning";
+            this.buttonGPUtuning.UseVisualStyleBackColor = true;
+            this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
             // 
             // algorithmSettingsControl1
             // 
             this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(360, 8);
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, 8);
             this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
             this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 208);
@@ -1641,22 +1685,6 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
-            // 
-            // groupBox_Idle
-            // 
-            this.groupBox_Idle.Controls.Add(this.checkBox_StartMiningWhenIdle);
-            this.groupBox_Idle.Controls.Add(this.pictureBox_StartMiningWhenIdle);
-            this.groupBox_Idle.Controls.Add(this.label_MinIdleSeconds);
-            this.groupBox_Idle.Controls.Add(this.pictureBox_MinIdleSeconds);
-            this.groupBox_Idle.Controls.Add(this.textBox_MinIdleSeconds);
-            this.groupBox_Idle.Location = new System.Drawing.Point(6, 363);
-            this.groupBox_Idle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Idle.Name = "groupBox_Idle";
-            this.groupBox_Idle.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Idle.Size = new System.Drawing.Size(346, 70);
-            this.groupBox_Idle.TabIndex = 392;
-            this.groupBox_Idle.TabStop = false;
-            this.groupBox_Idle.Text = "Idle:";
             // 
             // Form_Settings
             // 
@@ -1680,6 +1708,10 @@ namespace NiceHashMiner.Forms
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form_Settings_Paint);
             this.tabControlGeneral.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
+            this.groupBox_Idle.ResumeLayout(false);
+            this.groupBox_Idle.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartMiningWhenIdle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).EndInit();
             this.groupBox_Main.ResumeLayout(false);
             this.groupBox_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).EndInit();
@@ -1696,7 +1728,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableWindowsErrorReporting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDriverVersionWarning)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartMiningWhenIdle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoScaleBTCValues)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).EndInit();
@@ -1721,7 +1752,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMaxSeconds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSeconds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -1731,8 +1761,6 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            this.groupBox_Idle.ResumeLayout(false);
-            this.groupBox_Idle.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1859,5 +1887,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox Checkbox_Save_windows_size_and_position;
         private System.Windows.Forms.CheckBox checkbox_Group_same_devices;
         private System.Windows.Forms.GroupBox groupBox_Idle;
+        private System.Windows.Forms.Label label_switching_algorithms;
+        private System.Windows.Forms.ComboBox comboBox_switching_algorithms;
     }
 }
