@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners
     public class SRBMiner : Miner
     {
         private readonly int GPUPlatformNumber;
-        private int _benchmarkTimeWait = 240 + 20;
+        private int _benchmarkTimeWait = 190;
 
        // private int TotalCount = 2;
         private const int TotalDelim = 2;
@@ -60,187 +60,20 @@ namespace NiceHashMiner.Miners
 
         private string GetStartCommand(string url, string btcAdress, string worker) {
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            var algo = "cryptonightv8";
-            var port = "3367";
-            var variant = " --ccryptonighttype normalv8";
-            url = url.Replace("stratum+tcp://", "");
-            string nhsuff = "";
-            string username = GetUsername(btcAdress, worker);
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
+                var algo = "randomxmonero";
+                var port = "3380";
+                url = url.Replace("randomx", "randomxmonero");
+                return $" --algorithm randomx --pool {url} --wallet {btcAdress}.{worker} --nicehash true --api-enable --api-port {ApiPort} {extras} "
+               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
+               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
+               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
+               + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
+               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} ";
             }
-            if (File.Exists("bin_3rdparty\\SRBMiner\\poolsV8.txt"))
-                File.Delete("bin_3rdparty\\SRBMiner\\poolsV8.txt");
-            Thread.Sleep(200);
-            var str1 = "{\r\n" +
-                       "\"pools\" :\r\n" +
-                       "[\r\n";
-            var str2 = "        {\r\n" +
-                    "                \"pool\" : \"cryptonightv8." + myServers[1, 0] + nhsuff + ".nicehash.com:3367\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightv8." + myServers[2, 0] + nhsuff + ".nicehash.com:3367\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightv8." + myServers[3, 0] + nhsuff + ".nicehash.com:3367\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightv8." + myServers[4, 0] + nhsuff + ".nicehash.com:3367\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightv8." + myServers[5, 0] + nhsuff + ".nicehash.com:3367\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightv8." + myServers[0, 0] + nhsuff + ".nicehash.com:3367\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "        }\r\n"+
-                    "]\r\n}";
-            try
-            {
-                FileStream fs = new FileStream("bin_3rdparty\\SRBMiner\\poolsV8.txt", FileMode.Create, FileAccess.Write);
-                StreamWriter w = new StreamWriter(fs);
-                w.Write(str1+str2);
-                w.Flush();
-                w.Close();
-                Thread.Sleep(200);
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("poolsV8.txt write error:", e.ToString());
-            }
+            return "unsupported algo";
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightHeavy))
-            {
-                algo = "cryptonightheavy";
-                port = "3364";
-                variant = " --ccryptonighttype heavy";
-                if (File.Exists("bin_3rdparty\\SRBMiner\\poolsH.txt"))
-                    File.Delete("bin_3rdparty\\SRBMiner\\poolsH.txt");
-                Thread.Sleep(200);
-                var strh1 = "{\r\n" +
-                           "\"pools\" :\r\n" +
-                           "[\r\n";
-
-                var strh2 = "        {\r\n" +
-                    "                \"pool\" : \"cryptonightheavy." + myServers[1, 0] + nhsuff + ".nicehash.com:3364\",\r\n" +
-                    "                \"wallet\" : \""+ username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightheavy." + myServers[2, 0] + nhsuff + ".nicehash.com:3364\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightheavy." + myServers[3, 0] + nhsuff + ".nicehash.com:3364\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightheavy." + myServers[4, 0] + nhsuff + ".nicehash.com:3364\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightheavy." + myServers[5, 0] + nhsuff + ".nicehash.com:3364\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightheavy." + myServers[0, 0] + nhsuff + ".nicehash.com:3364\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "        }\r\n";
-                var strh3 = "]\r\n" +
-                           "}";
-                try
-                {
-                    FileStream fs = new FileStream("bin_3rdparty\\SRBMiner\\poolsH.txt", FileMode.Create, FileAccess.Write);
-                    StreamWriter w = new StreamWriter(fs);
-                    w.Write(strh1 + strh2 + strh3);
-                    w.Flush();
-                    w.Close();
-                    Thread.Sleep(200);
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("poolsH.txt write error:", e.ToString());
-                }
-                return $" {variant} --cgpuid {GetDevicesCommandString().TrimStart()} {extras} --cnicehash true --apienable --apiport {ApiPort} --cpool {url} --cwallet {username} --cpassword x --pools poolsH.txt";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightR))
-            {
-                algo = "cryptonighr";
-                port = "3375";
-                variant = " --ccryptonighttype normalv4";
-                if (File.Exists("bin_3rdparty\\SRBMiner\\poolsR.txt"))
-                    File.Delete("bin_3rdparty\\SRBMiner\\poolsR.txt");
-                Thread.Sleep(200);
-                var strh1 = "{\r\n" +
-                           "\"pools\" :\r\n" +
-                           "[\r\n";
-
-                var strh2 = "        {\r\n" +
-                    "                \"pool\" : \"cryptonightr." + myServers[1, 0] + nhsuff + ".nicehash.com:3375\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightr." + myServers[2, 0] + nhsuff + ".nicehash.com:3375\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightr." + myServers[3, 0] + nhsuff + ".nicehash.com:3375\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightr." + myServers[4, 0] + nhsuff + ".nicehash.com:3375\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightr." + myServers[5, 0] + nhsuff + ".nicehash.com:3375\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "},\r\n" +
-                    "        {\r\n" +
-                    "                \"pool\" : \"cryptonightr." + myServers[0, 0] + nhsuff + ".nicehash.com:3375\",\r\n" +
-                    "                \"wallet\" : \"" + username + "\",\r\n" +
-                    "                \"password\" : \"x\"\r\n" +
-                    "        }\r\n";
-                var strh3 = "]\r\n" +
-                           "}";
-                try
-                {
-                    FileStream fs = new FileStream("bin_3rdparty\\SRBMiner\\poolsR.txt", FileMode.Create, FileAccess.Write);
-                    StreamWriter w = new StreamWriter(fs);
-                    w.Write(strh1 + strh2 + strh3);
-                    w.Flush();
-                    w.Close();
-                    Thread.Sleep(200);
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("poolsR.txt write error:", e.ToString());
-                }
-                return $" {variant} --cgpuid {GetDevicesCommandString().TrimStart()} {extras} --cnicehash true --apienable --apiport {ApiPort} --cpool {url} --cwallet {username} --cpassword x --pools poolsR.txt";
-            }
-
-            return $" {variant} --cgpuid {GetDevicesCommandString().TrimStart()} {extras} --cnicehash true --apienable --apiport {ApiPort} --cpool {url} --cwallet {username} --cpassword x --pools poolsV8.txt";
         }
 
         protected override string GetDevicesCommandString()
@@ -254,47 +87,27 @@ namespace NiceHashMiner.Miners
         }
         private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
         {
-            if (url.Contains("Auto"))
-            {
-                url = url.Replace("Auto", "eu");
-            }
             var LastCommandLine = GetStartCommand(url, btcAdress, worker);
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             var algo = "cryptonightv8";
             var port = "3367";
-            var variant = " --ccryptonighttype normalv8";
+
             url = url.Replace("stratum+tcp://", "");
 
             if (File.Exists(GetLogFileName()))
                 File.Delete(GetLogFileName());
             Thread.Sleep(500);
-            string nhsuff = "";
-            string username = GetUsername(btcAdress, worker);
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
+                algo = "randomxmonero";
+                port = "3380";
+
+                return $" --algorithm randomx --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker}"
+                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark --nicehash false --log-file {GetLogFileName()} {extras}";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightHeavy))
-            {
-                algo = "cryptonightheavy";
-                port = "3364";
-                variant = " --ccryptonighttype heavy";
-                return $" {variant} --cgpuid {GetDevicesCommandString().TrimStart()} {extras} --apienable --apiport {ApiPort} --cpool cryptonightheavy.hk{nhsuff}.nicehash.com:3364 --cwallet {username} --cpassword x --logfile {GetLogFileName()} --pools poolsH.txt";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightR))
-            {
-                algo = "cryptonightr";
-                port = "3375";
-                variant = " --ccryptonighttype normalv4";
-                return $" {variant} --cgpuid {GetDevicesCommandString().TrimStart()} {extras} --apienable --apiport {ApiPort} --cpool xmr-eu1.nanopool.org:14444 --cwallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.{worker} --cpassword x --logfile {GetLogFileName()} --pools poolsR.txt";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
-            {
-                algo = "cryptonightv8";
-                port = "3367";
-                variant = " --ccryptonighttype normalv8";
-                return $" {variant} --cgpuid {GetDevicesCommandString().TrimStart()} {extras} --apienable --apiport {ApiPort} --cpool cryptonightv8.hk{nhsuff}.nicehash.com:3367 --cwallet {username} --cpassword x --logfile {GetLogFileName()} --pools poolsV8.txt";
-            }
+
+
             return "unknown";
         }
 
@@ -395,7 +208,7 @@ namespace NiceHashMiner.Miners
                         kspeed = 1000;
                     else if (lineLowered.Contains("mh/s"))
                         kspeed = 1000000;
-                    count++;
+                   // count++;
                     var parse = lineLowered.Substring(st + 7, e - st - 9).Trim().Replace(",", ".");
                     try
                     {
@@ -409,7 +222,7 @@ namespace NiceHashMiner.Miners
                     }
 
                     speed = speed + tmp;
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count);
+                    BenchmarkAlgorithm.BenchmarkSpeed = speed;
                     /*
                     if (count >= TotalCount)
                     {

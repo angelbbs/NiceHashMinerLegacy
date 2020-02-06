@@ -127,6 +127,7 @@ namespace NiceHashMinerLegacy.Divert
         }
 
         public static List<uint> processIdList = new List<uint>();
+        private static IntPtr DClaymore = (IntPtr)0;
         /*
         public void Add(int processId)
         {
@@ -137,6 +138,7 @@ namespace NiceHashMinerLegacy.Divert
         {
             //Helpers.ConsolePrint("WinDivertSharp", "Divert START for process ID: " + processId.ToString() + " Miner: " + MinerName + " CurrentAlgorithmType: " + CurrentAlgorithmType);
             logging = log;
+            /*
             if (processIdList.Count > 1)
             {
                 for (int i = 0; i < processIdList.Count; i++)
@@ -144,37 +146,56 @@ namespace NiceHashMinerLegacy.Divert
                     Helpers.ConsolePrint("WinDivertSharp", "processIdList " + processIdList[i].ToString());
                 }
             }
+            */
             if ( CurrentAlgorithmType == 47 && MinerName.ToLower() == "xmrig") //for testing. Disable in productuon
             {
                 return IntPtr.Zero;
                 //return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
             }
-
+            //надо передавать id процесса в существующий поток
             if (CurrentAlgorithmType == 20 && MinerName.ToLower() == "claymoredual") 
             {
                 processIdList.Add((uint)processId);
                 if (processIdList.Count > 1)
                 {
-                    Helpers.ConsolePrint("WinDivertSharp", "Mixed rig detected: " + processIdList.Count.ToString());
+                    //Helpers.ConsolePrint("WinDivertSharp", "Mixed rig detected: " + processIdList.Count.ToString() + " " + String.Join(",", processIdList));
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert handle: " + DClaymore.ToString() + ". Added " + processId.ToString() + " to divert process list: " + " " + String.Join(",", processIdList));
+                    return DClaymore;
                 }
-                return DClaymoreDual.ClaymoreDualDivertStart(processId, CurrentAlgorithmType, MinerName, strPlatform);
+                DClaymore = DClaymoreDual.ClaymoreDualDivertStart(processIdList, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", "New Divert handle: " + DClaymore.ToString() + ". Initiated by " + processId.ToString() + " to divert process list: " + " " + String.Join(",", processIdList));
+                return DClaymore;
             }
-            return IntPtr.Zero;
+            return new IntPtr(0);
         }
 
         public static void DivertStop(IntPtr DivertHandle, int Pid)
         {
-            
+            int dh = (int)DivertHandle;
             //if (DivertHandle != IntPtr.Zero | DivertHandle != new IntPtr(-1) | DivertHandle != new IntPtr(0) | DivertHandle  != (IntPtr)0)
-            if (DivertHandle != (IntPtr)0)
+            if (processIdList.Count <= 1 && dh != 0 && Divert.processIdList.Contains((uint)Pid))
             {
                 //divert_running = false;
                 Thread.Sleep(50);
                 WinDivert.WinDivertClose(DivertHandle);
-                Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + DivertHandle.ToString() + " ProcessID: " + Pid.ToString());
+                processIdList.Remove((uint)Pid);
+                DivertHandle = new IntPtr(0);
+                Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() + " ProcessID: " + Pid.ToString());
+                Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdList));
                 Thread.Sleep(50);
             }
-            processIdList.Remove((uint)Pid);
+            else
+            {
+                if (processIdList.Contains((uint)Pid))
+                {
+                    Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() + " from divert process list: " + " " + String.Join(",", processIdList));
+                    processIdList.Remove((uint)Pid);
+                }
+                if (processIdList.Count < 1)
+                {
+                    Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdList");
+                }
+            }
         }
 
        

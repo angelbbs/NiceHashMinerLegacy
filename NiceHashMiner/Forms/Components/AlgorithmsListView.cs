@@ -332,8 +332,15 @@ namespace NiceHashMiner.Forms.Components
                         var algo = lvi.Tag as Algorithm;
                         if (algo != null)
                         {
-                                lvi.SubItems[RATIO].Text = algo.CurPayingRatio;
-                                lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                            if (algorithm is DualAlgorithm dualAlg)
+                            {
+                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
+                            }
+                            else
+                            {
+                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            }
+                            lvi.SubItems[RATE].Text = algo.CurPayingRate;
                         }
                     }
                 }

@@ -137,7 +137,7 @@ namespace NiceHashMiner.Miners.Grouping
            // public const string CryptoDredgeV8 = Bin3rdParty + @"\CryptoDredgeV8\CryptoDredge.exe";
             public const string ZEnemy = Bin3rdParty + @"\Z-Enemy\z-enemy.exe";
             public const string trex = Bin3rdParty + @"\t-rex\t-rex.exe";
-            public const string SRBMiner = Bin3rdParty + @"\SRBMiner\SRBMiner-CN.exe";
+            public const string SRBMiner = Bin3rdParty + @"\SRBMiner\SRBMiner-MULTI.exe";
             public const string GMiner = Bin3rdParty + @"\gminer\miner.exe";
             public const string Bminer = Bin3rdParty + @"\bminer\bminer.exe";
             public const string WildRig = Bin3rdParty + @"\WildRig\wildrig.exe";

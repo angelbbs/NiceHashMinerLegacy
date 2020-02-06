@@ -81,6 +81,15 @@ namespace NiceHashMiner.Devices.Algorithms
                   //  new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightHeavy, "")
                 }
             },
+                        {
+                MinerBaseType.SRBMiner,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.RandomX, "RandomX")
+                            {
+                              //  ExtraLaunchParameters = " "
+                            }
+                        }
+            },
             {
                 MinerBaseType.cpuminer,
                 new List<Algorithm>
