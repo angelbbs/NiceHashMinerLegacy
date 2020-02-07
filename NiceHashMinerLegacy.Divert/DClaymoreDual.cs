@@ -75,48 +75,28 @@ namespace NiceHashMinerLegacy.Divert
 
         internal static bool CheckParityConnections(List<uint> processIdList, ushort Port, string def)
         {
-           // return true;
             Port = Divert.SwapOrder(Port);
             Helpers.ConsolePrint("WinDivertSharp", def + " processIdList: " + " (" + String.Join(", ", processIdList) + " Port: " + Port.ToString());
-            //Helpers.ConsolePrint("WinDivertSharp", "processId: " + processId.ToString() + " Port: " + Port.ToString());
             List<Connection> _allConnections = new List<Connection>();
 
             _allConnections.Clear();
             _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
 
-           // if (Divert.processIdList.Count > 1)
-            {
                 for (int i = 1; i < _allConnections.Count; i++)
                 {
                     if (Divert.processIdList.Contains(_allConnections[i].OwningPid) &&
                         _allConnections[i].LocalEndPoint.Port == Port)
                     {
-                        
+                        /*
                         Helpers.ConsolePrint("WinDivertSharp", "CheckParityConnections: " + 
                             _allConnections[i].OwningPid.ToString() + " " + _allConnections[i].LocalEndPoint.ToString() +
                              " processIdList: " + String.Join(", ", processIdList) + " Port: " + Port.ToString());
-                             
+                          */   
                         _allConnections = null;
                         return true;
                     }
                 }
-            }
-            /*
-            else
-            {
-                for (int i = 1; i < _allConnections.Count; i++)
-                {
-                    if (_allConnections[i].OwningPid == (uint)processId &
-                        _allConnections[i].LocalEndPoint.Port == Port &
-                        processName.ToLower() == "ethdcrminer64.exe")
-                    {
-                       // Helpers.ConsolePrint("WinDivertSharp", "CheckParityConnections: " + _allConnections[i].OwningPid.ToString() + " " + _allConnections[i].LocalEndPoint.ToString());
-                        _allConnections = null;
-                        return true;
-                    }
-                }
-            }
-            */
+
             _allConnections = null;
             return false;
         }
@@ -219,7 +199,6 @@ namespace NiceHashMinerLegacy.Divert
                         recvOverlapped = new NativeOverlapped();
 
                         recvEvent = Kernel32.CreateEvent(IntPtr.Zero, false, false, IntPtr.Zero);
-                        //recvOverlapped.EventHandle = recvEvent;
 
                         if (recvEvent == IntPtr.Zero)
                         {
@@ -280,7 +259,6 @@ namespace NiceHashMinerLegacy.Divert
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333) //us1.ethpool.org
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() +") -> Devfee connection to us1.ethpool.org (" + DevFeeIP + ")");
                                 Helpers.ConsolePrint("WinDivertSharp", processName + " (" + String.Join(", ", processIdList) +") -> Devfee connection to us1.ethpool.org (" + DevFeeIP + ")");
                                 DevFeeIPName = DevFeeIPName1;
                                 DevFeePort = DevFeePort1;
@@ -293,7 +271,6 @@ namespace NiceHashMinerLegacy.Divert
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008) //eth-eu.dwarfpool.com
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") -> Devfee connection to eth-eu.dwarfpool.com (" + DevFeeIP + ")");
                                 Helpers.ConsolePrint("WinDivertSharp", processName + " (" + String.Join(", ", processIdList) + ") -> Devfee connection to eth-eu.dwarfpool.com (" + DevFeeIP + ")");
                                 DevFeeIPName = DevFeeIPName2;
                                 DevFeePort = DevFeePort2;
@@ -304,26 +281,7 @@ namespace NiceHashMinerLegacy.Divert
                                 DivertPort = DivertPort2;
                             }
                         }
-                        /*
-                        try
-                        {
-                            System.Text.ASCIIEncoding ASCII = new System.Text.ASCIIEncoding();
-                            IPHostEntry heserver = Dns.GetHostEntry(DevFeeIPName);
 
-                            foreach (IPAddress curAdd in heserver.AddressList)
-                            {
-                                if (curAdd.AddressFamily.ToString() == ProtocolFamily.InterNetwork.ToString())
-                                {
-                                    DevFeeIP = curAdd.ToString();
-                                    break; //only 1st IP
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint("WinDivertSharp", "Exception: " + e.ToString());
-                        }
-                        */
                         try
                         {
                             System.Text.ASCIIEncoding ASCII = new System.Text.ASCIIEncoding();
@@ -356,9 +314,6 @@ namespace NiceHashMinerLegacy.Divert
                         if (addr.Direction == WinDivertDirection.Outbound &
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == DevFeePort & parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &
                             CheckParityConnections(processIdList, DevFeePort, "2"))
-                        //if ((parse_result.TcpHeader->DstPort == Divert.SwapOrder(DevFeePort) && parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP) ||
-                          //  (parse_result.TcpHeader->SrcPort == Divert.SwapOrder(DivertPort) && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP) &&
-                            //(CheckParityConnections(processId, parse_result.TcpHeader->DstPort) || CheckParityConnections(processId, parse_result.TcpHeader->SrcPort)))// to/from devfee
                         {
                             if (parse_result.PacketPayloadLength > 0)
                             {
@@ -374,14 +329,10 @@ namespace NiceHashMinerLegacy.Divert
                         if (addr.Direction == WinDivertDirection.Inbound &
                             Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == DivertPort & parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &
                             CheckParityConnections(processIdList, DevFeePort, "3"))
-                        //if ((parse_result.TcpHeader->DstPort == Divert.SwapOrder(DevFeePort) && parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP) ||
-                        //  (parse_result.TcpHeader->SrcPort == Divert.SwapOrder(DivertPort) && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP) &&
-                        //(CheckParityConnections(processId, parse_result.TcpHeader->DstPort) || CheckParityConnections(processId, parse_result.TcpHeader->SrcPort)))// to/from devfee
                         {
                             if (parse_result.PacketPayloadLength > 0)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
-
                                 //goto Divert;//меняем данные в пакете
                                 goto changeSrcDst; //входящее соединение, только меняем адреса
                             }
@@ -403,7 +354,7 @@ Divert:
                         {
                             //modified = false;
                             //goto sendPacket;
-                            goto changeSrcDst; //проверить
+                            goto changeSrcDst; 
                         }
                         
                         if (parse_result.PacketPayloadLength > 1 & addr.Direction == WinDivertDirection.Outbound &
@@ -466,11 +417,6 @@ Divert:
 
                             if (parse_result.PacketPayloadLength > 10 && addr.Direction == WinDivertDirection.Outbound &&
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008)
-                            //PacketPayloadData.Contains("eth_getWork"))//dwarfpool fix
-                            {
-                               // modified = false;
-                               // goto sendPacket;
-                            }
 
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             /*
@@ -499,21 +445,18 @@ changeSrcDst:
                                 parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &&
                                 CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, "6"))//out to devfee
                         {
-                                //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") DEVFEE SESSION: -> " + 
                                 Helpers.ConsolePrint("WinDivertSharp", processName + " (" + String.Join(", ", processIdList) + ") DEVFEE SESSION: -> " + 
                                     "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() + 
                                     "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
                                     " len: " + readLen.ToString());
                                 parse_result.IPv4Header->DstAddr = IPAddress.Parse(DivertIP);
                                 parse_result.TcpHeader->DstPort = Divert.SwapOrder(DivertPort);
-                                //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") " +
                                 Helpers.ConsolePrint("WinDivertSharp", processName + " (" + String.Join(", ", processIdList) + ") " +
                                     "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() + " (" + DivertIPName + ")");
 
                             if (parse_result.PacketPayloadLength > 0)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
-                                //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") -> packet: " + PacketPayloadData);
                             }
                             modified = true;
                         }
@@ -523,21 +466,18 @@ changeSrcDst:
                                 parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
                                 CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, "7"))
                         {
-                            //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") DEVFEE SESSION: <- " + 
                             Helpers.ConsolePrint("WinDivertSharp", processName + " (" + String.Join(", ", processIdList) + ") DEVFEE SESSION: <- " + 
                                 "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() + 
                                 "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
                                 " len: " + readLen.ToString());
                             parse_result.IPv4Header->SrcAddr = IPAddress.Parse(DevFeeIP); ;
                             parse_result.TcpHeader->SrcPort = Divert.SwapOrder(DevFeePort);
-                            //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") "
                             Helpers.ConsolePrint("WinDivertSharp", processName + " (" + String.Join(", ", processIdList) + ") "
                                 + "<- New DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() + " (" + DivertIPName + ")");
                             
                             if (parse_result.PacketPayloadLength > 0)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
-                                //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") <- packet: " + PacketPayloadData);
                                 Helpers.ConsolePrint("WinDivertSharp", processName + " (" + String.Join(", ", processIdList) + ") <- packet: " + PacketPayloadData);
                             }
                             modified = true;

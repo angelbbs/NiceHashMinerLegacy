@@ -302,7 +302,10 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         try
                         {
-                            Divert.DivertStop(pidData.DivertHandle, pidData.Pid);
+                            if (ConfigManager.GeneralConfig.DivertRun)
+                            {
+                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid);
+                            }
                             process.Kill();
                             process.Close();
                             process.WaitForExit(1000 * 60 * 1);
@@ -426,7 +429,10 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id);
+                if (ConfigManager.GeneralConfig.DivertRun)
+                {
+                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id);
+                }
                 KillProcessAndChildren(pid);
 
                 if (ProcessHandle != null)
@@ -1254,14 +1260,24 @@ namespace NiceHashMiner
                             strPlatform = "CPU";
                         }
                     }
-                    P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName, strPlatform, ConfigManager.GeneralConfig.DivertLog);
-
-                    _currentPidData = new MinerPidData
+                    if (ConfigManager.GeneralConfig.DivertRun)
                     {
-                        MinerBinPath = P.StartInfo.FileName,
-                        Pid = P.Id,
-                        DivertHandle = P.DivertHandle
-                    };
+                        P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName, strPlatform, ConfigManager.GeneralConfig.DivertLog);
+
+                        _currentPidData = new MinerPidData
+                        {
+                            MinerBinPath = P.StartInfo.FileName,
+                            Pid = P.Id,
+                            DivertHandle = P.DivertHandle
+                        };
+                    } else
+                    {
+                        _currentPidData = new MinerPidData
+                        {
+                            MinerBinPath = P.StartInfo.FileName,
+                            Pid = P.Id
+                        };
+                    }
                     _allPidData.Add(_currentPidData);
 
                     Helpers.ConsolePrint(MinerTag(), "Starting miner " + ProcessTag() + " " + LastCommandLine);

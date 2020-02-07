@@ -357,9 +357,10 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
 
             // IFTTT notification check
+            /*
             toolTip1.SetToolTip(checkBox_UseIFTTT, International.GetText("Form_Settings_ToolTip_UseIFTTT"));
             toolTip1.SetToolTip(pictureBox_UseIFTTT, International.GetText("Form_Settings_ToolTip_UseIFTTT"));
-
+            */
             toolTip1.SetToolTip(pictureBox_SwitchProfitabilityThreshold,
                 International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
             toolTip1.SetToolTip(label_SwitchProfitabilityThreshold,
@@ -422,7 +423,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
             checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
             checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
-            checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
+           // checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
             checkBox_RunScriptOnCUDA_GPU_Lost.Text =
                 International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
 
@@ -440,6 +441,7 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowFanAsPercent.Text = "Показать обороты вентилятора в процентах";
                 checkbox_Group_same_devices.Text = "Группировать одинаковые устройства";
                 checkBox_Force_mining_if_nonprofitable.Text = "Принудительный майнинг, если не прибыльно";
+                checkBox_Show_profit_with_power_consumption.Text = "Показывать прибыльность с учетом рахода на ЭЭ";
                 checkBox_Disable_extra_launch_parameter_checking.Text = "Отключить проверку дополнительных параметров";
                 checkBox_DisableDetectionCPU.Text = "Отключить определение CPU";
                 label_AutoStartMiningDelay.Text = "Задержка автозапуска майнинга (сек)";
@@ -523,7 +525,7 @@ namespace NiceHashMiner.Forms
 
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
 
-            label_IFTTTAPIKey.Text = International.GetText("Form_Settings_IFTTTAPIKey");
+          //  label_IFTTTAPIKey.Text = International.GetText("Form_Settings_IFTTTAPIKey");
 
             label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
 
@@ -659,6 +661,9 @@ namespace NiceHashMiner.Forms
                 checkBox_Force_mining_if_nonprofitable.BackColor = Form_Main._backColor;
                 checkBox_Force_mining_if_nonprofitable.ForeColor = Form_Main._textColor;
 
+                checkBox_Show_profit_with_power_consumption.BackColor = Form_Main._backColor;
+                checkBox_Show_profit_with_power_consumption.ForeColor = Form_Main._textColor;
+
                 checkBox_Allow_remote_management.BackColor = Form_Main._backColor;
                 checkBox_Allow_remote_management.ForeColor = Form_Main._textColor;
 
@@ -706,11 +711,11 @@ namespace NiceHashMiner.Forms
                 textBox_ElectricityCost.BackColor = Form_Main._backColor;
                 textBox_ElectricityCost.ForeColor = Form_Main._foreColor;
                 textBox_ElectricityCost.BorderStyle = BorderStyle.FixedSingle;
-
+                /*
                 textBox_IFTTTKey.BackColor = Form_Main._backColor;
                 textBox_IFTTTKey.ForeColor = Form_Main._foreColor;
                 textBox_IFTTTKey.BorderStyle = BorderStyle.FixedSingle;
-
+                */
                 textBox_LogMaxFileSize.BackColor = Form_Main._backColor;
                 textBox_LogMaxFileSize.ForeColor = Form_Main._foreColor;
                 textBox_LogMaxFileSize.BorderStyle = BorderStyle.FixedSingle;
@@ -779,7 +784,7 @@ namespace NiceHashMiner.Forms
                 pictureBox_SwitchProfitabilityThreshold.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_TimeUnit.Image = NiceHashMiner.Properties.Resources.info_white_18;
              //   pictureBox_Use3rdPartyMiners.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_UseIFTTT.Image = NiceHashMiner.Properties.Resources.info_white_18;
+              //  pictureBox_UseIFTTT.Image = NiceHashMiner.Properties.Resources.info_white_18;
                // pictureBox_WorkerName.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox1.Image = NiceHashMiner.Properties.Resources.info_white_18;
 
@@ -853,11 +858,12 @@ namespace NiceHashMiner.Forms
                 checkBox_AutoStartMining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AllowMultipleInstances.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_UseIFTTT.CheckedChanged += CheckBox_UseIFTTT_CheckChanged;
+               // checkBox_UseIFTTT.CheckedChanged += CheckBox_UseIFTTT_CheckChanged;
                 checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -873,7 +879,7 @@ namespace NiceHashMiner.Forms
                 textBox_BitcoinAddressNew.Leave += GeneralTextBoxes_Leave;
                 textBox_WorkerName.Leave += GeneralTextBoxes_Leave;
                 */
-                textBox_IFTTTKey.Leave += GeneralTextBoxes_Leave;
+              //  textBox_IFTTTKey.Leave += GeneralTextBoxes_Leave;
                 // these are ints only
                 textBox_SwitchMaxSeconds.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchMinSeconds.Leave += GeneralTextBoxes_Leave;
@@ -959,11 +965,12 @@ namespace NiceHashMiner.Forms
                 checkBox_RunAtStartup.Checked = IsInStartupRegistry();
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
                 checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
-                checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
+               // checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
                 checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
+                checkBox_Show_profit_with_power_consumption.Checked = !ConfigManager.GeneralConfig.DecreasePowerCost;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
@@ -979,8 +986,8 @@ namespace NiceHashMiner.Forms
                 textBox_BitcoinAddressNew.Text = ConfigManager.GeneralConfig.BitcoinAddressNew;
                 textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
                 */
-                textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
-                textBox_IFTTTKey.Enabled = ConfigManager.GeneralConfig.UseIFTTT;
+              //  textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
+                //textBox_IFTTTKey.Enabled = ConfigManager.GeneralConfig.UseIFTTT;
                 textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
                 textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
                // textBox_MinerAPIQueryInterval.Text = ConfigManager.GeneralConfig.MinerAPIQueryInterval.ToString();
@@ -1098,13 +1105,14 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
             ConfigManager.GeneralConfig.IdleWhenNoInternetAccess = checkBox_IdleWhenNoInternetAccess.Checked;
-            ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
+          //  ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
+            ConfigManager.GeneralConfig.DecreasePowerCost = !checkBox_Show_profit_with_power_consumption.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
@@ -1233,7 +1241,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.SwitchProfitabilityThreshold =
                 Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text) / 100;
 
-            ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
+          //  ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
 
             ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
 
@@ -1509,7 +1517,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             checkBox_MinimizeMiningWindows.Enabled = !checkBox_HideMiningWindows.Checked;
         }
-
+        /*
         private void CheckBox_UseIFTTT_CheckChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
@@ -1519,7 +1527,7 @@ namespace NiceHashMiner.Forms
 
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
         }
-
+        */
         private void algorithmsListView1_Load(object sender, EventArgs e)
         {
 
@@ -2036,6 +2044,11 @@ namespace NiceHashMiner.Forms
         }
 
         private void textBox_MinerRestartDelayMS_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox_Show_profit_with_power_consumption_CheckedChanged(object sender, EventArgs e)
         {
 
         }

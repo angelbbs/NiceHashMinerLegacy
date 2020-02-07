@@ -58,19 +58,20 @@ namespace NiceHashMiner.Miners
             ProcessHandle = _Start();
         }
 
-        private string GetStartCommand(string url, string btcAdress, string worker) {
+        private string GetStartCommand(string url, string btcAddress, string worker) {
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+            string username = GetUsername(btcAddress, worker);
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
                 var algo = "randomxmonero";
                 var port = "3380";
                 url = url.Replace("randomx", "randomxmonero");
-                return $" --algorithm randomx --pool {url} --wallet {btcAdress}.{worker} --nicehash true --api-enable --api-port {ApiPort} {extras} "
-               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
-               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
-               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
-               + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} "
-               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker} ";
+                return $" --algorithm randomx --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
+               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} ";
             }
             return "unsupported algo";
 
@@ -85,13 +86,13 @@ namespace NiceHashMiner.Miners
 
             return deviceStringCommand;
         }
-        private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
+        private string GetStartBenchmarkCommand(string url, string btcAddress, string worker)
         {
-            var LastCommandLine = GetStartCommand(url, btcAdress, worker);
+            var LastCommandLine = GetStartCommand(url, btcAddress, worker);
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             var algo = "cryptonightv8";
             var port = "3367";
-
+            string username = GetUsername(btcAddress, worker);
             url = url.Replace("stratum+tcp://", "");
 
             if (File.Exists(GetLogFileName()))
@@ -103,7 +104,7 @@ namespace NiceHashMiner.Miners
                 algo = "randomxmonero";
                 port = "3380";
 
-                return $" --algorithm randomx --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {btcAdress}.{worker}"
+                return $" --algorithm randomx --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username}"
                 + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark --nicehash false --log-file {GetLogFileName()} {extras}";
             }
 

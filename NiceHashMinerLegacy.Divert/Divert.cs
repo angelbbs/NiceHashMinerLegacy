@@ -128,15 +128,9 @@ namespace NiceHashMinerLegacy.Divert
 
         public static List<uint> processIdList = new List<uint>();
         private static IntPtr DClaymore = (IntPtr)0;
-        /*
-        public void Add(int processId)
-        {
-            processIdList.Add(processId);
-        }
-        */
+
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, bool log)
         {
-            //Helpers.ConsolePrint("WinDivertSharp", "Divert START for process ID: " + processId.ToString() + " Miner: " + MinerName + " CurrentAlgorithmType: " + CurrentAlgorithmType);
             logging = log;
             /*
             if (processIdList.Count > 1)
@@ -158,7 +152,6 @@ namespace NiceHashMinerLegacy.Divert
                 processIdList.Add((uint)processId);
                 if (processIdList.Count > 1)
                 {
-                    //Helpers.ConsolePrint("WinDivertSharp", "Mixed rig detected: " + processIdList.Count.ToString() + " " + String.Join(",", processIdList));
                     Helpers.ConsolePrint("WinDivertSharp", "Divert handle: " + DClaymore.ToString() + ". Added " + processId.ToString() + " to divert process list: " + " " + String.Join(",", processIdList));
                     return DClaymore;
                 }
@@ -172,7 +165,6 @@ namespace NiceHashMinerLegacy.Divert
         public static void DivertStop(IntPtr DivertHandle, int Pid)
         {
             int dh = (int)DivertHandle;
-            //if (DivertHandle != IntPtr.Zero | DivertHandle != new IntPtr(-1) | DivertHandle != new IntPtr(0) | DivertHandle  != (IntPtr)0)
             if (processIdList.Count <= 1 && dh != 0 && Divert.processIdList.Contains((uint)Pid))
             {
                 //divert_running = false;
@@ -197,7 +189,5 @@ namespace NiceHashMinerLegacy.Divert
                 }
             }
         }
-
-       
     }
 }

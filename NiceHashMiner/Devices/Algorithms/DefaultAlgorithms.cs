@@ -141,7 +141,7 @@ namespace NiceHashMiner.Devices.Algorithms
                                 ExtraLaunchParameters = "--enablegpurampup --cgputhreads 2 "
                             },
                             */
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.CryptoNightR, "CryptoNightR")
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Eaglesong, "CryptoNightR")
                             {
                                 ExtraLaunchParameters = "--enablegpurampup --cgputhreads 2 "
                             }

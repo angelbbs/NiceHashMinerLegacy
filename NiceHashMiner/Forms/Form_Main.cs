@@ -976,7 +976,7 @@ namespace NiceHashMiner
                 Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
                 iApiData.AlgorithmName + apiGetExceptionString;
             var rateBtcString = FormatPayingOutput(paying, power);
-            if (ConfigManager.GeneralConfig.DecreasePowerCost)
+            if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
                 power = 0;
             }
@@ -1083,16 +1083,27 @@ namespace NiceHashMiner
                 {
                     powerString = "(-" + (totalPowerRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
                 }
-                toolStripStatusLabelBTCDayText.Text = powerString + " " +
+                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                {
+                    powerString = "";
+                }
+                
+
+                    toolStripStatusLabelBTCDayText.Text = powerString + " " +
                     "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                toolStripStatusLabelGlobalRateValue.Text =
-                    ((totalRate + totalPowerRate) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                    toolStripStatusLabelGlobalRateValue.Text =
+                ((totalRate + totalPowerRate) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                
             }
             else
             {
                 if (totalPowerRate != 0)
                 {
                     powerString = "(-" + (totalPowerRate * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
+                }
+                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                {
+                    powerString = "";
                 }
                 toolStripStatusLabelBTCDayText.Text = powerString + " " +
                     "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -1103,12 +1114,20 @@ namespace NiceHashMiner
             {
                 powerString = "(-" + ExchangeRateApi.ConvertToActiveCurrency((totalPowerRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture) + ") ";
+                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                {
+                    powerString = "";//!!!!!
+                }
             }
             else
             {
                 powerString = "";
             }
-            toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
+            if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+            {
+                totalPowerRate = 0;
+            }
+                toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
                 .ConvertToActiveCurrency(((totalRate + totalPowerRate) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
@@ -1449,7 +1468,7 @@ namespace NiceHashMiner
         private string FormatPayingOutput(double paying, double power)
         {
             string ret;
-            if (ConfigManager.GeneralConfig.DecreasePowerCost)
+            if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
                 power = 0;
             }
