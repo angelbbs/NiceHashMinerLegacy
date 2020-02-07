@@ -980,6 +980,7 @@ namespace NiceHashMiner
             {
                 power = 0;
             }
+            //надо ширину группы менять в зависимости от ширины окна
             var rateCurrencyString = ExchangeRateApi
                                          .ConvertToActiveCurrency((paying + power) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)

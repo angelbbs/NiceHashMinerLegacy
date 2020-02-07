@@ -144,12 +144,12 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(comboBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(label_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(pictureBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
-
+            /*
             toolTip1.SetToolTip(checkBox_DebugConsole,
                 International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
             toolTip1.SetToolTip(pictureBox_DebugConsole,
                 International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
-
+                */
             //toolTip1.SetToolTip(textBox_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
             /*
             toolTip1.SetToolTip(label_BitcoinAddressNew, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
@@ -268,25 +268,26 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
 
             toolTip1.SetToolTip(checkBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
-            toolTip1.SetToolTip(pictureBox_LogToFile,
-                International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
+         //   toolTip1.SetToolTip(pictureBox_LogToFile,
+           //     International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
 
 
             toolTip1.SetToolTip(textBox_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
             toolTip1.SetToolTip(label_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
             toolTip1.SetToolTip(pictureBox_LogMaxFileSize,
                 International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
-
+            /*
             toolTip1.SetToolTip(checkBox_ShowDriverVersionWarning,
                 International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
             toolTip1.SetToolTip(pictureBox_ShowDriverVersionWarning,
                 International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
-
+                */
+            /*
             toolTip1.SetToolTip(checkBox_DisableWindowsErrorReporting,
                 International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
             toolTip1.SetToolTip(pictureBox_DisableWindowsErrorReporting,
                 International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
-
+                */
             toolTip1.SetToolTip(checkBox_ShowInternetConnectionWarning,
                 International.GetText("Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning"));
             toolTip1.SetToolTip(pictureBox_ShowInternetConnectionWarning,
@@ -351,8 +352,8 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_ToolTip_DisableDefaultOptimizations"));
                 */
             // internet connection mining check
-            toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess,
-                International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
+           // toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess,
+             //   International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
             toolTip1.SetToolTip(pictureBox_IdleWhenNoInternetAccess,
                 International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
 
@@ -396,7 +397,7 @@ namespace NiceHashMiner.Forms
 
         private void InitializeGeneralTabTranslations()
         {
-            checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
+           // checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
             checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
@@ -406,10 +407,10 @@ namespace NiceHashMiner.Forms
                 string.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
-            checkBox_ShowDriverVersionWarning.Text =
-                International.GetText("Form_Settings_General_ShowDriverVersionWarning");
-            checkBox_DisableWindowsErrorReporting.Text =
-                International.GetText("Form_Settings_General_DisableWindowsErrorReporting");
+           // checkBox_ShowDriverVersionWarning.Text =
+             //   International.GetText("Form_Settings_General_ShowDriverVersionWarning");
+          //  checkBox_DisableWindowsErrorReporting.Text =
+         //       International.GetText("Form_Settings_General_DisableWindowsErrorReporting");
             checkBox_ShowInternetConnectionWarning.Text =
                 International.GetText("Form_Settings_General_ShowInternetConnectionWarning");
            // checkBox_Use3rdPartyMiners.Text = International.GetText("Form_Settings_General_3rdparty_Text");
@@ -755,18 +756,18 @@ namespace NiceHashMiner.Forms
                 pictureBox_APIBindPortStart.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_AutoScaleBTCValues.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_AutoStartMining.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_DebugConsole.Image = NiceHashMiner.Properties.Resources.info_white_18;
+             //   pictureBox_DebugConsole.Image = NiceHashMiner.Properties.Resources.info_white_18;
              //   pictureBox_DisableDefaultOptimizations.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_DisableDetectionAMD.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_DisableDetectionNVIDIA.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_DisableWindowsErrorReporting.Image = NiceHashMiner.Properties.Resources.info_white_18;
+              //  pictureBox_DisableWindowsErrorReporting.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_displayCurrency.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_ElectricityCost.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_HideMiningWindows.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_IdleWhenNoInternetAccess.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_Language.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_LogMaxFileSize.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_LogToFile.Image = NiceHashMiner.Properties.Resources.info_white_18;
+               // pictureBox_LogToFile.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinerRestartDelayMS.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinIdleSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinimizeMiningWindows.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -776,7 +777,7 @@ namespace NiceHashMiner.Forms
                 pictureBox_RunAtStartup.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunScriptOnCUDA_GPU_Lost.Image = NiceHashMiner.Properties.Resources.info_white_18;
                // pictureBox_ServiceLocation.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_ShowDriverVersionWarning.Image = NiceHashMiner.Properties.Resources.info_white_18;
+              //  pictureBox_ShowDriverVersionWarning.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_ShowInternetConnectionWarning.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_StartMiningWhenIdle.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_SwitchMaxSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -830,8 +831,8 @@ namespace NiceHashMiner.Forms
 
          //   checkBox_DisableDefaultOptimizations.Text =
            //     International.GetText("Form_Settings_Text_DisableDefaultOptimizations");
-            checkBox_IdleWhenNoInternetAccess.Text =
-                International.GetText("Form_Settings_Text_ContinueMiningIfNoInternetAccess");
+          //  checkBox_IdleWhenNoInternetAccess.Text =
+          //      International.GetText("Form_Settings_Text_ContinueMiningIfNoInternetAccess");
 
             label_SwitchProfitabilityThreshold.Text =
                 International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
@@ -845,12 +846,12 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionCPU.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableDetectionAMD.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableDetectionNVIDIA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_IdleWhenNoInternetAccess.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+              //  checkBox_IdleWhenNoInternetAccess.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_HideMiningWindows.CheckedChanged += CheckBox_HideMiningWindows_CheckChanged;
-                checkBox_DebugConsole.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_ShowDriverVersionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_DisableWindowsErrorReporting.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+              //  checkBox_DebugConsole.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+             //   checkBox_ShowDriverVersionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+              //  checkBox_DisableWindowsErrorReporting.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowInternetConnectionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_StartMiningWhenIdle.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -939,7 +940,7 @@ namespace NiceHashMiner.Forms
         {
             // Checkboxes set checked value
             {
-                checkBox_DebugConsole.Checked = ConfigManager.GeneralConfig.DebugConsole;
+              //  checkBox_DebugConsole.Checked = ConfigManager.GeneralConfig.DebugConsole;
                 checkBox_AutoStartMining.Checked = ConfigManager.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.GeneralConfig.MinimizeToTray;
@@ -949,16 +950,23 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionAMD.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                 checkBox_AutoScaleBTCValues.Checked = ConfigManager.GeneralConfig.AutoScaleBTCValues;
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
-                checkBox_ShowDriverVersionWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
-                checkBox_DisableWindowsErrorReporting.Checked =
-                    ConfigManager.GeneralConfig.DisableWindowsErrorReporting;
+             //   checkBox_ShowDriverVersionWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
+              //  checkBox_DisableWindowsErrorReporting.Checked =
+               //     ConfigManager.GeneralConfig.DisableWindowsErrorReporting;
                 checkBox_ShowInternetConnectionWarning.Checked =
                     ConfigManager.GeneralConfig.ShowInternetConnectionWarning;
                 checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
                 checkBox_LogToFile.Checked = ConfigManager.GeneralConfig.LogToFile;
+                if (checkBox_LogToFile.Checked)
+                {
+                    textBox_LogMaxFileSize.Enabled = true;
+                } else
+                {
+                    textBox_LogMaxFileSize.Enabled = false;
+                }
               //  checkBox_AMD_DisableAMDTempControl.Checked = ConfigManager.GeneralConfig.DisableAMDTempControl;
-            //    checkBox_DisableDefaultOptimizations.Checked = ConfigManager.GeneralConfig.DisableDefaultOptimizations;
-                checkBox_IdleWhenNoInternetAccess.Checked = ConfigManager.GeneralConfig.IdleWhenNoInternetAccess;
+              //    checkBox_DisableDefaultOptimizations.Checked = ConfigManager.GeneralConfig.DisableDefaultOptimizations;
+             //   checkBox_IdleWhenNoInternetAccess.Checked = ConfigManager.GeneralConfig.IdleWhenNoInternetAccess;
               //  checkBox_Use3rdPartyMiners.Checked =
                 //    ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
                 checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
@@ -1087,7 +1095,7 @@ namespace NiceHashMiner.Forms
             if (!_isInitFinished) return;
             // indicate there has been a change
             IsChange = true;
-            ConfigManager.GeneralConfig.DebugConsole = checkBox_DebugConsole.Checked;
+          //  ConfigManager.GeneralConfig.DebugConsole = checkBox_DebugConsole.Checked;
             ConfigManager.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
 //            label_AutoStartMiningDelay.Enabled = checkBox_AutoStartMining.Checked;
             textBox_AutoStartMiningDelay.Enabled = checkBox_AutoStartMining.Checked;
@@ -1099,12 +1107,12 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU = checkBox_DisableDetectionCPU.Checked;
             ConfigManager.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
             ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
-            ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBox_ShowDriverVersionWarning.Checked;
-            ConfigManager.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
-            ConfigManager.GeneralConfig.ShowInternetConnectionWarning = checkBox_ShowInternetConnectionWarning.Checked;
+          //  ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBox_ShowDriverVersionWarning.Checked;
+          //  ConfigManager.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
+          //  ConfigManager.GeneralConfig.ShowInternetConnectionWarning = checkBox_ShowInternetConnectionWarning.Checked;
             ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
-            ConfigManager.GeneralConfig.IdleWhenNoInternetAccess = checkBox_IdleWhenNoInternetAccess.Checked;
+         //   ConfigManager.GeneralConfig.IdleWhenNoInternetAccess = checkBox_IdleWhenNoInternetAccess.Checked;
           //  ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
@@ -1120,6 +1128,13 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
            // ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
             ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
+            if (checkBox_LogToFile.Checked)
+            {
+                textBox_LogMaxFileSize.Enabled = true;
+            } else
+            {
+                textBox_LogMaxFileSize.Enabled = false;
+            }
         }
         /*
         private void CheckBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e)
@@ -2049,6 +2064,11 @@ namespace NiceHashMiner.Forms
         }
 
         private void checkBox_Show_profit_with_power_consumption_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label_LogMaxFileSize_Click(object sender, EventArgs e)
         {
 
         }

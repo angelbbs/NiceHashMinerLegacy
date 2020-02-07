@@ -52,7 +52,7 @@ namespace NiceHashMiner.Configs.Data
         public int ColumnLOAD = 66;
         public int ColumnFAN = 56;
         public int ColumnPOWER = 85;
-        public int FormWidth = 745;
+        public int FormWidth = 770;
         public int FormTop = 0;
         public int FormLeft = 0;
         public int BenchmarkFormWidth = 700;
@@ -94,7 +94,7 @@ namespace NiceHashMiner.Configs.Data
         public bool LogToFile = true;
 
         // in bytes
-        public long LogMaxFileSize = 1048576;
+        public long LogMaxFileSize = 16777216;
 
         public bool ShowDriverVersionWarning = false;
         public bool DisableWindowsErrorReporting = true;
@@ -242,7 +242,7 @@ namespace NiceHashMiner.Configs.Data
             ColumnLOAD = 66;
             ColumnFAN = 56;
             ColumnPOWER = 85;
-            FormWidth = 745;
+            FormWidth = 770;
             FormTop = 0;
             FormLeft = 0;
             BenchmarkFormWidth = 700;
