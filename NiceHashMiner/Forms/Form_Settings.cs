@@ -942,6 +942,14 @@ namespace NiceHashMiner.Forms
             {
               //  checkBox_DebugConsole.Checked = ConfigManager.GeneralConfig.DebugConsole;
                 checkBox_AutoStartMining.Checked = ConfigManager.GeneralConfig.AutoStartMining;
+                if (checkBox_AutoStartMining.Checked)
+                {
+                    textBox_AutoStartMiningDelay.Enabled = true;
+                }
+                else
+                {
+                    textBox_AutoStartMiningDelay.Enabled = false;
+                }
                 checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.GeneralConfig.MinimizeToTray;
                 checkBox_DisableDetectionNVIDIA.Checked =
