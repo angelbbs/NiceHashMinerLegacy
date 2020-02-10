@@ -215,7 +215,6 @@ namespace NiceHashMiner.Forms.Components
                 index++;
 
             }
-
         }
         public void ResetComputeDevices(List<ComputeDevice> computeDevices)
         {

@@ -46,6 +46,9 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceBTCCode = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBalanceDollarText = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBalanceDollarValue = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_power1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_power2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_power3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.linkLabelCheckStats = new System.Windows.Forms.LinkLabel();
             this.labelWorkerName = new System.Windows.Forms.Label();
             this.textBoxWorkerName = new System.Windows.Forms.TextBox();
@@ -113,6 +116,7 @@ namespace NiceHashMiner
             // 
             // statusStrip1
             // 
+            this.statusStrip1.AllowMerge = false;
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelGlobalRateText,
@@ -123,8 +127,11 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceBTCValue,
             this.toolStripStatusLabelBalanceBTCCode,
             this.toolStripStatusLabelBalanceDollarText,
-            this.toolStripStatusLabelBalanceDollarValue});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 333);
+            this.toolStripStatusLabelBalanceDollarValue,
+            this.toolStripStatusLabel_power1,
+            this.toolStripStatusLabel_power2,
+            this.toolStripStatusLabel_power3});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 311);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(729, 22);
             this.statusStrip1.TabIndex = 8;
@@ -133,6 +140,7 @@ namespace NiceHashMiner
             // 
             // toolStripStatusLabelGlobalRateText
             // 
+            this.toolStripStatusLabelGlobalRateText.Margin = new System.Windows.Forms.Padding(6, 3, 0, 2);
             this.toolStripStatusLabelGlobalRateText.Name = "toolStripStatusLabelGlobalRateText";
             this.toolStripStatusLabelGlobalRateText.Size = new System.Drawing.Size(67, 17);
             this.toolStripStatusLabelGlobalRateText.Text = "Global rate:";
@@ -153,6 +161,7 @@ namespace NiceHashMiner
             // toolStripStatusLabelBTCDayValue
             // 
             this.toolStripStatusLabelBTCDayValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.toolStripStatusLabelBTCDayValue.Margin = new System.Windows.Forms.Padding(6, 3, 0, 2);
             this.toolStripStatusLabelBTCDayValue.Name = "toolStripStatusLabelBTCDayValue";
             this.toolStripStatusLabelBTCDayValue.Size = new System.Drawing.Size(31, 17);
             this.toolStripStatusLabelBTCDayValue.Text = "0.00";
@@ -188,6 +197,25 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceDollarValue.Name = "toolStripStatusLabelBalanceDollarValue";
             this.toolStripStatusLabelBalanceDollarValue.Size = new System.Drawing.Size(16, 17);
             this.toolStripStatusLabelBalanceDollarValue.Text = "...";
+            // 
+            // toolStripStatusLabel_power1
+            // 
+            this.toolStripStatusLabel_power1.Name = "toolStripStatusLabel_power1";
+            this.toolStripStatusLabel_power1.Size = new System.Drawing.Size(43, 17);
+            this.toolStripStatusLabel_power1.Text = "Power:";
+            // 
+            // toolStripStatusLabel_power2
+            // 
+            this.toolStripStatusLabel_power2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.toolStripStatusLabel_power2.Name = "toolStripStatusLabel_power2";
+            this.toolStripStatusLabel_power2.Size = new System.Drawing.Size(14, 17);
+            this.toolStripStatusLabel_power2.Text = "0";
+            // 
+            // toolStripStatusLabel_power3
+            // 
+            this.toolStripStatusLabel_power3.Name = "toolStripStatusLabel_power3";
+            this.toolStripStatusLabel_power3.Size = new System.Drawing.Size(18, 17);
+            this.toolStripStatusLabel_power3.Text = "W";
             // 
             // linkLabelCheckStats
             // 
@@ -308,7 +336,7 @@ namespace NiceHashMiner
             this.flowLayoutPanelRates.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelRates.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelRates.Name = "flowLayoutPanelRates";
-            this.flowLayoutPanelRates.Size = new System.Drawing.Size(590, 40);
+            this.flowLayoutPanelRates.Size = new System.Drawing.Size(702, 40);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
             // 
@@ -318,9 +346,9 @@ namespace NiceHashMiner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.label_NotProfitable);
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
-            this.groupBox1.Location = new System.Drawing.Point(9, 268);
+            this.groupBox1.Location = new System.Drawing.Point(10, 251);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(596, 59);
+            this.groupBox1.Size = new System.Drawing.Size(708, 59);
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";
@@ -386,7 +414,7 @@ namespace NiceHashMiner
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(595, 146);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(595, 129);
             this.devicesListViewEnableControl1.TabIndex = 109;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
             // 
@@ -394,7 +422,7 @@ namespace NiceHashMiner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(729, 355);
+            this.ClientSize = new System.Drawing.Size(729, 333);
             this.Controls.Add(this.labelBitcoinAddressNew);
             this.Controls.Add(this.textBoxBTCAddress_new);
             this.Controls.Add(this.linkLabelNewVersion);
@@ -416,7 +444,7 @@ namespace NiceHashMiner
             this.Controls.Add(this.buttonStartMining);
             this.Enabled = false;
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(700, 316);
+            this.MinimumSize = new System.Drawing.Size(700, 372);
             this.Name = "Form_Main";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -466,6 +494,9 @@ namespace NiceHashMiner
         private System.Windows.Forms.Button buttonStartMining;
         private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceDollarValue;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power2;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power3;
     }
 }
 

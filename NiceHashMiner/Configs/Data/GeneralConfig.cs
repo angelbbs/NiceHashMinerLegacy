@@ -15,7 +15,8 @@ namespace NiceHashMiner.Configs.Data
     {
         public Version ConfigFileVersion;
         public double ForkFixVersion;
-        public bool DecreasePowerCost;
+        public bool DecreasePowerCost = false;
+        public bool FiatCurrency = false;
         public bool NoShowApiInLog;
         public bool lolMinerOldEnumeration;
         public bool GMinerIDByBusEnumeration = true;
@@ -52,7 +53,8 @@ namespace NiceHashMiner.Configs.Data
         public int ColumnLOAD = 66;
         public int ColumnFAN = 56;
         public int ColumnPOWER = 85;
-        public int FormWidth = 770;
+        public int FormWidth = 700;
+        public int FormHeight = 389;
         public int FormTop = 0;
         public int FormLeft = 0;
         public int BenchmarkFormWidth = 700;
@@ -158,6 +160,8 @@ namespace NiceHashMiner.Configs.Data
         /// Cost of electricity in kW-h
         /// </summary>
         public double KwhPrice = 0;
+        public int PowerPSU = 80;
+        public int PowerMB = 60;
 
         /// <summary>
         /// True if NHML should try to cache SMA values for next launch
@@ -166,6 +170,7 @@ namespace NiceHashMiner.Configs.Data
 
         public int ColorProfileIndex = 0;
         public int SwitchingAlgorithmsIndex = 2;
+        public int DevicesCountIndex = 0;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();
         public bool UseEthlargement = false;
 
@@ -243,6 +248,7 @@ namespace NiceHashMiner.Configs.Data
             ColumnFAN = 56;
             ColumnPOWER = 85;
             FormWidth = 770;
+            FormHeight = 406;
             FormTop = 0;
             FormLeft = 0;
             BenchmarkFormWidth = 700;

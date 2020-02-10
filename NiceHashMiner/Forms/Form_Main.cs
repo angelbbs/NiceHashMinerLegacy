@@ -27,6 +27,7 @@ namespace NiceHashMiner
 {
     using System.IO;
     using System.Runtime.InteropServices;
+    using static NiceHashMiner.Devices.ComputeDeviceManager;
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
@@ -57,7 +58,7 @@ namespace NiceHashMiner
         private int _flowLayoutPanelRatesIndex = 0;
 
         private const string BetaAlphaPostfixString = "";
-        const string ForkString = " Fork Fix 23 beta 1";
+        const string ForkString = " Fork Fix 23";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -66,10 +67,11 @@ namespace NiceHashMiner
 
         //private bool _isSmaUpdated = false;
 
-        private double _factorTimeUnit = 1.0;
+        public static double _factorTimeUnit = 1.0;
 
-        private readonly int _mainFormHeight = 0;
+        private int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
+        private int groupBox1Top = 0;
         bool firstStartConnection = false;
         private bool firstRun = false;
         public static Color _backColor;
@@ -183,6 +185,12 @@ namespace NiceHashMiner
             InitLocalization();
             devicesListViewEnableControl1.Visible = false;
             ComputeDeviceManager.SystemSpecs.QueryAndLog();
+            groupBox1Top = groupBox1.Top;
+            
+            devicesListViewEnableControl1.Height = 129 + ConfigManager.GeneralConfig.DevicesCountIndex * 17;
+            groupBox1Top += ConfigManager.GeneralConfig.DevicesCountIndex * 17;
+            //this.Height += 16;
+
 
             comboBoxLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.comboBoxLocation.DrawItem += new DrawItemEventHandler(comboBoxLocation_DrawItem);
@@ -221,6 +229,7 @@ namespace NiceHashMiner
             // for resizing
             InitFlowPanelStart();
 
+            groupBox1.Height = 32;
             if (groupBox1.Size.Height > 0 && Size.Height > 0)
             {
                 _emtpyGroupPanelHeight = groupBox1.Size.Height;
@@ -228,9 +237,10 @@ namespace NiceHashMiner
             }
             else
             {
-                _emtpyGroupPanelHeight = 59;
-                _mainFormHeight = 330 - _emtpyGroupPanelHeight;
+               // _emtpyGroupPanelHeight = 59;
+               // _mainFormHeight = 330 - _emtpyGroupPanelHeight;
             }
+            //_mainFormHeight = Size.Height;
             ClearRatesAll();
 
         }
@@ -294,6 +304,9 @@ namespace NiceHashMiner
 
             label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
             groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
+            toolStripStatusLabel_power1.Text = "";
+            toolStripStatusLabel_power2.Text = "";
+            toolStripStatusLabel_power3.Text = "";
         }
 
         public void InitMainConfigGuiData()
@@ -743,6 +756,7 @@ namespace NiceHashMiner
                         this.Left = ConfigManager.GeneralConfig.FormLeft;
                     }
                     this.Width = ConfigManager.GeneralConfig.FormWidth;
+                    this.Height = ConfigManager.GeneralConfig.FormHeight;
                 } else
                 {
                    // this.Width = 660; // min width
@@ -821,12 +835,8 @@ namespace NiceHashMiner
                 // DevicesListViewEnableControl.listViewDevices.BackColor = _backColor;
                 devicesListViewEnableControl1.BackColor = _backColor;
                 devicesListViewEnableControl1.ForeColor = _foreColor;
-
-                //DevicesListViewEnableControl.DefaultDevicesColorSeter.
-                //   DevicesListViewEnableControl.DefaultDevicesColorSeter.EnabledColor = _backColor;
-                //  devicesListViewEnableControl1.listViewDevices.Items[0].UseItemStyleForSubItems = false;
-
             }
+
             this.Update();
             this.Refresh();
             // general loading indicator
@@ -953,19 +963,25 @@ namespace NiceHashMiner
             _flowLayoutPanelRatesIndex = 0;
             var visibleGroupCount = 1;
             if (groupCount > 0) visibleGroupCount += groupCount;
-
+            double panelHeight = 0;
             var groupBox1Height = _emtpyGroupPanelHeight;
             if (flowLayoutPanelRates.Controls.Count > 0)
             {
                 var control = flowLayoutPanelRates.Controls[0];
-                var panelHeight = ((GroupProfitControl)control).Size.Height * 1.1f;
-                groupBox1Height = (int)((visibleGroupCount) * panelHeight - panelHeight/3.0f);
+                panelHeight = (int)((GroupProfitControl)control).Size.Height * 1.1;
+                groupBox1Height = (int)((visibleGroupCount) * panelHeight - panelHeight / 3.0f);
             }
 
             groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1Height);
+
+            groupBox1.Top = groupBox1Top;
             // set new height
-            Size = new Size(Size.Width, _mainFormHeight + groupBox1Height);
+            int newHeight = _mainFormHeight + groupBox1Height - (int)panelHeight / 2;
+            //this.MaximumSize = new Size(-1, newHeight);
+           // Form_Main.ActiveForm.MinimumSize.Height = newHeight;
+            Size = new Size(Size.Width, newHeight + ConfigManager.GeneralConfig.DevicesCountIndex * 17);
         }
+
 
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying, double power,
             bool isApiGetException)
@@ -975,14 +991,15 @@ namespace NiceHashMiner
             var speedString =
                 Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
                 iApiData.AlgorithmName + apiGetExceptionString;
+            //power = 0;
             var rateBtcString = FormatPayingOutput(paying, power);
             if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
                 power = 0;
             }
-            //надо ширину группы менять в зависимости от ширины окна
+
             var rateCurrencyString = ExchangeRateApi
-                                         .ConvertToActiveCurrency((paying + power) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
+                                         .ConvertToActiveCurrency((paying - power) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $"{ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -1036,7 +1053,7 @@ namespace NiceHashMiner
             }
 
             try
-            { 
+            {
             if (InvokeRequired)
             {
                 Invoke((Action)HideNotProfitable);
@@ -1070,13 +1087,27 @@ namespace NiceHashMiner
 
         private void UpdateGlobalRate()
         {
+            double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
             var totalRate = MinersManager.GetTotalRate();
             var totalPowerRate = MinersManager.GetTotalPowerRate();
             var powerString = "";
+            double TotalPower = 0;
+            foreach (var computeDevice in Available.Devices)
+            {
+                TotalPower += computeDevice.PowerUsage;
+            }
+            double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
+            totalPower = Math.Round(totalPower, 0);
+            var PowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 *_factorTimeUnit / 1000;
+            var PowerRateFiat = ExchangeRateApi.GetKwhPriceInBtc()*ExchangeRateApi.GetUsdExchangeRate() * totalPower * 24 *_factorTimeUnit / 1000;
 
+            var powerMB = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 / 1000;
 
-            //groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
-
+            double totalPowerRateDec = 0;
+            if (ConfigManager.GeneralConfig.DecreasePowerCost)
+            {
+                totalPowerRateDec = totalPowerRate;
+            }
 
             if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
             {
@@ -1084,17 +1115,15 @@ namespace NiceHashMiner
                 {
                     powerString = "(-" + (totalPowerRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
                 }
-                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                if (ConfigManager.GeneralConfig.DecreasePowerCost)
                 {
                     powerString = "";
                 }
-                
-
                     toolStripStatusLabelBTCDayText.Text = powerString + " " +
                     "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                     toolStripStatusLabelGlobalRateValue.Text =
-                ((totalRate + totalPowerRate) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
-                
+                ((totalRate - totalPowerRateDec) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+
             }
             else
             {
@@ -1102,34 +1131,35 @@ namespace NiceHashMiner
                 {
                     powerString = "(-" + (totalPowerRate * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
                 }
-                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                if (ConfigManager.GeneralConfig.DecreasePowerCost)
                 {
                     powerString = "";
                 }
                 toolStripStatusLabelBTCDayText.Text = powerString + " " +
                     "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 toolStripStatusLabelGlobalRateValue.Text =
-                    ((totalRate + totalPowerRate) * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                    ((totalRate - totalPowerRateDec) * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
             }
+
             if (totalPowerRate != 0)
             {
                 powerString = "(-" + ExchangeRateApi.ConvertToActiveCurrency((totalPowerRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture) + ") ";
-                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                if (ConfigManager.GeneralConfig.DecreasePowerCost)
                 {
                     powerString = "";//!!!!!
                 }
+                toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
+                toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
+                toolStripStatusLabel_power2.Text = totalPower.ToString();
             }
             else
             {
                 powerString = "";
             }
-            if (!ConfigManager.GeneralConfig.DecreasePowerCost)
-            {
-                totalPowerRate = 0;
-            }
+
                 toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency(((totalRate + totalPowerRate) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                .ConvertToActiveCurrency(((totalRate - totalPowerRateDec) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
@@ -1385,6 +1415,7 @@ namespace NiceHashMiner
                 if (ConfigManager.GeneralConfig.Save_windows_size_and_position)
                 {
                     ConfigManager.GeneralConfig.FormWidth = this.Width;
+                    ConfigManager.GeneralConfig.FormHeight = this.Height;
                     if (this.Top + this.Left >= 1)
                     {
                         ConfigManager.GeneralConfig.FormTop = this.Top;
@@ -1421,7 +1452,7 @@ namespace NiceHashMiner
             var settings = new Form_Settings();
             //   SetChildFormCenter(settings);
             settings.ShowDialog();
-            
+
             if (settings.IsChange && settings.IsChangeSaved && settings.IsRestartNeeded)
             {
                 MessageBox.Show(
@@ -1475,11 +1506,11 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
-                ret = ((paying + power) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) +
+                ret = ((paying - power) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) +
                     " mBTC/" +
                       International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
             else
-                ret = ((paying + power) * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) +
+                ret = ((paying - power) * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) +
                     " BTC/" +
                       International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
@@ -1562,6 +1593,13 @@ namespace NiceHashMiner
         // Minimize to system tray if MinimizeToTray is set to true
         private void Form1_Resize(object sender, EventArgs e)
         {
+
+            foreach (var control in flowLayoutPanelRates.Controls)
+            {
+                ((GroupProfitControl)control).Width = this.Width - 145;
+            }
+            //((GroupProfitControl)control).Width = 520;
+            //(GroupProfitControl)groupBoxMinerGroup.Width = 530;
 
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
@@ -1880,10 +1918,15 @@ namespace NiceHashMiner
             }
 
             UpdateGlobalRate();
+            toolStripStatusLabel_power1.Text = "";
+            toolStripStatusLabel_power2.Text = "";
+            toolStripStatusLabel_power3.Text = "";
+            //devicesListViewEnableControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+            //devicesListViewEnableControl1.Update();
         }
 
         private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
-        { 
+        {
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
         }
 
@@ -1918,112 +1961,7 @@ namespace NiceHashMiner
 
         }
 
-        /*
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            ConfigManager.GeneralConfig.NewPlatform = !radioButtonOldPlatform.Checked;
-//            ConfigManager.GeneralConfigFileCommit();
-        }
-
-        private void radioButtonNewPlatform_CheckedChanged(object sender, EventArgs e)
-        {
-
-            ConfigManager.GeneralConfig.NewPlatform = radioButtonNewPlatform.Checked;
-            textBoxBTCAddress.Enabled = !radioButtonNewPlatform.Checked;
-            textBoxBTCAddress_new.Enabled = radioButtonNewPlatform.Checked;
-           // ConfigManager.GeneralConfigFileCommit();
-            Thread.Sleep(10);
-
-            if (firstStartConnection && NiceHashSocket._webSocket != null)
-            {
-                ConfigManager.GeneralConfigFileCommit();
-                NiceHashStats._socket = null;
-                NiceHashSocket._restartConnection = true;
-                NiceHashSocket._webSocket.Close();
-                NiceHashSocket._webSocket = null;
-
-
-                NiceHashStats._deviceUpdateTimer.Change(System.Threading.Timeout.Infinite, 0);
-                NiceHashStats._deviceUpdateTimer.Dispose();
-                NiceHashStats._deviceUpdateTimer = null;
-                NiceHashStats.ClearAlgorithmRates();
-                Thread.Sleep(10);
-
-                if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-                {
-                    NiceHashStats.StartConnection(Links.NhmSocketAddress_new);
-                }
-                else
-                {
-                    NiceHashStats.StartConnection(Links.NhmSocketAddress);
-                }
-            }
-        }
-        */
-        /*
-        public class ListViewWithoutScrollBar : ListView
-        {
-            protected override void WndProc(ref Message m)
-            {
-                switch (m.Msg)
-                {
-                    case 0x83: // WM_NCCALCSIZE
-                        int style = (int)GetWindowLong(this.Handle, GWL_STYLE);
-                        if ((style & WS_VSCROLL) == WS_VSCROLL)
-                            SetWindowLong(this.Handle, GWL_STYLE, style & ~WS_VSCROLL);
-                        base.WndProc(ref m);
-                        break;
-                    default:
-                        base.WndProc(ref m);
-                        break;
-                }
-            }
-            const int GWL_STYLE = -16;
-            const int WS_VSCROLL = 0x00200000;
-
-            public static int GetWindowLong(IntPtr hWnd, int nIndex)
-            {
-                if (IntPtr.Size == 4)
-                    return (int)GetWindowLong32(hWnd, nIndex);
-                else
-                    return (int)(long)GetWindowLongPtr64(hWnd, nIndex);
-            }
-
-            public static int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong)
-            {
-                if (IntPtr.Size == 4)
-                    return (int)SetWindowLongPtr32(hWnd, nIndex, dwNewLong);
-                else
-                    return (int)(long)SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
-            }
-
-            [DllImport("user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Auto)]
-            public static extern IntPtr GetWindowLong32(IntPtr hWnd, int nIndex);
-
-            [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Auto)]
-            public static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
-
-            [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Auto)]
-            public static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, int dwNewLong);
-
-            [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", CharSet = CharSet.Auto)]
-            public static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, int dwNewLong);
-        }
-        //[DllImport("user32")]
-        //private static extern long ShowScrollBar(long hwnd, long wBar, long bShow);
-        long SB_HORZ = 0;
-        long SB_VERT = 1;
-        long SB_BOTH = 3;
-
-        [System.Runtime.InteropServices.DllImport("user32", CallingConvention = System.Runtime.InteropServices.CallingConvention.Winapi)]
-        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
-
-        private static extern bool ShowScrollBar(long hwnd, long wBar, [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)] bool bShow);
-        private void HideHorizontalScrollBar()
-        {
-            ShowScrollBar(devicesListViewEnableControl1.Handle.ToInt64(), SB_HORZ, false);
-        }
-        */
+      
         private void devicesListViewEnableControl1_Load(object sender, EventArgs e)
         {
             /*
@@ -2034,9 +1972,9 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.AutoScroll = false;
            // devicesListViewEnableControl1.
            */
-           // devicesListViewEnableControl1.AutoScroll = false;
+            // devicesListViewEnableControl1.AutoScroll = false;
             // HideHorizontalScrollBar();
-           // devicesListViewEnableControl1.VerticalScroll.Enabled = true;
+            // devicesListViewEnableControl1.VerticalScroll.Enabled = true;
 
         }
 
@@ -2076,6 +2014,17 @@ namespace NiceHashMiner
                 TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.HidePrefix;   // center the text
                 TextRenderer.DrawText(e.Graphics, buttonStartMining.Text, btn.Font, e.ClipRectangle, btn.ForeColor, flags);
             }
+        }
+
+        private void devicesListViewEnableControl1_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form_Main_ResizeEnd(object sender, EventArgs e)
+        {
+           // _mainFormHeight = Size.Height;
+            //_mainFormHeight = Size.Height - _emtpyGroupPanelHeight;
         }
     }
 

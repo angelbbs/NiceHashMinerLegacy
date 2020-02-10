@@ -59,6 +59,7 @@
     <Compile Include="Connection.cs" />
     <Compile Include="DClaymoreDual.cs" />
     <Compile Include="Divert.cs" />
+    <Compile Include="DPhoenix.cs" />
     <Compile Include="DXMRig.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Logger.cs" />

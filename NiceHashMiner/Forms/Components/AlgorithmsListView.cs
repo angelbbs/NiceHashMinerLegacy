@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Stats;
+using System.Globalization;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -53,7 +55,7 @@ namespace NiceHashMiner.Forms.Components
                 if (!isListViewEnabled)
                 {
                   //  return;
-                } 
+                }
                 if (lvi.Tag is Algorithm algorithm)
                 {
                     if (!algorithm.Enabled && !algorithm.IsBenchmarkPending)
@@ -165,7 +167,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     e.Graphics.FillRectangle(backBrush, e.Bounds);
                 }
-           
+
 
             using (SolidBrush foreBrush = new SolidBrush(foreColor))
             {
@@ -205,7 +207,7 @@ namespace NiceHashMiner.Forms.Components
         }
         public void InitLocale()
         {
-            
+
             var _backColor = Form_Main._backColor;
             var _foreColor = Form_Main._foreColor;
             var _textColor = Form_Main._textColor;
@@ -240,7 +242,7 @@ namespace NiceHashMiner.Forms.Components
                 listViewAlgorithms.Columns[POWER].Text = "Потребление";
             }
 
-            
+
 
             listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
@@ -280,7 +282,7 @@ namespace NiceHashMiner.Forms.Components
                         //name = $"{alg.AlgorithmName} ({alg.MinerBaseTypeName})";
                         payingRatio = alg.CurPayingRatio;
                     }
-                    
+
                     lvi.SubItems.Add(name);
                     lvi.SubItems.Add(miner);
 
@@ -304,8 +306,47 @@ namespace NiceHashMiner.Forms.Components
                             lvi.SubItems.Add(alg.PowerUsage.ToString() + " W");
                         }
                     }
+                    double.TryParse(alg.CurPayingRate, out var valueRate);
+                    double WithPowerRate = 0;
+                    WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * alg.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+                    if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                    {
+                        WithPowerRate = valueRate;
+                    }
+                    string rateCurrencyString = ExchangeRateApi
+                             .ConvertToActiveCurrency((WithPowerRate) * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
+                             .ToString("F2", CultureInfo.InvariantCulture);
+                    string fiatCurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" +
+                         International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                    string btcCurrencyName = "BTC/" +
+                         International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+
                     lvi.SubItems.Add(payingRatio);
-                    lvi.SubItems.Add(alg.CurPayingRate);
+                    if (ConfigManager.GeneralConfig.DecreasePowerCost)
+                    {
+                        if (ConfigManager.GeneralConfig.FiatCurrency)
+                        {
+                            columnHeader6.Text = fiatCurrencyName;
+                            lvi.SubItems.Add(rateCurrencyString);
+                        } else
+                        {
+                            columnHeader6.Text = btcCurrencyName;
+                            lvi.SubItems.Add(WithPowerRate.ToString("F8"));
+                        }
+                    }
+                    else
+                    {
+                        if (ConfigManager.GeneralConfig.FiatCurrency)
+                        {
+                            columnHeader6.Text = fiatCurrencyName;
+                            lvi.SubItems.Add(rateCurrencyString);
+                        }
+                        else
+                        {
+                            columnHeader6.Text = btcCurrencyName;
+                            lvi.SubItems.Add(alg.CurPayingRate);
+                        }
+                    }
                     lvi.Tag = alg;
                     lvi.Checked = alg.Enabled;
                     listViewAlgorithms.Items.Add(lvi);
@@ -340,7 +381,47 @@ namespace NiceHashMiner.Forms.Components
                             {
                                 lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
                             }
-                            lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                            double.TryParse(algorithm.CurPayingRate, out var valueRate);
+                            double WithPowerRate = 0;
+                            WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+                            if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                            {
+                                WithPowerRate = valueRate;
+                            }
+                            string rateCurrencyString = ExchangeRateApi
+                                     .ConvertToActiveCurrency((WithPowerRate) * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
+                                     .ToString("F2", CultureInfo.InvariantCulture);
+                            string fiatCurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" +
+                                 International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                            string btcCurrencyName = "BTC/" +
+                                 International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+
+                            if (ConfigManager.GeneralConfig.DecreasePowerCost)
+                            {
+                                if (ConfigManager.GeneralConfig.FiatCurrency)
+                                {
+                                    columnHeader6.Text = fiatCurrencyName;
+                                    lvi.SubItems[RATE].Text =  rateCurrencyString;
+                                }
+                                else
+                                {
+                                    columnHeader6.Text = btcCurrencyName;
+                                    lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
+                                }
+                            }
+                            else
+                            {
+                                if (ConfigManager.GeneralConfig.FiatCurrency)
+                                {
+                                    columnHeader6.Text = fiatCurrencyName;
+                                    lvi.SubItems[RATE].Text = rateCurrencyString;
+                                }
+                                else
+                                {
+                                    columnHeader6.Text = btcCurrencyName;
+                                    lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                                }
+                            }
                         }
                     }
                 }
@@ -433,7 +514,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        // on benchmark 
+        // on benchmark
         public void SetSpeedStatus(ComputeDevice computeDevice, Algorithm algorithm, string status)
         {
             if (algorithm != null)
@@ -453,7 +534,18 @@ namespace NiceHashMiner.Forms.Components
                             }
 
                             //    lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
-                            lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
+                            double.TryParse(algorithm.CurPayingRate, out var valueRate);
+                            var WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+
+                            if (ConfigManager.GeneralConfig.DecreasePowerCost)
+                            {
+                                lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
+                            }
+                            else
+                            {
+                                lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                            }
+                            //lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
                             algorithm.PowerUsage = Math.Round(algorithm.PowerUsage, 0);
                             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
                             {

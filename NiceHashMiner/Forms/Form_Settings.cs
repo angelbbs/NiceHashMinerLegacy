@@ -354,8 +354,8 @@ namespace NiceHashMiner.Forms
             // internet connection mining check
            // toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess,
              //   International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
-            toolTip1.SetToolTip(pictureBox_IdleWhenNoInternetAccess,
-                International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
+           // toolTip1.SetToolTip(pictureBox_IdleWhenNoInternetAccess,
+             //   International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
 
             // IFTTT notification check
             /*
@@ -442,7 +442,10 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowFanAsPercent.Text = "Показать обороты вентилятора в процентах";
                 checkbox_Group_same_devices.Text = "Группировать одинаковые устройства";
                 checkBox_Force_mining_if_nonprofitable.Text = "Принудительный майнинг, если не прибыльно";
-                checkBox_Show_profit_with_power_consumption.Text = "Показывать прибыльность с учетом рахода на ЭЭ";
+                checkBox_Show_profit_with_power_consumption.Text = "Показывать прибыльность с учетом рахода на эл.энергию";
+                checkBox_fiat.Text = "Показывать прибыльность алгоритмов в фиатной валюте";
+                label_psu.Text = "КПД блока питания (%)";
+                label_MBpower.Text = "Потребление м.платы, диска и т.п. (Вт)";
                 checkBox_Disable_extra_launch_parameter_checking.Text = "Отключить проверку дополнительных параметров";
                 checkBox_DisableDetectionCPU.Text = "Отключить определение CPU";
                 label_AutoStartMiningDelay.Text = "Задержка автозапуска майнинга (сек)";
@@ -465,6 +468,8 @@ namespace NiceHashMiner.Forms
                 comboBox_switching_algorithms.Items.Add("через 10 мин");
                 comboBox_switching_algorithms.Items.Add("через 15 мин");
                 comboBox_switching_algorithms.Items.Add("случайно (стандартный NHM)");
+
+                label_devices_count.Text = "Кол-во видимых устройств";
             }
             else
             {
@@ -477,6 +482,13 @@ namespace NiceHashMiner.Forms
                 comboBox_switching_algorithms.Items.Add("random (standard NHM)");
             }
 
+            comboBox_devices_count.Items.Add("6");
+            comboBox_devices_count.Items.Add("7");
+            comboBox_devices_count.Items.Add("8");
+            comboBox_devices_count.Items.Add("9");
+            comboBox_devices_count.Items.Add("10");
+            comboBox_devices_count.Items.Add("11");
+            comboBox_devices_count.Items.Add("12");
 
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated;
 
@@ -503,7 +515,7 @@ namespace NiceHashMiner.Forms
                 }
             }
             */
-           
+
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             /*
@@ -603,7 +615,7 @@ namespace NiceHashMiner.Forms
 
                 tabPageAdvanced1.BackColor = Form_Main._backColor;
                 tabPageAdvanced1.ForeColor = Form_Main._foreColor;
-                
+
                 tabPageDevicesAlgos.BackColor = Form_Main._backColor;
                 tabPageDevicesAlgos.ForeColor = Form_Main._foreColor;
 
@@ -628,7 +640,7 @@ namespace NiceHashMiner.Forms
                     lbl.FlatAppearance.BorderColor = Form_Main._textColor;
                     lbl.FlatAppearance.BorderSize = 1;
                 }
-                
+
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
                 {
                     lbl.BackColor = Form_Main._backColor;
@@ -647,6 +659,7 @@ namespace NiceHashMiner.Forms
                 comboBox_Language.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_switching_algorithms.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_devices_count.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 foreach (var lbl in this.tabPageGeneral.Controls.OfType<GroupBox>())
                 {
@@ -712,6 +725,14 @@ namespace NiceHashMiner.Forms
                 textBox_ElectricityCost.BackColor = Form_Main._backColor;
                 textBox_ElectricityCost.ForeColor = Form_Main._foreColor;
                 textBox_ElectricityCost.BorderStyle = BorderStyle.FixedSingle;
+
+                textBox_psu.BackColor = Form_Main._backColor;
+                textBox_psu.ForeColor = Form_Main._foreColor;
+                textBox_psu.BorderStyle = BorderStyle.FixedSingle;
+
+                textBox_mb.BackColor = Form_Main._backColor;
+                textBox_mb.ForeColor = Form_Main._foreColor;
+                textBox_mb.BorderStyle = BorderStyle.FixedSingle;
                 /*
                 textBox_IFTTTKey.BackColor = Form_Main._backColor;
                 textBox_IFTTTKey.ForeColor = Form_Main._foreColor;
@@ -764,7 +785,7 @@ namespace NiceHashMiner.Forms
                 pictureBox_displayCurrency.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_ElectricityCost.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_HideMiningWindows.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_IdleWhenNoInternetAccess.Image = NiceHashMiner.Properties.Resources.info_white_18;
+             //   pictureBox_IdleWhenNoInternetAccess.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_Language.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_LogMaxFileSize.Image = NiceHashMiner.Properties.Resources.info_white_18;
                // pictureBox_LogToFile.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -868,6 +889,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                // checkBox_AMD_DisableAMDTempControl.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -893,6 +915,8 @@ namespace NiceHashMiner.Forms
                 textBox_APIBindPortStart.Leave += GeneralTextBoxes_Leave;
                 textBox_MinProfit.Leave += GeneralTextBoxes_Leave;
                 textBox_ElectricityCost.Leave += GeneralTextBoxes_Leave;
+                textBox_psu.Leave += GeneralTextBoxes_Leave;
+                textBox_mb.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchProfitabilityThreshold.Leave += GeneralTextBoxes_Leave;
                 // set int only keypress
                 textBox_SwitchMaxSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
@@ -906,6 +930,8 @@ namespace NiceHashMiner.Forms
                 // set double only keypress
                 textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBox_ElectricityCost.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBox_psu.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBox_mb.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -914,6 +940,7 @@ namespace NiceHashMiner.Forms
                 comboBox_TimeUnit.Leave += GeneralComboBoxes_Leave;
                 comboBox_ColorProfile.Leave += GeneralComboBoxes_Leave;
                 comboBox_switching_algorithms.Leave += GeneralComboBoxes_Leave;
+                comboBox_devices_count.Leave += GeneralComboBoxes_Leave;
           //      comboBox_DagLoadMode.Leave += GeneralComboBoxes_Leave;
             }
 
@@ -986,7 +1013,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
-                checkBox_Show_profit_with_power_consumption.Checked = !ConfigManager.GeneralConfig.DecreasePowerCost;
+                checkBox_Show_profit_with_power_consumption.Checked = ConfigManager.GeneralConfig.DecreasePowerCost;
+                checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
@@ -1021,6 +1049,8 @@ namespace NiceHashMiner.Forms
                 textBox_SwitchProfitabilityThreshold.Text = ((ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)*100)
                     .ToString("F2").Replace(',', '.'); // force comma;
                 textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
+                textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
+                textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString();
             }
 
             // set custom control referances
@@ -1066,6 +1096,7 @@ namespace NiceHashMiner.Forms
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
                 comboBox_ColorProfile.SelectedIndex = ConfigManager.GeneralConfig.ColorProfileIndex;
                 comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
+                comboBox_devices_count.SelectedIndex = ConfigManager.GeneralConfig.DevicesCountIndex;
             }
         }
 
@@ -1128,7 +1159,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
-            ConfigManager.GeneralConfig.DecreasePowerCost = !checkBox_Show_profit_with_power_consumption.Checked;
+            ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
+            ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
@@ -1267,6 +1299,8 @@ namespace NiceHashMiner.Forms
           //  ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
 
             ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
+            ConfigManager.GeneralConfig.PowerMB = Helpers.ParseInt(textBox_mb.Text);
+            ConfigManager.GeneralConfig.PowerPSU = Helpers.ParseInt(textBox_psu.Text);
 
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
@@ -1285,6 +1319,8 @@ namespace NiceHashMiner.Forms
             //      textBox_ethminerDefaultBlockHeight.Text = ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
             textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
             textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
+            textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString("");
+            textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString("");
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
@@ -1295,6 +1331,7 @@ namespace NiceHashMiner.Forms
             //ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.ColorProfileIndex = comboBox_ColorProfile.SelectedIndex;
             ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = comboBox_switching_algorithms.SelectedIndex;
+            ConfigManager.GeneralConfig.DevicesCountIndex = comboBox_devices_count.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
             /*
             ConfigManager.GeneralConfig.EthminerDagGenerationType =
@@ -1465,7 +1502,7 @@ namespace NiceHashMiner.Forms
 
             if (IsChangeSaved)
             {
-          
+
             ConfigManager.GeneralConfigFileCommit();
                 ConfigManager.CommitBenchmarks();
                 International.Initialize(ConfigManager.GeneralConfig.Language);
@@ -2079,6 +2116,46 @@ namespace NiceHashMiner.Forms
         private void label_LogMaxFileSize_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void groupBox_Main_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label_ElectricityCost_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox_ElectricityCost_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox_Force_mining_if_nonprofitable_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox_ElectricityCost_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox_devices_count_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_ServiceLocation_DrawItem(sender, e);
         }
     }
 }

@@ -17,6 +17,7 @@ using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
+using static NiceHashMiner.Devices.ComputeDeviceManager;
 
 namespace NiceHashMiner.Miners
 {
@@ -51,10 +52,10 @@ namespace NiceHashMiner.Miners
         private bool _isConnectedToInternet;
         private readonly bool _isMiningRegardlesOfProfit;
 
-        // timers 
+        // timers
         private readonly Timer _preventSleepTimer;
 
-        // check internet connection 
+        // check internet connection
         private readonly Timer _internetCheckTimer;
 
 
@@ -263,6 +264,17 @@ namespace NiceHashMiner.Miners
 
             return totalPowerRate;
         }
+        public double GetTotalPower()
+        {
+            double totalPower = 0;
+
+            if (_runningGroupMiners != null)
+            {
+                totalPower += _runningGroupMiners.Values.Sum(groupMiner => groupMiner.TotalPower);
+            }
+
+            return totalPower;
+        }
         // full of state
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
@@ -342,7 +354,7 @@ namespace NiceHashMiner.Miners
                     currentProfit += device.GetCurrentMostProfitValue;
                     prevStateProfit += device.GetPrevMostProfitValue;
                 }
-            }                                                        
+            }
             var stringBuilderFull = new StringBuilder();
             stringBuilderFull.AppendLine("Current device profits:");
             foreach (var device in _miningDevices)
@@ -411,7 +423,7 @@ namespace NiceHashMiner.Miners
                     $"Will SWITCH profit diff is {percDiff*100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold*100}%");
             }
 
-            // group new miners 
+            // group new miners
             var newGroupedMiningPairs = new Dictionary<string, List<MiningPair>>();
             // group devices with same supported algorithms
             {
@@ -533,7 +545,7 @@ namespace NiceHashMiner.Miners
                     var stringBuilderCurrentAlgo = new StringBuilder();
                     var stringBuilderNoChangeAlgo = new StringBuilder();
 
-                    // stop old miners                   
+                    // stop old miners
                     foreach (var toStop in toStopGroupMiners.Values)
                     {
                         stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmType}, ");
@@ -633,11 +645,20 @@ namespace NiceHashMiner.Miners
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
 
                         }
+                        //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.CurrentRate: " + groupMiners.CurrentRate.ToString());
                         // Deduct power costs
-                        var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
-                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
-                        groupMiners.PowerRate = ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
+                        //var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
+                        double powerUsage = 0;
+                        foreach (var computeDevice in Available.Devices)
+                        {
+                            powerUsage += computeDevice.PowerUsage;
+                        }
+                        double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
+                        //groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
+                        double totalPowerUsage = (powerUsage + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
+                        groupMiners.PowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPowerUsage * 24 / 1000;
                         //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.DualAlgorithmType: " + groupMiners.DualAlgorithmType.ToString() +" SecondaryAlgorithmID: " + ad.SecondaryAlgorithmID.ToString() + " CurrentRate: " + groupMiners.CurrentRate.ToString() + "CurrentRateSec:" + CurrentRateSec.ToString());
+                        //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.CurrentRate: " + groupMiners.CurrentRate.ToString() + " groupMiners.PowerRate: " + groupMiners.PowerRate.ToString());
                     }
                     else
                     {

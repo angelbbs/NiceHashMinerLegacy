@@ -118,6 +118,7 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.SwitchMinSecondsDynamic != _generalConfigBackup.SwitchMinSecondsDynamic
                    || GeneralConfig.MinerAPIQueryInterval != _generalConfigBackup.MinerAPIQueryInterval
                    || GeneralConfig.ColorProfileIndex != _generalConfigBackup.ColorProfileIndex
+                   || GeneralConfig.DevicesCountIndex != _generalConfigBackup.DevicesCountIndex
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting;
         }
 

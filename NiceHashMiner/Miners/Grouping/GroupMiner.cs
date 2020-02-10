@@ -47,6 +47,7 @@ namespace NiceHashMiner.Miners.Grouping
                     {
                         deviceNames.Add(pair.Device.NameCount);
                         DevIndexes.Add(pair.Device.Index);
+                        //TotalPower += pair.Device.PowerUsage;
                         TotalPower += pair.Algorithm.PowerUsage;
                     }
                     DevicesInfoString = "{ " + string.Join(", ", deviceNames) + " }";

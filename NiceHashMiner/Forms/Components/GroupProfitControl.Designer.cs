@@ -48,7 +48,7 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxMinerGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBoxMinerGroup.Location = new System.Drawing.Point(0, 0);
             this.groupBoxMinerGroup.Name = "groupBoxMinerGroup";
-            this.groupBoxMinerGroup.Size = new System.Drawing.Size(543, 40);
+            this.groupBoxMinerGroup.Size = new System.Drawing.Size(540, 40);
             this.groupBoxMinerGroup.TabIndex = 108;
             this.groupBoxMinerGroup.TabStop = false;
             this.groupBoxMinerGroup.Text = "Mining Devices { N/A } ";
@@ -65,8 +65,7 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // labelCurentcyPerDayVaue
             // 
-            this.labelCurentcyPerDayVaue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelCurentcyPerDayVaue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCurentcyPerDayVaue.AutoSize = true;
             this.labelCurentcyPerDayVaue.Location = new System.Drawing.Point(464, 16);
             this.labelCurentcyPerDayVaue.Name = "labelCurentcyPerDayVaue";
@@ -76,6 +75,7 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // labelBTCRateValue
             // 
+            this.labelBTCRateValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelBTCRateValue.AutoSize = true;
             this.labelBTCRateValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.labelBTCRateValue.Location = new System.Drawing.Point(355, 16);
@@ -86,6 +86,7 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // labelBTCRateIndicator
             // 
+            this.labelBTCRateIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelBTCRateIndicator.AutoSize = true;
             this.labelBTCRateIndicator.Location = new System.Drawing.Point(312, 16);
             this.labelBTCRateIndicator.Name = "labelBTCRateIndicator";

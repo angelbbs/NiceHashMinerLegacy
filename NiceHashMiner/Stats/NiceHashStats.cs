@@ -109,11 +109,27 @@ namespace NiceHashMiner.Stats
         public static bool remoteMiningStop = false;
         public static bool remoteUpdateUI = false;
 
+        private static void LoadCachedSMAData()
+        {
+            if (File.Exists("configs\\sma.dat"))
+            {
+                try
+                {
+                    dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
+                    //Helpers.ConsolePrint("SOCKET", "Using previous SMA");
+                    JArray smadata = (JArray.Parse(jsonData));
+                    SetAlgorithmRates(smadata);
+                } catch (Exception er)
+                {
+                    Helpers.ConsolePrint("SMA.DAT", er.ToString());
+                }
+        }
+        }
 
         public static void StartConnection(string address)
         {
-
-
+            NHSmaData.InitializeIfNeeded();
+            LoadCachedSMAData();
             _socket = null;
             _socket = new NiceHashSocket(address);
             _socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;

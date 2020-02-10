@@ -140,12 +140,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--enablegpurampup --cgputhreads 2 "
                             },
-                            */
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Eaglesong, "CryptoNightR")
+
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Eaglesong, "Eaglesong")
                             {
                                 ExtraLaunchParameters = "--enablegpurampup --cgputhreads 2 "
                             }
-                            /*
+
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.CryptoNightHeavy, "CryptoNightHeavy")
                             {
                                 ExtraLaunchParameters = "--enablegpurampup --cgputhreads 2 "
@@ -260,7 +260,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     //new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                 }
             },
-            { 
+            {
                  MinerBaseType.NBMiner,
                  new List<Algorithm>
                  {
@@ -356,14 +356,14 @@ namespace NiceHashMiner.Devices.Algorithms
                         //    new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.Skunk, "Skunk"),
                         }
                     },
-                        
+
                     { MinerBaseType.XmrigNVIDIA,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.XmrigNVIDIA, AlgorithmType.CryptoNightR, "CryptoNightR") { },
                             new Algorithm(MinerBaseType.XmrigNVIDIA, AlgorithmType.RandomX, "RandomX") { }
                         }
                     },
-                    
+
                         { MinerBaseType.TTMiner,
                         new List<Algorithm>() {
                            // new Algorithm(MinerBaseType.TTMiner, AlgorithmType.Lyra2REv3, "Lyra2REv3"),
@@ -434,12 +434,12 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, ""),
-                    
+
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                     {
                         ExtraLaunchParameters = "--dual_intensity 0"
                     },
-                    
+
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
