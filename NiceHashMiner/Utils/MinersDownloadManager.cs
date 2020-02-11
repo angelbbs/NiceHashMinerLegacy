@@ -7,7 +7,7 @@ namespace NiceHashMiner.Utils
     public static class MinersDownloadManager
     {
         public static DownloadSetup StandardDlSetup = new DownloadSetup(
-             "https://github.com/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_23/bin_f23.zip",
+             "https://github.com/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_23/bin_ff23.zip",
             "bins.zip",
             "bin");
 

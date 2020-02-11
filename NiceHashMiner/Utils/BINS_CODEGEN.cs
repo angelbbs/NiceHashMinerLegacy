@@ -12,7 +12,7 @@ namespace NiceHashMiner.Utils
         {
             @"/vc_redist.x64.exe",
             @"/xmrig/xmrig.exe",
-            @"/Fork_Fix_22.2.txt"
+            @"/Fork_Fix_23.txt"
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py

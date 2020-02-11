@@ -47,7 +47,7 @@ namespace NiceHashMiner.Miners
         }
         public static double GetTotalPower()
         {
-            return _curMiningSession?.GetTotalPower() ?? 0;
+            return _curMiningSession?.GetTotalPowerRate() ?? 0;
         }
 
         public static bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,

@@ -1089,7 +1089,7 @@ namespace NiceHashMiner
         {
             double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
             var totalRate = MinersManager.GetTotalRate();
-            var totalPowerRate = MinersManager.GetTotalPowerRate();
+            //var totalPowerRate = MinersManager.GetTotalPowerRate();
             var powerString = "";
             double TotalPower = 0;
             foreach (var computeDevice in Available.Devices)
@@ -1098,7 +1098,7 @@ namespace NiceHashMiner
             }
             double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
             totalPower = Math.Round(totalPower, 0);
-            var PowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 *_factorTimeUnit / 1000;
+            var totalPowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 *_factorTimeUnit / 1000;
             var PowerRateFiat = ExchangeRateApi.GetKwhPriceInBtc()*ExchangeRateApi.GetUsdExchangeRate() * totalPower * 24 *_factorTimeUnit / 1000;
 
             var powerMB = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 / 1000;

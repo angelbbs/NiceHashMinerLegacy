@@ -161,6 +161,7 @@ namespace NiceHashMinerLegacy.Divert
                 Helpers.ConsolePrint("WinDivertSharp", "New Divert handle: " + DClaymore.ToString() + ". Initiated by " + processId.ToString() + " (claymoredual) to divert process list: " + " " + String.Join(",", processIdListClaymore));
                 return DClaymore;
             }
+
             if (CurrentAlgorithmType == 47 && MinerName.ToLower() == "xmrig") //for testing. Disable in productuon
             {
                 return IntPtr.Zero;
@@ -169,7 +170,7 @@ namespace NiceHashMinerLegacy.Divert
             //надо передавать id процесса в существующий поток
             if (CurrentAlgorithmType == 20 && MinerName.ToLower() == "phoenix")
             {
-                return IntPtr.Zero;
+                //return IntPtr.Zero;
                 processIdListPhoenix.Add((uint)processId);
                 if (processIdListPhoenix.Count > 1)
                 {
