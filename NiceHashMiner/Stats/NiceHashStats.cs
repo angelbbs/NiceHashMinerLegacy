@@ -1085,9 +1085,9 @@ namespace NiceHashMiner.Stats
                             */
                             //если старая прибыльность (24ч) больше новой (30м), то игнорировать
                             //if (paying != 0 && (paying * 5 < Math.Abs(algo[1].Value<double>()) * mult || (paying / 5 > Math.Abs(algo[1].Value<double>() * mult))))
-                            if (paying != 0 && (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ))
-                            {
-                                Helpers.ConsolePrint("SMA API", "Bug found in: " + algoKey.ToString() + " " + paying.ToString() + " < " + Math.Abs(algo[1].Value<double>()) * mult + " Old profitability is bigger than newer on " + (treshold*100-100).ToString() + "%. Ignoring");
+                            if ((ConfigManager.GeneralConfig.MOPA4 || ConfigManager.GeneralConfig.MOPA5) && treshold != 1 && paying != 0 && (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ))
+                            { 
+                                Helpers.ConsolePrint("SMA API", "Bug found in: " + algoKey.ToString() + " " + paying.ToString() + " < " + Math.Abs(algo[1].Value<double>()) * mult + " 24h profitability is bigger than newer on " + (treshold*100-100).ToString() + "%. Ignoring");
                                 if (Math.Abs(algo[1].Value<double>()) * mult == 0 || Math.Abs(algo[1].Value<double>()) * mult * 102 < paying)
                                 {
                                     Helpers.ConsolePrint("SMA API", algoKey.ToString() + " paying sets to zero");
