@@ -58,7 +58,7 @@ namespace NiceHashMiner
         private int _flowLayoutPanelRatesIndex = 0;
 
         private const string BetaAlphaPostfixString = "";
-        const string ForkString = " Fork Fix 23";
+        const string ForkString = " Fork Fix 23.1";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -522,7 +522,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
-            NiceHashStats.OnSmaUpdate += SmaCallback;
+           // NiceHashStats.OnSmaUpdate += SmaCallback;
             NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
@@ -694,6 +694,7 @@ namespace NiceHashMiner
                     _autostartTimerDelay.Stop();
                     _autostartTimerDelay = null;
                     buttonStopMining.Text = International.GetText("Form_Main_stop");
+                    buttonStopMining.Refresh();
                     return;
                 }
                 else
@@ -1449,6 +1450,7 @@ namespace NiceHashMiner
 
         private void ButtonSettings_Click(object sender, EventArgs e)
         {
+
             var settings = new Form_Settings();
             //   SetChildFormCenter(settings);
             settings.ShowDialog();
@@ -1989,11 +1991,12 @@ namespace NiceHashMiner
 
         private void buttonStopMining_Paint(object sender, PaintEventArgs e)
         {
-            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
+            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0 && _autostartTimer == null)
             {
+                buttonStopMining.ResetText();
                 Button btn = (Button)sender;
                 TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.HidePrefix;   // center the text
-                TextRenderer.DrawText(e.Graphics, buttonStopMining.Text, btn.Font, e.ClipRectangle, btn.ForeColor, flags);
+                TextRenderer.DrawText(e.Graphics, International.GetText("Form_Main_stop"), btn.Font, e.ClipRectangle, btn.ForeColor, flags);
             }
         }
 
@@ -2010,10 +2013,13 @@ namespace NiceHashMiner
         {
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
+                buttonStartMining.ResetText();
                 Button btn = (Button)sender;
                 TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.HidePrefix;   // center the text
-                TextRenderer.DrawText(e.Graphics, buttonStartMining.Text, btn.Font, e.ClipRectangle, btn.ForeColor, flags);
+                TextRenderer.DrawText(e.Graphics, International.GetText("Form_Main_start"), btn.Font, e.ClipRectangle, btn.ForeColor, flags);
+  
             }
+            
         }
 
         private void devicesListViewEnableControl1_Resize(object sender, EventArgs e)

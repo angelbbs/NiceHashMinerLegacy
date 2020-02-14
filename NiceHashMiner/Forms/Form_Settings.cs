@@ -122,7 +122,8 @@ namespace NiceHashMiner.Forms
             {
                 Helpers.ConsolePrint("SETTINGS", e.ToString());
             }
-            Form_Settings.ActiveForm.Refresh();
+            Form_Settings.ActiveForm.Update();
+
             if (UpdateListView_timer == null)
             {
                 UpdateListView_timer = new Timer();

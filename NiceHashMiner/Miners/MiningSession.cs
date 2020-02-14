@@ -52,10 +52,10 @@ namespace NiceHashMiner.Miners
         private bool _isConnectedToInternet;
         private readonly bool _isMiningRegardlesOfProfit;
 
-        // timers 
+        // timers
         private readonly Timer _preventSleepTimer;
 
-        // check internet connection 
+        // check internet connection
         private readonly Timer _internetCheckTimer;
 
 
@@ -354,7 +354,7 @@ namespace NiceHashMiner.Miners
                     currentProfit += device.GetCurrentMostProfitValue;
                     prevStateProfit += device.GetPrevMostProfitValue;
                 }
-            }                                                        
+            }
             var stringBuilderFull = new StringBuilder();
             stringBuilderFull.AppendLine("Current device profits:");
             foreach (var device in _miningDevices)
@@ -423,7 +423,7 @@ namespace NiceHashMiner.Miners
                     $"Will SWITCH profit diff is {percDiff*100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold*100}%");
             }
 
-            // group new miners 
+            // group new miners
             var newGroupedMiningPairs = new Dictionary<string, List<MiningPair>>();
             // group devices with same supported algorithms
             {
@@ -545,7 +545,7 @@ namespace NiceHashMiner.Miners
                     var stringBuilderCurrentAlgo = new StringBuilder();
                     var stringBuilderNoChangeAlgo = new StringBuilder();
 
-                    // stop old miners                   
+                    // stop old miners
                     foreach (var toStop in toStopGroupMiners.Values)
                     {
                         stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmType}, ");
@@ -633,9 +633,9 @@ namespace NiceHashMiner.Miners
                     }
 
                     // set rates
-                    NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
-                    //if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
-                    if (ad != null)
+                    //NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
+                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
+                   // if (ad != null)
                     {
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
                         NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
@@ -645,7 +645,7 @@ namespace NiceHashMiner.Miners
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
 
                         }
-                        Helpers.ConsolePrint(m.MinerTag(), "groupMiners.CurrentRate: " + groupMiners.CurrentRate.ToString());
+                        //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.CurrentRate: " + groupMiners.CurrentRate.ToString());
                         // Deduct power costs
                         //var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
                         double powerUsage = 0;
@@ -684,7 +684,11 @@ namespace NiceHashMiner.Miners
                         m.IsApiReadException);
                 }
             }
-            catch (Exception e) { Helpers.ConsolePrint(Tag, e.Message); }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("Exception: ", e.ToString());
+                //Helpers.ConsolePrint(Tag, e.Message);
+            }
         }
     }
 }

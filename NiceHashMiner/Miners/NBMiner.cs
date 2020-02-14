@@ -217,7 +217,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                cmd = $"-a {AlgoName} -o ethproxy+tcp://eth-eu.dwarfpool.com:8008 -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1 -o1 nicehash+tcp://daggerhashimoto." + myServers[0, 0] + nhsuff + ".nicehash.com:3353 -u1 " + username +
+                cmd = $"-a {AlgoName} -o ethproxy+tcp://eu1.ethermine.org:4444 -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner -o1 nicehash+tcp://daggerhashimoto." + myServers[0, 0] + nhsuff + ".nicehash.com:3353 -u1 " + username +
                     $" -o2 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + nhsuff + ".nicehash.com:3353 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
@@ -256,7 +256,7 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a eaglesong_ethash -o stratum+tcp://ckb.2miners.com:6464 -u ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv -o1 stratum+tcp://eaglesong." + myServers[0, 0] + nhsuff + ".nicehash.com:3381 -u1 " + username +
                     $" -o2 stratum+tcp://eaglesong." + myServers[1, 0] + nhsuff + ".nicehash.com:3381 -u2 " + username +
-                    $" -do ethproxy+tcp://eth-eu.dwarfpool.com:8008 -du 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1 -do1 nicehash+tcp://daggerhashimoto." + myServers[0, 0] + nhsuff + ".nicehash.com:3353 -du1 " + username +
+                    $" -do ethproxy+tcp://eu1.ethermine.org:4444 -du 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner -do1 nicehash+tcp://daggerhashimoto." + myServers[0, 0] + nhsuff + ".nicehash.com:3353 -du1 " + username +
                     $" -do2 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + nhsuff + ".nicehash.com:3353 -du2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }

@@ -19,6 +19,8 @@ using System.Reflection;
 using System.Security.Principal;
 using System.ComponentModel;
 using System.Management;
+using System.Runtime.ExceptionServices;
+using System.Security;
 
 namespace NiceHashMiner
 {
@@ -28,6 +30,7 @@ namespace NiceHashMiner
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
+        [HandleProcessCorruptedStateExceptions, SecurityCritical]
         static void Main(string[] argv)
         {
 
@@ -475,6 +478,14 @@ namespace NiceHashMiner
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 23;
+                }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 23.1)
+                {
+                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    if (Directory.Exists("internals"))
+                        Directory.Delete("internals", true);
+                    ConfigManager.GeneralConfig.ForkFixVersion = 23.1;
                 }
                 //**
                 Thread.Sleep(100);

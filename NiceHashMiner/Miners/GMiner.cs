@@ -432,7 +432,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo ethash" +
-                " --server eth-eu.dwarfpool.com --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1." + worker + " --pass x --port 8008 --ssl 0 --proto proxy" +
+                " --server eu1.ethermine.org --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.GMiner --pass x --port 4444 --ssl 0 --proto proxy" +
                 " --server daggerhashimoto.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3353 --ssl 0 --proto stratum" +
                 " --server daggerhashimoto.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3353 --ssl 0 --proto stratum" +
                 GetDevicesCommandString();
@@ -448,7 +448,7 @@ namespace NiceHashMiner.Miners
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo eth+ckb" +
-                " --server eth-eu.dwarfpool.com:8008 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.gminer --ssl 0 --proto proxy --dserver ckb.2miners.com:6464 --duser ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv" +
+                " --server eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.GMiner --ssl 0 --proto proxy --dserver ckb.2miners.com:6464 --duser ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv" +
                 " --server daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.eu.nicehash.com:3381 --duser " + username + " --ssl 0" +
                 " --server daggerhashimoto.hk.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.hk.nicehash.com:3381 --duser " + username + " --ssl 0" +
                 GetDevicesCommandString();

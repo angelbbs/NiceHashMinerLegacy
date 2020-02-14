@@ -25,6 +25,7 @@ using NiceHashMinerLegacy.UUID;
 using NiceHashMiner.Miners.Grouping;
 using System.Management;
 using System.Text;
+using System.Runtime.ExceptionServices;
 
 namespace NiceHashMiner.Stats
 {
@@ -184,6 +185,7 @@ namespace NiceHashMiner.Stats
                     {
                         case "sma":
                             {
+                                /*
                                 // Try in case stable is not sent, we still get updated paying rates
                                 try
                                 {
@@ -197,7 +199,10 @@ namespace NiceHashMiner.Stats
                                     w0.Close();
                                 }
                                 catch
-                                { }
+                                {
+                                    Helpers.ConsolePrint("SOCKET", "Exception: " + e.ToString());
+                                }
+                                */
                                 //***************************
                                 FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                                 StreamWriter w = new StreamWriter(fs);
@@ -278,12 +283,7 @@ namespace NiceHashMiner.Stats
                     }
                 }
                // Helpers.ConsolePrint("SOCKET", "Received8: ");
-            } catch (Exception er)
-            {
-                Helpers.ConsolePrint("SOCKET", er.ToString());
-            }
 
-           // Helpers.ConsolePrint("SOCKET", "Received9: ");
             for (int h = 0; h < 24; h += 3)
             {
 
@@ -306,6 +306,11 @@ namespace NiceHashMiner.Stats
                     }
                 }
               //  Helpers.ConsolePrint("SOCKET", "Received11: ");
+            }
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("SOCKET", er.ToString());
             }
         }
 
@@ -568,9 +573,9 @@ namespace NiceHashMiner.Stats
                 return false;
 
             }
-            catch (Exception erapi)
+            catch (Exception ex)
             {
-                Helpers.ConsolePrint("NHM_API_info", erapi.ToString());
+                Helpers.ConsolePrint("NHM_API_info", ex.Message);
                 Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrentOld fatal ERROR");
                 return false;
             }
@@ -581,11 +586,6 @@ namespace NiceHashMiner.Stats
         public static bool GetSmaAPICurrent()
         {
             Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPICurrent");
-
-            if (!ConfigManager.GeneralConfig.NewPlatform)
-            {
-                return true;
-            }
 
             try
             {
@@ -653,9 +653,9 @@ namespace NiceHashMiner.Stats
                 return false;
 
             }
-            catch (Exception erapi)
+            catch (Exception ex)
             {
-                Helpers.ConsolePrint("NHM_API_info", erapi.ToString());
+                Helpers.ConsolePrint("NHM_API_info", ex.Message);
                 Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent fatal ERROR");
                 return false;
             }
@@ -726,9 +726,9 @@ namespace NiceHashMiner.Stats
                 return false;
 
             }
-            catch (Exception erapi)
+            catch (Exception ex)
             {
-                Helpers.ConsolePrint("NHM_API_info", erapi.ToString());
+                Helpers.ConsolePrint("NHM_API_info", ex.Message);
                 Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI5m fatal ERROR");
                 return false;
             }
@@ -800,19 +800,21 @@ namespace NiceHashMiner.Stats
                 return false;
 
             }
-            catch (Exception erapi)
+            catch (Exception ex)
             {
-                Helpers.ConsolePrint("NHM_API_info", erapi.ToString());
+                Helpers.ConsolePrint("NHM_API_info", ex.Message);
                 Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h fatal ERROR");
                 return false;
             }
             return false;
 
         }
+
+        [HandleProcessCorruptedStateExceptions]
         public static bool GetSmaAPI()
         {
 
-            //if (ConfigManager.GeneralConfig.NewPlatform)
+            try
             {
                 if (ConfigManager.GeneralConfig.MOPA2)
                 {
@@ -833,12 +835,11 @@ namespace NiceHashMiner.Stats
                     GetSmaAPICurrent(); //bug *10
                 }
             }
-            /*
-            else
+            catch (Exception ex)
             {
-                return GetSmaAPICurrentOld();
+                Helpers.ConsolePrint("SOCKET", ex.Message);
+
             }
-            */
             return true;
         }
 
@@ -923,8 +924,9 @@ namespace NiceHashMiner.Stats
                     }
                 }
             }
-            catch (Exception ersma)
+            catch (Exception ex)
             {
+                Helpers.ConsolePrint("SOCKET", ex.Message);
                 Helpers.ConsolePrint("SOCKET", "Using default SMA");
                 /*
                 if (AlgorithmRates == null || niceHashData == null)
@@ -936,7 +938,7 @@ namespace NiceHashMiner.Stats
                 dynamic defsma = "[[5,\"0.00031031\"],[7,\"0.00401\"],[8,\"0.26617936\"],[14,\"0.00677556\"],[20,\"0.00833567\"],[21,\"0.00005065\"],[22,\"352.1073569\"],[23,\"0.00064179\"],[24,\"620.89332464\"],[25,\"0.00009207\"],[26,\"0.01044116\"],[27,\"0.00005085\"],[28,\"0.00003251\"],[29,\"0.00778864\"]]";
                 JArray smadata = (JArray.Parse(defsma));
                 SetAlgorithmRates(smadata);
-                Helpers.ConsolePrint("OLDSMA", ersma.ToString());
+                Helpers.ConsolePrint("OLDSMA", ex.ToString());
             }
         }
 
@@ -954,8 +956,10 @@ namespace NiceHashMiner.Stats
                 var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
                 return latest.tag_name;
             }
-            catch
-            { }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GITHUB", ex.ToString());
+            }
             return "";
         }
 
@@ -1039,7 +1043,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
+                Helpers.ConsolePrint("SOCKET", e.Message);
             }
         }
         private static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 1)
@@ -1140,8 +1144,10 @@ namespace NiceHashMiner.Stats
 
         private static void SetStableAlgorithms(JArray stable)
         {
+            /*
             var stables = stable.Select(algo => (AlgorithmType) algo.Value<int>());
             NHSmaData.UpdateStableAlgorithms(stables);
+            */
         }
 
         private static void SetBalance(string balance)

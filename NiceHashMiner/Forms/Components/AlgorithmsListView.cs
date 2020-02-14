@@ -247,6 +247,12 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
             //listViewAlgorithms.Columns[RATE].Width = 0;
+            listViewAlgorithms.Columns[ALGORITHM].Width = ConfigManager.GeneralConfig.ColumnListALGORITHM;
+            listViewAlgorithms.Columns[MINER].Width = ConfigManager.GeneralConfig.ColumnListMINER;
+            listViewAlgorithms.Columns[SPEED].Width = ConfigManager.GeneralConfig.ColumnListSPEED;
+            listViewAlgorithms.Columns[POWER].Width = ConfigManager.GeneralConfig.ColumnListPOWER;
+            listViewAlgorithms.Columns[RATIO].Width = ConfigManager.GeneralConfig.ColumnListRATIO;
+            listViewAlgorithms.Columns[RATE].Width = ConfigManager.GeneralConfig.ColumnListRATE;
         }
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
@@ -865,7 +871,12 @@ namespace NiceHashMiner.Forms.Components
 
         private void listViewAlgorithms_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
         {
-
+            ConfigManager.GeneralConfig.ColumnListALGORITHM = listViewAlgorithms.Columns[ALGORITHM].Width;
+            ConfigManager.GeneralConfig.ColumnListMINER = listViewAlgorithms.Columns[MINER].Width;
+            ConfigManager.GeneralConfig.ColumnListSPEED = listViewAlgorithms.Columns[SPEED].Width;
+            ConfigManager.GeneralConfig.ColumnListPOWER = listViewAlgorithms.Columns[POWER].Width;
+            ConfigManager.GeneralConfig.ColumnListRATIO = listViewAlgorithms.Columns[RATIO].Width;
+            ConfigManager.GeneralConfig.ColumnListRATE = listViewAlgorithms.Columns[RATE].Width;
         }
     }
 

@@ -57,6 +57,8 @@ namespace NiceHashMiner.Forms
         public bool InBenchmark { get; private set; }
 
         public string benchmarkfail = "";
+        private static Timer UpdateListView_timer;
+
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
         {
@@ -216,7 +218,22 @@ namespace NiceHashMiner.Forms
                 ExitWhenFinished = true;
                 StartStopBtn_Click(null, null);
             }
+
+            if (UpdateListView_timer == null)
+            {
+                UpdateListView_timer = new Timer();
+                UpdateListView_timer.Tick += UpdateLvi_Tick;
+                UpdateListView_timer.Interval = 10000;
+                UpdateListView_timer.Start();
+            }
+
         }
+
+        private void UpdateLvi_Tick(object sender, EventArgs e)
+        {
+            algorithmsListView1.UpdateLvi();
+        }
+
 
         #region IBenchmarkCalculation methods
 
@@ -696,6 +713,12 @@ namespace NiceHashMiner.Forms
 
         private void CloseBtn_Click(object sender, EventArgs e)
         {
+            if (UpdateListView_timer != null)
+            {
+                UpdateListView_timer.Stop();
+                UpdateListView_timer = null;
+            }
+
             Close();
         }
 
@@ -732,6 +755,12 @@ namespace NiceHashMiner.Forms
                 }
             }
             ConfigManager.GeneralConfigFileCommit();
+            if (UpdateListView_timer != null)
+            {
+                UpdateListView_timer.Stop();
+                UpdateListView_timer = null;
+            }
+
         }
 
         private void DevicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)

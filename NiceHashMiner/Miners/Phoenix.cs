@@ -102,7 +102,7 @@ namespace NiceHashMiner.Miners
         {
             //var username = GetUsername(Globals.GetBitcoinUser(), worker);
             //var username2 = GetUsername(btcAdress, worker);
-            var username2 = btcAdress + "." + worker;
+           // var username2 = btcAdress + "." + worker;
             var platform = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -122,7 +122,7 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(200);
 
             return " -rvram -1 -eres 0 -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                   + $" -pool {url} -wal {username2} -cdmport  127.0.0.1:{ApiPort} -pass x " +
+                   + $" -pool {url} -wal {btcAdress} -cdmport  127.0.0.1:{ApiPort} -pass x " +
                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
 
         }
@@ -165,7 +165,7 @@ namespace NiceHashMiner.Miners
         {
             var url = GetServiceUrl(algorithm.NiceHashID);
 
-            var ret = GetStartBenchmarkCommand("stratum+tcp://eth-eu.dwarfpool.com:8008", "0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1", ConfigManager.GeneralConfig.WorkerName.Trim())
+            var ret = GetStartBenchmarkCommand("stratum+tcp://eu1.ethermine.org:4444", "0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Phoenix", "")
                          + " -logfile " + GetLogFileName();
 
             //BenchmarkTimeWait = Math.Max(60, Math.Min(120, time * 3));

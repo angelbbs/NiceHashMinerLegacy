@@ -53,6 +53,14 @@ namespace NiceHashMiner.Configs.Data
         public int ColumnLOAD = 66;
         public int ColumnFAN = 56;
         public int ColumnPOWER = 85;
+
+        public int ColumnListALGORITHM = 110;
+        public int ColumnListMINER = 82;
+        public int ColumnListSPEED = 152;
+        public int ColumnListPOWER = 88;
+        public int ColumnListRATIO = 90;
+        public int ColumnListRATE = 148;
+
         public int FormWidth = 700;
         public int FormHeight = 389;
         public int FormTop = 0;
@@ -170,7 +178,7 @@ namespace NiceHashMiner.Configs.Data
 
         public int ColorProfileIndex = 0;
         public int SwitchingAlgorithmsIndex = 2;
-        public int DevicesCountIndex = 0;
+        public int DevicesCountIndex = 1;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();
         public bool UseEthlargement = false;
 
@@ -247,6 +255,14 @@ namespace NiceHashMiner.Configs.Data
             ColumnLOAD = 66;
             ColumnFAN = 56;
             ColumnPOWER = 85;
+
+            ColumnListALGORITHM = 110;
+            ColumnListMINER = 82;
+            ColumnListSPEED = 152;
+            ColumnListPOWER = 88;
+            ColumnListRATIO = 90;
+            ColumnListRATE = 148;
+
             FormWidth = 770;
             FormHeight = 406;
             FormTop = 0;

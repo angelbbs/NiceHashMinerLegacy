@@ -218,7 +218,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 CommandLine = sc + " -a ethash" +
-                 " -o stratum+tcp://eth-eu.dwarfpool.com:8008" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trm" + " -p x -d ";
+                 " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.TRM" + " -p x -d ";
             }
             //return $" -o stratum+tcp://xmr-eu.dwarfpool.com:8005 {variant} -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.{worker} -p x {extras} --api-port {ApiPort} --donate-level=1"
             /*

@@ -508,7 +508,7 @@ namespace NiceHashMiner.Miners
                 }
                 addParam = " "
                     + GetDevicesCommandString()
-                    + String.Format("  -epool stratum+tcp://eth-eu.dwarfpool.com:8008 -ewal 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1/{0} -mport 127.0.0.1:-{1} -epsw x -allpools 1 -ftime 10 -retrydelay 5 " + dcri + " ", worker, ApiPort)
+                    + String.Format("  -epool stratum+tcp://eu1.ethermine.org:4444 -ewal 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Claymore -mport 127.0.0.1:-{0} -epsw x -allpools 1 -ftime 10 -retrydelay 5 " + dcri + " ", ApiPort)
                     + dualModeParams;
             }
             else if (SecondaryAlgorithmType == AlgorithmType.Keccak & needdcri & !istuned)
@@ -524,7 +524,7 @@ namespace NiceHashMiner.Miners
 
                 addParam = " "
                                     + GetDevicesCommandString()
-                                    + String.Format("  -epool stratum+tcp://eth-eu.dwarfpool.com:8008 -ewal 9290e50e7ccf1bdc90da8248a2bbacc5063aeee1/{0} -mport 127.0.0.1:-{1} -epsw x -allpools 1 -ftime 10 -retrydelay 5 " + dcri + " ", worker, ApiPort)
+                                    + String.Format("  -epool stratum+tcp://eu1.ethermine.org:4444 -ewal 9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Claymore -mport 127.0.0.1:-{0} -epsw x -allpools 1 -ftime 10 -retrydelay 5 " + dcri + " ", ApiPort)
                                     + dualModeParams;
             }
             else if (SecondaryAlgorithmType == AlgorithmType.Pascal || SecondaryAlgorithmType == AlgorithmType.Sia)
@@ -540,7 +540,7 @@ namespace NiceHashMiner.Miners
 
                 addParam = " "
                                         + GetDevicesCommandString()
-                                        + String.Format("  -epool stratum+tcp://eth-eu.dwarfpool.com:8008 -ewal 9290e50e7ccf1bdc90da8248a2bbacc5063aeee1/{0} -mport 127.0.0.1:-{1} -epsw x -allpools 1 -ftime 10 -retrydelay 5", worker, ApiPort)
+                                        + String.Format("  -epool stratum+tcp://eu1.ethermine.org:4444 -ewal 9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Claymore -mport 127.0.0.1:-{0} -epsw x -allpools 1 -ftime 10 -retrydelay 5", ApiPort)
                                         + dualModeParams;
             }
             return addParam + " -epoolsfile " + epoolsFile;
