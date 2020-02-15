@@ -63,6 +63,46 @@ namespace NiceHashMiner.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Close_hot {
+            get {
+                object obj = ResourceManager.GetObject("Close-hot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Close_normal {
+            get {
+                object obj = ResourceManager.GetObject("Close-normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Delete_hot {
+            get {
+                object obj = ResourceManager.GetObject("Delete-hot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Delete_normal {
+            get {
+                object obj = ResourceManager.GetObject("Delete-normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap info_black_18 {
             get {
                 object obj = ResourceManager.GetObject("info_black_18", resourceCulture);
@@ -146,6 +186,26 @@ namespace NiceHashMiner.Properties {
         internal static System.Drawing.Bitmap NHM_logo_xsmall_light2020 {
             get {
                 object obj = ResourceManager.GetObject("NHM_logo_xsmall_light2020", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Ok_hot {
+            get {
+                object obj = ResourceManager.GetObject("Ok-hot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Ok_normal {
+            get {
+                object obj = ResourceManager.GetObject("Ok-normal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

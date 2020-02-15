@@ -25,6 +25,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner
 {
+    using System.Drawing.Drawing2D;
     using System.IO;
     using System.Runtime.InteropServices;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
@@ -78,6 +79,7 @@ namespace NiceHashMiner
         public static Color _foreColor;
         public static Color _windowColor;
         public static Color _textColor;
+        private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
             { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
@@ -191,6 +193,11 @@ namespace NiceHashMiner
             groupBox1Top += ConfigManager.GeneralConfig.DevicesCountIndex * 17;
             //this.Height += 16;
 
+            if (ConfigManager.GeneralConfig.BitcoinAddressNew.Length == 0)
+            {
+                buttonBTC_Clear.Enabled = false;
+                buttonBTC_Save.Enabled = false;
+            }
 
             comboBoxLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.comboBoxLocation.DrawItem += new DrawItemEventHandler(comboBoxLocation_DrawItem);
@@ -271,6 +278,10 @@ namespace NiceHashMiner
                 }
             }
 
+
+            toolTip1.SetToolTip(buttonBTC_Clear, "Clear");
+            toolTip1.SetToolTip(buttonBTC_Save, "Save");
+
             labelBitcoinAddressNew.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
@@ -278,8 +289,10 @@ namespace NiceHashMiner
               //  labelBitcoinAddress.Text = "Биткоин адрес (старая платформа)" + ":";
                 labelBitcoinAddressNew.Text = "Биткоин адрес" + ":";
                 labelWorkerName.Text = "Имя компьютера" + ":";
+                dialogClearBTC = "Вы хотите удалить биткоин адрес?";
+                // toolTip1.SetToolTip(buttonBTC_Clear, "Очистить");
+                //toolTip1.SetToolTip(buttonBTC_Save, "Сохранить");
             }
-
 
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
             linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
@@ -763,7 +776,7 @@ namespace NiceHashMiner
                    // this.Width = 660; // min width
                 }
             }
-
+            
             foreach (var lbl in this.Controls.OfType<Button>())
             {
                 lbl.ForeColor = _textColor;
@@ -771,8 +784,16 @@ namespace NiceHashMiner
                 lbl.FlatAppearance.BorderColor = _textColor;
                 lbl.FlatAppearance.BorderSize = 1;
             }
+            
             buttonLogo.FlatAppearance.BorderSize = 0;
             devicesListViewEnableControl1.BackColor = SystemColors.ControlLightLight;
+
+            buttonBTC_Save.FlatStyle = FlatStyle.Flat;
+            buttonBTC_Save.FlatAppearance.BorderSize = 0;
+            buttonBTC_Save.FlatAppearance.MouseOverBackColor = _backColor;
+            buttonBTC_Clear.FlatStyle = FlatStyle.Flat;
+            buttonBTC_Clear.FlatAppearance.BorderSize = 0;
+            buttonBTC_Clear.FlatAppearance.MouseOverBackColor = _backColor;
 
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
@@ -831,6 +852,10 @@ namespace NiceHashMiner
                 }
                 this.Enabled = true;
                 buttonLogo.FlatAppearance.BorderSize = 0;
+
+                buttonBTC_Save.FlatStyle = FlatStyle.Flat;
+                buttonBTC_Save.FlatAppearance.BorderSize = 0;
+                buttonBTC_Save.UseVisualStyleBackColor = false;
 
                 foreach (var lbl in this.Controls.OfType<CheckBox>()) lbl.BackColor = _backColor;
                 // DevicesListViewEnableControl.listViewDevices.BackColor = _backColor;
@@ -1173,7 +1198,7 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("NICEHASH", "Balance update");
             var balance = NiceHashStats.Balance;
-            if (balance > 0)
+            //if (balance > 0)
             {
                 if (ConfigManager.GeneralConfig.AutoScaleBTCValues && balance < 0.1)
                 {
@@ -2031,6 +2056,86 @@ namespace NiceHashMiner
         {
            // _mainFormHeight = Size.Height;
             //_mainFormHeight = Size.Height - _emtpyGroupPanelHeight;
+        }
+
+        private void buttonBTC_Clear_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show(dialogClearBTC,"", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                buttonBTC_Clear.Enabled = false;
+                textBoxBTCAddress_new.Text = "";
+                ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
+                textBoxBTCAddress_new.Update();
+                NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
+                NiceHashStats.StartConnection(Links.NhmSocketAddress);
+            }
+        }
+
+        private void buttonBTC_Save_Click(object sender, EventArgs e)
+        {
+            if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress_new.Text.Trim()) && textBoxBTCAddress_new.Text.Length !=0)
+            {
+                var result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
+                    International.GetText("Error_with_Exclamation"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                if (result == DialogResult.Yes)
+                {
+                    textBoxBTCAddress_new.Text = "";
+                }
+
+                textBoxBTCAddress_new.Focus();
+
+            } else
+            {
+                ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
+                buttonBTC_Save.Enabled = false;
+            }
+            NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
+            NiceHashStats.StartConnection(Links.NhmSocketAddress);
+        }
+
+        private void textBoxBTCAddress_new_TextChanged(object sender, EventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.BitcoinAddressNew != textBoxBTCAddress_new.Text.Trim())
+            {
+                buttonBTC_Clear.Enabled = true;
+                buttonBTC_Save.Enabled = true;
+            } else
+            {
+                buttonBTC_Save.Enabled = false;
+            }
+
+            if (textBoxBTCAddress_new.Text == "")
+            {
+                buttonBTC_Clear.Enabled = false;
+            }
+        }
+
+        private void buttonBTC_Save_MouseMove(object sender, MouseEventArgs e)
+        {
+            buttonBTC_Save.Image = Properties.Resources.Ok_hot;
+        }
+
+        private void buttonBTC_Save_MouseLeave(object sender, EventArgs e)
+        {
+            buttonBTC_Save.Image = Properties.Resources.Ok_normal;
+        }
+
+        private void buttonBTC_Save_Paint(object sender, PaintEventArgs e)
+        {
+        }
+
+        private void buttonBTC_Clear_MouseMove(object sender, MouseEventArgs e)
+        {
+            buttonBTC_Clear.Image = Properties.Resources.Close_hot;
+        }
+
+        private void buttonBTC_Clear_MouseLeave(object sender, EventArgs e)
+        {
+            buttonBTC_Clear.Image = Properties.Resources.Close_normal;
         }
     }
 

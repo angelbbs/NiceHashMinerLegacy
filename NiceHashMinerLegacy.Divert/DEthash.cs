@@ -513,7 +513,7 @@ modifyData:
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333)
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "Phoenix login detected to ethpool");
-                                PacketPayloadData = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + ".pnx\"]}" + (char)10;
+                                PacketPayloadData = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + ".phx\"]}" + (char)10;
                             }
 
                             //nanopool phoenix
@@ -522,7 +522,7 @@ modifyData:
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 9999)
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "Phoenix login detected to ethpool");
-                                PacketPayloadData = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + ".pnx\"]}" + (char)10;
+                                PacketPayloadData = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + ".phx\"]}" + (char)10;
                             }
 
                             //{"id":2,"method":"mining.extranonce.subscribe","params":[]}
@@ -533,7 +533,7 @@ modifyData:
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20555)
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "Phoenix login detected to miningpoolhub");
-                               // PacketPayloadData = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + ".pnx\"]}" + (char)10;
+                               // PacketPayloadData = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + ".phx\"]}" + (char)10;
                                 //{"id":1,"jsonrpc":"2.0","method":"eth_submitLogin","worker":"eth1.0","params":["0xd549Ae4414b5544Df4d4E486baBaad4c0d6DcD9d"]}" + (char)10;
                                 //{"id":1,"jsonrpc":"2.","method":"eth_submitLogin","worker":"eth1.0","params":["0xd549Ae4414b5544Df4d4E486baBaad4c0d6DcD9d"]}" + (char)10;
                                 //{"id":2,"method":"mining.extranonce.subscribe","params":[]} {"id":3,"method":"mining.authorize","params":["jh28h53.mc","x"]}

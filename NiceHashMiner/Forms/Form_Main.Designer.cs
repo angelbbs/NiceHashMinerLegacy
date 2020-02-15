@@ -65,8 +65,10 @@ namespace NiceHashMiner
             this.buttonHelp = new System.Windows.Forms.Button();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonBTC_Save = new System.Windows.Forms.Button();
             this.labelBitcoinAddressNew = new System.Windows.Forms.Label();
             this.textBoxBTCAddress_new = new System.Windows.Forms.TextBox();
+            this.buttonBTC_Clear = new System.Windows.Forms.Button();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -385,6 +387,23 @@ namespace NiceHashMiner
             this.linkLabelNewVersion.TabIndex = 110;
             this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelNewVersion_LinkClicked);
             // 
+            // buttonBTC_Save
+            // 
+            this.buttonBTC_Save.FlatAppearance.BorderSize = 0;
+            this.buttonBTC_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonBTC_Save.Image = global::NiceHashMiner.Properties.Resources.Ok_normal;
+            this.buttonBTC_Save.Location = new System.Drawing.Point(372, 32);
+            this.buttonBTC_Save.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonBTC_Save.Name = "buttonBTC_Save";
+            this.buttonBTC_Save.Size = new System.Drawing.Size(20, 20);
+            this.buttonBTC_Save.TabIndex = 113;
+            this.toolTip1.SetToolTip(this.buttonBTC_Save, "Save");
+            this.buttonBTC_Save.UseVisualStyleBackColor = false;
+            this.buttonBTC_Save.Click += new System.EventHandler(this.buttonBTC_Save_Click);
+            this.buttonBTC_Save.Paint += new System.Windows.Forms.PaintEventHandler(this.buttonBTC_Save_Paint);
+            this.buttonBTC_Save.MouseLeave += new System.EventHandler(this.buttonBTC_Save_MouseLeave);
+            this.buttonBTC_Save.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Save_MouseMove);
+            // 
             // labelBitcoinAddressNew
             // 
             this.labelBitcoinAddressNew.AutoSize = true;
@@ -400,6 +419,22 @@ namespace NiceHashMiner
             this.textBoxBTCAddress_new.Name = "textBoxBTCAddress_new";
             this.textBoxBTCAddress_new.Size = new System.Drawing.Size(230, 20);
             this.textBoxBTCAddress_new.TabIndex = 111;
+            this.textBoxBTCAddress_new.TextChanged += new System.EventHandler(this.textBoxBTCAddress_new_TextChanged);
+            // 
+            // buttonBTC_Clear
+            // 
+            this.buttonBTC_Clear.FlatAppearance.BorderSize = 0;
+            this.buttonBTC_Clear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonBTC_Clear.Image = global::NiceHashMiner.Properties.Resources.Close_normal;
+            this.buttonBTC_Clear.Location = new System.Drawing.Point(346, 32);
+            this.buttonBTC_Clear.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonBTC_Clear.Name = "buttonBTC_Clear";
+            this.buttonBTC_Clear.Size = new System.Drawing.Size(20, 20);
+            this.buttonBTC_Clear.TabIndex = 114;
+            this.buttonBTC_Clear.UseVisualStyleBackColor = false;
+            this.buttonBTC_Clear.Click += new System.EventHandler(this.buttonBTC_Clear_Click);
+            this.buttonBTC_Clear.MouseLeave += new System.EventHandler(this.buttonBTC_Clear_MouseLeave);
+            this.buttonBTC_Clear.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Clear_MouseMove);
             // 
             // devicesListViewEnableControl1
             // 
@@ -423,6 +458,8 @@ namespace NiceHashMiner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 333);
+            this.Controls.Add(this.buttonBTC_Clear);
+            this.Controls.Add(this.buttonBTC_Save);
             this.Controls.Add(this.labelBitcoinAddressNew);
             this.Controls.Add(this.textBoxBTCAddress_new);
             this.Controls.Add(this.linkLabelNewVersion);
@@ -497,6 +534,8 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power3;
+        private System.Windows.Forms.Button buttonBTC_Save;
+        private System.Windows.Forms.Button buttonBTC_Clear;
     }
 }
 
