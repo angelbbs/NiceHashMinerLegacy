@@ -18,6 +18,10 @@ using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 using static NiceHashMiner.Devices.ComputeDeviceManager;
+using System.Threading;
+using System.Globalization;
+using System.Management;
+using System.Diagnostics;
 
 namespace NiceHashMiner.Miners
 {
@@ -29,10 +33,10 @@ namespace NiceHashMiner.Miners
         private const string DoubleFormat = "F12";
 
         // session varibles fixed
-        private readonly string _miningLocation;
+        public static  string _miningLocation;
 
-        private readonly string _btcAdress;
-        private readonly string _worker;
+        public static  string _btcAdress;
+        public static  string _worker;
         private readonly List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
 
@@ -41,7 +45,7 @@ namespace NiceHashMiner.Miners
         // session varibles changing
         // GroupDevices hash code doesn't work correctly use string instead
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
-        private Dictionary<string, GroupMiner> _runningGroupMiners = new Dictionary<string, GroupMiner>();
+        public static Dictionary<string, GroupMiner> _runningGroupMiners = new Dictionary<string, GroupMiner>();
 
         private GroupMiner _ethminerNvidiaPaused;
         private GroupMiner _ethminerAmdPaused;
@@ -147,6 +151,59 @@ namespace NiceHashMiner.Miners
         #endregion
 
         #region Start/Stop
+        private static void KillProcessAndChildren(int pid)
+        {
+            // Cannot close 'system idle process'.
+            if (pid == 0)
+            {
+                return;
+            }
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                    ("Select * From Win32_Process Where ParentProcessID=" + pid);
+            ManagementObjectCollection moc = searcher.Get();
+            foreach (ManagementObject mo in moc)
+            {
+                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+            }
+            try
+            {
+                Process proc = Process.GetProcessById(pid);
+                proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+                // Process already exited.
+            }
+        }
+
+        public static void RestartMiner(string ProcessTag)
+        {
+            if (_runningGroupMiners != null)
+            {
+                foreach (var groupMiner in _runningGroupMiners.Values)
+                {
+                    if (groupMiner.Miner.ProcessTag().Contains(ProcessTag))
+                    {
+                        try
+                        {
+                            int k = ProcessTag.IndexOf("pid(");
+                            int i = ProcessTag.IndexOf(")|bin");
+                            var cpid = ProcessTag.Substring(k + 4, i - k - 4).Trim();
+
+                            int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
+                            KillProcessAndChildren(pid);
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint("Restart miner", "RestartMiner(): " + e.Message);
+                        }
+                    }
+                    Form_Main.ActiveForm.Focus();//костыль. иначе появляется бордюр у кнопки
+                }
+
+//                _runningGroupMiners = new Dictionary<string, GroupMiner>();
+            }
+        }
 
         public void StopAllMiners()
         {
@@ -681,7 +738,7 @@ namespace NiceHashMiner.Miners
                     // Update GUI
                     _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad,
                         groupMiners.CurrentRate, groupMiners.PowerRate,
-                        m.IsApiReadException);
+                        m.IsApiReadException, m.ProcessTag());
                 }
             }
             catch (Exception e)

@@ -128,6 +128,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
         public string MachineGuid = "";
+        public string CpuID = "";
 
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;

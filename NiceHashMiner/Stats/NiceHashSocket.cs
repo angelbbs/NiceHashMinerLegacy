@@ -345,7 +345,23 @@ namespace NiceHashMiner.Stats
                 string btc;
                 string worker;
                 string group = "";
-                string rig = RigID;
+                string rig = UUID.GetDeviceB64UUID();
+                string CpuID = UUID.GetCpuID();
+                if (Configs.ConfigManager.GeneralConfig.CpuID.Length == 0)
+                {
+                    Configs.ConfigManager.GeneralConfig.CpuID = CpuID;
+                }
+
+                if (Configs.ConfigManager.GeneralConfig.MachineGuid.Length == 0)
+                {
+                    Configs.ConfigManager.GeneralConfig.MachineGuid = rig;
+                }
+
+                if (Configs.ConfigManager.GeneralConfig.MachineGuid != rig && Configs.ConfigManager.GeneralConfig.CpuID == CpuID)
+                {
+                    Helpers.ConsolePrint("UUID", "New MachineGuid. Maybe error. Using previous MachineGuid");
+                    rig = Configs.ConfigManager.GeneralConfig.MachineGuid;
+                }
                 var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
 
                 if (Configs.ConfigManager.GeneralConfig.NewPlatform)

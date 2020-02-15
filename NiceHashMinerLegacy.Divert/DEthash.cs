@@ -135,8 +135,8 @@ namespace NiceHashMinerLegacy.Divert
             //filter = "(ip || tcp) && (inbound ? (tcp.SrcPort == 3333 || tcp.SrcPort == 4444 || tcp.SrcPort == 8008) : !loopback && ((tcp.DstPort == 3333) || (tcp.DstPort == 8008) || (tcp.DstPort == 4444) || (tcp.DstPort == 5555)))";//dagger
             filter = "(ip || tcp) && (inbound ? (tcp.SrcPort == 3333 || tcp.SrcPort == 4444 ||" +
                 " tcp.SrcPort == 8008 || tcp.SrcPort == 9999 ||tcp.SrcPort == 14444 || tcp.SrcPort == 20555) : " +
-                "!loopback && ((tcp.DstPort == 3333) || (tcp.DstPort == 8008) || (tcp.DstPort == 4444) ||" +
-                " (tcp.DstPort == 5555) || (tcp.DstPort == 20555) || (tcp.DstPort == 9999) || (tcp.DstPort == 14444)))";//dagger
+                "!loopback && ((tcp.DstPort == 3333) || (tcp.DstPort == 4444) || (tcp.DstPort == 8008) ||" +
+                " (tcp.DstPort == 9999) || (tcp.DstPort == 14444) || (tcp.DstPort == 20555) || (tcp.DstPort == 5555)))";//dagger
 
             uint errorPos = 0;
 
@@ -313,6 +313,7 @@ nextCycle:
                             }
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4444 ||
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 9999 ||
+                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20555 ||
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 14444
                                 ) //ethermine.org
                             {
@@ -334,13 +335,13 @@ nextCycle:
                         if (CurrentAlgorithmType == 20 &&
                             addr.Direction == WinDivertDirection.Outbound &&
                             (
-                           // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20555 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20555 ||
                            // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 9999 ||
                            // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333 ||
                            // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4444 ||
                            // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 14444 ||
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555 
-                           // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008
+                           // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008 
                             ))
                         {
                             /*
@@ -348,6 +349,7 @@ nextCycle:
                             packet.Dispose();
                             goto nextCycle;
                             */
+                            
                             modified = false;
                             goto sendPacket;
                             
@@ -453,7 +455,7 @@ modifyData:
                         {
                      //       Helpers.ConsolePrint("WinDivertSharp", "*** 10");
                             modified = true;
-                            dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
+                            //dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
                             Helpers.ConsolePrint("WinDivertSharp", " (" + String.Join(", ", processIdList) + ") packet: " + PacketPayloadData);
        
                             //ethpool claymore
@@ -463,7 +465,7 @@ modifyData:
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "Claymore login detected to ethpool");
                                 //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") old etpool login: " + json.@params[0]);
-                                json.@params[0] = DivertLogin;
+                                //json.@params[0] = DivertLogin;
                                 //Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") new etpool login: " + json.@params[0]);
                                 //{"id":2,"jsonrpc":"2.0","method":"eth_login","params":["0xc6F31A79526c641de4E432CB22a88BB577A67eaC","x"]}
                                 //{"id":1,"jsonrpc":"2.0","method":"eth_submitLogin","params":["0xc6F31A79526c641de4E432CB22a88BB577A67eaC","x"]}
@@ -537,7 +539,7 @@ modifyData:
                                 //{"id":1,"jsonrpc":"2.0","method":"eth_submitLogin","worker":"eth1.0","params":["0xd549Ae4414b5544Df4d4E486baBaad4c0d6DcD9d"]}" + (char)10;
                                 //{"id":1,"jsonrpc":"2.","method":"eth_submitLogin","worker":"eth1.0","params":["0xd549Ae4414b5544Df4d4E486baBaad4c0d6DcD9d"]}" + (char)10;
                                 //{"id":2,"method":"mining.extranonce.subscribe","params":[]} {"id":3,"method":"mining.authorize","params":["jh28h53.mc","x"]}
-                                PacketPayloadData = "{\"id\":1,\"jsonrpc\":\"2.\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + "\"]}" + (char)10;
+                                PacketPayloadData = "{\"id\":2,\"jsonrpc\":\"2.\",\"method\":\"eth_submitLogin\",\"worker\":\"eth1.0\",\"params\":[\"" + DivertLogin + "\"]}" + (char)10;
                             }
 
                             //*****************************
@@ -576,8 +578,7 @@ modifyData:
                             // if (parse_result.PacketPayloadLength > 10 && addr.Direction == WinDivertDirection.Outbound &&
                             //   Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008)
 
-
-
+                            /*
                             string cpacket4 = "";
                             for (int i = 0; i < readLen; i++)
                             {
@@ -587,7 +588,7 @@ modifyData:
                             }
                             if (cpacket4.Length > 100)
                                 File.WriteAllText(np.ToString() + "make-" + addr.Direction.ToString() + ".pkt", cpacket4);
-                                
+                              */  
                         }
 changeSrcDst:
                         /*

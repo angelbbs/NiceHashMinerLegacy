@@ -430,6 +430,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />
+    <None Include="Resources\Refresh-disabled.png" />
+    <None Include="Resources\Refresh-hot.png" />
+    <None Include="Resources\Refresh-normal.png" />
     <None Include="Resources\Delete-normal.png" />
     <None Include="Resources\Delete-hot.png" />
     <None Include="Resources\Close-normal.png" />

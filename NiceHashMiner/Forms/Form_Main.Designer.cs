@@ -369,6 +369,7 @@ namespace NiceHashMiner
             // buttonHelp
             // 
             this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonHelp.FlatAppearance.BorderSize = 0;
             this.buttonHelp.Location = new System.Drawing.Point(612, 220);
             this.buttonHelp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonHelp.Name = "buttonHelp";
@@ -433,6 +434,8 @@ namespace NiceHashMiner
             this.buttonBTC_Clear.TabIndex = 114;
             this.buttonBTC_Clear.UseVisualStyleBackColor = false;
             this.buttonBTC_Clear.Click += new System.EventHandler(this.buttonBTC_Clear_Click);
+            this.buttonBTC_Clear.Paint += new System.Windows.Forms.PaintEventHandler(this.buttonBTC_Clear_Paint);
+            this.buttonBTC_Clear.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Clear_MouseDown);
             this.buttonBTC_Clear.MouseLeave += new System.EventHandler(this.buttonBTC_Clear_MouseLeave);
             this.buttonBTC_Clear.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Clear_MouseMove);
             // 
@@ -481,7 +484,7 @@ namespace NiceHashMiner
             this.Controls.Add(this.buttonStartMining);
             this.Enabled = false;
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(700, 372);
+            this.MinimumSize = new System.Drawing.Size(720, 372);
             this.Name = "Form_Main";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -520,7 +523,6 @@ namespace NiceHashMiner
         private System.Windows.Forms.TextBox textBoxWorkerName;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label_NotProfitable;
         private System.Windows.Forms.Button buttonHelp;
@@ -536,6 +538,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power3;
         private System.Windows.Forms.Button buttonBTC_Save;
         private System.Windows.Forms.Button buttonBTC_Clear;
+        public System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
     }
 }
 

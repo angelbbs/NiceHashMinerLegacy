@@ -56,7 +56,7 @@ namespace NiceHashMiner
         private Form_Benchmark _benchmarkForm;
 
         private int _flowLayoutPanelVisibleCount = 0;
-        private int _flowLayoutPanelRatesIndex = 0;
+        public static int _flowLayoutPanelRatesIndex = 0;
 
         private const string BetaAlphaPostfixString = "";
         const string ForkString = " Fork Fix 23.1";
@@ -438,6 +438,7 @@ namespace NiceHashMiner
             if (!ConfigManager.GeneralConfig.AutoStartMining)
             {
                 buttonStopMining.Enabled = false;
+                buttonBTC_Clear.Enabled = true;
             } else
             {
                 buttonStopMining.Text = buttonStopMining.Text + "...";
@@ -714,6 +715,7 @@ namespace NiceHashMiner
                 {
                     //buttonStartMining.Enabled = false;
                     buttonStopMining.Enabled = true;
+                    buttonBTC_Clear.Enabled = false;
                     buttonStopMining.Text = International.GetText("Form_Main_stop") + " (" + _AutoStartMiningDelay.ToString() + ")";
                     buttonStartMining.Update();
                 }
@@ -721,6 +723,7 @@ namespace NiceHashMiner
             else
             {
                 buttonStopMining.Enabled = false;
+                buttonBTC_Clear.Enabled = true;
             }
         }
             private void AutoStartTimer_Tick(object sender, EventArgs e)
@@ -856,6 +859,10 @@ namespace NiceHashMiner
                 buttonBTC_Save.FlatStyle = FlatStyle.Flat;
                 buttonBTC_Save.FlatAppearance.BorderSize = 0;
                 buttonBTC_Save.UseVisualStyleBackColor = false;
+
+                buttonBTC_Clear.FlatStyle = FlatStyle.Flat;
+                buttonBTC_Clear.FlatAppearance.BorderSize = 0;
+                buttonBTC_Clear.UseVisualStyleBackColor = false;
 
                 foreach (var lbl in this.Controls.OfType<CheckBox>()) lbl.BackColor = _backColor;
                 // DevicesListViewEnableControl.listViewDevices.BackColor = _backColor;
@@ -997,7 +1004,7 @@ namespace NiceHashMiner
                 panelHeight = (int)((GroupProfitControl)control).Size.Height * 1.1;
                 groupBox1Height = (int)((visibleGroupCount) * panelHeight - panelHeight / 3.0f);
             }
-
+           // MiningSession._runningGroupMiners = null;
             groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1Height);
 
             groupBox1.Top = groupBox1Top;
@@ -1010,7 +1017,7 @@ namespace NiceHashMiner
 
 
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying, double power,
-            bool isApiGetException)
+            bool isApiGetException, string processTag)
         {
             var apiGetExceptionString = isApiGetException ? " **" : "";
 
@@ -1034,7 +1041,7 @@ namespace NiceHashMiner
             {
                 // flowLayoutPanelRatesIndex may be OOB, so catch
                 ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
-                    .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBtcString, rateCurrencyString);
+                    .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBtcString, rateCurrencyString, processTag);
             }
             catch { }
 
@@ -1626,7 +1633,7 @@ namespace NiceHashMiner
                 ((GroupProfitControl)control).Width = this.Width - 145;
             }
             //((GroupProfitControl)control).Width = 520;
-            //(GroupProfitControl)groupBoxMinerGroup.Width = 530;
+
 
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
@@ -1819,6 +1826,7 @@ namespace NiceHashMiner
             //buttonSettings.Enabled = false;
             devicesListViewEnableControl1.IsMining = true;
             buttonStopMining.Enabled = true;
+            buttonBTC_Clear.Enabled = false;
 
             // Disable profitable notification on start
             _isNotProfitable = false;
@@ -1937,6 +1945,7 @@ namespace NiceHashMiner
             buttonSettings.Enabled = true;
             devicesListViewEnableControl1.IsMining = false;
             buttonStopMining.Enabled = false;
+            buttonBTC_Clear.Enabled = true;
 
             if (_demoMode)
             {
@@ -2060,7 +2069,10 @@ namespace NiceHashMiner
 
         private void buttonBTC_Clear_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show(dialogClearBTC,"", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //Form_Main.ActiveForm.Focus();
+            var result = MessageBox.Show(dialogClearBTC,"", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+
+                MessageBoxDefaultButton.Button2);
 
             if (result == DialogResult.Yes)
             {
@@ -2136,6 +2148,16 @@ namespace NiceHashMiner
         private void buttonBTC_Clear_MouseLeave(object sender, EventArgs e)
         {
             buttonBTC_Clear.Image = Properties.Resources.Close_normal;
+        }
+
+        private void buttonBTC_Clear_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void buttonBTC_Clear_MouseDown(object sender, MouseEventArgs e)
+        {
+
         }
     }
 
