@@ -198,7 +198,7 @@ namespace NiceHashMiner.Miners
                             Helpers.ConsolePrint("Restart miner", "RestartMiner(): " + e.Message);
                         }
                     }
-                    Form_Main.ActiveForm.Focus();//костыль. иначе появляется бордюр у кнопки
+                    //Form_Main.ActiveForm.Focus();//костыль. иначе появляется бордюр у кнопки
                 }
 
 //                _runningGroupMiners = new Dictionary<string, GroupMiner>();

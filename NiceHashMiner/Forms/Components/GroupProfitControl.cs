@@ -38,12 +38,11 @@ namespace NiceHashMiner.Forms.Components
             groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
             groupBoxMinerGroup.BackColor = Form_Main._backColor;
             button_restart.Tag = ProcessTag;
-
+            button_restart.Refresh();
+            //button_restart.Enabled = true;
+            //button_restart.Image = Properties.Resources.Refresh_normal;
         }
 
-        private void buttonBTC_Save_Click(object sender, System.EventArgs e)
-        {
-        }
 
         private void button_restart_MouseLeave(object sender, System.EventArgs e)
         {
@@ -76,6 +75,12 @@ namespace NiceHashMiner.Forms.Components
             Form_Main.ActiveForm.Focus();
             Helpers.ConsolePrint("NICEHASH", "Restarting miner: " + button_restart.Tag.ToString());
             MiningSession.RestartMiner(button_restart.Tag.ToString());
+            //button_restart.Enabled = false;
+            button_restart.ForeColor = Form_Main._backColor;
+            button_restart.Image = Properties.Resources.Refresh_disabled;
+            button_restart.UseVisualStyleBackColor = false;
+            button_restart.FlatAppearance.BorderSize = 0;
+            button_restart.Refresh();
         }
     }
 }

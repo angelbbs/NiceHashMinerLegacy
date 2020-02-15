@@ -2070,6 +2070,7 @@ namespace NiceHashMiner
         private void buttonBTC_Clear_Click(object sender, EventArgs e)
         {
             //Form_Main.ActiveForm.Focus();
+            buttonBTC_Clear.ForeColor = Form_Main._backColor;
             var result = MessageBox.Show(dialogClearBTC,"", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
 
                 MessageBoxDefaultButton.Button2);
