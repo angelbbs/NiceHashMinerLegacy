@@ -438,7 +438,7 @@ namespace NiceHashMiner
             if (!ConfigManager.GeneralConfig.AutoStartMining)
             {
                 buttonStopMining.Enabled = false;
-                buttonBTC_Clear.Enabled = true;
+               // buttonBTC_Clear.Enabled = true;
             } else
             {
                 buttonStopMining.Text = buttonStopMining.Text + "...";

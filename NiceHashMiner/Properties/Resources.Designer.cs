@@ -233,6 +233,16 @@ namespace NiceHashMiner.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Refresh_hot_bw {
+            get {
+                object obj = ResourceManager.GetObject("Refresh-hot_bw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Refresh_normal {
             get {
                 object obj = ResourceManager.GetObject("Refresh-normal", resourceCulture);

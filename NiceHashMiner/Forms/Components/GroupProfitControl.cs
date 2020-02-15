@@ -46,13 +46,13 @@ namespace NiceHashMiner.Forms.Components
 
         private void button_restart_MouseLeave(object sender, System.EventArgs e)
         {
-            button_restart.Image = Properties.Resources.Refresh_normal;
+            button_restart.Image = Properties.Resources.Refresh_disabled;
         }
 
         private void button_restart_MouseMove(object sender, MouseEventArgs e)
         {
             button_restart.FlatAppearance.MouseOverBackColor = Form_Main._backColor;
-            button_restart.Image = Properties.Resources.Refresh_hot;
+            button_restart.Image = Properties.Resources.Refresh_hot_bw;
         }
 
         private void labelCurentcyPerDayVaue_Click(object sender, System.EventArgs e)
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Forms.Components
             button_restart.Image = Properties.Resources.Refresh_disabled;
             button_restart.UseVisualStyleBackColor = false;
             button_restart.FlatAppearance.BorderSize = 0;
-            button_restart.Refresh();
+            button_restart.Update();
         }
     }
 }

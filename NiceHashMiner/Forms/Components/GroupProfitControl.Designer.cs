@@ -63,7 +63,7 @@ namespace NiceHashMiner.Forms.Components {
             this.button_restart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button_restart.FlatAppearance.BorderSize = 0;
             this.button_restart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_restart.Image = global::NiceHashMiner.Properties.Resources.Refresh_normal;
+            this.button_restart.Image = global::NiceHashMiner.Properties.Resources.Refresh_hot_bw;
             this.button_restart.Location = new System.Drawing.Point(522, 2);
             this.button_restart.Margin = new System.Windows.Forms.Padding(1);
             this.button_restart.Name = "button_restart";

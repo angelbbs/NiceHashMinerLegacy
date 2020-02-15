@@ -424,6 +424,7 @@ namespace NiceHashMiner
             // 
             // buttonBTC_Clear
             // 
+            this.buttonBTC_Clear.Enabled = false;
             this.buttonBTC_Clear.FlatAppearance.BorderSize = 0;
             this.buttonBTC_Clear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonBTC_Clear.Image = global::NiceHashMiner.Properties.Resources.Close_normal;

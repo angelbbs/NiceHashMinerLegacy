@@ -1284,8 +1284,6 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint(MinerTag(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
 
                     StartCoolDownTimerChecker();
-                    Form_Main.ActiveForm.Focus();//костыль. иначе появляется бордюр у кнопки button_restart
-                  
                     return P;
                 }
 
