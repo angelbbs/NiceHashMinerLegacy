@@ -72,7 +72,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void buttonBTC_restart(object sender, System.EventArgs e)
         {
-            Form_Main.ActiveForm.Focus();
+           // Form_Main.ActiveForm.Focus();
             Helpers.ConsolePrint("NICEHASH", "Restarting miner: " + button_restart.Tag.ToString());
             MiningSession.RestartMiner(button_restart.Tag.ToString());
             //button_restart.Enabled = false;

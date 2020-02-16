@@ -1369,31 +1369,14 @@ namespace NiceHashMiner
                     var result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
                         International.GetText("Error_with_Exclamation"),
                         MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
+                    
                     if (result == DialogResult.Yes)
                         Process.Start(Links.NhmBtcWalletFaqNew);
-
+                        
                     textBoxBTCAddress_new.Focus();
                     return false;
                 }
             }
-            /*
-            else
-            {
-                if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && showError)
-                {
-                    var result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
-                        International.GetText("Error_with_Exclamation"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                    if (result == DialogResult.Yes)
-                        Process.Start(Links.NhmBtcWalletFaq);
-
-                    textBoxBTCAddress.Focus();
-                    return false;
-                }
-            }
-            */
             if (!BitcoinAddress.ValidateWorkerName(textBoxWorkerName.Text.Trim()) && showError)
             {
                 var result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidWorkerNameMsg"),
@@ -2096,7 +2079,8 @@ namespace NiceHashMiner
 
                 if (result == DialogResult.Yes)
                 {
-                    textBoxBTCAddress_new.Text = "";
+                    Process.Start(Links.NhmBtcWalletFaqNew);
+                    //textBoxBTCAddress_new.Text = "";
                 }
 
                 textBoxBTCAddress_new.Focus();
