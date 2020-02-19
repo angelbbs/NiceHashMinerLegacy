@@ -125,6 +125,11 @@ namespace NiceHashMiner.Miners
                 algo = "grin31";
                 algoName = "grincuckatoo31";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
+            {
+                algo = "grin32";
+                algoName = "grincuckatoo32";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 algo = "aeternity";
@@ -390,18 +395,19 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
             {
-                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin29" +
-                " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckaroo29" +
+                //" --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
                 " --server grincuckaroo29.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3371 --ssl 0" +
                 " --server grincuckaroo29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3371 --ssl 0" +
                 GetDevicesCommandString();
             }
+            //start miner.exe--algo cuckarood29 --server eu.frostypool.com:3516--user angelbbs
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin29" +
-                " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
-                " --server grincuckarood29.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
-                " --server grincuckarood29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckarood29" +
+                " --server eu.frostypool.com:3516 --user angelbbs --ssl 0" +
+                " --server grincuckarood29.eu:3377" + nhsuff + ".nicehash.com --user " + username + " --ssl 0" +
+                " --server grincuckarood29.hk:3377" + nhsuff + ".nicehash.com --user " + username + " --ssl 0" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
@@ -418,6 +424,14 @@ namespace NiceHashMiner.Miners
                 " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6667 --ssl 0" +
                 " --server grincuckatoo31.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3372 --ssl 0" +
                 " --server grincuckatoo31.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3372 --ssl 0" +
+                GetDevicesCommandString();
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
+            {
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin32" +
+                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA." + worker + " --pass x  --ssl 0" +
+                " --server grincuckatoo32.eu" + nhsuff + ".nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
+                " --server grincuckatoo32.hk" + nhsuff + ".nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
@@ -623,6 +637,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 || 
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 || 
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 || 
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 || 
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {

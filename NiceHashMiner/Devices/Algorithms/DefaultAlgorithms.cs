@@ -476,6 +476,10 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
+                    },
+                                        new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo32, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
                     }
                 }
             },

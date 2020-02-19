@@ -579,7 +579,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.Cuckaroom
                     });
             }
-            if (algoSettings.ContainsKey(MinerBaseType.lolMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.2))
+            if (algoSettings.ContainsKey(MinerBaseType.lolMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.2))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {

@@ -223,13 +223,15 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://grin.sparkpool.com:6666 -u angelbbs@mail.ru.{worker} -o1 stratum+tcp://grincuckaroo29." + myServers[0, 0] + nhsuff + ".nicehash.com:3371 -u1 " + username +
-                    $" -o2 stratum+tcp://grincuckaroo29." + myServers[1, 0] + nhsuff + ".nicehash.com:3371 -u2 " + username +
+                //cmd = $"-a {AlgoName} -o stratum+tcp://grin.sparkpool.com:6666 -u angelbbs@mail.ru.{worker} -o1 stratum+tcp://grincuckaroo29." + myServers[0, 0] + nhsuff + ".nicehash.com:3371 -u1 " + username +
+                cmd = $"-a {AlgoName} -o stratum+tcp://grincuckaroo29." + myServers[0, 0] + nhsuff + ".nicehash.com:3371 -u " + username +
+                    $" -o1 stratum+tcp://grincuckaroo29." + myServers[1, 0] + nhsuff + ".nicehash.com:3371 -u1 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
+            //start miner.exe --algo cuckarood29 --server eu.frostypool.com:3516 --user angelbbs
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://grin.sparkpool.com:6666 -u angelbbs@mail.ru.{worker} -o1 stratum+tcp://grincuckarood29." + myServers[0, 0] + nhsuff + ".nicehash.com:3377 -u1 " + username +
+                cmd = $"-a {AlgoName} -o stratum+tcp://eu.frostypool.com:3516 -u angelbbs -o1 stratum+tcp://grincuckarood29." + myServers[0, 0] + nhsuff + ".nicehash.com:3377 -u1 " + username +
                     $" -o2 stratum+tcp://grincuckarood29." + myServers[1, 0] + nhsuff + ".nicehash.com:3377 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }

@@ -62,6 +62,7 @@ namespace NiceHashMiner.Forms.Components {
             this.listViewAlgorithms.TabIndex = 11;
             this.listViewAlgorithms.UseCompatibleStateImageBehavior = false;
             this.listViewAlgorithms.View = System.Windows.Forms.View.Details;
+            this.listViewAlgorithms.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewAlgorithms_ColumnClick);
             this.listViewAlgorithms.ColumnWidthChanged += new System.Windows.Forms.ColumnWidthChangedEventHandler(this.listViewAlgorithms_ColumnWidthChanged);
             this.listViewAlgorithms.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.listViewAlgorithms_ColumnWidthChanging);
             this.listViewAlgorithms.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listViewAlgorithms_ItemCheck);
@@ -123,6 +124,7 @@ namespace NiceHashMiner.Forms.Components {
             this.Controls.Add(this.listViewAlgorithms);
             this.Name = "AlgorithmsListView";
             this.Size = new System.Drawing.Size(539, 380);
+            this.EnabledChanged += new System.EventHandler(this.AlgorithmsListView_EnabledChanged);
             this.ResumeLayout(false);
 
         }

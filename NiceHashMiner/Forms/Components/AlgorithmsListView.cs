@@ -13,6 +13,7 @@ using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Stats;
 using System.Globalization;
+using System.Collections;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -253,6 +254,9 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.Columns[POWER].Width = ConfigManager.GeneralConfig.ColumnListPOWER;
             listViewAlgorithms.Columns[RATIO].Width = ConfigManager.GeneralConfig.ColumnListRATIO;
             listViewAlgorithms.Columns[RATE].Width = ConfigManager.GeneralConfig.ColumnListRATE;
+            listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(ConfigManager.GeneralConfig.ColumnListSort);
+            //listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(2);
+            //listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(e.Column);
         }
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
@@ -274,7 +278,8 @@ namespace NiceHashMiner.Forms.Components
                     if (alg is DualAlgorithm dualAlg)
                     {
                        // name = "  ↑ + " + dualAlg.SecondaryAlgorithmName;
-                        name = "  " + char.ConvertFromUtf32(8593) + " + " + dualAlg.SecondaryAlgorithmName;
+                        //name = "  " + char.ConvertFromUtf32(8593) + " + " + dualAlg.SecondaryAlgorithmName;
+                        name = dualAlg.AlgorithmName;
                         miner = alg.MinerBaseTypeName;
                         secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
                         totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
@@ -494,9 +499,11 @@ namespace NiceHashMiner.Forms.Components
         {
             if (IsInBenchmark)
             {
-                e.Item.Checked = !e.Item.Checked;
-                return;
+                //listViewAlgorithms.CheckBoxes = false;
+                 // e.Item.Checked = !e.Item.Checked;
+                //return;
             }
+
 
             if (e.Item.Tag is Algorithm algo)
             {
@@ -809,6 +816,11 @@ namespace NiceHashMiner.Forms.Components
             {
                 listViewAlgorithms.SelectedItems.Clear();
             }
+            if (IsInBenchmark)
+            {
+                //listViewAlgorithms.CheckBoxes = false;
+                 //e.Item.Checked = !e.Item.Checked;
+            }
         }
 
         private void listViewAlgorithms_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -877,6 +889,40 @@ namespace NiceHashMiner.Forms.Components
             ConfigManager.GeneralConfig.ColumnListPOWER = listViewAlgorithms.Columns[POWER].Width;
             ConfigManager.GeneralConfig.ColumnListRATIO = listViewAlgorithms.Columns[RATIO].Width;
             ConfigManager.GeneralConfig.ColumnListRATE = listViewAlgorithms.Columns[RATE].Width;
+        }
+
+        private void listViewAlgorithms_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(e.Column);
+            ConfigManager.GeneralConfig.ColumnListSort = e.Column;
+        }
+
+        private void AlgorithmsListView_EnabledChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+    class ListViewColumnComparer : IComparer
+    {
+        public int ColumnIndex { get; set; }
+
+        public ListViewColumnComparer(int columnIndex)
+        {
+            ColumnIndex = columnIndex;
+        }
+
+        public int Compare(object x, object y)
+        {
+            try
+            {
+                return String.Compare(
+                ((ListViewItem)x).SubItems[ColumnIndex].Text,
+                ((ListViewItem)y).SubItems[ColumnIndex].Text);
+            }
+            catch (Exception) // если вдруг столбец пустой (или что-то пошло не так)
+            {
+                return 0;
+            }
         }
     }
 

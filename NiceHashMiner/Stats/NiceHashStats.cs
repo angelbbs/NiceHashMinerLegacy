@@ -944,7 +944,7 @@ namespace NiceHashMiner.Stats
 
         public static string GetVersion(string worker)
         {
-            string url = "https://api.github.com/repos/angelbbs/nicehashminerlegacy/releases";
+            string url = "https://api.github.com/repos/angelbbs/nicehashminerlegacy/releases/latest";
             string r1 = GetGitHubAPIData(url);
             //Helpers.ConsolePrint("GITHUB!", r1);
             //string r1 = GetNiceHashApiData(url, "");
@@ -1090,7 +1090,7 @@ namespace NiceHashMiner.Stats
                             //если старая прибыльность (24ч) больше новой (30м), то игнорировать
                             //if (paying != 0 && (paying * 5 < Math.Abs(algo[1].Value<double>()) * mult || (paying / 5 > Math.Abs(algo[1].Value<double>() * mult))))
                             if ((ConfigManager.GeneralConfig.MOPA4 || ConfigManager.GeneralConfig.MOPA5) && treshold != 1 && paying != 0 && (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ))
-                            { 
+                            {
                                 Helpers.ConsolePrint("SMA API", "Bug found in: " + algoKey.ToString() + " " + paying.ToString() + " < " + Math.Abs(algo[1].Value<double>()) * mult + " 24h profitability is bigger than newer on " + (treshold*100-100).ToString() + "%. Ignoring");
                                 if (Math.Abs(algo[1].Value<double>()) * mult == 0 || Math.Abs(algo[1].Value<double>()) * mult * 102 < paying)
                                 {

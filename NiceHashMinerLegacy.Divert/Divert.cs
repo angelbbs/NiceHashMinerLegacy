@@ -22,6 +22,7 @@ using System.Management;
 using System.Runtime.ExceptionServices;
 using System.Runtime.CompilerServices;
 
+
 namespace NiceHashMinerLegacy.Divert
 {
     public class Divert
@@ -29,6 +30,7 @@ namespace NiceHashMinerLegacy.Divert
        // private static Timer _divertTimer;
         
         public static bool logging;
+        public static bool gminer_running = false;
 
         public static UInt32 SwapByteOrder(UInt32 value)
         {
@@ -126,7 +128,9 @@ namespace NiceHashMinerLegacy.Divert
             return enc.GetBytes(str);
         }
 
-        public static List<uint> processIdListEthash = new List<uint>();
+        //public static List<int> processIdListEthash = new List<int>();
+        public static List<string> processIdListEthash = new List<string>();
+
         private static IntPtr DEthashHandle = (IntPtr)0;
 
         public static string LineNumber([CallerLineNumber] int lineNumber = 0, [CallerMemberName] string caller = null)
@@ -157,6 +161,35 @@ namespace NiceHashMinerLegacy.Divert
             return "";
         }
 
+        public static string GetRemoteIP(List<string> PortList, string port)
+        {
+            for (var i = 0; i < PortList.Count; i++)
+            {
+                if (PortList[i].Contains(port))
+                {
+                    return PortList[i].Split(':')[1];
+                }
+            }
+            return "0.0.0.0";
+        }
+        public static bool CheckSrcPort(List<string> PortList, string sample)
+        {
+            bool found = false;
+            for (var i = 0; i < PortList.Count; i++)
+            {
+                if (PortList[i].Contains(sample))
+                {
+                    found = true;
+                }
+            }
+            if (found == false)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, bool log)
         {
@@ -176,49 +209,165 @@ namespace NiceHashMinerLegacy.Divert
                 //return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
             }
             //надо передавать id процесса в существующий поток
-            if (CurrentAlgorithmType == 20 && (MinerName.ToLower() == "claymoredual" ||
-                MinerName.ToLower() == "phoenix") ) 
+            if (CurrentAlgorithmType == 20 && (MinerName.ToLower() == "claymoredual")) 
             {
-                processIdListEthash.Add((uint)processId);
+                processIdListEthash.Add("claymoredual " + processId.ToString());
                 if (processIdListEthash.Count > 1)
                 {
-                    Helpers.ConsolePrint("WinDivertSharp", "Divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
                     return DEthashHandle;
                 }
                 DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
-                Helpers.ConsolePrint("WinDivertSharp", "New Divert handle: " + DEthashHandle.ToString() + ". Initiated by " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DEthashHandle.ToString() + ". Initiated by " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
                 return DEthashHandle;
             }
 
+            if (CurrentAlgorithmType == 20 && (MinerName.ToLower() == "phoenix"))
+            {
+                processIdListEthash.Add("phoenix " + processId.ToString());
+                if (processIdListEthash.Count > 1)
+                {
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                    return DEthashHandle;
+                }
+                DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DEthashHandle.ToString() + ". Initiated by " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                return DEthashHandle;
+            }
+
+            if (CurrentAlgorithmType == 20 && (MinerName.ToLower() == "nbminer"))
+            {
+                processIdListEthash.Add("nbminer " + processId.ToString());
+                if (processIdListEthash.Count > 1)
+                {
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                    return DEthashHandle;
+                }
+                DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DEthashHandle.ToString() + ". Initiated by " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                return DEthashHandle;
+            }
+
+            Helpers.ConsolePrint("WinDivertSharp", MinerName.ToLower());
+            if (CurrentAlgorithmType == 20 && MinerName.ToLower() == "gminer")
+            {
+                gminer_running = true;
+                GetGMiner(processId, CurrentAlgorithmType, MinerName, strPlatform);
+            }
             return new IntPtr(0);
+        }
+
+
+        //GMiner порождает дочерний процесс который поднимает соединение с devfee пулом через 10-15 секунд после старта
+        [HandleProcessCorruptedStateExceptions]
+        internal static Task<bool> GetGMiner(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        {
+            return Task.Run(() =>
+            {
+                var t = new TaskCompletionSource<bool>();
+                var _allConnections = new List<Connection>();
+                int childPID = 0;
+
+
+                DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DEthashHandle.ToString() + ". Initiated by " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+
+                do
+                {
+                    _allConnections.Clear();
+                    _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
+
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                    ("Select * From Win32_Process Where ParentProcessID=" + processId);
+                    ManagementObjectCollection moc = searcher.Get();
+                    foreach (ManagementObject mo in moc)
+                    {
+                        childPID = Convert.ToInt32(mo["ProcessID"]);
+                        //Helpers.ConsolePrint("WinDivertSharp", "Main pid: " + processId + " child pid: " + childPID.ToString());
+                        //                    Process proc = Process.GetProcessById(pid);
+                        for (int c = 1; c < _allConnections.Count; c++)
+                        {
+                            //Helpers.ConsolePrint("WinDivertSharp", "all OwningPid: " + String.Join(",", processIdListEthash));
+                            // if (_allConnections[i].OwningPid.ToString().Contains(processId.ToString()) ||
+                            // _allConnections[i].OwningPid.ToString().Contains(childPID.ToString()))
+                            if (childPID.ToString().Equals(_allConnections[c].OwningPid.ToString()) &&
+                            _allConnections[c].RemoteEndPoint.Port == 4444)
+                            {
+                                //if (!processIdListEthash.Contains(_allConnections[c].OwningPid.ToString()))
+                                if (!String.Join(" ", processIdListEthash).Contains(_allConnections[c].OwningPid.ToString()))
+                                {
+                                    processIdListEthash.Add("gminer: " + processId.ToString() + " " + _allConnections[c].OwningPid.ToString());
+                                    Helpers.ConsolePrint("WinDivertSharp", "GMiner OwningPid: " + _allConnections[c].OwningPid.ToString());
+                                }
+                                
+                            }
+                        }
+                    }
+                    Thread.Sleep(1);
+                } while (gminer_running);
+                return t.Task;
+            });
         }
 
         public static void DivertStop(IntPtr DivertHandle, int Pid)
         {
             //claymore
             int dh = (int)DivertHandle;
-            if (processIdListEthash.Count <= 1 && dh != 0 && Divert.processIdListEthash.Contains((uint)Pid))
+            if (processIdListEthash.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListEthash).Contains(Pid.ToString()))
             {
                 //divert_running = false;
                 Thread.Sleep(50);
                 WinDivert.WinDivertClose(DivertHandle);
-                processIdListEthash.Remove((uint)Pid);
+
+                for (var i = 0; i < processIdListEthash.Count; i++)
+                {
+                    if (processIdListEthash[i].Contains(Pid.ToString()))
+                    {
+                        processIdListEthash.RemoveAt(i);
+                    }
+                }
+                
+                //processIdListEthash.Remove(Pid.ToString());
                 DivertHandle = new IntPtr(0);
-                Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() + " ProcessID: " + Pid.ToString());
+                Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                    " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
                 Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListEthash));
                 Thread.Sleep(50);
             }
             else
             {
-                if (processIdListEthash.Contains((uint)Pid))
+                if (String.Join(" ", Divert.processIdListEthash).Contains(Pid.ToString()))
                 {
-                    Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() + " from divert process list: " + " " + String.Join(",", processIdListEthash));
-                    processIdListEthash.Remove((uint)Pid);
+                    Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                        " " + " " + GetProcessName(Pid) +
+                        " from divert process list: " + " " + String.Join(",", processIdListEthash));
+                    for (var i = 0; i < processIdListEthash.Count; i++)
+                    {
+                        if (processIdListEthash[i].Contains(Pid.ToString()))
+                        {
+                            processIdListEthash.RemoveAt(i);
+                            continue;
+                        }
+                    }
+                    //processIdListEthash.Remove(Pid.ToString());
                 }
                 if (processIdListEthash.Count < 1)
                 {
                     Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListEthash");
                 }
+            }
+            //check gminer divert is running
+            bool gminerfound = false;
+            for (var i = 0; i < processIdListEthash.Count; i++)
+            {
+                if (processIdListEthash[i].Contains("gminer"))
+                {
+                    gminerfound = true;
+                }
+            }
+            if (gminerfound == false)
+            {
+                gminer_running = false;
             }
         }
     }
