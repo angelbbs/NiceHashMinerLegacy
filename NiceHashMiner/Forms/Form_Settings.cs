@@ -440,6 +440,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Send_actual_version_info.Text = "Отправлять инфо о версии программы";
                 checkBox_Additional_info_about_device.Text = "Дополнительная информация об устройстве";
                 Checkbox_Save_windows_size_and_position.Text = "Сохранять позицию и размер окон";
+                checkBox_sorting_list_of_algorithms.Text = "Сортировать список алгоритмов";
                 checkBox_ShowFanAsPercent.Text = "Показать обороты вентилятора в процентах";
                 checkbox_Group_same_devices.Text = "Группировать одинаковые устройства";
                 checkBox_Force_mining_if_nonprofitable.Text = "Принудительный майнинг, если не прибыльно";
@@ -691,6 +692,9 @@ namespace NiceHashMiner.Forms
                 Checkbox_Save_windows_size_and_position.BackColor = Form_Main._backColor;
                 Checkbox_Save_windows_size_and_position.ForeColor = Form_Main._textColor;
 
+                checkBox_sorting_list_of_algorithms.BackColor = Form_Main._backColor;
+                checkBox_sorting_list_of_algorithms.ForeColor = Form_Main._textColor;
+
                 checkBox_ShowFanAsPercent.BackColor = Form_Main._backColor;
                 checkBox_ShowFanAsPercent.ForeColor = Form_Main._textColor;
 
@@ -889,6 +893,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_sorting_list_of_algorithms.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1018,6 +1023,7 @@ namespace NiceHashMiner.Forms
                 checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
+                checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
@@ -1164,6 +1170,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
+            ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;

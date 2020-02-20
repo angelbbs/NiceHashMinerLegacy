@@ -208,7 +208,6 @@ namespace NiceHashMiner.Forms.Components
         }
         public void InitLocale()
         {
-
             var _backColor = Form_Main._backColor;
             var _foreColor = Form_Main._foreColor;
             var _textColor = Form_Main._textColor;
@@ -254,9 +253,6 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.Columns[POWER].Width = ConfigManager.GeneralConfig.ColumnListPOWER;
             listViewAlgorithms.Columns[RATIO].Width = ConfigManager.GeneralConfig.ColumnListRATIO;
             listViewAlgorithms.Columns[RATE].Width = ConfigManager.GeneralConfig.ColumnListRATE;
-            listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(ConfigManager.GeneralConfig.ColumnListSort);
-            //listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(2);
-            //listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(e.Column);
         }
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
@@ -893,13 +889,26 @@ namespace NiceHashMiner.Forms.Components
 
         private void listViewAlgorithms_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(e.Column);
-            ConfigManager.GeneralConfig.ColumnListSort = e.Column;
+            if (ConfigManager.GeneralConfig.ColumnSort)
+            {
+                listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(2);
+                listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(e.Column);
+                ConfigManager.GeneralConfig.ColumnListSort = e.Column;
+            }
         }
 
         private void AlgorithmsListView_EnabledChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void AlgorithmsListView_Load(object sender, EventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.ColumnSort)
+            {
+                listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(2);
+                listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(ConfigManager.GeneralConfig.ColumnListSort);
+            }
         }
     }
     class ListViewColumnComparer : IComparer

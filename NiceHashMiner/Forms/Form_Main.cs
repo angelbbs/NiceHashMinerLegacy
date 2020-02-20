@@ -772,8 +772,10 @@ namespace NiceHashMiner
                         this.Top = ConfigManager.GeneralConfig.FormTop;
                         this.Left = ConfigManager.GeneralConfig.FormLeft;
                     }
+                    
                     this.Width = ConfigManager.GeneralConfig.FormWidth;
-                    this.Height = ConfigManager.GeneralConfig.FormHeight;
+                    //this.Height = ConfigManager.GeneralConfig.FormHeight;
+                    this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17;
                 } else
                 {
                    // this.Width = 660; // min width

@@ -42,6 +42,7 @@ namespace NiceHashMiner.Forms
             this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.checkBox_fiat = new System.Windows.Forms.CheckBox();
             this.textBox_psu = new System.Windows.Forms.TextBox();
             this.label_psu = new System.Windows.Forms.Label();
             this.textBox_mb = new System.Windows.Forms.TextBox();
@@ -140,11 +141,11 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
+            this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.checkBox_fiat = new System.Windows.Forms.CheckBox();
+            this.checkBox_sorting_list_of_algorithms = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -375,6 +376,17 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.Text = "Main:";
             this.groupBox_Main.Enter += new System.EventHandler(this.groupBox_Main_Enter);
             // 
+            // checkBox_fiat
+            // 
+            this.checkBox_fiat.AutoSize = true;
+            this.checkBox_fiat.Location = new System.Drawing.Point(9, 171);
+            this.checkBox_fiat.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_fiat.Name = "checkBox_fiat";
+            this.checkBox_fiat.Size = new System.Drawing.Size(239, 17);
+            this.checkBox_fiat.TabIndex = 382;
+            this.checkBox_fiat.Text = "Show profitability of algorithms in fiat currency";
+            this.checkBox_fiat.UseVisualStyleBackColor = true;
+            // 
             // textBox_psu
             // 
             this.textBox_psu.Location = new System.Drawing.Point(168, 89);
@@ -533,6 +545,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.checkBox_sorting_list_of_algorithms);
             this.groupBox_Misc.Controls.Add(this.Checkbox_Save_windows_size_and_position);
             this.groupBox_Misc.Controls.Add(this.label1);
             this.groupBox_Misc.Controls.Add(this.textBox_AutoStartMiningDelay);
@@ -1555,17 +1568,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
             // 
-            // buttonGPUtuning
-            // 
-            this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
-            this.buttonGPUtuning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonGPUtuning.Name = "buttonGPUtuning";
-            this.buttonGPUtuning.Size = new System.Drawing.Size(141, 23);
-            this.buttonGPUtuning.TabIndex = 394;
-            this.buttonGPUtuning.Text = "GPU tuning";
-            this.buttonGPUtuning.UseVisualStyleBackColor = true;
-            this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
-            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1581,6 +1583,17 @@ namespace NiceHashMiner.Forms
             this.algorithmsListView1.Name = "algorithmsListView1";
             this.algorithmsListView1.Size = new System.Drawing.Size(645, 169);
             this.algorithmsListView1.TabIndex = 2;
+            // 
+            // buttonGPUtuning
+            // 
+            this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
+            this.buttonGPUtuning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonGPUtuning.Name = "buttonGPUtuning";
+            this.buttonGPUtuning.Size = new System.Drawing.Size(141, 23);
+            this.buttonGPUtuning.TabIndex = 394;
+            this.buttonGPUtuning.Text = "GPU tuning";
+            this.buttonGPUtuning.UseVisualStyleBackColor = true;
+            this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
             // 
             // algorithmSettingsControl1
             // 
@@ -1607,16 +1620,17 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
-            // checkBox_fiat
+            // checkBox_sorting_list_of_algorithms
             // 
-            this.checkBox_fiat.AutoSize = true;
-            this.checkBox_fiat.Location = new System.Drawing.Point(9, 171);
-            this.checkBox_fiat.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_fiat.Name = "checkBox_fiat";
-            this.checkBox_fiat.Size = new System.Drawing.Size(239, 17);
-            this.checkBox_fiat.TabIndex = 382;
-            this.checkBox_fiat.Text = "Show profitability of algorithms in fiat currency";
-            this.checkBox_fiat.UseVisualStyleBackColor = true;
+            this.checkBox_sorting_list_of_algorithms.AutoSize = true;
+            this.checkBox_sorting_list_of_algorithms.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_sorting_list_of_algorithms.Location = new System.Drawing.Point(7, 350);
+            this.checkBox_sorting_list_of_algorithms.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_sorting_list_of_algorithms.Name = "checkBox_sorting_list_of_algorithms";
+            this.checkBox_sorting_list_of_algorithms.Size = new System.Drawing.Size(136, 17);
+            this.checkBox_sorting_list_of_algorithms.TabIndex = 381;
+            this.checkBox_sorting_list_of_algorithms.Text = "Sorting list of algorithms";
+            this.checkBox_sorting_list_of_algorithms.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -1810,5 +1824,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label label_devices_count;
         private System.Windows.Forms.ComboBox comboBox_devices_count;
         private System.Windows.Forms.CheckBox checkBox_fiat;
+        private System.Windows.Forms.CheckBox checkBox_sorting_list_of_algorithms;
     }
 }

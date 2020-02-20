@@ -211,7 +211,7 @@ namespace NiceHashMinerLegacy.Divert
             //надо передавать id процесса в существующий поток
             if (CurrentAlgorithmType == 20 && (MinerName.ToLower() == "claymoredual")) 
             {
-                processIdListEthash.Add("claymoredual " + processId.ToString());
+                processIdListEthash.Add("claymoredual: " + processId.ToString());
                 if (processIdListEthash.Count > 1)
                 {
                     Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
@@ -224,7 +224,7 @@ namespace NiceHashMinerLegacy.Divert
 
             if (CurrentAlgorithmType == 20 && (MinerName.ToLower() == "phoenix"))
             {
-                processIdListEthash.Add("phoenix " + processId.ToString());
+                processIdListEthash.Add("phoenix: " + processId.ToString());
                 if (processIdListEthash.Count > 1)
                 {
                     Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
@@ -237,7 +237,7 @@ namespace NiceHashMinerLegacy.Divert
 
             if (CurrentAlgorithmType == 20 && (MinerName.ToLower() == "nbminer"))
             {
-                processIdListEthash.Add("nbminer " + processId.ToString());
+                processIdListEthash.Add("nbminer: " + processId.ToString());
                 if (processIdListEthash.Count > 1)
                 {
                     Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
@@ -268,7 +268,7 @@ namespace NiceHashMinerLegacy.Divert
                 var _allConnections = new List<Connection>();
                 int childPID = 0;
 
-
+                processIdListEthash.Add("gminer: " + processId.ToString() + " null");
                 DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
                 Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DEthashHandle.ToString() + ". Initiated by " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
 
@@ -290,14 +290,14 @@ namespace NiceHashMinerLegacy.Divert
                             //Helpers.ConsolePrint("WinDivertSharp", "all OwningPid: " + String.Join(",", processIdListEthash));
                             // if (_allConnections[i].OwningPid.ToString().Contains(processId.ToString()) ||
                             // _allConnections[i].OwningPid.ToString().Contains(childPID.ToString()))
-                            if (childPID.ToString().Equals(_allConnections[c].OwningPid.ToString()) &&
-                            _allConnections[c].RemoteEndPoint.Port == 4444)
+                            ////_allConnections[c].RemoteEndPoint.Port == 4444)
+                            if (childPID.ToString().Equals(_allConnections[c].OwningPid.ToString())) 
                             {
                                 //if (!processIdListEthash.Contains(_allConnections[c].OwningPid.ToString()))
                                 if (!String.Join(" ", processIdListEthash).Contains(_allConnections[c].OwningPid.ToString()))
                                 {
                                     processIdListEthash.Add("gminer: " + processId.ToString() + " " + _allConnections[c].OwningPid.ToString());
-                                    Helpers.ConsolePrint("WinDivertSharp", "GMiner OwningPid: " + _allConnections[c].OwningPid.ToString());
+                                    Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner OwningPid: " + _allConnections[c].OwningPid.ToString());
                                 }
                                 
                             }

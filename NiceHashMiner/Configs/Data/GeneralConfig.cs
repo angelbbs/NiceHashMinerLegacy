@@ -60,6 +60,7 @@ namespace NiceHashMiner.Configs.Data
         public int ColumnListPOWER = 88;
         public int ColumnListRATIO = 90;
         public int ColumnListRATE = 148;
+        public bool ColumnSort = false;
         public int ColumnListSort = 1;
 
         public int FormWidth = 700;
@@ -264,6 +265,7 @@ namespace NiceHashMiner.Configs.Data
             ColumnListPOWER = 88;
             ColumnListRATIO = 90;
             ColumnListRATE = 148;
+            ColumnSort = false;
             ColumnListSort = 1;
 
             FormWidth = 770;
