@@ -139,12 +139,14 @@ namespace NiceHashMinerLegacy.Divert
             return caller + ": " + lineNumber;
         }
 
+        private static System.Text.ASCIIEncoding ASCII;
+        private static IPHostEntry heserver;
         public static string DNStoIP(string DivertIPName)
         {
             try
             {
-                System.Text.ASCIIEncoding ASCII = new System.Text.ASCIIEncoding();
-                IPHostEntry heserver = Dns.GetHostEntry(DivertIPName);
+                ASCII = new System.Text.ASCIIEncoding();
+                heserver = Dns.GetHostEntry(DivertIPName);
                 foreach (IPAddress curAdd in heserver.AddressList)
                 {
                     if (curAdd.AddressFamily.ToString() == ProtocolFamily.InterNetwork.ToString())
@@ -267,6 +269,9 @@ namespace NiceHashMinerLegacy.Divert
                 var t = new TaskCompletionSource<bool>();
                 var _allConnections = new List<Connection>();
                 int childPID = 0;
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                ("Select * From Win32_Process Where ParentProcessID=" + processId);
+                ManagementObjectCollection moc;
 
                 processIdListEthash.Add("gminer: " + processId.ToString() + " null");
                 DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
@@ -277,9 +282,8 @@ namespace NiceHashMinerLegacy.Divert
                     _allConnections.Clear();
                     _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
 
-                    ManagementObjectSearcher searcher = new ManagementObjectSearcher
-                    ("Select * From Win32_Process Where ParentProcessID=" + processId);
-                    ManagementObjectCollection moc = searcher.Get();
+
+                    moc = searcher.Get();
                     foreach (ManagementObject mo in moc)
                     {
                         childPID = Convert.ToInt32(mo["ProcessID"]);
@@ -303,7 +307,7 @@ namespace NiceHashMinerLegacy.Divert
                             }
                         }
                     }
-                    Thread.Sleep(1);
+                    //Thread.Sleep(1);
                 } while (gminer_running);
                 return t.Task;
             });

@@ -62,40 +62,61 @@ namespace NiceHashMinerLegacy.Divert
         private static string PacketPayloadData;
         private static string OwnerPID = "-1";
         private static int stratumRatio = 0;
-        
+        private static List<string> _oldPorts = new List<string>();
+
+        private static WinDivertBuffer newpacket = new WinDivertBuffer();
+        private static WinDivertParseResult parse_result;
+        private static int PacketLen;
+        private static string RemoteIP;
+
+
         internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
         {
             string ret = "unknown";
             string miner = "";
             Port = Divert.SwapOrder(Port);
+
             List<Connection> _allConnections = new List<Connection>();
-
             _allConnections.Clear();
-            _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
+                _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
 
-            for (int i = 1; i < _allConnections.Count; i++)
-            {
-                if (String.Join(" ", processIdList).Contains(_allConnections[i].OwningPid.ToString()) &&
-                    (_allConnections[i].LocalEndPoint.Port == Port) ||
-                    _allConnections[i].RemoteEndPoint.Port == Port)
+                for (int i = 1; i < _allConnections.Count; i++)
                 {
-                    ret = _allConnections[i].OwningPid.ToString();
-                    for (var j = 0; j < processIdList.Count; j++)
+                    if (String.Join(" ", processIdList).Contains(_allConnections[i].OwningPid.ToString()) &&
+                        (_allConnections[i].LocalEndPoint.Port == Port) ||
+                        _allConnections[i].RemoteEndPoint.Port == Port)
                     {
-                        if (processIdList[j].Contains(ret))
+                        ret = _allConnections[i].OwningPid.ToString();
+                        for (var j = 0; j < processIdList.Count; j++)
                         {
-                            miner = processIdList[j].Split(':')[0];
+                            if (processIdList[j].Contains(ret))
+                            {
+                                miner = processIdList[j].Split(':')[0];
+                            }
                         }
-                    }
 
-                    _allConnections.Clear();
-                    _allConnections = null;
-                    return miner + ": " + ret;
+                    if (!String.Join(" ", _oldPorts).Contains(Port.ToString()))
+                    {
+                        _oldPorts.Add(miner + ": " + ret + " : " + Port.ToString());
+                        //Helpers.ConsolePrint("WinDivertSharp", "add _oldPorts: " + String.Join(" ", _oldPorts));
+                    }
+                        _allConnections.Clear();
+                        _allConnections = null;
+                        return miner + ": " + ret;
+                    }
+                }
+            for (int i = 1; i < _oldPorts.Count; i++)
+            {
+               //Helpers.ConsolePrint("WinDivertSharp", "_oldPorts: " + String.Join(" ", _oldPorts));
+                if (String.Join(" ", _oldPorts).Contains(Port.ToString()))
+                {
+                    //Helpers.ConsolePrint("WinDivertSharp", "_oldPorts found: " + Port.ToString());
+                    return "unknown: ?";
                 }
             }
 
-            Helpers.ConsolePrint("WinDivertSharp", "Error processIdList: " + String.Join(" ", processIdList) +
-                " Port not found: " + Port.ToString() + " Direction: " + dir);
+               // Helpers.ConsolePrint("WinDivertSharp", "Error processIdList: " + String.Join(" ", processIdList) +
+               // " Port not found: " + Port.ToString() + " Direction: " + dir);
             _allConnections.Clear();
             _allConnections = null;
 
@@ -109,13 +130,13 @@ namespace NiceHashMinerLegacy.Divert
 
             DivertLogin1 = "0x9290E50e7CcF1bdC90da8248a2bBaCc5063AeEE1";
 
-            //DivertIP1 = Divert.DNStoIP("eu1.ethermine.org");
-            //DivertPort1 = 4444;
-            DivertIP1 = Divert.DNStoIP("eth-eu1.nanopool.org");
+            DivertIP1 = Divert.DNStoIP("eu1.ethermine.org");
+            DivertPort1 = 4444;
+            //DivertIP1 = Divert.DNStoIP("eth-eu1.nanopool.org"); //не понимает логин клеймора
             //DivertIP1 = Divert.DNStoIP("asia1.ethermine.org");
-            DivertPort1 = 9999;
+            //DivertPort1 = 9999;
 
-            DivertIP2 = Divert.DNStoIP("eth-eu.dwarfpool.com");//eth.f2pool.com:8008
+            DivertIP2 = Divert.DNStoIP("eth-eu.dwarfpool.com");//eth.f2pool.com:8008 //49.247.192.198:8008 - etp-kor1.topmining.co.kr:8008
             DivertPort2 = 8008;
 
             //не работает. пока отключим шиткоины
@@ -150,9 +171,10 @@ filter = "(outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 || tcp.DstPort
                 return new IntPtr(-1);
             }
 
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 16384);
+            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 2048); //16386
             WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 1000);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 33554432);
+            //WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 33554432);
+            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 2097152);
 
             RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
 
@@ -182,14 +204,14 @@ filter = "(outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 || tcp.DstPort
             List<string> InboundPorts = new List<string>();
 
         //Span<byte> packetData = null;
-        byte[] packetData = null;
+
             NativeOverlapped recvOverlapped;
 
             IntPtr recvEvent = IntPtr.Zero;
             uint recvAsyncIoLen = 0;
             bool modified = false;
 
-            WinDivertBuffer newpacket = new WinDivertBuffer();
+
 
             do
             {
@@ -198,27 +220,28 @@ filter = "(outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 || tcp.DstPort
 nextCycle:
                     if (divert_running)
                     {
-                        packetData = null;
                         readLen = 0;
                         modified = false;
-
+                        PacketPayloadData = null;
+                        packet.Dispose();
                         recvAsyncIoLen = 0;
-                        recvOverlapped = new NativeOverlapped();
+                        //recvOverlapped = new NativeOverlapped();
 
-                        recvEvent = Kernel32.CreateEvent(IntPtr.Zero, false, false, IntPtr.Zero);
-
+                        //recvEvent = Kernel32.CreateEvent(IntPtr.Zero, false, false, IntPtr.Zero);
+                        /*
                         if (recvEvent == IntPtr.Zero)
                         {
                             Helpers.ConsolePrint("WinDivertSharp", "Failed to initialize receive IO event.");
                             //continue;
                         }
+                        */
                         addr.Reset();
-                        recvOverlapped.EventHandle = recvEvent;
+                        //recvOverlapped.EventHandle = recvEvent;
 
                         packet = new WinDivertBuffer();
                         //var result = WinDivert.WinDivertRecvEx(handle, packet, 0, ref addr, ref readLen, ref recvOverlapped);
                         var result = WinDivert.WinDivertRecv(handle, packet, ref addr, ref readLen);
-
+                        /*
                         if (!result)
                         {
                             var error = Marshal.GetLastWin32Error();
@@ -226,14 +249,16 @@ nextCycle:
                             // 997 == ERROR_IO_PENDING
                             if (error != 997)
                             {
+                                
                                 divert_running = false;
                                 Helpers.ConsolePrint($"WinDivertSharp", "Unknown IO error ID {0} while awaiting overlapped result.", error.ToString());
                                 Kernel32.CloseHandle(recvEvent);
                                 continue;
+                                
                             }
 
-                            while (Kernel32.WaitForSingleObject(recvEvent, 1000) == (uint)WaitForSingleObjectResult.WaitTimeout) ;
-
+                            //while (Kernel32.WaitForSingleObject(recvEvent, 1000) == (uint)WaitForSingleObjectResult.WaitTimeout) ;
+                            
                             if (!Kernel32.GetOverlappedResult(handle, ref recvOverlapped, ref recvAsyncIoLen, false))
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "Failed to get overlapped result.");
@@ -241,12 +266,14 @@ nextCycle:
                                 continue;
                             }
                             //readLen = recvAsyncIoLen;
+                            
                         }
+                */
 
-                        Kernel32.CloseHandle(recvEvent);
+                        //Kernel32.CloseHandle(recvEvent);
                         np++;
                         
-                        
+                        /*
                         string cpacket0 = "";
                         for (int i = 0; i < readLen; i++)
                         {
@@ -256,21 +283,22 @@ nextCycle:
                         }
                         //if (cpacket0.Length > 60)
                         File.WriteAllText(np.ToString()+ "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
+                        */
 
-                        Helpers.ConsolePrint("WinDivertSharp", "divert stratum, ratio: " + stratumRatio.ToString());
-                        if (stratumRatio < -10)
+                        //Helpers.ConsolePrint("WinDivertSharp", "divert stratum, ratio: " + stratumRatio.ToString());
+                        if (stratumRatio < -7)
                         {
                             Helpers.ConsolePrint("WinDivertSharp", "Alternate divert stratum, ratio: " + stratumRatio.ToString());
-                            //DivertIP1 = Divert.DNStoIP("asia1.ethermine.org");
-                           // DivertIP1 = Divert.DNStoIP("eth-eu1.nanopool.org");
-                           // DivertPort1 = 9999;
+                            DivertIP1 = Divert.DNStoIP("asia1.ethermine.org");
+                            DivertPort1 = 14444;
+                            stratumRatio = -100; //фиксируем на альтернативном пуле. Потом подумать, как обратно вернуть
                         }
                         if (stratumRatio > 10)
                         {
                             stratumRatio = 5;
                         }
 
-                            var parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                            parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
                         if (addr.Direction == WinDivertDirection.Outbound)
@@ -380,15 +408,15 @@ parsePacket:
                             ))
                         {
                             
+                            /*
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "DROP SSL connection to port: " + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
-                            
                             packet.Dispose();
                             goto nextCycle;
+                            */
                             
-                            /*
                             modified = false;
                             goto sendPacket;
-                            */
+                            
                         }
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
                         if (addr.Direction == WinDivertDirection.Outbound &
@@ -416,10 +444,10 @@ parsePacket:
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         }
 
-                        if (addr.Direction == WinDivertDirection.Inbound & 
+                        if (addr.Direction == WinDivertDirection.Inbound &&
                             //проверку входящего соединения можно упростить
                             //но могут путаться пакеты, если несколько соединений одновременно
-                          //  parse_result.TcpHeader->SrcPort == DivertPort & parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &
+                            //parse_result.TcpHeader->SrcPort == DivertPort && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
                             !OwnerPID.Equals("-1"))
                         {
                             if (parse_result.PacketPayloadLength > 0)
@@ -445,7 +473,7 @@ parsePacket:
 Divert:
                         PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
 
-                        int PacketLen = (int)parse_result.PacketPayloadLength;
+                        PacketLen = (int)parse_result.PacketPayloadLength;
 
                         //обход модификации пакета. Иначе пул проглатывает шары
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
@@ -659,7 +687,10 @@ modifyData:
                             readLen = packet.Length;
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
-                            
+                            head = null;
+                            modpacket = null;
+                            newPayload = null;
+                            /*
                             string cpacket4 = "";
                             for (int i = 0; i < readLen; i++)
                             {
@@ -669,7 +700,7 @@ modifyData:
                             }
                             //if (cpacket4.Length > 100)
                                 File.WriteAllText(np.ToString() + "make-" + addr.Direction.ToString() + ".pkt", cpacket4);
-                               
+                              */ 
                         }
 changeSrcDst:
                         /*
@@ -725,14 +756,14 @@ changeSrcDst:
                             //parse_result.IPv4Header->SrcAddr = IPAddress.Parse(DevFeeIP); ;
                             parse_result.TcpHeader->SrcPort = DevFeePort;
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                            string RemoteIP = Divert.GetRemoteIP(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                            RemoteIP = Divert.GetRemoteIP(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
                             parse_result.IPv4Header->SrcAddr = IPAddress.Parse(RemoteIP);
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") "
                                 + "<- New DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 "  New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
 
                             
-                            Helpers.ConsolePrint("WinDivertSharp", Divert.GetRemoteIP(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString()));
+                            //Helpers.ConsolePrint("WinDivertSharp", Divert.GetRemoteIP(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString()));
                             // Helpers.ConsolePrint("WinDivertSharp", String.Join(",", InboundPorts).Split(':')[0]);
                             // Helpers.ConsolePrint("WinDivertSharp", String.Join(",", InboundPorts).Split(':')[1]);
 
@@ -753,7 +784,7 @@ sendPacket:
                         {
                             WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
                         }
-
+                        /*
                         string cpacket1 = "";
                         for (int i = 0; i < readLen; i++)
                         {
@@ -763,6 +794,7 @@ sendPacket:
                         }
                         //if (cpacket1.Length > 100)
                             File.WriteAllText(np.ToString() + "new-" + addr.Direction.ToString() + ".pkt", cpacket1);
+                            */
 
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
 
@@ -827,7 +859,7 @@ sendPacket:
                     packet = null;
                     */
                 }
-
+                //GC.Collect();
             }
             while (divert_running);
 

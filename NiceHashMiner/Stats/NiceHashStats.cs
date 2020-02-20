@@ -174,6 +174,7 @@ namespace NiceHashMiner.Stats
 
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
+            GC.Collect();
             try
             {
                 if (e.IsText)
