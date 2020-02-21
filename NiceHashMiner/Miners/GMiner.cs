@@ -125,7 +125,7 @@ namespace NiceHashMiner.Miners
                 algo = "grin31";
                 algoName = "grincuckatoo31";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 algo = "grin32";
                 algoName = "grincuckatoo32";

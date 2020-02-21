@@ -189,8 +189,8 @@ namespace NiceHashMiner
             ComputeDeviceManager.SystemSpecs.QueryAndLog();
             groupBox1Top = groupBox1.Top;
             
-            devicesListViewEnableControl1.Height = 129 + ConfigManager.GeneralConfig.DevicesCountIndex * 17;
-            groupBox1Top += ConfigManager.GeneralConfig.DevicesCountIndex * 17;
+            devicesListViewEnableControl1.Height = 129 + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
+            groupBox1Top += ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1 ;
             //this.Height += 16;
 
             if (ConfigManager.GeneralConfig.BitcoinAddressNew.Length == 0)
@@ -775,7 +775,7 @@ namespace NiceHashMiner
                     
                     this.Width = ConfigManager.GeneralConfig.FormWidth;
                     //this.Height = ConfigManager.GeneralConfig.FormHeight;
-                    this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17;
+                    this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
                 } else
                 {
                    // this.Width = 660; // min width
@@ -1014,7 +1014,7 @@ namespace NiceHashMiner
             int newHeight = _mainFormHeight + groupBox1Height - (int)panelHeight / 2;
             //this.MaximumSize = new Size(-1, newHeight);
            // Form_Main.ActiveForm.MinimumSize.Height = newHeight;
-            Size = new Size(Size.Width, newHeight + ConfigManager.GeneralConfig.DevicesCountIndex * 17);
+            Size = new Size(Size.Width, newHeight + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1);
         }
 
 
