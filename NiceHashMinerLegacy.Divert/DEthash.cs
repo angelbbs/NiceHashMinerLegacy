@@ -829,7 +829,7 @@ sendPacket:
                             }
                             else
                             {
-                                stratumRatio++;
+                                stratumRatio = stratumRatio + 2;
                             }
                         }
 
