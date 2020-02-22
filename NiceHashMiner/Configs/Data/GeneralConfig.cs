@@ -27,6 +27,7 @@ namespace NiceHashMiner.Configs.Data
         public string DisplayCurrency = "USD";
         public bool DivertRun = true;
         public bool DivertLog = false;
+        public bool BlockGMinerApacheTomcat = false;
 
         public bool DebugConsole = false;
         public bool NewPlatform = true;
@@ -200,6 +201,7 @@ namespace NiceHashMiner.Configs.Data
             //LessThreads = 0;
             DivertRun = true;
             DivertLog = false;
+            BlockGMinerApacheTomcat = false;
             DebugConsole = false;
             HideMiningWindows = false;
             Lyra2z = false;

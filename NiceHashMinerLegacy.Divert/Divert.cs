@@ -31,6 +31,7 @@ namespace NiceHashMinerLegacy.Divert
         
         public static bool logging;
         public static bool gminer_running = false;
+        public static bool BlockGMinerApacheTomcat;
 
         public static UInt32 SwapByteOrder(UInt32 value)
         {
@@ -193,9 +194,10 @@ namespace NiceHashMinerLegacy.Divert
 
         
         [HandleProcessCorruptedStateExceptions]
-        public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, bool log)
+        public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, bool log, bool BlockGMinerApacheTomcatConfig)
         {
             logging = log;
+            BlockGMinerApacheTomcat = BlockGMinerApacheTomcatConfig;
             /*
             if (processIdList.Count > 1)
             {
@@ -317,7 +319,7 @@ namespace NiceHashMinerLegacy.Divert
                             }
                         }
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                 } while (gminer_running);
                 return t.Task;
             });

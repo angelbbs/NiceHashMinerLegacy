@@ -154,14 +154,14 @@ namespace NiceHashMinerLegacy.Divert
             //   " || tcp.DstPort == 3030 || tcp.DstPort == 6060 || tcp.DstPort == 9292)" +
 filter = "(!loopback && outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 || tcp.DstPort == 13333 ||" +
                 " tcp.DstPort == 9999 || tcp.DstPort == 19999 || tcp.DstPort == 14444 || tcp.DstPort == 20555 ||" +
-                " tcp.DstPort == 8008 || tcp.DstPort == 3030 || tcp.DstPort == 6060 || tcp.DstPort == 9292 ||" +
-                " tcp.DstPort == 3516 || tcp.DstPort == 8443 ||" +
+                " tcp.DstPort == 8008 || tcp.DstPort == 8018 ||tcp.DstPort == 3030 || tcp.DstPort == 6060 || tcp.DstPort == 9292 ||" +
+                " tcp.DstPort == 8443 ||" +
                 " tcp.DstPort == 5555)" +
                 " : " + 
                 "(tcp.SrcPort == 3333 || tcp.SrcPort == 4444 || tcp.SrcPort == 13333 ||" +
                 " tcp.SrcPort == 9999 || tcp.SrcPort == 19999 || tcp.SrcPort == 14444 || tcp.SrcPort == 20555 ||" +
-                " tcp.SrcPort == 8008 || tcp.SrcPort == 3030 || tcp.SrcPort == 6060 || tcp.SrcPort == 9292 ||" +
-                " tcp.SrcPort == 3516 || tcp.SrcPort == 8443)" +
+                " tcp.SrcPort == 8008 || tcp.SrcPort == 8018 || tcp.SrcPort == 3030 || tcp.SrcPort == 6060 || tcp.SrcPort == 9292 ||" +
+                " tcp.SrcPort == 8443)" +
                 ")";
 
             uint errorPos = 0;
@@ -220,7 +220,7 @@ filter = "(!loopback && outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 |
             IntPtr recvEvent = IntPtr.Zero;
             uint recvAsyncIoLen = 0;
             bool modified = false;
-
+            bool result;
 
 
             do
@@ -250,23 +250,24 @@ nextCycle:
 
                         packet = new WinDivertBuffer();
                         //var result = WinDivert.WinDivertRecvEx(handle, packet, 0, ref addr, ref readLen, ref recvOverlapped);
-                        var result = WinDivert.WinDivertRecv(handle, packet, ref addr, ref readLen);
-                        /*
+                        result = WinDivert.WinDivertRecv(handle, packet, ref addr, ref readLen);
+
                         if (!result)
                         {
-                            var error = Marshal.GetLastWin32Error();
+                           // var error = Marshal.GetLastWin32Error();
                             //Helpers.ConsolePrint("WinDivertSharp", "No error code: " + error.ToString());
                             // 997 == ERROR_IO_PENDING
-                            if (error != 997)
+                            //if (error != 997)
                             {
-                                
-                                divert_running = false;
-                                Helpers.ConsolePrint($"WinDivertSharp", "Unknown IO error ID {0} while awaiting overlapped result.", error.ToString());
-                                Kernel32.CloseHandle(recvEvent);
-                                continue;
-                                
-                            }
 
+                                divert_running = false;
+                                Helpers.ConsolePrint($"WinDivertSharp", "WinDivertRecv error.");
+                                //Kernel32.CloseHandle(recvEvent);
+                                continue;
+
+                            }
+                        }
+                        /*
                             //while (Kernel32.WaitForSingleObject(recvEvent, 1000) == (uint)WaitForSingleObjectResult.WaitTimeout) ;
                             
                             if (!Kernel32.GetOverlappedResult(handle, ref recvOverlapped, ref recvAsyncIoLen, false))
@@ -314,7 +315,7 @@ nextCycle:
 
 
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
-                        if (addr.Direction == WinDivertDirection.Outbound)
+                        if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
                         }
@@ -322,6 +323,54 @@ nextCycle:
                         {
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         }
+
+                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
+                        {
+                            if (Divert.BlockGMinerApacheTomcat)
+                            {
+                                Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Block gminer Apache Tomcat");
+                                goto nextCycle;
+                            } else
+                            {
+                                Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Allow gminer Apache Tomcat");
+                                modified = false;
+                                goto sendPacket;
+                            }
+                        }
+
+                        if (
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8018 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3030 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6060 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 9292 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8008 ||//
+                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8018 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 3030 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 6060 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 9292
+                            ) //?? gminer 
+                        {
+                            /*
+                            string cpacket10 = "";
+                            for (int i = 0; i < readLen; i++)
+                            {
+                                // if (packet[i] >= 32)
+                                cpacket10 = cpacket10 + (char)packet[i];
+
+                            }
+                            //if (cpacket10.Length > 60)
+                                File.WriteAllText(np.ToString() + "gm-" + addr.Direction.ToString() + ".pkt", cpacket10);
+                                */
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Skip devfee: " +
+                            "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
+                            "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
+                            " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
+                            modified = false;
+                            goto sendPacket;
+                        }
+
 
                         if (CurrentAlgorithmType == 20 &&
                             addr.Direction == WinDivertDirection.Outbound )
@@ -392,6 +441,10 @@ nextCycle:
                                 DivertLogin = DivertLogin1;
                                 DivertIP = DivertIP1;
                                 DivertPort = Divert.SwapOrder(DivertPort1);
+                                if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4444 && OwnerPID.Contains("gminer"))
+                                {
+                                    DivertIP = DevFeeIP;
+                                }
                                 goto parsePacket;
                             }
                             /*
@@ -487,34 +540,6 @@ nextCycle:
                             }
                         }
 
-                        if (
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3516 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3030 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6060 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 9292 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443 || //
-                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 3516 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 3030 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 6060 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 9292 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443
-                            ) //?? gminer 
-                        {
-                            /*
-                            string cpacket10 = "";
-                            for (int i = 0; i < readLen; i++)
-                            {
-                                // if (packet[i] >= 32)
-                                cpacket10 = cpacket10 + (char)packet[i];
-
-                            }
-                            //if (cpacket10.Length > 60)
-                                File.WriteAllText(np.ToString() + "gm-" + addr.Direction.ToString() + ".pkt", cpacket10);
-                                */
-                            modified = false;
-                            goto sendPacket;
-
-                        }
                         Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Unknown connection: " +
                         "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                         "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
@@ -829,7 +854,7 @@ sendPacket:
 
                         if (modified)
                         {
-                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
+                          //  WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
                         }
                         /*
                         string cpacket1 = "";
@@ -888,6 +913,7 @@ sendPacket:
                 } catch (Exception e)
                 {
                     Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
+                    Thread.Sleep(500);
                 }
                 finally
                 {

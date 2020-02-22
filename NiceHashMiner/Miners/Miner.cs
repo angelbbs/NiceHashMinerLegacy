@@ -1263,7 +1263,8 @@ namespace NiceHashMiner
                     }
                     if (ConfigManager.GeneralConfig.DivertRun)
                     {
-                        P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName, strPlatform, ConfigManager.GeneralConfig.DivertLog);
+                        P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName,
+                            strPlatform, ConfigManager.GeneralConfig.DivertLog, ConfigManager.GeneralConfig.BlockGMinerApacheTomcat);
 
                         _currentPidData = new MinerPidData
                         {
