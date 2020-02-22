@@ -950,12 +950,12 @@ namespace NiceHashMiner.Stats
             //Helpers.ConsolePrint("GITHUB!", r1);
             //string r1 = GetNiceHashApiData(url, "");
             if (r1 == null) return null;
-            github_version[] nhjson;
+            github_version nhjson;
             try
             {
-                nhjson = JsonConvert.DeserializeObject<github_version[]>(r1, Globals.JsonSettings);
-                var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
-                return latest.tag_name;
+                nhjson = JsonConvert.DeserializeObject<github_version>(r1, Globals.JsonSettings);
+                //var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
+                return nhjson.tag_name;
             }
             catch (Exception ex)
             {

@@ -2010,6 +2010,7 @@ namespace NiceHashMiner
 
         private void buttonStopMining_Paint(object sender, PaintEventArgs e)
         {
+            /*
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0 && _autostartTimer == null)
             {
                 buttonStopMining.ResetText();
@@ -2017,6 +2018,7 @@ namespace NiceHashMiner
                 TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.HidePrefix;   // center the text
                 TextRenderer.DrawText(e.Graphics, International.GetText("Form_Main_stop"), btn.Font, e.ClipRectangle, btn.ForeColor, flags);
             }
+            */
         }
 
         private void buttonStartMining_EnabledChanged(object sender, EventArgs e)
@@ -2030,7 +2032,8 @@ namespace NiceHashMiner
 
         private void buttonStartMining_Paint(object sender, PaintEventArgs e)
         {
-            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
+            /*
+            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0 && Form_Main.ActiveForm.Enabled == true)
             {
                 buttonStartMining.ResetText();
                 Button btn = (Button)sender;
@@ -2038,7 +2041,7 @@ namespace NiceHashMiner
                 TextRenderer.DrawText(e.Graphics, International.GetText("Form_Main_start"), btn.Font, e.ClipRectangle, btn.ForeColor, flags);
   
             }
-            
+            */
         }
 
         private void devicesListViewEnableControl1_Resize(object sender, EventArgs e)

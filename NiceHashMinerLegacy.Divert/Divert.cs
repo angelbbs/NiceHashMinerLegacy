@@ -253,6 +253,7 @@ namespace NiceHashMinerLegacy.Divert
             Helpers.ConsolePrint("WinDivertSharp", MinerName.ToLower());
             if (CurrentAlgorithmType == 20 && MinerName.ToLower() == "gminer")
             {
+                processIdListEthash.Add("gminer: force");
                 gminer_running = true;
                 GetGMiner(processId, CurrentAlgorithmType, MinerName, strPlatform);
             }
@@ -302,12 +303,21 @@ namespace NiceHashMinerLegacy.Divert
                                 {
                                     processIdListEthash.Add("gminer: " + processId.ToString() + " " + _allConnections[c].OwningPid.ToString());
                                     Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner OwningPid: " + _allConnections[c].OwningPid.ToString());
+                                    for (var j = 0; j < processIdListEthash.Count; j++)
+                                    {
+                                        if (processIdListEthash[j].Contains("gminer: force"))
+                                        {
+                                            processIdListEthash.RemoveAt(j);
+                                            break;
+                                        }
+                                    }
+                                    Helpers.ConsolePrint("WinDivertSharp", "processIdListEthash: " + String.Join(" ", processIdListEthash));
                                 }
                                 
                             }
                         }
                     }
-                    //Thread.Sleep(1);
+                    Thread.Sleep(500);
                 } while (gminer_running);
                 return t.Task;
             });
