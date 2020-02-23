@@ -70,8 +70,8 @@ namespace NiceHashMiner.Miners
                     return new Ccminer();
                 case MinerBaseType.experimental:
                     return CreateExperimental(deviceType, algorithm.NiceHashID);
-                //case MinerBaseType.EWBF:
-                  //  return new Ewbf();
+                case MinerBaseType.EWBF:
+                    return new Ewbf();
                 //case MinerBaseType.Prospector:
                   //  return new Prospector();
                 case MinerBaseType.Xmrig:

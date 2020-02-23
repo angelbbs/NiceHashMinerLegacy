@@ -142,6 +142,7 @@
     <Compile Include="Miners\CryptoDredge.cs" />
     <Compile Include="Miners\Equihash\Dstm.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
+    <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\hsrneoscrypt.cs" />
     <Compile Include="Miners\lolMiner.cs" />

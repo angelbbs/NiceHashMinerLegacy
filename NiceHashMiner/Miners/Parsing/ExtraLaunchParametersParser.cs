@@ -365,45 +365,6 @@ namespace NiceHashMiner.Miners.Parsing
                             return MinerType.ClaymoreNeoscrypt;
                     }
                     break;
-                case MinerBaseType.Claymore_old:
-                    if (AlgorithmType.CryptoNight == algorithmType)
-                    {
-                        return MinerType.ClaymoreCryptoNight;
-                    }
-                    break;
-                case MinerBaseType.ethminer:
-                    if (DeviceType.AMD == deviceType)
-                    {
-                        return MinerType.ethminer_OCL;
-                    }
-                    if (DeviceType.NVIDIA == deviceType)
-                    {
-                        return MinerType.ethminer_CUDA;
-                    }
-                    break;
-                case MinerBaseType.nheqminer:
-                    switch (deviceType)
-                    {
-                        case DeviceType.CPU:
-                            return MinerType.nheqminer_CPU;
-                        case DeviceType.AMD:
-                            return MinerType.nheqminer_AMD;
-                        case DeviceType.NVIDIA:
-                            return MinerType.nheqminer_CUDA;
-                    }
-                    break;
-                case MinerBaseType.eqm:
-                    if (DeviceType.CPU == deviceType)
-                    {
-                        return MinerType.eqm_CPU;
-                    }
-                    if (DeviceType.NVIDIA == deviceType)
-                    {
-                        return MinerType.eqm_CUDA;
-                    }
-                    break;
-                //case MinerBaseType.excavator:
-                //    return MinerType.excavator;
                 case MinerBaseType.EWBF:
                     return MinerType.EWBF;
                 case MinerBaseType.Xmrig:

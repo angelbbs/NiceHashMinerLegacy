@@ -327,6 +327,31 @@ nextCycle:
                         if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443 ||
                             Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
                         {
+                            if(addr.Direction == WinDivertDirection.Outbound)
+                            {
+                                if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443)
+                                {
+                                    parse_result.IPv4Header->DstAddr = IPAddress.Parse("94.231.123.82");
+                                }
+                            } else
+                            {
+                                if (Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
+                                {
+                                    parse_result.IPv4Header->SrcAddr = IPAddress.Parse("94.231.123.82");
+                                }
+                            }
+                            parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") SSL: " +
+                            "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
+                            "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
+                            " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
+                            if (parse_result.PacketPayloadLength > 0)
+                            {
+                                Helpers.ConsolePrint("WinDivertSharp", Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength));
+                            }
+                            modified = false;
+                            goto sendPacket;
+                            
                             if (Divert.BlockGMinerApacheTomcat)
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Block gminer Apache Tomcat");
@@ -366,7 +391,9 @@ nextCycle:
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Skip devfee: " +
                             "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                             "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                            " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
+                            " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString() +
+                            " " + addr.Direction.ToString()
+                            );
                             modified = false;
                             goto sendPacket;
                         }
@@ -564,6 +591,11 @@ Divert:
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         }
 
+                        if(PacketPayloadData == null)
+                        {
+                            goto changeSrcDst;
+                        }
+
                         if (parse_result.PacketPayloadLength > 10 & addr.Direction == WinDivertDirection.Outbound)
                         {
                             if (PacketPayloadData.Contains("eth_submitWork") && !OwnerPID.Equals("-1"))
@@ -595,7 +627,7 @@ modifyData:
                         if (parse_result.PacketPayloadLength > 1 & addr.Direction == WinDivertDirection.Outbound &
                            !OwnerPID.Equals("-1"))
                         {
-                            modified = true;
+                            modified = false;
                             //dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") packet: " + PacketPayloadData);
        
@@ -854,7 +886,7 @@ sendPacket:
 
                         if (modified)
                         {
-                          //  WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
+                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
                         }
                         /*
                         string cpacket1 = "";
