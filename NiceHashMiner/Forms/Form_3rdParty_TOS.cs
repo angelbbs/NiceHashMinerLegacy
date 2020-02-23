@@ -20,6 +20,7 @@ namespace NiceHashMiner.Forms
             label_Tos.Text = International.GetText("Form_Main_3rdParty_Text");
             button_Agree.Text = International.GetText("Form_Main_3rdParty_Button_Agree_Text");
             //button_Decline.Text = International.GetText("Form_Main_3rdParty_Button_Refuse_Text");
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
 
 

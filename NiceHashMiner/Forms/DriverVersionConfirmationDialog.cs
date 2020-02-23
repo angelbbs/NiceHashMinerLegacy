@@ -20,6 +20,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("DriverVersionConfirmationDialog_linkToDriverDownloadPage");
             chkBoxDontShowAgain.Text = International.GetText("DriverVersionConfirmationDialog_chkBoxDontShowAgain");
             buttonOK.Text = International.GetText("Global_OK");
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)

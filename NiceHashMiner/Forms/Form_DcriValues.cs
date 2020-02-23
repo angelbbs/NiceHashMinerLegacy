@@ -37,6 +37,7 @@ namespace NiceHashMiner.Forms
             NiceHashStats.OnSmaUpdate += UpdateProfits;
 
             _isInitFinished = true;
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
 
         private bool IsChange

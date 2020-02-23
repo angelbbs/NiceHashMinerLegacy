@@ -42,6 +42,7 @@ namespace NiceHashMiner.Configs.Data
         public int AutoStartMiningDelay = 0;
         public bool HideMiningWindows = false;
         public bool MinimizeToTray = false;
+        public bool AlwaysOnTop = false;
         public bool Lyra2z = false;
         public bool ShowFanAsPercent = false;
         public bool MOPA1 = true;
@@ -206,6 +207,7 @@ namespace NiceHashMiner.Configs.Data
             HideMiningWindows = false;
             Lyra2z = false;
             MinimizeToTray = false;
+            AlwaysOnTop = false;
             BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();
             DisableAMDTempControl = false;

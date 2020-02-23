@@ -11,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {
@@ -39,6 +40,7 @@ namespace NiceHashMiner
             this.progressBar1.Value = 0;
 
             SetInfoMsg(startInfoMsg);
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
 
         // download miners constructor

@@ -2,6 +2,7 @@
 * This is an open source non-commercial project. Dear PVS-Studio, please check it.
 * PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 */
+using NiceHashMiner.Configs;
 using System;
 using System.Windows.Forms;
 
@@ -25,6 +26,7 @@ namespace NiceHashMiner
                     International.GetText("MinerFileNotFoundDialog_link").Length);
             chkBoxDisableDetection.Text = International.GetText("MinerFileNotFoundDialog_chkBoxDisableDetection");
             buttonOK.Text = International.GetText("Global_OK");
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)

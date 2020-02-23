@@ -35,6 +35,7 @@ namespace NiceHashMiner.Forms
             //comboBox_Languages.Location = new Point((this.Width - comboBox_Languages.Size.Width) / 2, comboBox_Languages.Location.Y);
             textBox_TOS.Text = TosText;
             textBox_TOS.ScrollBars = ScrollBars.Vertical;
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
 
         private void Button_OK_Click(object sender, EventArgs e)

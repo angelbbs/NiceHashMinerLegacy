@@ -697,7 +697,9 @@ namespace NiceHashMiner
             _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
             _autostartTimer.Start();
 
-            }
+            //Form_Main.ActiveForm.TopMost = true;
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
+        }
         private void AutoStartTimer_TickDelay(object sender, EventArgs e)
         {
             if (ConfigManager.GeneralConfig.AutoStartMining)

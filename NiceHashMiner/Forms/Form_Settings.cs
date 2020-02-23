@@ -123,6 +123,7 @@ namespace NiceHashMiner.Forms
                 Helpers.ConsolePrint("SETTINGS", e.ToString());
             }
             Form_Settings.ActiveForm.Update();
+            if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
 
             if (UpdateListView_timer == null)
             {
@@ -446,6 +447,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Force_mining_if_nonprofitable.Text = "Принудительный майнинг, если не прибыльно";
                 checkBox_Show_profit_with_power_consumption.Text = "Показывать прибыльность с учетом рахода на эл.энергию";
                 checkBox_fiat.Text = "Показывать прибыльность алгоритмов в фиатной валюте";
+                checkBox_AlwaysOnTop.Text = "Поверх остальных окон";
                 label_psu.Text = "КПД блока питания (%)";
                 label_MBpower.Text = "Потребление м.платы, диска и т.п. (Вт)";
                 checkBox_Disable_extra_launch_parameter_checking.Text = "Отключить проверку дополнительных параметров";
@@ -874,7 +876,8 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionNVIDIA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
               //  checkBox_IdleWhenNoInternetAccess.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_HideMiningWindows.CheckedChanged += CheckBox_HideMiningWindows_CheckChanged;
+                checkBox_HideMiningWindows.CheckedChanged +=GeneralCheckBoxes_CheckedChanged;
+                checkBox_AlwaysOnTop.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
               //  checkBox_DebugConsole.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
              //   checkBox_ShowDriverVersionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
               //  checkBox_DisableWindowsErrorReporting.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -985,6 +988,7 @@ namespace NiceHashMiner.Forms
                 }
                 checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.GeneralConfig.MinimizeToTray;
+                checkBox_AlwaysOnTop.Checked = ConfigManager.GeneralConfig.AlwaysOnTop;
                 checkBox_DisableDetectionNVIDIA.Checked =
                     ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 checkBox_DisableDetectionCPU.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU;
@@ -1147,6 +1151,7 @@ namespace NiceHashMiner.Forms
             textBox_AutoStartMiningDelay.Enabled = checkBox_AutoStartMining.Checked;
             ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             ConfigManager.GeneralConfig.MinimizeToTray = checkBox_MinimizeToTray.Checked;
+            ConfigManager.GeneralConfig.AlwaysOnTop = checkBox_AlwaysOnTop.Checked;
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA =
                 checkBox_DisableDetectionNVIDIA.Checked;
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD = checkBox_DisableDetectionAMD.Checked;
