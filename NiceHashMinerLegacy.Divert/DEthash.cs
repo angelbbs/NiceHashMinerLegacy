@@ -324,34 +324,10 @@ nextCycle:
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         }
 
-                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
+
+
+                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443 || Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
                         {
-                            if(addr.Direction == WinDivertDirection.Outbound)
-                            {
-                                if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443)
-                                {
-                                    parse_result.IPv4Header->DstAddr = IPAddress.Parse("94.231.123.82");
-                                }
-                            } else
-                            {
-                                if (Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
-                                {
-                                    parse_result.IPv4Header->SrcAddr = IPAddress.Parse("94.231.123.82");
-                                }
-                            }
-                            parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") SSL: " +
-                            "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-                            "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                            " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
-                            if (parse_result.PacketPayloadLength > 0)
-                            {
-                                Helpers.ConsolePrint("WinDivertSharp", Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength));
-                            }
-                            modified = false;
-                            goto sendPacket;
-                            
                             if (Divert.BlockGMinerApacheTomcat)
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Block gminer Apache Tomcat");
@@ -360,9 +336,11 @@ nextCycle:
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Allow gminer Apache Tomcat");
                                 modified = false;
-                                goto sendPacket;
+                                //goto sendPacket;
                             }
                         }
+                       
+                        
 
                         if (
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008 ||
@@ -553,7 +531,8 @@ nextCycle:
                             //проверку входящего соединения можно упростить
                             //но могут путаться пакеты, если несколько соединений одновременно
                             //parse_result.TcpHeader->SrcPort == DivertPort && parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
-                            !OwnerPID.Equals("-1"))
+                            !OwnerPID.Equals("-1")
+                            )
                         {
                             if (parse_result.PacketPayloadLength > 0)
                             {
