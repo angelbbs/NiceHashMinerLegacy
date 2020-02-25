@@ -59,6 +59,7 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.checkBox_sorting_list_of_algorithms = new System.Windows.Forms.CheckBox();
             this.Checkbox_Save_windows_size_and_position = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -146,7 +147,10 @@ namespace NiceHashMiner.Forms
             this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
+            this.tabPageOverClock = new System.Windows.Forms.TabPage();
+            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.groupBoxAlgorithmSettings2 = new System.Windows.Forms.GroupBox();
+            this.algorithmsListView2 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -187,6 +191,8 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVIDIA)).BeginInit();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            this.tabPageOverClock.SuspendLayout();
+            this.groupBoxAlgorithmSettings2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -238,6 +244,7 @@ namespace NiceHashMiner.Forms
             this.tabControlGeneral.Controls.Add(this.tabPageGeneral);
             this.tabControlGeneral.Controls.Add(this.tabPageAdvanced1);
             this.tabControlGeneral.Controls.Add(this.tabPageDevicesAlgos);
+            this.tabControlGeneral.Controls.Add(this.tabPageOverClock);
             // 
             // 
             // 
@@ -582,6 +589,17 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
+            // 
+            // checkBox_AlwaysOnTop
+            // 
+            this.checkBox_AlwaysOnTop.AutoSize = true;
+            this.checkBox_AlwaysOnTop.Location = new System.Drawing.Point(7, 158);
+            this.checkBox_AlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_AlwaysOnTop.Name = "checkBox_AlwaysOnTop";
+            this.checkBox_AlwaysOnTop.Size = new System.Drawing.Size(96, 17);
+            this.checkBox_AlwaysOnTop.TabIndex = 382;
+            this.checkBox_AlwaysOnTop.Text = "Always on Top";
+            this.checkBox_AlwaysOnTop.UseVisualStyleBackColor = true;
             // 
             // checkBox_sorting_list_of_algorithms
             // 
@@ -1634,16 +1652,61 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
-            // checkBox_AlwaysOnTop
+            // tabPageOverClock
             // 
-            this.checkBox_AlwaysOnTop.AutoSize = true;
-            this.checkBox_AlwaysOnTop.Location = new System.Drawing.Point(7, 158);
-            this.checkBox_AlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_AlwaysOnTop.Name = "checkBox_AlwaysOnTop";
-            this.checkBox_AlwaysOnTop.Size = new System.Drawing.Size(96, 17);
-            this.checkBox_AlwaysOnTop.TabIndex = 382;
-            this.checkBox_AlwaysOnTop.Text = "Always on Top";
-            this.checkBox_AlwaysOnTop.UseVisualStyleBackColor = true;
+            this.tabPageOverClock.Controls.Add(this.groupBoxAlgorithmSettings2);
+            this.tabPageOverClock.Controls.Add(this.devicesListViewEnableControl2);
+            this.tabPageOverClock.Location = new System.Drawing.Point(4, 23);
+            this.tabPageOverClock.Name = "tabPageOverClock";
+            this.tabPageOverClock.Size = new System.Drawing.Size(669, 439);
+            this.tabPageOverClock.TabIndex = 3;
+            this.tabPageOverClock.Text = "Overclock";
+            // 
+            // devicesListViewEnableControl2
+            // 
+            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl2.IsInBenchmark = false;
+            this.devicesListViewEnableControl2.IsMining = false;
+            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(4, 32);
+            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
+            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 165);
+            this.devicesListViewEnableControl2.TabIndex = 398;
+            // 
+            // groupBoxAlgorithmSettings2
+            // 
+            this.groupBoxAlgorithmSettings2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAlgorithmSettings2.Controls.Add(this.algorithmsListView2);
+            this.groupBoxAlgorithmSettings2.Location = new System.Drawing.Point(2, 205);
+            this.groupBoxAlgorithmSettings2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxAlgorithmSettings2.Name = "groupBoxAlgorithmSettings2";
+            this.groupBoxAlgorithmSettings2.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxAlgorithmSettings2.Size = new System.Drawing.Size(657, 253);
+            this.groupBoxAlgorithmSettings2.TabIndex = 399;
+            this.groupBoxAlgorithmSettings2.TabStop = false;
+            this.groupBoxAlgorithmSettings2.Text = "Algorithm settings for selected device:";
+            // 
+            // algorithmsListView2
+            // 
+            this.algorithmsListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListView2.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.algorithmsListView2.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListView2.BenchmarkCalculation = null;
+            this.algorithmsListView2.ComunicationInterface = null;
+            this.algorithmsListView2.IsInBenchmark = false;
+            this.algorithmsListView2.Location = new System.Drawing.Point(6, 21);
+            this.algorithmsListView2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmsListView2.Name = "algorithmsListView2";
+            this.algorithmsListView2.Size = new System.Drawing.Size(645, 169);
+            this.algorithmsListView2.TabIndex = 2;
             // 
             // Form_Settings
             // 
@@ -1714,6 +1777,8 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            this.tabPageOverClock.ResumeLayout(false);
+            this.groupBoxAlgorithmSettings2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1839,5 +1904,9 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_fiat;
         private System.Windows.Forms.CheckBox checkBox_sorting_list_of_algorithms;
         private System.Windows.Forms.CheckBox checkBox_AlwaysOnTop;
+        private System.Windows.Forms.TabPage tabPageOverClock;
+        private System.Windows.Forms.GroupBox groupBoxAlgorithmSettings2;
+        private Components.AlgorithmsListView algorithmsListView2;
+        private Components.DevicesListViewEnableControl devicesListViewEnableControl2;
     }
 }

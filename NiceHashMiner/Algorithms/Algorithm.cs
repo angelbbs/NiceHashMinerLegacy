@@ -87,6 +87,16 @@ namespace NiceHashMiner.Algorithms
 
         #endregion
 
+        #region OverClock settings
+        public bool OverClockEnabled { get; set; }
+        public int Amd1 { get; set; }
+        public int Amd2 { get; set; }
+        public int Amd3 { get; set; }
+        public int Amd4 { get; set; }
+        public int Amd5 { get; set; }
+        #endregion
+
+
         #region Profitability
 
         /// <summary>

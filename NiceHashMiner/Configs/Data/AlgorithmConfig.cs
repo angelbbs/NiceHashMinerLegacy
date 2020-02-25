@@ -22,5 +22,11 @@ namespace NiceHashMiner.Configs.Data
         public bool Hidden = false;
         public int LessThreads = 0;
         public double PowerUsage = 0;
+        public bool OverClockEnabled = false;
+        public int Amd1 = 0;
+        public int Amd2 = 0;
+        public int Amd3 = 0;
+        public int Amd4 = 0;
+        public int Amd5 = 0;
     }
 }

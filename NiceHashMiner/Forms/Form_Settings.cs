@@ -88,6 +88,9 @@ namespace NiceHashMiner.Forms
             // link algorithm list with algorithm settings control
             algorithmSettingsControl1.Enabled = false;
             algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
+
+            InitializeOverClockTab();
+            algorithmsListView2.ComunicationInterface = algorithmSettingsControl1;
             //algorithmsListView1.RemoveRatioRates();
             /*
             Form_Settings.comboBox_ColorProfile.Items.AddRange(new object[] {
@@ -103,9 +106,10 @@ namespace NiceHashMiner.Forms
             {
                 _selectedComputeDevice = ComputeDeviceManager.Available.Devices[0];
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                algorithmsListView2.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
                 groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                     _selectedComputeDevice.Name);
-               // groupBoxAlgorithmSettings.ForeColor = Form_Main._foreColor;
+
             }
 
             // At the very end set to true
@@ -564,6 +568,7 @@ namespace NiceHashMiner.Forms
             */
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
+            devicesListViewEnableControl2.InitLocale();
             Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
             if (ConfigManager.GeneralConfig.SettingsFormLeft + ConfigManager.GeneralConfig.SettingsFormWidth <= screenSize.Size.Width &&
                 ConfigManager.GeneralConfig.SettingsFormTop + ConfigManager.GeneralConfig.SettingsFormHeight <= screenSize.Size.Height)
@@ -587,6 +592,7 @@ namespace NiceHashMiner.Forms
 
 
             algorithmsListView1.InitLocale();
+            algorithmsListView2.InitLocale();
 
             comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
@@ -623,6 +629,9 @@ namespace NiceHashMiner.Forms
                 tabPageDevicesAlgos.BackColor = Form_Main._backColor;
                 tabPageDevicesAlgos.ForeColor = Form_Main._foreColor;
 
+                tabPageOverClock.BackColor = Form_Main._backColor;
+                tabPageOverClock.ForeColor = Form_Main._foreColor;
+
                 foreach (var lbl in tabPageAdvanced1.Controls.OfType<GroupBox>())
                 {
                     lbl.BackColor = Form_Main._backColor;
@@ -652,6 +661,34 @@ namespace NiceHashMiner.Forms
                 }
 
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<UserControl>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
+                //*
+                foreach (var lbl in tabPageOverClock.Controls.OfType<GroupBox>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
+                foreach (var lbl in tabPageOverClock.Controls.OfType<Button>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._textColor;
+                    lbl.FlatStyle = FlatStyle.Flat;
+                    lbl.FlatAppearance.BorderColor = Form_Main._textColor;
+                    lbl.FlatAppearance.BorderSize = 1;
+                }
+
+                foreach (var lbl in tabPageOverClock.Controls.OfType<Button>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
+                foreach (var lbl in tabPageOverClock.Controls.OfType<UserControl>())
                 {
                     lbl.BackColor = Form_Main._backColor;
                     lbl.ForeColor = Form_Main._foreColor;
@@ -821,6 +858,10 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;
                 algorithmsListView1.BackColor = Form_Main._backColor;
                 algorithmsListView1.ForeColor = Form_Main._foreColor;
+                devicesListViewEnableControl2.BackColor = Form_Main._backColor;
+                devicesListViewEnableControl2.ForeColor = Form_Main._foreColor;
+                algorithmsListView2.BackColor = Form_Main._backColor;
+                algorithmsListView2.ForeColor = Form_Main._foreColor;
                 tabPageGeneral.BackColor = Form_Main._backColor;
                 tabPageGeneral.ForeColor = Form_Main._foreColor;
             } else
@@ -829,6 +870,10 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;
                 algorithmsListView1.BackColor = SystemColors.ControlLightLight;
                 algorithmsListView1.ForeColor = Form_Main._foreColor;
+                devicesListViewEnableControl2.BackColor = SystemColors.ControlLightLight;
+                devicesListViewEnableControl2.ForeColor = Form_Main._foreColor;
+                algorithmsListView2.BackColor = SystemColors.ControlLightLight;
+                algorithmsListView2.ForeColor = Form_Main._foreColor;
             }
 
             // Setup Tooltips CPU
@@ -1075,6 +1120,10 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Available.Devices);
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
                 devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
+
+                devicesListViewEnableControl2.SetComputeDevices(ComputeDeviceManager.Available.Devices);
+                devicesListViewEnableControl2.SetAlgorithmsListView(algorithmsListView2);
+                devicesListViewEnableControl2.IsSettingsCopyEnabled = true;
             }
 
             // Add language selections list
@@ -1133,6 +1182,20 @@ namespace NiceHashMiner.Forms
         }
 
         #endregion //Tab Devices
+
+        #region Tab OverClock
+
+        private void InitializeOverClockTab()
+        {
+            InitializeOverClockCallbacks();
+        }
+
+        private void InitializeOverClockCallbacks()
+        {
+            devicesListViewEnableControl2.SetDeviceSelectionChangedCallback(DevicesListView2_ItemSelectionChanged);
+        }
+
+        #endregion //Tab OverClock
 
         #endregion // Initializations
 
@@ -1373,7 +1436,7 @@ namespace NiceHashMiner.Forms
             groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                 _selectedComputeDevice.Name);
         }
-
+        /*
         private void ButtonSelectedProfit_Click(object sender, EventArgs e)
         {
             if (_selectedComputeDevice == null)
@@ -1397,13 +1460,29 @@ namespace NiceHashMiner.Forms
             url += "&cost=1&power=1"; // Set default power and cost to 1
             System.Diagnostics.Process.Start(url);
         }
-
+        */
         private void ButtonGPUtuning_Click(object sender, EventArgs e)
         {
              System.Diagnostics.Process.Start("GPU-Tuning.exe");
         }
 
         #endregion //Tab Device
+
+        #region Tab OverClock
+
+        private void DevicesListView2_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            algorithmSettingsControl1.Deselect();
+            // show algorithms
+            _selectedComputeDevice =
+                ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
+            algorithmsListView2.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            groupBoxAlgorithmSettings2.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
+                _selectedComputeDevice.Name);
+        }
+
+
+        #endregion //Tab OverClock
 
 
         private void ToolTip1_Popup(object sender, PopupEventArgs e)

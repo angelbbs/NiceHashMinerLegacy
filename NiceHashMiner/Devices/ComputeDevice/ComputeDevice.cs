@@ -395,6 +395,12 @@ namespace NiceHashMiner.Devices
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
                     setAlgo.LessThreads = copyFromAlgo.LessThreads;
                     setAlgo.PowerUsage = copyFromAlgo.PowerUsage;
+                    setAlgo.OverClockEnabled = copyFromAlgo.OverClockEnabled;
+                    setAlgo.Amd1 = copyFromAlgo.Amd1;
+                    setAlgo.Amd2 = copyFromAlgo.Amd2;
+                    setAlgo.Amd3 = copyFromAlgo.Amd3;
+                    setAlgo.Amd4 = copyFromAlgo.Amd4;
+                    setAlgo.Amd5 = copyFromAlgo.Amd5;
                     NiceHashMiner.Forms.Form_Settings.ActiveForm.Update();
 
                     if (setAlgo is DualAlgorithm dualSA && copyFromAlgo is DualAlgorithm dualCFA)
@@ -456,6 +462,12 @@ namespace NiceHashMiner.Devices
                         }
                         setAlgo.LessThreads = conf.LessThreads;
                         setAlgo.PowerUsage = conf.PowerUsage;
+                        setAlgo.OverClockEnabled = conf.OverClockEnabled;
+                        setAlgo.Amd1 = conf.Amd1;
+                        setAlgo.Amd2 = conf.Amd2;
+                        setAlgo.Amd3 = conf.Amd3;
+                        setAlgo.Amd4 = conf.Amd4;
+                        setAlgo.Amd5 = conf.Amd5;
                         if (setAlgo is DualAlgorithm dualSA)
                         {
                             dualSA.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
@@ -513,7 +525,13 @@ namespace NiceHashMiner.Devices
                     Enabled = algo.Enabled,
                     Hidden = algo.Hidden,
                     LessThreads = algo.LessThreads,
-                    PowerUsage =  algo.PowerUsage
+                    PowerUsage =  algo.PowerUsage,
+                    OverClockEnabled = algo.OverClockEnabled,
+                    Amd1 = algo.Amd1,
+                    Amd2 = algo.Amd2,
+                    Amd3 = algo.Amd3,
+                    Amd4 = algo.Amd4,
+                    Amd5 = algo.Amd5
                 };
                 // insert
                 if (!conf.Hidden)
