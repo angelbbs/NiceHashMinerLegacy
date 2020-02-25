@@ -305,7 +305,7 @@ namespace NiceHashMiner
                         {
                             if (ConfigManager.GeneralConfig.DivertRun)
                             {
-                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid);
+                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, (int)MiningSetup.CurrentAlgorithmType);
                             }
                             process.Kill();
                             process.Close();
@@ -432,7 +432,7 @@ namespace NiceHashMiner
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
                 if (ConfigManager.GeneralConfig.DivertRun)
                 {
-                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id);
+                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, (int)MiningSetup.CurrentAlgorithmType);
                 }
                 KillProcessAndChildren(pid);
 

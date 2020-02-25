@@ -103,6 +103,7 @@ namespace NiceHashMiner.Switching
             if (!stableUpdated && !unstableUpdated && _hasStarted)
             {
                 sb.AppendLine("No algos affected (either no SMA update or no algos higher");
+                NHSmaData.Initialize();
             }
 
             if (_hasStarted)

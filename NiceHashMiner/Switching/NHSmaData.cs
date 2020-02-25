@@ -37,6 +37,7 @@ namespace NiceHashMiner.Switching
         // Public for tests only
         public static void Initialize()
         {
+            Helpers.ConsolePrint("NHSMA", "Try initialize SMA");
             _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
             _stableAlgorithms = new HashSet<AlgorithmType>();
 

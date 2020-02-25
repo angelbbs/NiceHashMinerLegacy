@@ -26,7 +26,6 @@ namespace NiceHashMinerLegacy.Divert
 {
     public class DEthash
     {
-        private static volatile bool divert_running = true;
         private static IntPtr DivertHandle;
         private static readonly uint MaxPacket = 2048;
 
@@ -131,7 +130,7 @@ namespace NiceHashMinerLegacy.Divert
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr EthashDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
             {
-            divert_running = true;
+            Divert.Ethashdivert_running = true;
 
             DivertLogin1 = "0x9290E50e7CcF1bdC90da8248a2bBaCc5063AeEE1";
 
@@ -155,13 +154,13 @@ namespace NiceHashMinerLegacy.Divert
 filter = "(!loopback && outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 || tcp.DstPort == 13333 ||" +
                 " tcp.DstPort == 9999 || tcp.DstPort == 19999 || tcp.DstPort == 14444 || tcp.DstPort == 20555 ||" +
                 " tcp.DstPort == 8008 || tcp.DstPort == 8018 ||tcp.DstPort == 3030 || tcp.DstPort == 6060 || tcp.DstPort == 9292 ||" +
-                " tcp.DstPort == 8443 ||" +
+                " tcp.DstPort == 6666 || tcp.DstPort == 8443 ||" +
                 " tcp.DstPort == 5555)" +
                 " : " + 
                 "(tcp.SrcPort == 3333 || tcp.SrcPort == 4444 || tcp.SrcPort == 13333 ||" +
                 " tcp.SrcPort == 9999 || tcp.SrcPort == 19999 || tcp.SrcPort == 14444 || tcp.SrcPort == 20555 ||" +
                 " tcp.SrcPort == 8008 || tcp.SrcPort == 8018 || tcp.SrcPort == 3030 || tcp.SrcPort == 6060 || tcp.SrcPort == 9292 ||" +
-                " tcp.SrcPort == 8443)" +
+                " tcp.SrcPort == 6666 || tcp.SrcPort == 8443)" +
                 ")";
 
             uint errorPos = 0;
@@ -221,14 +220,14 @@ filter = "(!loopback && outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 |
             uint recvAsyncIoLen = 0;
             bool modified = false;
             bool result;
-
+            string nbminerWorker = "default1";
 
             do
             {
                 try
                 {
 nextCycle:
-                    if (divert_running)
+                    if (Divert.Ethashdivert_running)
                     {
                         readLen = 0;
                         modified = false;
@@ -260,7 +259,7 @@ nextCycle:
                             //if (error != 997)
                             {
 
-                                divert_running = false;
+                                Divert.Ethashdivert_running = false;
                                 Helpers.ConsolePrint($"WinDivertSharp", "WinDivertRecv error.");
                                 //Kernel32.CloseHandle(recvEvent);
                                 continue;
@@ -336,7 +335,7 @@ nextCycle:
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Allow gminer Apache Tomcat");
                                 modified = false;
-                                //goto sendPacket;
+                                goto sendPacket;
                             }
                         }
                        
@@ -388,7 +387,9 @@ nextCycle:
                             }
 
                             if (OwnerPID.Contains("nbminer") && (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13333)) //sparkpool
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6666 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13333
+                            )) //sparkpool
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
                                 Helpers.ConsolePrint("WinDivertSharp",
@@ -727,11 +728,14 @@ modifyData:
                             //nbminer eth
                             if (CurrentAlgorithmType == 20 &&
                                 PacketPayloadData.Contains("eth_submitLogin") && PacketPayloadData.Contains("sp_nbminer") &&
-                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333)
+                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333 ||
+                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13333 ||
+                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6666
+                                )
                             {
-                                Helpers.ConsolePrint("WinDivertSharp", "NBMiner login detected to sparkpool");
-                                //PacketPayloadData = "{\"id\":1,\"method\":\"eth_submitLogin\",\"params\":[\"" + DivertLogin + "\"],\"worker\":\"\"}" + (char)10;
-                                PacketPayloadData = "{\"id\":1,\"method\":\"eth_submitLogin\",\"params\":[\"" + DivertLogin + "\"],\"worker\":\"default1\"}" + (char)10;
+                                nbminerWorker = PacketPayloadData.Split(':')[4].Replace("}", "");
+                                Helpers.ConsolePrint("WinDivertSharp", "NBMiner login detected to sparkpool. Worker: " + nbminerWorker);
+                                PacketPayloadData = "{\"id\":1,\"method\":\"eth_submitLogin\",\"params\":[\"" + DivertLogin + "\"],\"worker\":" + nbminerWorker + "}" + (char)10;
                                 goto changePayloadData;
                             }
                             //{"id":1,"method":"eth_submitLogin","params":["sp_nbminer"],"worker":"5EE77B52"}
@@ -877,8 +881,8 @@ sendPacket:
                         }
                         //if (cpacket1.Length > 100)
                             File.WriteAllText(np.ToString() + "new-" + addr.Direction.ToString() + ".pkt", cpacket1);
-                            */
-
+                            
+*/
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
 
                         if (addr.Direction == WinDivertDirection.Outbound)
@@ -946,7 +950,7 @@ sendPacket:
                 //GC.Collect();
                 Thread.Sleep(1);
             }
-            while (divert_running);
+            while (Divert.Ethashdivert_running);
 
         }
     }

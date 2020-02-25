@@ -60,6 +60,7 @@
     <Compile Include="DEthash.cs" />
     <Compile Include="Divert.cs" />
     <Compile Include="DXMRig.cs" />
+    <Compile Include="DZhash.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NetworkInformation.cs" />
