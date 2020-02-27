@@ -617,7 +617,7 @@ Divert:
 modifyData:
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
                         if (parse_result.PacketPayloadLength > 1 & addr.Direction == WinDivertDirection.Outbound &
-                           !OwnerPID.Equals("-1"))
+                           !OwnerPID.Equals("-1") && PacketPayloadData != null)
                         {
                             modified = false;
                             //dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
@@ -960,7 +960,7 @@ sendPacket:
                     */
                 }
                 //GC.Collect();
-                Thread.Sleep(1);
+                Thread.Sleep(5);
             }
             while (Divert.Ethashdivert_running);
 

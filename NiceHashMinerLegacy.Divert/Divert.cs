@@ -21,7 +21,7 @@ using System.Security.Principal;
 using System.Management;
 using System.Runtime.ExceptionServices;
 using System.Runtime.CompilerServices;
-
+using System.ComponentModel;
 
 namespace NiceHashMinerLegacy.Divert
 {
@@ -290,6 +290,90 @@ namespace NiceHashMinerLegacy.Divert
             return new IntPtr(0);
         }
 
+        private static int GetParentProcess(int Id)
+        {
+            int parentPid = 0;
+            using (ManagementObject mo = new ManagementObject("win32_process.handle='" + Id.ToString() + "'"))
+            {
+                mo.Get();
+                parentPid = Convert.ToInt32(mo["ParentProcessId"]);
+            }
+            return parentPid;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct ParentProcessUtilities
+        {
+            // These members must match PROCESS_BASIC_INFORMATION
+            internal IntPtr Reserved1;
+            internal IntPtr PebBaseAddress;
+            internal IntPtr Reserved2_0;
+            internal IntPtr Reserved2_1;
+            internal IntPtr UniqueProcessId;
+            internal IntPtr InheritedFromUniqueProcessId;
+
+            [DllImport("ntdll.dll")]
+            private static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref ParentProcessUtilities processInformation, int processInformationLength, out int returnLength);
+
+            /// <summary>
+            /// Gets the parent process of the current process.
+            /// </summary>
+            /// <returns>An instance of the Process class.</returns>
+            public static Process GetParentProcess()
+            {
+                return GetParentProcess(Process.GetCurrentProcess().Handle);
+            }
+
+            /// <summary>
+            /// Gets the parent process of specified process.
+            /// </summary>
+            /// <param name="id">The process id.</param>
+            /// <returns>An instance of the Process class.</returns>
+            public static Process GetParentProcess(int id)
+            {
+                Process process = Process.GetProcessById(id);
+                return GetParentProcess(process.Handle);
+            }
+
+            /// <summary>
+            /// Gets the parent process of a specified process.
+            /// </summary>
+            /// <param name="handle">The process handle.</param>
+            /// <returns>An instance of the Process class.</returns>
+            public static Process GetParentProcess(IntPtr handle)
+            {
+                ParentProcessUtilities pbi = new ParentProcessUtilities();
+                int returnLength;
+                int status = NtQueryInformationProcess(handle, 0, ref pbi, Marshal.SizeOf(pbi), out returnLength);
+                if (status != 0)
+                    throw new Win32Exception(status);
+
+                try
+                {
+                    return Process.GetProcessById(pbi.InheritedFromUniqueProcessId.ToInt32());
+                }
+                catch (ArgumentException)
+                {
+                    // not found
+                    return null;
+                }
+            }
+        }
+        public static int GetChildProcess(int ProcessId)
+        {
+            Process[] localByName = Process.GetProcessesByName("miner");
+            foreach (var processName in localByName)
+            {
+                int t = Process.GetProcessById(processName.Id).Id;
+                int p = GetParentProcess(t);
+                if (p == ProcessId)
+                {
+                    return t;
+                }
+            }
+
+            return -1;
+        }
 
         //GMiner порождает дочерний процесс который поднимает соединение с devfee пулом через 10-15 секунд после старта
         [HandleProcessCorruptedStateExceptions]
@@ -299,10 +383,7 @@ namespace NiceHashMinerLegacy.Divert
             {
                 var t = new TaskCompletionSource<bool>();
                 var _allConnections = new List<Connection>();
-                int childPID = 0;
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher
-                ("Select * From Win32_Process Where ParentProcessID=" + processId);
-                ManagementObjectCollection moc;
+                int childPID = -1;
 
                 processIdListEthash.Add("gminer: " + processId.ToString() + " null");
                 DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
@@ -310,38 +391,21 @@ namespace NiceHashMinerLegacy.Divert
 
                 do
                 {
-                    _allConnections.Clear();
-                    _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
-
-
-                    moc = searcher.Get();
-                    foreach (ManagementObject mo in moc)
-                    {
-                        childPID = Convert.ToInt32(mo["ProcessID"]);
-
-                        for (int c = 1; c < _allConnections.Count; c++)
-                        {
-                            if (childPID.ToString().Equals(_allConnections[c].OwningPid.ToString())) 
+                            childPID = GetChildProcess(processId);
+ 
+                            if (childPID > 0) 
                             {
-                                if (!String.Join(" ", processIdListEthash).Contains(_allConnections[c].OwningPid.ToString()))
+                                if (!String.Join(" ", processIdListEthash).Contains(childPID.ToString()))
                                 {
-                                    processIdListEthash.Add("gminer: " + processId.ToString() + " " + _allConnections[c].OwningPid.ToString());
-                                    Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Ethash OwningPid: " + _allConnections[c].OwningPid.ToString());
-                                    for (var j = 0; j < processIdListEthash.Count; j++)
-                                    {
-                                        if (processIdListEthash[j].Contains("gminer: force"))
-                                        {
-                                            processIdListEthash.RemoveAt(j);
-                                            break;
-                                        }
-                                    }
+                                    processIdListEthash.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                                    Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Ethash ChildPid: " + childPID.ToString());
+                                    processIdListEthash.RemoveAll(x => x.Contains("gminer: force"));
                                     Helpers.ConsolePrint("WinDivertSharp", "processIdListEthash: " + String.Join(" ", processIdListEthash));
+                                    break;
                                 }
                                 
                             }
-                        }
-                    }
-                    Thread.Sleep(300);
+                    Thread.Sleep(400);
                 } while (gminer_runningEthash);
                 return t.Task;
             });
@@ -353,10 +417,7 @@ namespace NiceHashMinerLegacy.Divert
             {
                 var t = new TaskCompletionSource<bool>();
                 var _allConnections = new List<Connection>();
-                int childPID = 0;
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher
-                ("Select * From Win32_Process Where ParentProcessID=" + processId);
-                ManagementObjectCollection moc;
+                int childPID = -1;
 
                 processIdListZhash.Add("gminer: " + processId.ToString() + " null");
                 DZhashHandle = DZhash.ZhashDivertStart(processIdListZhash, CurrentAlgorithmType, MinerName, strPlatform);
@@ -364,36 +425,19 @@ namespace NiceHashMinerLegacy.Divert
 
                 do
                 {
-                    _allConnections.Clear();
-                    _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
+                    childPID = GetChildProcess(processId);
 
-
-                    moc = searcher.Get();
-                    foreach (ManagementObject mo in moc)
+                    if (childPID > 0)
                     {
-                        childPID = Convert.ToInt32(mo["ProcessID"]);
-
-                        for (int c = 1; c < _allConnections.Count; c++)
+                        if (!String.Join(" ", processIdListZhash).Contains(childPID.ToString()))
                         {
-                            if (childPID.ToString().Equals(_allConnections[c].OwningPid.ToString()))
-                            {
-                                if (!String.Join(" ", processIdListZhash).Contains(_allConnections[c].OwningPid.ToString()))
-                                {
-                                    processIdListZhash.Add("gminer: " + processId.ToString() + " " + _allConnections[c].OwningPid.ToString());
-                                    Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner ZHash OwningPid: " + _allConnections[c].OwningPid.ToString());
-                                    for (var j = 0; j < processIdListZhash.Count; j++)
-                                    {
-                                        if (processIdListZhash[j].Contains("gminer: force"))
-                                        {
-                                            processIdListZhash.RemoveAt(j);
-                                            break;
-                                        }
-                                    }
-                                    Helpers.ConsolePrint("WinDivertSharp", "processIdListZhash: " + String.Join(" ", processIdListZhash));
-                                }
-
-                            }
+                            processIdListZhash.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Zhash ChildPid: " + childPID.ToString());
+                            processIdListZhash.RemoveAll(x => x.Contains("gminer: force"));
+                            Helpers.ConsolePrint("WinDivertSharp", "processIdListZhash: " + String.Join(" ", processIdListZhash));
+                            break;
                         }
+
                     }
                     Thread.Sleep(400);
                 } while (gminer_runningZhash);
@@ -407,10 +451,7 @@ namespace NiceHashMinerLegacy.Divert
             {
                 var t = new TaskCompletionSource<bool>();
                 var _allConnections = new List<Connection>();
-                int childPID = 0;
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher
-                ("Select * From Win32_Process Where ParentProcessID=" + processId);
-                ManagementObjectCollection moc;
+                int childPID = -1;
 
                 processIdListBeam.Add("gminer: " + processId.ToString() + " null");
                 DBeamHandle = DBeam.BeamDivertStart(processIdListBeam, CurrentAlgorithmType, MinerName, strPlatform);
@@ -418,36 +459,19 @@ namespace NiceHashMinerLegacy.Divert
 
                 do
                 {
-                    _allConnections.Clear();
-                    _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
+                    childPID = GetChildProcess(processId);
 
-
-                    moc = searcher.Get();
-                    foreach (ManagementObject mo in moc)
+                    if (childPID > 0)
                     {
-                        childPID = Convert.ToInt32(mo["ProcessID"]);
-
-                        for (int c = 1; c < _allConnections.Count; c++)
+                        if (!String.Join(" ", processIdListBeam).Contains(childPID.ToString()))
                         {
-                            if (childPID.ToString().Equals(_allConnections[c].OwningPid.ToString()))
-                            {
-                                if (!String.Join(" ", processIdListBeam).Contains(_allConnections[c].OwningPid.ToString()))
-                                {
-                                    processIdListBeam.Add("gminer: " + processId.ToString() + " " + _allConnections[c].OwningPid.ToString());
-                                    Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Beam OwningPid: " + _allConnections[c].OwningPid.ToString());
-                                    for (var j = 0; j < processIdListBeam.Count; j++)
-                                    {
-                                        if (processIdListBeam[j].Contains("gminer: force"))
-                                        {
-                                            processIdListBeam.RemoveAt(j);
-                                            break;
-                                        }
-                                    }
-                                    Helpers.ConsolePrint("WinDivertSharp", "processIdListBeam: " + String.Join(" ", processIdListBeam));
-                                }
-
-                            }
+                            processIdListBeam.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Zhash ChildPid: " + childPID.ToString());
+                            processIdListBeam.RemoveAll(x => x.Contains("gminer: force"));
+                            Helpers.ConsolePrint("WinDivertSharp", "processIdListBeam: " + String.Join(" ", processIdListBeam));
+                            break;
                         }
+
                     }
                     Thread.Sleep(400);
                 } while (gminer_runningBeam);
@@ -487,15 +511,19 @@ namespace NiceHashMinerLegacy.Divert
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListEthash));
+                        processIdListEthash.RemoveAll(x => x.Contains(Pid.ToString()));
+                        /*
                         for (var i = 0; i < processIdListEthash.Count; i++)
                         {
                             if (processIdListEthash[i].Contains(Pid.ToString()))
                             {
+                                processIdListEthash.RemoveAll(Pid.ToString()));
                                 processIdListEthash.RemoveAt(i);
                                 i = 0;
                                 continue;
                             }
                         }
+                        */
                     }
                     if (processIdListEthash.Count < 1)
                     {
