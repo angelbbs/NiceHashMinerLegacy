@@ -379,8 +379,22 @@ namespace NiceHashMiner
 
         public void AfterLoadComplete()
         {
+            if (ConfigManager.GeneralConfig.DivertRun)
+            {
+                var CMDconfigHandle = new Process
 
+                {
+                    StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+                };
 
+                CMDconfigHandle.StartInfo.Arguments = "start WinDivert1.4";
+                CMDconfigHandle.StartInfo.UseShellExecute = false;
+                CMDconfigHandle.StartInfo.CreateNoWindow = true;
+                CMDconfigHandle.Start();
+            }
 
             _loadingScreen = null;
             Enabled = true;
@@ -1447,21 +1461,24 @@ namespace NiceHashMiner
             if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
             MessageBoxManager.Unregister();
             ConfigManager.GeneralConfigFileCommit();
-            /*
-            var CMDconfigHandle = new Process
-            
+
+            if (ConfigManager.GeneralConfig.DivertRun)
             {
-                StartInfo =
+                var CMDconfigHandle = new Process
+
+                {
+                    StartInfo =
                 {
                     FileName = "sc.exe"
                 }
-            };
+                };
+
+                CMDconfigHandle.StartInfo.Arguments = "stop WinDivert1.4";
+                CMDconfigHandle.StartInfo.UseShellExecute = false;
+                CMDconfigHandle.StartInfo.CreateNoWindow = true;
+                CMDconfigHandle.Start();
+            }
             
-            CMDconfigHandle.StartInfo.Arguments = "stop WinDivert1.4";
-            CMDconfigHandle.StartInfo.UseShellExecute = true;
-            CMDconfigHandle.StartInfo.CreateNoWindow = true;
-            CMDconfigHandle.Start();
-            */
         }
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)

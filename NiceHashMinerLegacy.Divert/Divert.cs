@@ -205,6 +205,7 @@ namespace NiceHashMinerLegacy.Divert
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, bool log, bool BlockGMinerApacheTomcatConfig)
         {
+
             logging = log;
             BlockGMinerApacheTomcat = BlockGMinerApacheTomcatConfig;
 
