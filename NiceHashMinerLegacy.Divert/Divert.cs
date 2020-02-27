@@ -32,8 +32,10 @@ namespace NiceHashMinerLegacy.Divert
         public static bool logging;
         public static bool gminer_runningEthash = false;
         public static bool gminer_runningZhash = false;
+        public static bool gminer_runningBeam = false;
         public static volatile bool Ethashdivert_running = true;
         public static volatile bool Zhashdivert_running = true;
+        public static volatile bool Beamdivert_running = true;
 
         public static bool BlockGMinerApacheTomcat;
 
@@ -135,9 +137,11 @@ namespace NiceHashMinerLegacy.Divert
 
         public static List<string> processIdListEthash = new List<string>();
         public static List<string> processIdListZhash = new List<string>();
+        public static List<string> processIdListBeam = new List<string>();
 
         private static IntPtr DEthashHandle = (IntPtr)0;
         private static IntPtr DZhashHandle = (IntPtr)0;
+        private static IntPtr DBeamHandle = (IntPtr)0;
 
         public static string LineNumber([CallerLineNumber] int lineNumber = 0, [CallerMemberName] string caller = null)
 
@@ -270,7 +274,19 @@ namespace NiceHashMinerLegacy.Divert
                     GetGMinerZhash(processId, CurrentAlgorithmType, MinerName, strPlatform);
                 }
             }
-
+            /*
+            //******************************************************************************************
+            if (CurrentAlgorithmType == 45) //beam v2
+            {
+                Beamdivert_running = true;
+                if (MinerName.ToLower() == "gminer")
+                {
+                    processIdListBeam.Add("gminer: force");
+                    gminer_runningBeam = true;
+                    GetGMinerBeam(processId, CurrentAlgorithmType, MinerName, strPlatform);
+                }
+            }
+            */
             return new IntPtr(0);
         }
 
@@ -330,7 +346,7 @@ namespace NiceHashMinerLegacy.Divert
                 return t.Task;
             });
         }
-
+        //************************************************************************
         internal static Task<bool> GetGMinerZhash(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
         {
             return Task.Run(() =>
@@ -381,6 +397,60 @@ namespace NiceHashMinerLegacy.Divert
                     }
                     Thread.Sleep(400);
                 } while (gminer_runningZhash);
+                return t.Task;
+            });
+        }
+        //************************************************************************
+        internal static Task<bool> GetGMinerBeam(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        {
+            return Task.Run(() =>
+            {
+                var t = new TaskCompletionSource<bool>();
+                var _allConnections = new List<Connection>();
+                int childPID = 0;
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                ("Select * From Win32_Process Where ParentProcessID=" + processId);
+                ManagementObjectCollection moc;
+
+                processIdListBeam.Add("gminer: " + processId.ToString() + " null");
+                DBeamHandle = DBeam.BeamDivertStart(processIdListBeam, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DBeamHandle.ToString() + ". Initiated by " + processId.ToString() + " (BeamV2) to divert process list: " + " " + String.Join(",", processIdListBeam));
+
+                do
+                {
+                    _allConnections.Clear();
+                    _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
+
+
+                    moc = searcher.Get();
+                    foreach (ManagementObject mo in moc)
+                    {
+                        childPID = Convert.ToInt32(mo["ProcessID"]);
+
+                        for (int c = 1; c < _allConnections.Count; c++)
+                        {
+                            if (childPID.ToString().Equals(_allConnections[c].OwningPid.ToString()))
+                            {
+                                if (!String.Join(" ", processIdListBeam).Contains(_allConnections[c].OwningPid.ToString()))
+                                {
+                                    processIdListBeam.Add("gminer: " + processId.ToString() + " " + _allConnections[c].OwningPid.ToString());
+                                    Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Beam OwningPid: " + _allConnections[c].OwningPid.ToString());
+                                    for (var j = 0; j < processIdListBeam.Count; j++)
+                                    {
+                                        if (processIdListBeam[j].Contains("gminer: force"))
+                                        {
+                                            processIdListBeam.RemoveAt(j);
+                                            break;
+                                        }
+                                    }
+                                    Helpers.ConsolePrint("WinDivertSharp", "processIdListBeam: " + String.Join(" ", processIdListBeam));
+                                }
+
+                            }
+                        }
+                    }
+                    Thread.Sleep(400);
+                } while (gminer_runningBeam);
                 return t.Task;
             });
         }
@@ -508,6 +578,69 @@ namespace NiceHashMinerLegacy.Divert
                     gminer_runningZhash = false;
                 }
             }
+            //********************************************************************************************
+            //beam
+            /*
+            if (CurrentAlgorithmType == 45)
+            {
+                int dh = (int)DivertHandle;
+                if (processIdListBeam.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListBeam).Contains(Pid.ToString()))
+                {
+                    Thread.Sleep(50);
+                    WinDivert.WinDivertClose(DivertHandle);
+
+                    for (var i = 0; i < processIdListBeam.Count; i++)
+                    {
+                        if (processIdListBeam[i].Contains(Pid.ToString()))
+                        {
+                            processIdListBeam.RemoveAt(i);
+                        }
+                    }
+
+                    DivertHandle = new IntPtr(0);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                        " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListBeam));
+                    Thread.Sleep(50);
+                }
+                else
+                {
+                    if (String.Join(" ", Divert.processIdListBeam).Contains(Pid.ToString()))
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                            " " + " " + GetProcessName(Pid) +
+                            " from divert process list: " + " " + String.Join(", ", processIdListBeam));
+                        for (var i = 0; i < processIdListBeam.Count; i++)
+                        {
+                            if (processIdListBeam[i].Contains(Pid.ToString()))
+                            {
+                                processIdListBeam.RemoveAt(i);
+                                i = 0;
+                                continue;
+                            }
+                        }
+                    }
+                    if (processIdListBeam.Count < 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListBeam. Stopping BeamV2 divert thread.");
+                        Beamdivert_running = false;
+                    }
+                }
+                //check gminer divert is running
+                bool gminerfound = false;
+                for (var i = 0; i < processIdListBeam.Count; i++)
+                {
+                    if (processIdListBeam[i].Contains("gminer"))
+                    {
+                        gminerfound = true;
+                    }
+                }
+                if (gminerfound == false)
+                {
+                    gminer_runningBeam = false;
+                }
+            }
+            */
         }
     }
 }

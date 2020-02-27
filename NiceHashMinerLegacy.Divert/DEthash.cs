@@ -543,6 +543,11 @@ nextCycle:
                             }
                             else
                             {
+                                if (OwnerPID.Contains("nbminer"))
+                                {
+                                    modified = false;
+                                    goto sendPacket;
+                                }
                                 goto changeSrcDst; //пакет пустой, меняем адреса
                             }
                         }
@@ -580,6 +585,13 @@ Divert:
                         {
                             if (PacketPayloadData.Contains("eth_submitWork") && !OwnerPID.Equals("-1"))
                             {
+                                Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Submit work");
+                                Helpers.ConsolePrint("WinDivertSharp", PacketPayloadData);
+                                if (PacketPayloadData.Contains("sp_nbminer"))
+                                {
+                                    modified = false;
+                                    goto sendPacket;
+                                } 
                                 goto changeSrcDst;
                             }
 
