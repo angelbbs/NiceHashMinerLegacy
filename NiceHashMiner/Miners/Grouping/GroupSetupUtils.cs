@@ -215,9 +215,16 @@ namespace NiceHashMiner.Miners.Grouping
 
         public double GetAvarage()
         {
-            if (Count > 0)
+            if (ConfigManager.GeneralConfig.Group_same_devices)
             {
-                return Speed / Count;
+                if (Count > 0)
+                {
+                    return Speed / Count;
+                }
+                return 0;
+            } else
+            {
+                return Speed;
             }
             return 0;
         }

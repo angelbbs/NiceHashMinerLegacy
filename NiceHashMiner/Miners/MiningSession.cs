@@ -37,7 +37,7 @@ namespace NiceHashMiner.Miners
 
         public static  string _btcAdress;
         public static  string _worker;
-        private readonly List<MiningDevice> _miningDevices;
+        private List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
 
         private readonly AlgorithmSwitchingManager _switchingManager;
@@ -392,14 +392,22 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
-        private void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
+        public void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
 #endif
             var profitableDevices = new List<MiningPair>();
+            var devices = ComputeDeviceManager.Available.Devices;
             var currentProfit = 0.0d;
             var prevStateProfit = 0.0d;
+
+            // _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
+            if (_miningDevices.Count > 0)
+            {
+                GroupSetupUtils.AvarageSpeeds(_miningDevices);
+            }
+
             foreach (var device in _miningDevices)
             {
                 // calculate profits
@@ -417,27 +425,27 @@ namespace NiceHashMiner.Miners
             foreach (var device in _miningDevices)
             {
                 var stringBuilderDevice = new StringBuilder();
-                stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
+                stringBuilderDevice.AppendLine($"Profits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
                 foreach (var algo in device.Algorithms)
                 {
                     stringBuilderDevice.AppendLine(
-                        $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
-                        $"\t(SPEED = {algo.AvaragedSpeed}" +
-                        $"\t\t| NHSMA = {algo.CurNhmSmaDataVal})" +
-                        $"\t[{algo.AlgorithmStringID}]" +
+                        $"\tPROFIT = {Math.Round(algo.CurrentProfit, 10).ToString(DoubleFormat).PadRight(17)}" +
+                        $"\tSPEED = {Math.Round(algo.AvaragedSpeed, 3).ToString().PadRight(13)}" +
+                        $"\tNHSMA = {algo.CurNhmSmaDataVal.ToString().PadRight(21)}" +
+                        $"\t{algo.AlgorithmStringID.PadRight(28)}" +
                         $"\t less than {device.GetMostProfitableString()} {(((device.GetCurrentMostProfitValue - algo.CurrentProfit) / device.GetCurrentMostProfitValue) * 100):0.00}%"
                     );
                     if (algo is DualAlgorithm dualAlg)
                     {
                         stringBuilderDevice.AppendLine(
-                            $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
-                            $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
+                            $"\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
+                            $"\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
                         );
                     }
                 }
                 // most profitable
                 stringBuilderDevice.AppendLine(
-                    $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
+                    $"\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
                 stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
             Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
@@ -455,30 +463,50 @@ namespace NiceHashMiner.Miners
             }
 
             // check profit threshold
-            Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
-            if (prevStateProfit > 0 && currentProfit > 0)
+            bool needSwitch = false;
+            foreach (var device in _miningDevices)
             {
-                var a = Math.Max(prevStateProfit, currentProfit);
-                var b = Math.Min(prevStateProfit, currentProfit);
-                //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
-                var percDiff = ((a - b)) / b;
-                if (percDiff <= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+                // calculate profits
+                //device.CalculateProfits(e.NormalizedProfits);
+                // check if device has profitable algo
+                //if (device.HasProfitableAlgo())
                 {
-                    // don't switch
-                    Helpers.ConsolePrint(Tag,
-                        $"Will NOT switch profit diff is {percDiff*100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold*100}%");
-                    // RESTORE OLD PROFITS STATE
-                    foreach (var device in _miningDevices)
+                    //profitableDevices.Add(device.GetMostProfitablePair());
+                    currentProfit = device.GetCurrentMostProfitValue;
+                    prevStateProfit = device.GetPrevMostProfitValue;
+
+                    
+                    Helpers.ConsolePrint(Tag, $"{device.Device.GetFullName()}: PrevStateProfit {prevStateProfit.ToString(DoubleFormat)}, CurrentProfit {currentProfit.ToString(DoubleFormat)}");
+                    //if (prevStateProfit > 0 && currentProfit > 0)
+                    if (currentProfit > 0)
                     {
-                        device.RestoreOldProfitsState();
+                        var a = Math.Max(prevStateProfit, currentProfit);
+                        var b = Math.Min(prevStateProfit, currentProfit);
+                        //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
+                        var percDiff = ((a - b)) / Math.Abs(b);
+                        if (percDiff <= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+                        {
+                            // don't switch
+                            Helpers.ConsolePrint(Tag,
+                                $"{device.Device.GetFullName()}: Will NOT switch profit diff is {percDiff * 100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            // RESTORE OLD PROFITS STATE
+                            // foreach (var device in _miningDevices)
+                            {
+                                device.RestoreOldProfitsState();
+                            }
+
+                            //return;
+                        }
+                        else
+                        {
+                            needSwitch = true;
+                            Helpers.ConsolePrint(Tag,
+                                $"{device.Device.GetFullName()}: Will SWITCH profit diff is {percDiff * 100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                        }
                     }
-
-                    return;
                 }
-
-                Helpers.ConsolePrint(Tag,
-                    $"Will SWITCH profit diff is {percDiff*100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold*100}%");
             }
+            if (!needSwitch) return;
 
             // group new miners
             var newGroupedMiningPairs = new Dictionary<string, List<MiningPair>>();

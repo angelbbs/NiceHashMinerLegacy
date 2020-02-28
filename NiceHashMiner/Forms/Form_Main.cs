@@ -381,6 +381,7 @@ namespace NiceHashMiner
         {
             if (ConfigManager.GeneralConfig.DivertRun)
             {
+                /*
                 var CMDconfigHandle = new Process
 
                 {
@@ -394,6 +395,7 @@ namespace NiceHashMiner
                 CMDconfigHandle.StartInfo.UseShellExecute = false;
                 CMDconfigHandle.StartInfo.CreateNoWindow = true;
                 CMDconfigHandle.Start();
+                */
             }
 
             _loadingScreen = null;
@@ -1464,6 +1466,7 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.DivertRun)
             {
+                /*
                 var CMDconfigHandle = new Process
 
                 {
@@ -1477,6 +1480,7 @@ namespace NiceHashMiner
                 CMDconfigHandle.StartInfo.UseShellExecute = false;
                 CMDconfigHandle.StartInfo.CreateNoWindow = true;
                 CMDconfigHandle.Start();
+                */
             }
             
         }
