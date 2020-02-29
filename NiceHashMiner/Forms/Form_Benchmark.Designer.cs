@@ -71,7 +71,7 @@ namespace NiceHashMiner.Forms {
             this.groupBoxBenchmarkProgress.Controls.Add(this.progressBarBenchmarkSteps);
             this.groupBoxBenchmarkProgress.Location = new System.Drawing.Point(12, 452);
             this.groupBoxBenchmarkProgress.Name = "groupBoxBenchmarkProgress";
-            this.groupBoxBenchmarkProgress.Size = new System.Drawing.Size(418, 47);
+            this.groupBoxBenchmarkProgress.Size = new System.Drawing.Size(337, 47);
             this.groupBoxBenchmarkProgress.TabIndex = 108;
             this.groupBoxBenchmarkProgress.TabStop = false;
             this.groupBoxBenchmarkProgress.Text = "Benchmark progress status:";
@@ -89,7 +89,7 @@ namespace NiceHashMiner.Forms {
             // 
             this.progressBarBenchmarkSteps.Location = new System.Drawing.Point(162, 16);
             this.progressBarBenchmarkSteps.Name = "progressBarBenchmarkSteps";
-            this.progressBarBenchmarkSteps.Size = new System.Drawing.Size(161, 23);
+            this.progressBarBenchmarkSteps.Size = new System.Drawing.Size(169, 23);
             this.progressBarBenchmarkSteps.TabIndex = 108;
             // 
             // radioButton_SelectedUnbenchmarked
@@ -213,7 +213,5 @@ namespace NiceHashMiner.Forms {
         private System.Windows.Forms.RadioButton radioButton_SelectedUnbenchmarked;
         private System.Windows.Forms.RadioButton radioButton_RE_SelectedUnbenchmarked;
         private System.Windows.Forms.CheckBox checkBox_StartMiningAfterBenchmark;
-
-
     }
 }

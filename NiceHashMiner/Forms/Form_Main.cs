@@ -1464,9 +1464,7 @@ namespace NiceHashMiner
             MessageBoxManager.Unregister();
             ConfigManager.GeneralConfigFileCommit();
 
-            if (ConfigManager.GeneralConfig.DivertRun)
-            {
-                /*
+             //stop openhardwaremonitor
                 var CMDconfigHandle = new Process
 
                 {
@@ -1476,13 +1474,10 @@ namespace NiceHashMiner
                 }
                 };
 
-                CMDconfigHandle.StartInfo.Arguments = "stop WinDivert1.4";
+                CMDconfigHandle.StartInfo.Arguments = "stop winring0_1_2_0";
                 CMDconfigHandle.StartInfo.UseShellExecute = false;
                 CMDconfigHandle.StartInfo.CreateNoWindow = true;
                 CMDconfigHandle.Start();
-                */
-            }
-            
         }
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)
