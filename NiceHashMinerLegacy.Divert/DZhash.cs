@@ -132,9 +132,9 @@ namespace NiceHashMinerLegacy.Divert
             DivertIP1 = Divert.DNStoIP("btg.2miners.com");
             DivertPort1 = 4040;
 
-filter = "(!loopback && outbound ? (tcp.DstPort == 4040)" +
+filter = "(!loopback && outbound ? (tcp.DstPort == 4040 || tcp.DstPort == 20595)" +
                 " : " +
-                "(tcp.SrcPort == 4040)" +
+                "(tcp.SrcPort == 4040 || tcp.SrcPort == 20595)" +
                 ")";
 
             uint errorPos = 0;
@@ -230,10 +230,11 @@ nextCycle:
                         }
                         if (cpacket0.Length > 60)
                         File.WriteAllText(np.ToString()+ "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
+                        */
 
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
-                        */
+                        
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
@@ -283,7 +284,24 @@ nextCycle:
                                 }
                                 goto parsePacket;
                             }
-
+                            if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20595) //poolhub
+                            {
+                                DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
+                                Helpers.ConsolePrint("WinDivertSharp",
+                                "(" + OwnerPID.ToString() + ") -> Devfee connection to (" +
+                                DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
+                                DevFeePort = parse_result.TcpHeader->DstPort;
+                                DivertLogin = DivertLogin1;
+                                DivertIP = DivertIP1;
+                                DivertPort = Divert.SwapOrder(DivertPort1);//swap
+                                /*
+                                if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20595 && OwnerPID.Contains("gminer"))
+                                {
+                                    DivertIP = DevFeeIP;
+                                }
+                                */
+                                goto parsePacket;
+                            }
 
                         }
 
@@ -418,8 +436,25 @@ modifyData:
                                 //{"id":4,"method":"mining.submit","params":["GZdx44gPVFX7GfeWXA3kyiuXecym3CWGHi","902239708713597","118c535e","0000000000000000000000000000000000000000d54d0300","640cba177cab965e79697053169531e66fd2550f0cc0438a96022358d17be9e2ec04d09f437664c5e2277c902edb340fbf73f90e2096acb86c9b59082f4242d16ea2c11c2018e045ed4d75f333f75a67d5315ccf68ff065b541e0017c0b1ee92a3b7ff41b6"]}
                                 goto changePayloadData;
                             }
+                            
+                            if (PacketPayloadData.Contains("mining.authorize") &&
+                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20595)
+                            {
+                                Helpers.ConsolePrint("WinDivertSharp", "GMiner login detected to equihash-hub.miningpoolhub.com");
+                                PacketPayloadData = "{\"id\":2,\"method\":\"mining.authorize\",\"params\":[\"" + DivertLogin + "\",\"x\"]}" + (char)10;
+                                goto changePayloadData;
+                            }
+                            if (PacketPayloadData.Contains("mining.submit") &&
+                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20595)
+                            {
+                                dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
+                                json.@params[0] = DivertLogin;
+                                PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
+                                //{"id":4,"method":"mining.submit","params":["GZdx44gPVFX7GfeWXA3kyiuXecym3CWGHi","902239708713597","118c535e","0000000000000000000000000000000000000000d54d0300","640cba177cab965e79697053169531e66fd2550f0cc0438a96022358d17be9e2ec04d09f437664c5e2277c902edb340fbf73f90e2096acb86c9b59082f4242d16ea2c11c2018e045ed4d75f333f75a67d5315ccf68ff065b541e0017c0b1ee92a3b7ff41b6"]}
+                                goto changePayloadData;
+                            }
 
-changePayloadData:
+                            changePayloadData:
                             //*****************************
                             byte[] head = new byte[40];
                             for (int i = 0; i < 40; i++)

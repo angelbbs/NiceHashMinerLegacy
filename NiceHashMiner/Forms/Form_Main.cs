@@ -69,7 +69,7 @@ namespace NiceHashMiner
         //private bool _isSmaUpdated = false;
 
         public static double _factorTimeUnit = 1.0;
-
+        public static int nanominerCount = 0;
         private int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
         private int groupBox1Top = 0;
@@ -88,6 +88,7 @@ namespace NiceHashMiner
 
         public Form_Main()
         {
+            Helpers.ConsolePrint("NICEHASH", "Start Form_Main");
             switch (ConfigManager.GeneralConfig.ColorProfileIndex)
             {
                 case 0: //default
@@ -181,14 +182,20 @@ namespace NiceHashMiner
                     _textColor = ConfigManager.GeneralConfig.ColorProfiles.DefaultColor[3];
                     break;
             }
-            InitializeComponent();
-            Icon = Properties.Resources.logo;
+            Helpers.ConsolePrint("NICEHASH", "Start InitializeComponent");
 
+            Process thisProc = Process.GetCurrentProcess();
+            thisProc.PriorityClass = ProcessPriorityClass.High;
+
+            InitializeComponent();
+
+            Icon = Properties.Resources.logo;
+            Helpers.ConsolePrint("NICEHASH", "Start InitLocalization");
             InitLocalization();
             devicesListViewEnableControl1.Visible = false;
             ComputeDeviceManager.SystemSpecs.QueryAndLog();
             groupBox1Top = groupBox1.Top;
-            
+
             devicesListViewEnableControl1.Height = 129 + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
             groupBox1Top += ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1 ;
             //this.Height += 16;
@@ -198,7 +205,7 @@ namespace NiceHashMiner
                 buttonBTC_Clear.Enabled = false;
                 buttonBTC_Save.Enabled = false;
             }
-
+            Helpers.ConsolePrint("NICEHASH", "Start query RAM");
             comboBoxLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.comboBoxLocation.DrawItem += new DrawItemEventHandler(comboBoxLocation_DrawItem);
             // Log the computer's amount of Total RAM and Page File Size
@@ -249,6 +256,8 @@ namespace NiceHashMiner
             }
             //_mainFormHeight = Size.Height;
             ClearRatesAll();
+            thisProc = Process.GetCurrentProcess();
+            thisProc.PriorityClass = ProcessPriorityClass.Normal;
 
         }
 
@@ -499,16 +508,16 @@ namespace NiceHashMiner
                 }
             }
             // Query Available ComputeDevices
-            Thread.Sleep(100);
+            //Thread.Sleep(100);
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
-            Thread.Sleep(200);
+            //Thread.Sleep(200);
             _isDeviceDetectionInitialized = true;
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
-            Thread.Sleep(200);
+            //Thread.Sleep(200);
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
@@ -535,7 +544,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
-            Thread.Sleep(200);
+           // Thread.Sleep(200);
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
@@ -548,7 +557,7 @@ namespace NiceHashMiner
                 _loadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
                 Helpers.SetNvidiaP0State();
             }
-            Thread.Sleep(100);
+            //Thread.Sleep(100);
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
@@ -583,7 +592,7 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(
     International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            Thread.Sleep(200);
+            //Thread.Sleep(200);
 
             string ghv = NiceHashStats.GetVersion("");
             Helpers.ConsolePrint("GITHUB", ghv);
@@ -790,7 +799,7 @@ namespace NiceHashMiner
                         this.Top = ConfigManager.GeneralConfig.FormTop;
                         this.Left = ConfigManager.GeneralConfig.FormLeft;
                     }
-                    
+
                     this.Width = ConfigManager.GeneralConfig.FormWidth;
                     //this.Height = ConfigManager.GeneralConfig.FormHeight;
                     this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
@@ -799,7 +808,7 @@ namespace NiceHashMiner
                    // this.Width = 660; // min width
                 }
             }
-            
+
             foreach (var lbl in this.Controls.OfType<Button>())
             {
                 lbl.ForeColor = _textColor;
@@ -807,7 +816,7 @@ namespace NiceHashMiner
                 lbl.FlatAppearance.BorderColor = _textColor;
                 lbl.FlatAppearance.BorderSize = 1;
             }
-            
+
             buttonLogo.FlatAppearance.BorderSize = 0;
             devicesListViewEnableControl1.BackColor = SystemColors.ControlLightLight;
 
@@ -904,6 +913,7 @@ namespace NiceHashMiner
             {
               //  Form_Loading.ActiveForm.BackColor = Color.LightGray; // при автозапуске объект неинициализирован
             }
+
             _startupTimer = new Timer();
             _startupTimer.Tick += StartupTimer_Tick;
             _startupTimer.Interval = 200;
@@ -1389,10 +1399,10 @@ namespace NiceHashMiner
                     var result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
                         International.GetText("Error_with_Exclamation"),
                         MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                    
+
                     if (result == DialogResult.Yes)
                         Process.Start(Links.NhmBtcWalletFaqNew);
-                        
+
                     textBoxBTCAddress_new.Focus();
                     return false;
                 }
@@ -1464,8 +1474,8 @@ namespace NiceHashMiner
             MessageBoxManager.Unregister();
             ConfigManager.GeneralConfigFileCommit();
 
-             //stop openhardwaremonitor
-                var CMDconfigHandle = new Process
+            //stop openhardwaremonitor
+            var CMDconfigHandleOHM = new Process
 
                 {
                     StartInfo =
@@ -1474,10 +1484,25 @@ namespace NiceHashMiner
                 }
                 };
 
-                CMDconfigHandle.StartInfo.Arguments = "stop winring0_1_2_0";
-                CMDconfigHandle.StartInfo.UseShellExecute = false;
-                CMDconfigHandle.StartInfo.CreateNoWindow = true;
-                CMDconfigHandle.Start();
+            CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+            CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+            CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+            CMDconfigHandleOHM.Start();
+            /*
+            var CMDconfigHandleWD = new Process
+
+            {
+                StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+            };
+
+            CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
+            CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+            CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+            CMDconfigHandleWD.Start();
+            */
         }
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)
@@ -2015,7 +2040,7 @@ namespace NiceHashMiner
 
         }
 
-      
+
         private void devicesListViewEnableControl1_Load(object sender, EventArgs e)
         {
             /*
@@ -2072,7 +2097,7 @@ namespace NiceHashMiner
                 Button btn = (Button)sender;
                 TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.HidePrefix;   // center the text
                 TextRenderer.DrawText(e.Graphics, International.GetText("Form_Main_start"), btn.Font, e.ClipRectangle, btn.ForeColor, flags);
-  
+
             }
             */
         }

@@ -93,7 +93,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
+               // Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
             }
         }
 

@@ -508,6 +508,7 @@ namespace NiceHashMiner.Forms
 
         private bool StartButonClick()
         {
+            Form_Main.nanominerCount = 0;
             CalcBenchmarkDevicesAlgorithmQueue();
             // device selection check scope
             {

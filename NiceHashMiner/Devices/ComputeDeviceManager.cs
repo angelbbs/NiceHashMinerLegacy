@@ -951,6 +951,7 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint("SystemSpecs", $"TotalSwapSpaceSize = {TotalSwapSpaceSize}");
                     Helpers.ConsolePrint("SystemSpecs", $"TotalVirtualMemorySize = {TotalVirtualMemorySize}");
                     Helpers.ConsolePrint("SystemSpecs", $"TotalVisibleMemorySize = {TotalVisibleMemorySize}");
+                    Helpers.ConsolePrint("SystemSpecs", $"ProcessorCount = {Environment.ProcessorCount}");
                 }
             }
         }

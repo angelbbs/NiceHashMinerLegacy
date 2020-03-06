@@ -43,6 +43,7 @@
         XmrigNVIDIA,
         NBMiner,
         miniZ,
+        Nanominer,
         END
     }
 }

@@ -52,6 +52,16 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             },
             {
+                MinerBaseType.Nanominer,
+                new List<Algorithm>()
+                {
+                    new Algorithm(MinerBaseType.Nanominer, AlgorithmType.DaggerHashimoto, "")
+                    {
+                        ExtraLaunchParameters = "memTweak = 0 "
+                    }
+                }
+            },
+            {
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()
                 {
@@ -276,8 +286,7 @@ namespace NiceHashMiner.Devices.Algorithms
                                 ExtraLaunchParameters = "--di 0"
                             }
                  }
-            }
-
+            },
         }.ConcatDictList(All, Gpu);
 
         #endregion

@@ -478,7 +478,7 @@ namespace NiceHashMiner.Miners
                     
                     Helpers.ConsolePrint(Tag, $"{device.Device.GetFullName()}: PrevStateProfit {prevStateProfit.ToString(DoubleFormat)}, CurrentProfit {currentProfit.ToString(DoubleFormat)}");
                     //if (prevStateProfit > 0 && currentProfit > 0)
-                    if (currentProfit > 0)
+                    //if (currentProfit > 0)
                     {
                         var a = Math.Max(prevStateProfit, currentProfit);
                         var b = Math.Min(prevStateProfit, currentProfit);
@@ -720,7 +720,6 @@ namespace NiceHashMiner.Miners
                     // set rates
                     //NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
                     if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
-                   // if (ad != null)
                     {
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
                         NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);

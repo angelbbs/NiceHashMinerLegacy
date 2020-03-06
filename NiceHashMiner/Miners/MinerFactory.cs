@@ -118,6 +118,8 @@ namespace NiceHashMiner.Miners
                     return new NBMiner(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.miniZ:
                     return new miniZ();
+                case MinerBaseType.Nanominer:
+                    return new Nanominer();
             }
 
             return null;

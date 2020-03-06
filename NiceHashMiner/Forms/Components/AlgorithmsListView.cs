@@ -620,7 +620,9 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var testItem = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem")
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem") + " " +
+                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                        listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
                     };
                     testItem.Click += ToolStripMenuItemTest_Click;
                     contextMenuStrip1.Items.Add(testItem);
@@ -767,11 +769,22 @@ namespace NiceHashMiner.Forms.Components
 
         private void ToolStripMenuItemEnableBenched_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem lvi in listViewAlgorithms.Items)
+            if (_computeDevice != null)
             {
-                if (lvi.Tag is Algorithm algorithm && algorithm.BenchmarkSpeed > 0)
+                foreach (ListViewItem lvi in listViewAlgorithms.Items)
                 {
-                    lvi.Checked = true;
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        if (algorithm.BenchmarkSpeed > 0)
+                        {
+                            lvi.Checked = true;
+                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                        } else
+                        {
+                            lvi.Checked = false;
+                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                        }
+                    }
                 }
             }
         }

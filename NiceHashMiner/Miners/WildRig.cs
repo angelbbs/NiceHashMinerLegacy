@@ -110,7 +110,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "x16r";
                 port = "3366";
-                return $" -a {algo} -o stratum+tcp://x16r.eu.mine.zpool.ca:3636 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
+                return $" --benchmark -a {algo} -o stratum+tcp://x16r.eu.mine.zpool.ca:3636 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
                + $" -o stratum+tcp://{algo}.eu{nhsuff}.nicehash.com:{port} -u {username}:x "
                + " --multiple-instance --opencl-devices=" + GetDevicesCommandString().TrimStart();
             }
@@ -118,7 +118,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "x16rv2";
                 port = "3379";
-                return $" -a {algo} -o stratum+tcp://x16rv2.eu.mine.zpool.ca:3637 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
+                return $" --benchmark -a {algo} -o stratum+tcp://x16rv2.eu.mine.zpool.ca:3637 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
                + $" -o stratum+tcp://{algo}.eu{nhsuff}.nicehash.com:{port} -u {username}:x "
                + " --multiple-instance --opencl-devices=" + GetDevicesCommandString().TrimStart();
             }

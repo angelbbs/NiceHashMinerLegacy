@@ -35,9 +35,99 @@ namespace NiceHashMinerLegacy.Divert
         public static bool gminer_runningBeam = false;
         public static volatile bool Ethashdivert_running = true;
         public static volatile bool Zhashdivert_running = true;
+        public static volatile bool RandomXdivert_running = true;
         public static volatile bool Beamdivert_running = true;
 
         public static bool BlockGMinerApacheTomcat;
+        //public static WinDivertBuffer SendDataPacket = new WinDivertBuffer(new byte[]
+        public static byte[] SendDataPacket =  (new byte[]
+{
+    /*
+            0x45, 0x00, 0x00, 0xC2, 0x92, 0x23, 0xC3, 0x92,
+            0x40, 0x00, 0xC2, 0x80, 0x06, 0x00, 0x00, 0xC3,
+            0x80, 0xC2, 0xA8, 0x01, 0x6F, 0xC2, 0xAC, 0x41,
+            0xC3, 0x8F, 0x6A, 0xC3, 0x96, 0xC2, 0xAF, 0x11,
+            0x5C, 0xC3, 0xB7, 0xC2, 0x85, 0x6B, 0xC3, 0x87,
+            0x05, 0xC2, 0x9C, 0x29, 0xC3, 0x90, 0x50, 0x18,
+            0x40, 0x29, 0x54, 0x14, 0x00, 0x00
+            */
+            0x45, 0x00, 0x00, 0xC2, 0x92, 0x13, 0xC3, 0xB9,
+            0x40, 0x00, 0xC2, 0x80, 0x06, 0x00, 0x00, 0xC3,
+            0x80, 0xC2, 0xA8, 0x01, 0x6F, 0xC2, 0xAC, 0x41,
+            0xC3, 0x8F, 0x6A, 0xC3, 0xAA, 0xC3, 0xAF, 0x11,
+            0x5C, 0x3A, 0x54, 0xC2, 0x8B, 0x3B, 0xC3, 0x87,
+            0xC2, 0xB4, 0xC2, 0x99, 0x40, 0x50, 0x18, 0x40,
+            0x29, 0x54, 0x14, 0x00, 0x00
+    /*
+            0x45, 0x00, 0x02, 0x09, 0x48, 0x2d, 0x40, 0x00,
+            0x40, 0x06, 0x00, 0x00, 0x0a, 0x0a, 0x0a, 0x0a,
+            0x5d, 0xb8, 0xd8, 0x77, 0xa3, 0x1a, 0x00, 0x50,
+            0x53, 0x38, 0xcc, 0xc2, 0x56, 0x37, 0xb3, 0x55,
+            0x80, 0x18, 0x00, 0x73, 0x00, 0x00, 0x00, 0x00,
+            0x01, 0x01, 0x08, 0x0a, 0x00, 0x2c, 0x85, 0x1b,
+            0x1b, 0x7f, 0x3a, 0x71, 0x47, 0x45, 0x54, 0x20,
+            0x2f, 0x20, 0x48, 0x54, 0x54, 0x50, 0x2f, 0x31,
+            0x2e, 0x31, 0x0d, 0x0a, 0x48, 0x6f, 0x73, 0x74,
+            0x3a, 0x20, 0x77, 0x77, 0x77, 0x2e, 0x65, 0x78,
+            0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x63, 0x6f,
+            0x6d, 0x0d, 0x0a, 0x43, 0x6f, 0x6e, 0x6e, 0x65,
+            0x63, 0x74, 0x69, 0x6f, 0x6e, 0x3a, 0x20, 0x6b,
+            0x65, 0x65, 0x70, 0x2d, 0x61, 0x6c, 0x69, 0x76,
+            0x65, 0x0d, 0x0a, 0x43, 0x61, 0x63, 0x68, 0x65,
+            0x2d, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c,
+            0x3a, 0x20, 0x6d, 0x61, 0x78, 0x2d, 0x61, 0x67,
+            0x65, 0x3d, 0x30, 0x0d, 0x0a, 0x41, 0x63, 0x63,
+            0x65, 0x70, 0x74, 0x3a, 0x20, 0x74, 0x65, 0x78,
+            0x74, 0x2f, 0x68, 0x74, 0x6d, 0x6c, 0x2c, 0x61,
+            0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69,
+            0x6f, 0x6e, 0x2f, 0x78, 0x68, 0x74, 0x6d, 0x6c,
+            0x2b, 0x78, 0x6d, 0x6c, 0x2c, 0x61, 0x70, 0x70,
+            0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+            0x2f, 0x78, 0x6d, 0x6c, 0x3b, 0x71, 0x3d, 0x30,
+            0x2e, 0x39, 0x2c, 0x69, 0x6d, 0x61, 0x67, 0x65,
+            0x2f, 0x77, 0x65, 0x62, 0x70, 0x2c, 0x2a, 0x2f,
+            0x2a, 0x3b, 0x71, 0x3d, 0x30, 0x2e, 0x38, 0x0d,
+            0x0a, 0x55, 0x73, 0x65, 0x72, 0x2d, 0x41, 0x67,
+            0x65, 0x6e, 0x74, 0x3a, 0x20, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58, 0x58,
+            0x58, 0x58, 0x0d, 0x0a, 0x41, 0x63, 0x63, 0x65,
+            0x70, 0x74, 0x2d, 0x45, 0x6e, 0x63, 0x6f, 0x64,
+            0x69, 0x6e, 0x67, 0x3a, 0x20, 0x67, 0x7a, 0x69,
+            0x70, 0x2c, 0x64, 0x65, 0x66, 0x6c, 0x61, 0x74,
+            0x65, 0x2c, 0x73, 0x64, 0x63, 0x68, 0x0d, 0x0a,
+            0x41, 0x63, 0x63, 0x65, 0x70, 0x74, 0x2d, 0x4c,
+            0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x3a,
+            0x20, 0x65, 0x6e, 0x2d, 0x55, 0x53, 0x2c, 0x65,
+            0x6e, 0x3b, 0x71, 0x3d, 0x30, 0x2e, 0x38, 0x0d,
+            0x0a, 0x49, 0x66, 0x2d, 0x4e, 0x6f, 0x6e, 0x65,
+            0x2d, 0x4d, 0x61, 0x74, 0x63, 0x68, 0x3a, 0x20,
+            0x22, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33,
+            0x33, 0x33, 0x22, 0x0d, 0x0a, 0x49, 0x66, 0x2d,
+            0x4d, 0x6f, 0x64, 0x69, 0x66, 0x69, 0x65, 0x64,
+            0x2d, 0x53, 0x69, 0x6e, 0x63, 0x65, 0x3a, 0x20,
+            0x46, 0x72, 0x69, 0x2c, 0x20, 0x30, 0x33, 0x20,
+            0x41, 0x75, 0x67, 0x20, 0x32, 0x30, 0x31, 0x34,
+            0x20, 0x31, 0x33, 0x3a, 0x33, 0x33, 0x3a, 0x33,
+            0x33, 0x20, 0x47, 0x4d, 0x54, 0x0d, 0x0a, 0x0d,
+            0x0a
+            */
+});
+
 
         public static UInt32 SwapByteOrder(UInt32 value)
         {
@@ -138,10 +228,12 @@ namespace NiceHashMinerLegacy.Divert
         public static List<string> processIdListEthash = new List<string>();
         public static List<string> processIdListZhash = new List<string>();
         public static List<string> processIdListBeam = new List<string>();
+        public static List<string> processIdListRandomX = new List<string>();
 
         private static IntPtr DEthashHandle = (IntPtr)0;
         private static IntPtr DZhashHandle = (IntPtr)0;
         private static IntPtr DBeamHandle = (IntPtr)0;
+        private static IntPtr DRandomXHandle = (IntPtr)0;
 
         public static string LineNumber([CallerLineNumber] int lineNumber = 0, [CallerMemberName] string caller = null)
 
@@ -201,6 +293,105 @@ namespace NiceHashMinerLegacy.Divert
             return true;
         }
 
+        public unsafe static WinDivertBuffer MakeNewPacket(WinDivertBuffer packet, uint readLen, string PacketPayloadData)
+        {
+            WinDivertParseResult parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+            //store old tcp/ip data
+            var dstaddr = parse_result.IPv4Header->DstAddr;
+            var dstport = parse_result.TcpHeader->DstPort;
+
+            var srcaddr = parse_result.IPv4Header->SrcAddr;
+            var srcport = parse_result.TcpHeader->SrcPort;
+
+            var hdrlen = parse_result.IPv4Header->HdrLength;
+            var len = parse_result.IPv4Header->Length;
+
+            var ver = parse_result.IPv4Header->Version;
+            var ihl = parse_result.IPv4Header->HdrLength;
+            var tos = parse_result.IPv4Header->TOS;
+            var tl = parse_result.IPv4Header->Length;
+            var id = parse_result.IPv4Header->Id;
+            var df = parse_result.IPv4Header->Df;
+            var fo = parse_result.IPv4Header->FragOff;
+
+            var ttl = parse_result.IPv4Header->TTL;
+            var protocol = parse_result.IPv4Header->Protocol;
+
+            var ack = parse_result.TcpHeader->Ack;
+            var ackn = parse_result.TcpHeader->AckNum;
+            var fin = parse_result.TcpHeader->Fin;
+            var psh = parse_result.TcpHeader->Psh;
+            var rst = parse_result.TcpHeader->Rst;
+            var sn = parse_result.TcpHeader->SeqNum;
+            var syn = parse_result.TcpHeader->Syn;
+            var urg = parse_result.TcpHeader->Urg;
+            var urgp = parse_result.TcpHeader->UrgPtr;
+            var wind = parse_result.TcpHeader->Window;
+/*
+            Helpers.ConsolePrint("WinDivertSharp", "ver: " + ver);
+            Helpers.ConsolePrint("WinDivertSharp", "ihl: " + ihl);
+            Helpers.ConsolePrint("WinDivertSharp", "tos: " + tos);
+            Helpers.ConsolePrint("WinDivertSharp", "tl: " + Divert.SwapOrder(tl));
+            Helpers.ConsolePrint("WinDivertSharp", "id: " + Divert.SwapOrder(id));
+            Helpers.ConsolePrint("WinDivertSharp", "df: " + df);
+            Helpers.ConsolePrint("WinDivertSharp", "fo: " + fo);
+            Helpers.ConsolePrint("WinDivertSharp", "ttl: " + ttl);
+            Helpers.ConsolePrint("WinDivertSharp", "protocol: " + protocol);
+
+            Helpers.ConsolePrint("WinDivertSharp", "ack: " + ack);
+            Helpers.ConsolePrint("WinDivertSharp", "ackn: " + ackn);
+            Helpers.ConsolePrint("WinDivertSharp", "fin: " + fin);
+            Helpers.ConsolePrint("WinDivertSharp", "psh: " + psh);
+            Helpers.ConsolePrint("WinDivertSharp", "rst: " + rst);
+            Helpers.ConsolePrint("WinDivertSharp", "sn: " + sn);
+            Helpers.ConsolePrint("WinDivertSharp", "syn: " + syn);
+            Helpers.ConsolePrint("WinDivertSharp", "urg: " + urg);
+            Helpers.ConsolePrint("WinDivertSharp", "urgp: " + urgp);
+            Helpers.ConsolePrint("WinDivertSharp", "wind: " + wind);
+*/
+
+            var tcpPacket = new TcpPacket(Divert.SwapOrder(parse_result.TcpHeader->SrcPort), Divert.SwapOrder(parse_result.TcpHeader->DstPort));
+            var ipv4Packet = new IPv4Packet(parse_result.IPv4Header->SrcAddr, parse_result.IPv4Header->DstAddr);
+
+            var payload = Divert.StringToByteArray(PacketPayloadData);
+            ipv4Packet.Id = Divert.SwapOrder(id);
+            ipv4Packet.TimeToLive = ttl;
+            ipv4Packet.Protocol = (PacketDotNet.IPProtocolType.TCP);
+            ipv4Packet.TypeOfService = tos;
+            ipv4Packet.FragmentFlags = 2;
+            ipv4Packet.FragmentOffset = 0;
+
+            tcpPacket.PayloadData = payload;
+
+            tcpPacket.SequenceNumber = Divert.SwapByteOrder(sn);
+            tcpPacket.AcknowledgmentNumber = Divert.SwapByteOrder(ackn);
+
+            tcpPacket.Urg = urg == 0 ? false : true;
+            tcpPacket.Ack = ack == 0 ? false : true;
+            tcpPacket.Psh = psh == 0 ? false : true;
+            tcpPacket.Rst = rst == 0 ? false : true;
+            tcpPacket.Syn = syn == 0 ? false : true;
+            tcpPacket.Fin = fin == 0 ? false : true;
+
+//            Helpers.ConsolePrint("WinDivertSharp", "TcpHeader->Checksum: " + parse_result.TcpHeader->Checksum.ToString());
+//            Helpers.ConsolePrint("WinDivertSharp", "IPv4Header->Checksum: " + parse_result.IPv4Header->Checksum.ToString());
+
+                ipv4Packet.PayloadPacket = tcpPacket;
+                tcpPacket.ParentPacket = ipv4Packet;
+                ushort pl = (ushort)(tcpPacket.PayloadData.Length + 10);
+                //Helpers.ConsolePrint("WinDivertSharp", "tcpPacket.PayloadData.Length: " + pl.ToString());
+                tcpPacket.WindowSize = Divert.SwapOrder(pl);
+                tcpPacket.Checksum = (ushort)0;
+
+
+            var ip4 = ipv4Packet.Bytes;
+            packet.Dispose();
+            packet = new WinDivertBuffer(ip4);
+            readLen = packet.Length;
+            //    WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
+            return packet;
+        }
+
         
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, bool log, bool BlockGMinerApacheTomcatConfig)
@@ -208,12 +399,32 @@ namespace NiceHashMinerLegacy.Divert
 
             logging = log;
             BlockGMinerApacheTomcat = BlockGMinerApacheTomcatConfig;
-
+            /*
             if ( CurrentAlgorithmType == 47 && MinerName.ToLower() == "xmrig") //for testing. Disable in productuon
             {
                 return IntPtr.Zero;
                 //return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
             }
+            */
+            if (CurrentAlgorithmType == 47 && MinerName.ToLower().Equals("xmrig")) 
+            {
+                return IntPtr.Zero;
+                //ssl
+                RandomXdivert_running = true;
+                if (MinerName.ToLower() == "xmrig")
+                {
+                    processIdListRandomX.Add("xmrig: " + processId.ToString());
+                    if (processIdListRandomX.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DRandomXHandle.ToString() + ". Added " + processId.ToString() + " (RandomX) to divert process list: " + " " + String.Join(",", processIdListRandomX));
+                        return DRandomXHandle;
+                    }
+                    DRandomXHandle = DRandomX.RandomXDivertStart(processIdListRandomX, CurrentAlgorithmType, MinerName);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DRandomXHandle.ToString() + ". Initiated by " + processId.ToString() + " (RandomX) to divert process list: " + " " + String.Join(",", processIdListRandomX));
+                    return DRandomXHandle;
+                }
+            }
+            
             //***********************************************************************************
             if (CurrentAlgorithmType == 20) //dagerhashimoto
             {
@@ -257,6 +468,19 @@ namespace NiceHashMinerLegacy.Divert
                     return DEthashHandle;
                 }
 
+                if (MinerName.ToLower() == "nanominer")
+                {
+                    processIdListEthash.Add("nanominer: " + processId.ToString());
+                    if (processIdListEthash.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DEthashHandle.ToString() + ". Added " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                        return DEthashHandle;
+                    }
+                    DEthashHandle = DEthash.EthashDivertStart(processIdListEthash, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DEthashHandle.ToString() + ". Initiated by " + processId.ToString() + " (ethash) to divert process list: " + " " + String.Join(",", processIdListEthash));
+                    return DEthashHandle;
+                }
+
                 if (MinerName.ToLower() == "gminer")
                 {
                     processIdListEthash.Add("gminer: force");
@@ -275,6 +499,8 @@ namespace NiceHashMinerLegacy.Divert
                     GetGMinerZhash(processId, CurrentAlgorithmType, MinerName, strPlatform);
                 }
             }
+
+
             /*
             //******************************************************************************************
             if (CurrentAlgorithmType == 45) //beam v2
@@ -607,6 +833,57 @@ namespace NiceHashMinerLegacy.Divert
                     gminer_runningZhash = false;
                 }
             }
+            //********************************************************************************************
+            //randomx
+            /*
+            if (CurrentAlgorithmType == 47)
+            {
+                int dh = (int)DivertHandle;
+                if (processIdListRandomX.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListRandomX).Contains(Pid.ToString()))
+                {
+                    Thread.Sleep(50);
+                    WinDivert.WinDivertClose(DivertHandle);
+
+                    for (var i = 0; i < processIdListRandomX.Count; i++)
+                    {
+                        if (processIdListRandomX[i].Contains(Pid.ToString()))
+                        {
+                            processIdListRandomX.RemoveAt(i);
+                        }
+                    }
+
+                    DivertHandle = new IntPtr(0);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                        " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListRandomX));
+                    Thread.Sleep(50);
+                }
+                else
+                {
+                    if (String.Join(" ", Divert.processIdListRandomX).Contains(Pid.ToString()))
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                            " " + " " + GetProcessName(Pid) +
+                            " from divert process list: " + " " + String.Join(", ", processIdListRandomX));
+                        for (var i = 0; i < processIdListRandomX.Count; i++)
+                        {
+                            if (processIdListRandomX[i].Contains(Pid.ToString()))
+                            {
+                                processIdListRandomX.RemoveAt(i);
+                                i = 0;
+                                continue;
+                            }
+                        }
+                    }
+                    if (processIdListRandomX.Count < 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListRandomX. Stopping RandomX divert thread.");
+                        RandomXdivert_running = false;
+                    }
+                }
+                
+            }
+            */
             //********************************************************************************************
             //beam
             /*

@@ -363,6 +363,14 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
+            if (algoSettings.ContainsKey(MinerBaseType.Nanominer) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7) && !device.Name.Contains("R7 370"))
+            {
+                algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType>
+                    {
+                        MinerBaseType.Nanominer
+                    });
+            }
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>

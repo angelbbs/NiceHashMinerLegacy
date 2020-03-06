@@ -556,6 +556,14 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>()
             ),
             new MinerOptionPackage(
+                MinerType.Nanominer,
+                new List<MinerOption>
+                {
+                    new MinerOption("Nanominer_memTweak", "memTweak = ", "-1", MinerOptionFlagType.SingleParam),
+                },
+                new List<MinerOption>()
+            ),
+            new MinerOptionPackage(
                 MinerType.GMiner,
                 new List<MinerOption>
                 {
@@ -618,7 +626,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("RateWatchdog", "--ratewatchdog", "--ratewatchdog", "", MinerOptionFlagType.Uni, "") // default none
                 },
                 new List<MinerOption>()
-                 ),
+             ),
              new MinerOptionPackage(
                 MinerType.lyclMiner,
                 new List<MinerOption>

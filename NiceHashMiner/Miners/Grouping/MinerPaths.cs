@@ -115,6 +115,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string mkxminer = Bin3rdParty + @"\mkxminer\mkxminer.exe";
             public const string teamredminer = Bin3rdParty + @"\teamredminer\teamredminer.exe";
             public const string Phoenix = Bin3rdParty + @"\Phoenix\PhoenixMiner.exe";
+            public const string Nanominer = Bin3rdParty + @"\Nanominer\nanominer.exe";
             public const string lolMiner = Bin3rdParty + @"\lolMiner\lolMiner.exe";
             public const string lolMinerBEAM = Bin3rdParty + @"\lolMinerBEAM\lolMiner.exe";
             public const string EthLargement = Bin3rdParty + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
@@ -250,6 +251,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.NBMiner;
                 case MinerBaseType.miniZ:
                     return Data.miniZ;
+                case MinerBaseType.Nanominer:
+                    return Data.Nanominer;
             }
             return Data.None;
         }
@@ -417,7 +420,6 @@ namespace NiceHashMiner.Miners.Grouping
                 // TODO wrong case?
                 return Data.None; // should not happen
             }
-
 
             public static string trex(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
             {

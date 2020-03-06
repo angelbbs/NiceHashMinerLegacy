@@ -150,6 +150,7 @@
     <Compile Include="Miners\lyclMiner.cs" />
     <Compile Include="Miners\miniZ.cs" />
     <Compile Include="Miners\NBMiner.cs" />
+    <Compile Include="Miners\Nanominer.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\SRBMiner.cs" />
     <Compile Include="Miners\teamredminer.cs" />

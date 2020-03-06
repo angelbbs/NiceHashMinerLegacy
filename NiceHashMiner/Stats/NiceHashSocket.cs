@@ -357,8 +357,14 @@ namespace NiceHashMiner.Stats
                     Configs.ConfigManager.GeneralConfig.MachineGuid = rig;
                 }
 
-                if (Configs.ConfigManager.GeneralConfig.MachineGuid != rig && Configs.ConfigManager.GeneralConfig.CpuID == CpuID)
+                if (!Configs.ConfigManager.GeneralConfig.MachineGuid.Equals(rig) && Configs.ConfigManager.GeneralConfig.CpuID.Equals(CpuID))
                 {
+                    /*
+                    Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.MachineGuid);
+                    Helpers.ConsolePrint("UUID", rig);
+                    Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.CpuID);
+                    Helpers.ConsolePrint("UUID", CpuID);
+                    */
                     Helpers.ConsolePrint("UUID", "New MachineGuid. Maybe error. Using previous MachineGuid");
                     rig = Configs.ConfigManager.GeneralConfig.MachineGuid;
                 }
@@ -367,7 +373,7 @@ namespace NiceHashMiner.Stats
                 if (Configs.ConfigManager.GeneralConfig.NewPlatform)
                 {
                     protocol = 3;
-                    version = "NHML/1.9.2.20"; //
+                    version = "NHML/3.0.0.5"; //
                     if (ConfigManager.GeneralConfig.Send_actual_version_info)
                     {
                         version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
@@ -392,7 +398,7 @@ namespace NiceHashMiner.Stats
                 } else
                 {
                     protocol = 1;
-                    version = "NHML/1.9.1.7";
+                    version = "NHML/3.0.0.5";
 
 
                     var login = new NicehashLogin

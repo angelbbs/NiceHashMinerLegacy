@@ -179,7 +179,7 @@ namespace NiceHashMiner.Stats
             {
                 if (e.IsText)
                 {
-                 //   Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
+                    Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
                     dynamic message = JsonConvert.DeserializeObject(e.Data);
                    // Helpers.ConsolePrint("SOCKET", "Received1: " + e.Data);
                     switch (message.method.Value)

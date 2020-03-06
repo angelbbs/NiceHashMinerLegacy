@@ -9,6 +9,7 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Switching;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -220,6 +221,14 @@ namespace NiceHashMiner.Forms.Components
             var payingRate = speed * paying * 0.000000001;
             var payingRateSec = secondarySpeed * payingSec * 0.000000001;
             var rate = (payingRate + payingRateSec).ToString("F8");
+
+
+            var WithPowerRate = payingRate + payingRateSec - ExchangeRateApi.GetKwhPriceInBtc() * _currentlySelectedAlgorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+            if (ConfigManager.GeneralConfig.DecreasePowerCost)
+            {
+                rate = WithPowerRate.ToString("F8");
+            }
+
             // update lvi speed
             if (_currentlySelectedLvi != null)
             {

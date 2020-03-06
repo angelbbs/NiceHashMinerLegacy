@@ -299,7 +299,7 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
     "AlgorithmsListView_ContextMenu_EnableAll": "Включить все алгоритмы",
     "AlgorithmsListView_ContextMenu_ClearItem": "Сбросить скорость алгоритма",
-    "AlgorithmsListView_ContextMenu_TestItem": "Включить это только",
+    "AlgorithmsListView_ContextMenu_TestItem": "Включить только",
     "AlgorithmsListView_ContextMenu_EnableBenched": "Включить только контрольные показатели",
     "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
     "Form_Main_MiningDevices": "Устройства {0}:",

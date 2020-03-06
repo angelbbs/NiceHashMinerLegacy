@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -61,6 +61,7 @@
     <Compile Include="Divert.cs" />
     <Compile Include="DXMRig.cs" />
     <Compile Include="DBeam.cs" />
+    <Compile Include="DRandomX.cs" />
     <Compile Include="DZhash.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Logger.cs" />

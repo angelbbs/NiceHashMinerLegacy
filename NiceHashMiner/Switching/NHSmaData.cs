@@ -97,12 +97,19 @@ namespace NiceHashMiner.Switching
             CheckInit();
             lock (_currentSma)
             {
-                foreach (var algo in newSma.Keys)
+                try
                 {
-                    if (_currentSma.ContainsKey(algo))
+                    foreach (var algo in newSma.Keys)
                     {
-                        _currentSma[algo].Paying = newSma[algo];
+                        if (_currentSma.ContainsKey(algo))
+                        {
+                            _currentSma[algo].Paying = newSma[algo];
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint(Tag, e.ToString());
                 }
 
                 if (ConfigManager.GeneralConfig.UseSmaCache)
