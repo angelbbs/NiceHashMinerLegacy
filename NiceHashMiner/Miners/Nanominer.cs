@@ -45,8 +45,21 @@ namespace NiceHashMiner.Miners
 
         private string GetStartCommand(string url, string btcAdress, string worker)
         {
-            if (File.Exists("bin_3rdparty\\Nanominer\\config_nh.ini"))
-                File.Delete("bin_3rdparty\\Nanominer\\config_nh.ini");
+            var platform = "";
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    platform = "nvidia";
+                }
+                else
+                {
+                    platform = "amd";
+                }
+            }
+
+            if (File.Exists("bin_3rdparty\\Nanominer\\config_nh_" + platform +".ini"))
+                File.Delete("bin_3rdparty\\Nanominer\\config_nh_" + platform + ".ini");
 
             string username = GetUsername(btcAdress, worker);
             string rigName = username.Split('.')[1];
@@ -71,7 +84,7 @@ namespace NiceHashMiner.Miners
 
             try
             {
-                FileStream fs = new FileStream("bin_3rdparty\\Nanominer\\config_nh.ini", FileMode.Create, FileAccess.Write);
+                FileStream fs = new FileStream("bin_3rdparty\\Nanominer\\config_nh_" + platform + ".ini", FileMode.Create, FileAccess.Write);
                 StreamWriter w = new StreamWriter(fs);
                 w.WriteAsync(cfgFile);
                 w.Flush();
@@ -82,7 +95,7 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("GetStartCommand", e.ToString());
             }
 
-            return " config_nh.ini";
+            return " config_nh_" + platform + ".ini";
             /*
             +
                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD) +

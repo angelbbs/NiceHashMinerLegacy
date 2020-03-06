@@ -666,13 +666,15 @@ Divert:
                             
                             if (PacketPayloadData.Contains("eth_getWork") && OwnerPID.Contains("nanominer"))
                             {
+                                /*
                                 packet.Dispose();
                                 goto nextCycle;
-                                /*
+                                */
+                                
                                 Helpers.ConsolePrint("WinDivertSharp", "Normalize nanominer eth_getWork");
                                 PacketPayloadData = "{\"id\":3,\"jsonrpc\":\"2.0\",\"method\":\"eth_getWork\",\"params\":[]}";
                                 goto modifyData;
-                                */
+                                
                             }
                             
                             //block nanominer packets without json (ssl)
