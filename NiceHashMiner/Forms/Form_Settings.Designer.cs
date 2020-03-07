@@ -59,6 +59,7 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.checkBox_sorting_list_of_algorithms = new System.Windows.Forms.CheckBox();
             this.Checkbox_Save_windows_size_and_position = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -142,11 +143,16 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.buttonGPUtuning = new System.Windows.Forms.Button();
+            this.tabPageAbout = new System.Windows.Forms.TabPage();
+            this.groupBoxInfo = new System.Windows.Forms.GroupBox();
+            this.buttonLicence = new System.Windows.Forms.Button();
+            this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
+            this.groupBoxUpdates = new System.Windows.Forms.GroupBox();
+            this.richTextBoxVersion = new System.Windows.Forms.RichTextBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -187,6 +193,9 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVIDIA)).BeginInit();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            this.tabPageAbout.SuspendLayout();
+            this.groupBoxInfo.SuspendLayout();
+            this.groupBoxUpdates.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -238,6 +247,7 @@ namespace NiceHashMiner.Forms
             this.tabControlGeneral.Controls.Add(this.tabPageGeneral);
             this.tabControlGeneral.Controls.Add(this.tabPageAdvanced1);
             this.tabControlGeneral.Controls.Add(this.tabPageDevicesAlgos);
+            this.tabControlGeneral.Controls.Add(this.tabPageAbout);
             // 
             // 
             // 
@@ -582,6 +592,17 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
+            // 
+            // checkBox_AlwaysOnTop
+            // 
+            this.checkBox_AlwaysOnTop.AutoSize = true;
+            this.checkBox_AlwaysOnTop.Location = new System.Drawing.Point(7, 158);
+            this.checkBox_AlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_AlwaysOnTop.Name = "checkBox_AlwaysOnTop";
+            this.checkBox_AlwaysOnTop.Size = new System.Drawing.Size(96, 17);
+            this.checkBox_AlwaysOnTop.TabIndex = 382;
+            this.checkBox_AlwaysOnTop.Text = "Always on Top";
+            this.checkBox_AlwaysOnTop.UseVisualStyleBackColor = true;
             // 
             // checkBox_sorting_list_of_algorithms
             // 
@@ -1582,6 +1603,66 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
             // 
+            // buttonGPUtuning
+            // 
+            this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
+            this.buttonGPUtuning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonGPUtuning.Name = "buttonGPUtuning";
+            this.buttonGPUtuning.Size = new System.Drawing.Size(141, 23);
+            this.buttonGPUtuning.TabIndex = 394;
+            this.buttonGPUtuning.Text = "GPU tuning";
+            this.buttonGPUtuning.UseVisualStyleBackColor = true;
+            this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
+            // 
+            // tabPageAbout
+            // 
+            this.tabPageAbout.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageAbout.Controls.Add(this.groupBoxUpdates);
+            this.tabPageAbout.Controls.Add(this.groupBoxInfo);
+            this.tabPageAbout.Location = new System.Drawing.Point(4, 23);
+            this.tabPageAbout.Name = "tabPageAbout";
+            this.tabPageAbout.Size = new System.Drawing.Size(669, 439);
+            this.tabPageAbout.TabIndex = 3;
+            this.tabPageAbout.Text = "About";
+            // 
+            // groupBoxInfo
+            // 
+            this.groupBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxInfo.Controls.Add(this.richTextBoxInfo);
+            this.groupBoxInfo.Controls.Add(this.buttonLicence);
+            this.groupBoxInfo.Location = new System.Drawing.Point(4, 3);
+            this.groupBoxInfo.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxInfo.Name = "groupBoxInfo";
+            this.groupBoxInfo.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxInfo.Size = new System.Drawing.Size(659, 88);
+            this.groupBoxInfo.TabIndex = 393;
+            this.groupBoxInfo.TabStop = false;
+            this.groupBoxInfo.Text = "Info";
+            // 
+            // buttonLicence
+            // 
+            this.buttonLicence.Location = new System.Drawing.Point(5, 57);
+            this.buttonLicence.Name = "buttonLicence";
+            this.buttonLicence.Size = new System.Drawing.Size(128, 23);
+            this.buttonLicence.TabIndex = 357;
+            this.buttonLicence.Text = "View licence";
+            this.buttonLicence.UseVisualStyleBackColor = true;
+            this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
+            // 
+            // richTextBoxInfo
+            // 
+            this.richTextBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxInfo.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBoxInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxInfo.Location = new System.Drawing.Point(5, 19);
+            this.richTextBoxInfo.Name = "richTextBoxInfo";
+            this.richTextBoxInfo.Size = new System.Drawing.Size(649, 32);
+            this.richTextBoxInfo.TabIndex = 358;
+            this.richTextBoxInfo.Text = "";
+            this.richTextBoxInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBoxInfo_LinkClicked);
+            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1597,17 +1678,6 @@ namespace NiceHashMiner.Forms
             this.algorithmsListView1.Name = "algorithmsListView1";
             this.algorithmsListView1.Size = new System.Drawing.Size(645, 169);
             this.algorithmsListView1.TabIndex = 2;
-            // 
-            // buttonGPUtuning
-            // 
-            this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
-            this.buttonGPUtuning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonGPUtuning.Name = "buttonGPUtuning";
-            this.buttonGPUtuning.Size = new System.Drawing.Size(141, 23);
-            this.buttonGPUtuning.TabIndex = 394;
-            this.buttonGPUtuning.Text = "GPU tuning";
-            this.buttonGPUtuning.UseVisualStyleBackColor = true;
-            this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
             // 
             // algorithmSettingsControl1
             // 
@@ -1634,16 +1704,31 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
-            // checkBox_AlwaysOnTop
+            // groupBoxUpdates
             // 
-            this.checkBox_AlwaysOnTop.AutoSize = true;
-            this.checkBox_AlwaysOnTop.Location = new System.Drawing.Point(7, 158);
-            this.checkBox_AlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_AlwaysOnTop.Name = "checkBox_AlwaysOnTop";
-            this.checkBox_AlwaysOnTop.Size = new System.Drawing.Size(96, 17);
-            this.checkBox_AlwaysOnTop.TabIndex = 382;
-            this.checkBox_AlwaysOnTop.Text = "Always on Top";
-            this.checkBox_AlwaysOnTop.UseVisualStyleBackColor = true;
+            this.groupBoxUpdates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxUpdates.Controls.Add(this.richTextBoxVersion);
+            this.groupBoxUpdates.Location = new System.Drawing.Point(4, 97);
+            this.groupBoxUpdates.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxUpdates.Name = "groupBoxUpdates";
+            this.groupBoxUpdates.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxUpdates.Size = new System.Drawing.Size(659, 88);
+            this.groupBoxUpdates.TabIndex = 394;
+            this.groupBoxUpdates.TabStop = false;
+            this.groupBoxUpdates.Text = "Updates";
+            // 
+            // richTextBoxVersion
+            // 
+            this.richTextBoxVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxVersion.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBoxVersion.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxVersion.Location = new System.Drawing.Point(5, 19);
+            this.richTextBoxVersion.Name = "richTextBoxVersion";
+            this.richTextBoxVersion.Size = new System.Drawing.Size(649, 32);
+            this.richTextBoxVersion.TabIndex = 358;
+            this.richTextBoxVersion.Text = "";
             // 
             // Form_Settings
             // 
@@ -1714,6 +1799,9 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            this.tabPageAbout.ResumeLayout(false);
+            this.groupBoxInfo.ResumeLayout(false);
+            this.groupBoxUpdates.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1839,5 +1927,11 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_fiat;
         private System.Windows.Forms.CheckBox checkBox_sorting_list_of_algorithms;
         private System.Windows.Forms.CheckBox checkBox_AlwaysOnTop;
+        private System.Windows.Forms.TabPage tabPageAbout;
+        private System.Windows.Forms.GroupBox groupBoxInfo;
+        private System.Windows.Forms.Button buttonLicence;
+        private System.Windows.Forms.RichTextBox richTextBoxInfo;
+        private System.Windows.Forms.GroupBox groupBoxUpdates;
+        private System.Windows.Forms.RichTextBox richTextBoxVersion;
     }
 }

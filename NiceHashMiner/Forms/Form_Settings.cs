@@ -19,6 +19,8 @@ using NiceHashMinerLegacy.Common.Enums;
 using System.Linq;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace NiceHashMiner.Forms
 {
@@ -49,6 +51,9 @@ namespace NiceHashMiner.Forms
 
         public Form_Settings()
         {
+            Process thisProc = Process.GetCurrentProcess();
+            thisProc.PriorityClass = ProcessPriorityClass.High;
+
             InitializeComponent();
             Icon = Properties.Resources.logo;
 
@@ -132,6 +137,9 @@ namespace NiceHashMiner.Forms
                 UpdateListView_timer.Interval = 10000;
                 UpdateListView_timer.Start();
             }
+
+            thisProc.PriorityClass = ProcessPriorityClass.Normal;
+            thisProc.Dispose();
         }
         private void UpdateLvi_Tick(object sender, EventArgs e)
         {
@@ -433,6 +441,13 @@ namespace NiceHashMiner.Forms
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label1.Text = "Color profile (partial)";
             //label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
+            var newver = NiceHashStats.Version.Replace(",", ".");
+            var ver = Configs.ConfigManager.GeneralConfig.ForkFixVersion;
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
+            var build = buildDate.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
+            richTextBoxVersion.ReadOnly = true;
+            richTextBoxVersion.Text = "Current version: " + ver + ". Build: " + build; 
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
               //  label_BitcoinAddress.Text = "Биткоин адрес (старая платформа)";
@@ -474,6 +489,21 @@ namespace NiceHashMiner.Forms
                 comboBox_switching_algorithms.Items.Add("случайно (стандартный NHM)");
 
                 label_devices_count.Text = "Кол-во видимых устройств";
+                tabPageAbout.Text = "О программе";
+                groupBoxInfo.Text = "Информация";
+                groupBoxUpdates.Text = "Версия";
+                buttonLicence.Text = "Просмотр лицензии";
+                richTextBoxInfo.ReadOnly = true;
+
+                richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Bold);
+                richTextBoxInfo.AppendText("Miner Legacy Fork Fix");
+                richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Regular);
+                richTextBoxInfo.AppendText(" (для NiceHash) это неофициальная ветка программы, " +
+                    "созданная https://github.com/angelbbs при поддержке сообществ " +
+                    "https://bitcointalk.org/index.php?topic=5132119.0 " +
+                    "https://github.com/angelbbs/NiceHashMinerLegacy/issues");
+                groupBoxUpdates.Text = "Обновления";
+                richTextBoxVersion.Text = "Текущая версия: " + ver + ". Сборка: " + build;
             }
             else
             {
@@ -623,6 +653,9 @@ namespace NiceHashMiner.Forms
                 tabPageDevicesAlgos.BackColor = Form_Main._backColor;
                 tabPageDevicesAlgos.ForeColor = Form_Main._foreColor;
 
+                tabPageAbout.BackColor = Form_Main._backColor;
+                tabPageAbout.ForeColor = Form_Main._foreColor;
+
                 foreach (var lbl in tabPageAdvanced1.Controls.OfType<GroupBox>())
                 {
                     lbl.BackColor = Form_Main._backColor;
@@ -645,6 +678,11 @@ namespace NiceHashMiner.Forms
                     lbl.FlatAppearance.BorderSize = 1;
                 }
 
+                    richTextBoxInfo.BackColor = Form_Main._backColor;
+                    richTextBoxInfo.ForeColor = Form_Main._textColor;
+                richTextBoxVersion.BackColor = Form_Main._backColor;
+                richTextBoxVersion.ForeColor = Form_Main._textColor;
+
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
                 {
                     lbl.BackColor = Form_Main._backColor;
@@ -652,6 +690,34 @@ namespace NiceHashMiner.Forms
                 }
 
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<UserControl>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
+                //*
+                foreach (var lbl in tabPageAbout.Controls.OfType<GroupBox>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
+                foreach (var lbl in tabPageAbout.Controls.OfType<Button>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._textColor;
+                    lbl.FlatStyle = FlatStyle.Flat;
+                    lbl.FlatAppearance.BorderColor = Form_Main._textColor;
+                    lbl.FlatAppearance.BorderSize = 1;
+                }
+
+                foreach (var lbl in tabPageAbout.Controls.OfType<Button>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
+                foreach (var lbl in tabPageAbout.Controls.OfType<UserControl>())
                 {
                     lbl.BackColor = Form_Main._backColor;
                     lbl.ForeColor = Form_Main._foreColor;
@@ -2169,6 +2235,17 @@ namespace NiceHashMiner.Forms
         private void comboBox_devices_count_DrawItem(object sender, DrawItemEventArgs e)
         {
             comboBox_ServiceLocation_DrawItem(sender, e);
+        }
+
+        private void buttonLicence_Click(object sender, EventArgs e)
+        {
+            Form ifrm = new Form_ChooseLanguage(false);
+            ifrm.Show();
+        }
+
+        private void richTextBoxInfo_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.LinkText);
         }
     }
 }

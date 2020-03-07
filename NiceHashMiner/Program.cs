@@ -534,7 +534,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("NICEHASH",
                         "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
-                    Application.Run(new Form_ChooseLanguage());
+                    Application.Run(new Form_ChooseLanguage(true));
                 }
 
                 // Init languages

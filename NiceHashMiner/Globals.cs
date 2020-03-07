@@ -19,7 +19,7 @@ namespace NiceHashMiner
         public static readonly string DemoUserNew = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";
 
         // change this if TOS changes
-        public static int CurrentTosVer = 3;
+        public static int CurrentTosVer = 4;
 
         // Variables
         public static JsonSerializerSettings JsonSettings = null;

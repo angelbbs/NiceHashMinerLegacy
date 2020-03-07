@@ -285,7 +285,7 @@ nextCycle:
                         np++;
 
 
-                        /*
+                        
                         string cpacket0 = "";
                         for (int i = 0; i < readLen; i++)
                         {
@@ -295,7 +295,7 @@ nextCycle:
                         }
                         if (cpacket0.Length > 60)
                         File.WriteAllText(np.ToString()+ "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
-                        */
+                        
 
                         /*
                         if (stratumRatio < -7)
@@ -642,7 +642,7 @@ Divert:
                                 if (OwnerPID.Contains("nanominer"))
                                 {
                                     dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
-                                    json.worker = "nmr";
+                                    json.worker = "nnm";
                                     PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
                                     modified = false;
                                     goto modifyData;
@@ -664,17 +664,16 @@ Divert:
                             //Z-UEcw", "x"], "id": 2, "worker": "Farm1$0-2t3LAymH0Ve-dEwJZ-UEcw"}{"worker": "", "jsonrpc": "2.0", "params": [], "id": 3, "method": "eth_getWork"}{"id":6,"worker":"Farm1$0-2t3LAymH0Ve-dEwJZ-UEcw","jsonrpc":"2.0","method":"eth_submitHashrate","params":["0x3862188", "0x03513a550f32eb594f9088604341d3f2618d24caa193e4f9f035c3a1be38b36a"]}{"id":6,"worker":"Farm1$0-2t3LAymH0Ve-dEwJZ-UEcw","jsonrpc":"2.0","method":"eth_submitHashrate","params":["0x3862188", "0x03513a550f32eb594f9088604341d3f2618d24caa193e4f9f035c3a1be38b36a"]}{"id":6
                             //{"id":3,"jsonrpc":"2.0","method":"eth_getWork","params":[]} claymore
                             
-                            if (PacketPayloadData.Contains("eth_getWork") && OwnerPID.Contains("nanominer"))
+                            if (PacketPayloadData.Contains("}{")  && OwnerPID.Contains("nanominer"))
                             {
-                                /*
+                                Helpers.ConsolePrint("WinDivertSharp", "Block nanominer packets broken json");
                                 packet.Dispose();
                                 goto nextCycle;
-                                */
-                                
+                                /*
                                 Helpers.ConsolePrint("WinDivertSharp", "Normalize nanominer eth_getWork");
                                 PacketPayloadData = "{\"id\":3,\"jsonrpc\":\"2.0\",\"method\":\"eth_getWork\",\"params\":[]}";
                                 goto modifyData;
-                                
+                                */
                             }
                             
                             //block nanominer packets without json (ssl)
@@ -1034,7 +1033,7 @@ sendPacket:
                         }
                         if (cpacket1.Length > 60)
                             File.WriteAllText(np.ToString() + "new-" + addr.Direction.ToString() + ".pkt", cpacket1);
-                           
+                          
 
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
 
