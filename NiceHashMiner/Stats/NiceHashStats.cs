@@ -81,13 +81,16 @@ namespace NiceHashMiner.Stats
         private const int DeviceUpdateInterval = 60 * 1000;
 
         public static double Balance { get; private set; }
-        public static string Version { get; private set; }
-
+       // public static string Version { get; private set; }
+        public static string Version = "";
+        /*
         class github_version
         {
             public string tag_name;
             public string target_commitish;
+            public List<T> assets;
         }
+        */
     public static bool IsAlive => _socket?.IsAlive ?? false;
 
         // Event handlers for socket
@@ -297,12 +300,16 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("GITHUB", "Check new version");
                     try
                     {
-                        string ghv = GetVersion("");
-                        Helpers.ConsolePrint("GITHUB", ghv);
+                        string ghv = GetVersion().Item1;
+                        Double.TryParse(ghv.ToString(), out Form_Main.githubVersion);
+                        Form_Main.buildD = NiceHashStats.GetVersion().Item2;
+                        Helpers.ConsolePrint("GITHUB", "Version: ", ghv.ToString());
+                        Helpers.ConsolePrint("GITHUB", "Build: ", Form_Main.buildD.ToString());
                         SetVersion(ghv);
                     }
                     catch (Exception er)
                     {
+                        Helpers.ConsolePrint("GITHUB", "Github error");
                         Helpers.ConsolePrint("GITHUB", er.ToString());
                     }
                 }
@@ -943,25 +950,37 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        public static string GetVersion(string worker)
+        public static Tuple<string, double> GetVersion()
         {
             string url = "https://api.github.com/repos/angelbbs/nicehashminerlegacy/releases/latest";
             string r1 = GetGitHubAPIData(url);
-            //Helpers.ConsolePrint("GITHUB!", r1);
-            //string r1 = GetNiceHashApiData(url, "");
             if (r1 == null) return null;
-            github_version nhjson;
+            //github_version nhjson;
+            string tagname = "";
             try
             {
-                nhjson = JsonConvert.DeserializeObject<github_version>(r1, Globals.JsonSettings);
+                dynamic nhjson = JsonConvert.DeserializeObject(r1, Globals.JsonSettings);
                 //var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
-                return nhjson.tag_name;
+                var gitassets = nhjson.assets;
+                for (var i = 0; i < gitassets.Count; i++)
+                {
+                    string n = gitassets[i].name;
+                    if (n.Contains("Setup.exe"))
+                    {
+                        DateTime build = gitassets[i].updated_at;
+                        string buildDate = build.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
+                        Double.TryParse(buildDate.ToString(), out Form_Main.buildD);
+                    }
+                }
+                tagname = nhjson.tag_name;
+                Double.TryParse(tagname.Replace("Fork_Fix_", "").ToString(), out Form_Main.githubVersion);
+                return Tuple.Create(tagname, (double)Form_Main.buildD); 
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("GITHUB", ex.ToString());
             }
-            return "";
+            return Tuple.Create("", (double)Form_Main.buildD);
         }
 
         public static string GetGitHubAPIData(string URL)
@@ -1058,6 +1077,7 @@ namespace NiceHashMiner.Stats
                 {
                     foreach (var algo in data)
                     {
+                        if (algo == null) return;
                         bug = false;
                         alg_zero = false;
                         var algoKey = (AlgorithmType)algo[0].Value<int>();

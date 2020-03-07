@@ -446,8 +446,33 @@ namespace NiceHashMiner.Forms
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
             var build = buildDate.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
-            richTextBoxVersion.ReadOnly = true;
-            richTextBoxVersion.Text = "Current version: " + ver + ". Build: " + build; 
+            linkLabelCurrentVersion.LinkBehavior = LinkBehavior.NeverUnderline;
+            linkLabelCurrentVersion.Text = "Current version: " + ver + ". Build: " + build;
+
+            linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
+            Double.TryParse(build.ToString(), out Form_Main.buildDcurrent);
+            linkLabelNewVersion.Text = "No new version or build";
+            buttonUpdate.Visible = false;
+
+            if (Form_Main.buildDcurrent < Form_Main.buildD)
+            {
+                linkLabelNewVersion.Text = "New build: " + Form_Main.buildD;
+                buttonUpdate.Visible = true;
+                linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
+            }
+            var programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
+            if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
+            {
+                linkLabelNewVersion.Text = "New version: " + Form_Main.githubVersion.ToString();
+                buttonUpdate.Visible = true;
+                linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
+            }
+            if (Form_Main.githubVersion <= 0)
+            {
+                linkLabelNewVersion.Text = "Error";
+                buttonUpdate.Visible = false;
+            }
+
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
               //  label_BitcoinAddress.Text = "Биткоин адрес (старая платформа)";
@@ -490,6 +515,7 @@ namespace NiceHashMiner.Forms
 
                 label_devices_count.Text = "Кол-во видимых устройств";
                 tabPageAbout.Text = "О программе";
+
                 groupBoxInfo.Text = "Информация";
                 groupBoxUpdates.Text = "Версия";
                 buttonLicence.Text = "Просмотр лицензии";
@@ -502,8 +528,30 @@ namespace NiceHashMiner.Forms
                     "созданная https://github.com/angelbbs при поддержке сообществ " +
                     "https://bitcointalk.org/index.php?topic=5132119.0 " +
                     "https://github.com/angelbbs/NiceHashMinerLegacy/issues");
-                groupBoxUpdates.Text = "Обновления";
-                richTextBoxVersion.Text = "Текущая версия: " + ver + ". Сборка: " + build;
+                groupBoxUpdates.Text = "Обновление программы";
+                linkLabelCurrentVersion.Text = "Текущая версия: " + ver + ". Сборка: " + build;
+                linkLabelNewVersion.Text = "Нет новой версии или сборки";
+                //richTextBoxNewVersion.Text = "Новая сборка: " + build;
+                buttonCheckNewVersion.Text = "Проверить сейчас";
+                buttonUpdate.Text = "Обновить сейчас";
+
+                if (Form_Main.buildDcurrent < Form_Main.buildD)
+                {
+                    linkLabelNewVersion.Text = "Новая сборка: " + Form_Main.buildD.ToString();
+                    linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
+                    buttonUpdate.Visible = true;
+                }
+
+                if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
+                {
+                    linkLabelNewVersion.Text = "Новая версия: " + Form_Main.githubVersion.ToString();
+                    linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
+                    buttonUpdate.Visible = true;
+                }
+                if (Form_Main.githubVersion <= 0)
+                {
+                    linkLabelNewVersion.Text = "Ошибка проверки новой версии";
+                }
             }
             else
             {
@@ -680,8 +728,18 @@ namespace NiceHashMiner.Forms
 
                     richTextBoxInfo.BackColor = Form_Main._backColor;
                     richTextBoxInfo.ForeColor = Form_Main._textColor;
-                richTextBoxVersion.BackColor = Form_Main._backColor;
-                richTextBoxVersion.ForeColor = Form_Main._textColor;
+                linkLabelCurrentVersion.BackColor = Form_Main._backColor;
+                linkLabelCurrentVersion.ForeColor = Form_Main._textColor;
+                linkLabelCurrentVersion.LinkColor = Form_Main._textColor;
+                linkLabelCurrentVersion.ActiveLinkColor = Form_Main._textColor;
+                linkLabelCurrentVersion.MouseLeave += (s, e) => linkLabelCurrentVersion.LinkBehavior = LinkBehavior.NeverUnderline;
+                linkLabelCurrentVersion.MouseEnter += (s, e) => linkLabelCurrentVersion.LinkBehavior =LinkBehavior.AlwaysUnderline;
+                linkLabelNewVersion.MouseLeave += (s, e) => linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
+                linkLabelNewVersion.MouseEnter += (s, e) => linkLabelNewVersion.LinkBehavior = LinkBehavior.AlwaysUnderline;
+
+                linkLabelNewVersion.BackColor = Form_Main._backColor;
+                linkLabelNewVersion.ForeColor = Form_Main._textColor;
+                linkLabelNewVersion.LinkColor = Form_Main._textColor;
 
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
                 {
@@ -2246,6 +2304,61 @@ namespace NiceHashMiner.Forms
         private void richTextBoxInfo_LinkClicked(object sender, LinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(e.LinkText);
+        }
+
+        private void buttonCheckNewVersion_Click(object sender, EventArgs e)
+        {
+            Double.TryParse(NiceHashStats.GetVersion().Item1, out Form_Main.githubVersion);
+            Form_Main.buildD = NiceHashStats.GetVersion().Item2;
+
+            linkLabelNewVersion.Text = "No new version or build";
+            if (Form_Main.buildDcurrent < Form_Main.buildD)
+            {
+                linkLabelNewVersion.Text = "New build: " + Form_Main.buildD.ToString();
+                buttonUpdate.Visible = true;
+            }
+            var programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
+            if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
+            {
+                linkLabelNewVersion.Text = "New version: " + Form_Main.githubVersion.ToString();
+                buttonUpdate.Visible = true;
+            }
+
+            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+            {
+                linkLabelNewVersion.Text = "Нет новой версии или сборки";
+                buttonUpdate.Visible = false;
+                if (Form_Main.buildDcurrent > Form_Main.buildD)
+                {
+                    linkLabelNewVersion.Text = "Новая сборка: " + Form_Main.buildD.ToString();
+                    buttonUpdate.Visible = true;
+                }
+                if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
+                {
+                    linkLabelNewVersion.Text = "Новая версия: " + Form_Main.githubVersion.ToString();
+                    buttonUpdate.Visible = true;
+                }
+                if (Form_Main.githubVersion <= 0)
+                {
+                    linkLabelNewVersion.Text = "Ошибка проверки новой версии";
+                    buttonUpdate.Visible = false;
+                }
+            }
+            linkLabelNewVersion.Update();
+        }
+
+        private void linkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+        }
+
+        private void linkLabelCurrentVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+        }
+
+        private void linkLabelCurrentVersion_MouseEnter(object sender, EventArgs e)
+        {
         }
     }
 }

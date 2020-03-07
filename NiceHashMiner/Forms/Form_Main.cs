@@ -79,6 +79,9 @@ namespace NiceHashMiner
         public static Color _foreColor;
         public static Color _windowColor;
         public static Color _textColor;
+        public static double buildD = 0.0d;
+        public static double buildDcurrent = 0.0d;
+        public static double githubVersion = 0.0d;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -593,12 +596,20 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(
     International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             //Thread.Sleep(200);
-
-            string ghv = NiceHashStats.GetVersion("");
-            Helpers.ConsolePrint("GITHUB", ghv);
-            if (ghv != null)
+            try
             {
-                NiceHashStats.SetVersion(ghv);
+                string ghv = NiceHashStats.GetVersion().Item1;
+                buildD = NiceHashStats.GetVersion().Item2;
+                Helpers.ConsolePrint("GITHUB", ghv);
+                if (ghv != null)
+                {
+                    NiceHashStats.SetVersion(ghv);
+                }
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("GITHUB", "Github error");
+                Helpers.ConsolePrint("GITHUB", er.ToString());
             }
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
@@ -1525,11 +1536,16 @@ namespace NiceHashMiner
 
         private void ButtonSettings_Click(object sender, EventArgs e)
         {
-
             var settings = new Form_Settings();
-            //   SetChildFormCenter(settings);
-            settings.ShowDialog();
-
+            try
+            {
+                //   SetChildFormCenter(settings);
+                settings.ShowDialog();
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("settings", er.ToString());
+            }
             if (settings.IsChange && settings.IsChangeSaved && settings.IsRestartNeeded)
             {
                 MessageBox.Show(

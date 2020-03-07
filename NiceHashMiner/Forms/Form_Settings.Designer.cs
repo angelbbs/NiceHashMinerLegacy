@@ -145,14 +145,17 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
+            this.groupBoxUpdates = new System.Windows.Forms.GroupBox();
+            this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
+            this.buttonUpdate = new System.Windows.Forms.Button();
+            this.buttonCheckNewVersion = new System.Windows.Forms.Button();
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
-            this.buttonLicence = new System.Windows.Forms.Button();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
+            this.buttonLicence = new System.Windows.Forms.Button();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.groupBoxUpdates = new System.Windows.Forms.GroupBox();
-            this.richTextBoxVersion = new System.Windows.Forms.RichTextBox();
+            this.linkLabelCurrentVersion = new System.Windows.Forms.LinkLabel();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -194,8 +197,8 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             this.tabPageAbout.SuspendLayout();
-            this.groupBoxInfo.SuspendLayout();
             this.groupBoxUpdates.SuspendLayout();
+            this.groupBoxInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -1625,6 +1628,54 @@ namespace NiceHashMiner.Forms
             this.tabPageAbout.TabIndex = 3;
             this.tabPageAbout.Text = "About";
             // 
+            // groupBoxUpdates
+            // 
+            this.groupBoxUpdates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxUpdates.Controls.Add(this.linkLabelCurrentVersion);
+            this.groupBoxUpdates.Controls.Add(this.linkLabelNewVersion);
+            this.groupBoxUpdates.Controls.Add(this.buttonUpdate);
+            this.groupBoxUpdates.Controls.Add(this.buttonCheckNewVersion);
+            this.groupBoxUpdates.Location = new System.Drawing.Point(4, 97);
+            this.groupBoxUpdates.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxUpdates.Name = "groupBoxUpdates";
+            this.groupBoxUpdates.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxUpdates.Size = new System.Drawing.Size(659, 47);
+            this.groupBoxUpdates.TabIndex = 394;
+            this.groupBoxUpdates.TabStop = false;
+            this.groupBoxUpdates.Text = "Program updates";
+            // 
+            // linkLabelNewVersion
+            // 
+            this.linkLabelNewVersion.AutoSize = true;
+            this.linkLabelNewVersion.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.linkLabelNewVersion.Location = new System.Drawing.Point(384, 19);
+            this.linkLabelNewVersion.Name = "linkLabelNewVersion";
+            this.linkLabelNewVersion.Size = new System.Drawing.Size(55, 13);
+            this.linkLabelNewVersion.TabIndex = 362;
+            this.linkLabelNewVersion.TabStop = true;
+            this.linkLabelNewVersion.Text = "linkLabel2";
+            this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNewVersion_LinkClicked);
+            // 
+            // buttonUpdate
+            // 
+            this.buttonUpdate.Location = new System.Drawing.Point(556, 14);
+            this.buttonUpdate.Name = "buttonUpdate";
+            this.buttonUpdate.Size = new System.Drawing.Size(98, 23);
+            this.buttonUpdate.TabIndex = 361;
+            this.buttonUpdate.Text = "Update now";
+            this.buttonUpdate.UseVisualStyleBackColor = true;
+            // 
+            // buttonCheckNewVersion
+            // 
+            this.buttonCheckNewVersion.Location = new System.Drawing.Point(255, 14);
+            this.buttonCheckNewVersion.Name = "buttonCheckNewVersion";
+            this.buttonCheckNewVersion.Size = new System.Drawing.Size(118, 23);
+            this.buttonCheckNewVersion.TabIndex = 359;
+            this.buttonCheckNewVersion.Text = "Check now";
+            this.buttonCheckNewVersion.UseVisualStyleBackColor = true;
+            this.buttonCheckNewVersion.Click += new System.EventHandler(this.buttonCheckNewVersion_Click);
+            // 
             // groupBoxInfo
             // 
             this.groupBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1640,16 +1691,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo.TabStop = false;
             this.groupBoxInfo.Text = "Info";
             // 
-            // buttonLicence
-            // 
-            this.buttonLicence.Location = new System.Drawing.Point(5, 57);
-            this.buttonLicence.Name = "buttonLicence";
-            this.buttonLicence.Size = new System.Drawing.Size(128, 23);
-            this.buttonLicence.TabIndex = 357;
-            this.buttonLicence.Text = "View licence";
-            this.buttonLicence.UseVisualStyleBackColor = true;
-            this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
-            // 
             // richTextBoxInfo
             // 
             this.richTextBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1662,6 +1703,16 @@ namespace NiceHashMiner.Forms
             this.richTextBoxInfo.TabIndex = 358;
             this.richTextBoxInfo.Text = "";
             this.richTextBoxInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBoxInfo_LinkClicked);
+            // 
+            // buttonLicence
+            // 
+            this.buttonLicence.Location = new System.Drawing.Point(5, 57);
+            this.buttonLicence.Name = "buttonLicence";
+            this.buttonLicence.Size = new System.Drawing.Size(128, 23);
+            this.buttonLicence.TabIndex = 357;
+            this.buttonLicence.Text = "View licence";
+            this.buttonLicence.UseVisualStyleBackColor = true;
+            this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
             // algorithmsListView1
             // 
@@ -1704,31 +1755,17 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
-            // groupBoxUpdates
+            // linkLabelCurrentVersion
             // 
-            this.groupBoxUpdates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxUpdates.Controls.Add(this.richTextBoxVersion);
-            this.groupBoxUpdates.Location = new System.Drawing.Point(4, 97);
-            this.groupBoxUpdates.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxUpdates.Name = "groupBoxUpdates";
-            this.groupBoxUpdates.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxUpdates.Size = new System.Drawing.Size(659, 88);
-            this.groupBoxUpdates.TabIndex = 394;
-            this.groupBoxUpdates.TabStop = false;
-            this.groupBoxUpdates.Text = "Updates";
-            // 
-            // richTextBoxVersion
-            // 
-            this.richTextBoxVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxVersion.BackColor = System.Drawing.SystemColors.Control;
-            this.richTextBoxVersion.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBoxVersion.Location = new System.Drawing.Point(5, 19);
-            this.richTextBoxVersion.Name = "richTextBoxVersion";
-            this.richTextBoxVersion.Size = new System.Drawing.Size(649, 32);
-            this.richTextBoxVersion.TabIndex = 358;
-            this.richTextBoxVersion.Text = "";
+            this.linkLabelCurrentVersion.AutoSize = true;
+            this.linkLabelCurrentVersion.Location = new System.Drawing.Point(6, 19);
+            this.linkLabelCurrentVersion.Name = "linkLabelCurrentVersion";
+            this.linkLabelCurrentVersion.Size = new System.Drawing.Size(55, 13);
+            this.linkLabelCurrentVersion.TabIndex = 363;
+            this.linkLabelCurrentVersion.TabStop = true;
+            this.linkLabelCurrentVersion.Text = "linkLabel1";
+            this.linkLabelCurrentVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCurrentVersion_LinkClicked);
+            this.linkLabelCurrentVersion.MouseEnter += new System.EventHandler(this.linkLabelCurrentVersion_MouseEnter);
             // 
             // Form_Settings
             // 
@@ -1800,8 +1837,9 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             this.tabPageAbout.ResumeLayout(false);
-            this.groupBoxInfo.ResumeLayout(false);
             this.groupBoxUpdates.ResumeLayout(false);
+            this.groupBoxUpdates.PerformLayout();
+            this.groupBoxInfo.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1932,6 +1970,9 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonLicence;
         private System.Windows.Forms.RichTextBox richTextBoxInfo;
         private System.Windows.Forms.GroupBox groupBoxUpdates;
-        private System.Windows.Forms.RichTextBox richTextBoxVersion;
+        private System.Windows.Forms.Button buttonCheckNewVersion;
+        private System.Windows.Forms.Button buttonUpdate;
+        private System.Windows.Forms.LinkLabel linkLabelNewVersion;
+        private System.Windows.Forms.LinkLabel linkLabelCurrentVersion;
     }
 }
