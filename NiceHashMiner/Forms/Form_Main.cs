@@ -27,6 +27,7 @@ namespace NiceHashMiner
 {
     using System.Drawing.Drawing2D;
     using System.IO;
+    using System.Net;
     using System.Runtime.InteropServices;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
 
@@ -82,6 +83,8 @@ namespace NiceHashMiner
         public static double buildD = 0.0d;
         public static double buildDcurrent = 0.0d;
         public static double githubVersion = 0.0d;
+        public static string githubName = "";
+        public static string github_browser_download_url = "";
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -459,7 +462,16 @@ namespace NiceHashMiner
             }
         }
 
-
+        public static void ProgressBarUpd(DownloadProgressChangedEventArgs e)
+        {
+            Form_Settings.ProgressProgramUpdate.Maximum = (int)e.TotalBytesToReceive / 100;
+            Form_Settings.ProgressProgramUpdate.Value = (int)e.BytesReceived / 100;
+           
+            if ((int)e.BytesReceived / 100 == 1)
+            {
+                Form_Settings.ProgressProgramUpdate.Visible = false;
+            }
+        }
         // This is a single shot _benchmarkTimer
         private void StartupTimer_Tick(object sender, EventArgs e)
         {

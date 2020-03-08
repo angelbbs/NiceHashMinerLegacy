@@ -628,27 +628,32 @@ Divert:
 
                         if (parse_result.PacketPayloadLength > 10 & addr.Direction == WinDivertDirection.Outbound)
                         {
-                            if (PacketPayloadData.Contains("eth_submitWork") && !OwnerPID.Equals("-1"))
+                            if (PacketPayloadData.Contains("}{") && OwnerPID.Contains("nanominer"))
+                            {
+                                PacketPayloadData = PacketPayloadData.Split('{')[1];
+                                PacketPayloadData = "{" + PacketPayloadData.Split('}')[0] + "}";
+                                Helpers.ConsolePrint("WinDivertSharp", "Fix nanominer packets broken json");
+                                Helpers.ConsolePrint("WinDivertSharp", PacketPayloadData);
+                                /*
+                                packet.Dispose();
+                                goto nextCycle;
+                                */
+                                /*
+                                Helpers.ConsolePrint("WinDivertSharp", "Normalize nanominer eth_getWork");
+                                PacketPayloadData = "{\"id\":3,\"jsonrpc\":\"2.0\",\"method\":\"eth_getWork\",\"params\":[]}";
+                                goto modifyData;
+                                */
+                            }
+                            if (PacketPayloadData.Contains("eth_submitWork") && OwnerPID.Contains("nanominer"))
                             {
                                 Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Submit work");
-                                Helpers.ConsolePrint("WinDivertSharp", PacketPayloadData);
-                                
-                                if (PacketPayloadData.Contains("sp_nbminer"))//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                {
-                                    modified = false;
-                                    goto sendPacket;
-                                }
-                                
-                                if (OwnerPID.Contains("nanominer"))
-                                {
-                                    dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
-                                    json.worker = "nnm";
-                                    PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
-                                    modified = false;
-                                    goto modifyData;
-                                }
-                                goto changeSrcDst;
+                                dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
+                                //json.worker = "nnm";
+                                PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
+                                modified = false;
+                                goto modifyData;
                             }
+
                             if (PacketPayloadData.Contains("eth_submitHashrate") && OwnerPID.Contains("nanominer"))
                             {
                                 packet.Dispose();
@@ -661,20 +666,10 @@ Divert:
                                 goto sendPacket;
                                 */
                             }
+
+
                             //Z-UEcw", "x"], "id": 2, "worker": "Farm1$0-2t3LAymH0Ve-dEwJZ-UEcw"}{"worker": "", "jsonrpc": "2.0", "params": [], "id": 3, "method": "eth_getWork"}{"id":6,"worker":"Farm1$0-2t3LAymH0Ve-dEwJZ-UEcw","jsonrpc":"2.0","method":"eth_submitHashrate","params":["0x3862188", "0x03513a550f32eb594f9088604341d3f2618d24caa193e4f9f035c3a1be38b36a"]}{"id":6,"worker":"Farm1$0-2t3LAymH0Ve-dEwJZ-UEcw","jsonrpc":"2.0","method":"eth_submitHashrate","params":["0x3862188", "0x03513a550f32eb594f9088604341d3f2618d24caa193e4f9f035c3a1be38b36a"]}{"id":6
                             //{"id":3,"jsonrpc":"2.0","method":"eth_getWork","params":[]} claymore
-                            
-                            if (PacketPayloadData.Contains("}{")  && OwnerPID.Contains("nanominer"))
-                            {
-                                Helpers.ConsolePrint("WinDivertSharp", "Block nanominer packets broken json");
-                                packet.Dispose();
-                                goto nextCycle;
-                                /*
-                                Helpers.ConsolePrint("WinDivertSharp", "Normalize nanominer eth_getWork");
-                                PacketPayloadData = "{\"id\":3,\"jsonrpc\":\"2.0\",\"method\":\"eth_getWork\",\"params\":[]}";
-                                goto modifyData;
-                                */
-                            }
                             
                             //block nanominer packets without json (ssl)
                             if (!PacketPayloadData.Contains("jsonrpc") && OwnerPID.Contains("nanominer"))
@@ -1017,7 +1012,11 @@ changeSrcDst:
 
 
 sendPacket:
-                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        if (OwnerPID.Contains("nanominer"))
+                        {
+                            modified = true;
+                        }
+                            parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
                         if (modified)
                         {

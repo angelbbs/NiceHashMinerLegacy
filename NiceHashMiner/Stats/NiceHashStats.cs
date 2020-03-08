@@ -967,6 +967,8 @@ namespace NiceHashMiner.Stats
                     string n = gitassets[i].name;
                     if (n.Contains("Setup.exe"))
                     {
+                        Form_Main.githubName = n;
+                        Form_Main.github_browser_download_url = gitassets[i].browser_download_url;
                         DateTime build = gitassets[i].updated_at;
                         string buildDate = build.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
                         Double.TryParse(buildDate.ToString(), out Form_Main.buildD);

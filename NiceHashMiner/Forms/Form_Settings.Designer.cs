@@ -156,6 +156,7 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.linkLabelCurrentVersion = new System.Windows.Forms.LinkLabel();
+            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1636,6 +1637,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.Controls.Add(this.linkLabelNewVersion);
             this.groupBoxUpdates.Controls.Add(this.buttonUpdate);
             this.groupBoxUpdates.Controls.Add(this.buttonCheckNewVersion);
+            this.groupBoxUpdates.Controls.Add(this.progressBarUpdate);
             this.groupBoxUpdates.Location = new System.Drawing.Point(4, 97);
             this.groupBoxUpdates.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxUpdates.Name = "groupBoxUpdates";
@@ -1659,15 +1661,18 @@ namespace NiceHashMiner.Forms
             // 
             // buttonUpdate
             // 
+            this.buttonUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonUpdate.Location = new System.Drawing.Point(556, 14);
             this.buttonUpdate.Name = "buttonUpdate";
             this.buttonUpdate.Size = new System.Drawing.Size(98, 23);
             this.buttonUpdate.TabIndex = 361;
             this.buttonUpdate.Text = "Update now";
             this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
             // 
             // buttonCheckNewVersion
             // 
+            this.buttonCheckNewVersion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCheckNewVersion.Location = new System.Drawing.Point(255, 14);
             this.buttonCheckNewVersion.Name = "buttonCheckNewVersion";
             this.buttonCheckNewVersion.Size = new System.Drawing.Size(118, 23);
@@ -1706,6 +1711,7 @@ namespace NiceHashMiner.Forms
             // 
             // buttonLicence
             // 
+            this.buttonLicence.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLicence.Location = new System.Drawing.Point(5, 57);
             this.buttonLicence.Name = "buttonLicence";
             this.buttonLicence.Size = new System.Drawing.Size(128, 23);
@@ -1766,6 +1772,20 @@ namespace NiceHashMiner.Forms
             this.linkLabelCurrentVersion.Text = "linkLabel1";
             this.linkLabelCurrentVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCurrentVersion_LinkClicked);
             this.linkLabelCurrentVersion.MouseEnter += new System.EventHandler(this.linkLabelCurrentVersion_MouseEnter);
+            // 
+            // progressBarUpdate
+            // 
+            this.progressBarUpdate.CustomText = "";
+            this.progressBarUpdate.Location = new System.Drawing.Point(554, 14);
+            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
+            this.progressBarUpdate.Name = "progressBarUpdate";
+            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
+            this.progressBarUpdate.Size = new System.Drawing.Size(100, 23);
+            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBarUpdate.TabIndex = 396;
+            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
+            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
             // 
             // Form_Settings
             // 
@@ -1851,7 +1871,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonCloseNoSave;
 
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.CustomTabControl tabControlGeneral;
         private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.GroupBox groupBox_Main;
         private System.Windows.Forms.CheckBox checkBox_Force_mining_if_nonprofitable;
@@ -1965,7 +1984,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_fiat;
         private System.Windows.Forms.CheckBox checkBox_sorting_list_of_algorithms;
         private System.Windows.Forms.CheckBox checkBox_AlwaysOnTop;
-        private System.Windows.Forms.TabPage tabPageAbout;
         private System.Windows.Forms.GroupBox groupBoxInfo;
         private System.Windows.Forms.Button buttonLicence;
         private System.Windows.Forms.RichTextBox richTextBoxInfo;
@@ -1974,5 +1992,8 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.LinkLabel linkLabelCurrentVersion;
+        public System.Windows.Forms.TabPage tabPageAbout;
+        private System.Windows.Forms.CustomTabControl tabControlGeneral;
+        private ProgressBarSample.TextProgressBar progressBarUpdate;
     }
 }

@@ -28,6 +28,7 @@ namespace NiceHashMiner.Forms
     {
         private readonly bool _isInitFinished = false;
         private bool _isChange = false;
+        public static ProgressBar ProgressProgramUpdate { get; set; }
 
         public bool IsChange
         {
@@ -102,7 +103,8 @@ namespace NiceHashMiner.Forms
             "Black",
             "DarkGreen"});
             */
-
+            ProgressProgramUpdate = progressBarUpdate;
+            //ProgressProgramUpdate = new ProgressBar { Parent = this, Dock = DockStyle.Top };
             // set first device selected {
             if (ComputeDeviceManager.Available.Devices.Count > 0)
             {
@@ -453,6 +455,7 @@ namespace NiceHashMiner.Forms
             Double.TryParse(build.ToString(), out Form_Main.buildDcurrent);
             linkLabelNewVersion.Text = "No new version or build";
             buttonUpdate.Visible = false;
+            progressBarUpdate.Visible = false;
 
             if (Form_Main.buildDcurrent < Form_Main.buildD)
             {
@@ -703,6 +706,8 @@ namespace NiceHashMiner.Forms
 
                 tabPageAbout.BackColor = Form_Main._backColor;
                 tabPageAbout.ForeColor = Form_Main._foreColor;
+                progressBarUpdate.BackColor = Form_Main._backColor;
+                progressBarUpdate.ForeColor = Form_Main._foreColor;
 
                 foreach (var lbl in tabPageAdvanced1.Controls.OfType<GroupBox>())
                 {
@@ -2359,6 +2364,16 @@ namespace NiceHashMiner.Forms
 
         private void linkLabelCurrentVersion_MouseEnter(object sender, EventArgs e)
         {
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            buttonUpdate.Visible = false;
+            progressBarUpdate.Visible = true;
+
+            progressBarUpdate.BackColor = Form_Main._backColor;
+            progressBarUpdate.TextColor = Form_Main._textColor;
+            Updater.Updater.DownloadSetup(Form_Main.githubVersion.ToString());
         }
     }
 }
