@@ -62,6 +62,7 @@
     <Compile Include="DXMRig.cs" />
     <Compile Include="DBeam.cs" />
     <Compile Include="DRandomX.cs" />
+    <Compile Include="DCuckaroom29.cs" />
     <Compile Include="DZhash.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Logger.cs" />

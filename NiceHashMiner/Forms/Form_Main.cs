@@ -85,6 +85,8 @@ namespace NiceHashMiner
         public static double githubVersion = 0.0d;
         public static string githubName = "";
         public static string github_browser_download_url = "";
+        public static string BackupFileName = "";
+        private static bool issetup = false;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -467,10 +469,34 @@ namespace NiceHashMiner
             Form_Settings.ProgressProgramUpdate.Maximum = (int)e.TotalBytesToReceive / 100;
             Form_Settings.ProgressProgramUpdate.Value = (int)e.BytesReceived / 100;
            
-            if ((int)e.BytesReceived / 100 == 1)
+            if ((int)e.TotalBytesToReceive == (int)e.BytesReceived && issetup == false)
             {
-                Form_Settings.ProgressProgramUpdate.Visible = false;
+                //Form_Settings.ProgressProgramUpdate.Visible = false;
+
+                issetup = true;
+                string curdir = Environment.CurrentDirectory;
+                if (MessageBox.Show("Закрыть программу и начать установку новой версии?",
+                    International.GetText("Обновление"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    Helpers.ConsolePrint("Updater", "Start update to " + curdir);
+                    MinersManager.StopAllMiners();
+                    if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
+                    MessageBoxManager.Unregister();
+                    ConfigManager.GeneralConfigFileCommit();
+
+                    Process setupProcess = new Process(); 
+                    setupProcess.StartInfo.FileName = @"temp\" + Form_Main.githubName; 
+                    setupProcess.StartInfo.Arguments = "/dir=" + curdir;
+                    setupProcess.Start();
+                }
+                else
+                {
+                    Helpers.ConsolePrint("Updater", "Cancel update to " + curdir);
+                }
+
             }
+
         }
         // This is a single shot _benchmarkTimer
         private void StartupTimer_Tick(object sender, EventArgs e)

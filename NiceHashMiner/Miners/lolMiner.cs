@@ -118,7 +118,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
-                LastCommandLine = "--coin GRIN-C32 --pool " + url + ";grincuckatoo31." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[5, 0] + nhsuff + ".nicehash.com" +
+                LastCommandLine = "--coin GRIN-C32 --pool " + url + ";grincuckatoo32." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[5, 0] + nhsuff + ".nicehash.com" +
                              " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
                              " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
                              " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +

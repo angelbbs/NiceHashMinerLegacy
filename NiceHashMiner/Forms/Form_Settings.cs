@@ -21,6 +21,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Diagnostics;
+using System.IO;
 
 namespace NiceHashMiner.Forms
 {
@@ -448,18 +449,20 @@ namespace NiceHashMiner.Forms
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
             var build = buildDate.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
+            Double.TryParse(build.ToString(), out Form_Main.buildDcurrent);
+
             linkLabelCurrentVersion.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabelCurrentVersion.Text = "Current version: " + ver + ". Build: " + build;
+            linkLabelCurrentVersion.Text = "Current version: " + ver + ". Build: " + Form_Main.buildDcurrent.ToString("00000000.00");
 
             linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
-            Double.TryParse(build.ToString(), out Form_Main.buildDcurrent);
+
             linkLabelNewVersion.Text = "No new version or build";
             buttonUpdate.Visible = false;
             progressBarUpdate.Visible = false;
 
             if (Form_Main.buildDcurrent < Form_Main.buildD)
             {
-                linkLabelNewVersion.Text = "New build: " + Form_Main.buildD;
+                linkLabelNewVersion.Text = "New build: " + Form_Main.buildD.ToString("{0:00000000.00}");
                 buttonUpdate.Visible = true;
                 linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
             }
@@ -475,6 +478,23 @@ namespace NiceHashMiner.Forms
                 linkLabelNewVersion.Text = "Error";
                 buttonUpdate.Visible = false;
             }
+
+            buttonRestoreBackup.Enabled = false;
+
+            labelBackupCopy.Text = "No available backup copy";
+            if (Directory.Exists("backup"))
+            {
+                var dirInfo = new DirectoryInfo("backup");
+                foreach (var file in dirInfo.GetFiles())
+                {
+                    if (file.Name.Contains("backup_") && file.Name.Contains(".zip"))
+                    {
+                        Form_Main.BackupFileName = file.Name.Replace("backup_", "");
+                        labelBackupCopy.Text = "Backup copy: " + file.Name.Replace("backup_", "").Replace(".zip", "");
+                    }
+                }
+            }
+
 
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
@@ -532,15 +552,15 @@ namespace NiceHashMiner.Forms
                     "https://bitcointalk.org/index.php?topic=5132119.0 " +
                     "https://github.com/angelbbs/NiceHashMinerLegacy/issues");
                 groupBoxUpdates.Text = "Обновление программы";
-                linkLabelCurrentVersion.Text = "Текущая версия: " + ver + ". Сборка: " + build;
+                linkLabelCurrentVersion.Text = "Текущая версия: " + ver + ". Сборка: " + Form_Main.buildDcurrent.ToString("00000000.00");
                 linkLabelNewVersion.Text = "Нет новой версии или сборки";
-                //richTextBoxNewVersion.Text = "Новая сборка: " + build;
+
                 buttonCheckNewVersion.Text = "Проверить сейчас";
                 buttonUpdate.Text = "Обновить сейчас";
 
                 if (Form_Main.buildDcurrent < Form_Main.buildD)
                 {
-                    linkLabelNewVersion.Text = "Новая сборка: " + Form_Main.buildD.ToString();
+                    linkLabelNewVersion.Text = "Новая сборка: " + Form_Main.buildD.ToString("00000000.00");
                     linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
                     buttonUpdate.Visible = true;
                 }
@@ -554,6 +574,13 @@ namespace NiceHashMiner.Forms
                 if (Form_Main.githubVersion <= 0)
                 {
                     linkLabelNewVersion.Text = "Ошибка проверки новой версии";
+                }
+                if (Form_Main.BackupFileName.Length > 0)
+                {
+                    labelBackupCopy.Text = "Резервная копия: " + Form_Main.BackupFileName;
+                } else
+                {
+                    labelBackupCopy.Text = "Нет резервной копии";
                 }
             }
             else
@@ -708,6 +735,7 @@ namespace NiceHashMiner.Forms
                 tabPageAbout.ForeColor = Form_Main._foreColor;
                 progressBarUpdate.BackColor = Form_Main._backColor;
                 progressBarUpdate.ForeColor = Form_Main._foreColor;
+                progressBarUpdate.ProgressColor = Form_Main._backColor;
 
                 foreach (var lbl in tabPageAdvanced1.Controls.OfType<GroupBox>())
                 {
@@ -2319,7 +2347,7 @@ namespace NiceHashMiner.Forms
             linkLabelNewVersion.Text = "No new version or build";
             if (Form_Main.buildDcurrent < Form_Main.buildD)
             {
-                linkLabelNewVersion.Text = "New build: " + Form_Main.buildD.ToString();
+                linkLabelNewVersion.Text = "New build: " + Form_Main.buildD.ToString("00000000.00");
                 buttonUpdate.Visible = true;
             }
             var programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
@@ -2328,14 +2356,19 @@ namespace NiceHashMiner.Forms
                 linkLabelNewVersion.Text = "New version: " + Form_Main.githubVersion.ToString();
                 buttonUpdate.Visible = true;
             }
-
+            if (Form_Main.githubVersion <= 0)
+            {
+                linkLabelNewVersion.Text = "Error checking the new version";
+                buttonUpdate.Visible = false;
+            }
+            
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
                 linkLabelNewVersion.Text = "Нет новой версии или сборки";
                 buttonUpdate.Visible = false;
                 if (Form_Main.buildDcurrent > Form_Main.buildD)
                 {
-                    linkLabelNewVersion.Text = "Новая сборка: " + Form_Main.buildD.ToString();
+                    linkLabelNewVersion.Text = "Новая сборка: " + Form_Main.buildD.ToString("00000000.00");
                     buttonUpdate.Visible = true;
                 }
                 if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
@@ -2343,12 +2376,15 @@ namespace NiceHashMiner.Forms
                     linkLabelNewVersion.Text = "Новая версия: " + Form_Main.githubVersion.ToString();
                     buttonUpdate.Visible = true;
                 }
+                
                 if (Form_Main.githubVersion <= 0)
                 {
                     linkLabelNewVersion.Text = "Ошибка проверки новой версии";
                     buttonUpdate.Visible = false;
                 }
+                
             }
+            
             linkLabelNewVersion.Update();
         }
 
@@ -2374,6 +2410,58 @@ namespace NiceHashMiner.Forms
             progressBarUpdate.BackColor = Form_Main._backColor;
             progressBarUpdate.TextColor = Form_Main._textColor;
             Updater.Updater.DownloadSetup(Form_Main.githubVersion.ToString());
+        }
+
+        private void buttonCreateBackup_Click(object sender, EventArgs e)
+        {
+            string fname = Form_Main.buildDcurrent.ToString("00000000.00");
+            var CMDconfigHandleBackup = new Process
+
+            {
+                StartInfo =
+                {
+                    FileName = "utils\\7z.exe"
+                }
+            };
+
+            if (Directory.Exists("backup"))
+            {
+                var dirInfo = new DirectoryInfo("backup");
+                foreach (var file in dirInfo.GetFiles()) file.Delete();
+                dirInfo.Delete();
+            }
+
+
+            CMDconfigHandleBackup.StartInfo.Arguments = "a -tzip -mx3 -ssw -r -x!backup backup\\backup_" + fname + ".zip";
+            CMDconfigHandleBackup.StartInfo.UseShellExecute = false;
+            CMDconfigHandleBackup.StartInfo.CreateNoWindow = false;
+            //CMDconfigHandleBackup.Exited += new EventHandler(CMDconfigHandleBackup_Exited);
+            CMDconfigHandleBackup.Start();
+            CMDconfigHandleBackup.WaitForExit(); 
+            Helpers.ConsolePrint("BACKUP","Error code: " + CMDconfigHandleBackup.ExitCode);
+            if (CMDconfigHandleBackup.ExitCode != 0)
+            {
+                MessageBox.Show("Error code: " + CMDconfigHandleBackup.ExitCode,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (Directory.Exists("backup"))
+            {
+                var dirInfo = new DirectoryInfo("backup");
+                foreach (var file in dirInfo.GetFiles())
+                {
+                    if (file.Name.Contains("backup_") && file.Name.Contains(".zip"))
+                    {
+                        Form_Main.BackupFileName = file.Name.Replace("backup_", "");
+                        labelBackupCopy.Text = "Резервная копия: " + file.Name.Replace("backup_", "").Replace(".zip", "");
+                    }
+                }
+            }
+
+        }
+        private void CMDconfigHandleBackup_Exited(object sender, System.EventArgs e)
+        {
         }
     }
 }

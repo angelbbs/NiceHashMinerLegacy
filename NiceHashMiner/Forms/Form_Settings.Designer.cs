@@ -143,20 +143,25 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.buttonGPUtuning = new System.Windows.Forms.Button();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
             this.groupBoxUpdates = new System.Windows.Forms.GroupBox();
+            this.linkLabelCurrentVersion = new System.Windows.Forms.LinkLabel();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonCheckNewVersion = new System.Windows.Forms.Button();
+            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.linkLabelCurrentVersion = new System.Windows.Forms.LinkLabel();
-            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonRestoreBackup = new System.Windows.Forms.Button();
+            this.buttonCreateBackup = new System.Windows.Forms.Button();
+            this.textProgressBar1 = new ProgressBarSample.TextProgressBar();
+            this.labelBackupCopy = new System.Windows.Forms.Label();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -200,6 +205,7 @@ namespace NiceHashMiner.Forms
             this.tabPageAbout.SuspendLayout();
             this.groupBoxUpdates.SuspendLayout();
             this.groupBoxInfo.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -1607,6 +1613,22 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
             // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
+            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(645, 169);
+            this.algorithmsListView1.TabIndex = 2;
+            // 
             // buttonGPUtuning
             // 
             this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
@@ -1618,9 +1640,35 @@ namespace NiceHashMiner.Forms
             this.buttonGPUtuning.UseVisualStyleBackColor = true;
             this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
             // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, 8);
+            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 208);
+            this.algorithmSettingsControl1.TabIndex = 396;
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 51);
+            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
+            this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
             // tabPageAbout
             // 
             this.tabPageAbout.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageAbout.Controls.Add(this.groupBox2);
             this.tabPageAbout.Controls.Add(this.groupBoxUpdates);
             this.tabPageAbout.Controls.Add(this.groupBoxInfo);
             this.tabPageAbout.Location = new System.Drawing.Point(4, 23);
@@ -1638,7 +1686,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.Controls.Add(this.buttonUpdate);
             this.groupBoxUpdates.Controls.Add(this.buttonCheckNewVersion);
             this.groupBoxUpdates.Controls.Add(this.progressBarUpdate);
-            this.groupBoxUpdates.Location = new System.Drawing.Point(4, 97);
+            this.groupBoxUpdates.Location = new System.Drawing.Point(4, 150);
             this.groupBoxUpdates.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxUpdates.Name = "groupBoxUpdates";
             this.groupBoxUpdates.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1647,11 +1695,23 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.TabStop = false;
             this.groupBoxUpdates.Text = "Program updates";
             // 
+            // linkLabelCurrentVersion
+            // 
+            this.linkLabelCurrentVersion.AutoSize = true;
+            this.linkLabelCurrentVersion.Location = new System.Drawing.Point(6, 19);
+            this.linkLabelCurrentVersion.Name = "linkLabelCurrentVersion";
+            this.linkLabelCurrentVersion.Size = new System.Drawing.Size(55, 13);
+            this.linkLabelCurrentVersion.TabIndex = 363;
+            this.linkLabelCurrentVersion.TabStop = true;
+            this.linkLabelCurrentVersion.Text = "linkLabel1";
+            this.linkLabelCurrentVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCurrentVersion_LinkClicked);
+            this.linkLabelCurrentVersion.MouseEnter += new System.EventHandler(this.linkLabelCurrentVersion_MouseEnter);
+            // 
             // linkLabelNewVersion
             // 
             this.linkLabelNewVersion.AutoSize = true;
             this.linkLabelNewVersion.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.linkLabelNewVersion.Location = new System.Drawing.Point(384, 19);
+            this.linkLabelNewVersion.Location = new System.Drawing.Point(373, 19);
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
             this.linkLabelNewVersion.Size = new System.Drawing.Size(55, 13);
             this.linkLabelNewVersion.TabIndex = 362;
@@ -1662,9 +1722,9 @@ namespace NiceHashMiner.Forms
             // buttonUpdate
             // 
             this.buttonUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonUpdate.Location = new System.Drawing.Point(556, 14);
+            this.buttonUpdate.Location = new System.Drawing.Point(536, 14);
             this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(98, 23);
+            this.buttonUpdate.Size = new System.Drawing.Size(118, 23);
             this.buttonUpdate.TabIndex = 361;
             this.buttonUpdate.Text = "Update now";
             this.buttonUpdate.UseVisualStyleBackColor = true;
@@ -1673,13 +1733,27 @@ namespace NiceHashMiner.Forms
             // buttonCheckNewVersion
             // 
             this.buttonCheckNewVersion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCheckNewVersion.Location = new System.Drawing.Point(255, 14);
+            this.buttonCheckNewVersion.Location = new System.Drawing.Point(245, 14);
             this.buttonCheckNewVersion.Name = "buttonCheckNewVersion";
             this.buttonCheckNewVersion.Size = new System.Drawing.Size(118, 23);
             this.buttonCheckNewVersion.TabIndex = 359;
             this.buttonCheckNewVersion.Text = "Check now";
             this.buttonCheckNewVersion.UseVisualStyleBackColor = true;
             this.buttonCheckNewVersion.Click += new System.EventHandler(this.buttonCheckNewVersion_Click);
+            // 
+            // progressBarUpdate
+            // 
+            this.progressBarUpdate.CustomText = "";
+            this.progressBarUpdate.Location = new System.Drawing.Point(536, 14);
+            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
+            this.progressBarUpdate.Name = "progressBarUpdate";
+            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
+            this.progressBarUpdate.Size = new System.Drawing.Size(118, 23);
+            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBarUpdate.TabIndex = 396;
+            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
+            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
             // 
             // groupBoxInfo
             // 
@@ -1720,72 +1794,67 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // algorithmsListView1
+            // groupBox2
             // 
-            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
-            this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
-            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(645, 169);
-            this.algorithmsListView1.TabIndex = 2;
+            this.groupBox2.Controls.Add(this.labelBackupCopy);
+            this.groupBox2.Controls.Add(this.buttonRestoreBackup);
+            this.groupBox2.Controls.Add(this.buttonCreateBackup);
+            this.groupBox2.Controls.Add(this.textProgressBar1);
+            this.groupBox2.Location = new System.Drawing.Point(4, 97);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox2.Size = new System.Drawing.Size(659, 47);
+            this.groupBox2.TabIndex = 395;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Backup copies";
             // 
-            // algorithmSettingsControl1
+            // buttonRestoreBackup
             // 
-            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, 8);
-            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 208);
-            this.algorithmSettingsControl1.TabIndex = 396;
+            this.buttonRestoreBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRestoreBackup.Location = new System.Drawing.Point(536, 14);
+            this.buttonRestoreBackup.Name = "buttonRestoreBackup";
+            this.buttonRestoreBackup.Size = new System.Drawing.Size(118, 23);
+            this.buttonRestoreBackup.TabIndex = 361;
+            this.buttonRestoreBackup.Text = "Restore from backup";
+            this.buttonRestoreBackup.UseVisualStyleBackColor = true;
             // 
-            // devicesListViewEnableControl1
+            // buttonCreateBackup
             // 
-            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 51);
-            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
-            this.devicesListViewEnableControl1.TabIndex = 397;
+            this.buttonCreateBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonCreateBackup.Location = new System.Drawing.Point(245, 14);
+            this.buttonCreateBackup.Name = "buttonCreateBackup";
+            this.buttonCreateBackup.Size = new System.Drawing.Size(118, 23);
+            this.buttonCreateBackup.TabIndex = 359;
+            this.buttonCreateBackup.Text = "Create backup";
+            this.buttonCreateBackup.UseVisualStyleBackColor = true;
+            this.buttonCreateBackup.Click += new System.EventHandler(this.buttonCreateBackup_Click);
             // 
-            // linkLabelCurrentVersion
+            // textProgressBar1
             // 
-            this.linkLabelCurrentVersion.AutoSize = true;
-            this.linkLabelCurrentVersion.Location = new System.Drawing.Point(6, 19);
-            this.linkLabelCurrentVersion.Name = "linkLabelCurrentVersion";
-            this.linkLabelCurrentVersion.Size = new System.Drawing.Size(55, 13);
-            this.linkLabelCurrentVersion.TabIndex = 363;
-            this.linkLabelCurrentVersion.TabStop = true;
-            this.linkLabelCurrentVersion.Text = "linkLabel1";
-            this.linkLabelCurrentVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCurrentVersion_LinkClicked);
-            this.linkLabelCurrentVersion.MouseEnter += new System.EventHandler(this.linkLabelCurrentVersion_MouseEnter);
+            this.textProgressBar1.CustomText = "";
+            this.textProgressBar1.Location = new System.Drawing.Point(536, 14);
+            this.textProgressBar1.Margin = new System.Windows.Forms.Padding(0);
+            this.textProgressBar1.Name = "textProgressBar1";
+            this.textProgressBar1.ProgressColor = System.Drawing.Color.Green;
+            this.textProgressBar1.Size = new System.Drawing.Size(118, 23);
+            this.textProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.textProgressBar1.TabIndex = 396;
+            this.textProgressBar1.TextColor = System.Drawing.Color.Black;
+            this.textProgressBar1.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textProgressBar1.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
             // 
-            // progressBarUpdate
+            // labelBackupCopy
             // 
-            this.progressBarUpdate.CustomText = "";
-            this.progressBarUpdate.Location = new System.Drawing.Point(554, 14);
-            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
-            this.progressBarUpdate.Name = "progressBarUpdate";
-            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
-            this.progressBarUpdate.Size = new System.Drawing.Size(100, 23);
-            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBarUpdate.TabIndex = 396;
-            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
-            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
+            this.labelBackupCopy.AutoSize = true;
+            this.labelBackupCopy.Location = new System.Drawing.Point(6, 19);
+            this.labelBackupCopy.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelBackupCopy.Name = "labelBackupCopy";
+            this.labelBackupCopy.Size = new System.Drawing.Size(131, 13);
+            this.labelBackupCopy.TabIndex = 407;
+            this.labelBackupCopy.Text = "No available backup copy";
             // 
             // Form_Settings
             // 
@@ -1860,6 +1929,8 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.ResumeLayout(false);
             this.groupBoxUpdates.PerformLayout();
             this.groupBoxInfo.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1995,5 +2066,10 @@ namespace NiceHashMiner.Forms
         public System.Windows.Forms.TabPage tabPageAbout;
         private System.Windows.Forms.CustomTabControl tabControlGeneral;
         private ProgressBarSample.TextProgressBar progressBarUpdate;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button buttonRestoreBackup;
+        private System.Windows.Forms.Button buttonCreateBackup;
+        private ProgressBarSample.TextProgressBar textProgressBar1;
+        private System.Windows.Forms.Label labelBackupCopy;
     }
 }

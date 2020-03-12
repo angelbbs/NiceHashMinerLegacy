@@ -408,6 +408,46 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash, "ZHash")
                 }
             },
+            /*
+            {
+            MinerBaseType.Bminer,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.DaggerHashimoto, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.ZHash, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.BeamV2, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckaroo29, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckarood29, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.Cuckaroom, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.CuckooCycle, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
+                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckatoo31, "")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    }
+                }
+            },
+            */
             {
             MinerBaseType.GMiner,
                 new List<Algorithm>

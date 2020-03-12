@@ -385,17 +385,6 @@ Divert:
                                 goto changeSrcDst;
                             }
 
-                            if (PacketPayloadData.Contains("eth_login") && !OwnerPID.Equals("-1"))
-                            {
-                                Helpers.ConsolePrint("WinDivertSharp", "*** eth_login");
-                                goto modifyData;
-                            }
-
-                            if (PacketPayloadData.Contains("eth_submitLogin") && !OwnerPID.Equals("-1"))
-                            {
-                                Helpers.ConsolePrint("WinDivertSharp", "*** eth_submitLogin");
-                                goto modifyData;
-                            }
 
                             if (PacketPayloadData.Contains("mining.authorize") && !OwnerPID.Equals("-1"))
                             {

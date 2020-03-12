@@ -137,6 +137,7 @@
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Miners\Bminer.cs" />
     <Compile Include="Miners\castxmr.cs" />
     <Compile Include="Miners\ClaymoreNeoscryptMiner.cs" />
     <Compile Include="Miners\CryptoDredge.cs" />
