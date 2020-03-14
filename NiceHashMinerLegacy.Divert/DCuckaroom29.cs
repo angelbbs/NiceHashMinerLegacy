@@ -350,6 +350,14 @@ nextCycle:
                         parsePacket:
 
                         if (addr.Direction == WinDivertDirection.Outbound &
+                            parse_result.TcpHeader->DstPort == DivertPort & parse_result.IPv4Header->DstAddr.ToString() == DivertIP &
+                           !OwnerPID.Equals("-1"))
+                        {
+                            //loopback
+                            goto sendPacket;
+                        }
+
+                            if (addr.Direction == WinDivertDirection.Outbound &
                             parse_result.TcpHeader->DstPort == DevFeePort & parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &
                            !OwnerPID.Equals("-1"))
                         {

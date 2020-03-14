@@ -148,6 +148,10 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
+            this.groupBoxBackup = new System.Windows.Forms.GroupBox();
+            this.labelBackupCopy = new System.Windows.Forms.Label();
+            this.buttonRestoreBackup = new System.Windows.Forms.Button();
+            this.buttonCreateBackup = new System.Windows.Forms.Button();
             this.groupBoxUpdates = new System.Windows.Forms.GroupBox();
             this.linkLabelCurrentVersion = new System.Windows.Forms.LinkLabel();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
@@ -157,11 +161,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.buttonRestoreBackup = new System.Windows.Forms.Button();
-            this.buttonCreateBackup = new System.Windows.Forms.Button();
-            this.textProgressBar1 = new ProgressBarSample.TextProgressBar();
-            this.labelBackupCopy = new System.Windows.Forms.Label();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -203,9 +202,9 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             this.tabPageAbout.SuspendLayout();
+            this.groupBoxBackup.SuspendLayout();
             this.groupBoxUpdates.SuspendLayout();
             this.groupBoxInfo.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -613,6 +612,7 @@ namespace NiceHashMiner.Forms
             this.checkBox_AlwaysOnTop.TabIndex = 382;
             this.checkBox_AlwaysOnTop.Text = "Always on Top";
             this.checkBox_AlwaysOnTop.UseVisualStyleBackColor = true;
+            this.checkBox_AlwaysOnTop.CheckedChanged += new System.EventHandler(this.checkBox_AlwaysOnTop_CheckedChanged);
             // 
             // checkBox_sorting_list_of_algorithms
             // 
@@ -1668,7 +1668,7 @@ namespace NiceHashMiner.Forms
             // tabPageAbout
             // 
             this.tabPageAbout.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPageAbout.Controls.Add(this.groupBox2);
+            this.tabPageAbout.Controls.Add(this.groupBoxBackup);
             this.tabPageAbout.Controls.Add(this.groupBoxUpdates);
             this.tabPageAbout.Controls.Add(this.groupBoxInfo);
             this.tabPageAbout.Location = new System.Drawing.Point(4, 23);
@@ -1676,6 +1676,54 @@ namespace NiceHashMiner.Forms
             this.tabPageAbout.Size = new System.Drawing.Size(669, 439);
             this.tabPageAbout.TabIndex = 3;
             this.tabPageAbout.Text = "About";
+            // 
+            // groupBoxBackup
+            // 
+            this.groupBoxBackup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxBackup.Controls.Add(this.labelBackupCopy);
+            this.groupBoxBackup.Controls.Add(this.buttonRestoreBackup);
+            this.groupBoxBackup.Controls.Add(this.buttonCreateBackup);
+            this.groupBoxBackup.Location = new System.Drawing.Point(4, 97);
+            this.groupBoxBackup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxBackup.Name = "groupBoxBackup";
+            this.groupBoxBackup.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxBackup.Size = new System.Drawing.Size(659, 47);
+            this.groupBoxBackup.TabIndex = 395;
+            this.groupBoxBackup.TabStop = false;
+            this.groupBoxBackup.Text = "Backup copies";
+            // 
+            // labelBackupCopy
+            // 
+            this.labelBackupCopy.AutoSize = true;
+            this.labelBackupCopy.Location = new System.Drawing.Point(6, 19);
+            this.labelBackupCopy.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelBackupCopy.Name = "labelBackupCopy";
+            this.labelBackupCopy.Size = new System.Drawing.Size(131, 13);
+            this.labelBackupCopy.TabIndex = 407;
+            this.labelBackupCopy.Text = "No available backup copy";
+            // 
+            // buttonRestoreBackup
+            // 
+            this.buttonRestoreBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRestoreBackup.Location = new System.Drawing.Point(387, 14);
+            this.buttonRestoreBackup.Name = "buttonRestoreBackup";
+            this.buttonRestoreBackup.Size = new System.Drawing.Size(118, 23);
+            this.buttonRestoreBackup.TabIndex = 361;
+            this.buttonRestoreBackup.Text = "Restore from backup";
+            this.buttonRestoreBackup.UseVisualStyleBackColor = true;
+            this.buttonRestoreBackup.Click += new System.EventHandler(this.buttonRestoreBackup_Click);
+            // 
+            // buttonCreateBackup
+            // 
+            this.buttonCreateBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonCreateBackup.Location = new System.Drawing.Point(267, 14);
+            this.buttonCreateBackup.Name = "buttonCreateBackup";
+            this.buttonCreateBackup.Size = new System.Drawing.Size(110, 23);
+            this.buttonCreateBackup.TabIndex = 359;
+            this.buttonCreateBackup.Text = "Create backup";
+            this.buttonCreateBackup.UseVisualStyleBackColor = true;
+            this.buttonCreateBackup.Click += new System.EventHandler(this.buttonCreateBackup_Click);
             // 
             // groupBoxUpdates
             // 
@@ -1711,7 +1759,7 @@ namespace NiceHashMiner.Forms
             // 
             this.linkLabelNewVersion.AutoSize = true;
             this.linkLabelNewVersion.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.linkLabelNewVersion.Location = new System.Drawing.Point(373, 19);
+            this.linkLabelNewVersion.Location = new System.Drawing.Point(384, 19);
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
             this.linkLabelNewVersion.Size = new System.Drawing.Size(55, 13);
             this.linkLabelNewVersion.TabIndex = 362;
@@ -1733,9 +1781,9 @@ namespace NiceHashMiner.Forms
             // buttonCheckNewVersion
             // 
             this.buttonCheckNewVersion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCheckNewVersion.Location = new System.Drawing.Point(245, 14);
+            this.buttonCheckNewVersion.Location = new System.Drawing.Point(267, 14);
             this.buttonCheckNewVersion.Name = "buttonCheckNewVersion";
-            this.buttonCheckNewVersion.Size = new System.Drawing.Size(118, 23);
+            this.buttonCheckNewVersion.Size = new System.Drawing.Size(110, 23);
             this.buttonCheckNewVersion.TabIndex = 359;
             this.buttonCheckNewVersion.Text = "Check now";
             this.buttonCheckNewVersion.UseVisualStyleBackColor = true;
@@ -1793,68 +1841,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.Text = "View licence";
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.labelBackupCopy);
-            this.groupBox2.Controls.Add(this.buttonRestoreBackup);
-            this.groupBox2.Controls.Add(this.buttonCreateBackup);
-            this.groupBox2.Controls.Add(this.textProgressBar1);
-            this.groupBox2.Location = new System.Drawing.Point(4, 97);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox2.Size = new System.Drawing.Size(659, 47);
-            this.groupBox2.TabIndex = 395;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Backup copies";
-            // 
-            // buttonRestoreBackup
-            // 
-            this.buttonRestoreBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonRestoreBackup.Location = new System.Drawing.Point(536, 14);
-            this.buttonRestoreBackup.Name = "buttonRestoreBackup";
-            this.buttonRestoreBackup.Size = new System.Drawing.Size(118, 23);
-            this.buttonRestoreBackup.TabIndex = 361;
-            this.buttonRestoreBackup.Text = "Restore from backup";
-            this.buttonRestoreBackup.UseVisualStyleBackColor = true;
-            // 
-            // buttonCreateBackup
-            // 
-            this.buttonCreateBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCreateBackup.Location = new System.Drawing.Point(245, 14);
-            this.buttonCreateBackup.Name = "buttonCreateBackup";
-            this.buttonCreateBackup.Size = new System.Drawing.Size(118, 23);
-            this.buttonCreateBackup.TabIndex = 359;
-            this.buttonCreateBackup.Text = "Create backup";
-            this.buttonCreateBackup.UseVisualStyleBackColor = true;
-            this.buttonCreateBackup.Click += new System.EventHandler(this.buttonCreateBackup_Click);
-            // 
-            // textProgressBar1
-            // 
-            this.textProgressBar1.CustomText = "";
-            this.textProgressBar1.Location = new System.Drawing.Point(536, 14);
-            this.textProgressBar1.Margin = new System.Windows.Forms.Padding(0);
-            this.textProgressBar1.Name = "textProgressBar1";
-            this.textProgressBar1.ProgressColor = System.Drawing.Color.Green;
-            this.textProgressBar1.Size = new System.Drawing.Size(118, 23);
-            this.textProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.textProgressBar1.TabIndex = 396;
-            this.textProgressBar1.TextColor = System.Drawing.Color.Black;
-            this.textProgressBar1.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textProgressBar1.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
-            // 
-            // labelBackupCopy
-            // 
-            this.labelBackupCopy.AutoSize = true;
-            this.labelBackupCopy.Location = new System.Drawing.Point(6, 19);
-            this.labelBackupCopy.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelBackupCopy.Name = "labelBackupCopy";
-            this.labelBackupCopy.Size = new System.Drawing.Size(131, 13);
-            this.labelBackupCopy.TabIndex = 407;
-            this.labelBackupCopy.Text = "No available backup copy";
             // 
             // Form_Settings
             // 
@@ -1926,11 +1912,11 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             this.tabPageAbout.ResumeLayout(false);
+            this.groupBoxBackup.ResumeLayout(false);
+            this.groupBoxBackup.PerformLayout();
             this.groupBoxUpdates.ResumeLayout(false);
             this.groupBoxUpdates.PerformLayout();
             this.groupBoxInfo.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2066,10 +2052,9 @@ namespace NiceHashMiner.Forms
         public System.Windows.Forms.TabPage tabPageAbout;
         private System.Windows.Forms.CustomTabControl tabControlGeneral;
         private ProgressBarSample.TextProgressBar progressBarUpdate;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBoxBackup;
         private System.Windows.Forms.Button buttonRestoreBackup;
         private System.Windows.Forms.Button buttonCreateBackup;
-        private ProgressBarSample.TextProgressBar textProgressBar1;
         private System.Windows.Forms.Label labelBackupCopy;
     }
 }

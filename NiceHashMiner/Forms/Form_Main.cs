@@ -86,6 +86,7 @@ namespace NiceHashMiner
         public static string githubName = "";
         public static string github_browser_download_url = "";
         public static string BackupFileName = "";
+        public static string BackupFileDate = "";
         private static bool issetup = false;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
