@@ -28,6 +28,7 @@ using System.Management;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Divert;
 using NiceHashMiner.Forms.Components;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {
@@ -409,7 +410,7 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerTag(), ProcessTag() + " ERROR killing miner with pid: " + pid.ToString());
                     }
                 }
-                
+
             }
             catch (ArgumentException)
             {
@@ -1101,7 +1102,7 @@ namespace NiceHashMiner
             int bestServerId = 0;
             long bestReplyTime = 10000;
 
-            string server = ""; 
+            string server = "";
             Helpers.ConsolePrint("PingServers", " start ping");
             for (int i = 0; i < 6; i++)
             {
@@ -1131,7 +1132,7 @@ namespace NiceHashMiner
                 }
                 serverId++;
             }
-            string[,] tmpServers = { { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } }; 
+            string[,] tmpServers = { { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
             int pingReplyTimeTmp;
             long bestReplyTimeTmp = 10000;
             int iTmp = 0;
@@ -1159,13 +1160,13 @@ namespace NiceHashMiner
                 server = "speedtest." + Form_Main.myServers[i, 0] + ".nicehash.com";
                 Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
             }
-               
+
              Helpers.ConsolePrint("PingServers", "BestServer: " + Globals.MiningLocation[bestServerId]);
             return bestServerId;
         }
         protected string GetServiceUrl(AlgorithmType algo)
         {
-            return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], 
+            return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
         }
         protected bool IsActiveProcess(int pid)
@@ -1184,7 +1185,7 @@ namespace NiceHashMiner
 
         protected virtual NiceHashProcess _Start()
         {
-           RunCMDBeforeOrAfterMining(true);
+            RunCMDBeforeOrAfterMining(true);
             // never start when ended
             if (_isEnded)
             {
@@ -1266,7 +1267,7 @@ namespace NiceHashMiner
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
                         Helpers.ConsolePrint("WinDivertSharp", "Miner: " + MinerDeviceName + " Algo: " + MiningSetup.CurrentAlgorithmType);
                         P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName,
-                            strPlatform, w, ConfigManager.GeneralConfig.DivertLog, ConfigManager.GeneralConfig.BlockGMinerApacheTomcat);
+                            strPlatform, w, ConfigManager.GeneralConfig.DivertLog, ConfigManager.GeneralConfig.SaveDivertPackets, ConfigManager.GeneralConfig.BlockGMinerApacheTomcat);
 
                         _currentPidData = new MinerPidData
                         {
@@ -1590,7 +1591,7 @@ namespace NiceHashMiner
                 Restart();
                 return;
             }
-            
+
                 switch (CurrentMinerReadStatus)
                 {
                     case MinerApiReadStatus.GOT_READ:

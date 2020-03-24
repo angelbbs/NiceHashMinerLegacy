@@ -367,6 +367,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --pers auto --algo 144_5" +
+                " --server btg.2miners.com --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.gminer --pass x --port 4040 " +
                 " --server equihash144.eu.mine.zpool.ca --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 --pass c=BTC --port 2144 " +
                 " --server zhash.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3369" +
                 " --server zhash.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3369" +
@@ -387,8 +388,8 @@ namespace NiceHashMiner.Miners
             {
                 //_benchmarkTimeWait = 180; 
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashII" +
-                " --server beam-eu.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 2222 --ssl 1 " +
-                " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 12222 --ssl 1 " +
+                " --server beam.2miners.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --port 5050 --ssl 1 " +
+                " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --port 12222 --ssl 1 " +
                 " --server beamv2.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3378 --ssl 0" +
                 " --server beamv2.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3378 --ssl 0" +
                 GetDevicesCommandString();
@@ -413,14 +414,16 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckaroom29" +
+                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
                 " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
-                " --server grincuckarood29.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
-                " --server grincuckarood29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
+                " --server cuckaroom.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3382 --ssl 0" +
+                " --server cuckaroom.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3382 --ssl 0" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin31" +
+                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
                 " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6667 --ssl 0" +
                 " --server grincuckatoo31.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3372 --ssl 0" +
                 " --server grincuckatoo31.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3372 --ssl 0" +
@@ -429,7 +432,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin32" +
-                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA." + worker + " --pass x  --ssl 0" +
+                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
                 " --server grincuckatoo32.eu" + nhsuff + ".nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
                 " --server grincuckatoo32.hk" + nhsuff + ".nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
                 GetDevicesCommandString();
@@ -437,8 +440,8 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo aeternity" +
-                " --server ae.f2pool.com --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + worker + " --pass x --port 7898 --ssl 0" +
-                " --server ae.2miners.com --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + worker + " --pass x --port 4040 --ssl 0" +
+                //" --server ae.f2pool.com --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + worker + " --pass x --port 7898 --ssl 0" +
+                " --server ae.2miners.com --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.gminer --pass x --port 4040 --ssl 0" +
                 " --server cuckoocycle.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3376 --ssl 0" +
                 " --server cuckoocycle.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3376 --ssl 0" +
                 GetDevicesCommandString();
@@ -454,7 +457,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo eaglesong" +
-                " --server ckb.2miners.com:6464 --user ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv --ssl 0" +
+                " --server ckb.2miners.com:6464 --user ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv.gminer --ssl 0" +
                 " --server eaglesong.eu" + nhsuff + ".nicehash.com:3381 --user " + username + " --ssl 0" +
                 " --server eaglesong.hk" + nhsuff + ".nicehash.com:3381 --user " + username + " --ssl 0" +
                 GetDevicesCommandString();
@@ -462,7 +465,7 @@ namespace NiceHashMiner.Miners
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo eth+ckb" +
-                " --server eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.GMiner --ssl 0 --proto proxy --dserver ckb.2miners.com:6464 --duser ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv" +
+                " --server eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.GMiner --ssl 0 --proto proxy --dserver ckb.2miners.com:6464 --duser ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv.gminer" +
                 " --server daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.eu.nicehash.com:3381 --duser " + username + " --ssl 0" +
                 " --server daggerhashimoto.hk.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.hk.nicehash.com:3381 --duser " + username + " --ssl 0" +
                 GetDevicesCommandString();

@@ -235,17 +235,19 @@ nextCycle:
                         }
 
                         np++;
-                        
-                        string cpacket0 = "";
-                        for (int i = 0; i < readLen; i++)
+                        if (Divert._SaveDivertPackets)
                         {
-                           // if (packet[i] >= 32)
+                            if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+                            string cpacket0 = "";
+                            for (int i = 0; i < readLen; i++)
+                            {
+                                // if (packet[i] >= 32)
                                 cpacket0 = cpacket0 + (char)packet[i];
 
+                            }
+                            if (cpacket0.Length > 60)
+                                File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
-                        if (cpacket0.Length > 60)
-                        File.WriteAllText(np.ToString()+ "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
-                        
 
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
@@ -641,17 +643,20 @@ sendPacket:
                         {
                             WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
                         }
-                        
-                        string cpacket1 = "";
-                        for (int i = 0; i < readLen; i++)
+
+                        if (Divert._SaveDivertPackets)
                         {
-                            // if (packet[i] >= 32)
-                            cpacket1 = cpacket1 + (char)packet[i];
+                            if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+                            string cpacket1 = "";
+                            for (int i = 0; i < readLen; i++)
+                            {
+                                // if (packet[i] >= 32)
+                                cpacket1 = cpacket1 + (char)packet[i];
 
+                            }
+                            if (cpacket1.Length > 100)
+                                File.WriteAllText("temp/" + np.ToString() + "new-" + addr.Direction.ToString() + ".pkt", cpacket1);
                         }
-                        if (cpacket1.Length > 100)
-                            File.WriteAllText(np.ToString() + "new-" + addr.Direction.ToString() + ".pkt", cpacket1);
-
 
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
 

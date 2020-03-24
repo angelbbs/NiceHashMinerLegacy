@@ -513,7 +513,7 @@ namespace NiceHashMiner.Stats
         {
             attemptReconnect_Tick();
             NiceHashStats.GetSmaAPICurrent();
-            ExchangeRateApi.GetNewBTCRate();
+           // ExchangeRateApi.GetNewBTCRate();
             if (_attemptingReconnect)
             {
                 return false;

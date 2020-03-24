@@ -286,7 +286,7 @@ namespace NiceHashMiner.Miners
 
             addParam = " "
                                     + GetDevicesCommandString()
-                                    + String.Format("  -epool {0} -ewal {1} -mport 127.0.0.1:-{2} -esm 3 -epsw x -allpools 1 -ftime 10 -retrydelay 5", url, username, ApiPort)
+                                    + String.Format("  -epool {0} -ewal {1} -mport 127.0.0.1:-{2} -esm 3 -epsw x -allpools 1 -ftime 10 -retrydelay 5 -checkcert 0", url, username, ApiPort)
                                     + dualModeParams;
             }
             return addParam + " -epoolsfile "+epoolsFile;

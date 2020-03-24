@@ -28,7 +28,9 @@ namespace NiceHashMiner
     using System.Drawing.Drawing2D;
     using System.IO;
     using System.Net;
+    using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
@@ -43,6 +45,8 @@ namespace NiceHashMiner
         private Timer _autostartTimer;
         private Timer _autostartTimerDelay;
         private Timer _deviceStatusTimer;
+        private Timer _updateTimer;
+        private int _updateTimerCount;
         private int _AutoStartMiningDelay = 0;
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
@@ -60,7 +64,7 @@ namespace NiceHashMiner
         public static int _flowLayoutPanelRatesIndex = 0;
 
         private const string BetaAlphaPostfixString = "";
-        const string ForkString = " Fork Fix 25";
+        const string ForkString = " Fork Fix ";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -80,14 +84,15 @@ namespace NiceHashMiner
         public static Color _foreColor;
         public static Color _windowColor;
         public static Color _textColor;
-        public static double buildD = 0.0d;
-        public static double buildDcurrent = 0.0d;
+        public static double githubBuild = 0.0d;
+        public static double currentBuild = 0.0d;
+        public static double currentVersion = 0.0d;
         public static double githubVersion = 0.0d;
         public static string githubName = "";
         public static string github_browser_download_url = "";
         public static string BackupFileName = "";
         public static string BackupFileDate = "";
-        private static bool issetup = false;
+        public static bool NewVersionExist = false;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -229,21 +234,14 @@ namespace NiceHashMiner
 
             R = new Random((int)DateTime.Now.Ticks);
 
-            //            Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
-            /*
-            var cPlatform = "";
-            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-            {
-                cPlatform = " (для старой платформы NiceHash)";
-            }
-            else
-            {
-                cPlatform = " (for old NiceHash platform)";
-            }
-            */
-
-
             Text += ForkString;
+            Text += ForkString + ConfigManager.GeneralConfig.ForkFixVersion.ToString();
+
+            var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
+            var buildDate = new DateTime(2000, 1, 1).AddDays(internalversion.Build).AddSeconds(internalversion.Revision * 2);
+            var build = buildDate.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
+            Double.TryParse(build.ToString(), out Form_Main.currentBuild);
+            Form_Main.currentVersion = ConfigManager.GeneralConfig.ForkFixVersion;
 
             label_NotProfitable.Visible = false;
 
@@ -467,35 +465,14 @@ namespace NiceHashMiner
 
         public static void ProgressBarUpd(DownloadProgressChangedEventArgs e)
         {
-            Form_Settings.ProgressProgramUpdate.Maximum = (int)e.TotalBytesToReceive / 100;
-            Form_Settings.ProgressProgramUpdate.Value = (int)e.BytesReceived / 100;
-           
-            if ((int)e.TotalBytesToReceive == (int)e.BytesReceived && issetup == false)
+            if (Form_Settings.ProgressProgramUpdate != null)
             {
-                //Form_Settings.ProgressProgramUpdate.Visible = false;
-
-                issetup = true;
-                string curdir = Environment.CurrentDirectory;
-                if (MessageBox.Show("Закрыть программу и начать установку новой версии?",
-                    International.GetText("Обновление"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                {
-                    Helpers.ConsolePrint("Updater", "Start update to " + curdir);
-                    MinersManager.StopAllMiners();
-                    if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
-                    MessageBoxManager.Unregister();
-                    ConfigManager.GeneralConfigFileCommit();
-
-                    Process setupProcess = new Process(); 
-                    setupProcess.StartInfo.FileName = @"temp\" + Form_Main.githubName; 
-                    setupProcess.StartInfo.Arguments = "/dir=" + curdir;
-                    setupProcess.Start();
-                }
-                else
-                {
-                    Helpers.ConsolePrint("Updater", "Cancel update to " + curdir);
-                }
-
+                Form_Settings.ProgressProgramUpdate.Maximum = (int)e.TotalBytesToReceive / 100;
+                Form_Settings.ProgressProgramUpdate.Value = (int)e.BytesReceived / 100;
+            }
+            if ((int)e.TotalBytesToReceive == (int)e.BytesReceived && Form_Settings.ProgressProgramUpdate != null)
+            {
+                Form_Settings.ProgressProgramUpdate.Visible = false;
             }
 
         }
@@ -599,161 +576,72 @@ namespace NiceHashMiner
                 _loadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
                 Helpers.SetNvidiaP0State();
             }
-            //Thread.Sleep(100);
+
+            _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
+            try
+            {
+                CheckGithub();
+            } catch (Exception er)
+            {
+                Helpers.ConsolePrint("CheckGithub", er.ToString());
+            }
+
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
-           // NiceHashStats.OnSmaUpdate += SmaCallback;
-            NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.OnExchangeUpdate += ExchangeCallback;
-            Thread.Sleep(50);
-            /*
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                NiceHashStats.StartConnection(Links.NhmSocketAddress);
-                //NiceHashStats.DeviceStatus_TickNew("PENDING");
-            }
-            else
-            */
-            {
-                NiceHashStats.StartConnection(Links.NhmSocketAddress);
-            }
-
-            // increase timeout
-            if (Globals.IsFirstNetworkCheckTimeout)
-            {
-                //while (!Helpers.WebRequestTestGoogle() && Globals.FirstNetworkCheckTimeoutTries > 0)
-                while (Globals.FirstNetworkCheckTimeoutTries > 0)
-                {
-                    --Globals.FirstNetworkCheckTimeoutTries;
-                }
-            }
-
-            _loadingScreen.IncreaseLoadCounterAndMessage(
-    International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            //Thread.Sleep(200);
-            try
-            {
-                string ghv = NiceHashStats.GetVersion().Item1;
-                buildD = NiceHashStats.GetVersion().Item2;
-                Helpers.ConsolePrint("GITHUB", ghv);
-                if (ghv != null)
-                {
-                    NiceHashStats.SetVersion(ghv);
-                }
-            }
-            catch (Exception er)
-            {
-                Helpers.ConsolePrint("GITHUB", "Github error");
-                Helpers.ConsolePrint("GITHUB", er.ToString());
-            }
+            //Thread.Sleep(50);
+            NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
-            //// Don't start timer if socket is giving data
-            //if (ExchangeRateApi.ExchangesFiat == null)
-            //{
-            //    // Wait a bit and check again
-            //    Thread.Sleep(1000);
-            //    if (ExchangeRateApi.ExchangesFiat == null)
-            //    {
-            //        Helpers.ConsolePrint("NICEHASH", "No exchange from socket yet, getting manually");
-            //        _bitcoinExchangeCheck = new Timer();
-            //        _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
-            //        _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
-            //        _bitcoinExchangeCheck.Start();
-            //        BitcoinExchangeCheck_Tick(null, null);
-            //    }
-            //}
 
             _loadingScreen.FinishLoad();
 
             firstStartConnection = true;
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
-            // standard miners check scope
+
+            if (!MinersExistanceChecker.IsMinersBinsInit())
             {
-                // check if download needed
-                if (!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit)
+                 var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                       International.GetText("Warning_with_Exclamation"),
+                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
+                if (result == DialogResult.Yes)
                 {
-                    var downloadUnzipForm =
-                        new Form_Loading(new MinersDownloader(MinersDownloadManager.StandardDlSetup));
+                    ConfigManager.GeneralConfigFileCommit();
+                    var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.StandardDlSetup));
                     SetChildFormCenter(downloadUnzipForm);
                     downloadUnzipForm.ShowDialog();
                 }
-                // check if files are mising
-                if (!MinersExistanceChecker.IsMinersBinsInit())
+            }
+            else
+            {
+                // all good
+                ConfigManager.GeneralConfig.DownloadInit = true;
+                ConfigManager.GeneralConfigFileCommit();
+            }
+
+            if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
+            {
+                var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                           International.GetText("Warning_with_Exclamation"),
+                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
+                if (result == DialogResult.Yes)
                 {
-                    var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                        International.GetText("Warning_with_Exclamation"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (result == DialogResult.Yes)
-                    {
-                        ConfigManager.GeneralConfig.DownloadInit = false;
-                        ConfigManager.GeneralConfigFileCommit();
-                        var pHandle = new Process
-                        {
-                            StartInfo =
-                            {
-                                FileName = Application.ExecutablePath
-                            }
-                        };
-                        pHandle.Start();
-                        Close();
-                        return;
-                    }
-                }
-                else if (!ConfigManager.GeneralConfig.DownloadInit)
-                {
-                    // all good
-                    ConfigManager.GeneralConfig.DownloadInit = true;
                     ConfigManager.GeneralConfigFileCommit();
+                    var download3rdPartyUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
+                    SetChildFormCenter(download3rdPartyUnzipForm);
+                    download3rdPartyUnzipForm.ShowDialog();
                 }
             }
-            // 3rdparty miners check scope #2
+            else
             {
-                // check if download needed
-                if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES)
-                {
-                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() &&
-                        !ConfigManager.GeneralConfig.DownloadInit3rdParty)
-                    {
-                        var download3rdPartyUnzipForm =
-                            new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
-                        SetChildFormCenter(download3rdPartyUnzipForm);
-                        download3rdPartyUnzipForm.ShowDialog();
-                    }
-                    // check if files are mising
-                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
-                    {
-                        var result = MessageBox.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                            International.GetText("Warning_with_Exclamation"),
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result == DialogResult.Yes)
-                        {
-                            ConfigManager.GeneralConfig.DownloadInit3rdParty = false;
-                            ConfigManager.GeneralConfigFileCommit();
-                            var pHandle = new Process
-                            {
-                                StartInfo =
-                                {
-                                    FileName = Application.ExecutablePath
-                                }
-                            };
-                            pHandle.Start();
-                            Close();
-                            return;
-                        }
-                    }
-                    else if (!ConfigManager.GeneralConfig.DownloadInit3rdParty)
-                    {
-                        // all good
-                        ConfigManager.GeneralConfig.DownloadInit3rdParty = true;
-                        ConfigManager.GeneralConfigFileCommit();
-                    }
-                }
+                // all good
+                ConfigManager.GeneralConfig.DownloadInit3rdParty = true;
+                ConfigManager.GeneralConfigFileCommit();
             }
 
             if (runVCRed)
@@ -959,10 +847,7 @@ namespace NiceHashMiner
 
             SetChildFormCenter(_loadingScreen);
             _loadingScreen.Show();
-            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
-            {
-              //  Form_Loading.ActiveForm.BackColor = Color.LightGray; // при автозапуске объект неинициализирован
-            }
+
 
             _startupTimer = new Timer();
             _startupTimer.Tick += StartupTimer_Tick;
@@ -981,32 +866,96 @@ namespace NiceHashMiner
             _deviceStatusTimer.Interval = 1000;
             _deviceStatusTimer.Start();
 
+            _updateTimer = new Timer();
+            _updateTimer.Tick += UpdateTimer_Tick;
+            _updateTimer.Interval = 1000 * 60;//1 min
+            _updateTimerCount = 0;
+            _updateTimer.Start();
+
         }
 
-        //        [Obsolete("Deprecated in favour of AlgorithmSwitchingManager timer")]
-        //       private async void SMAMinerCheck_Tick(object sender, EventArgs e)
-        //        {
-        //            _smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
-        //                                      R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-        //            if (ComputeDeviceManager.Group.ContainsAmdGpus)
-        //            {
-        //                _smaMinerCheck.Interval =
-        //                    (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
-        //                     ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
-        //                    R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-        //            }
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            _updateTimerCount++;
+            int period = 0;
+            switch (ConfigManager.GeneralConfig.ProgramUpdateIndex)
+            {
+                case 0:
+                    period = 60;
+                    break;
+                case 1:
+                    period = 180;
+                    break;
+                case 2:
+                    period = 360;
+                    break;
+                case 3:
+                    period = 720;
+                    break;
+                case 4:
+                    period = 1140;
+                    break;
+            }
 
-        //#if (SWITCH_TESTING)
-        //            SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
-        //#endif
-        //            if (_isSmaUpdated)
-        //            {
-        //                // Don't bother checking for new profits unless SMA has changed
-        //                _isSmaUpdated = false;
-        //                await MinersManager.SwichMostProfitableGroupUpMethod();
-        //            }
-        //        }
+            if (_updateTimerCount >= period)
+            {
+                _updateTimerCount = 0;
+                bool newver = false;
+                try
+                {
+                    newver = CheckGithub();
+                }
+                catch (Exception er)
+                {
+                    Helpers.ConsolePrint("CheckGithub", er.ToString());
+                    return;
+                }
 
+                if (ConfigManager.GeneralConfig.ProgramAutoUpdate && newver)
+                {
+                    Updater.Updater.Downloader(true);
+                }
+            }
+        }
+        public bool CheckGithub()
+        {
+            Helpers.ConsolePrint("GITHUB", "Check new version");
+                Helpers.ConsolePrint("GITHUB", "Current version: " + Form_Main.currentVersion.ToString());
+                Helpers.ConsolePrint("GITHUB", "Current build: " + Form_Main.currentBuild.ToString());
+            bool ret = CheckNewVersion();
+                Helpers.ConsolePrint("GITHUB", "GITHUB Version: " + Form_Main.githubVersion.ToString());
+                Helpers.ConsolePrint("GITHUB", "GITHUB Build: " + Form_Main.githubBuild.ToString());
+            //SetVersion(ghv);
+            return ret;
+        }
+        private bool CheckNewVersion()
+        {
+            bool ret = false;
+            string githubVersion = Updater.Updater.GetVersion().Item1;
+            Double.TryParse(githubVersion.ToString(), out Form_Main.githubVersion);
+            Form_Main.githubBuild = Updater.Updater.GetVersion().Item2;
+            if (linkLabelNewVersion != null)
+            {
+                if (Form_Main.currentBuild < Form_Main.githubBuild)//testing
+                {
+                    Form_Main.NewVersionExist = true;
+                    linkLabelNewVersion.Text = (string.Format(International.GetText("Form_Main_new_build_released").Replace("{0}", "{0}"), ""));
+                    ret = true;
+                }
+                if (Form_Main.currentVersion < Form_Main.githubVersion)
+                {
+                    Form_Main.NewVersionExist = true;
+                    linkLabelNewVersion.Text = (string.Format(International.GetText("Form_Main_new_version_released").Replace("v{0}", "{0}"), "Fork Fix " + Form_Main.githubVersion.ToString()));
+                    ret = true;
+                }
+                if (Form_Main.githubVersion <= 0)
+                {
+                    Form_Main.NewVersionExist = false;
+                    ret = false;
+                }
+            }
+            return ret;
+        }
         private static async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
             await MinersManager.MinerStatsCheck();
@@ -1395,49 +1344,6 @@ namespace NiceHashMiner
             */
         }
 
-        private void VersionUpdateCallback(object sender, EventArgs e)
-        {
-            var ver = NiceHashStats.Version.Replace(",", ".");
-            if (ver == null) return;
-            //var programVersion = "Fork_Fix_"+ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",",".");
-            var programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
-            Helpers.ConsolePrint("Program version: ", programVersion);
-            //var ret = programVersion.CompareTo(ver);
-            if (ver.Length < 1)
-            {
-                return;
-            }
-            ver = ver.Replace("Fork_Fix_", "");
-            Helpers.ConsolePrint("Github version: ", ver);
-            double vern = double.Parse(ver, CultureInfo.InvariantCulture);
-            double programVersionn = double.Parse(programVersion, CultureInfo.InvariantCulture);
-            Helpers.ConsolePrint("Program version: ", programVersionn.ToString());
-            Helpers.ConsolePrint("Github version: ", vern.ToString());
-            //if (ret < 0 || (ret == 0 && BetaAlphaPostfixString != ""))
-            if (programVersionn < vern)
-            {
-                Helpers.ConsolePrint("Old version detected. Update needed.", "");
-                SetVersionLabel(string.Format(International.GetText("Form_Main_new_version_released").Replace("v{0}", "{0}"), "Fork Fix " + ver));
-                //_visitUrlNew = Links.VisitUrlNew + ver;
-                _visitUrlNew = Links.VisitUrlNew;
-            }
-        }
-
-        private delegate void SetVersionLabelCallback(string text);
-
-        private void SetVersionLabel(string text)
-        {
-            if (linkLabelNewVersion.InvokeRequired)
-            {
-                var d = new SetVersionLabelCallback(SetVersionLabel);
-                Invoke(d, new object[] { text });
-            }
-            else
-            {
-                linkLabelNewVersion.Text = text;
-            }
-        }
-
         private bool VerifyMiningAddress(bool showError)
         {
 
@@ -1499,7 +1405,18 @@ namespace NiceHashMiner
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_visitUrlNew);
+            //Process.Start(_visitUrlNew);
+            var settings = new Form_Settings();
+            try
+            {
+                //   SetChildFormCenter(settings);
+                settings.tabControlGeneral.SelectedTab = settings.tabPageAbout;
+                settings.ShowDialog();
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("settings", er.ToString());
+            }
         }
 
 

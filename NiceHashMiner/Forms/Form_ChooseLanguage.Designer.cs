@@ -70,9 +70,9 @@ namespace NiceHashMiner.Forms {
             this.checkBox_TOS.AutoSize = true;
             this.checkBox_TOS.Location = new System.Drawing.Point(15, 330);
             this.checkBox_TOS.Name = "checkBox_TOS";
-            this.checkBox_TOS.Size = new System.Drawing.Size(151, 17);
+            this.checkBox_TOS.Size = new System.Drawing.Size(147, 17);
             this.checkBox_TOS.TabIndex = 3;
-            this.checkBox_TOS.Text = "I accept the Terms Of Use";
+            this.checkBox_TOS.Text = "I accept license condition";
             this.checkBox_TOS.UseVisualStyleBackColor = true;
             this.checkBox_TOS.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
@@ -102,7 +102,7 @@ namespace NiceHashMiner.Forms {
             this.MinimizeBox = false;
             this.Name = "Form_ChooseLanguage";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Miner Legacy Fork Fix EULA  / Choose Language";
+            this.Text = "Miner Legacy Fork Fix license  / Choose Language";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_ChooseLanguage_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

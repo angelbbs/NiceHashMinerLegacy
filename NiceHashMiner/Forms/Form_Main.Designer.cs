@@ -382,7 +382,7 @@ namespace NiceHashMiner
             // linkLabelNewVersion
             // 
             this.linkLabelNewVersion.AutoSize = true;
-            this.linkLabelNewVersion.Location = new System.Drawing.Point(291, 80);
+            this.linkLabelNewVersion.Location = new System.Drawing.Point(386, 76);
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
             this.linkLabelNewVersion.Size = new System.Drawing.Size(0, 13);
             this.linkLabelNewVersion.TabIndex = 110;

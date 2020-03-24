@@ -52,7 +52,7 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             if (!type)
             {
-                this.Text = "Miner Legacy Fork Fix EULA";
+                this.Text = "Miner Legacy Fork Fix license";
             }
             checkBox_TOS.Visible = type;
             label_Instruction.Visible = type;

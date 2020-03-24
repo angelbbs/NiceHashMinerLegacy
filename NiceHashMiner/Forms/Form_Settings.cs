@@ -323,6 +323,9 @@ namespace NiceHashMiner.Forms
             checkBox_RunScriptOnCUDA_GPU_Lost.Text =
                 International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
 
+            checkBoxAutoupdate.Text = International.GetText("Form_Settings_checkBoxAutoupdate");
+            labelCheckforprogramupdatesevery.Text = International.GetText("Form_Settings_labelCheckforprogramupdatesevery");
+
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label1.Text = International.GetText("Form_Settings_Color_profile");
 
@@ -331,12 +334,12 @@ namespace NiceHashMiner.Forms
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
             var build = buildDate.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
-            Double.TryParse(build.ToString(), out Form_Main.buildDcurrent);
+            Double.TryParse(build.ToString(), out Form_Main.currentBuild);
 
             linkLabelCurrentVersion.LinkBehavior = LinkBehavior.NeverUnderline;
             linkLabelCurrentVersion.Text = International.GetText("Form_Settings_Currentversion") + 
                 ver + International.GetText("Form_Settings_Currentbuild") + 
-                Form_Main.buildDcurrent.ToString("00000000.00");
+                Form_Main.currentBuild.ToString("00000000.00");
 
             linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
 
@@ -345,12 +348,33 @@ namespace NiceHashMiner.Forms
 
             linkLabelNewVersion.Text = International.GetText("Form_Settings_Nonewversionorbuild");
             buttonUpdate.Visible = false;
+            if (Form_Main.NewVersionExist)
+            {
+                linkLabelNewVersion.Text = International.GetText("Form_Settings_Nonewversionorbuild");
+                if (Form_Main.currentBuild < Form_Main.githubBuild)//testing
+                {
+                    linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") + Form_Main.githubBuild.ToString("00000000.00");
+                    buttonUpdate.Visible = true;
+                }
+
+                if (Form_Main.currentVersion < Form_Main.githubVersion)
+                {
+                    linkLabelNewVersion.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
+                    buttonUpdate.Visible = true;
+                }
+                if (Form_Main.githubVersion <= 0)
+                {
+                    linkLabelNewVersion.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
+                    buttonUpdate.Visible = false;
+                }
+                linkLabelNewVersion.Update();
+            }
             progressBarUpdate.Visible = false;
 
-            if (Form_Main.buildDcurrent < Form_Main.buildD)
+            if (Form_Main.currentBuild < Form_Main.githubBuild)
             {
                 linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") + 
-                    Form_Main.buildD.ToString("{0:00000000.00}");
+                    Form_Main.githubBuild.ToString("{0:00000000.00}");
                 buttonUpdate.Visible = true;
                 linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
             }
@@ -446,6 +470,12 @@ namespace NiceHashMiner.Forms
             comboBox_devices_count.Items.Add("10");
             comboBox_devices_count.Items.Add("11");
             comboBox_devices_count.Items.Add("12");
+
+            comboBoxCheckforprogramupdatesevery.Items.Add(International.GetText("Form_Settings_comboBoxCheckforprogramupdatesevery1"));
+            comboBoxCheckforprogramupdatesevery.Items.Add(International.GetText("Form_Settings_comboBoxCheckforprogramupdatesevery3"));
+            comboBoxCheckforprogramupdatesevery.Items.Add(International.GetText("Form_Settings_comboBoxCheckforprogramupdatesevery6"));
+            comboBoxCheckforprogramupdatesevery.Items.Add(International.GetText("Form_Settings_comboBoxCheckforprogramupdatesevery12"));
+            comboBoxCheckforprogramupdatesevery.Items.Add(International.GetText("Form_Settings_comboBoxCheckforprogramupdatesevery24"));
 
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated;
 
@@ -616,6 +646,7 @@ namespace NiceHashMiner.Forms
                 comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_switching_algorithms.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_devices_count.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBoxCheckforprogramupdatesevery.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 foreach (var lbl in this.tabPageGeneral.Controls.OfType<GroupBox>())
                 {
@@ -802,6 +833,7 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxAutoupdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
@@ -838,6 +870,7 @@ namespace NiceHashMiner.Forms
                 comboBox_ColorProfile.Leave += GeneralComboBoxes_Leave;
                 comboBox_switching_algorithms.Leave += GeneralComboBoxes_Leave;
                 comboBox_devices_count.Leave += GeneralComboBoxes_Leave;
+                comboBoxCheckforprogramupdatesevery.Leave += GeneralComboBoxes_Leave;
             }
         }
 
@@ -890,6 +923,7 @@ namespace NiceHashMiner.Forms
                 checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
+                checkBoxAutoupdate.Checked = ConfigManager.GeneralConfig.ProgramAutoUpdate;
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
             }
@@ -951,6 +985,7 @@ namespace NiceHashMiner.Forms
                 comboBox_ColorProfile.SelectedIndex = ConfigManager.GeneralConfig.ColorProfileIndex;
                 comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
                 comboBox_devices_count.SelectedIndex = ConfigManager.GeneralConfig.DevicesCountIndex;
+                comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
             }
         }
 
@@ -1014,6 +1049,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
+            ConfigManager.GeneralConfig.ProgramAutoUpdate = checkBoxAutoupdate.Checked;
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
             ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
             if (checkBox_LogToFile.Checked)
@@ -1139,6 +1175,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ColorProfileIndex = comboBox_ColorProfile.SelectedIndex;
             ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = comboBox_switching_algorithms.SelectedIndex;
             ConfigManager.GeneralConfig.DevicesCountIndex = comboBox_devices_count.SelectedIndex;
+            ConfigManager.GeneralConfig.ProgramUpdateIndex = comboBoxCheckforprogramupdatesevery.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
         }
 
@@ -1875,17 +1912,18 @@ namespace NiceHashMiner.Forms
 
         private void buttonCheckNewVersion_Click(object sender, EventArgs e)
         {
-            Double.TryParse(NiceHashStats.GetVersion().Item1, out Form_Main.githubVersion);
-            Form_Main.buildD = NiceHashStats.GetVersion().Item2;
+            string githubVersion = Updater.Updater.GetVersion().Item1;
+            Double.TryParse(githubVersion.ToString(), out Form_Main.githubVersion);
+            Form_Main.githubBuild = Updater.Updater.GetVersion().Item2;
 
             linkLabelNewVersion.Text = International.GetText("Form_Settings_Nonewversionorbuild");
-            if (Form_Main.buildDcurrent >= Form_Main.buildD)//testing
+            if (Form_Main.currentBuild < Form_Main.githubBuild)//testing
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") + Form_Main.buildD.ToString("00000000.00");
+                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") + Form_Main.githubBuild.ToString("00000000.00");
                 buttonUpdate.Visible = true;
             }
-            var programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
-            if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
+
+            if (Form_Main.currentVersion < Form_Main.githubVersion)
             {
                 linkLabelNewVersion.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
                 buttonUpdate.Visible = true;
@@ -1895,7 +1933,6 @@ namespace NiceHashMiner.Forms
                 linkLabelNewVersion.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
                 buttonUpdate.Visible = false;
             }
-          
             linkLabelNewVersion.Update();
         }
 
@@ -1920,12 +1957,12 @@ namespace NiceHashMiner.Forms
 
             progressBarUpdate.BackColor = Form_Main._backColor;
             progressBarUpdate.TextColor = Form_Main._textColor;
-            Updater.Updater.DownloadSetup(Form_Main.githubVersion.ToString());
+            Updater.Updater.Downloader(false);
         }
 
         private void buttonCreateBackup_Click(object sender, EventArgs e)
         {
-            string fname = Form_Main.buildDcurrent.ToString("00000000.00");
+            string fname = Form_Main.currentBuild.ToString("00000000.00");
             try
             {
                 var CMDconfigHandleBackup = new Process
@@ -2028,6 +2065,11 @@ namespace NiceHashMiner.Forms
             System.Threading.Thread.Sleep(1000);
             Process.Start("backup\\restore.cmd");
 
+        }
+
+        private void comboBoxCheckforprogramupdatesevery_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_ServiceLocation_DrawItem(sender, e);
         }
     }
 }

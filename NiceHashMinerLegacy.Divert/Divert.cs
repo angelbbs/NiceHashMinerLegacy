@@ -30,6 +30,7 @@ namespace NiceHashMinerLegacy.Divert
        // private static Timer _divertTimer;
         
         public static bool logging;
+        public static bool _SaveDivertPackets;
         public static bool gminer_runningEthash = false;
         public static bool gminer_runningZhash = false;
         public static bool gminer_runningCuckaroom29 = false;
@@ -400,9 +401,10 @@ namespace NiceHashMinerLegacy.Divert
 
         
         [HandleProcessCorruptedStateExceptions]
-        public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, string w, bool log, bool BlockGMinerApacheTomcatConfig)
+        public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig)
         {
             logging = log;
+            _SaveDivertPackets = SaveDiverPackets;
             worker = w;
             BlockGMinerApacheTomcat = BlockGMinerApacheTomcatConfig;
             Helpers.ConsolePrint("WinDivertSharp", "Miner: " + MinerName + " Algo: " + CurrentAlgorithmType);
@@ -505,6 +507,19 @@ namespace NiceHashMinerLegacy.Divert
                     gminer_runningZhash = true;
                     GetGMinerZhash(processId, CurrentAlgorithmType, MinerName, strPlatform);
                 }
+
+                if (MinerName.ToLower() == "miniz")
+                {
+                    processIdListZhash.Add("miniz: " + processId.ToString());
+                    if (processIdListZhash.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DZhashHandle.ToString() + ". Added " + processId.ToString() + " (Zhash) to divert process list: " + " " + String.Join(",", processIdListZhash));
+                        return DZhashHandle;
+                    }
+                    DZhashHandle = DZhash.ZhashDivertStart(processIdListZhash, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DZhashHandle.ToString() + ". Initiated by " + processId.ToString() + " (Zhash) to divert process list: " + " " + String.Join(",", processIdListZhash));
+                    return DZhashHandle;
+                }
             }
 
             //******************************************************************************************
@@ -519,7 +534,7 @@ namespace NiceHashMinerLegacy.Divert
                 }
             }
             
-            /*
+            
             //******************************************************************************************
             if (CurrentAlgorithmType == 45) //beam v2
             {
@@ -530,8 +545,20 @@ namespace NiceHashMinerLegacy.Divert
                     gminer_runningBeam = true;
                     GetGMinerBeam(processId, CurrentAlgorithmType, MinerName, strPlatform);
                 }
+                if (MinerName.ToLower() == "miniz")
+                {
+                    processIdListBeam.Add("miniz: " + processId.ToString());
+                    if (processIdListBeam.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DBeamHandle.ToString() + ". Added " + processId.ToString() + " (BeamV2) to divert process list: " + " " + String.Join(",", processIdListBeam));
+                        return DBeamHandle;
+                    }
+                    DBeamHandle = DBeam.BeamDivertStart(processIdListBeam, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DBeamHandle.ToString() + ". Initiated by " + processId.ToString() + " (BeamV2) to divert process list: " + " " + String.Join(",", processIdListBeam));
+                    return DBeamHandle;
+                }
             }
-            */
+            
             return new IntPtr(0);
         }
 
@@ -1004,7 +1031,7 @@ namespace NiceHashMinerLegacy.Divert
             */
             //********************************************************************************************
             //beam
-            /*
+            
             if (CurrentAlgorithmType == 45)
             {
                 int dh = (int)DivertHandle;
@@ -1064,7 +1091,7 @@ namespace NiceHashMinerLegacy.Divert
                     gminer_runningBeam = false;
                 }
             }
-            */
+            
         }
     }
 }

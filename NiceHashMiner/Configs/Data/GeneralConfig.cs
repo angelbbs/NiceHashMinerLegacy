@@ -27,6 +27,7 @@ namespace NiceHashMiner.Configs.Data
         public string DisplayCurrency = "USD";
         public bool DivertRun = true;
         public bool DivertLog = false;
+        public bool SaveDivertPackets = false;
         public bool BlockGMinerApacheTomcat = false;
 
         public bool DebugConsole = false;
@@ -184,6 +185,8 @@ namespace NiceHashMiner.Configs.Data
         public int ColorProfileIndex = 0;
         public int SwitchingAlgorithmsIndex = 2;
         public int DevicesCountIndex = 1;
+        public bool ProgramAutoUpdate = true;
+        public int ProgramUpdateIndex = 1;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();
         public bool UseEthlargement = false;
 
@@ -202,6 +205,7 @@ namespace NiceHashMiner.Configs.Data
             //LessThreads = 0;
             DivertRun = true;
             DivertLog = false;
+            SaveDivertPackets = false;
             BlockGMinerApacheTomcat = false;
             DebugConsole = false;
             HideMiningWindows = false;

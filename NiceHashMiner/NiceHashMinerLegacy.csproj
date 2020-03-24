@@ -339,6 +339,7 @@
     </Compile>
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
     <Compile Include="Switching\NHSmaData.cs" />
+    <Compile Include="Utils\MessageBoxEx.cs" />
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

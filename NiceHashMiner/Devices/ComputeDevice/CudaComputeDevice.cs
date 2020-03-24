@@ -63,6 +63,8 @@ namespace NiceHashMiner.Devices
                     {
                         Form_Main.needRestart = true;
                         //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
+                        //if(ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
+
                         // throw new Exception($"NVML get temp failed with code: {ret}");
                     }
                     temp = utemp;

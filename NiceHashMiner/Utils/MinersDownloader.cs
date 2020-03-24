@@ -65,11 +65,11 @@ namespace NiceHashMiner.Utils
             {
                 Helpers.ConsolePrint("MinersDownloader", e.Message);
             }
-            Downlaod();
+            Download();
         }
 
         // #2 download the file
-        private void Downlaod()
+        private void Download()
         {
             _lastProgress = 0;
             _ticksSinceUpdate = 0;

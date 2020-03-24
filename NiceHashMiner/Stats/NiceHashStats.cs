@@ -26,6 +26,7 @@ using NiceHashMiner.Miners.Grouping;
 using System.Management;
 using System.Text;
 using System.Runtime.ExceptionServices;
+using System.Reflection;
 
 namespace NiceHashMiner.Stats
 {
@@ -97,7 +98,7 @@ namespace NiceHashMiner.Stats
         public static event EventHandler OnBalanceUpdate;
 
         public static event EventHandler OnSmaUpdate;
-        public static event EventHandler OnVersionUpdate;
+        //public static event EventHandler OnVersionUpdate;
         public static event EventHandler OnConnectionLost;
         public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
@@ -246,7 +247,7 @@ namespace NiceHashMiner.Stats
 
                         case "balance":
                           //  Helpers.ConsolePrint("SOCKET", "Received2: " + e.Data);
-                            ExchangeRateApi.GetNewBTCRate();
+                            //ExchangeRateApi.GetNewBTCRate();
                             //Helpers.ConsolePrint("SOCKET", "Received3: " + e.Data);
                             SetBalance(message.value.Value);
                             //Helpers.ConsolePrint("SOCKET", "Received4: " + e.Data);
@@ -286,35 +287,7 @@ namespace NiceHashMiner.Stats
                             break;
                     }
                 }
-               // Helpers.ConsolePrint("SOCKET", "Received8: ");
 
-            for (int h = 0; h < 24; h += 3)
-            {
-
-                var timeFrom1 = new TimeSpan(h, 00, 0);
-                var timeTo1 = new TimeSpan(h, 01, 30);
-                var timeNow = DateTime.Now.TimeOfDay;
-               // Helpers.ConsolePrint("SOCKET", "Received10: ");
-                if (timeNow > timeFrom1 && timeNow < timeTo1)
-                {
-                    Helpers.ConsolePrint("GITHUB", "Check new version");
-                    try
-                    {
-                        string ghv = GetVersion().Item1;
-                        Double.TryParse(ghv.ToString(), out Form_Main.githubVersion);
-                        Form_Main.buildD = NiceHashStats.GetVersion().Item2;
-                        Helpers.ConsolePrint("GITHUB", "Version: ", ghv.ToString());
-                        Helpers.ConsolePrint("GITHUB", "Build: ", Form_Main.buildD.ToString());
-                        SetVersion(ghv);
-                    }
-                    catch (Exception er)
-                    {
-                        Helpers.ConsolePrint("GITHUB", "Github error");
-                        Helpers.ConsolePrint("GITHUB", er.ToString());
-                    }
-                }
-              //  Helpers.ConsolePrint("SOCKET", "Received11: ");
-            }
             }
             catch (Exception er)
             {
@@ -950,71 +923,7 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        public static Tuple<string, double> GetVersion()
-        {
-            string url = "https://api.github.com/repos/angelbbs/nicehashminerlegacy/releases/latest";
-            string r1 = GetGitHubAPIData(url);
-            if (r1 == null) return null;
-            //github_version nhjson;
-            string tagname = "";
-            try
-            {
-                dynamic nhjson = JsonConvert.DeserializeObject(r1, Globals.JsonSettings);
-                //var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
-                var gitassets = nhjson.assets;
-                for (var i = 0; i < gitassets.Count; i++)
-                {
-                    string n = gitassets[i].name;
-                    if (n.Contains("Setup.exe"))
-                    {
-                        Form_Main.githubName = n;
-                        Form_Main.github_browser_download_url = gitassets[i].browser_download_url;
-                        DateTime build = gitassets[i].updated_at;
-                        string buildDate = build.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
-                        Double.TryParse(buildDate.ToString(), out Form_Main.buildD);
-                    }
-                }
-                tagname = nhjson.tag_name;
-                Double.TryParse(tagname.Replace("Fork_Fix_", "").ToString(), out Form_Main.githubVersion);
-                return Tuple.Create(tagname, (double)Form_Main.buildD); 
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("GITHUB", ex.ToString());
-            }
-            return Tuple.Create("", (double)Form_Main.buildD);
-        }
 
-        public static string GetGitHubAPIData(string URL)
-        {
-            string ResponseFromServer;
-            try
-            {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
-                WR.UserAgent = "NiceHashMinerLegacy/" + Application.ProductVersion;
-                WR.Timeout = 10 * 1000;
-                WR.Credentials = CredentialCache.DefaultCredentials;
-                //idHTTP1.IOHandler:= IdSSLIOHandlerSocket1;
-                // ServicePointManager.SecurityProtocol = (SecurityProtocolType)SslProtocols.Tls12;
-                Thread.Sleep(200);
-                WebResponse Response = WR.GetResponse();
-                Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 5 * 1000;
-                StreamReader Reader = new StreamReader(SS);
-                ResponseFromServer = Reader.ReadToEnd();
-                if (ResponseFromServer.Length == 0 || (ResponseFromServer[0] != '{' && ResponseFromServer[0] != '['))
-                    throw new Exception("Not JSON!");
-                Reader.Close();
-                Response.Close();
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("GITHUB", ex.Message);
-                return null;
-            }
-            return ResponseFromServer;
-        }
 
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
         {
@@ -1191,13 +1100,13 @@ namespace NiceHashMiner.Stats
             }
          //  Helpers.ConsolePrint("SOCKET", "Received7: " + balance);
         }
-
+        /*
         public static void SetVersion(string version)
         {
             Version = version;
             OnVersionUpdate?.Invoke(null, EventArgs.Empty);
         }
-
+        */
         private static void SetExchangeRates(string data)
         {
             try

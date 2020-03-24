@@ -173,13 +173,11 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --log-file=" + GetLogFileName()
                       + " --pers auto --par=" + algo
+                      + " --url GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.miniz" + ".nhmlff" + "@btg.2miners.com:4040 -p x"
                       + " --url 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + ".nhmlff" + "@equihash144.eu.mine.zpool.ca:2144 -p c=BTC"
                       + " --url " + username + "@" + algoName + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + stratumPort
                       + " --url " + username + "@" + algoName + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + stratumPort
                       + " --url " + username + "@" + algoName + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[3, 0] + nhsuff + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[4, 0] + nhsuff + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[5, 0] + nhsuff + ".nicehash.com:" + stratumPort
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -191,7 +189,8 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + "  --log-file=" + GetLogFileName()
                       + " --pers auto --par=" + algo
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + "@beam.f2pool.com:5000"
+                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniZ@beam.2miners.com:5252"
+                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniZ@beam.f2pool.com:5000"
                       //+ " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + "@beam-eu.sparkpool.com:2222"
                       + " --url " + username + "@" + algoName + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + stratumPort
                       + " --url " + username + "@" + algoName + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + stratumPort
@@ -210,14 +209,12 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + "  --log-file=" + GetLogFileName()
                       + " --pers auto --par=" + algo
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + "@beam.f2pool.com:5000"
+                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.2miners.com:5252"
+                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.f2pool.com:5000"
                       //+ " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + "@beam-eu.sparkpool.com:2222"
                       + " --url " + username + "@" + algoName + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + stratumPort
                       + " --url " + username + "@" + algoName + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + stratumPort
                       + " --url " + username + "@" + algoName + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[3, 0] + nhsuff + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[4, 0] + nhsuff + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[5, 0] + nhsuff + ".nicehash.com:" + stratumPort
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -434,8 +431,8 @@ namespace NiceHashMiner.Miners
             if (firstStart)
   //          if (ad.Speed <= 0.0001)
             {
-               Thread.Sleep(3000);
-               ad.Speed = 1;
+               Thread.Sleep(5000);
+               ad.Speed = 0;
                 firstStart = false;
                 return ad;
             }
@@ -450,8 +447,8 @@ namespace NiceHashMiner.Miners
                 var bytesToRead = new byte[client.ReceiveBufferSize];
                 var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                 var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-//                Helpers.ConsolePrint("miniZ API:", respStr);
-                if (!respStr.Contains("speed_sps") && prevSpeed != 0)
+                //Helpers.ConsolePrint("miniZ API:", respStr);
+                if (!respStr.Contains("}]}") && prevSpeed != 0)
                 {
                     client.Close();
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
@@ -464,21 +461,30 @@ namespace NiceHashMiner.Miners
             catch (Exception ex)
             {
                 Helpers.ConsolePrint(MinerTag(), ex.Message);
-                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = prevSpeed;
             }
-
-            if (resp != null && resp.error == null)
+            try
             {
-                ad.Speed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_sps);
-                prevSpeed = ad.Speed;
-                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                if (ad.Speed == 0)
+                if (resp != null && resp.error == null)
                 {
-                    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                    ad.Speed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_sps);
+                    prevSpeed = ad.Speed;
+                    CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                    if (ad.Speed == 0)
+                    {
+                        CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                    }
                 }
             }
-
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint(MinerTag(), ex.Message);
+                //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                ad.Speed = prevSpeed;
+            }
             return ad;
         }
 

@@ -46,7 +46,8 @@
         "Form_Main_start": "&Start",
         "Form_Main_stop": "St&op",
         "Form_Main_help": "&Help",
-        "Form_Main_new_version_released": "IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it.",
+        "Form_Main_new_version_released": "IMPORTANT! New version v{0} has been released.\r\n Click here to install it.",
+"Form_Main_new_build_released": "IMPORTANT! New build {0} has been released.\r\n Click here to install it.",
         "Form_Main_DemoModeLabel": "Miner Legacy Fork Fix is running in DEMO mode!",
         "Form_Main_DemoModeTitle": "Start mining in DEMO mode?",
         "Form_Main_DemoModeMsg": "You have not entered a bitcoin address. Miner Legacy Fork Fix will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!",
@@ -306,7 +307,7 @@
         "AlgorithmsListView_GroupBox_NONE": "NONE",
         "BenchmarkOptions_Benchmark_Type": "Benchmark Type:",
         "Form_Main_MiningDevices": "Mining Devices {0}:",
-        "Form_Main_bins_folder_files_missing": "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. Miner Legacy Fork Fix might not work properly without missing files. Click Yes to reinitialize Miner Legacy Fork Fix to try to fix this issue.",
+        "Form_Main_bins_folder_files_missing": "There are missing miners files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. Miner Legacy Fork Fix might not work properly without missing files. Click Yes to download miners to try to fix this issue.",
         "Form_Main_MINING_NOT_PROFITABLE": "CURRENTLY MINING NOT PROFITABLE.",
         "Form_Main_MINING_NO_INTERNET_CONNECTION": "CURRENTLY NOT MINING. NO INTERNET CONNECTION.",
         "Form_Main_Group_Device_Rates": "Group/Device Rates:",
@@ -454,6 +455,14 @@
 "Form_Settings_Createbackup": "Create",
 "Form_Settings_Restorebackup": "Restore",
 "Form_Settings_GPUTuning": "GPU Tuning",
+"Form_Settings_comboBoxCheckforprogramupdatesevery1": "1 hour",
+"Form_Settings_comboBoxCheckforprogramupdatesevery3": "3 hours",
+"Form_Settings_comboBoxCheckforprogramupdatesevery6": "6 hours",
+"Form_Settings_comboBoxCheckforprogramupdatesevery12": "12 hours",
+"Form_Settings_comboBoxCheckforprogramupdatesevery24": "1 day",
+"Form_Settings_labelCheckforprogramupdatesevery": "Check for program updates every",
+"Form_Settings_checkBoxAutoupdate": "Auto update",
+"Form_Settings_MessageBoxUpdate": "Closing program and start installing new version?",
                 "Form_Settings_buttonLicence": "View licence"
     }
 }

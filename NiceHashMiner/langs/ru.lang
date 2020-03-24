@@ -46,7 +46,8 @@
     "Form_Main_start": "&Старт",
     "Form_Main_stop": "Ст&оп",
     "Form_Main_help": "С&правка",
-    "Form_Main_new_version_released": "ВАЖНО! Выпущена новая версия v{0}.\r\nКликните здесь, чтобы скачать.",
+    "Form_Main_new_version_released": "ВАЖНО! Выпущена новая версия v{0}.\r\nКликните здесь, чтобы установить.",
+    "Form_Main_new_build_released": "ВАЖНО! Выпущена новая сборка {0}.\r\nКликните здесь, чтобы установить.",
     "Form_Main_DemoModeLabel": "Miner Legacy Fork Fix работает в режиме ДЕМО!",
     "Form_Main_DemoModeTitle": "Запустить майнинг в режиме ДЕМО?",
     "Form_Main_DemoModeMsg": "Вы не ввели Биткоин-адрес. Miner Legacy Fork Fix начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nДИСКЛАМАЦИЯ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
@@ -303,7 +304,7 @@
     "AlgorithmsListView_ContextMenu_EnableBenched": "Включить только контрольные показатели",
     "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
     "Form_Main_MiningDevices": "Устройства {0}:",
-    "Form_Main_bins_folder_files_missing": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. Miner Legacy Fork Fix может не работать правильно без недостающих файлов. Нажмите «Да» для переустановки Miner Legacy Fork Fix, чтобы попробовать исправить ошибку.",
+    "Form_Main_bins_folder_files_missing": "Отсутствуют файлы майнеров. Убедитесь, что ваш антивирус не блокирует приложение. Miner Legacy Fork Fix может не работать правильно без недостающих файлов. Нажмите «Да» для загрузки майнеров, чтобы попробовать исправить ошибку.",
     "Form_Main_MINING_NOT_PROFITABLE": "МАЙНИНГ НЕ ПРИБЫЛЬНЫЙ НА ДАННЫЙ МОМЕНТ.",
     "Form_Main_Group_Device_Rates": "Ставки Группы/Устройства:",
     "Form_Main_Power1": "Потребл.:",
@@ -445,6 +446,14 @@
 "Form_Settings_Createbackup": "Создать",
 "Form_Settings_Restorebackup": "Восстановить",
 "Form_Settings_GPUTuning": "Настройка GPU",
+"Form_Settings_comboBoxCheckforprogramupdatesevery1": "1 час",
+"Form_Settings_comboBoxCheckforprogramupdatesevery3": "3 часа",
+"Form_Settings_comboBoxCheckforprogramupdatesevery6": "6 часов",
+"Form_Settings_comboBoxCheckforprogramupdatesevery12": "12 часов",
+"Form_Settings_comboBoxCheckforprogramupdatesevery24": "1 день",
+"Form_Settings_labelCheckforprogramupdatesevery": "Проверять обновления каждый(е)",
+"Form_Settings_checkBoxAutoupdate": "Автоматическое обновление",
+"Form_Settings_MessageBoxUpdate": "Закрыть программу и начать установку новой версии?",
                 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }
