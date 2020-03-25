@@ -70,81 +70,35 @@ namespace NiceHashMiner.Miners.Grouping
         public static class Data
         {
             // root binary folder
-            private const string Bin = @"bin";
+            private const string minersBins = @"miners";
 
-            /// <summary>
-            /// ccminers
-            /// </summary>
-//            public const string CcminerDecred = Bin + @"\ccminer_decred\ccminer.exe";
+            public const string XmrStak = minersBins + @"\xmr-stak\xmr-stak.exe";
+            public const string Xmrig = minersBins + @"\xmrig\xmrig.exe";
+            public const string lyclMiner = minersBins + @"\lyclMiner\lyclMiner.exe";
 
-//            public const string CcminerNanashi = Bin + @"\ccminer_nanashi\ccminer.exe"; //deprecated
-            public const string CcminerNeoscrypt = Bin + @"\ccminer_neoscrypt\ccminer.exe";
-//            public const string CcminerSp = Bin + @"\ccminer_sp\ccminer.exe";
-            public const string CcminerTPruvot = Bin + @"\ccminer_tpruvot\ccminer.exe";
-//            public const string CcminerCryptonight = Bin + @"\ccminer_cryptonight\ccminer.exe";
-//            public const string CcminerX11Gost = Bin + @"\ccminer_x11gost\ccminer.exe";
-            public const string CcminerKlausT = Bin + @"\ccminer_klaust\ccminer.exe";
-            public const string CcminerMTP = Bin + @"\ccminer_mtp\ccminer.exe";
+            public const string teamredminer = minersBins + @"\teamredminer\teamredminer.exe";
+            public const string Phoenix = minersBins + @"\Phoenix\PhoenixMiner.exe";
+            public const string Nanominer = minersBins + @"\Nanominer\nanominer.exe";
+            public const string lolMiner = minersBins + @"\lolMiner\lolMiner.exe";
 
-            /// <summary>
-            /// ethminers
-            /// </summary>
-            public const string Ethminer = Bin + @"\ethminer\ethminer.exe";
-
-            /// <summary>
-            /// sgminers
-            /// </summary>
-            public const string Sgminer560General = Bin + @"\sgminer-5-6-0-general\sgminer.exe";
-
-//            public const string SgminerGm = Bin + @"\sgminer-gm\sgminer.exe";
-            public const string SgminerKl = Bin + @"\sgminer-kl\sgminer.exe";
-
-            public const string NhEqMiner = Bin + @"\nheqminer_v0.4b\NhEqMiner.exe";
-            public const string Excavator = Bin + @"\excavator\excavator.exe";
-
-            public const string XmrStackCpuMiner = Bin + @"\xmr-stak-cpu\xmr-stak-cpu.exe";
-            public const string XmrStakAmd = Bin + @"\xmr-stak-amd\xmr-stak-amd.exe";
-            public const string XmrStak = Bin + @"\xmr-stak\xmr-stak.exe";
-            public const string Xmrig = Bin + @"\xmrig\xmrig.exe";
-            public const string XmrigAMD = Bin + @"\xmrig\xmrig.exe";
-            public const string XmrigNVIDIA = Bin + @"\xmrig\xmrig.exe";
-            public const string XmrStakHeavy = Bin + @"\xmr-stak_heavy\xmr-stak.exe";
-
-            public const string CpuMiner = Bin + @"\cpuminer_opt\cpuminer.exe";
-            public const string lyclMiner = Bin + @"\lyclMiner\lyclMiner.exe";
-            public const string mkxminer = Bin3rdParty + @"\mkxminer\mkxminer.exe";
-            public const string teamredminer = Bin3rdParty + @"\teamredminer\teamredminer.exe";
-            public const string Phoenix = Bin3rdParty + @"\Phoenix\PhoenixMiner.exe";
-            public const string Nanominer = Bin3rdParty + @"\Nanominer\nanominer.exe";
-            public const string lolMiner = Bin3rdParty + @"\lolMiner\lolMiner.exe";
-            public const string lolMinerBEAM = Bin3rdParty + @"\lolMinerBEAM\lolMiner.exe";
-            public const string EthLargement = Bin3rdParty + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
+            public const string EthLargement = minersBins + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
             public const string None = "";
 
-            // root binary folder
-            private const string Bin3rdParty = @"bin_3rdparty";
-
-            public const string ClaymoreZcashMiner = Bin3rdParty + @"\claymore_zcash\ZecMiner64.exe";
-            public const string ClaymoreCryptoNightMiner = Bin3rdParty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
-            public const string ClaymoreNeoscryptMiner = Bin3rdParty + @"\claymore_neoscrypt\NeoScryptMiner.exe";
-            public const string OptiminerZcashMiner = Bin3rdParty + @"\optiminer_zcash_win\Optiminer.exe";
-            public const string ClaymoreDual = Bin3rdParty + @"\claymore_dual\EthDcrMiner64.exe";
-            public const string Ewbf = Bin3rdParty + @"\ewbf\miner.exe";
-            public const string Prospector = Bin3rdParty + @"\prospector\prospector.exe";
-            public const string Dstm = Bin3rdParty + @"\dstm\zm.exe";
-            public const string CastXMR = Bin3rdParty + @"\castxmr\cast_xmr-vega.exe";
-            public const string hsrneoscrypt = Bin3rdParty + @"\hsrminer_neoscrypt\hsrminer_neoscrypt.exe";
-            public const string CryptoDredge = Bin3rdParty + @"\CryptoDredge\CryptoDredge.exe";
-           // public const string CryptoDredgeV8 = Bin3rdParty + @"\CryptoDredgeV8\CryptoDredge.exe";
-            public const string ZEnemy = Bin3rdParty + @"\Z-Enemy\z-enemy.exe";
-            public const string trex = Bin3rdParty + @"\t-rex\t-rex.exe";
-            public const string SRBMiner = Bin3rdParty + @"\SRBMiner\SRBMiner-MULTI.exe";
-            public const string GMiner = Bin3rdParty + @"\gminer\miner.exe";
-            public const string Bminer = Bin3rdParty + @"\bminer\bminer.exe";
-            public const string WildRig = Bin3rdParty + @"\WildRig\wildrig.exe";
-            public const string TTMiner = Bin3rdParty + @"\TT-Miner\TT-Miner.exe";
-            public const string NBMiner = Bin3rdParty + @"\NBMiner\nbminer.exe";
-            public const string miniZ = Bin3rdParty + @"\miniZ\miniZ.exe";
+            public const string ClaymoreNeoscryptMiner = minersBins + @"\claymore_neoscrypt\NeoScryptMiner.exe";
+            public const string ClaymoreDual = minersBins + @"\claymore_dual\EthDcrMiner64.exe";
+            public const string Ewbf = minersBins + @"\ewbf\miner.exe";
+            public const string CastXMR = minersBins + @"\castxmr\cast_xmr-vega.exe";
+            public const string hsrneoscrypt = minersBins + @"\hsrminer_neoscrypt\hsrminer_neoscrypt.exe";
+            public const string CryptoDredge = minersBins + @"\CryptoDredge\CryptoDredge.exe";
+            public const string ZEnemy = minersBins + @"\Z-Enemy\z-enemy.exe";
+            public const string trex = minersBins + @"\t-rex\t-rex.exe";
+            public const string SRBMiner = minersBins + @"\SRBMiner\SRBMiner-MULTI.exe";
+            public const string GMiner = minersBins + @"\gminer\miner.exe";
+            public const string Bminer = minersBins + @"\bminer\bminer.exe";
+            public const string WildRig = minersBins + @"\WildRig\wildrig.exe";
+            public const string TTMiner = minersBins + @"\TT-Miner\TT-Miner.exe";
+            public const string NBMiner = minersBins + @"\NBMiner\nbminer.exe";
+            public const string miniZ = minersBins + @"\miniZ\miniZ.exe";
         }
 
         // NEW START
@@ -172,49 +126,21 @@ namespace NiceHashMiner.Miners.Grouping
                     Helpers.ConsolePrint("PATHS", $"Path {path.Path} not found, using defaults");
                 }
             }
-            // Temp workaround
-            if (minerBaseType == MinerBaseType.XmrStak && algoType == AlgorithmType.CryptoNightHeavy)
-                return Data.XmrStakHeavy;
-            if (minerBaseType == MinerBaseType.CryptoDredge && algoType == AlgorithmType.CryptoNightV8)
-                // return NvidiaGroups.CryptoDredgeV8(algoType, devGroupType);
-                return Data.CryptoDredge;
 
             switch (minerBaseType)
             {
-                case MinerBaseType.ccminer:
-                    return NvidiaGroups.Ccminer_path(algoType, devGroupType);
-                case MinerBaseType.sgminer:
-                    return AmdGroup.SgminerPath(algoType);
-                case MinerBaseType.nheqminer:
-                    return Data.NhEqMiner;
-                case MinerBaseType.ethminer:
-                    return Data.Ethminer;
                 case MinerBaseType.Claymore:
                     return AmdGroup.ClaymorePath(algoType);
-                case MinerBaseType.OptiminerAMD:
-                    return Data.OptiminerZcashMiner;
-                //case MinerBaseType.excavator:
-                //    return Data.Excavator;
                 case MinerBaseType.XmrStak:
                     return Data.XmrStak;
                 case MinerBaseType.ccminer_alexis:
                     return NvidiaGroups.CcminerUnstablePath(algoType, devGroupType);
-                case MinerBaseType.experimental:
-                    return Experimental.GetPath(algoType, devGroupType);
                 case MinerBaseType.EWBF:
                     return Data.Ewbf;
-                case MinerBaseType.Prospector:
-                    return Data.Prospector;
                 case MinerBaseType.Xmrig:
                     return Data.Xmrig;
-                case MinerBaseType.XmrigAMD:
-                    return Data.XmrigAMD;
                 case MinerBaseType.SRBMiner:
                     return Data.SRBMiner;
-                case MinerBaseType.dstm:
-                    return Data.Dstm;
-                case MinerBaseType.cpuminer:
-                    return Data.CpuMiner;
                 case MinerBaseType.CastXMR:
                     return Data.CastXMR;
                 case MinerBaseType.lyclMiner:
@@ -227,8 +153,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return NvidiaGroups.ZEnemy(algoType, devGroupType);
                 case MinerBaseType.trex:
                     return NvidiaGroups.trex(algoType, devGroupType);
-                case MinerBaseType.mkxminer:
-                    return Data.mkxminer;
                 case MinerBaseType.teamredminer:
                     return Data.teamredminer;
                 case MinerBaseType.Phoenix:
@@ -239,8 +163,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.lolMiner;
                 case MinerBaseType.WildRig:
                     return Data.WildRig;
-                case MinerBaseType.lolMinerBEAM:
-                    return Data.lolMinerBEAM;
                 case MinerBaseType.Bminer:
                     return Data.Bminer;
                 case MinerBaseType.TTMiner:
@@ -297,30 +219,6 @@ namespace NiceHashMiner.Miners.Grouping
         ////// private stuff from here on
         private static class NvidiaGroups
         {
-            private static string CcminerSM3X(AlgorithmType algorithmType)
-            {
-                return Data.CcminerTPruvot;
-            }
-
-            private static string CcminerSM5XOrSM6X(AlgorithmType algorithmType)
-            {
-                switch (algorithmType)
-                {
-                    case AlgorithmType.Lbry:
-                    case AlgorithmType.Blake2s:
-                    case AlgorithmType.Skunk:
-                    case AlgorithmType.Keccak:
-                    case AlgorithmType.Lyra2z:
-                        return Data.CcminerTPruvot;
-                    case AlgorithmType.Sia:
-                    case AlgorithmType.Nist5:
-                    case AlgorithmType.NeoScrypt:
-                        return Data.CcminerKlausT;
-                }
-
-                return Data.CcminerMTP;
-            }
-
             public static string hsrneoscrypt_path(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
             {
                 // sm21 and sm3x have same settings
@@ -437,25 +335,6 @@ namespace NiceHashMiner.Miners.Grouping
                 return Data.None; // should not happen
             }
 
-            public static string Ccminer_path(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
-            {
-                switch (nvidiaGroup)
-                {
-                    // sm21 and sm3x no longer have same settings since tpruvot dropped 21 support
-                    case DeviceGroupType.NVIDIA_3_x:
-                        return CcminerSM3X(algorithmType);
-                    // CN exception
-                    case DeviceGroupType.NVIDIA_6_x when algorithmType == AlgorithmType.CryptoNight:
-                        return Data.CcminerTPruvot;
-                    // sm5x and sm6x have same settings otherwise
-                    case DeviceGroupType.NVIDIA_5_x:
-                    case DeviceGroupType.NVIDIA_6_x:
-                        return CcminerSM5XOrSM6X(algorithmType);
-                }
-                // TODO wrong case?
-                return Data.None; // should not happen
-            }
-
             public static string CcminerUnstablePath(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
             {
                 // sm5x and sm6x have same settings
@@ -466,23 +345,10 @@ namespace NiceHashMiner.Miners.Grouping
 
         private static class AmdGroup
         {
-            public static string SgminerPath(AlgorithmType type)
-            {
-                if (AlgorithmType.X16R == type)
-                {
-                    return Data.SgminerKl;
-                }
-                return Data.SgminerKl;
-            }
-
             public static string ClaymorePath(AlgorithmType type)
             {
                 switch (type)
                 {
-                    case AlgorithmType.Equihash:
-                        return Data.ClaymoreZcashMiner;
-                    case AlgorithmType.CryptoNightV7:
-                        return Data.ClaymoreCryptoNightMiner;
                     case AlgorithmType.DaggerHashimoto:
                         return Data.ClaymoreDual;
                     case AlgorithmType.NeoScrypt:
@@ -505,14 +371,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.lyclMiner;
                 }
                 return Data.lyclMiner;
-            }
-            public static string mkxminer(AlgorithmType algorithmType)
-            {
-                if (AlgorithmType.Lyra2REv2 == algorithmType )
-                {
-                    return Data.mkxminer;
-                }
-                return Data.mkxminer;
             }
             public static string teamredminer(AlgorithmType algorithmType)
             {
@@ -541,17 +399,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.lolMiner;
                 }
                 return Data.lolMiner;
-            }
-        }
-
-        // unstable miners, NVIDIA for now
-        private static class Experimental
-        {
-            public static string GetPath(AlgorithmType algoType, DeviceGroupType devGroupType)
-            {
-                return devGroupType == DeviceGroupType.NVIDIA_6_x
-                    ? NvidiaGroups.Ccminer_path(algoType, devGroupType)
-                    : Data.None;
             }
         }
 

@@ -25,6 +25,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner
 {
+    using Microsoft.Win32;
     using System.Drawing.Drawing2D;
     using System.IO;
     using System.Net;
@@ -515,17 +516,7 @@ namespace NiceHashMiner
                 Close();
                 return;
             }
-
-            // 3rdparty miners check scope #1
-            {
-                // check if setting set
-                if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
-                {
-                    // Show TOS
-                    Form tos = new Form_3rdParty_TOS();
-                    tos.ShowDialog(this);
-                }
-            }
+            InstallVcRedist();
             // Query Available ComputeDevices
             //Thread.Sleep(100);
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
@@ -612,7 +603,7 @@ namespace NiceHashMiner
                 if (result == DialogResult.Yes)
                 {
                     ConfigManager.GeneralConfigFileCommit();
-                    var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.StandardDlSetup));
+                    var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.MinersDownloadSetup));
                     SetChildFormCenter(downloadUnzipForm);
                     downloadUnzipForm.ShowDialog();
                 }
@@ -624,25 +615,6 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
-            {
-                var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                           International.GetText("Warning_with_Exclamation"),
-                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
-                if (result == DialogResult.Yes)
-                {
-                    ConfigManager.GeneralConfigFileCommit();
-                    var download3rdPartyUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
-                    SetChildFormCenter(download3rdPartyUnzipForm);
-                    download3rdPartyUnzipForm.ShowDialog();
-                }
-            }
-            else
-            {
-                // all good
-                ConfigManager.GeneralConfig.DownloadInit3rdParty = true;
-                ConfigManager.GeneralConfigFileCommit();
-            }
 
             if (runVCRed)
             {
@@ -663,6 +635,61 @@ namespace NiceHashMiner
             //Form_Main.ActiveForm.TopMost = true;
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
+        private bool IsVcRedistInstalled()
+        {
+
+            // x64 - 14.24.28127
+            const int minMajor = 14;
+            const int minMinor = 24;
+            try
+            {
+                using (var vcredist = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"))
+                {
+                    var major = Int32.Parse(vcredist.GetValue("Major")?.ToString());
+                    var minor = Int32.Parse(vcredist.GetValue("Minor")?.ToString());
+                    if (major < minMajor) return false;
+                    if (minor < minMinor) return false;
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("VcRedist", e.Message);
+            }
+            return false;
+        }
+
+        public void InstallVcRedist()
+        {
+            if (IsVcRedistInstalled())
+            {
+                return;
+            }
+            // TODO check if we need to run the insall
+            try
+            {
+                var vcredistProcess = new Process
+
+                {
+                    StartInfo =
+                {
+                    FileName = "miners//vc_redist.x64.exe"
+                }
+                };
+
+                vcredistProcess.StartInfo.Arguments = "/install /passive /norestart";
+                vcredistProcess.StartInfo.UseShellExecute = false;
+                vcredistProcess.StartInfo.CreateNoWindow = false;
+                vcredistProcess.Start();
+                vcredistProcess.WaitForExit();
+
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("VcRedist", e.Message);
+            }
+        }
+
         private void AutoStartTimer_TickDelay(object sender, EventArgs e)
         {
             if (ConfigManager.GeneralConfig.AutoStartMining)

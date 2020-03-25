@@ -61,8 +61,8 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (File.Exists("bin_3rdparty\\phoenix\\epools.txt"))
-                File.Delete("bin_3rdparty\\phoenix\\epools.txt");
+            if (File.Exists("miners\\phoenix\\epools.txt"))
+                File.Delete("miners\\phoenix\\epools.txt");
 
 
             Thread.Sleep(200);
@@ -79,7 +79,7 @@ namespace NiceHashMiner.Miners
                + String.Format("POOL: daggerhashimoto.{0}{1}.nicehash.com:3353, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[0, 0], nhsuff, username) + "\n";
             try
             {
-                FileStream fs = new FileStream("bin_3rdparty\\phoenix\\epools.txt", FileMode.Create, FileAccess.Write);
+                FileStream fs = new FileStream("miners\\phoenix\\epools.txt", FileMode.Create, FileAccess.Write);
                 StreamWriter w = new StreamWriter(fs);
                 w.WriteAsync(epools);
                 w.Flush();
@@ -116,8 +116,8 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (File.Exists("bin_3rdparty\\phoenix\\epools.txt"))
-                File.Delete("bin_3rdparty\\phoenix\\epools.txt");
+            if (File.Exists("miners\\phoenix\\epools.txt"))
+                File.Delete("miners\\phoenix\\epools.txt");
 
             Thread.Sleep(200);
 

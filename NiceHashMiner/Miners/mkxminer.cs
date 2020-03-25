@@ -182,7 +182,7 @@ protected override int GetMaxCooldownTimeInMilliseconds() {
 
             // cd to the cgminer for the process bins
 
-            CommandLine = " /C \"cd /d bin_3rdparty/mkxminer && mkxminer.exe " + " --algorithm lyra2z "+
+            CommandLine = " /C \"cd /d miners/mkxminer && mkxminer.exe " + " --algorithm lyra2z "+
                           " --url stratum+tcp://lyra2z.eu.mine.zpool.ca:4553" +
                           " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" +
                           " -p c=BTC " +

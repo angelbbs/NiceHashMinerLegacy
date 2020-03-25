@@ -58,14 +58,14 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (File.Exists("bin_3rdparty\\Nanominer\\config_nh_" + platform +".ini"))
-                File.Delete("bin_3rdparty\\Nanominer\\config_nh_" + platform + ".ini");
+            if (File.Exists("miners\\Nanominer\\config_nh_" + platform +".ini"))
+                File.Delete("miners\\Nanominer\\config_nh_" + platform + ".ini");
 
             string username = GetUsername(btcAdress, worker);
             string rigName = username.Split('.')[1];
             url = url.Replace("stratum+tcp://", "");
 
-            var cfgFile = 
+            var cfgFile =
                String.Format("webPort = {0}", ApiPort) + "\n"
                + String.Format("protocol = stratum\n")
                + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).TrimStart(' ') + (char)10
@@ -84,7 +84,7 @@ namespace NiceHashMiner.Miners
 
             try
             {
-                FileStream fs = new FileStream("bin_3rdparty\\Nanominer\\config_nh_" + platform + ".ini", FileMode.Create, FileAccess.Write);
+                FileStream fs = new FileStream("miners\\Nanominer\\config_nh_" + platform + ".ini", FileMode.Create, FileAccess.Write);
                 StreamWriter w = new StreamWriter(fs);
                 w.WriteAsync(cfgFile);
                 w.Flush();
@@ -155,8 +155,8 @@ namespace NiceHashMiner.Miners
             var username = Globals.GetBitcoinUser();
             var rigName = ConfigManager.GeneralConfig.WorkerName.Trim();
 
-            if (File.Exists("bin_3rdparty\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
-                File.Delete("bin_3rdparty\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
+            if (File.Exists("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
+                File.Delete("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
 
             var platform = "";
             foreach (var pair in MiningSetup.MiningPairs)
@@ -170,13 +170,13 @@ namespace NiceHashMiner.Miners
                     platform = "amd";
                 }
             }
-            if (File.Exists("bin_3rdparty\\Nanominer\\." + platform + GetLogFileName()))
-                File.Delete("bin_3rdparty\\Nanominer\\." + platform + GetLogFileName());
+            if (File.Exists("miners\\Nanominer\\." + platform + GetLogFileName()))
+                File.Delete("miners\\Nanominer\\." + platform + GetLogFileName());
 
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
-                var cfgFile = 
+                var cfgFile =
                    String.Format("logPath = {0}", platform + GetLogFileName()) + "\n"
                    + String.Format("webPort = {0}", ApiPort) + "\n"
                    + String.Format("protocol = stratum\n")
@@ -191,7 +191,7 @@ namespace NiceHashMiner.Miners
 
                 try
                 {
-                    FileStream fs = new FileStream("bin_3rdparty\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini", FileMode.Create, FileAccess.Write);
+                    FileStream fs = new FileStream("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini", FileMode.Create, FileAccess.Write);
                     StreamWriter w = new StreamWriter(fs);
                     w.WriteAsync(cfgFile);
                     w.Flush();
@@ -380,7 +380,7 @@ namespace NiceHashMiner.Miners
                                                 iteration++;
                                             }
                                         }
-                                        
+
                                     }
                                 }
                             }
@@ -399,7 +399,7 @@ namespace NiceHashMiner.Miners
                 BenchmarkThreadRoutineFinish();
             }
         }
-        
+
         // stub benchmarks read from file
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {

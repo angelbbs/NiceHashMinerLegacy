@@ -10,24 +10,11 @@ namespace NiceHashMiner.Utils
     {
         public static bool IsMinersBins_ALL_Init()
         {
-            foreach (var filePath in Bins_Data.ALL_FILES_BINS)
+            foreach (var filePath in MinersBins.ALL_FILES_BINS)
             {
-                if (!File.Exists($"bin{filePath}"))
+                if (!File.Exists($"miners{filePath}"))
                 {
-                    Helpers.ConsolePrint("MinersExistanceChecker", $"bin{filePath} doesn't exist! Warning");
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static bool IsMiners3rdPartyBinsInit()
-        {
-            foreach (var filePath in Bins_Data_3rd.ALL_FILES_BINS)
-            {
-                if (!File.Exists($"bin_3rdparty{filePath}"))
-                {
-                    Helpers.ConsolePrint("MinersExistanceChecker", $"bin_3rdparty{filePath} doesn't exist! Warning");
+                    Helpers.ConsolePrint("MinersExistanceChecker", $"miners{filePath} doesn't exist! Warning");
                     return false;
                 }
             }

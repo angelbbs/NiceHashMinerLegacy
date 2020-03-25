@@ -99,7 +99,7 @@ namespace NiceHashMiner.Miners
                 " -o " + alg + "." + myServers[5, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o " + alg + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
                 " -o " + url + " -u " + username + " -p x --log " + GetLogFileName() +
-                apiBind + 
+                apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
             ProcessHandle = _Start();
@@ -138,8 +138,8 @@ namespace NiceHashMiner.Miners
             _benchmarkTimeWait = time;
             TotalCount = _benchmarkTimeWait/60;
 
-            if (File.Exists("bin_3rdparty\\CryptoDredge\\" + GetLogFileName()))
-                File.Delete("bin_3rdparty\\CryptoDredge\\" + GetLogFileName());
+            if (File.Exists("miners\\CryptoDredge\\" + GetLogFileName()))
+                File.Delete("miners\\CryptoDredge\\" + GetLogFileName());
             string nhsuff = "";
 
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
@@ -273,8 +273,8 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
             {
                 /*
-                if (File.Exists("bin_3rdparty\\CryptoDredgeV8\\"+ GetLogFileName()))
-                    File.Delete("bin_3rdparty\\CryptoDredgeV8\\" + GetLogFileName());
+                if (File.Exists("miners\\CryptoDredgeV8\\"+ GetLogFileName()))
+                    File.Delete("miners\\CryptoDredgeV8\\" + GetLogFileName());
                     */
                 algo = "--algo cnv8";
                 commandLine = algo +
@@ -372,7 +372,7 @@ namespace NiceHashMiner.Miners
                         speed += tmp;
                         count++;
                         TotalCount--;
-                        goto norm;    
+                        goto norm;
                     } else if (outdata.Contains("GPU") && outdata.ToUpper().Contains("MH/S)"))
                     {
                     var st = outdata.IndexOf("Avr ");
@@ -587,7 +587,7 @@ norm:
                     ad.Speed = BenchmarkAlgorithm.BenchmarkSpeed;
                 }
                 */
-                
+
                 if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;

@@ -52,7 +52,7 @@ namespace NiceHashMiner.Miners
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
-            return 120 * 1000; 
+            return 120 * 1000;
         }
 
         private string GetStartCommand(string url, string btcAdress, string worker)
@@ -78,15 +78,15 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (File.Exists("bin_3rdparty\\claymore_dual\\epools.txt"))
-                File.Delete("bin_3rdparty\\claymore_dual\\epools.txt");
-            if (File.Exists("bin_3rdparty\\claymore_dual\\dpools.txt"))
-                File.Delete("bin_3rdparty\\claymore_dual\\dpools.txt");
+            if (File.Exists("miners\\claymore_dual\\epools.txt"))
+                File.Delete("miners\\claymore_dual\\epools.txt");
+            if (File.Exists("miners\\claymore_dual\\dpools.txt"))
+                File.Delete("miners\\claymore_dual\\dpools.txt");
 
-            if (File.Exists("bin_3rdparty\\claymore_dual\\"+ epoolsFile))
-                File.Delete("bin_3rdparty\\claymore_dual\\"+ epoolsFile);
-            if (File.Exists("bin_3rdparty\\claymore_dual\\" + dpoolsFile))
-                File.Delete("bin_3rdparty\\claymore_dual\\" + dpoolsFile);
+            if (File.Exists("miners\\claymore_dual\\"+ epoolsFile))
+                File.Delete("miners\\claymore_dual\\"+ epoolsFile);
+            if (File.Exists("miners\\claymore_dual\\" + dpoolsFile))
+                File.Delete("miners\\claymore_dual\\" + dpoolsFile);
 
             Thread.Sleep(200);
 
@@ -98,7 +98,7 @@ namespace NiceHashMiner.Miners
                + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[0, 0], username) + "\n";
             try
             {
-                FileStream fs = new FileStream("bin_3rdparty\\claymore_dual\\"+ epoolsFile, FileMode.Create, FileAccess.Write);
+                FileStream fs = new FileStream("miners\\claymore_dual\\"+ epoolsFile, FileMode.Create, FileAccess.Write);
                 StreamWriter w = new StreamWriter(fs);
                 w.WriteAsync(epools);
                 w.Flush();
@@ -200,7 +200,7 @@ namespace NiceHashMiner.Miners
                  + "POOL: stratum+tcp://" + SecondaryAlgorithmType.ToString().ToLower() + "." + myServers[5, 0] + ".nicehash.com:" + poolport + String.Format(", WALLET: {0}, PSW: x", username) + "\n";
                 try
                 {
-                    FileStream fs1 = new FileStream("bin_3rdparty\\claymore_dual\\"+dpoolsFile, FileMode.Create, FileAccess.Write);
+                    FileStream fs1 = new FileStream("miners\\claymore_dual\\"+dpoolsFile, FileMode.Create, FileAccess.Write);
                     StreamWriter w1 = new StreamWriter(fs1);
                     w1.WriteAsync(dpools);
                     w1.Flush();
@@ -318,15 +318,15 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (File.Exists("bin_3rdparty\\claymore_dual\\epools.txt"))
-                File.Delete("bin_3rdparty\\claymore_dual\\epools.txt");
-            if (File.Exists("bin_3rdparty\\claymore_dual\\dpools.txt"))
-                File.Delete("bin_3rdparty\\claymore_dual\\dpools.txt");
+            if (File.Exists("miners\\claymore_dual\\epools.txt"))
+                File.Delete("miners\\claymore_dual\\epools.txt");
+            if (File.Exists("miners\\claymore_dual\\dpools.txt"))
+                File.Delete("miners\\claymore_dual\\dpools.txt");
 
-            if (File.Exists("bin_3rdparty\\claymore_dual\\" + epoolsFile))
-                File.Delete("bin_3rdparty\\claymore_dual\\" + epoolsFile);
-            if (File.Exists("bin_3rdparty\\claymore_dual\\" + dpoolsFile))
-                File.Delete("bin_3rdparty\\claymore_dual\\" + dpoolsFile);
+            if (File.Exists("miners\\claymore_dual\\" + epoolsFile))
+                File.Delete("miners\\claymore_dual\\" + epoolsFile);
+            if (File.Exists("miners\\claymore_dual\\" + dpoolsFile))
+                File.Delete("miners\\claymore_dual\\" + dpoolsFile);
 
             Thread.Sleep(200);
 
@@ -338,7 +338,7 @@ namespace NiceHashMiner.Miners
                + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[5, 0], username) + "\n";
             try
             {
-                FileStream fs = new FileStream("bin_3rdparty\\claymore_dual\\" + epoolsFile, FileMode.Create, FileAccess.Write);
+                FileStream fs = new FileStream("miners\\claymore_dual\\" + epoolsFile, FileMode.Create, FileAccess.Write);
                 StreamWriter w = new StreamWriter(fs);
                 w.WriteAsync(epools);
                 w.Flush();
@@ -384,7 +384,7 @@ namespace NiceHashMiner.Miners
             }
             else //dual
             {
-                
+
                  urlSecond = Globals.GetLocationUrl(SecondaryAlgorithmType,
                     Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
                 username = Globals.GetBitcoinUser();
@@ -418,7 +418,7 @@ namespace NiceHashMiner.Miners
                     username = Globals.GetBitcoinUser();
                     dpsw = "x";
                 }
-                
+
                 if (SecondaryAlgorithmType == AlgorithmType.Pascal)
                 {
                     poolport = "3358";
@@ -443,7 +443,7 @@ namespace NiceHashMiner.Miners
                  + "POOL: stratum+tcp://" + SecondaryAlgorithmType.ToString().ToLower() + "." + myServers[5, 0] + ".nicehash.com:" + poolport + String.Format(", WALLET: {0}, PSW: x, ESM: 3, ALLPOOLS: 1", username) + "\n";
                 try
                 {
-                    FileStream fs1 = new FileStream("bin_3rdparty\\claymore_dual\\" + dpoolsFile, FileMode.Create, FileAccess.Write);
+                    FileStream fs1 = new FileStream("miners\\claymore_dual\\" + dpoolsFile, FileMode.Create, FileAccess.Write);
                     StreamWriter w1 = new StreamWriter(fs1);
                     w1.WriteAsync(dpools);
                     w1.Flush();

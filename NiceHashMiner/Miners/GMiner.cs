@@ -230,7 +230,7 @@ namespace NiceHashMiner.Miners
                     gminer_var = variables.gminer_var2;
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
-                    
+
                 {
                     ids.Add(id.ToString());
                 }
@@ -239,7 +239,7 @@ namespace NiceHashMiner.Miners
 
             deviceStringCommand += string.Join(" ", ids);
             deviceStringCommand = deviceStringCommand + extra + " ";
-         
+
             return gminer_var + deviceStringCommand;
         }
 
@@ -355,8 +355,8 @@ namespace NiceHashMiner.Miners
                     suff = "1_";
                 }
             }
-            if (File.Exists("bin_3rdparty\\gminer\\"+ suff + GetLogFileName()))
-                File.Delete("bin_3rdparty\\gminer\\"+ suff + GetLogFileName());
+            if (File.Exists("miners\\gminer\\"+ suff + GetLogFileName()))
+                File.Delete("miners\\gminer\\"+ suff + GetLogFileName());
 
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
@@ -376,7 +376,7 @@ namespace NiceHashMiner.Miners
             Helpers.ConsolePrint("BENCHMARK-suff:", suff);
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
             {
-                //_benchmarkTimeWait = 180; 
+                //_benchmarkTimeWait = 180;
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashI" +
               //  " --server beam-eu.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 2222 --ssl 1 " +
               //  " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 12222 --ssl 1 " +
@@ -386,7 +386,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
-                //_benchmarkTimeWait = 180; 
+                //_benchmarkTimeWait = 180;
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashII" +
                 " --server beam.2miners.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --port 5050 --ssl 1 " +
                 " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --port 12222 --ssl 1 " +
@@ -493,7 +493,7 @@ namespace NiceHashMiner.Miners
                 benchmarkTimer.Start();
 
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                
+
                 while (IsActiveProcess(BenchmarkHandle.Id))
                 {
                     if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 2)
@@ -637,10 +637,10 @@ namespace NiceHashMiner.Miners
 
         protected double GetNumber(string outdata)
         {
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 || 
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 || 
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 || 
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 || 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 ||
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 ||
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
@@ -742,7 +742,7 @@ namespace NiceHashMiner.Miners
         {
             //Helpers.ConsolePrint("try API...........", "");
             ApiData ad;
-            
+
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
             {
                 ad = new ApiData(AlgorithmType.DaggerEaglesong);

@@ -137,7 +137,7 @@ namespace NiceHashMiner.Miners
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.DeviceType).ToList();
             var extra = "";
             int id;
-            
+
             foreach (var mPair in sortedMinerPairs)
             {
                 id = mPair.Device.IDByBus;
@@ -176,7 +176,7 @@ namespace NiceHashMiner.Miners
 
             return deviceStringCommand;
             //return gminer_var + deviceStringCommand;
-            
+
         }
 
         protected void KillMinerBase(string exeName)
@@ -291,8 +291,8 @@ namespace NiceHashMiner.Miners
                     suff = "1_";
                 }
             }
-            if (File.Exists("bin_3rdparty\\bminer\\" + suff + GetLogFileName()))
-                File.Delete("bin_3rdparty\\bminer\\" + suff + GetLogFileName());
+            if (File.Exists("miners\\bminer\\" + suff + GetLogFileName()))
+                File.Delete("miners\\bminer\\" + suff + GetLogFileName());
 
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
@@ -309,7 +309,7 @@ namespace NiceHashMiner.Miners
             Helpers.ConsolePrint("BENCHMARK-suff:", suff);
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
             {
-                //_benchmarkTimeWait = 180; 
+                //_benchmarkTimeWait = 180;
                 ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashI" +
                 //  " --server beam-eu.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 2222 --ssl 1 " +
                 //  " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 12222 --ssl 1 " +
@@ -319,7 +319,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
-                //_benchmarkTimeWait = 180; 
+                //_benchmarkTimeWait = 180;
                 ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashII" +
                 " --server beam-eu.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 2222 --ssl 1 " +
                 " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 12222 --ssl 1 " +

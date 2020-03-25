@@ -141,13 +141,11 @@
     <Compile Include="Miners\castxmr.cs" />
     <Compile Include="Miners\ClaymoreNeoscryptMiner.cs" />
     <Compile Include="Miners\CryptoDredge.cs" />
-    <Compile Include="Miners\Equihash\Dstm.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\hsrneoscrypt.cs" />
     <Compile Include="Miners\lolMiner.cs" />
-    <Compile Include="Miners\lolMinerBEAM.cs" />
     <Compile Include="Miners\lyclMiner.cs" />
     <Compile Include="Miners\miniZ.cs" />
     <Compile Include="Miners\NBMiner.cs" />
@@ -278,12 +276,6 @@
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
-    <Compile Include="Miners\ClaymoreCryptoNightMiner.cs" />
-    <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
-    <Compile Include="Miners\Obsolete\eqm.cs" />
-    <Compile Include="Miners\Equihash\NhEqBase.cs" />
-    <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
-    <Compile Include="Miners\Obsolete\Excavator.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
@@ -294,26 +286,20 @@
     <Compile Include="Miners\Grouping\GroupMiner.cs" />
     <Compile Include="Miners\Grouping\MiningPair.cs" />
     <Compile Include="Miners\Grouping\MiningSetup.cs" />
-    <Compile Include="Miners\ethminer\MinerEtherum.cs" />
-    <Compile Include="Miners\ethminer\MinerEtherumCUDA.cs" />
-    <Compile Include="Miners\ethminer\MinerEtherumOCL.cs" />
     <Compile Include="Miners\Parsing\MinerOption.cs" />
     <Compile Include="Miners\Grouping\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />
-    <Compile Include="Miners\Equihash\NhEqMiner.cs" />
     <Compile Include="Miners\MiningSession.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Miners\Ccminer.cs" />
     <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DriverVersionConfirmationDialog.Designer.cs">
       <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Miners\ethminer\Ethereum.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
     <Compile Include="Miners\CpuMiner.cs" />
@@ -345,7 +331,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
-    <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
     <Compile Include="Utils\DownloadSetup.cs" />
     <Compile Include="Utils\MinersDownloader.cs" />

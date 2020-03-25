@@ -66,7 +66,7 @@ namespace NiceHashMiner.Miners
      apiBind +
      " -d " + GetDevicesCommandString() + " --no-watchdog " +
      ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-     
+
      /*
             LastCommandLine = algo + apiBind +
             " -o " + url + " -u " + username + " -p x " +
@@ -77,7 +77,7 @@ namespace NiceHashMiner.Miners
         }
 
 
-       
+
 
         // benchmark stuff
         protected void KillMinerBase(string exeName)
@@ -97,8 +97,8 @@ namespace NiceHashMiner.Miners
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             var username = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             var commandLine = "";
-            if (File.Exists("bin_3rdparty\\t-rex\\" + GetLogFileName()))
-                File.Delete("bin_3rdparty\\t-rex\\" + GetLogFileName());
+            if (File.Exists("miners\\t-rex\\" + GetLogFileName()))
+                File.Delete("miners\\t-rex\\" + GetLogFileName());
 
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
@@ -210,7 +210,7 @@ namespace NiceHashMiner.Miners
         }
 
 
-        
+
 
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
@@ -218,7 +218,7 @@ namespace NiceHashMiner.Miners
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
-            
+
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
@@ -316,7 +316,7 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-                
+
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
 
                 var latestLogFile = GetLogFileName();
@@ -463,7 +463,7 @@ namespace NiceHashMiner.Miners
                     }
 
                 }
-                
+
                 BenchmarkThreadRoutineFinish();
             }
         }
