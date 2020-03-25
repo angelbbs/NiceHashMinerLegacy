@@ -21,6 +21,7 @@ using System.ComponentModel;
 using System.Management;
 using System.Runtime.ExceptionServices;
 using System.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace NiceHashMiner
 {
@@ -511,8 +512,39 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ForkFixVersion = 25;
                 }
                 //**
-                Thread.Sleep(100);
+                //Thread.Sleep(100);
+                //********************************************************************
+                bool certexist = false;
+                using (var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
+                {
+                    store.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
 
+                    foreach (X509Certificate2 cert in store.Certificates)
+                    {
+                        if (cert.IssuerName.Name.Contains("Angelbbs"))
+                        {
+                            certexist = true;
+                            //Helpers.ConsolePrint("X509Store", cert.SerialNumber);
+                            //Helpers.ConsolePrint("X509Store", cert.IssuerName.Name);
+                            //Helpers.ConsolePrint("X509Store", cert.Subject);
+                            //store.Remove(cert);
+                            Helpers.ConsolePrint("X509Store", "Certificate exist");
+                            break;
+                        }
+                    }
+                    store.Close();
+                }
+                if (!certexist)
+                {
+                    //00A3302D9D56DBF591
+                    X509Certificate2 certificate = new X509Certificate2(Properties.Resources.rootCA, "", X509KeyStorageFlags.PersistKeySet);
+                    var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+                    store.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
+                    store.Add(certificate);
+                    Helpers.ConsolePrint("X509Store", "Add certificate");
+                    store.Close();
+                }
+                //********************************************************************
                 var version = Assembly.GetExecutingAssembly().GetName().Version;
                 var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
                 Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner Legacy Fork Fix: Build date " + buildDate);

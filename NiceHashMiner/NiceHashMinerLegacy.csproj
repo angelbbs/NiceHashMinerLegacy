@@ -403,7 +403,7 @@
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -435,9 +435,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\rootCA.crt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />
+    <None Include="Resources\rootCA.bmp" />
     <None Include="Resources\Refresh-hot_bw.png" />
     <None Include="Resources\Refresh-disabled.png" />
     <None Include="Resources\Refresh-hot.png" />
