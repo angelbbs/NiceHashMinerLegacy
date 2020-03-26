@@ -206,6 +206,7 @@ namespace NiceHashMiner
 
             Icon = Properties.Resources.logo;
             Helpers.ConsolePrint("NICEHASH", "Start InitLocalization");
+
             InitLocalization();
             devicesListViewEnableControl1.Visible = false;
             ComputeDeviceManager.SystemSpecs.QueryAndLog();
@@ -236,7 +237,9 @@ namespace NiceHashMiner
             R = new Random((int)DateTime.Now.Ticks);
 
             Text += ForkString;
-            Text += ForkString + ConfigManager.GeneralConfig.ForkFixVersion.ToString();
+            //Text += ForkString + ConfigManager.GeneralConfig.ForkFixVersion.ToString();
+            Text += ForkString + "26 beta 1";
+
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
             var buildDate = new DateTime(2000, 1, 1).AddDays(internalversion.Build).AddSeconds(internalversion.Revision * 2);
@@ -516,6 +519,7 @@ namespace NiceHashMiner
                 Close();
                 return;
             }
+            _loadingScreen.IncreaseLoadCounterAndMessage("Check VC redistributable");
             InstallVcRedist();
             // Query Available ComputeDevices
             //Thread.Sleep(100);
@@ -561,7 +565,7 @@ namespace NiceHashMiner
             Thread.Sleep(10);
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
-            _loadingScreen.IncreaseLoadCounter();
+           // _loadingScreen.IncreaseLoadCounter();
             if (ConfigManager.GeneralConfig.NVIDIAP0State)
             {
                 _loadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
@@ -640,7 +644,7 @@ namespace NiceHashMiner
 
             // x64 - 14.24.28127
             const int minMajor = 14;
-            const int minMinor = 24;
+            const int minMinor = 23;
             try
             {
                 using (var vcredist = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"))
@@ -665,7 +669,6 @@ namespace NiceHashMiner
             {
                 return;
             }
-            // TODO check if we need to run the insall
             try
             {
                 var vcredistProcess = new Process
@@ -773,7 +776,8 @@ namespace NiceHashMiner
                    // this.Width = 660; // min width
                 }
             }
-
+            Form_Main.ActiveForm.Visible = true;
+            
             foreach (var lbl in this.Controls.OfType<Button>())
             {
                 lbl.ForeColor = _textColor;

@@ -260,7 +260,7 @@ namespace NiceHashMinerLegacy.Divert
             {
                 try
                 {
-nextCycle:
+                    nextCycle:
                     if (Divert.Ethashdivert_running)
                     {
                         readLen = 0;
@@ -323,7 +323,7 @@ nextCycle:
                             stratumRatio = 5;
                         }
                         */
-                            parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
@@ -365,7 +365,7 @@ nextCycle:
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 19433 ||
                             Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 19433)
                         {
-                            
+
                         }
 
 
@@ -394,10 +394,10 @@ nextCycle:
                         }
 
 
-                        if (addr.Direction == WinDivertDirection.Outbound )
+                        if (addr.Direction == WinDivertDirection.Outbound)
                         {
                             //список соответствия src port и dst ip
-                            if(!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
+                            if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
                             {
                                 InboundPorts.Add(Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 ":" + parse_result.IPv4Header->DstAddr.ToString());
@@ -456,10 +456,10 @@ nextCycle:
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333) //us1.ethpool.org
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                Helpers.ConsolePrint("WinDivertSharp",  
-                                "(" + OwnerPID.ToString() +") -> Devfee connection to (" +
+                                Helpers.ConsolePrint("WinDivertSharp",
+                                "(" + OwnerPID.ToString() + ") -> Devfee connection to (" +
                                 DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
-                                DevFeePort = parse_result.TcpHeader->DstPort; 
+                                DevFeePort = parse_result.TcpHeader->DstPort;
                                 DivertLogin = DivertLogin1;
                                 DivertIP = DivertIP1;
                                 DivertPort = Divert.SwapOrder(DivertPort1);
@@ -474,7 +474,7 @@ nextCycle:
 
                                 }
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                Helpers.ConsolePrint("WinDivertSharp", 
+                                Helpers.ConsolePrint("WinDivertSharp",
                                 "(" + OwnerPID.ToString() + ") -> Devfee connection to eth-*.dwarfpool.com (" +
                                 DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
                                 DevFeePort = parse_result.TcpHeader->DstPort; //swap 8008
@@ -492,27 +492,27 @@ nextCycle:
                                 ) //ethermine.org
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                DevFeePort = parse_result.TcpHeader->DstPort; 
+                                DevFeePort = parse_result.TcpHeader->DstPort;
                                 DivertLogin = DivertLogin1;
                                 DivertIP = DivertIP1;
                                 DivertPort = Divert.SwapOrder(DivertPort1);
                                 //if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4444 && OwnerPID.Contains("gminer"))
-                                    if (DevFeeIP == DevFeeIP1 || DevFeeIP == DevFeeIP2)//проверим на etc
-                                    {
-                                        Helpers.ConsolePrint("WinDivertSharp",
-                                        "(" + OwnerPID.ToString() + ") -> ETC Devfee connection to (" +
-                                        DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
-                                        DivertLogin = DivertLogin3;
-                                        DivertIP = DivertIP3;
-                                    }
-                                    else
-                                    {
-                                        Helpers.ConsolePrint("WinDivertSharp",
-                                        "(" + OwnerPID.ToString() + ") -> ETH Devfee connection to (" +
-                                        DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
-                                        DivertLogin = DivertLogin1;
-                                        DivertIP = DevFeeIP;
-                                    }
+                                if (DevFeeIP == DevFeeIP1 || DevFeeIP == DevFeeIP2)//проверим на etc
+                                {
+                                    Helpers.ConsolePrint("WinDivertSharp",
+                                    "(" + OwnerPID.ToString() + ") -> ETC Devfee connection to (" +
+                                    DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
+                                    DivertLogin = DivertLogin3;
+                                    DivertIP = DivertIP3;
+                                }
+                                else
+                                {
+                                    Helpers.ConsolePrint("WinDivertSharp",
+                                    "(" + OwnerPID.ToString() + ") -> ETH Devfee connection to (" +
+                                    DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
+                                    DivertLogin = DivertLogin1;
+                                    DivertIP = DevFeeIP;
+                                }
 
                                 goto parsePacket;
                             }
@@ -542,24 +542,25 @@ nextCycle:
 
                         //*************************************************************************************************************
                         parsePacket:
-                        /*
-                        if (addr.Direction == WinDivertDirection.Outbound &&
-                            (
-                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333 ||
-                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008 ||
-                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 9999 ||
-                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 14444 ||
-                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4444 
-                            // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555
-                            ))
+                        if (File.Exists("EthashTest."))
                         {
-                            //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "DROP SSL connection to port: " + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
-                            packet.Dispose();
-                            goto nextCycle;
-                            //modified = false;
-                            //goto sendPacket;
+                            if (addr.Direction == WinDivertDirection.Outbound &&
+                                (
+                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333 ||
+                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008 ||
+                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 9999 ||
+                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 14444 ||
+                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4444
+                                // Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555
+                                ))
+                            {
+                                //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "DROP SSL connection to port: " + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                                packet.Dispose();
+                                goto nextCycle;
+                                //modified = false;
+                                //goto sendPacket;
+                            }
                         }
-                        */
 
                         if (addr.Direction == WinDivertDirection.Outbound &&
                             (

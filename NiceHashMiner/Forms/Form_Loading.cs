@@ -22,7 +22,7 @@ namespace NiceHashMiner
         }
 
         private int LoadCounter = 0;
-        private int TotalLoadSteps = 12;
+        private int TotalLoadSteps = 7 * 2;
         private readonly IAfterInitializationCaller AfterInitCaller;
 
         // init loading stuff
@@ -132,7 +132,7 @@ namespace NiceHashMiner
                 } else {
                     label_LoadingText.Text = "Init Failed!";
                 }
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(100);
                 Close();
             });
         }
