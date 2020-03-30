@@ -324,6 +324,7 @@ namespace NiceHashMiner.Forms
             {
                 algorithmsListView1.SetSpeedStatus(device, algorithm, status);
             });
+            algorithmsListView1.UpdateLvi();
         }
 
         public void StepUpBenchmarkStepProgress()

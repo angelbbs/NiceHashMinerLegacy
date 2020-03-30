@@ -429,6 +429,8 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerKeccak;
                     case AlgorithmType.Eaglesong:
                         return AlgorithmType.DaggerEaglesong;
+                    case AlgorithmType.Handshake:
+                        return AlgorithmType.DaggerHandshake;
                 }
             }
 

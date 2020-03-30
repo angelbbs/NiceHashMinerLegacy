@@ -281,9 +281,17 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
 
                             },
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Handshake, "Handshake")
+                            {
+
+                            },
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                             {
-                                ExtraLaunchParameters = "--di 0"
+                                ExtraLaunchParameters = "--di 100"
+                            },
+                            new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Handshake)
+                            {
+                                ExtraLaunchParameters = "--di 1"
                             }
                  }
             },
@@ -394,8 +402,13 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Eaglesong, "Eaglesong"),
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Handshake, "Handshake"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
+                            {
+                                ExtraLaunchParameters = "--di 100"
+                            },
+                            new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Handshake)
                             {
                                 ExtraLaunchParameters = "--di 100"
                             }
@@ -458,7 +471,10 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = "--dual_intensity 0"
                     },
-
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Handshake)
+                    {
+                        ExtraLaunchParameters = "--dual_intensity 0"
+                    },
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
@@ -483,11 +499,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
-                    /*
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Eaglesong, "")
+                    
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Handshake, "")
                     {
                     },
-                    */
+                    
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

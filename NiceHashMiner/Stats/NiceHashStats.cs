@@ -220,7 +220,7 @@ namespace NiceHashMiner.Stats
                                     var algoKey = (AlgorithmType)algo[0];
                                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                                     {
-                                        Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " - " + algo[1]);
+                                        Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " ("+ algo[0].ToString() + ") - " + algo[1]);
                                     }
                                 }
                                 if (ConfigManager.GeneralConfig.MOPA5)

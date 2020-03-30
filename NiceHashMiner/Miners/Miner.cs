@@ -1267,7 +1267,9 @@ namespace NiceHashMiner
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
                         Helpers.ConsolePrint("WinDivertSharp", "Miner: " + MinerDeviceName + " Algo: " + MiningSetup.CurrentAlgorithmType);
                         P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName,
-                            strPlatform, w, ConfigManager.GeneralConfig.DivertLog, ConfigManager.GeneralConfig.SaveDivertPackets, ConfigManager.GeneralConfig.BlockGMinerApacheTomcat);
+                            strPlatform, w, ConfigManager.GeneralConfig.DivertLog,
+                            ConfigManager.GeneralConfig.SaveDivertPackets,
+                            ConfigManager.GeneralConfig.BlockGMinerApacheTomcat, Form_Main.CertInstalled);
 
                         _currentPidData = new MinerPidData
                         {
@@ -1636,7 +1638,10 @@ namespace NiceHashMiner
             {
                 strAlgo = AlgorithmType.DaggerEaglesong.ToString();
             }
-
+            if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Handshake)
+            {
+                strAlgo = AlgorithmType.DaggerHandshake.ToString();
+            }
 
             var minername = MinerDeviceName;
             int subStr;
@@ -1661,6 +1666,7 @@ namespace NiceHashMiner
                     pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerLbry ||
                     pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerPascal ||
                     pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerSia ||
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerHandshake ||
                     pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerEaglesong)
                 {
                     strDual = "DUAL";

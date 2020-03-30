@@ -70,8 +70,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_Allow_remote_management = new System.Windows.Forms.CheckBox();
             this.pictureBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.PictureBox();
             this.checkBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.CheckBox();
-            this.pictureBox_ShowInternetConnectionWarning = new System.Windows.Forms.PictureBox();
-            this.checkBox_ShowInternetConnectionWarning = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeMiningWindows = new System.Windows.Forms.CheckBox();
             this.pictureBox_MinimizeMiningWindows = new System.Windows.Forms.PictureBox();
             this.pictureBox_RunAtStartup = new System.Windows.Forms.PictureBox();
@@ -175,7 +173,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).BeginInit();
             this.groupBox_Misc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
@@ -579,8 +576,6 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.Controls.Add(this.checkBox_Allow_remote_management);
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunScriptOnCUDA_GPU_Lost);
             this.groupBox_Misc.Controls.Add(this.checkBox_RunScriptOnCUDA_GPU_Lost);
-            this.groupBox_Misc.Controls.Add(this.pictureBox_ShowInternetConnectionWarning);
-            this.groupBox_Misc.Controls.Add(this.checkBox_ShowInternetConnectionWarning);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeMiningWindows);
             this.groupBox_Misc.Controls.Add(this.pictureBox_MinimizeMiningWindows);
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunAtStartup);
@@ -621,7 +616,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_sorting_list_of_algorithms.AutoSize = true;
             this.checkBox_sorting_list_of_algorithms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_sorting_list_of_algorithms.Location = new System.Drawing.Point(7, 372);
+            this.checkBox_sorting_list_of_algorithms.Location = new System.Drawing.Point(7, 349);
             this.checkBox_sorting_list_of_algorithms.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_sorting_list_of_algorithms.Name = "checkBox_sorting_list_of_algorithms";
             this.checkBox_sorting_list_of_algorithms.Size = new System.Drawing.Size(136, 17);
@@ -633,7 +628,7 @@ namespace NiceHashMiner.Forms
             // 
             this.Checkbox_Save_windows_size_and_position.AutoSize = true;
             this.Checkbox_Save_windows_size_and_position.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(7, 349);
+            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(7, 326);
             this.Checkbox_Save_windows_size_and_position.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Checkbox_Save_windows_size_and_position.Name = "Checkbox_Save_windows_size_and_position";
             this.Checkbox_Save_windows_size_and_position.Size = new System.Drawing.Size(176, 17);
@@ -644,7 +639,7 @@ namespace NiceHashMiner.Forms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 326);
+            this.label1.Location = new System.Drawing.Point(7, 303);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 13);
@@ -673,7 +668,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBox_ColorProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_ColorProfile.FormattingEnabled = true;
-            this.comboBox_ColorProfile.Location = new System.Drawing.Point(169, 322);
+            this.comboBox_ColorProfile.Location = new System.Drawing.Point(169, 299);
             this.comboBox_ColorProfile.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_ColorProfile.Name = "comboBox_ColorProfile";
             this.comboBox_ColorProfile.Size = new System.Drawing.Size(102, 21);
@@ -685,7 +680,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_Send_actual_version_info.AutoSize = true;
             this.checkBox_Send_actual_version_info.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Send_actual_version_info.Location = new System.Drawing.Point(7, 295);
+            this.checkBox_Send_actual_version_info.Location = new System.Drawing.Point(7, 272);
             this.checkBox_Send_actual_version_info.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Send_actual_version_info.Name = "checkBox_Send_actual_version_info";
             this.checkBox_Send_actual_version_info.Size = new System.Drawing.Size(140, 17);
@@ -697,7 +692,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_Allow_remote_management.AutoSize = true;
             this.checkBox_Allow_remote_management.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Allow_remote_management.Location = new System.Drawing.Point(7, 272);
+            this.checkBox_Allow_remote_management.Location = new System.Drawing.Point(7, 249);
             this.checkBox_Allow_remote_management.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Allow_remote_management.Name = "checkBox_Allow_remote_management";
             this.checkBox_Allow_remote_management.Size = new System.Drawing.Size(150, 17);
@@ -708,7 +703,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_RunScriptOnCUDA_GPU_Lost
             // 
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(253, 248);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(253, 225);
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Name = "pictureBox_RunScriptOnCUDA_GPU_Lost";
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(18, 18);
@@ -719,35 +714,13 @@ namespace NiceHashMiner.Forms
             // checkBox_RunScriptOnCUDA_GPU_Lost
             // 
             this.checkBox_RunScriptOnCUDA_GPU_Lost.AutoSize = true;
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(7, 249);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(7, 226);
             this.checkBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_RunScriptOnCUDA_GPU_Lost.Name = "checkBox_RunScriptOnCUDA_GPU_Lost";
             this.checkBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(191, 17);
             this.checkBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 372;
             this.checkBox_RunScriptOnCUDA_GPU_Lost.Text = "Run script when CUDA GPU is lost";
             this.checkBox_RunScriptOnCUDA_GPU_Lost.UseVisualStyleBackColor = true;
-            // 
-            // pictureBox_ShowInternetConnectionWarning
-            // 
-            this.pictureBox_ShowInternetConnectionWarning.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(253, 225);
-            this.pictureBox_ShowInternetConnectionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_ShowInternetConnectionWarning.Name = "pictureBox_ShowInternetConnectionWarning";
-            this.pictureBox_ShowInternetConnectionWarning.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ShowInternetConnectionWarning.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ShowInternetConnectionWarning.TabIndex = 371;
-            this.pictureBox_ShowInternetConnectionWarning.TabStop = false;
-            // 
-            // checkBox_ShowInternetConnectionWarning
-            // 
-            this.checkBox_ShowInternetConnectionWarning.AutoSize = true;
-            this.checkBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(7, 226);
-            this.checkBox_ShowInternetConnectionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_ShowInternetConnectionWarning.Name = "checkBox_ShowInternetConnectionWarning";
-            this.checkBox_ShowInternetConnectionWarning.Size = new System.Drawing.Size(192, 17);
-            this.checkBox_ShowInternetConnectionWarning.TabIndex = 370;
-            this.checkBox_ShowInternetConnectionWarning.Text = "Show Internet Connection Warning";
-            this.checkBox_ShowInternetConnectionWarning.UseVisualStyleBackColor = true;
             // 
             // checkBox_MinimizeMiningWindows
             // 
@@ -1915,7 +1888,6 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
@@ -1988,8 +1960,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_Allow_remote_management;
         private System.Windows.Forms.PictureBox pictureBox_RunScriptOnCUDA_GPU_Lost;
         private System.Windows.Forms.CheckBox checkBox_RunScriptOnCUDA_GPU_Lost;
-        private System.Windows.Forms.PictureBox pictureBox_ShowInternetConnectionWarning;
-        private System.Windows.Forms.CheckBox checkBox_ShowInternetConnectionWarning;
         private System.Windows.Forms.CheckBox checkBox_MinimizeMiningWindows;
         private System.Windows.Forms.PictureBox pictureBox_MinimizeMiningWindows;
         private System.Windows.Forms.PictureBox pictureBox_RunAtStartup;

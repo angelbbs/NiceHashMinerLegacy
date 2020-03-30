@@ -67,17 +67,8 @@ namespace NiceHashMiner.Miners
      " -d " + GetDevicesCommandString() + " --no-watchdog " +
      ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
 
-     /*
-            LastCommandLine = algo + apiBind +
-            " -o " + url + " -u " + username + " -p x " +
-            " -d " + GetDevicesCommandString() + " " +
-            ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-*/
             ProcessHandle = _Start();
         }
-
-
-
 
         // benchmark stuff
         protected void KillMinerBase(string exeName)

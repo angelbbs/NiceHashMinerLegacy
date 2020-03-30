@@ -94,6 +94,7 @@ namespace NiceHashMiner
         public static string BackupFileName = "";
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
+        public static bool CertInstalled = false;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -103,6 +104,7 @@ namespace NiceHashMiner
 
         public Form_Main()
         {
+            WindowState = FormWindowState.Minimized;
             Helpers.ConsolePrint("NICEHASH", "Start Form_Main");
             switch (ConfigManager.GeneralConfig.ColorProfileIndex)
             {
@@ -238,7 +240,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ForkString + ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += ForkString + "26 beta 1";
+            Text += "26 beta 1";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -269,7 +271,7 @@ namespace NiceHashMiner
             ClearRatesAll();
             thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.Normal;
-
+            
         }
 
         private void InitLocalization()
@@ -537,6 +539,8 @@ namespace NiceHashMiner
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
+            //_loadingScreen.IncreaseLoadCounterAndMessage("Set firewall rules");
+            Firewall.AddToFirewall();
 
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -583,14 +587,15 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
+            
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
-            NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
-            NiceHashStats.OnVersionBurn += VersionBurnCallback;
+            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.OnExchangeUpdate += ExchangeCallback;
             //Thread.Sleep(50);
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
-
+            
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
@@ -776,8 +781,8 @@ namespace NiceHashMiner
                    // this.Width = 660; // min width
                 }
             }
-            Form_Main.ActiveForm.Visible = true;
-            
+            WindowState = FormWindowState.Normal;
+
             foreach (var lbl in this.Controls.OfType<Button>())
             {
                 lbl.ForeColor = _textColor;
@@ -1094,7 +1099,7 @@ namespace NiceHashMiner
             var rateCurrencyString = ExchangeRateApi
                                          .ConvertToActiveCurrency((paying - power) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)
-                                     + $"{ExchangeRateApi.ActiveDisplayCurrency}/" +
+                                     + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
             try
@@ -1242,16 +1247,16 @@ namespace NiceHashMiner
                 {
                     powerString = "";//!!!!!
                 }
-                toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
-                toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
-                toolStripStatusLabel_power2.Text = totalPower.ToString();
             }
             else
             {
                 powerString = "";
             }
+            toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
+            toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
+            toolStripStatusLabel_power2.Text = totalPower.ToString();
 
-                toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
+            toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
                 .ConvertToActiveCurrency(((totalRate - totalPowerRateDec) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
@@ -1343,7 +1348,7 @@ namespace NiceHashMiner
            }));
         }
 
-
+        /*
         private void ConnectionLostCallback(object sender, EventArgs e)
         {
             if (!NHSmaData.HasData && ConfigManager.GeneralConfig.ShowInternetConnectionWarning &&
@@ -1360,7 +1365,7 @@ namespace NiceHashMiner
                     Application.Exit();
             }
         }
-
+        */
         private void ConnectionEstablishedCallback(object sender, EventArgs e)
         {
             /*
@@ -1963,6 +1968,7 @@ namespace NiceHashMiner
         }
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            UpdateGlobalRate();
             if (needRestart)
             {
                 needRestart = false;
@@ -2000,9 +2006,9 @@ namespace NiceHashMiner
             }
 
             UpdateGlobalRate();
-            toolStripStatusLabel_power1.Text = "";
-            toolStripStatusLabel_power2.Text = "";
-            toolStripStatusLabel_power3.Text = "";
+            //toolStripStatusLabel_power1.Text = "";
+            //toolStripStatusLabel_power2.Text = "";
+            //toolStripStatusLabel_power3.Text = "";
             //devicesListViewEnableControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
             //devicesListViewEnableControl1.Update();
         }

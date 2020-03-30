@@ -270,6 +270,8 @@ nextCycle:
                             }
                         }
 
+                        if (!Divert._certInstalled) goto sendPacket;
+
                         if (addr.Direction == WinDivertDirection.Outbound )
                         {
                             //список соответствия src port и dst ip

@@ -119,21 +119,21 @@ namespace NiceHashMiner.Forms.Components
                     $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
                 ;
 
-                field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage,0)); 
+                field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage,0));
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
-                if (algorithm is DualAlgorithm dualAlgo) 
+                if (algorithm is DualAlgorithm dualAlgo)
                 {
                     secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
                     secondaryFieldBoxBenchmarkSpeed.Enabled = true;
-                } 
-                else 
+                }
+                else
                 {
                     secondaryFieldBoxBenchmarkSpeed.Enabled = false;
                 }
-                
+
                 Update();
-            } 
+            }
             else {
                 // TODO this should not be null
             }
@@ -155,11 +155,11 @@ namespace NiceHashMiner.Forms.Components
                 {
                     fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                     field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage,0));
-                    if (algorithm is DualAlgorithm dualAlgo) 
+                    if (algorithm is DualAlgorithm dualAlgo)
                     {
                         secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         secondaryFieldBoxBenchmarkSpeed.EntryText = "0";
                     }
@@ -213,6 +213,10 @@ namespace NiceHashMiner.Forms.Components
             if (_currentlySelectedAlgorithm.DualNiceHashID == AlgorithmType.DaggerEaglesong)
             {
                 algo = AlgorithmType.Eaglesong;
+            }
+            if (_currentlySelectedAlgorithm.DualNiceHashID == AlgorithmType.DaggerHandshake)
+            {
+                algo = AlgorithmType.Handshake;
             }
 
             NHSmaData.TryGetPaying(algo, out var payingSec);

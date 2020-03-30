@@ -528,6 +528,7 @@ namespace NiceHashMiner
                             //Helpers.ConsolePrint("X509Store", cert.IssuerName.Name);
                             //Helpers.ConsolePrint("X509Store", cert.Subject);
                             //store.Remove(cert);
+                            Form_Main.CertInstalled = true;
                             Helpers.ConsolePrint("X509Store", "Certificate exist");
                             break;
                         }
@@ -586,7 +587,10 @@ namespace NiceHashMiner
                     {
                         try
                         {
-                            Application.Run(new Form_Main());
+                            //Application.Run(new Form_Main());
+                            var formmain = new Form_Main();
+                            formmain.Hide();
+                            Application.Run(formmain);
                         } catch (Exception e)
                         {
                             Helpers.ConsolePrint("NICEHASH", e.Message);

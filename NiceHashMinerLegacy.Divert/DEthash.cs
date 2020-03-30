@@ -404,7 +404,7 @@ namespace NiceHashMinerLegacy.Divert
                             }
 
                             if ((OwnerPID.Contains("phoenix") || OwnerPID.Contains("claymoredual")) &&
-                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555) //ssl
+                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555 && Divert._certInstalled) //ssl
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
                                 DevFeePort = parse_result.TcpHeader->DstPort;

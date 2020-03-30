@@ -94,19 +94,25 @@ namespace NiceHashMiner.Miners.Parsing
             var cdevOptions = new Dictionary<string, Dictionary<string, string>>();
             var isOptionDefaults = new Dictionary<string, bool>();
             var isOptionExist = new Dictionary<string, bool>();
+            var retVal = "";
 
-               foreach (var pair in miningPairs)
-               {
+            foreach (var pair in miningPairs)
+            {
                 if (pair.CurrentExtraLaunchParameters.StartsWith("%"))
                 {
-                    Helpers.ConsolePrint("ExtraLaunchParametersParser DISABLED%! ", pair.CurrentExtraLaunchParameters);
+                    Helpers.ConsolePrint("ExtraLaunchParametersParser DISABLED%", pair.CurrentExtraLaunchParameters);
                     return " " + pair.CurrentExtraLaunchParameters.Substring(1);
                 }
                 if (ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking)
                 {
-                    Helpers.ConsolePrint("ExtraLaunchParametersParser DISABLED! ", pair.CurrentExtraLaunchParameters);
-                    return " " + pair.CurrentExtraLaunchParameters;
+                    Helpers.ConsolePrint("ExtraLaunchParametersParser DISABLED", pair.CurrentExtraLaunchParameters);
+                    retVal = retVal + pair.CurrentExtraLaunchParameters + " ";
                 }
+            }
+            if (ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking)
+            {
+                Helpers.ConsolePrint("ExtraLaunchParametersParser DISABLED", "Final extra launch params: " + retVal);
+                return " " + retVal.Trim();
             }
 
                 // init devs options, and defaults
@@ -194,8 +200,6 @@ namespace NiceHashMiner.Miners.Parsing
                     }
                 }
             }
-
-            var retVal = "";
 
             // check if is all defaults
             var isAllDefault = true;

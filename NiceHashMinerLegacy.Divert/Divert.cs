@@ -30,14 +30,18 @@ namespace NiceHashMinerLegacy.Divert
        // private static Timer _divertTimer;
         
         public static bool logging;
+        public static bool _certInstalled = false;
         public static bool _SaveDivertPackets;
         public static bool gminer_runningEthash = false;
         public static bool gminer_runningZhash = false;
-        public static bool gminer_runningCuckaroom29 = false;
+        public static bool gminer_runningCuckooCycle = false;
+        public static bool gminer_runningGrin = false;
         public static bool gminer_runningBeam = false;
         public static volatile bool Ethashdivert_running = true;
         public static volatile bool Zhashdivert_running = true;
-        public static volatile bool Cuckaroom29divert_running = true;
+        public static volatile bool CuckooCycledivert_running = true;
+        public static volatile bool X16rV2divert_running = true;
+        public static volatile bool Grindivert_running = true;
         public static volatile bool RandomXdivert_running = true;
         public static volatile bool Beamdivert_running = true;
 
@@ -230,13 +234,17 @@ namespace NiceHashMinerLegacy.Divert
 
         public static List<string> processIdListEthash = new List<string>();
         public static List<string> processIdListZhash = new List<string>();
-        public static List<string> processIdListCuckaroom29 = new List<string>();
+        public static List<string> processIdListCuckooCycle = new List<string>();
+        public static List<string> processIdListX16rV2 = new List<string>();
+        public static List<string> processIdListGrin = new List<string>();
         public static List<string> processIdListBeam = new List<string>();
         public static List<string> processIdListRandomX = new List<string>();
 
         private static IntPtr DEthashHandle = (IntPtr)0;
         private static IntPtr DZhashHandle = (IntPtr)0;
-        private static IntPtr DCuckaroom29Handle = (IntPtr)0;
+        private static IntPtr DCuckooCycleHandle = (IntPtr)0;
+        private static IntPtr DX16rV2Handle = (IntPtr)0;
+        private static IntPtr DGrinHandle = (IntPtr)0;
         private static IntPtr DBeamHandle = (IntPtr)0;
         private static IntPtr DRandomXHandle = (IntPtr)0;
 
@@ -401,8 +409,10 @@ namespace NiceHashMinerLegacy.Divert
 
         
         [HandleProcessCorruptedStateExceptions]
-        public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig)
+        public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform,
+            string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig, bool CertInstalled)
         {
+            _certInstalled = CertInstalled;
             logging = log;
             _SaveDivertPackets = SaveDiverPackets;
             worker = w;
@@ -523,14 +533,55 @@ namespace NiceHashMinerLegacy.Divert
             }
 
             //******************************************************************************************
-            if (CurrentAlgorithmType == 49) //Cuckaroom29
+            if (CurrentAlgorithmType == 43) //cuckoocycle
             {
-                Cuckaroom29divert_running = true;
+                CuckooCycledivert_running = true;
                 if (MinerName.ToLower() == "gminer")
                 {
-                    processIdListCuckaroom29.Add("gminer: force");
-                    gminer_runningCuckaroom29 = true;
-                    GetGMinerCuckaroom29(processId, CurrentAlgorithmType, MinerName, strPlatform);
+                    processIdListCuckooCycle.Add("gminer: force");
+                    gminer_runningCuckooCycle = true;
+                    GetGMinerCuckooCycle(processId, CurrentAlgorithmType, MinerName, strPlatform);
+                }
+
+                if (MinerName.ToLower() == "nbminer")
+                {
+                    processIdListCuckooCycle.Add("nbminer: " + processId.ToString());
+                    if (processIdListCuckooCycle.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DCuckooCycleHandle.ToString() + ". Added " + processId.ToString() + " (CuckooCycle) to divert process list: " + " " + String.Join(",", processIdListCuckooCycle));
+                        return DCuckooCycleHandle;
+                    }
+                    DCuckooCycleHandle = DCuckooCycle.CuckooCycleDivertStart(processIdListCuckooCycle, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DCuckooCycleHandle.ToString() + ". Initiated by " + processId.ToString() + " (CuckooCycle) to divert process list: " + " " + String.Join(",", processIdListCuckooCycle));
+                    return DCuckooCycleHandle;
+                }
+            }
+            //******************************************************************************************
+            if (CurrentAlgorithmType == 46) //x16rv2
+            {
+                if (MinerName.ToLower().Contains("trex"))
+                {
+                    processIdListX16rV2.Add("trex: " + processId.ToString());
+                    if (processIdListX16rV2.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DX16rV2Handle.ToString() + ". Added " + processId.ToString() + " (X16rV2) to divert process list: " + " " + String.Join(",", processIdListX16rV2));
+                        return DX16rV2Handle;
+                    }
+                    DX16rV2Handle = DX16rV2.X16rV2DivertStart(processIdListX16rV2, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DX16rV2Handle.ToString() + ". Initiated by " + processId.ToString() + " (X16rV2) to divert process list: " + " " + String.Join(",", processIdListX16rV2));
+                    return DX16rV2Handle;
+                }
+            }
+
+            //******************************************************************************************
+            if (CurrentAlgorithmType == 39 || CurrentAlgorithmType == 49 || CurrentAlgorithmType == 50) //Grin
+            {
+                Grindivert_running = true;
+                if (MinerName.ToLower() == "gminer")
+                {
+                    processIdListGrin.Add("gminer: force");
+                    gminer_runningGrin = true;
+                    GetGMinerGrin(processId, CurrentAlgorithmType, MinerName, strPlatform);
                 }
             }
             
@@ -717,7 +768,7 @@ namespace NiceHashMinerLegacy.Divert
         }
 
         //************************************************************************
-        internal static Task<bool> GetGMinerCuckaroom29(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        internal static Task<bool> GetGMinerCuckooCycle(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
         {
             return Task.Run(() =>
             {
@@ -725,9 +776,9 @@ namespace NiceHashMinerLegacy.Divert
                 var _allConnections = new List<Connection>();
                 int childPID = -1;
 
-                processIdListCuckaroom29.Add("gminer: " + processId.ToString() + " null");
-                DCuckaroom29Handle = DCuckaroom29.Cuckaroom29DivertStart(processIdListCuckaroom29, CurrentAlgorithmType, MinerName, strPlatform);
-                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DCuckaroom29Handle.ToString() + ". Initiated by " + processId.ToString() + " (Cuckaroom29) to divert process list: " + " " + String.Join(",", processIdListCuckaroom29));
+                processIdListCuckooCycle.Add("gminer: " + processId.ToString() + " null");
+                DCuckooCycleHandle = DCuckooCycle.CuckooCycleDivertStart(processIdListCuckooCycle, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DCuckooCycleHandle.ToString() + ". Initiated by " + processId.ToString() + " (CuckooCycle) to divert process list: " + " " + String.Join(",", processIdListCuckooCycle));
 
                 do
                 {
@@ -735,18 +786,52 @@ namespace NiceHashMinerLegacy.Divert
 
                     if (childPID > 0)
                     {
-                        if (!String.Join(" ", processIdListCuckaroom29).Contains(childPID.ToString()))
+                        if (!String.Join(" ", processIdListCuckooCycle).Contains(childPID.ToString()))
                         {
-                            processIdListCuckaroom29.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
-                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Cuckaroom29 ChildPid: " + childPID.ToString());
-                            processIdListCuckaroom29.RemoveAll(x => x.Contains("gminer: force"));
-                            Helpers.ConsolePrint("WinDivertSharp", "processIdListCuckaroom29: " + String.Join(" ", processIdListCuckaroom29));
+                            processIdListCuckooCycle.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner CuckooCycle ChildPid: " + childPID.ToString());
+                            processIdListCuckooCycle.RemoveAll(x => x.Contains("gminer: force"));
+                            Helpers.ConsolePrint("WinDivertSharp", "processIdListCuckooCycle: " + String.Join(" ", processIdListCuckooCycle));
                             //break;
                         }
 
                     }
                     Thread.Sleep(400);
-                } while (gminer_runningCuckaroom29);
+                } while (gminer_runningCuckooCycle);
+                return t.Task;
+            });
+        }
+        //************************************************************************
+        internal static Task<bool> GetGMinerGrin(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        {
+            return Task.Run(() =>
+            {
+                var t = new TaskCompletionSource<bool>();
+                var _allConnections = new List<Connection>();
+                int childPID = -1;
+
+                processIdListGrin.Add("gminer: " + processId.ToString() + " null");
+                DGrinHandle = DGrin.GrinDivertStart(processIdListGrin, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DGrinHandle.ToString() + ". Initiated by " + processId.ToString() + " (Grin) to divert process list: " + " " + String.Join(",", processIdListGrin));
+
+                do
+                {
+                    childPID = GetChildProcess(processId);
+
+                    if (childPID > 0)
+                    {
+                        if (!String.Join(" ", processIdListGrin).Contains(childPID.ToString()))
+                        {
+                            processIdListGrin.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Grin ChildPid: " + childPID.ToString());
+                            processIdListGrin.RemoveAll(x => x.Contains("gminer: force"));
+                            Helpers.ConsolePrint("WinDivertSharp", "processIdListGrin: " + String.Join(" ", processIdListGrin));
+                            //break;
+                        }
+
+                    }
+                    Thread.Sleep(400);
+                } while (gminer_runningGrin);
                 return t.Task;
             });
         }
@@ -915,66 +1000,174 @@ namespace NiceHashMinerLegacy.Divert
                     gminer_runningZhash = false;
                 }
             }
-
-            //********************************************************************************************
-            //Cuckaroom29
-            if (CurrentAlgorithmType == 38)
+            //*********************************************************************
+            if (CurrentAlgorithmType == 43) //cuckoocycle
             {
                 int dh = (int)DivertHandle;
-                if (processIdListCuckaroom29.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListCuckaroom29).Contains(Pid.ToString()))
+                if (processIdListCuckooCycle.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListCuckooCycle).Contains(Pid.ToString()))
                 {
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListCuckaroom29.Count; i++)
+                    for (var i = 0; i < processIdListCuckooCycle.Count; i++)
                     {
-                        if (processIdListCuckaroom29[i].Contains(Pid.ToString()))
+                        if (processIdListCuckooCycle[i].Contains(Pid.ToString()))
                         {
-                            processIdListCuckaroom29.RemoveAt(i);
+                            processIdListCuckooCycle.RemoveAt(i);
                         }
                     }
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
                         " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
-                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListCuckaroom29));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListCuckooCycle));
                     Thread.Sleep(50);
                 }
                 else
                 {
-                    if (String.Join(" ", Divert.processIdListCuckaroom29).Contains(Pid.ToString()))
+                    if (String.Join(" ", Divert.processIdListCuckooCycle).Contains(Pid.ToString()))
                     {
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
-                            " from divert process list: " + " " + String.Join(", ", processIdListCuckaroom29));
-                        for (var i = 0; i < processIdListCuckaroom29.Count; i++)
+                            " from divert process list: " + " " + String.Join(", ", processIdListCuckooCycle));
+                        for (var i = 0; i < processIdListCuckooCycle.Count; i++)
                         {
-                            if (processIdListCuckaroom29[i].Contains(Pid.ToString()))
+                            if (processIdListCuckooCycle[i].Contains(Pid.ToString()))
                             {
-                                processIdListCuckaroom29.RemoveAt(i);
+                                processIdListCuckooCycle.RemoveAt(i);
                                 i = 0;
                                 continue;
                             }
                         }
                     }
-                    if (processIdListCuckaroom29.Count < 1)
+                    if (processIdListCuckooCycle.Count < 1)
                     {
-                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListCuckaroom29. Stopping Cuckaroom29 divert thread.");
-                        Cuckaroom29divert_running = false;
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListCuckooCycle. Stopping CuckooCycle divert thread.");
+                        CuckooCycledivert_running = false;
                     }
                 }
                 //check gminer divert is running
                 bool gminerfound = false;
-                for (var i = 0; i < processIdListCuckaroom29.Count; i++)
+                for (var i = 0; i < processIdListCuckooCycle.Count; i++)
                 {
-                    if (processIdListCuckaroom29[i].Contains("gminer"))
+                    if (processIdListCuckooCycle[i].Contains("gminer"))
                     {
                         gminerfound = true;
                     }
                 }
                 if (gminerfound == false)
                 {
-                    gminer_runningCuckaroom29 = false;
+                    gminer_runningCuckooCycle = false;
+                }
+            }
+            //********************************************************************************************
+            //x16rv2
+            if (CurrentAlgorithmType == 46)
+            {
+                int dh = (int)DivertHandle;
+                if (processIdListX16rV2.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListX16rV2).Contains(Pid.ToString()))
+                {
+                    Thread.Sleep(50);
+                    WinDivert.WinDivertClose(DivertHandle);
+
+                    for (var i = 0; i < processIdListX16rV2.Count; i++)
+                    {
+                        if (processIdListX16rV2[i].Contains(Pid.ToString()))
+                        {
+                            processIdListX16rV2.RemoveAt(i);
+                        }
+                    }
+
+                    DivertHandle = new IntPtr(0);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                        " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListX16rV2));
+                    Thread.Sleep(50);
+                }
+                else
+                {
+                    if (String.Join(" ", Divert.processIdListX16rV2).Contains(Pid.ToString()))
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                            " " + " " + GetProcessName(Pid) +
+                            " from divert process list: " + " " + String.Join(", ", processIdListX16rV2));
+                        for (var i = 0; i < processIdListX16rV2.Count; i++)
+                        {
+                            if (processIdListX16rV2[i].Contains(Pid.ToString()))
+                            {
+                                processIdListX16rV2.RemoveAt(i);
+                                i = 0;
+                                continue;
+                            }
+                        }
+                    }
+                    if (processIdListX16rV2.Count < 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListX16rV2. Stopping X16rV2 divert thread.");
+                        X16rV2divert_running = false;
+                    }
+                }
+            }
+
+            //********************************************************************************************
+            //Grin
+            if (CurrentAlgorithmType == 39 || CurrentAlgorithmType == 49 || CurrentAlgorithmType == 50) //Grin
+            {
+                int dh = (int)DivertHandle;
+                if (processIdListGrin.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListGrin).Contains(Pid.ToString()))
+                {
+                    Thread.Sleep(50);
+                    WinDivert.WinDivertClose(DivertHandle);
+
+                    for (var i = 0; i < processIdListGrin.Count; i++)
+                    {
+                        if (processIdListGrin[i].Contains(Pid.ToString()))
+                        {
+                            processIdListGrin.RemoveAt(i);
+                        }
+                    }
+
+                    DivertHandle = new IntPtr(0);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                        " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListGrin));
+                    Thread.Sleep(50);
+                }
+                else
+                {
+                    if (String.Join(" ", Divert.processIdListGrin).Contains(Pid.ToString()))
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                            " " + " " + GetProcessName(Pid) +
+                            " from divert process list: " + " " + String.Join(", ", processIdListGrin));
+                        for (var i = 0; i < processIdListGrin.Count; i++)
+                        {
+                            if (processIdListGrin[i].Contains(Pid.ToString()))
+                            {
+                                processIdListGrin.RemoveAt(i);
+                                i = 0;
+                                continue;
+                            }
+                        }
+                    }
+                    if (processIdListGrin.Count < 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListGrin. Stopping Grin divert thread.");
+                        Grindivert_running = false;
+                    }
+                }
+                //check gminer divert is running
+                bool gminerfound = false;
+                for (var i = 0; i < processIdListGrin.Count; i++)
+                {
+                    if (processIdListGrin[i].Contains("gminer"))
+                    {
+                        gminerfound = true;
+                    }
+                }
+                if (gminerfound == false)
+                {
+                    gminer_runningGrin = false;
                 }
             }
             //********************************************************************************************

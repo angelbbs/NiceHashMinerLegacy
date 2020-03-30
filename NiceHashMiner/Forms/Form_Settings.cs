@@ -232,11 +232,6 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(pictureBox_LogMaxFileSize,
                 International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
 
-            toolTip1.SetToolTip(checkBox_ShowInternetConnectionWarning,
-                International.GetText("Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning"));
-            toolTip1.SetToolTip(pictureBox_ShowInternetConnectionWarning,
-                International.GetText("Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning"));
-
             toolTip1.SetToolTip(checkBox_NVIDIAP0State,
                 International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
             toolTip1.SetToolTip(pictureBox_NVIDIAP0State,
@@ -308,9 +303,6 @@ namespace NiceHashMiner.Forms
                 string.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
-
-            checkBox_ShowInternetConnectionWarning.Text =
-                International.GetText("Form_Settings_General_ShowInternetConnectionWarning");
 
             checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
@@ -767,7 +759,6 @@ namespace NiceHashMiner.Forms
                 pictureBox_NVIDIAP0State.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunAtStartup.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunScriptOnCUDA_GPU_Lost.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_ShowInternetConnectionWarning.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_StartMiningWhenIdle.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_SwitchMaxSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_SwitchMinSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -815,7 +806,6 @@ namespace NiceHashMiner.Forms
                 checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_HideMiningWindows.CheckedChanged +=GeneralCheckBoxes_CheckedChanged;
                 checkBox_AlwaysOnTop.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_ShowInternetConnectionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_StartMiningWhenIdle.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_LogToFile.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -896,8 +886,6 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionAMD.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                 checkBox_AutoScaleBTCValues.Checked = ConfigManager.GeneralConfig.AutoScaleBTCValues;
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
-                checkBox_ShowInternetConnectionWarning.Checked =
-                    ConfigManager.GeneralConfig.ShowInternetConnectionWarning;
                 checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
                 checkBox_LogToFile.Checked = ConfigManager.GeneralConfig.LogToFile;
                 if (checkBox_LogToFile.Checked)

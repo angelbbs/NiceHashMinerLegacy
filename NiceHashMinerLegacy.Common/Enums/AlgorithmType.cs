@@ -7,6 +7,7 @@
     public enum AlgorithmType
     {
         // dual algos for grouping
+        DaggerHandshake = -11,
         DaggerEaglesong = -10,
         Dagger3G = -9,
         DaggerKeccak = -8,
@@ -102,7 +103,8 @@
         RandomX = 47,
         Eaglesong = 48,
         Cuckaroom = 49,
-        GrinCuckatoo32 = 50
+        GrinCuckatoo32 = 50,
+        Handshake = 51
         #endregion // NiceHashAPI
     }
 }
