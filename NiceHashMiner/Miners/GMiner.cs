@@ -838,6 +838,10 @@ namespace NiceHashMiner.Miners
                     {
                         totalSec = totalSec + resp.devices[i].speed2;
                     }
+                    if (SecondaryAlgorithmType == AlgorithmType.Handshake)
+                    {
+                        totalSec = totalSec + resp.devices[i].speed2;
+                    }
                 }
 
                 ad.Speed = total;
@@ -845,7 +849,10 @@ namespace NiceHashMiner.Miners
                 {
                     ad.SecondarySpeed = totalSec;
                 }
-
+                if (SecondaryAlgorithmType == AlgorithmType.Handshake)
+                {
+                    ad.SecondarySpeed = totalSec;
+                }
 
                 if (ad.Speed == 0)
                 {

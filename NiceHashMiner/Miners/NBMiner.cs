@@ -161,7 +161,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Handshake))
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://handshake." + myServers[1, 0] + nhsuff + ".nicehash.com:3384 -u1 " + user +
-                    $" -o2 stratum+tcp://eaglesong." + myServers[2, 0] + nhsuff + ".nicehash.com:3384 -u2 " + user +
+                    $" -o2 stratum+tcp://handshake." + myServers[2, 0] + nhsuff + ".nicehash.com:3384 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
 
@@ -446,7 +446,12 @@ namespace NiceHashMiner.Miners
                 ad.AlgorithmID = AlgorithmType.DaggerHashimoto;
                 ad.SecondaryAlgorithmID = AlgorithmType.Eaglesong;
             }
-            else
+            else if (SecondaryAlgorithmType == AlgorithmType.Handshake)
+            {
+                ad = new ApiData(AlgorithmType.DaggerHandshake);
+                ad.AlgorithmID = AlgorithmType.DaggerHashimoto;
+                ad.SecondaryAlgorithmID = AlgorithmType.Handshake;
+            } else
             {
                 ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             }
