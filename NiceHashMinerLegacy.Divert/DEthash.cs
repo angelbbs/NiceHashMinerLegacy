@@ -621,7 +621,7 @@ namespace NiceHashMinerLegacy.Divert
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 if (PacketPayloadData.Contains("json"))
                                 {
-                                    Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
+                                    //Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
                                 }
                                 //goto Divert;//меняем данные в пакете
                                 goto changeSrcDst; //входящее соединение, только меняем адреса
@@ -965,7 +965,7 @@ changeSrcDst:
 
                         sendPacket:
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                        Helpers.ConsolePrint("WinDivertSharp", "modified: " + modified);
+                        //Helpers.ConsolePrint("WinDivertSharp", "modified: " + modified);
                         //if (modified)
                         {
                             WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);

@@ -306,7 +306,7 @@ namespace NiceHashMiner
                         {
                             if (ConfigManager.GeneralConfig.DivertRun)
                             {
-                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, (int)MiningSetup.CurrentAlgorithmType);
+                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, (int)MiningSetup.CurrentAlgorithmType, (int)MiningSetup.CurrentSecondaryAlgorithmType);
                             }
                             process.Kill();
                             process.Close();
@@ -433,7 +433,7 @@ namespace NiceHashMiner
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
                 if (ConfigManager.GeneralConfig.DivertRun)
                 {
-                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, (int)MiningSetup.CurrentAlgorithmType);
+                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, (int)MiningSetup.CurrentAlgorithmType, (int)MiningSetup.CurrentSecondaryAlgorithmType);
                 }
                 KillProcessAndChildren(pid);
 
@@ -1264,9 +1264,11 @@ namespace NiceHashMiner
                     }
                     if (ConfigManager.GeneralConfig.DivertRun)
                     {
+                        int algo = (int)MiningSetup.CurrentAlgorithmType;
+                        int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
+
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
-                        Helpers.ConsolePrint("WinDivertSharp", "Miner: " + MinerDeviceName + " Algo: " + MiningSetup.CurrentAlgorithmType);
-                        P.DivertHandle = Divert.DivertStart(P.Id, (int)MiningSetup.CurrentAlgorithmType, MinerDeviceName,
+                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2,  MinerDeviceName,
                             strPlatform, w, ConfigManager.GeneralConfig.DivertLog,
                             ConfigManager.GeneralConfig.SaveDivertPackets,
                             ConfigManager.GeneralConfig.BlockGMinerApacheTomcat, Form_Main.CertInstalled);

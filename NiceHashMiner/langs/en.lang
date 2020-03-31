@@ -463,6 +463,8 @@
 "Form_Settings_labelCheckforprogramupdatesevery": "Check for program updates every",
 "Form_Settings_checkBoxAutoupdate": "Auto update",
 "Form_Settings_MessageBoxUpdate": "Closing program and start installing new version?",
+"Form_Settings_EnableAlgos": "Enable * for all devices",
+"Form_Settings_DisableAlgos": "Disable * for all devices",
                 "Form_Settings_buttonLicence": "View licence"
     }
 }

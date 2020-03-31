@@ -181,6 +181,7 @@ namespace NiceHashMiner.Miners
                 var durl = url.Replace("daggerhashimoto", "handshake");
                 return GetDevicesCommandString()
                       + " --algo eth+hns --server " + url + " --user " + username + " --ssl 0 --proto stratum"
+                      //+ " --dserver hns.pool.blackminer.com:9052 --duser hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j --ssl 0"
                       + " --dserver " + durl.Split(':')[0] + ":3384 --duser " + username + " --ssl 0"
                       + " --server daggerhashimoto." + myServers[1, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
                       + " --dserver handshake." + myServers[1, 0] + ".nicehash.com:3384" + " --duser " + username + " --ssl 0"

@@ -454,6 +454,8 @@
 "Form_Settings_labelCheckforprogramupdatesevery": "Проверять обновления каждый(е)",
 "Form_Settings_checkBoxAutoupdate": "Автоматическое обновление",
 "Form_Settings_MessageBoxUpdate": "Закрыть программу и начать установку новой версии?",
+"Form_Settings_EnableAlgos": "Включить * для всех устройств",
+"Form_Settings_DisableAlgos": "Выключить * для всех устройств",
                 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

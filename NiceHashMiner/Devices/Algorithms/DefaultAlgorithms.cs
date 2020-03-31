@@ -145,12 +145,10 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
-                            /*
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.CryptoNightV8, "CryptoNightV8")
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Handshake, "Handshake")
                             {
-                                ExtraLaunchParameters = "--enablegpurampup --cgputhreads 2 "
-                            },
-
+                            }
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Eaglesong, "Eaglesong")
                             {
                                 ExtraLaunchParameters = "--enablegpurampup --cgputhreads 2 "

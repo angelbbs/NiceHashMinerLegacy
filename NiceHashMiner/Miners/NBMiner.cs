@@ -176,6 +176,7 @@ namespace NiceHashMiner.Miners
             if (SecondaryAlgorithmType == AlgorithmType.Handshake) //dual
             {
                 cmd = $"-a hns_ethash -o stratum+tcp://handshake." + myServers[0, 0] + ".nicehash.com:3384 -u " + user +
+               // cmd = $"-a hns_ethash -o stratum+tcp://hns.pool.blackminer.com:9052 -u hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j " +
                     $" -o1 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u1 " + user +
                     $" -do nicehash+tcp://daggerhashimoto." + myServers[0, 0] + ".nicehash.com:3353 -du " + user +
                     $" -do1 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 -du1 " + user +

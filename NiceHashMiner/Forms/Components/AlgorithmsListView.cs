@@ -14,6 +14,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Stats;
 using System.Globalization;
 using System.Collections;
+using NiceHashMiner.Miners.Grouping;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -645,47 +646,103 @@ namespace NiceHashMiner.Forms.Components
                     clearItem.Click += ToolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
                 }
-                // open dcri
-                /*
                 {
-                    var dcriMenu = new ToolStripMenuItem
+                    var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                        listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                    var Enablealgo = new ToolStripMenuItem
                     {
-                        Text = International.GetText("Form_DcriValues_Title")
+                        Text = International.GetText("Form_Settings_EnableAlgos").Replace("*", al)
                     };
-
-                    if (listViewAlgorithms.SelectedItems.Count > 0
-                        && listViewAlgorithms.SelectedItems[0].Tag is DualAlgorithm dualAlg)
-                    {
-                        dcriMenu.Enabled = true;
-
-                        var openDcri = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_OpenDcri")
-                        };
-                        openDcri.Click += toolStripMenuItemOpenDcri_Click;
-                        dcriMenu.DropDownItems.Add(openDcri);
-
-                        var tuningEnabled = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("Form_DcriValues_TuningEnabled"),
-                            CheckOnClick = true,
-                            Checked = dualAlg.TuningEnabled
-                        };
-                        tuningEnabled.CheckedChanged += toolStripMenuItemTuningEnabled_Checked;
-                        dcriMenu.DropDownItems.Add(tuningEnabled);
-                    }
-                    else
-                    {
-                        dcriMenu.Enabled = false;
-                    }
-
-                    contextMenuStrip1.Items.Add(dcriMenu);
+                    Enablealgo.Click += ToolStripMenuEnablealgo_Click;
+                    contextMenuStrip1.Items.Add(Enablealgo);
                 }
-                */
+                {
+                    var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                        listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                    var Enablealgo = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("Form_Settings_DisableAlgos").Replace("*", al)
+                    };
+                    Enablealgo.Click += ToolStripMenuDisablealgo_Click;
+                    contextMenuStrip1.Items.Add(Enablealgo);
+                }
+
                 contextMenuStrip1.Show(Cursor.Position);
             }
         }
 
+        private void ToolStripMenuEnablealgo_Click(object sender, EventArgs e)
+        {
+            string aName = "";
+            MinerBaseType mName = MinerBaseType.NONE;
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        aName =  algorithm.AlgorithmName;
+                        mName = algorithm.MinerBaseType;
+                        if (algorithm is DualAlgorithm dualAlgo)
+                        {
+                        }
+                    }
+                }
+                var miningDevices = ComputeDeviceManager.Available.Devices;
+                foreach (var device in miningDevices)
+                {
+                    Helpers.ConsolePrint("", device.Name);
+                    if (device != null)
+                    {
+                        var devicesAlgos = device.GetAlgorithmSettings();
+                        foreach (var a in devicesAlgos)
+                        {
+                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                            {
+                                a.Enabled = true;
+                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private void ToolStripMenuDisablealgo_Click(object sender, EventArgs e)
+        {
+            string aName = "";
+            MinerBaseType mName = MinerBaseType.NONE;
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        aName = algorithm.AlgorithmName;
+                        mName = algorithm.MinerBaseType;
+                        if (algorithm is DualAlgorithm dualAlgo)
+                        {
+                        }
+                    }
+                }
+                var miningDevices = ComputeDeviceManager.Available.Devices;
+                foreach (var device in miningDevices)
+                {
+                    Helpers.ConsolePrint("", device.Name);
+                    if (device != null)
+                    {
+                        var devicesAlgos = device.GetAlgorithmSettings();
+                        foreach (var a in devicesAlgos)
+                        {
+                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                            {
+                                a.Enabled = false;
+                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         private void ToolStripMenuItemEnableAll_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem lvi in listViewAlgorithms.Items)
