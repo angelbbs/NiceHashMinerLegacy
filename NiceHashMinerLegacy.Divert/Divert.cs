@@ -34,12 +34,14 @@ namespace NiceHashMinerLegacy.Divert
         public static bool _SaveDivertPackets;
         public static bool gminer_runningEthash = false;
         public static bool gminer_runningZhash = false;
+        public static bool gminer_runningNeoscrypt = false;
         public static bool gminer_runningHandshake = false;
         public static bool gminer_runningCuckooCycle = false;
         public static bool gminer_runningGrin = false;
         public static bool gminer_runningBeam = false;
         public static volatile bool Ethashdivert_running = true;
         public static volatile bool Zhashdivert_running = true;
+        public static volatile bool Neoscryptdivert_running = true;
         public static volatile bool Handshakedivert_running = true;
         public static volatile bool CuckooCycledivert_running = true;
         public static volatile bool X16rV2divert_running = true;
@@ -236,6 +238,7 @@ namespace NiceHashMinerLegacy.Divert
 
         public static List<string> processIdListEthash = new List<string>();
         public static List<string> processIdListZhash = new List<string>();
+        public static List<string> processIdListNeoscrypt = new List<string>();
         public static List<string> processIdListHandshake = new List<string>();
         public static List<string> processIdListCuckooCycle = new List<string>();
         public static List<string> processIdListX16rV2 = new List<string>();
@@ -245,6 +248,7 @@ namespace NiceHashMinerLegacy.Divert
 
         private static IntPtr DEthashHandle = (IntPtr)0;
         private static IntPtr DZhashHandle = (IntPtr)0;
+        private static IntPtr DNeoscryptHandle = (IntPtr)0;
         private static IntPtr DHandshakeHandle = (IntPtr)0;
         private static IntPtr DCuckooCycleHandle = (IntPtr)0;
         private static IntPtr DX16rV2Handle = (IntPtr)0;
@@ -554,6 +558,24 @@ namespace NiceHashMinerLegacy.Divert
                 }
             }
 
+            //******************************************************************************************
+            if (CurrentAlgorithmType == 8) //Neoscrypt
+            {
+                Neoscryptdivert_running = true;
+
+                //if (MinerName.ToLower() == "miniz")
+                {
+                    processIdListNeoscrypt.Add(MinerName + ": " + processId.ToString());
+                    if (processIdListNeoscrypt.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DNeoscryptHandle.ToString() + ". Added " + processId.ToString() + " (Neoscrypt) to divert process list: " + " " + String.Join(",", processIdListNeoscrypt));
+                        return DNeoscryptHandle;
+                    }
+                    DNeoscryptHandle = DNeoscrypt.NeoscryptDivertStart(processIdListNeoscrypt, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DNeoscryptHandle.ToString() + ". Initiated by " + processId.ToString() + " (Neoscrypt) to divert process list: " + " " + String.Join(",", processIdListNeoscrypt));
+                    return DNeoscryptHandle;
+                }
+            }
             //******************************************************************************************
             if (CurrentAlgorithmType == 51 || SecondaryAlgorithmType == 51) //Handshake
             {
@@ -1081,7 +1103,55 @@ namespace NiceHashMinerLegacy.Divert
                 }
             }
             //********************************************************************************************
-            //zhash
+            //Neoscrypt
+            if (CurrentAlgorithmType == 8)
+            {
+                int dh = (int)DivertHandle;
+                if (processIdListNeoscrypt.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListNeoscrypt).Contains(Pid.ToString()))
+                {
+                    Thread.Sleep(50);
+                    WinDivert.WinDivertClose(DivertHandle);
+
+                    for (var i = 0; i < processIdListNeoscrypt.Count; i++)
+                    {
+                        if (processIdListNeoscrypt[i].Contains(Pid.ToString()))
+                        {
+                            processIdListNeoscrypt.RemoveAt(i);
+                        }
+                    }
+
+                    DivertHandle = new IntPtr(0);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                        " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListNeoscrypt));
+                    Thread.Sleep(50);
+                }
+                else
+                {
+                    if (String.Join(" ", Divert.processIdListNeoscrypt).Contains(Pid.ToString()))
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                            " " + " " + GetProcessName(Pid) +
+                            " from divert process list: " + " " + String.Join(", ", processIdListNeoscrypt));
+                        for (var i = 0; i < processIdListNeoscrypt.Count; i++)
+                        {
+                            if (processIdListNeoscrypt[i].Contains(Pid.ToString()))
+                            {
+                                processIdListNeoscrypt.RemoveAt(i);
+                                i = 0;
+                                continue;
+                            }
+                        }
+                    }
+                    if (processIdListNeoscrypt.Count < 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListNeoscrypt. Stopping Neoscrypt divert thread.");
+                        Neoscryptdivert_running = false;
+                    }
+                }
+            }
+
+            //********************************************************************************************
             if (CurrentAlgorithmType == 51 || SecondaryAlgorithmType == 51)//Handshake
             {
                 int dh = (int)DivertHandle;

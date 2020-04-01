@@ -24,7 +24,7 @@ namespace NiceHashMiner.Utils
             @"/NBMiner/NBMiner.exe",
             @"/miniZ/miniZ.exe",
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
-            @"/Fork_Fix_25.txt"
+            @"/Fork_Fix_26.txt"
         };
     }
 }

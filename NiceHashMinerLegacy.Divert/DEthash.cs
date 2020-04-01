@@ -588,7 +588,7 @@ namespace NiceHashMinerLegacy.Divert
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 if (PacketPayloadData.Contains("json"))
                                 {
-                                    Helpers.ConsolePrint("WinDivertSharp", "-> " + PacketPayloadData);
+                                    //Helpers.ConsolePrint("WinDivertSharp", "-> " + PacketPayloadData);
                                 }
                                 goto Divert;//меняем данные в пакете
                             }
@@ -716,7 +716,7 @@ modifyData:
                            !OwnerPID.Equals("-1") && PacketPayloadData != null)
                         {
                             modified = false;
-                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") packet: " + PacketPayloadData);
+                            //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") packet: " + PacketPayloadData);
        
                             //ethpool claymore
                             if (OwnerPID.Contains("claymoredual") && PacketPayloadData.Contains("eth_login") &&

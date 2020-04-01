@@ -66,6 +66,7 @@
     <Compile Include="DX16rV2.cs" />
     <Compile Include="DCuckooCycle.cs" />
     <Compile Include="DHandshake.cs" />
+    <Compile Include="DNeoscrypt.cs" />
     <Compile Include="DZhash.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Logger.cs" />

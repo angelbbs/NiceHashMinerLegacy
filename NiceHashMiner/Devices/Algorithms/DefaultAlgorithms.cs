@@ -145,9 +145,11 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Handshake, "Handshake")
                             {
                             }
+                            */
                             /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Eaglesong, "Eaglesong")
                             {
@@ -408,7 +410,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Handshake)
                             {
-                                ExtraLaunchParameters = "--di 100"
+                                ExtraLaunchParameters = "--di 2"
                             }
                         }
             },
@@ -469,10 +471,12 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = "--dual_intensity 0"
                     },
+                    /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Handshake)
                     {
                         ExtraLaunchParameters = "--dual_intensity 0"
                     },
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
@@ -497,11 +501,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
-                    
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Handshake, "")
                     {
                     },
-                    
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

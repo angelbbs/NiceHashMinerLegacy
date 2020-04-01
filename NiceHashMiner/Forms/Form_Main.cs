@@ -239,8 +239,8 @@ namespace NiceHashMiner
             R = new Random((int)DateTime.Now.Ticks);
 
             Text += ForkString;
-            //Text += ForkString + ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "26 beta 2";
+            Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
+            //Text += "26 beta 2";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -271,7 +271,8 @@ namespace NiceHashMiner
             ClearRatesAll();
             thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.Normal;
-            
+            //
+            //DHClient.ConnectToPool();
         }
 
         private void InitLocalization()
