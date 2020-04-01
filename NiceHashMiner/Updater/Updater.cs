@@ -40,7 +40,8 @@ namespace NiceHashMiner.Updater
             Helpers.ConsolePrint("Updater", "Try download " + Form_Main.github_browser_download_url);
             try
             {
-                ServicePointManager.SecurityProtocol = (SecurityProtocolType)SslProtocols.None;
+                //ServicePointManager.SecurityProtocol = (SecurityProtocolType)SslProtocols.None;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 WebClient client = new WebClient();
                 client.UseDefaultCredentials = false;
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
@@ -122,7 +123,7 @@ namespace NiceHashMiner.Updater
 
         public static Tuple<string, double> GetVersion()
         {
-            string url = "https://api.github.com/repos/angelbbs/nicehashminerlegacy/releases/latest";
+            string url = "https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest";
             //string url = "https://api.github.com/repos/angelbbs/nhmlff_update/releases/latest";
             string r1 = GetGitHubAPIData(url);
             if (r1 == null) return Tuple.Create("", 0d); 

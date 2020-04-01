@@ -136,7 +136,7 @@ namespace NiceHashMiner.Configs.Data
         public string CpuID = "";
 
         // 3rd party miners
-        public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
+        public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.YES;
 
         public bool DownloadInit3rdParty = false;
 
@@ -238,7 +238,7 @@ namespace NiceHashMiner.Configs.Data
             DownloadInit = false;
             //ContinueMiningIfNoInternetAccess = false;
             IdleWhenNoInternetAccess = true;
-            Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
+            Use3rdPartyMiners = Use3rdPartyMiners.YES;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
             UseIFTTT = false;
