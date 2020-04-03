@@ -347,6 +347,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
             }
             //if (algoSettings.ContainsKey(MinerBaseType.Claymore) && (device.Name.Contains("3GB"))
+            /*
             if (algoSettings.ContainsKey(MinerBaseType.Claymore) && device.GpuRam < (ulong)(1024 *1024*1024 * 3.7) && !device.Name.Contains("R7 370"))
              {
                 algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType>
@@ -354,7 +355,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         MinerBaseType.Claymore
                     });
             }
-
+            */
             if (algoSettings.ContainsKey(MinerBaseType.Phoenix) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7) && !device.Name.Contains("R7 370"))
             {
                 algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType>

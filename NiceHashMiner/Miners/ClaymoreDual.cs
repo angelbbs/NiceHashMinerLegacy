@@ -65,6 +65,8 @@ namespace NiceHashMiner.Miners
             string epoolsFile = "";
             string dpoolsFile = "";
 
+            url = url.Replace("dagger3gb", "daggerhashimoto");
+
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
@@ -595,7 +597,7 @@ namespace NiceHashMiner.Miners
         }
 
         // benchmark stuff
-
+        
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             // network stub
@@ -607,5 +609,6 @@ namespace NiceHashMiner.Miners
             BenchmarkTimeWait = time;
             return ret;
         }
+        
     }
 }

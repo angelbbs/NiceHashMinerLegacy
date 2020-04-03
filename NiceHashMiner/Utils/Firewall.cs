@@ -63,14 +63,14 @@ namespace NiceHashMiner
                 var tmpBins = DirSearch("miners");
                 foreach(var kmp in tmpBins)
                 {
-                    if (!kmp.Value.Contains("vc_redist") && !kmp.Value.Contains("switch-radeon-gpu") && 
+                    if (!kmp.Value.Contains("vc_redist") && !kmp.Value.Contains("switch-radeon-gpu") &&
                         !kmp.Value.Contains("EthMan") && !kmp.Value.Contains("OhGodAnETHlargementPill") &&
                         !kmp.Value.Contains("WinAMDTweak") && !kmp.Value.Contains("devcon") &&
                         !kmp.Value.Contains("Restarter")
                         )
                     {
-                        Helpers.ConsolePrint("Firewall", kmp.Key);
-                        Helpers.ConsolePrint("Firewall", kmp.Value);
+//                        Helpers.ConsolePrint("Firewall", kmp.Key);
+//                        Helpers.ConsolePrint("Firewall", kmp.Value);
                         miners.Add(Directory.GetCurrentDirectory() + "\\" + kmp.Key, kmp.Value);
                     }
                 }

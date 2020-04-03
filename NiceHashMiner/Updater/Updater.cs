@@ -53,7 +53,7 @@ namespace NiceHashMiner.Updater
             {
                 if (!ConfigManager.GeneralConfig.ProgramAutoUpdate && !_autoupdate)
                 {
-                    MessageBox.Show(er.Message + " Response: " + er.Response);
+                    //MessageBox.Show(er.Message + " Response: " + er.Response);
                 }
                 Helpers.ConsolePrint("Updater error: ", er.Message);
             }
@@ -87,7 +87,7 @@ namespace NiceHashMiner.Updater
                 if (e.Error != null)
                 {
                     Helpers.ConsolePrint("Updater: ", e.Error.Message);
-                    MessageBox.Show(e.Error.Message);
+                    //MessageBox.Show(e.Error.Message);
                 }
                 else
                 {
@@ -183,7 +183,7 @@ namespace NiceHashMiner.Updater
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("GITHUB", ex.Message);
-                MessageBox.Show(ex.Message + " Response: " + ex.Data);
+                //MessageBox.Show(ex.Message + " Response: " + ex.Data);
                 return null;
             }
             return ResponseFromServer;

@@ -114,10 +114,16 @@ namespace NiceHashMiner.Stats
 
         public static void UpdateExchangesFiat(Dictionary<string, double> newExchanges)
         {
-            if (newExchanges == null) return;
-            foreach (var key in newExchanges.Keys)
+            try
             {
-                ExchangesFiat.AddOrUpdate(key, newExchanges[key], (k, v) => newExchanges[k]);
+                if (newExchanges == null) return;
+                foreach (var key in newExchanges.Keys)
+                {
+                    ExchangesFiat.AddOrUpdate(key, newExchanges[key], (k, v) => newExchanges[k]);
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("API-error", ex.Message);
             }
         }
 
@@ -176,50 +182,6 @@ namespace NiceHashMiner.Stats
             return price / UsdBtcRate;
         }
 
-        //[Obsolete("UpdateApi is deprecated, use websocket method")]
-        //public static void UpdateApi(string worker)
-        //{
-        //    var resp = NiceHashStats.GetNiceHashApiData(ApiUrl, worker);
-        //    if (resp != null)
-        //    {
-        //        try
-        //        {
-        //            var lastResponse = JsonConvert.DeserializeObject<ExchangeRateJson>(resp, Globals.JsonSettings);
-        //            // set that we have a response
-        //            if (lastResponse != null)
-        //            {
-        //                var lastResult = lastResponse.result;
-        //                ExchangesFiat = lastResult.exchanges_fiat;
-        //                if (ExchangesFiat == null)
-        //                {
-        //                    Helpers.ConsolePrint("CurrencyConverter", "Unable to retrieve update, Falling back to USD");
-        //                    ActiveDisplayCurrency = "USD";
-        //                }
-        //                else
-        //                {
-        //                    ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-        //                }
-        //                // ActiveDisplayCurrency = "USD";
-        //                // check if currency avaliable and fill currency list
-        //                foreach (var pair in lastResult.exchanges)
-        //                {
-        //                    if (pair.ContainsKey("USD") && pair.ContainsKey("coin") && pair["coin"] == "BTC" && pair["USD"] != null)
-        //                    {
-        //                        UsdBtcRate = Helpers.ParseDouble(pair["USD"]);
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Helpers.ConsolePrint("ExchangeRateAPI", "UpdateAPI got Exception: " + e.Message);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Helpers.ConsolePrint("ExchangeRateAPI", "UpdateAPI got NULL");
-        //    }
-        //}
+       
     }
 }

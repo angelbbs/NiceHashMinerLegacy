@@ -93,7 +93,8 @@ namespace NiceHashMiner.Miners
             _miningLocation = miningLocation;
 
             _switchingManager = new AlgorithmSwitchingManager();
-            _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+            NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+            //_switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
 
             _btcAdress = btcAdress;
             _worker = worker;
@@ -426,6 +427,26 @@ namespace NiceHashMiner.Miners
             {
                 var stringBuilderDevice = new StringBuilder();
                 stringBuilderDevice.AppendLine($"Profits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
+                
+                //3GB
+                /*
+                double DH = 0.0d;
+                foreach (var algo in device.Algorithms)
+                {
+                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto)
+                    {
+                        DH = algo.CurNhmSmaDataVal;
+                    }
+                }
+                foreach (var algo in device.Algorithms)
+                {
+                    if (algo.NiceHashID == AlgorithmType.Dagger3GB)
+                    {
+                        algo.CurNhmSmaDataVal = DH;
+                        algo.CurPayingRatio = DH * algo.BenchmarkSpeed * 0.000000001;
+                    }
+                }
+                */
                 foreach (var algo in device.Algorithms)
                 {
                     stringBuilderDevice.AppendLine(

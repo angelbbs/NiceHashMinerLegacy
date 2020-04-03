@@ -366,6 +366,8 @@ namespace NiceHashMiner.Miners.Parsing
                             return MinerType.ClaymoreZcash;
                         case AlgorithmType.DaggerHashimoto:
                             return MinerType.ClaymoreDual;
+                        case AlgorithmType.Dagger3GB:
+                            return MinerType.ClaymoreDual;
                         case AlgorithmType.NeoScrypt:
                             return MinerType.ClaymoreNeoscrypt;
                     }

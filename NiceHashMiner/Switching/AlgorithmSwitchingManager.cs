@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Timers;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Threading.Tasks;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Switching
 {
@@ -21,14 +23,14 @@ namespace NiceHashMiner.Switching
         /// <summary>
         /// Emitted when the profits are checked
         /// </summary>
-        public event EventHandler<SmaUpdateEventArgs> SmaCheck;
+        public static event EventHandler<SmaUpdateEventArgs> SmaCheck;
 
-        private Timer _smaCheckTimer;
-        private readonly Random _random = new Random();//?
+        public static Timer _smaCheckTimer;
+        private static readonly Random _random = new Random();//?
 
-        private int _ticksForStable;
-        private int _ticksForUnstable;
-        private double _smaCheckTime;
+        private static int _ticksForStable;
+        private static int _ticksForUnstable;
+        private static double _smaCheckTime;
 
         // Simplify accessing config objects
         public static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
@@ -37,22 +39,18 @@ namespace NiceHashMiner.Switching
 
         public static int MaxHistory => Math.Max(StableRange.Upper, UnstableRange.Upper);
 
-        private readonly Dictionary<AlgorithmType, AlgorithmHistory> _stableHistory;
-        private readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory;
+        private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _stableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
+        private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
 
-        private bool _hasStarted;
+        private static bool _hasStarted;
 
         /// <summary>
         /// Currently used normalized profits
         /// </summary>
-        private readonly Dictionary<AlgorithmType, double> _lastLegitPaying;
+        private static readonly Dictionary<AlgorithmType, double> _lastLegitPaying = new Dictionary<AlgorithmType, double>();
 
         public AlgorithmSwitchingManager()
         {
-            _stableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
-            _unstableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
-            _lastLegitPaying = new Dictionary<AlgorithmType, double>();
-
             foreach (var kvp in NHSmaData.FilteredCurrentProfits(true))
             {
                 _stableHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
@@ -69,8 +67,19 @@ namespace NiceHashMiner.Switching
         {
             _smaCheckTimer = new Timer(100);
             _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
-
             _smaCheckTimer.Start();
+            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Dagger3GB)
+            {
+                if (ConfigManager.GeneralConfig.Dagger3GB)
+                {
+                    new Task(() => DHClient.StartConnection()).Start();
+                    //DHClient.StartConnection();
+                }
+            }
+        }
+        public static void SmaCheckNow()
+        {
+            SmaCheckTimerOnElapsed(null, null);
         }
 
         public void Stop()
@@ -82,7 +91,7 @@ namespace NiceHashMiner.Switching
         /// <summary>
         /// Checks profits and updates normalization based on ticks
         /// </summary>
-        internal void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
+        internal static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             Randomize();
 
@@ -116,14 +125,14 @@ namespace NiceHashMiner.Switching
             }
 
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
-            SmaCheck?.Invoke(this, args);
+            SmaCheck?.Invoke(sender, args);
         }
 
         /// <summary>
         /// Check profits for a history dict and update if profit has been higher for required ticks or if it is lower
         /// </summary>
         /// <returns>True iff any profits were postponed or updated</returns>
-        private bool UpdateProfits(Dictionary<AlgorithmType, AlgorithmHistory> history, int ticks, StringBuilder sb)
+        private static bool UpdateProfits(Dictionary<AlgorithmType, AlgorithmHistory> history, int ticks, StringBuilder sb)
         {
             var updated = false;
             var cTicks = "min";
@@ -163,7 +172,7 @@ namespace NiceHashMiner.Switching
             return updated;
         }
 
-        private void Randomize()
+        private static void Randomize()
         {
             // Lock in case this gets called simultaneously
             // Random breaks down when called from multiple threads

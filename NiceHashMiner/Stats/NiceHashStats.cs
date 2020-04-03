@@ -13,11 +13,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
-using System.Threading;
+using System.Timers;
+using System.Threading.Tasks;
 
 using NiceHashMiner.Configs;
 using static NiceHashMiner.Devices.ComputeDeviceManager;
@@ -27,6 +26,8 @@ using System.Management;
 using System.Text;
 using System.Runtime.ExceptionServices;
 using System.Reflection;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Stats
 {
@@ -107,8 +108,9 @@ namespace NiceHashMiner.Stats
         public static NiceHashSocket _socket;
         public static NiceHashSocket _socketold;
 
-        public static System.Threading.Timer _deviceUpdateTimer;
-        public static System.Threading.Timer _deviceUpdateTimerNew;
+        //public static System.Threading.Timer _deviceUpdateTimer;
+        public static System.Timers.Timer _deviceUpdateTimer;
+        //public static System.Threading.Timer _deviceUpdateTimerNew;
 
         public static bool remoteMiningStart = false;
         public static bool remoteMiningStop = false;
@@ -148,25 +150,28 @@ namespace NiceHashMiner.Stats
                 _socket.StartConnectionNew();
             } else
             {
-                _socket.StartConnection();
+                //_socket.StartConnection();
 
             }
 
 
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
             {
-                _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_TickNew, null, DeviceUpdateInterval, DeviceUpdateInterval);
+               // _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_TickNew, null, DeviceUpdateInterval, DeviceUpdateInterval);
             } else
             {
-                _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
+                //_deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
             }
 
-//            string ghv = GetVersion("");
-  //          Helpers.ConsolePrint("GITHUB", ghv);
-    //        if (ghv != null)
-      //      {
-        //        SetVersion(ghv);
-          //  }
+            _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
+            _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
+            _deviceUpdateTimer.Start();
+            //            string ghv = GetVersion("");
+            //          Helpers.ConsolePrint("GITHUB", ghv);
+            //        if (ghv != null)
+            //      {
+            //        SetVersion(ghv);
+            //  }
         }
 
         #region Socket Callbacks
@@ -269,6 +274,7 @@ namespace NiceHashMiner.Stats
                             break;
                         case "mining.set.worker":
                             RemoteMiningNotImplemented(message.id.Value.ToString());
+                            //RemoteWorkerRename(message.id.Value.ToString(), message.worker);
                             break;
                         case "mining.set.group":
                             RemoteMiningNotImplemented(message.id.Value.ToString());
@@ -357,7 +363,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("REMOTE", "Remote management disabled");
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Remote management disabled\"]}";
-                await _socket.SendData(cExecutedDisabled);
+                //await _socket.SendData(cExecutedDisabled);
                 return;
             }
             Helpers.ConsolePrint("REMOTE", "id: "+id+" device: "+ deviceToSwitch);
@@ -417,12 +423,12 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("REMOTE", "Remote management disabled");
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Remote management disabled\"]}";
-                await _socket.SendData(cExecutedDisabled);
+                //await _socket.SendData(cExecutedDisabled);
                 return;
             }
             Helpers.ConsolePrint("REMOTE", "Not implemented");
             var cExecutedNotImplemented = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Not implemented in Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",",".") + "\"]}";
-            await _socket.SendData(cExecutedNotImplemented);
+            //await _socket.SendData(cExecutedNotImplemented);
             return;
         }
             public static async Task RemoteMiningStart(string id, string device)
@@ -431,7 +437,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("REMOTE", "Remote management disabled");
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Remote management disabled\"]}";
-                await _socket.SendData(cExecutedDisabled);
+                //await _socket.SendData(cExecutedDisabled);
                 return;
             }
             var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
@@ -448,13 +454,26 @@ namespace NiceHashMiner.Stats
            //Thread.Sleep(1000);
            //await _socket.SendData(cExecuted);
         }
+        public static async Task RemoteWorkerRename(string id, string worker)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                return;
+            }
+            Configs.ConfigManager.GeneralConfig.WorkerName = worker;
+           // var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            //await _socket.SendData(cExecuted);
+            //Helpers.ConsolePrint("REMOTE", "Worker renamed");
+            return;
+        }
         public static async Task RemoteMiningStop(string id, string device)
         {
             if (!ConfigManager.GeneralConfig.Allow_remote_management)
             {
                 Helpers.ConsolePrint("REMOTE", "Remote management disabled");
-                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Remote management disabled\"]}";
-                await _socket.SendData(cExecutedDisabled);
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-1,\"Remote management disabled\"]}";
+                //await _socket.SendData(cExecutedDisabled);
                 return;
             }
             var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
@@ -1164,7 +1183,11 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        public static async void DeviceStatus_TickNew(object state)
+        public static void DeviceStatus_TickNew(object sender, ElapsedEventArgs e)
+        {
+            SetDeviceStatus(null);
+        }
+        public static async void SetDeviceStatus(object state)
         {
             var devices = ComputeDeviceManager.Available.Devices;
             var rigStatus = CalcRigStatusString();
@@ -1276,7 +1299,7 @@ namespace NiceHashMiner.Stats
 
                     deviceList.Add(array);
                 }
-                catch (Exception e) { Helpers.ConsolePrint("SOCKET", e.ToString()); }
+                catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
             }
 
             try
@@ -1298,13 +1321,14 @@ namespace NiceHashMiner.Stats
 
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new Exception($"DeviceStatus_TickNew: {e.ToString()}");
+                throw new Exception($"DeviceStatus_TickNew: {ex.ToString()}");
                // Helpers.ConsolePrint("DeviceStatus_TickNew", e.ToString());
             }
 }
-        private static async void DeviceStatus_Tick(object state)
+       // private static async void DeviceStatus_Tick(object state)
+        private static async void DeviceStatus_Tick(object sender, ElapsedEventArgs e)
         {
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
             {
@@ -1328,7 +1352,7 @@ namespace NiceHashMiner.Stats
                         device.Index,
                         device.Name
                     };
-                    Thread.Sleep(100);
+                    Thread.Sleep(50);
                     var status = Convert.ToInt32(activeIDs.Contains(device.Index)) + ((int) device.DeviceType + 1) * 2;
                     array.Add(status);
                     array.Add((int) Math.Round(device.Load));
@@ -1336,7 +1360,7 @@ namespace NiceHashMiner.Stats
                     array.Add(device.FanSpeed);
                     deviceList.Add(array);
                 }
-                catch (Exception e) { Helpers.ConsolePrint("SOCKET", e.ToString()); }
+                catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
             }
             var data = new NicehashDeviceStatus
             {

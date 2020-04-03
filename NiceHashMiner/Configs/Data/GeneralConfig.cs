@@ -29,6 +29,7 @@ namespace NiceHashMiner.Configs.Data
         public bool DivertLog = false;
         public bool SaveDivertPackets = false;
         public bool BlockGMinerApacheTomcat = false;
+        public bool Dagger3GB = false;
 
         public bool DebugConsole = false;
         public bool NewPlatform = true;
@@ -207,6 +208,7 @@ namespace NiceHashMiner.Configs.Data
             DivertLog = false;
             SaveDivertPackets = false;
             BlockGMinerApacheTomcat = false;
+            Dagger3GB = false;
             DebugConsole = false;
             HideMiningWindows = false;
             Lyra2z = false;

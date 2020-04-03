@@ -76,6 +76,33 @@ namespace NiceHashMiner.Switching
                     //    0
                     //};
                 }
+
+                if (algo == AlgorithmType.Dagger3GB)
+                {
+                    var paying = 0d;
+                    if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
+                        HasData = true;
+
+                    if (Form_Main.Dagger3GBProfit)
+                    {
+                        _currentSma[algo] = new NiceHashSma
+                        {
+                            Port = 3353,
+                            Name = algo.ToString().ToLower(),
+                            Algo = (int)algo,
+                            Paying = paying
+                        };
+                    } else
+                    {
+                        _currentSma[algo] = new NiceHashSma
+                        {
+                            Port = 3353,
+                            Name = algo.ToString().ToLower(),
+                            Algo = (int)algo,
+                            Paying = 0.0d
+                        };
+                    }
+                }
             }
 
             Initialized = true;
@@ -133,7 +160,7 @@ namespace NiceHashMiner.Switching
         /// <summary>
         /// Change SMA profit for one algo
         /// </summary>
-        internal static void UpdatePayingForAlgo(AlgorithmType algo, double paying)
+        public static void UpdatePayingForAlgo(AlgorithmType algo, double paying)
         {
             CheckInit();
             lock (_currentSma)
@@ -220,6 +247,14 @@ namespace NiceHashMiner.Switching
         public static bool TryGetPaying(AlgorithmType algo, out double paying)
         {
             CheckInit();
+            /*
+            if (algo == AlgorithmType.Dagger3GB)
+            {
+                TryGetSma(AlgorithmType.DaggerHashimoto, out var smaDH);
+                paying = smaDH.Paying;
+                return true;
+            }
+            */
             if (TryGetSma(algo, out var sma))
             {
                 paying = sma.Paying;

@@ -292,6 +292,13 @@ namespace NiceHashMiner
 
         public void KillAllUsedMinerProcesses()
         {
+            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Dagger3GB)
+            {
+                if (ConfigManager.GeneralConfig.Dagger3GB)
+                {
+                    DHClient.StopConnection();
+                }
+            }
             var toRemovePidData = new List<MinerPidData>();
             Helpers.ConsolePrint(MinerTag(), "Trying to kill all miner processes for this instance:");
             foreach (var pidData in _allPidData)
@@ -366,7 +373,7 @@ namespace NiceHashMiner
             RunCMDBeforeOrAfterMining(false);
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
             {
-                NiceHashStats.DeviceStatus_TickNew("STOPPED");
+                NiceHashStats.SetDeviceStatus("STOPPED");
             }
         }
 
@@ -420,6 +427,14 @@ namespace NiceHashMiner
         }
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
         {
+            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Dagger3GB)
+            {
+                if (ConfigManager.GeneralConfig.Dagger3GB)
+                {
+                    DHClient.StopConnection();
+                }
+            }
+
             if (IsRunning)
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Shutting down miner");
@@ -1244,7 +1259,7 @@ namespace NiceHashMiner
                     IsRunningNew = true;
                     if (Configs.ConfigManager.GeneralConfig.NewPlatform)
                     {
-                        NiceHashStats.DeviceStatus_TickNew("MINING");
+                        NiceHashStats.SetDeviceStatus("MINING");
                     }
                     string strPlatform = "";
                     foreach (var pair in MiningSetup.MiningPairs)

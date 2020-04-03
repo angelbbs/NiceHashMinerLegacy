@@ -95,6 +95,7 @@ namespace NiceHashMiner
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
+        public static bool Dagger3GBProfit = false;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -272,7 +273,7 @@ namespace NiceHashMiner
             thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.Normal;
             //
-            //DHClient.ConnectToPool();
+
         }
 
         private void InitLocalization()
@@ -392,7 +393,7 @@ namespace NiceHashMiner
                                                    International.GetText(
                                                        ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    International.GetText("Form_Main_balance") + ":";
-            BalanceCallback(null, null); // update currency changes
+            //BalanceCallback(null, null); // update currency changes
 
             if (_isDeviceDetectionInitialized)
             {
@@ -481,7 +482,6 @@ namespace NiceHashMiner
             {
                 Form_Settings.ProgressProgramUpdate.Visible = false;
             }
-
         }
         // This is a single shot _benchmarkTimer
         private void StartupTimer_Tick(object sender, EventArgs e)
@@ -589,12 +589,6 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             
-            NiceHashStats.OnBalanceUpdate += BalanceCallback;
-            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
-            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
-            NiceHashStats.OnExchangeUpdate += ExchangeCallback;
-            //Thread.Sleep(50);
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
             
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
@@ -644,6 +638,13 @@ namespace NiceHashMiner
 
             //Form_Main.ActiveForm.TopMost = true;
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
+
+            NiceHashStats.OnBalanceUpdate += BalanceCallback;
+            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+            NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
+            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
+            NiceHashStats.OnExchangeUpdate += ExchangeCallback;
+            //Thread.Sleep(50);
         }
         private bool IsVcRedistInstalled()
         {
@@ -1269,28 +1270,35 @@ namespace NiceHashMiner
 
         private void BalanceCallback(object sender, EventArgs e)
         {
-            Helpers.ConsolePrint("NICEHASH", "Balance update");
-            var balance = NiceHashStats.Balance;
-            //if (balance > 0)
+            try
             {
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && balance < 0.1)
+                Helpers.ConsolePrint("NICEHASH", "Balance update");
+                var balance = NiceHashStats.Balance;
+                //if (balance > 0)
                 {
-                    toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
-                    toolStripStatusLabelBalanceBTCValue.Text =
-                        (balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    toolStripStatusLabelBalanceBTCCode.Text = "BTC";
-                    toolStripStatusLabelBalanceBTCValue.Text = balance.ToString("F6", CultureInfo.InvariantCulture);
-                }
+                    if (ConfigManager.GeneralConfig.AutoScaleBTCValues && balance < 0.1)
+                    {
+                        toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
+                        toolStripStatusLabelBalanceBTCValue.Text =
+                            (balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        toolStripStatusLabelBalanceBTCCode.Text = "BTC";
+                        toolStripStatusLabelBalanceBTCValue.Text = balance.ToString("F6", CultureInfo.InvariantCulture);
+                    }
 
-                //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
-                var amount = (balance * ExchangeRateApi.GetUsdExchangeRate());
-                amount = ExchangeRateApi.ConvertToActiveCurrency(amount);
-                toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
-                toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
+                    //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
+                    var amountUsd = (balance * ExchangeRateApi.GetUsdExchangeRate());
+                    var amount = ExchangeRateApi.ConvertToActiveCurrency(amountUsd);
+                    toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
+                    toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Balance update", ex.ToString());
             }
+            Helpers.ConsolePrint("NICEHASH", "Balance updated");
         }
 
 
@@ -1733,7 +1741,7 @@ namespace NiceHashMiner
             //if (ConfigManager.GeneralConfig.NewPlatform)
             if (true)
             {
-                NiceHashStats.DeviceStatus_TickNew("MINING");
+                NiceHashStats.SetDeviceStatus("MINING");
                 if (textBoxBTCAddress_new.Text.Equals(""))
                 {
                     if (showWarnings)
@@ -1750,7 +1758,7 @@ namespace NiceHashMiner
                         }
                         else
                         {
-                            NiceHashStats.DeviceStatus_TickNew("STOPPED");
+                            NiceHashStats.SetDeviceStatus("STOPPED");
                             return StartMiningReturnType.IgnoreMsg;
                         }
                     }
@@ -1761,7 +1769,7 @@ namespace NiceHashMiner
                 }
                 else if (!VerifyMiningAddress(true))
                 {
-                    NiceHashStats.DeviceStatus_TickNew("STOPPED");
+                    NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
             }
@@ -1815,7 +1823,7 @@ namespace NiceHashMiner
                         International.GetText("Error_with_Exclamation"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                NiceHashStats.DeviceStatus_TickNew("STOPPED");
+                NiceHashStats.SetDeviceStatus("STOPPED");
                 return StartMiningReturnType.IgnoreMsg;
             }
 
@@ -1865,7 +1873,7 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    NiceHashStats.DeviceStatus_TickNew("STOPPED");
+                    NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
             }
@@ -1920,7 +1928,7 @@ namespace NiceHashMiner
             //_smaMinerCheck.Interval = 100;
             //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
-            NiceHashStats.DeviceStatus_TickNew("MINING");
+            NiceHashStats.SetDeviceStatus("MINING");
             if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
             {
                 _computeDevicesCheckTimer = new SystemTimer();
@@ -1979,7 +1987,7 @@ namespace NiceHashMiner
         }
         private void StopMining()
         {
-            NiceHashStats.DeviceStatus_TickNew("PENDING");
+            NiceHashStats.SetDeviceStatus("PENDING");
             _minerStatsCheck.Stop();
             //_smaMinerCheck.Stop();
             _computeDevicesCheckTimer?.Stop();

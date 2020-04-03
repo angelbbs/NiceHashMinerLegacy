@@ -42,7 +42,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.Claymore,
                 new List<Algorithm>()
                 {
-                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "")
+                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
+                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.Dagger3GB, "")
 //                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
              //       new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
 //                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),

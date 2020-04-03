@@ -16,6 +16,8 @@ namespace NiceHashMiner.Miners
             {
                 case AlgorithmType.DaggerHashimoto:
                     return new ClaymoreDual(algorithm.SecondaryNiceHashID);
+                case AlgorithmType.Dagger3GB:
+                    return new ClaymoreDual(algorithm.SecondaryNiceHashID);
                 case AlgorithmType.NeoScrypt:
                     return new ClaymoreNeoscryptMiner();
             }

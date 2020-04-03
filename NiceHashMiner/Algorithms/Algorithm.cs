@@ -92,11 +92,11 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// Current profit for this algorithm in BTC/Day
         /// </summary>
-        public double CurrentProfit { get; protected set; }
+        public double CurrentProfit { get; set; }
         /// <summary>
         /// Current SMA profitability for this algorithm type in BTC/GH/Day
         /// </summary>
-        public double CurNhmSmaDataVal { get; private set; }
+        public double CurNhmSmaDataVal { get; set; }
 
         /// <summary>
         /// Power consumption of this algorithm, in Watts
@@ -235,7 +235,7 @@ namespace NiceHashMiner.Algorithms
             CurNhmSmaDataVal = paying;
             CurrentProfit = CurNhmSmaDataVal * AvaragedSpeed * Mult;
             //добавляем CurrentProfitReal и используем его в логах
-            //добавляем Treshold и используем его для расчета CurrentProfit, чтоб алгоритмы переключались в зависимости от порога 
+            //добавляем Treshold и используем его для расчета CurrentProfit, чтоб алгоритмы переключались в зависимости от порога
             // Helpers.ConsolePrint("PROFIT", AlgorithmName + " CurrentProfit: " + CurrentProfit.ToString());
             SubtractPowerFromProfit();
         }

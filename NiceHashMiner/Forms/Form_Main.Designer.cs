@@ -521,7 +521,6 @@ namespace NiceHashMiner
         private System.Windows.Forms.Button buttonLogo;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ComboBox comboBoxLocation;
-        private System.Windows.Forms.TextBox textBoxWorkerName;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -540,6 +539,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.Button buttonBTC_Save;
         private System.Windows.Forms.Button buttonBTC_Clear;
         public System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
+        public System.Windows.Forms.TextBox textBoxWorkerName;
     }
 }
 
