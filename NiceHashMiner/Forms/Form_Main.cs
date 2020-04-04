@@ -95,7 +95,8 @@ namespace NiceHashMiner
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
-        public static bool Dagger3GBProfit = false;
+        public static bool DaggerHashimoto3GBProfit = false;
+        public static bool DaggerHashimoto3GB = true;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -594,6 +595,13 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
+            NiceHashStats.OnBalanceUpdate += BalanceCallback;
+            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+            NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
+            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
+            NiceHashStats.OnExchangeUpdate += ExchangeCallback;
+            //Thread.Sleep(50);
+
             _loadingScreen.FinishLoad();
 
             firstStartConnection = true;
@@ -639,12 +647,6 @@ namespace NiceHashMiner
             //Form_Main.ActiveForm.TopMost = true;
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
 
-            NiceHashStats.OnBalanceUpdate += BalanceCallback;
-            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
-            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
-            NiceHashStats.OnExchangeUpdate += ExchangeCallback;
-            //Thread.Sleep(50);
         }
         private bool IsVcRedistInstalled()
         {
@@ -1014,7 +1016,7 @@ namespace NiceHashMiner
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
+                    Helpers.ConsolePrint("NICEHASH", "OnGPUsLost.bat error: " + ex.Message);
                 }
             }
         }

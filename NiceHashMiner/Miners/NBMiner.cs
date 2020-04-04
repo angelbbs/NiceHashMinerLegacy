@@ -111,7 +111,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.ID));
+                    devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
                     platform = "--platform 2";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
@@ -221,7 +221,7 @@ namespace NiceHashMiner.Miners
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
                 } else
                 {
-                    devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.ID));
+                    devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
                     platform = "--platform 2";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
@@ -380,12 +380,12 @@ namespace NiceHashMiner.Miners
                     return false;
                 }
 
-                if (SecondaryAlgorithmType == AlgorithmType.GrinCuckaroo29 || 
-                    SecondaryAlgorithmType == AlgorithmType.GrinCuckarood29 ||
-                    SecondaryAlgorithmType == AlgorithmType.Cuckaroom ||
-                    SecondaryAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
-                    SecondaryAlgorithmType == AlgorithmType.CuckooCycle ||
-                    SecondaryAlgorithmType == AlgorithmType.DaggerHashimoto)
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
                 {
                     if (outdata.Contains("Total Speed:") && outdata.Contains("g/s")) //grin
                     {

@@ -292,13 +292,6 @@ namespace NiceHashMiner
 
         public void KillAllUsedMinerProcesses()
         {
-            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Dagger3GB)
-            {
-                if (ConfigManager.GeneralConfig.Dagger3GB)
-                {
-                    DHClient.StopConnection();
-                }
-            }
             var toRemovePidData = new List<MinerPidData>();
             Helpers.ConsolePrint(MinerTag(), "Trying to kill all miner processes for this instance:");
             foreach (var pidData in _allPidData)
@@ -427,13 +420,6 @@ namespace NiceHashMiner
         }
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
         {
-            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Dagger3GB)
-            {
-                if (ConfigManager.GeneralConfig.Dagger3GB)
-                {
-                    DHClient.StopConnection();
-                }
-            }
 
             if (IsRunning)
             {
@@ -1200,6 +1186,7 @@ namespace NiceHashMiner
 
         protected virtual NiceHashProcess _Start()
         {
+
             RunCMDBeforeOrAfterMining(true);
             // never start when ended
             if (_isEnded)

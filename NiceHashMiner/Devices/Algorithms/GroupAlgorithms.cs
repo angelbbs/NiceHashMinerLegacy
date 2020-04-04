@@ -244,8 +244,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                     //   AlgorithmType.NeoScrypt,
-                     //   AlgorithmType.Lyra2REv2
+                        //   AlgorithmType.NeoScrypt,
+                        //   AlgorithmType.Lyra2REv2
                     });
                 }
 
@@ -372,6 +372,18 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
+            if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7) ))
+            {
+                Form_Main.DaggerHashimoto3GB = false;
+            }
+            if (!Form_Main.DaggerHashimoto3GB)
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.DaggerHashimoto3GB
+                    });
+            }
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -427,7 +439,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.GrinCuckarood29
                     });
             }
-
+            /*
             if (algoSettings.ContainsKey(MinerBaseType.Bminer) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -435,7 +447,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.GrinCuckarood29
                     });
             }
-
+            */
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
@@ -582,7 +594,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.GrinCuckaroo29
                     });
             }
-            if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {

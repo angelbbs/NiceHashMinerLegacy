@@ -77,13 +77,13 @@ namespace NiceHashMiner.Switching
                     //};
                 }
 
-                if (algo == AlgorithmType.Dagger3GB)
+                if (algo == AlgorithmType.DaggerHashimoto3GB)
                 {
                     var paying = 0d;
                     if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
                         HasData = true;
 
-                    if (Form_Main.Dagger3GBProfit)
+                    if (Form_Main.DaggerHashimoto3GBProfit)
                     {
                         _currentSma[algo] = new NiceHashSma
                         {
@@ -248,7 +248,7 @@ namespace NiceHashMiner.Switching
         {
             CheckInit();
             /*
-            if (algo == AlgorithmType.Dagger3GB)
+            if (algo == AlgorithmType.DaggerHashimoto3GB)
             {
                 TryGetSma(AlgorithmType.DaggerHashimoto, out var smaDH);
                 paying = smaDH.Paying;

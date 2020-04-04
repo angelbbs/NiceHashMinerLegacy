@@ -9,7 +9,7 @@
         // dual algos for grouping
         DaggerHandshake = -11,
         DaggerEaglesong = -10,
-        Dagger3GB = -9,
+        DaggerHashimoto3GB = -9,
         DaggerKeccak = -8,
         DaggerBlake2s = -7,
         DaggerSia = -6,

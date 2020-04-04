@@ -427,7 +427,7 @@ namespace NiceHashMiner.Miners
             {
                 var stringBuilderDevice = new StringBuilder();
                 stringBuilderDevice.AppendLine($"Profits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
-                
+
                 //3GB
                 /*
                 double DH = 0.0d;
@@ -440,7 +440,7 @@ namespace NiceHashMiner.Miners
                 }
                 foreach (var algo in device.Algorithms)
                 {
-                    if (algo.NiceHashID == AlgorithmType.Dagger3GB)
+                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB)
                     {
                         algo.CurNhmSmaDataVal = DH;
                         algo.CurPayingRatio = DH * algo.BenchmarkSpeed * 0.000000001;
@@ -496,7 +496,7 @@ namespace NiceHashMiner.Miners
                     currentProfit = device.GetCurrentMostProfitValue;
                     prevStateProfit = device.GetPrevMostProfitValue;
 
-                    
+
                     Helpers.ConsolePrint(Tag, $"{device.Device.GetFullName()}: PrevStateProfit {prevStateProfit.ToString(DoubleFormat)}, CurrentProfit {currentProfit.ToString(DoubleFormat)}");
                     //if (prevStateProfit > 0 && currentProfit > 0)
                     //if (currentProfit > 0)

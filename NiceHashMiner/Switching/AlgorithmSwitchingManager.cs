@@ -68,12 +68,11 @@ namespace NiceHashMiner.Switching
             _smaCheckTimer = new Timer(100);
             _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
             _smaCheckTimer.Start();
-            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Dagger3GB)
+            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
             {
-                if (ConfigManager.GeneralConfig.Dagger3GB)
+                if (Form_Main.DaggerHashimoto3GB)
                 {
                     new Task(() => DHClient.StartConnection()).Start();
-                    //DHClient.StartConnection();
                 }
             }
         }
@@ -84,6 +83,13 @@ namespace NiceHashMiner.Switching
 
         public void Stop()
         {
+            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
+            {
+                if (Form_Main.DaggerHashimoto3GB)
+                {
+                    DHClient.StopConnection();
+                }
+            }
             _smaCheckTimer.Stop();
             _smaCheckTimer = null;
         }
@@ -160,7 +166,7 @@ namespace NiceHashMiner.Switching
                                 $" higher for {i}/{ticks} {cTicks} for {algo}"
                             );
                         }
-                    } 
+                    }
                     else
                     {
                         // Profit has gone down

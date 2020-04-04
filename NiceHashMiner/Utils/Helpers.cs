@@ -411,7 +411,7 @@ namespace NiceHashMiner
 
         public static AlgorithmType DualAlgoFromAlgos(AlgorithmType primary, AlgorithmType secondary)
         {
-            if (primary == AlgorithmType.DaggerHashimoto || primary == AlgorithmType.Dagger3GB)
+            if (primary == AlgorithmType.DaggerHashimoto || primary == AlgorithmType.DaggerHashimoto3GB)
             {
                 switch (secondary)
                 {

@@ -130,7 +130,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                LastCommandLine = "--coin GRIN-AD29 --pool " + url + ";grincuckarood29." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[5, 0] + nhsuff + ".nicehash.com" +
+                LastCommandLine = "--coin MWC-C29D --pool " + url + ";grincuckarood29." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[5, 0] + nhsuff + ".nicehash.com" +
                              " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
                              " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
                              " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
@@ -219,8 +219,8 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                CommandLine = "--coin GRIN-AD29 " +
-                " --pool grin.sparkpool.com;grincuckaroo29.usa" + nhsuff + ".nicehash.com --port 6666;3372 --user angelbbs@mail.ru." + worker + ";" + username + " --pass x;x" +
+                CommandLine = "--coin MWC-C29D " +
+                " --pool eu.frostypool.com;grincuckaroo29.usa" + nhsuff + ".nicehash.com --port 3516;3372 --user angelbbs.lolMiner;" + username + " --pass x;x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
