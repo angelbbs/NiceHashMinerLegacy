@@ -70,7 +70,7 @@ namespace NiceHashMinerLegacy.Divert
         private static WinDivertParseResult parse_result;
         private static int PacketLen;
         private static string RemoteIP;
-
+        private static bool noPayload = true;
 
         internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
         {
@@ -228,9 +228,14 @@ nextCycle:
                             }
                         }
 
-                        if (Divert._SaveDivertPackets)
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) != 8443 & Divert.SwapOrder(parse_result.TcpHeader->SrcPort) != 8443)
                         {
                             np++;
+                        }
+
+                        if (Divert._SaveDivertPackets)
+                        {
                             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
                             string cpacket0 = "";
                             for (int i = 0; i < readLen; i++)
@@ -243,7 +248,11 @@ nextCycle:
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
 
-                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        if (noPayload && np > 8)
+                        {
+                            modified = false;
+                            goto sendPacket;
+                        }
 
                         
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
@@ -331,6 +340,10 @@ nextCycle:
 
                         
 changeSrcDst:
+                        if (parse_result.PacketPayloadLength > 20)
+                        {
+                            noPayload = false;
+                        }
                         /*
                         Helpers.ConsolePrint("WinDivertSharp", "Before Src: "+ parse_result.IPv4Header->SrcAddr.ToString()+ ":"+ Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                             " Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +

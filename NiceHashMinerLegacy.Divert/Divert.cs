@@ -426,13 +426,13 @@ namespace NiceHashMinerLegacy.Divert
             worker = w;
             BlockGMinerApacheTomcat = BlockGMinerApacheTomcatConfig;
             Helpers.ConsolePrint("WinDivertSharp", "Miner: " + MinerName + " Algo: " + CurrentAlgorithmType + " AlgoDual: " + SecondaryAlgorithmType);
-            /*
+            
             if ( CurrentAlgorithmType == 47 && MinerName.ToLower() == "xmrig") //for testing. Disable in productuon
             {
-                return IntPtr.Zero;
-                //return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
+            //    return IntPtr.Zero;
+                return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
             }
-            */
+            
             if (CurrentAlgorithmType == 47 && MinerName.ToLower().Equals("xmrig")) 
             {
                 return IntPtr.Zero;
@@ -542,6 +542,7 @@ namespace NiceHashMinerLegacy.Divert
                     processIdListZhash.Add("gminer: force");
                     gminer_runningZhash = true;
                     GetGMinerZhash(processId, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert handle: " + DZhashHandle.ToString());
                 }
 
                 if (MinerName.ToLower() == "miniz")
@@ -784,17 +785,17 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     childPID = GetChildProcess(processId);
                     if (childPID > 0) 
-                            {
-                                if (!String.Join(" ", processIdListEthash).Contains(childPID.ToString()))
-                                {
-                                    processIdListEthash.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                    {
+                           if (!String.Join(" ", processIdListEthash).Contains(childPID.ToString()))
+                           {
+                           processIdListEthash.Add("gminer: " + processId.ToString() + " " + childPID.ToString() + " %" + DEthashHandle.ToString());
                                     Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Ethash ChildPid: " + childPID.ToString());
                                     processIdListEthash.RemoveAll(x => x.Contains("gminer: force"));
                                     Helpers.ConsolePrint("WinDivertSharp", "processIdListEthash: " + String.Join(" ", processIdListEthash));
                                     //break;
-                                }
+                           }
                                 
-                            }
+                    }
                     Thread.Sleep(400);
                 } while (gminer_runningEthash);
                 return t.Task;
@@ -821,8 +822,8 @@ namespace NiceHashMinerLegacy.Divert
                     {
                         if (!String.Join(" ", processIdListZhash).Contains(childPID.ToString()))
                         {
-                            processIdListZhash.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
-                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Zhash ChildPid: " + childPID.ToString());
+                            processIdListZhash.Add("gminer: " + processId.ToString() + " " + childPID.ToString() + " %" + DZhashHandle.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Zhash ChildPid: " + childPID.ToString() + " DZhashHandle: " + DZhashHandle.ToString());
                             processIdListZhash.RemoveAll(x => x.Contains("gminer: force"));
                             Helpers.ConsolePrint("WinDivertSharp", "processIdListZhash: " + String.Join(" ", processIdListZhash));
                             //break;
@@ -856,7 +857,7 @@ namespace NiceHashMinerLegacy.Divert
                     {
                         if (!String.Join(" ", processIdListHandshake).Contains(childPID.ToString()))
                         {
-                            processIdListHandshake.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            processIdListHandshake.Add("gminer: " + processId.ToString() + " " + childPID.ToString() + " %" + DHandshakeHandle.ToString());
                             Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Handshake ChildPid: " + childPID.ToString());
                             processIdListHandshake.RemoveAll(x => x.Contains("gminer: force"));
                             Helpers.ConsolePrint("WinDivertSharp", "processIdListHandshake: " + String.Join(" ", processIdListHandshake));
@@ -890,7 +891,7 @@ namespace NiceHashMinerLegacy.Divert
                     {
                         if (!String.Join(" ", processIdListCuckooCycle).Contains(childPID.ToString()))
                         {
-                            processIdListCuckooCycle.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            processIdListCuckooCycle.Add("gminer: " + processId.ToString() + " " + childPID.ToString() + " %" + DCuckooCycleHandle.ToString());
                             Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner CuckooCycle ChildPid: " + childPID.ToString());
                             processIdListCuckooCycle.RemoveAll(x => x.Contains("gminer: force"));
                             Helpers.ConsolePrint("WinDivertSharp", "processIdListCuckooCycle: " + String.Join(" ", processIdListCuckooCycle));
@@ -924,7 +925,7 @@ namespace NiceHashMinerLegacy.Divert
                     {
                         if (!String.Join(" ", processIdListGrin).Contains(childPID.ToString()))
                         {
-                            processIdListGrin.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            processIdListGrin.Add("gminer: " + processId.ToString() + " " + childPID.ToString() + " %" + DGrinHandle.ToString());
                             Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Grin ChildPid: " + childPID.ToString());
                             processIdListGrin.RemoveAll(x => x.Contains("gminer: force"));
                             Helpers.ConsolePrint("WinDivertSharp", "processIdListGrin: " + String.Join(" ", processIdListGrin));
@@ -959,7 +960,7 @@ namespace NiceHashMinerLegacy.Divert
                     {
                         if (!String.Join(" ", processIdListBeam).Contains(childPID.ToString()))
                         {
-                            processIdListBeam.Add("gminer: " + processId.ToString() + " " + childPID.ToString());
+                            processIdListBeam.Add("gminer: " + processId.ToString() + " " + childPID.ToString() + " %" + DBeamHandle.ToString());
                             Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Beam ChildPid: " + childPID.ToString());
                             processIdListBeam.RemoveAll(x => x.Contains("gminer: force"));
                             Helpers.ConsolePrint("WinDivertSharp", "processIdListBeam: " + String.Join(" ", processIdListBeam));
@@ -1004,22 +1005,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListEthash).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListEthash.Count; i++)
+                        {
+                            if (processIdListEthash[i].Contains(Pid.ToString()) && processIdListEthash[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListEthash[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListEthash));
                         processIdListEthash.RemoveAll(x => x.Contains(Pid.ToString()));
-                        /*
-                        for (var i = 0; i < processIdListEthash.Count; i++)
-                        {
-                            if (processIdListEthash[i].Contains(Pid.ToString()))
-                            {
-                                processIdListEthash.RemoveAll(Pid.ToString()));
-                                processIdListEthash.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
-                        */
+
                     }
                     if (processIdListEthash.Count < 1)
                     {
@@ -1045,12 +1045,10 @@ namespace NiceHashMinerLegacy.Divert
             //zhash
             if (CurrentAlgorithmType == 36)
             {
+                Zhashdivert_running = false;
                 int dh = (int)DivertHandle;
                 if (processIdListZhash.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListZhash).Contains(Pid.ToString()))
                 {
-                    Thread.Sleep(50);
-                    WinDivert.WinDivertClose(DivertHandle);
-
                     for (var i = 0; i < processIdListZhash.Count; i++)
                     {
                         if (processIdListZhash[i].Contains(Pid.ToString()))
@@ -1059,7 +1057,6 @@ namespace NiceHashMinerLegacy.Divert
                         }
                     }
 
-                    DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
                         " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
                     Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListZhash));
@@ -1069,23 +1066,29 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListZhash).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListZhash.Count; i++)
+                        {
+                            if (processIdListZhash[i].Contains(Pid.ToString()) && processIdListZhash[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListZhash[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListZhash));
-                        for (var i = 0; i < processIdListZhash.Count; i++)
-                        {
-                            if (processIdListZhash[i].Contains(Pid.ToString()))
-                            {
-                                processIdListZhash.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
+                        processIdListZhash.RemoveAll(x => x.Contains(Pid.ToString()));
+
                     }
                     if (processIdListZhash.Count < 1)
                     {
                         Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListZhash. Stopping Zhash divert thread.");
                         Zhashdivert_running = false;
+                        //Thread.Sleep(50);
+                        WinDivert.WinDivertClose(DivertHandle);
+                        DivertHandle = new IntPtr(0);
                     }
                 }
                 //check gminer divert is running
@@ -1130,18 +1133,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListNeoscrypt).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListNeoscrypt.Count; i++)
+                        {
+                            if (processIdListNeoscrypt[i].Contains(Pid.ToString()) && processIdListNeoscrypt[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListNeoscrypt[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListNeoscrypt));
-                        for (var i = 0; i < processIdListNeoscrypt.Count; i++)
-                        {
-                            if (processIdListNeoscrypt[i].Contains(Pid.ToString()))
-                            {
-                                processIdListNeoscrypt.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
+                        processIdListNeoscrypt.RemoveAll(x => x.Contains(Pid.ToString()));
+
                     }
                     if (processIdListNeoscrypt.Count < 1)
                     {
@@ -1178,18 +1184,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListHandshake).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListHandshake.Count; i++)
+                        {
+                            if (processIdListHandshake[i].Contains(Pid.ToString()) && processIdListHandshake[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListHandshake[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListHandshake));
-                        for (var i = 0; i < processIdListHandshake.Count; i++)
-                        {
-                            if (processIdListHandshake[i].Contains(Pid.ToString()))
-                            {
-                                processIdListHandshake.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
+                        processIdListHandshake.RemoveAll(x => x.Contains(Pid.ToString()));
+
                     }
                     if (processIdListHandshake.Count < 1)
                     {
@@ -1238,18 +1247,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListCuckooCycle).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListCuckooCycle.Count; i++)
+                        {
+                            if (processIdListCuckooCycle[i].Contains(Pid.ToString()) && processIdListCuckooCycle[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListCuckooCycle[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListCuckooCycle));
-                        for (var i = 0; i < processIdListCuckooCycle.Count; i++)
-                        {
-                            if (processIdListCuckooCycle[i].Contains(Pid.ToString()))
-                            {
-                                processIdListCuckooCycle.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
+                        processIdListCuckooCycle.RemoveAll(x => x.Contains(Pid.ToString()));
+
                     }
                     if (processIdListCuckooCycle.Count < 1)
                     {
@@ -1299,18 +1311,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListX16rV2).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListX16rV2.Count; i++)
+                        {
+                            if (processIdListX16rV2[i].Contains(Pid.ToString()) && processIdListX16rV2[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListX16rV2[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListX16rV2));
-                        for (var i = 0; i < processIdListX16rV2.Count; i++)
-                        {
-                            if (processIdListX16rV2[i].Contains(Pid.ToString()))
-                            {
-                                processIdListX16rV2.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
+                        processIdListX16rV2.RemoveAll(x => x.Contains(Pid.ToString()));
+
                     }
                     if (processIdListX16rV2.Count < 1)
                     {
@@ -1348,18 +1363,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListGrin).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListGrin.Count; i++)
+                        {
+                            if (processIdListGrin[i].Contains(Pid.ToString()) && processIdListGrin[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListGrin[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListGrin));
-                        for (var i = 0; i < processIdListGrin.Count; i++)
-                        {
-                            if (processIdListGrin[i].Contains(Pid.ToString()))
-                            {
-                                processIdListGrin.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
+                        processIdListGrin.RemoveAll(x => x.Contains(Pid.ToString()));
+
                     }
                     if (processIdListGrin.Count < 1)
                     {
@@ -1462,18 +1480,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (String.Join(" ", Divert.processIdListBeam).Contains(Pid.ToString()))
                     {
+                        for (var i = 0; i < processIdListBeam.Count; i++)
+                        {
+                            if (processIdListBeam[i].Contains(Pid.ToString()) && processIdListBeam[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListBeam[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
                         Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
                             " " + " " + GetProcessName(Pid) +
                             " from divert process list: " + " " + String.Join(", ", processIdListBeam));
-                        for (var i = 0; i < processIdListBeam.Count; i++)
-                        {
-                            if (processIdListBeam[i].Contains(Pid.ToString()))
-                            {
-                                processIdListBeam.RemoveAt(i);
-                                i = 0;
-                                continue;
-                            }
-                        }
+                        processIdListBeam.RemoveAll(x => x.Contains(Pid.ToString()));
+
                     }
                     if (processIdListBeam.Count < 1)
                     {

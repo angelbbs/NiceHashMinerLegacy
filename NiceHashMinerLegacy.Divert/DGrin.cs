@@ -73,7 +73,7 @@ namespace NiceHashMinerLegacy.Divert
         private static WinDivertParseResult parse_result;
         private static int PacketLen;
         private static string RemoteIP;
-
+        private static bool noPayload = true;
 
         internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
         {
@@ -229,7 +229,12 @@ nextCycle:
                             }
                         }
 
-                        np++;
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) != 8443 & Divert.SwapOrder(parse_result.TcpHeader->SrcPort) != 8443)
+                        {
+                            np++;
+                        }
+
                         if (Divert._SaveDivertPackets)
                         {
                             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
@@ -244,7 +249,11 @@ nextCycle:
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
 
-                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        if (noPayload && np > 8)
+                        {
+                            modified = false;
+                            goto sendPacket;
+                        }
 
                         
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
@@ -256,7 +265,7 @@ nextCycle:
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         }
 
-
+                        
                         if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443 || Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
                         {
                             if (Divert.BlockGMinerApacheTomcat)
@@ -270,7 +279,7 @@ nextCycle:
                                 goto sendPacket;
                             }
                         }
-
+                        
 
                         if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4416 && OwnerPID.Contains("gminer"))//ssl
                         {
@@ -367,6 +376,10 @@ nextCycle:
 
 
                         changeSrcDst:
+                        if (parse_result.PacketPayloadLength > 20)
+                        {
+                            noPayload = false;
+                        }
                         /*
                         Helpers.ConsolePrint("WinDivertSharp", "Before Src: "+ parse_result.IPv4Header->SrcAddr.ToString()+ ":"+ Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                             " Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
@@ -430,12 +443,28 @@ nextCycle:
 
                         sendPacket:
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        //***********************************************************************************
 
+                        // var modpacket = Divert.MakeNewPacket(packet, readLen, PacketPayloadData);
+                        // packet.Dispose();
+                        // packet = modpacket;
+                        // readLen = packet.Length;
+
+                        //parse_result.IPv4Header->Checksum = (ushort)WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
+                        //parse_result.IPv4Header->Checksum = (ushort)WinDivert.WinDivertHelperCalcChecksums(packet, readLen, WinDivertChecksumHelperParam.NoIpChecksum);
+
+                        
+                        //parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        //WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
+                        //***********************************************************************************
+                        
                         if (modified)
                         {
+                            addr.PseudoIPChecksum = true;
+                            addr.PseudoTCPChecksum = true;
                             WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
                         }
-
+                        
                         if (Divert._SaveDivertPackets)
                         {
                             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");

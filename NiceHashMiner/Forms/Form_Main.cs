@@ -785,8 +785,10 @@ namespace NiceHashMiner
                    // this.Width = 660; // min width
                 }
             }
-            WindowState = FormWindowState.Normal;
-
+            if (!Configs.ConfigManager.GeneralConfig.MinimizeToTray)
+            {
+                WindowState = FormWindowState.Normal;
+            }
             foreach (var lbl in this.Controls.OfType<Button>())
             {
                 lbl.ForeColor = _textColor;
@@ -1189,84 +1191,91 @@ namespace NiceHashMiner
 
         private void UpdateGlobalRate()
         {
-            double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
-            var totalRate = MinersManager.GetTotalRate();
-            //var totalPowerRate = MinersManager.GetTotalPowerRate();
-            var powerString = "";
-            double TotalPower = 0;
-            foreach (var computeDevice in Available.Devices)
+            try
             {
-                TotalPower += computeDevice.PowerUsage;
-            }
-            double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
-            totalPower = Math.Round(totalPower, 0);
-            var totalPowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 *_factorTimeUnit / 1000;
-            var PowerRateFiat = ExchangeRateApi.GetKwhPriceInBtc()*ExchangeRateApi.GetUsdExchangeRate() * totalPower * 24 *_factorTimeUnit / 1000;
-
-            var powerMB = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 / 1000;
-
-            double totalPowerRateDec = 0;
-            if (ConfigManager.GeneralConfig.DecreasePowerCost)
-            {
-                totalPowerRateDec = totalPowerRate;
-            }
-
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
-            {
-                if (totalPowerRate != 0)
+                double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
+                var totalRate = MinersManager.GetTotalRate();
+                //var totalPowerRate = MinersManager.GetTotalPowerRate();
+                var powerString = "";
+                double TotalPower = 0;
+                foreach (var computeDevice in Available.Devices)
                 {
-                    powerString = "(-" + (totalPowerRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
+                    TotalPower += computeDevice.PowerUsage;
                 }
+                double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
+                totalPower = Math.Round(totalPower, 0);
+                var totalPowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 * _factorTimeUnit / 1000;
+                var PowerRateFiat = ExchangeRateApi.GetKwhPriceInBtc() * ExchangeRateApi.GetUsdExchangeRate() * totalPower * 24 * _factorTimeUnit / 1000;
+
+                var powerMB = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 / 1000;
+
+                double totalPowerRateDec = 0;
                 if (ConfigManager.GeneralConfig.DecreasePowerCost)
                 {
-                    powerString = "";
+                    totalPowerRateDec = totalPowerRate;
                 }
+
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
+                {
+                    if (totalPowerRate != 0)
+                    {
+                        powerString = "(-" + (totalPowerRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
+                    }
+                    if (ConfigManager.GeneralConfig.DecreasePowerCost)
+                    {
+                        powerString = "";
+                    }
                     toolStripStatusLabelBTCDayText.Text = powerString + " " +
                     "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                     toolStripStatusLabelGlobalRateValue.Text =
                 ((totalRate - totalPowerRateDec) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
 
-            }
-            else
-            {
+                }
+                else
+                {
+                    if (totalPowerRate != 0)
+                    {
+                        powerString = "(-" + (totalPowerRate * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
+                    }
+                    if (ConfigManager.GeneralConfig.DecreasePowerCost)
+                    {
+                        powerString = "";
+                    }
+                    toolStripStatusLabelBTCDayText.Text = powerString + " " +
+                        "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                    toolStripStatusLabelGlobalRateValue.Text =
+                        ((totalRate - totalPowerRateDec) * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                }
+
                 if (totalPowerRate != 0)
                 {
-                    powerString = "(-" + (totalPowerRate * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
+                    powerString = "(-" + ExchangeRateApi.ConvertToActiveCurrency((totalPowerRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                    .ToString("F2", CultureInfo.InvariantCulture) + ") ";
+                    if (ConfigManager.GeneralConfig.DecreasePowerCost)
+                    {
+                        powerString = "";//!!!!!
+                    }
                 }
-                if (ConfigManager.GeneralConfig.DecreasePowerCost)
+                else
                 {
                     powerString = "";
                 }
-                toolStripStatusLabelBTCDayText.Text = powerString + " " +
-                    "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                toolStripStatusLabelGlobalRateValue.Text =
-                    ((totalRate - totalPowerRateDec) * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
-            }
+                toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
+                toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
+                toolStripStatusLabel_power2.Text = totalPower.ToString();
 
-            if (totalPowerRate != 0)
-            {
-                powerString = "(-" + ExchangeRateApi.ConvertToActiveCurrency((totalPowerRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
-                .ToString("F2", CultureInfo.InvariantCulture) + ") ";
-                if (ConfigManager.GeneralConfig.DecreasePowerCost)
-                {
-                    powerString = "";//!!!!!
-                }
+                toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
+                    .ConvertToActiveCurrency(((totalRate - totalPowerRateDec) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                    .ToString("F2", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
+                                                       International.GetText(
+                                                           ConfigManager.GeneralConfig.TimeUnit.ToString()) + "   " +
+                                                       International.GetText("Form_Main_balance") + ":";
             }
-            else
+            catch (Exception e)
             {
-                powerString = "";
+                Helpers.ConsolePrint("UpdateGlobalRate error: ", e.ToString());
             }
-            toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
-            toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
-            toolStripStatusLabel_power2.Text = totalPower.ToString();
-
-            toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency(((totalRate - totalPowerRateDec) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
-                .ToString("F2", CultureInfo.InvariantCulture);
-            toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
-                                                   International.GetText(
-                                                       ConfigManager.GeneralConfig.TimeUnit.ToString()) + "   " +
-                                                   International.GetText("Form_Main_balance") + ":";
         }
 
 
@@ -1825,7 +1834,7 @@ namespace NiceHashMiner
                         International.GetText("Error_with_Exclamation"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                NiceHashStats.SetDeviceStatus("STOPPED");
+                //NiceHashStats.SetDeviceStatus("STOPPED");
                 return StartMiningReturnType.IgnoreMsg;
             }
 

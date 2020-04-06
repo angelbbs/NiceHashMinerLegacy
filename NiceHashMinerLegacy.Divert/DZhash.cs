@@ -73,7 +73,7 @@ namespace NiceHashMinerLegacy.Divert
         private static int PacketLen;
         private static string RemoteIP;
         private static bool sslFixed = false;
-
+        private static bool noPayload = true;
         internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
         {
             if (String.Join(" ", processIdList).Contains("gminer: force"))
@@ -230,10 +230,14 @@ nextCycle:
                                 continue;
                             }
                         }
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) != 8443 & Divert.SwapOrder(parse_result.TcpHeader->SrcPort) != 8443)
+                        {
+                            np++;
+                        }
 
                         if (Divert._SaveDivertPackets)
                         {
-                            np++;
                             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
                             string cpacket0 = "";
                             for (int i = 0; i < readLen; i++)
@@ -245,7 +249,12 @@ nextCycle:
                             if (cpacket0.Length > 60)
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
-
+                        if (noPayload && np > 8)
+                        {
+                            Helpers.ConsolePrint("WinDivertSharp", "Stop divert");
+                            modified = false;
+                            goto sendPacket;
+                        }
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
                         
@@ -258,7 +267,7 @@ nextCycle:
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         }
 
-
+                        
                         if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8443 || Divert.SwapOrder(parse_result.TcpHeader->SrcPort) == 8443)
                         {
                             if (Divert.BlockGMinerApacheTomcat)
@@ -560,7 +569,7 @@ modifyData:
                             newPayload = null;
 
                         }
-changeSrcDst:
+                        changeSrcDst:
                         /*
                         Helpers.ConsolePrint("WinDivertSharp", "Before Src: "+ parse_result.IPv4Header->SrcAddr.ToString()+ ":"+ Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                             " Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
@@ -568,6 +577,10 @@ changeSrcDst:
                             " Direction: " + addr.Direction.ToString() +
                             " CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction));
                           */
+                        if (parse_result.PacketPayloadLength > 20)
+                        {
+                            noPayload = false;
+                        }
 
                         if (parse_result.TcpHeader->DstPort == DevFeePort &&
                                 addr.Direction == WinDivertDirection.Outbound &&
@@ -688,10 +701,10 @@ sendPacket:
                 {
 
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(5);
             }
             while (Divert.Zhashdivert_running);
-
+            Helpers.ConsolePrint("WinDivertSharp", "DZhash stopped");
         }
     }
 }

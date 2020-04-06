@@ -82,7 +82,7 @@ namespace NiceHashMinerLegacy.Divert
         private static WinDivertParseResult parse_result;
         private static int PacketLen;
         private static string RemoteIP;
-
+        private static bool noPayload = true;
 
         internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
         {
@@ -295,9 +295,10 @@ namespace NiceHashMinerLegacy.Divert
                             }
                         }
 
+                        np++;
+
                         if (Divert._SaveDivertPackets)
                         {
-                            np++;
                             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
                             string cpacket0 = "";
                             for (int i = 0; i < readLen; i++)
@@ -309,7 +310,11 @@ namespace NiceHashMinerLegacy.Divert
                             if (cpacket0.Length > 60)
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
-
+                        if (noPayload && np > 5)
+                        {
+                            modified = false;
+                            goto sendPacket;
+                        }
                         /*
                         if (stratumRatio < -7)
                         {
@@ -889,6 +894,10 @@ modifyData:
  
                         }
 changeSrcDst:
+                        if (parse_result.PacketPayloadLength > 20)
+                        {
+                            noPayload = false;
+                        }
                         /*
                         Helpers.ConsolePrint("WinDivertSharp", "Before Src: "+ parse_result.IPv4Header->SrcAddr.ToString()+ ":"+ Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                             " Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +

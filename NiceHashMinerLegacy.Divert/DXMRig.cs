@@ -19,7 +19,7 @@ using PacketDotNet;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Management;
-
+using System.Runtime.ExceptionServices;
 
 namespace NiceHashMinerLegacy.Divert
 {
@@ -77,6 +77,7 @@ namespace NiceHashMinerLegacy.Divert
         private static List<Connection> _allConnections = new List<Connection>();
         public static bool logging;
         private static string processName = "";
+        private static bool noPayload = true;
 
         private static bool CheckParityConnections(int processId, ushort SrcPort)
         {
@@ -104,6 +105,7 @@ namespace NiceHashMinerLegacy.Divert
             return false;
         }
 
+        [HandleProcessCorruptedStateExceptions]
         public static IntPtr XMRigDivertStart(int processId, int CurrentAlgorithmType, string MinerName)
             {
             divert_running = true;
@@ -193,9 +195,68 @@ namespace NiceHashMinerLegacy.Divert
             });
         }
 
+        // Calculates the TCP checksum using the IP Header and TCP Header.
+        // Ensure the TCPHeader contains an even number of bytes before passing to this method.
+        // If an odd number, pad with a 0 byte just for checksumming purposes.
+        static ushort GetTCPChecksum(byte[] IPHeader, byte[] TCPHeader)
+        {
+            uint sum = 0;
+            // TCP Header
+            for (int x = 0; x < TCPHeader.Length; x += 2)
+            {
+                sum += ntoh(BitConverter.ToUInt16(TCPHeader, x));
+            }
+            // Pseudo header - Source Address
+            sum += ntoh(BitConverter.ToUInt16(IPHeader, 12));
+            sum += ntoh(BitConverter.ToUInt16(IPHeader, 14));
+            // Pseudo header - Dest Address
+            sum += ntoh(BitConverter.ToUInt16(IPHeader, 16));
+            sum += ntoh(BitConverter.ToUInt16(IPHeader, 18));
+            // Pseudo header - Protocol
+            sum += ntoh(BitConverter.ToUInt16(new byte[] { 0, IPHeader[9] }, 0));
+            // Pseudo header - TCP Header length
+            sum += (UInt16)TCPHeader.Length;
+            // 16 bit 1's compliment
+            while ((sum >> 16) != 0) { sum = ((sum & 0xFFFF) + (sum >> 16)); }
+            sum = ~sum;
+            return (ushort)ntoh((UInt16)sum);
+        }
 
+        private static ushort ntoh(UInt16 In)
+        {
+            int x = IPAddress.NetworkToHostOrder(In);
+            return (ushort)(x >> 16);
+        }
+        private static byte[] getBytes(object str)
+        {
+            int size = Marshal.SizeOf(str);
+            byte[] arr = new byte[size];
+            IntPtr ptr = Marshal.AllocHGlobal(size);
 
-       // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            Marshal.StructureToPtr(str, ptr, true);
+            Marshal.Copy(ptr, arr, 0, size);
+            Marshal.FreeHGlobal(ptr);
+
+            return arr;
+        }
+        public static ushort ComputeHeaderIpChecksum(byte[] header, int length)
+        {
+            ushort word16;
+            long sum = 0;
+            for (int i = 0; i < length; i += 2)
+            {
+                word16 = (ushort)(((header[i] << 8) & 0xFF00) + (header[i + 1] & 0xFF));
+                sum += word16;
+            }
+
+            while ((sum >> 16) != 0)
+            {
+                sum = (sum & 0xFFFF) + (sum >> 16);
+            }
+
+            return (ushort)~sum;
+        }
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe static async Task RunDivert1(IntPtr handle, int processId, int CurrentAlgorithmType, string MinerName)
         {
             var packet = new WinDivertBuffer();
@@ -270,7 +331,7 @@ namespace NiceHashMinerLegacy.Divert
 
                         Kernel32.CloseHandle(recvEvent);
                         np++;
-                        
+
                         string cpacket0 = "";
                         for (int i = 0; i < readLen; i++)
                         {
@@ -278,10 +339,40 @@ namespace NiceHashMinerLegacy.Divert
                                 cpacket0 = cpacket0 + (char)packet[i];
 
                         }
-                        if (cpacket0.Length > 60)
+                        //if (cpacket0.Length > 60)
                         File.WriteAllText(np.ToString()+ "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
 
+                        if (noPayload && np > 8)
+                        {
+                            Helpers.ConsolePrint("WinDivertSharp", "Stop divert");
+                            modified = false;
+                            goto sendPacket;
+                        }
+
                         var parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        //parse_result.TcpHeader->Checksum = 48875;
+                        //**+++++++++++++++++++++++++
+                        var crc = GetTCPChecksum(getBytes(*parse_result.IPv4Header), getBytes(*parse_result.TcpHeader));
+                        Helpers.ConsolePrint("WinDivertSharp", ": " + np + " " + crc);
+                        Helpers.ConsolePrint("WinDivertSharp", "old TcpHeader->HdrLength: " + np + " " + (parse_result.TcpHeader->HdrLength));
+                        Helpers.ConsolePrint("WinDivertSharp", "old IPv4Header->Length: " + np + " " + (Divert.SwapOrder(parse_result.IPv4Header->Length)));
+                        Helpers.ConsolePrint("WinDivertSharp", "old TcpHeader->Checksum: " + np + " " + (parse_result.TcpHeader->Checksum));
+                        Helpers.ConsolePrint("WinDivertSharp", "old IPv4Header->Checksum: " + np + " " + (parse_result.IPv4Header->Checksum));
+
+
+                        WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
+
+                        cpacket0 = "";
+                        for (int i = 0; i < readLen; i++)
+                        {
+                            // if (packet[i] >= 32)
+                            cpacket0 = cpacket0 + (char)packet[i];
+
+                        }
+                        //if (cpacket0.Length > 60)
+                            File.WriteAllText(np.ToString() + "mod-" + addr.Direction.ToString() + ".pkt", cpacket0);
+
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                         //**+++++++++++++++++++++++++
                         //******* откуда и куда перенаправлять
 
@@ -333,8 +424,18 @@ namespace NiceHashMinerLegacy.Divert
                         {
                             Helpers.ConsolePrint("WinDivertSharp", "Exception: " + e.ToString());
                         }
-
-//*************************************************************************************************************
+                       //parse_result.TcpHeader->Checksum = Divert.SwapOrder(48879);
+                        Helpers.ConsolePrint("WinDivertSharp", "mod TcpHeader->HdrLength: " + np + " " + (parse_result.TcpHeader->HdrLength));
+                        Helpers.ConsolePrint("WinDivertSharp", "mod IPv4Header->HdrLength: " + np + " " + (parse_result.IPv4Header->HdrLength));
+                        Helpers.ConsolePrint("WinDivertSharp", "mod TcpHeader->Checksum: " + np + " " + (parse_result.TcpHeader->Checksum));
+                        Helpers.ConsolePrint("WinDivertSharp", "mod IPv4Header->Checksum: " + np + " " + (parse_result.IPv4Header->Checksum));
+                        // Helpers.ConsolePrint("WinDivertSharp", "WinDivertHelperCalcChecksums: " + Divert.SwapOrder((ushort)WinDivert.WinDivertHelperCalcChecksums(packet, readLen, WinDivertChecksumHelperParam.NoIpChecksum)));
+                        //*************************************************************************************************************
+                        if (parse_result.PacketPayloadLength > 20)
+                        {
+                            Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadLength > 20");
+                            noPayload = false;
+                        }
                         if (parse_result.IPv4Header != null &
                             (CheckParityConnections(processId, Divert.SwapOrder(parse_result.TcpHeader->SrcPort)) |
                              CheckParityConnections(processId, Divert.SwapOrder(parse_result.TcpHeader->DstPort))) &
@@ -584,7 +685,12 @@ Divert:
                             " parse_result.IPv4Header->DstAddr.ToString(): " + parse_result.IPv4Header->DstAddr.ToString() +
                             " parse_result.TcpHeader->SrcPort: " + parse_result.TcpHeader->SrcPort.ToString() +
                             " CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processId, parse_result.TcpHeader->SrcPort).ToString());
-                          */  
+                          */
+                        if (parse_result.PacketPayloadLength > 20)
+                        {
+                            Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadLength > 20");
+                            noPayload = false;
+                        }
                         if (parse_result.TcpHeader->DstPort == Divert.SwapOrder(DevFeePort) &&
                                 addr.Direction == WinDivertDirection.Outbound &&
                                 parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &&
