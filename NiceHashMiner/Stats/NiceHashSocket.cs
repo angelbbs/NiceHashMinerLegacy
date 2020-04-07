@@ -52,9 +52,9 @@ namespace NiceHashMiner.Stats
         private readonly Random _random = new Random();
         private readonly string _address;
 
-        public event EventHandler OnConnectionEstablished;
+       // public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
-        public event EventHandler OnConnectionLost;
+       // public event EventHandler OnConnectionLost;
         public static string RigID => UUID.GetDeviceB64UUID();
         private Timer _attemptReconnect;
 
@@ -277,7 +277,7 @@ namespace NiceHashMiner.Stats
                 Thread.Sleep(500);
             }
             _attemptingReconnect = false;
-            OnConnectionLost?.Invoke(null, EventArgs.Empty);
+           // OnConnectionLost?.Invoke(null, EventArgs.Empty);
             return false;
         }
 
@@ -368,7 +368,7 @@ namespace NiceHashMiner.Stats
                 }
                 */
 
-                OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
+              //  OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
             } catch (Exception er)
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
@@ -532,7 +532,7 @@ namespace NiceHashMiner.Stats
                 Thread.Sleep(1000);
             }
             _attemptingReconnect = false;
-            OnConnectionLost?.Invoke(null, EventArgs.Empty);
+          //  OnConnectionLost?.Invoke(null, EventArgs.Empty);
             return;
         }
     }

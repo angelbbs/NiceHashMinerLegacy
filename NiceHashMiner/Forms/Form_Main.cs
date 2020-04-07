@@ -523,8 +523,7 @@ namespace NiceHashMiner
                 Close();
                 return;
             }
-            _loadingScreen.IncreaseLoadCounterAndMessage("Check VC redistributable");
-            InstallVcRedist();
+
             // Query Available ComputeDevices
             //Thread.Sleep(100);
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
@@ -595,14 +594,12 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
-            NiceHashStats.OnBalanceUpdate += BalanceCallback;
+            //NiceHashStats.OnBalanceUpdate += BalanceCallback;
             //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
+            //NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             //NiceHashStats.OnVersionBurn += VersionBurnCallback;
-            NiceHashStats.OnExchangeUpdate += ExchangeCallback;
+           // NiceHashStats.OnExchangeUpdate += ExchangeCallback;
             //Thread.Sleep(50);
-
-            _loadingScreen.FinishLoad();
 
             firstStartConnection = true;
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
@@ -627,11 +624,9 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-
-            if (runVCRed)
-            {
-                Helpers.InstallVcRedist();
-            }
+            _loadingScreen.IncreaseLoadCounterAndMessage("Check VC redistributable");
+            InstallVcRedist();
+            _loadingScreen.FinishLoad();
 
             _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
             _autostartTimerDelay = new Timer();
@@ -998,7 +993,7 @@ namespace NiceHashMiner
             }
             return ret;
         }
-        private static async void MinerStatsCheck_Tick(object sender, EventArgs e)
+        private async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
             await MinersManager.MinerStatsCheck();
         }
@@ -1279,11 +1274,11 @@ namespace NiceHashMiner
         }
 
 
-        private void BalanceCallback(object sender, EventArgs e)
+        private void BalanceCallback()
         {
             try
             {
-                Helpers.ConsolePrint("NICEHASH", "Balance update");
+                //Helpers.ConsolePrint("NICEHASH", "Balance update");
                 var balance = NiceHashStats.Balance;
                 //if (balance > 0)
                 {
@@ -1309,7 +1304,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("Balance update", ex.ToString());
             }
-            Helpers.ConsolePrint("NICEHASH", "Balance updated");
+            //Helpers.ConsolePrint("NICEHASH", "Balance updated");
         }
 
 
@@ -1320,7 +1315,7 @@ namespace NiceHashMiner
         //    UpdateExchange();
         //}
 
-        private void ExchangeCallback(object sender, EventArgs e)
+        private void ExchangeCallback()
         {
             //// We are getting data from socket so stop checking manually
             //_bitcoinExchangeCheck?.Stop();
@@ -1346,59 +1341,10 @@ namespace NiceHashMiner
 
             toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
 
-            Helpers.ConsolePrint("NICEHASH",
-                "Current Bitcoin rate: " + br.ToString("F2", CultureInfo.InvariantCulture));
+          //  Helpers.ConsolePrint("NICEHASH",
+            //    "Current Bitcoin rate: " + br.ToString("F2", CultureInfo.InvariantCulture));
         }
 
-        private void SmaCallback(object sender, EventArgs e)
-        {
-            Helpers.ConsolePrint("NICEHASH", "SMA Update");
-            //_isSmaUpdated = true;
-        }
-
-        private void VersionBurnCallback(object sender, SocketEventArgs e)
-        {
-            BeginInvoke((Action)(() =>
-           {
-               StopMining();
-               _benchmarkForm?.StopBenchmark();
-               var dialogResult = MessageBox.Show(e.Message, International.GetText("Error_with_Exclamation"),
-                   MessageBoxButtons.OK, MessageBoxIcon.Error);
-               Application.Exit();
-           }));
-        }
-
-        /*
-        private void ConnectionLostCallback(object sender, EventArgs e)
-        {
-            if (!NHSmaData.HasData && ConfigManager.GeneralConfig.ShowInternetConnectionWarning &&
-                _showWarningNiceHashData)
-            {
-                _showWarningNiceHashData = false;
-                var dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_NoInternetMsg"),
-                    International.GetText("Form_Main_msgbox_NoInternetTitle"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                if (dialogResult == DialogResult.Yes)
-                    return;
-                if (dialogResult == DialogResult.No)
-                    Application.Exit();
-            }
-        }
-        */
-        private void ConnectionEstablishedCallback(object sender, EventArgs e)
-        {
-            /*
-            // send credentials
-            if (ConfigManager.GeneralConfig.NewPlatform)
-            {
-                //NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
-            } else
-            {
-                NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
-            }
-            */
-        }
 
         private bool VerifyMiningAddress(bool showError)
         {
@@ -1988,6 +1934,8 @@ namespace NiceHashMiner
         }
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            ExchangeCallback(); 
+            BalanceCallback(); 
             UpdateGlobalRate();
             if (needRestart)
             {

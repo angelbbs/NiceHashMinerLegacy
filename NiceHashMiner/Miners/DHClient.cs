@@ -83,6 +83,7 @@ namespace NiceHashMiner.Miners
             //new Task(() => ConnectToPool()).Start();
             while (checkConnection)
             {
+                Thread.Sleep(500);
                 /*
                 if (tcpClient == null)
                 {

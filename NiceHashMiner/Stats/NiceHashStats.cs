@@ -96,14 +96,14 @@ namespace NiceHashMiner.Stats
     public static bool IsAlive => _socket?.IsAlive ?? false;
 
         // Event handlers for socket
-        public static event EventHandler OnBalanceUpdate;
+       // public static event EventHandler OnBalanceUpdate;
 
         public static event EventHandler OnSmaUpdate;
         //public static event EventHandler OnVersionUpdate;
-        public static event EventHandler OnConnectionLost;
-        public static event EventHandler OnConnectionEstablished;
+       // public static event EventHandler OnConnectionLost;
+       // public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
-        public static event EventHandler OnExchangeUpdate;
+       // public static event EventHandler OnExchangeUpdate;
 
         public static NiceHashSocket _socket;
         public static NiceHashSocket _socketold;
@@ -139,9 +139,9 @@ namespace NiceHashMiner.Stats
             LoadCachedSMAData();
             _socket = null;
             _socket = new NiceHashSocket(address);
-            _socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
+           // _socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
             _socket.OnDataReceived += SocketOnOnDataReceived;
-            _socket.OnConnectionLost += SocketOnOnConnectionLost;
+         //   _socket.OnConnectionLost += SocketOnOnConnectionLost;
 
             NiceHashSocket._restartConnection = true;
             Helpers.ConsolePrint("SOCKET-address:", address);
@@ -175,12 +175,12 @@ namespace NiceHashMiner.Stats
         }
 
         #region Socket Callbacks
-
+        /*
         private static void SocketOnOnConnectionLost(object sender, EventArgs eventArgs)
         {
             OnConnectionLost?.Invoke(sender, eventArgs);
         }
-
+        */
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
             GC.Collect();
@@ -943,7 +943,7 @@ namespace NiceHashMiner.Stats
         }
 
 
-
+/*
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
         {
             //DeviceStatus_Tick(null); // Send device to populate rig stats
@@ -954,7 +954,7 @@ namespace NiceHashMiner.Stats
            // GetSmaAPICurrent();
             OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
         }
-
+        */
         #endregion
 
         #region Incoming socket calls
@@ -1110,7 +1110,7 @@ namespace NiceHashMiner.Stats
                 {
                   //  Helpers.ConsolePrint("SOCKET", "Received6: " + balance);
                     Balance = bal;
-                    OnBalanceUpdate?.Invoke(null, EventArgs.Empty);
+                    //OnBalanceUpdate?.Invoke(null, EventArgs.Empty);
                 }
             }
             catch (Exception e)
@@ -1146,7 +1146,7 @@ namespace NiceHashMiner.Stats
                     }
                     ExchangeRateApi.UpdateExchangesFiat(exchange.exchanges_fiat);
                     Thread.Sleep(200);
-                    OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
+                    //OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
                 }
             }
             catch (Exception e)

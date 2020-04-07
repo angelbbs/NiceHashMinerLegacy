@@ -279,31 +279,9 @@ nextCycle:
                                 goto sendPacket;
                             }
                         }
-                        
 
-                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4416 && OwnerPID.Contains("gminer"))//ssl
-                        {
-                            packet.Dispose();
-                            goto nextCycle;
-                        }
-                            /*
-                            if (addr.Direction == WinDivertDirection.Outbound &&
-                                Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6666)
-                            {
-                                    Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Block gminer SSL connection");
-                                    goto nextCycle;
-                            }
-                            */
                             PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
-                        /*
-                        //block gminer packets without json (ssl)
-                        if (!PacketPayloadData.Contains("jsonrpc") && OwnerPID.Contains("gminer") && PacketPayloadData.Length > 10)
-                        {
-                            Helpers.ConsolePrint("WinDivertSharp", "Block gminer packets without json");
-                            packet.Dispose();
-                            goto nextCycle;
-                        }
-                        */
+
                         //список соответствия src port и dst ip
                         if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
                         {
@@ -314,8 +292,7 @@ nextCycle:
                         if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6666 ||
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6667 ||//g31
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3030 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4040 ||
-                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4416) 
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4040) 
                         {
                             DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
                             DevFeePort = parse_result.TcpHeader->DstPort;
@@ -328,11 +305,13 @@ nextCycle:
                             modified = true;
                             goto changeSrcDst;
                         }
-                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13030 && !Divert._certInstalled)
+                        if ((Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13030 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4416) && !Divert._certInstalled)
                         {
                             goto sendPacket;
                         }
-                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13030)
+                        if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13030 ||
+                            Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4416)
                         {
                             DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
                             DevFeePort = parse_result.TcpHeader->DstPort;
@@ -356,7 +335,7 @@ nextCycle:
                             !OwnerPID.Equals("-1")
                             )
                         {
-                            if (parse_result.PacketPayloadLength > 0)
+                            if (parse_result.PacketPayloadLength > 16)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 goto changeSrcDst; //входящее соединение, только меняем адреса
@@ -376,7 +355,7 @@ nextCycle:
 
 
                         changeSrcDst:
-                        if (parse_result.PacketPayloadLength > 20)
+                        if (parse_result.PacketPayloadLength > 16)
                         {
                             noPayload = false;
                         }
@@ -462,7 +441,7 @@ nextCycle:
                         {
                             addr.PseudoIPChecksum = true;
                             addr.PseudoTCPChecksum = true;
-                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
+                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
                         }
                         
                         if (Divert._SaveDivertPackets)

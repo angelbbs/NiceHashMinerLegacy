@@ -331,10 +331,10 @@ namespace NiceHashMiner
             }
             return false;
         }
-
+        /*
         public static void InstallVcRedist()
         {
-            var cudaDevicesDetection = new Process
+            var PInstallVcRedist = new Process
             {
                 StartInfo =
                 {
@@ -349,9 +349,9 @@ namespace NiceHashMiner
 
             //const int waitTime = 45 * 1000; // 45seconds
             //CudaDevicesDetection.WaitForExit(waitTime);
-            cudaDevicesDetection.Start();
+            PInstallVcRedist.Start();
         }
-
+        */
         public static void SetDefaultEnvironmentVariables()
         {
             ConsolePrint("NICEHASH", "Setting environment variables");
