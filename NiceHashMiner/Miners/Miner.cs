@@ -335,16 +335,7 @@ namespace NiceHashMiner
         {
             if (worker.Length > 0)
             {
-                if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-                {
                     return btcAdress + "." + worker + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
-                } else
-                {
-                    return btcAdress + "." + worker;
-                }
-                //return $"{btcAdress}.{worker}{"$"+NiceHashMiner.Stats.NiceHashSocket.RigID}";
-                //return $"{btcAdress}.{worker}${NiceHashMiner.Stats.NiceHashSocket.RigID}";
-                //return $"{btcAdress}.{worker}${NiceHashMiner.Stats.NiceHashSocket.RigID}";
             } else
             {
 
@@ -364,10 +355,7 @@ namespace NiceHashMiner
             IsRunningNew = false;
             Ethlargement.Stop();
             RunCMDBeforeOrAfterMining(false);
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
                 NiceHashStats.SetDeviceStatus("STOPPED");
-            }
         }
 
         public void End()
@@ -1244,10 +1232,7 @@ namespace NiceHashMiner
                 {
                     IsRunning = true;
                     IsRunningNew = true;
-                    if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-                    {
                         NiceHashStats.SetDeviceStatus("MINING");
-                    }
                     string strPlatform = "";
                     foreach (var pair in MiningSetup.MiningPairs)
                     {

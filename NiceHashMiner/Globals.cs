@@ -61,37 +61,20 @@ namespace NiceHashMiner
                     break;
             }
             var nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
                 return prefix
                    + name
                    + "." + miningLocation
                    + nhsuff + ".nicehash.com:"
                    + port;
-            }
-            else
-            {
-                return prefix
-                   + name
-                   + "." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
-            }
+
         }
 
         public static string GetBitcoinUser()
         {
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
                 return BitcoinAddress.ValidateBitcoinAddress(Configs.ConfigManager.GeneralConfig.BitcoinAddressNew.Trim())
                     ? Configs.ConfigManager.GeneralConfig.BitcoinAddressNew.Trim()
                     : DemoUserNew;
-            } else
-            {
-                return BitcoinAddress.ValidateBitcoinAddress(Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim())
-                   ? Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim()
-                   : DemoUser;
-            }
+
         }
     }
 }

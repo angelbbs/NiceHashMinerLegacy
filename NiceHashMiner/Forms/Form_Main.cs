@@ -360,9 +360,6 @@ namespace NiceHashMiner
             textBoxBTCAddress_new.Text = ConfigManager.GeneralConfig.BitcoinAddressNew;
             textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
 
-            //radioButtonNewPlatform.Checked = ConfigManager.GeneralConfig.NewPlatform;
-            //radioButtonOldPlatform.Checked = !ConfigManager.GeneralConfig.NewPlatform;
-
             _showWarningNiceHashData = true;
             _demoMode = false;
 
@@ -936,6 +933,11 @@ namespace NiceHashMiner
 
             if (_updateTimerCount >= period)
             {
+                if (ConfigManager.GeneralConfig.PeriodicalReconnect)
+                {
+                    Helpers.ConsolePrint("SOCKET", "Periodical reconnect");
+                    NiceHashSocket._webSocket.Close();
+                }
                 _updateTimerCount = 0;
                 bool newver = false;
                 try
@@ -1348,8 +1350,6 @@ namespace NiceHashMiner
 
         private bool VerifyMiningAddress(bool showError)
         {
-
-            //if (ConfigManager.GeneralConfig.NewPlatform)
             if (true)
             {
                 if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress_new.Text.Trim()) && showError)
@@ -1380,29 +1380,16 @@ namespace NiceHashMiner
         private void LinkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (!VerifyMiningAddress(true)) return;
-            //if (ConfigManager.GeneralConfig.NewPlatform)
             if (true)
             {
                 Process.Start(Links.CheckStatsNew + textBoxBTCAddress_new.Text.Trim());
             }
-            /*
-            else
-            {
-                Process.Start(Links.CheckStats + textBoxBTCAddress.Text.Trim());
-            }
-            */
         }
 
 
         private void LinkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (ConfigManager.GeneralConfig.NewPlatform)
-            {
                 Process.Start(Links.NhmBtcWalletFaqNew);
-            } else
-            {
-                Process.Start(Links.NhmBtcWalletFaq);
-            }
         }
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1580,13 +1567,7 @@ namespace NiceHashMiner
 
         private void ToolStripStatusLabel10_Click(object sender, EventArgs e)
         {
-            if (ConfigManager.GeneralConfig.NewPlatform)
-            {
                 Process.Start(Links.NhmPayingFaqNew);
-            } else
-            {
-                Process.Start(Links.NhmPayingFaq);
-            }
         }
 
         private void ToolStripStatusLabel10_MouseHover(object sender, EventArgs e)
@@ -1601,7 +1582,6 @@ namespace NiceHashMiner
 
         private void TextBoxCheckBoxMain_Leave(object sender, EventArgs e)
         {
-            //if (ConfigManager.GeneralConfig.NewPlatform)
             if (true)
             {
                 if (VerifyMiningAddress(false))
@@ -1695,7 +1675,7 @@ namespace NiceHashMiner
                 _autostartTimer.Stop();
                 _autostartTimer = null;
             }
-            //if (ConfigManager.GeneralConfig.NewPlatform)
+
             if (true)
             {
                 NiceHashStats.SetDeviceStatus("MINING");
@@ -1857,17 +1837,12 @@ namespace NiceHashMiner
 
             bool isMining;
             var btcAdress = "";
-            //if (ConfigManager.GeneralConfig.NewPlatform)
+
             if (true)
             {
                  btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress_new.Text.Trim();
             }
-            /*
-            else
-            {
-                 btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
-            }
-            */
+
             if (comboBoxLocation.SelectedIndex < 6)
             {
                 isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],

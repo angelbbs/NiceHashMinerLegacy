@@ -145,33 +145,12 @@ namespace NiceHashMiner.Stats
 
             NiceHashSocket._restartConnection = true;
             Helpers.ConsolePrint("SOCKET-address:", address);
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                _socket.StartConnectionNew();
-            } else
-            {
-                //_socket.StartConnection();
-
-            }
-
-
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-               // _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_TickNew, null, DeviceUpdateInterval, DeviceUpdateInterval);
-            } else
-            {
-                //_deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
-            }
+            _socket.StartConnectionNew();
 
             _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
             _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
             _deviceUpdateTimer.Start();
-            //            string ghv = GetVersion("");
-            //          Helpers.ConsolePrint("GITHUB", ghv);
-            //        if (ghv != null)
-            //      {
-            //        SetVersion(ghv);
-            //  }
+
         }
 
         #region Socket Callbacks
@@ -240,22 +219,12 @@ namespace NiceHashMiner.Stats
                                 // {
                                 // }
 
-                                //***************************
-                                /*
-                                if (ConfigManager.GeneralConfig.NewPlatform)
-                                {
-                                    SetAlgorithmRates(message.data);
-                                }
-                                */
+
                                 break;
                             }
 
                         case "balance":
-                          //  Helpers.ConsolePrint("SOCKET", "Received2: " + e.Data);
-                            //ExchangeRateApi.GetNewBTCRate();
-                            //Helpers.ConsolePrint("SOCKET", "Received3: " + e.Data);
                             SetBalance(message.value.Value);
-                            //Helpers.ConsolePrint("SOCKET", "Received4: " + e.Data);
                             break;
                         //case "versions":
                         //    SetVersion(message.legacy.Value);
@@ -495,24 +464,10 @@ namespace NiceHashMiner.Stats
         {
             Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPICurrentOld");
 
-            if (ConfigManager.GeneralConfig.NewPlatform)
-            {
-                //NHSmaData.Initialized = true;
-                //return false;
-            }
-
             try
             {
                 string resp;
-                if (!ConfigManager.GeneralConfig.NewPlatform)
-                {
-                    resp = NiceHashStats.GetNiceHashApiData("https://api.nicehash.com/api?method=simplemultialgo.info", "x");
-                }
-                else
-                {
                     resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info/", "x");
-                    //resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/algorithms/", "x");
-                }
 
                 if (resp != null)
                 {
@@ -522,13 +477,7 @@ namespace NiceHashMiner.Stats
                     }
 
                     dynamic list;
-                    /*
-                    if (ConfigManager.GeneralConfig.NewPlatform)
-                    {
-                        list = JsonConvert.DeserializeObject<Rootobject>(resp);
-                    }
-                    else
-                    */
+
                     {
                         list = JsonConvert.DeserializeObject<Rootobject>(resp);
                     }
@@ -666,11 +615,6 @@ namespace NiceHashMiner.Stats
         {
             Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPI5m");
 
-            if (!ConfigManager.GeneralConfig.NewPlatform)
-            {
-                return true;
-            }
-
             try
             {
                 string resp;
@@ -739,11 +683,6 @@ namespace NiceHashMiner.Stats
         public static bool GetSmaAPI24h()
         {
             Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPI24h");
-
-            if (!ConfigManager.GeneralConfig.NewPlatform)
-            {
-                return true;
-            }
 
             try
             {
@@ -1161,10 +1100,7 @@ namespace NiceHashMiner.Stats
 
         public static async Task SetCredentials(string btc, string worker)
         {
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
                 return;
-            }
                 var data = new NicehashCredentials
             {
                 btc = btc,
@@ -1195,10 +1131,7 @@ namespace NiceHashMiner.Stats
             string type;
             string b64Web;
             string nuuid = "";
-            if (!Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                return;
-            }
+
             if (state != null)
                 rigStatus = state.ToString();
             {
@@ -1330,10 +1263,6 @@ namespace NiceHashMiner.Stats
        // private static async void DeviceStatus_Tick(object state)
         private static async void DeviceStatus_Tick(object sender, ElapsedEventArgs e)
         {
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-              //  return;
-            }
             var devices = ComputeDeviceManager.Available.Devices;
             var deviceList = new List<JArray>();
             var activeIDs = MinersManager.GetActiveMinersIndexes();

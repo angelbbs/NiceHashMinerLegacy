@@ -302,11 +302,20 @@ namespace NiceHashMiner.Stats
                 {
                     Configs.ConfigManager.GeneralConfig.MachineGuid = rig;
                 }
-
+                /*
+                var macUUID = WindowsMacUtils.GetMAC_UUID();
+                Helpers.ConsolePrint("UUID", macUUID);
+                Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.MachineGuid);
+                Helpers.ConsolePrint("UUID", RigID);
+                Helpers.ConsolePrint("UUID", rig);
+                Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.CpuID);
+                Helpers.ConsolePrint("UUID", CpuID);
+                */
                 if (!Configs.ConfigManager.GeneralConfig.MachineGuid.Equals(rig) && Configs.ConfigManager.GeneralConfig.CpuID.Equals(CpuID))
                 {
                     /*
                     Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.MachineGuid);
+                    Helpers.ConsolePrint("UUID", RigID);
                     Helpers.ConsolePrint("UUID", rig);
                     Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.CpuID);
                     Helpers.ConsolePrint("UUID", CpuID);
@@ -316,8 +325,6 @@ namespace NiceHashMiner.Stats
                 }
                 var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
 
-                if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-                {
                     protocol = 3;
                     version = "NHML/3.0.0.5"; //
                     if (ConfigManager.GeneralConfig.Send_actual_version_info)
@@ -341,32 +348,15 @@ namespace NiceHashMiner.Stats
                     var loginJson = JsonConvert.SerializeObject(login);
                     //loginJson = loginJson.Replace("{", " { ");
                     SendDataNew(loginJson);
-                } else
-                {
-                    protocol = 1;
-                    version = "NHML/3.0.0.5";
+               
 
-
-                    var login = new NicehashLogin
-                    {
-                        version = version,
-                        protocol = protocol
-                    };
-                    var loginJson = JsonConvert.SerializeObject(login);
-                        SendDataNew(loginJson);
-                }
-                if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-                {
+                    NiceHashStats.SetDeviceStatus(null);
+                    /*
                     NiceHashStats.SetDeviceStatus("PENDING");
                     Thread.Sleep(100);
                     NiceHashStats.SetDeviceStatus("STOPPED");
-                }
-                /*
-               if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-                {
-                    loginJson = "{ \"method\":\"login\",\"version\":\"NHML/1.9.2.7\",\"protocol\":3,\"btc\":\"3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ\",\"worker\":\"worker1\",\"group\":\"\",\"rig\":\"0-AMMDquXCml2iU-g4tcFQEQ\"}";
-                }
-                */
+                    */
+
 
               //  OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
             } catch (Exception er)
@@ -409,7 +399,7 @@ namespace NiceHashMiner.Stats
         {
             try
             {
-                if (_webSocket != null && IsAlive)
+                if (_webSocket != null && _webSocket.IsAlive)
                 {
                     // Make sure connection is open
                     // Verify valid JSON and method
@@ -421,7 +411,7 @@ namespace NiceHashMiner.Stats
                         //return true;
                         return await SendAsync(data);
                     }
-                } else if (_webSocket != null && !IsAlive)
+                } else if (_webSocket == null)
                 {
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
                     _webSocket.Close();
@@ -441,12 +431,14 @@ namespace NiceHashMiner.Stats
                     */
                 } else
                 {
-                    if (!_connectionAttempted)
+                    if (_webSocket.IsAlive)
                     {
-                        Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
+                        Helpers.ConsolePrint("SOCKET", "Socket alive");
                     } else
                     {
-                        Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
+                        Helpers.ConsolePrint("SOCKET", "Socket died, retrying");
+                        _webSocket.Close();
+                        _webSocket = null;
                         StartConnectionNew();
                     }
                 }

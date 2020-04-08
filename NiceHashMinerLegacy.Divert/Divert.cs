@@ -429,8 +429,8 @@ namespace NiceHashMinerLegacy.Divert
             
             if ( CurrentAlgorithmType == 47 && MinerName.ToLower() == "xmrig") //for testing. Disable in productuon
             {
-            //    return IntPtr.Zero;
-                return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
+                return IntPtr.Zero;
+            //    return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
             }
             
             if (CurrentAlgorithmType == 47 && MinerName.ToLower().Equals("xmrig")) 
