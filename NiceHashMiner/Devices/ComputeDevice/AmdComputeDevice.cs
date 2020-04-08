@@ -39,31 +39,35 @@ namespace NiceHashMiner.Devices
                 var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
                 if (result != ADL.ADL_SUCCESS)
                 {
-                    _gpus.Open();
-                    foreach (var hardware in _gpus.Hardware)
+                    try
                     {
-                        hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuAti)
+                        _gpus.Open();
+                        foreach (var hardware in _gpus.Hardware)
                         {
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
-                            //Helpers.ConsolePrint("!all gpu:", _adapterIndex + "-" + hardware.Identifier + " " + hardware.Name + " " + hardware.HardwareType.ToString());
-                            if (gpuId == _adapterIndex)
+                            hardware.Update();
+                            if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                if (gpuId == _adapterIndex)
                                 {
-                                    //Helpers.ConsolePrint("sensor:", sensor.Name + " " + sensor.Value + " " + sensor.Value.ToString());
-                                    if (sensor.SensorType == SensorType.Fan)
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                        if ((int)sensor.Value >= 0)
+                                        if (sensor.SensorType == SensorType.Fan)
                                         {
-                                            //Helpers.ConsolePrint("Control:", sensor.Value + " " + sensor.Value.ToString());
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value >= 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
                                     }
                                 }
                             }
                         }
+                    }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
                 }
                 return adlf.FanSpeed;
@@ -79,29 +83,36 @@ namespace NiceHashMiner.Devices
                 var result = ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt);
                 if (result != ADL.ADL_SUCCESS)
                 {
-                    _gpus.Open();
-                    foreach (var hardware in _gpus.Hardware)
+                    try
                     {
-                        hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuAti)
+                        _gpus.Open();
+                        foreach (var hardware in _gpus.Hardware)
                         {
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
-                            if (gpuId == _adapterIndex)
+                            hardware.Update();
+                            if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                if (gpuId == _adapterIndex)
                                 {
-                                    if (sensor.SensorType == SensorType.Temperature)
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                        if ((int)sensor.Value > 0)
+                                        if (sensor.SensorType == SensorType.Temperature)
                                         {
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value > 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
-                                    }
 
+                                    }
                                 }
                             }
                         }
+                    }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
                 }
                 return adlt.Temperature * 0.001f;
@@ -116,31 +127,35 @@ namespace NiceHashMiner.Devices
                 var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp);
                 if (result != ADL.ADL_SUCCESS)
                 {
-                    _gpus.Open();
-                    foreach (var hardware in _gpus.Hardware)
+                    try
                     {
-                        hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuAti)
+                        _gpus.Open();
+                        foreach (var hardware in _gpus.Hardware)
                         {
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
-                            //Helpers.ConsolePrint("!all gpu:", _adapterIndex + "-" + hardware.Identifier + " " + hardware.Name + " " + hardware.HardwareType.ToString());
-                            if (gpuId == _adapterIndex)
+                            hardware.Update();
+                            if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                if (gpuId == _adapterIndex)
                                 {
-                                    //Helpers.ConsolePrint("sensor:", sensor.Name + " " + sensor.Value + " " + sensor.Value.ToString());
-                                    if (sensor.SensorType == SensorType.Load)
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                        if ((int)sensor.Value >= 0)
+                                        if (sensor.SensorType == SensorType.Load)
                                         {
-                                            //Helpers.ConsolePrint("Control:", sensor.Value + " " + sensor.Value.ToString());
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value >= 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
                                     }
                                 }
                             }
                         }
+                    }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
                 }
                 return adlp.ActivityPercent;
@@ -160,31 +175,35 @@ namespace NiceHashMiner.Devices
                    // Helpers.ConsolePrint("ADL", power.ToString());
                         return (double) power / (1 << 8);
                     }
-                    _gpus.Open();
-                    foreach (var hardware in _gpus.Hardware)
+                    try
                     {
-                        hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuAti)
+                        _gpus.Open();
+                        foreach (var hardware in _gpus.Hardware)
                         {
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
-                            //Helpers.ConsolePrint("!all gpu:", _adapterIndex + "-" + hardware.Identifier + " " + hardware.Name + " " + hardware.HardwareType.ToString());
-                            if (gpuId == _adapterIndex)
+                            hardware.Update();
+                            if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                if (gpuId == _adapterIndex)
                                 {
-                                    //Helpers.ConsolePrint("sensor:", sensor.Name + " " + sensor.Value + " " + sensor.Value.ToString());
-                                    if (sensor.SensorType == SensorType.Fan)
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                        if ((int)sensor.Value >= 0)
+                                        if (sensor.SensorType == SensorType.Fan)
                                         {
-                                            //Helpers.ConsolePrint("Control:", sensor.Value + " " + sensor.Value.ToString());
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value >= 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
                                     }
                                 }
                             }
                         }
+                    }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
                 }
 
