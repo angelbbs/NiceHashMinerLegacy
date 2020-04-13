@@ -537,8 +537,9 @@ namespace NiceHashMiner
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
-            //_loadingScreen.IncreaseLoadCounterAndMessage("Set firewall rules");
-            Firewall.AddToFirewall();
+            _loadingScreen.SetInfoMsg("Set firewall rules");
+            new Task(() => Firewall.AddToFirewall()).Start();
+           // Firewall.AddToFirewall();
 
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -1050,6 +1051,7 @@ namespace NiceHashMiner
                 Invoke((Action)delegate { ClearRates(groupCount); });
                 return;
             }
+            if (flowLayoutPanelRates == null) return;
             if (_flowLayoutPanelVisibleCount != groupCount)
             {
                 _flowLayoutPanelVisibleCount = groupCount;
@@ -1678,7 +1680,10 @@ namespace NiceHashMiner
 
             if (true)
             {
-                NiceHashStats.SetDeviceStatus("MINING");
+                NiceHashStats._deviceUpdateTimer.Stop();
+                new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+                NiceHashStats._deviceUpdateTimer.Start();
+                //NiceHashStats.SetDeviceStatus("MINING");
                 if (textBoxBTCAddress_new.Text.Equals(""))
                 {
                     if (showWarnings)
@@ -1695,7 +1700,10 @@ namespace NiceHashMiner
                         }
                         else
                         {
-                            NiceHashStats.SetDeviceStatus("STOPPED");
+                            NiceHashStats._deviceUpdateTimer.Stop();
+                            new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+                            NiceHashStats._deviceUpdateTimer.Start();
+                            //NiceHashStats.SetDeviceStatus("STOPPED");
                             return StartMiningReturnType.IgnoreMsg;
                         }
                     }
@@ -1706,7 +1714,10 @@ namespace NiceHashMiner
                 }
                 else if (!VerifyMiningAddress(true))
                 {
-                    NiceHashStats.SetDeviceStatus("STOPPED");
+                    NiceHashStats._deviceUpdateTimer.Stop();
+                    new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+                    NiceHashStats._deviceUpdateTimer.Start();
+                    //NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
             }
@@ -1760,7 +1771,6 @@ namespace NiceHashMiner
                         International.GetText("Error_with_Exclamation"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                //NiceHashStats.SetDeviceStatus("STOPPED");
                 return StartMiningReturnType.IgnoreMsg;
             }
 
@@ -1810,7 +1820,10 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    NiceHashStats.SetDeviceStatus("STOPPED");
+                    NiceHashStats._deviceUpdateTimer.Stop();
+                    new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+                    NiceHashStats._deviceUpdateTimer.Start();
+                    //NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
             }
@@ -1860,7 +1873,10 @@ namespace NiceHashMiner
             //_smaMinerCheck.Interval = 100;
             //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
-            NiceHashStats.SetDeviceStatus("MINING");
+            NiceHashStats._deviceUpdateTimer.Stop();
+            new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+            NiceHashStats._deviceUpdateTimer.Start();
+            //NiceHashStats.SetDeviceStatus("MINING");
             if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
             {
                 _computeDevicesCheckTimer = new SystemTimer();
@@ -1909,9 +1925,11 @@ namespace NiceHashMiner
         }
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            
             ExchangeCallback(); 
             BalanceCallback(); 
             UpdateGlobalRate();
+            
             if (needRestart)
             {
                 needRestart = false;
@@ -1921,7 +1939,10 @@ namespace NiceHashMiner
         }
         private void StopMining()
         {
-            NiceHashStats.SetDeviceStatus("PENDING");
+            NiceHashStats._deviceUpdateTimer.Stop();
+            new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+            NiceHashStats._deviceUpdateTimer.Stop();
+            //NiceHashStats.SetDeviceStatus("PENDING");
             _minerStatsCheck.Stop();
             //_smaMinerCheck.Stop();
             _computeDevicesCheckTimer?.Stop();

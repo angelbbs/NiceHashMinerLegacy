@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +24,7 @@ namespace NiceHashMiner.Miners
     {
         internal static TcpClient tcpClient = null;
         internal static bool checkConnection = false;
+        private static int EpochCount = 0;
         public static string DNStoIP(string IPName)
         {
             try
@@ -240,23 +242,19 @@ namespace NiceHashMiner.Miners
             while (checkConnection)
             {
                 Thread.Sleep(100);
-                //Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle1");
                 int serverBytes;
                 //if (serverStream.CanRead)
                 {
                     try
                     {
-                  //      Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle2");
                         if (tcpClient.Connected)
                         {
-                    //        Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle3");
                             for (int i = 0; i < 1024; i++)
                             {
                                 messagePool[i] = 0;
                             }
 
                             serverBytes = serverStream.Read(messagePool, 0, 8192);
-                         //   Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle4");
                             //serverBytes = serverStream.Read(messagePool, 0, 8192);
                             //object o = bf.Deserialize(serverStream);
                             //string msg = (string)o;
@@ -272,13 +270,11 @@ namespace NiceHashMiner.Miners
                                     clientZero = false;
                                 }
                             }
-                      //      Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle5");
                             if (clientZero)
                             {
                                 //   continue;
                                 Helpers.ConsolePrint("DaggerHashimoto3GB", "clientZero");
                             }
-                      //      Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle6");
                             /*
                             if (SavePackets)
                             {
@@ -301,16 +297,15 @@ namespace NiceHashMiner.Miners
                                 break;
                             }
                             */
-                      //      Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle7");
                             var poolAnswer = poolData.Split((char)0)[0];
-                            //Helpers.ConsolePrint("DaggerHashimoto3GB", "<- " + poolAnswer);
+                            Helpers.ConsolePrint("DaggerHashimoto3GB", "<- " + poolAnswer);
 
                             if (poolAnswer.Contains("mining.notify") && !poolAnswer.Contains("method"))
                             {
                                 //Helpers.ConsolePrint("DaggerHashimoto3GB", "-> " + Encoding.ASCII.GetString(authorizeBytes));
                                 serverStream.Write(authorizeBytes, 0, authorizeBytes.Length);
                             }
-                       //     Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle8");
+
                             if (poolAnswer.Contains("mining.notify") && poolAnswer.Contains("method"))//job
                             {
                                 int amount = poolAnswer.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
@@ -323,13 +318,16 @@ namespace NiceHashMiner.Miners
                                         string seedhash = json.@params[1];
                                         //Helpers.ConsolePrint("DaggerHashimoto3GB", "seedhash = " + seedhash);
                                         epoch = Epoch(seedhash);
-                                        //Helpers.ConsolePrint("DaggerHashimoto3GB", "Epoch = " + epoch.ToString());
+                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Epoch = " + epoch.ToString());
                                         bool previousEpoch = Epoch3GB;
                                         if (epoch < 235) //win 7
                                         {
+                                            EpochCount = 0;
                                             Epoch3GB = true;
+                                            Divert.SetDagger3GBJob(poolAnswer);
                                         } else
                                         {
+                                            EpochCount++;
                                             Epoch3GB = false;
                                         }
                                         if (previousEpoch != Epoch3GB) needUpdate = true;
@@ -341,54 +339,52 @@ namespace NiceHashMiner.Miners
                                     Form_Main.DaggerHashimoto3GBProfit = true;
                                     NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-                                    //NiceHashMiner.Switching.AlgorithmSwitchingManager._smaCheckTimer.Stop();
-                                    //NiceHashMiner.Switching.AlgorithmSwitchingManager._smaCheckTimer.Start();
                                     NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                                     needUpdate = false;
                                 }
                                 if (needUpdate && !Epoch3GB)
                                 {
-                                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF. Epoch: " + epoch.ToString());
-                                    Form_Main.DaggerHashimoto3GBProfit = false;
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-                                    //NiceHashMiner.Switching.AlgorithmSwitchingManager._smaCheckTimer.Stop();
-                                    //NiceHashMiner.Switching.AlgorithmSwitchingManager._smaCheckTimer.Start();
-                                    NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                                    needUpdate = false;
+                                    if (EpochCount > 5)
+                                    {
+                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF. Epoch: " + epoch.ToString());
+                                        Form_Main.DaggerHashimoto3GBProfit = false;
+                                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
+                                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+                                        needUpdate = false;
+                                    } else
+                                    {
+                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Wait to switch OFF. Count: " + EpochCount.ToString());
+                                    }
                                 }
                             }
-                     //       Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle9");
+
                             if (poolAnswer.Contains("set_difficulty"))
                             {
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", "-> " + Encoding.ASCII.GetString(subscribeBytes));
                                 serverStream.Write(subscribeBytes, 0, subscribeBytes.Length);
-                               // Helpers.ConsolePrint("DaggerHashimoto3GB", "-> " + Encoding.ASCII.GetString(noopBytes));
-                               // serverStream.Write(noopBytes, 0, noopBytes.Length);
                             }
-                     //       Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle10");
-                          //  Helpers.ConsolePrint("DaggerHashimoto3GB", poolAnswer);
+
                             if (poolAnswer.Contains("false"))
                             {
                                 //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
                                 //break;
                             }
-                       //     Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle11");
+
                             if (poolAnswer.Contains("reconnect"))
                             {
                                 //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
                                 break;
                             }
-                      //      Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle12");
+
                             if (poolAnswer.Contains("Invalid JSON request"))
                             {
                                 //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
                                 break;
                             }
-                      //      Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle13");
+ 
                             byte[] bytes = Encoding.ASCII.GetBytes(poolAnswer);
                             //serverStream.Write(bytes, 0, bytes.Length);
                             bytes = null;
-                      //      Helpers.ConsolePrint("DaggerHashimoto3GB", "cycle14");
+
                         } else
                         {
                             Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected");

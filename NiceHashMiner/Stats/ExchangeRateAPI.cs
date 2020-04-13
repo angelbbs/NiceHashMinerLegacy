@@ -34,7 +34,7 @@ namespace NiceHashMiner.Stats
             set
             {
                 try
-                { 
+                {
                 if (value > 0)
                 {
                     Interlocked.Exchange(ref _usdBtcRate, value);
@@ -79,7 +79,7 @@ namespace NiceHashMiner.Stats
                 return;
             }
 
-           
+
             try
             {
                 dynamic resp = JsonConvert.DeserializeObject(ResponseFromAPI);
@@ -176,12 +176,12 @@ namespace NiceHashMiner.Stats
             // Race condition not a problem since UsdBtcRate will never update to 0
             if (UsdBtcRate <= 0)
             {
-                Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
+//                Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
                 return 0;
             }
             return price / UsdBtcRate;
         }
 
-       
+
     }
 }

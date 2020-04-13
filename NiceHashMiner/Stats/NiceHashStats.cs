@@ -80,7 +80,7 @@ namespace NiceHashMiner.Stats
         #endregion
 
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
-        private const int DeviceUpdateInterval = 60 * 1000;
+        private const int DeviceUpdateInterval = 45 * 1000;
 
         public static double Balance { get; private set; }
        // public static string Version { get; private set; }
@@ -162,7 +162,7 @@ namespace NiceHashMiner.Stats
         */
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
-            GC.Collect();
+            //GC.Collect();
             try
             {
                 if (e.IsText)

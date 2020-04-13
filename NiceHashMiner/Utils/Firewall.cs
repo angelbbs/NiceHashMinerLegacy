@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 
 namespace NiceHashMiner
 {
@@ -58,6 +59,7 @@ namespace NiceHashMiner
         public static void AddToFirewall()
         {
             Dictionary<string, string> miners = new Dictionary<string, string>();
+            SetFirewallRule($"advfirewall firewall delete rule name=mlff");
             // foreach (string binPath in relativePaths)
             {
                 var tmpBins = DirSearch("miners");
@@ -78,10 +80,13 @@ namespace NiceHashMiner
 
                 foreach (var miner in miners)
                 {
+                    RemoveFirewallRule(miner.Key, miner.Value);
+                Thread.Sleep(1);
                     AllowFirewallRule(miner.Key, miner.Value);
                 }
-                SetFirewallRule($"advfirewall firewall add rule name=mlff program={Directory.GetCurrentDirectory() + "\\NiceHashMinerLegacy.exe"} protocol=tcp dir=in enable=yes action=allow");
-                SetFirewallRule($"advfirewall firewall add rule name=mlff program={Directory.GetCurrentDirectory() + "\\NiceHashMinerLegacy.exe"} protocol=tcp dir=out enable=yes action=allow");
+
+            SetFirewallRule($"advfirewall firewall add rule name=mlff program={Directory.GetCurrentDirectory() + "\\NiceHashMinerLegacy.exe"} protocol=tcp dir=in enable=yes action=allow");
+            SetFirewallRule($"advfirewall firewall add rule name=mlff program={Directory.GetCurrentDirectory() + "\\NiceHashMinerLegacy.exe"} protocol=tcp dir=out enable=yes action=allow");
         }
     }
 }

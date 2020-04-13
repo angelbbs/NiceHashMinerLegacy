@@ -439,7 +439,7 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            ApiData ad;
+            ApiData ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
             {

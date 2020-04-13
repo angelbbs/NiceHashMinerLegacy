@@ -52,13 +52,26 @@ namespace NiceHashMiner.Devices
                                 {
                                     foreach (var sensor in hardware.Sensors)
                                     {
-                                        if (sensor.SensorType == SensorType.Fan)
+                                        if (ConfigManager.GeneralConfig.ShowFanAsPercent)
                                         {
-                                            if ((int)sensor.Value >= 0)
+                                            if (sensor.SensorType == SensorType.Control)
                                             {
-                                                return (int)sensor.Value;
+                                                if ((int)sensor.Value >= 0)
+                                                {
+                                                    return (int)sensor.Value;
+                                                }
+                                                else return -1;
                                             }
-                                            else return -1;
+                                        } else
+                                        {
+                                            if (sensor.SensorType == SensorType.Fan)
+                                            {
+                                                if ((int)sensor.Value >= 0)
+                                                {
+                                                    return (int)sensor.Value;
+                                                }
+                                                else return -1;
+                                            }
                                         }
                                     }
                                 }
@@ -172,9 +185,10 @@ namespace NiceHashMiner.Devices
                     var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex2, 0, ref power); //0
                     if (result == ADL.ADL_SUCCESS)
                     {
-                   // Helpers.ConsolePrint("ADL", power.ToString());
-                        return (double) power / (1 << 8);
+                        // Helpers.ConsolePrint("ADL", power.ToString());
+                        return (double)power / (1 << 8);
                     }
+                }
                     try
                     {
                         _gpus.Open();
@@ -188,7 +202,7 @@ namespace NiceHashMiner.Devices
                                 {
                                     foreach (var sensor in hardware.Sensors)
                                     {
-                                        if (sensor.SensorType == SensorType.Fan)
+                                        if (sensor.SensorType == SensorType.Power)
                                         {
                                             if ((int)sensor.Value >= 0)
                                             {
@@ -205,7 +219,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
-                }
+                
 
                 return power;
             }

@@ -129,6 +129,7 @@ namespace NiceHashMiner.Stats
         {
             Helpers.ConsolePrint("NiceHashSocket", $"Error occured: {e.Message}");
             NiceHashStats._deviceUpdateTimer.Stop();
+            new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
         }
 
@@ -143,8 +144,7 @@ namespace NiceHashMiner.Stats
                 }
                 Thread.Sleep(1000 * 20);
             }
-            NiceHashStats._deviceUpdateTimer.Stop();
-            NiceHashStats._deviceUpdateTimer.Start();
+
             /*
             if (!_restartConnection)
             {
@@ -200,6 +200,12 @@ namespace NiceHashMiner.Stats
                     else
                     {
                         Helpers.ConsolePrint("SOCKETNEW", "webSocket not created, retrying");
+                        if (_webSocket != null)
+                        {
+                            _webSocket.Close();
+                            _webSocket = null;
+                        }
+                        Thread.Sleep(5000);
                         StartConnectionNew();
                     }
                 }
@@ -347,19 +353,28 @@ namespace NiceHashMiner.Stats
                     };
                     var loginJson = JsonConvert.SerializeObject(login);
                     //loginJson = loginJson.Replace("{", " { ");
-                    SendDataNew(loginJson);
-               
+                   // SendDataNew(loginJson);
+                new Task(() => SendDataNew(loginJson)).Start();
 
-                    NiceHashStats.SetDeviceStatus(null);
-                    /*
-                    NiceHashStats.SetDeviceStatus("PENDING");
-                    Thread.Sleep(100);
-                    NiceHashStats.SetDeviceStatus("STOPPED");
-                    */
+                //NiceHashStats._deviceUpdateTimer.Stop();
+                Thread.Sleep(1000);
+                //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
+               // Thread.Sleep(1000);
+                new Task(() => NiceHashStats.SetDeviceStatus(null)).Start();
+                // NiceHashStats._deviceUpdateTimer.Start();
 
 
-              //  OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
-            } catch (Exception er)
+                //NiceHashStats.SetDeviceStatus(null);
+                /*
+                NiceHashStats.SetDeviceStatus("PENDING");
+                Thread.Sleep(100);
+                NiceHashStats.SetDeviceStatus("STOPPED");
+                */
+
+
+                //  OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception er)
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
             }
@@ -414,8 +429,12 @@ namespace NiceHashMiner.Stats
                 } else if (_webSocket == null)
                 {
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
-                    _webSocket.Close();
-                    _webSocket = null;
+                    if (_webSocket != null)
+                    {
+                        _webSocket.Close();
+                        _webSocket = null;
+                    }
+                    Thread.Sleep(5000);
                     StartConnectionNew();
                     /*
                   //  if (AttemptReconnect() && !recurs)
@@ -439,6 +458,7 @@ namespace NiceHashMiner.Stats
                         Helpers.ConsolePrint("SOCKET", "Socket died, retrying");
                         _webSocket.Close();
                         _webSocket = null;
+                        Thread.Sleep(5000);
                         StartConnectionNew();
                     }
                 }

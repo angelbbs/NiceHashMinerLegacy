@@ -147,14 +147,15 @@ namespace NiceHashMiner.Switching
 
             foreach (var algo in history.Keys)
             {
-                if (NHSmaData.TryGetPaying(algo, out var paying) && !algo.ToString().Contains("UNUSED"))
+                NHSmaData.TryGetPaying(algo, out var paying);
+                if (!algo.ToString().Contains("UNUSED"))
                 {
                     history[algo].Add(paying);
                     if (paying > _lastLegitPaying[algo])
                     {
                         updated = true;
                         var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
-                        if (i >= ticks)
+                        if (i >= ticks  || algo == AlgorithmType.DaggerHashimoto3GB)
                         {
                             _lastLegitPaying[algo] = paying;
                             sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i} {cTicks} for {algo}");

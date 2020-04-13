@@ -195,68 +195,8 @@ namespace NiceHashMinerLegacy.Divert
             });
         }
 
-        static ushort GetTCPChecksum(byte[] IPHeader, byte[] TCPHeader)
-        {
-            uint sum = 0;
-            // TCP Header 21d16 407a8    1F852 4071D ff74
-            for (int x = 0; x < TCPHeader.Length; x += 2)
-            {
-                sum += ntoh(BitConverter.ToUInt16(TCPHeader, x));
-            }
-            // Pseudo header - Source Address
-            sum += ntoh(BitConverter.ToUInt16(IPHeader, 12));
-            sum += ntoh(BitConverter.ToUInt16(IPHeader, 14));
-            // Pseudo header - Dest Address
-            sum += ntoh(BitConverter.ToUInt16(IPHeader, 16));
-            sum += ntoh(BitConverter.ToUInt16(IPHeader, 18));
-            // Pseudo header - Protocol
-            sum += ntoh(BitConverter.ToUInt16(new byte[] { 0, IPHeader[9] }, 0));
-            // Pseudo header - TCP Header length
-            sum += (UInt16)20;
-          //  sum += (UInt16)(int)(TCPHeader.Length/8);
-            // 16 bit 1's compliment
-            while ((sum >> 16) != 0) { sum = ((sum & 0xFFFF) + (sum >> 16)); }
-            sum = ~sum;
-            return (ushort)ntoh((UInt16)sum);
-        }
 
-        private static ushort ntoh(UInt16 In)
-        {
-            int x = IPAddress.NetworkToHostOrder(In);
-            return (ushort)(x >> 16);
-        }
-
-
-
-        private static byte[] getBytes(object str)
-        {
-            int size = Marshal.SizeOf(str);
-            byte[] arr = new byte[size];
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-
-            Marshal.StructureToPtr(str, ptr, true);
-            Marshal.Copy(ptr, arr, 0, size);
-            Marshal.FreeHGlobal(ptr);
-
-            return arr;
-        }
-        public static ushort ComputeHeaderIpChecksum(byte[] header, int length)
-        {
-            ushort word16;
-            long sum = 0;
-            for (int i = 0; i < length; i += 2)
-            {
-                word16 = (ushort)(((header[i] << 8) & 0xFF00) + (header[i + 1] & 0xFF));
-                sum += word16;
-            }
-
-            while ((sum >> 16) != 0)
-            {
-                sum = (sum & 0xFFFF) + (sum >> 16);
-            }
-
-            return Divert.SwapOrder((ushort)~sum);
-        }
+        
         // [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe static async Task RunDivert1(IntPtr handle, int processId, int CurrentAlgorithmType, string MinerName)
         {
@@ -353,42 +293,6 @@ namespace NiceHashMinerLegacy.Divert
                         var parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                         PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
 
-                        //parse_result.TcpHeader->Checksum = 48875;
-                        //**+++++++++++++++++++++++++
-                        System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-                        //var pIPv4Header = enc.GetBytes(Divert.ToString(getBytes(*parse_result.IPv4Header)));
-                        var pIPv4Header = getBytes(*parse_result.IPv4Header);
-                        var pTcpHeader = getBytes(*parse_result.TcpHeader);
-
-                        
-                        //var crc = GetTCPChecksum(getBytes(*parse_result.IPv4Header), getBytes(*parse_result.TcpHeader));
-                        File.WriteAllBytes(np.ToString() + "IPv4Header-" + addr.Direction.ToString() + ".pkt", getBytes(*parse_result.IPv4Header));
-                        File.WriteAllBytes(np.ToString() + "TcpHeader-" + addr.Direction.ToString() + ".pkt", getBytes(*parse_result.TcpHeader));
-                        var crc = GetTCPChecksum(pIPv4Header, pTcpHeader); //неправильно считает
-                        var crch = ComputeHeaderIpChecksum(pIPv4Header, pIPv4Header.Length); //правильно считает
-                        Helpers.ConsolePrint("WinDivertSharp", "np: " + np + " crc: " + crc.ToString());
-                        Helpers.ConsolePrint("WinDivertSharp", "np: " + np + " crch: " + crch.ToString());
-                        Helpers.ConsolePrint("WinDivertSharp", "old TcpHeader->HdrLength: " + np + " " + (parse_result.TcpHeader->HdrLength));
-                        Helpers.ConsolePrint("WinDivertSharp", "old IPv4Header->Length: " + np + " " + (Divert.SwapOrder(parse_result.IPv4Header->Length)));
-                        Helpers.ConsolePrint("WinDivertSharp", "old TcpHeader->Checksum: " + np + " " + (parse_result.TcpHeader->Checksum));
-                        Helpers.ConsolePrint("WinDivertSharp", "old IPv4Header->Checksum: " + np + " " + (parse_result.IPv4Header->Checksum));
-                        parse_result.IPv4Header->Checksum = 61374;
-                        parse_result.TcpHeader->Checksum = 48879;
-                        //addr.PseudoIPChecksum = true;
-                        //addr.PseudoTCPChecksum = true;
-                        WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
-
-                        byte[] cpacket1 = new byte[readLen];
-                        for (int i = 0; i < readLen; i++)
-                        {
-                            // if (packet[i] >= 32)
-                            cpacket1[i] = packet[i];
-
-                        }
-                        //if (cpacket0.Length > 60)
-                            File.WriteAllBytes(np.ToString() + "mod-" + addr.Direction.ToString() + ".pkt", cpacket1);
-
-                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                         //**+++++++++++++++++++++++++
                         //******* откуда и куда перенаправлять
 
@@ -440,12 +344,7 @@ namespace NiceHashMinerLegacy.Divert
                         {
                             Helpers.ConsolePrint("WinDivertSharp", "Exception: " + e.ToString());
                         }
-                       //parse_result.TcpHeader->Checksum = Divert.SwapOrder(48879);
-                        Helpers.ConsolePrint("WinDivertSharp", "mod TcpHeader->HdrLength: " + np + " " + (parse_result.TcpHeader->HdrLength));
-                        Helpers.ConsolePrint("WinDivertSharp", "mod IPv4Header->HdrLength: " + np + " " + (parse_result.IPv4Header->HdrLength));
-                        Helpers.ConsolePrint("WinDivertSharp", "mod TcpHeader->Checksum: " + np + " " + (parse_result.TcpHeader->Checksum));
-                        Helpers.ConsolePrint("WinDivertSharp", "mod IPv4Header->Checksum: " + np + " " + (parse_result.IPv4Header->Checksum));
-                        // Helpers.ConsolePrint("WinDivertSharp", "WinDivertHelperCalcChecksums: " + Divert.SwapOrder((ushort)WinDivert.WinDivertHelperCalcChecksums(packet, readLen, WinDivertChecksumHelperParam.NoIpChecksum)));
+
                         //*************************************************************************************************************
                         if (parse_result.PacketPayloadLength > 20)
                         {
@@ -719,7 +618,8 @@ Divert:
                                 parse_result.IPv4Header->DstAddr = IPAddress.Parse(DivertIP);
                                 parse_result.TcpHeader->DstPort = Divert.SwapOrder(DivertPort);
                                 Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") " +
-                                    "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() + " (" + DivertIPName + ")");
+                                    "-> New DevFee port: " + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                            // "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() + " (" + DivertIPName + ")");
 
                             if (parse_result.PacketPayloadLength > 0)
                             {
@@ -733,8 +633,9 @@ Divert:
                                 parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
                                 CheckParityConnections(processId, Divert.SwapOrder(parse_result.TcpHeader->DstPort)))
                         {
-                            Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") DEVFEE SESSION: <- " + 
-                                "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() + 
+                            Helpers.ConsolePrint("WinDivertSharp", processName + " (" + processId.ToString() + ") DEVFEE SESSION: <- " +
+                                "DevFee SrcPort: " + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
+                                // "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() + 
                                 "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
                                 " len: " + readLen.ToString());
                             parse_result.IPv4Header->SrcAddr = IPAddress.Parse(DevFeeIP); ;
@@ -751,10 +652,16 @@ Divert:
 
 
 sendPacket:
-                        if (modified && addr.Direction == WinDivertDirection.Outbound)
-                        {
-                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
-                        }
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        parse_result.TcpHeader->Checksum = 0;
+                        var crc = Divert.CalcTCPChecksum(packet, readLen);
+
+                        parse_result.IPv4Header->Checksum = 0;
+                        var pIPv4Header = Divert.getBytes(*parse_result.IPv4Header);
+                        var crch = Divert.CalcIpChecksum(pIPv4Header, pIPv4Header.Length);
+
+                        parse_result.IPv4Header->Checksum = crch;
+                        parse_result.TcpHeader->Checksum = crc;
 
 
                         byte[] cpacket2 = new byte[readLen];

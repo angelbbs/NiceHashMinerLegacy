@@ -355,7 +355,10 @@ namespace NiceHashMiner
             IsRunningNew = false;
             Ethlargement.Stop();
             RunCMDBeforeOrAfterMining(false);
-                NiceHashStats.SetDeviceStatus("STOPPED");
+            NiceHashStats._deviceUpdateTimer.Stop();
+            new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+            NiceHashStats._deviceUpdateTimer.Start();
+            //NiceHashStats.SetDeviceStatus("STOPPED");
         }
 
         public void End()
@@ -1232,7 +1235,10 @@ namespace NiceHashMiner
                 {
                     IsRunning = true;
                     IsRunningNew = true;
-                        NiceHashStats.SetDeviceStatus("MINING");
+                    //  NiceHashStats.SetDeviceStatus("MINING");
+                    NiceHashStats._deviceUpdateTimer.Stop();
+                    new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+                    NiceHashStats._deviceUpdateTimer.Start();
                     string strPlatform = "";
                     foreach (var pair in MiningSetup.MiningPairs)
                     {
@@ -1599,9 +1605,9 @@ namespace NiceHashMiner
                         break;
                     default:
                         Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.UNKNOWN");
-                        CoolUp();
-                        break;
-                }
+                    //CoolDown();
+                    break;
+            }
 
             // set new times left from the CoolUp/Down change
             _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;

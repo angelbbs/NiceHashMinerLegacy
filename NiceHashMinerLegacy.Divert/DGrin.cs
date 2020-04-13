@@ -346,10 +346,10 @@ nextCycle:
                             }
                         }
 
-                        Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Unknown connection: " +
-                        "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-                        "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                        " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
+                        Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Unknown connection");
+                        //"DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
+                       // "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
+                       // " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
                         modified = false;
                         goto sendPacket;
 
@@ -380,7 +380,8 @@ nextCycle:
                             parse_result.TcpHeader->DstPort = DivertPort;
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " +
-                                    "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                                "-> New DevFee port: " + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                            //     "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
 
                             if (parse_result.PacketPayloadLength > 0)
                             {
@@ -405,7 +406,8 @@ nextCycle:
                                !OwnerPID.Equals("-1"))
                         {
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") DEVFEE SESSION: <- " +
-                                "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
+                               // "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
+                               "DevFee SrcPort: " + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
                                 " len: " + readLen.ToString());
                             parse_result.TcpHeader->SrcPort = DevFeePort;
@@ -422,28 +424,24 @@ nextCycle:
 
                         sendPacket:
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                        //***********************************************************************************
+                        /*                        
+                                                if (modified)
+                                                {
+                                                    addr.PseudoIPChecksum = true;
+                                                    addr.PseudoTCPChecksum = true;
+                                                    WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
+                                                }
+                          */
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        parse_result.TcpHeader->Checksum = 0;
+                        var crc = Divert.CalcTCPChecksum(packet, readLen);
 
-                        // var modpacket = Divert.MakeNewPacket(packet, readLen, PacketPayloadData);
-                        // packet.Dispose();
-                        // packet = modpacket;
-                        // readLen = packet.Length;
+                        parse_result.IPv4Header->Checksum = 0;
+                        var pIPv4Header = Divert.getBytes(*parse_result.IPv4Header);
+                        var crch = Divert.CalcIpChecksum(pIPv4Header, pIPv4Header.Length);
 
-                        //parse_result.IPv4Header->Checksum = (ushort)WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
-                        //parse_result.IPv4Header->Checksum = (ushort)WinDivert.WinDivertHelperCalcChecksums(packet, readLen, WinDivertChecksumHelperParam.NoIpChecksum);
-
-                        
-                        //parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                        //WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
-                        //***********************************************************************************
-                        
-                        if (modified)
-                        {
-                            addr.PseudoIPChecksum = true;
-                            addr.PseudoTCPChecksum = true;
-                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
-                        }
-                        
+                        parse_result.IPv4Header->Checksum = crch;
+                        parse_result.TcpHeader->Checksum = crc;
                         if (Divert._SaveDivertPackets)
                         {
                             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
@@ -478,7 +476,7 @@ nextCycle:
                 catch (Exception e)
                 {
                     Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
-                    Thread.Sleep(500);
+                    Thread.Sleep(300);
                 }
                 finally
                 {

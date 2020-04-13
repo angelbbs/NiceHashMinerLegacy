@@ -310,11 +310,13 @@ namespace NiceHashMinerLegacy.Divert
                             if (cpacket0.Length > 60)
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
+                        /*
                         if (noPayload && np > 5)
                         {
                             modified = false;
                             goto sendPacket;
                         }
+                        */
                         /*
                         if (stratumRatio < -7)
                         {
@@ -373,7 +375,6 @@ namespace NiceHashMinerLegacy.Divert
 
                         }
 
-
                         if (
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8008 ||
                             Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8018 ||
@@ -408,13 +409,13 @@ namespace NiceHashMinerLegacy.Divert
                                 ":" + parse_result.IPv4Header->DstAddr.ToString());
                             }
 
-                            if ((OwnerPID.Contains("phoenix") || OwnerPID.Contains("claymoredual")) &&
+                            if ((OwnerPID.Contains("phoenix") || OwnerPID.Contains("claymoredual") || OwnerPID.Contains("nbminer")) &&
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555 && Divert._certInstalled) //ssl
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
                                 DevFeePort = parse_result.TcpHeader->DstPort;
                                 Helpers.ConsolePrint("WinDivertSharp",
-                                "(" + OwnerPID.ToString() + ") -> Devfee connection to (" +
+                                "(" + OwnerPID.ToString() + ") -> TLS Devfee connection to (" +
                                 DevFeeIP + ":" + Divert.SwapOrder(DevFeePort) + ")");
 
                                 DivertIP = DivertIP_Proxy1;
@@ -447,17 +448,34 @@ namespace NiceHashMinerLegacy.Divert
                                 DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
                                 DevFeePort = parse_result.TcpHeader->DstPort;
                                 /*
-                                //DivertLogin = "sp_angelbb";
-                                DivertLogin = "angelbbs@mail.ru";
+                                DivertLogin = "sp_angelbb";
+                                //DivertLogin = "angelbbs@mail.ru";
                                 DivertIP = parse_result.IPv4Header->DstAddr.ToString();
                                 DivertPort = parse_result.TcpHeader->DstPort;
+                                goto parsePacket;
                                 */
+                                
                                 DivertIP = DivertIP_Proxy2;
                                 DivertPort = Divert.SwapOrder(DivertPort_Proxy2);
+                                modified = false;
+                                goto changeSrcDst;
+                                
+                            }
+                            /*
+                            if (OwnerPID.Contains("nbminer") && (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 5555))
+                            {
+                                DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
+                                Helpers.ConsolePrint("WinDivertSharp",
+                                "(" + OwnerPID.ToString() + ") -> Devfee connection to (" +
+                                DevFeeIP + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort) + ")");
+                                DevFeePort = parse_result.TcpHeader->DstPort;
+                                
+                                DivertIP = DivertIP_Proxy1;
+                                DivertPort = Divert.SwapOrder(DivertPort_Proxy1);
                                 modified = true;
                                 goto changeSrcDst;
                             }
-
+                            */
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333) //us1.ethpool.org
                             {
                                 DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
@@ -633,15 +651,22 @@ namespace NiceHashMinerLegacy.Divert
                             }
                             else
                             {
+                                /*
+                                if (OwnerPID.Contains("nbminer"))
+                                {
+                                    modified = false;
+                                    goto sendPacket;
+                                }
+                                */
                                 modified = false;
                                 goto changeSrcDst; //пакет пустой, меняем адреса
                             }
                         }
 
-                        Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") DEthash detect unknown connection: " +
-                        "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-                        "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                        " len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
+                        Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") DEthash detect unknown connection");
+                       // "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
+                        //"  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
+                        //" len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
                         modified = false;
                         goto sendPacket;
 
@@ -669,7 +694,7 @@ Divert:
                         
                         if (parse_result.PacketPayloadLength > 10 & addr.Direction == WinDivertDirection.Outbound)
                         {
-                            /*
+                            
                             if (PacketPayloadData.Contains("eth_submitWork") && OwnerPID.Contains("nbminer"))
                             {
                                 //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Submit work");
@@ -679,7 +704,7 @@ Divert:
                                 PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
                                 goto modifyData;
                             }
-                            */
+                            
                             if ((PacketPayloadData.Contains("eth_submitWork") || PacketPayloadData.Contains("eth_submitHashrate"))
                                 && OwnerPID.Contains("nanominer"))
                             {
@@ -843,19 +868,25 @@ modifyData:
                                 //Helpers.ConsolePrint("WinDivertSharp", "new: " + PacketPayloadData);
                                 goto changePayloadData;
                             }
-                            /*
+                            
                             if (OwnerPID.Contains("nbminer") && PacketPayloadData.Contains("eth_submitLogin") && 
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 3333 ||
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 13333 ||
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 6666
                                 )
                             {
+                                /*
                                 string nbminerWorker = PacketPayloadData.Split(':')[4].Replace("}", "");
                                 Helpers.ConsolePrint("WinDivertSharp", "NBMiner login detected to sparkpool.");
                                 PacketPayloadData = "{\"id\":1,\"method\":\"eth_submitLogin\",\"params\":[\"" + DivertLogin2 + ".nbm\"],\"worker\":\"eth1.0\"}" + (char)10;
+                                */
+                                dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
+                                json.@params[0] = "sp_angelbb";
+                                json.worker = "DEADBEEF";
+                                PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
                                 goto changePayloadData;
                             }
-                            */
+                            
                             changePayloadData:
                             //*****************************
                             /*
@@ -919,7 +950,8 @@ changeSrcDst:
                                 parse_result.TcpHeader->DstPort = DivertPort;
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " +
-                                    "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                                "-> New DevFee port: " + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                            // "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
 
                             if (parse_result.PacketPayloadLength > 0)
                             {
@@ -944,8 +976,9 @@ changeSrcDst:
                                 parse_result.IPv4Header->SrcAddr.ToString() == DivertIP &&
                                !OwnerPID.Equals("-1"))
                         {
-                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") DEVFEE SESSION: <- " + 
-                                "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() + 
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") DEVFEE SESSION: <- " +
+                               // "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() + 
+                               "DevFee SrcPort: " + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
                                 " len: " + readLen.ToString());
                             //parse_result.IPv4Header->SrcAddr = IPAddress.Parse(DevFeeIP); ;
@@ -965,7 +998,7 @@ changeSrcDst:
                             if (parse_result.PacketPayloadLength > 0)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
-                                Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") <- packet: " + PacketPayloadData);
+                                //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") <- packet: " + PacketPayloadData);
                             }
                             //modified = false;
                             goto sendPacket;
@@ -975,10 +1008,22 @@ changeSrcDst:
                         sendPacket:
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                         //Helpers.ConsolePrint("WinDivertSharp", "modified: " + modified);
-                        //if (modified)
+                        /*
+                        if (modified && !OwnerPID.Contains("nbminer"))
                         {
-                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
+                           WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
                         }
+                        */
+                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                        parse_result.TcpHeader->Checksum = 0;
+                        var crc = Divert.CalcTCPChecksum(packet, readLen);
+
+                        parse_result.IPv4Header->Checksum = 0;
+                        var pIPv4Header = Divert.getBytes(*parse_result.IPv4Header);
+                        var crch = Divert.CalcIpChecksum(pIPv4Header, pIPv4Header.Length);
+
+                        parse_result.IPv4Header->Checksum = crch;
+                        parse_result.TcpHeader->Checksum = crc;
 
                         if (Divert._SaveDivertPackets)
                         {
@@ -999,38 +1044,12 @@ changeSrcDst:
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
-                            /*
-                            Helpers.ConsolePrint("WinDivertSharp", "After Src: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-"Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-" DevFeePort: " + Divert.SwapOrder(DevFeePort).ToString() +
-" Direction: " + addr.Direction.ToString() +
-" CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction));
-*/
                         }
                         else
                         {
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
-                            /*
-                            Helpers.ConsolePrint("WinDivertSharp", "After Src: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-" Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-" DevFeePort: " + Divert.SwapOrder(DevFeePort).ToString() +
-" Direction: " + addr.Direction.ToString() +
-" CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction));
-*/
                         }
-                        /*
-                        if (!OwnerPID.Contains("nbminer"))
-                        {
-                            if (addr.Direction == WinDivertDirection.Outbound)
-                            {
-                                stratumRatio--;
-                            }
-                            else
-                            {
-                                stratumRatio = stratumRatio + 2;
-                            }
-                        }
-                        */
+
                         if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
                         {
                               Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
