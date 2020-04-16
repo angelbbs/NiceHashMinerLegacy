@@ -28,6 +28,7 @@ using System.Runtime.ExceptionServices;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using System.Net.Sockets;
 
 namespace NiceHashMiner.Stats
 {
@@ -143,7 +144,6 @@ namespace NiceHashMiner.Stats
             _socket.OnDataReceived += SocketOnOnDataReceived;
          //   _socket.OnConnectionLost += SocketOnOnConnectionLost;
 
-            NiceHashSocket._restartConnection = true;
             Helpers.ConsolePrint("SOCKET-address:", address);
             _socket.StartConnectionNew();
 
@@ -1118,6 +1118,63 @@ namespace NiceHashMiner.Stats
                 }
             }
         }
+        internal static TcpClient tcpClientGoogle = null;
+        public static void ConnectToGoogle()
+        {
+            try
+            {
+                tcpClientGoogle = new TcpClient();
+                Form_Main.GoogleIP = Form_Main.DNStoIP("www.google.com");
+                tcpClientGoogle.Connect(Form_Main.GoogleIP, 80);
+                NetworkStream serverStream = tcpClientGoogle.GetStream();
+                serverStream.ReadTimeout = 1000 * 5;
+
+                byte[] messageGoogle = new byte[1024];
+                int GoogleBytes;
+                System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+                var Request = enc.GetBytes("GET / HTTP/1.1\r\n\r\n");
+
+                if (serverStream == null)
+                {
+                    Helpers.ConsolePrint("ConnectToGoogle", "Error in serverStream");
+                    return;
+                }
+                serverStream.Write(Request, 0, Request.Length);
+                if (tcpClientGoogle.Connected)
+                {
+                    for (int i = 0; i < 1024; i++)
+                    {
+                        messageGoogle[i] = 0;
+                    }
+                    GoogleBytes = serverStream.Read(messageGoogle, 0, 1024); //HTTP/1.1 200 OK
+                    var GoogleAnswer = Encoding.ASCII.GetString(messageGoogle);
+                    //Helpers.ConsolePrint("ConnectToGoogle", "Answer: " + GoogleAnswer);
+                    if (tcpClientGoogle != null)
+                    {
+                        tcpClientGoogle.Client.Disconnect(false);
+                        tcpClientGoogle.Client.Shutdown(SocketShutdown.Both);
+                        tcpClientGoogle.Close();
+                        tcpClientGoogle.Dispose();
+                        tcpClientGoogle = null;
+                    }
+                    serverStream.Close();
+                    serverStream.Dispose();
+                    serverStream = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("ConnectToGoogle", "Disconnected: " + ex.Message);
+                if (tcpClientGoogle != null)
+                {
+                    tcpClientGoogle.Client.Disconnect(false);
+                    tcpClientGoogle.Client.Shutdown(SocketShutdown.Both);
+                    tcpClientGoogle.Close();
+                    tcpClientGoogle.Dispose();
+                    tcpClientGoogle = null;
+                }
+            }
+        }
 
         public static void DeviceStatus_TickNew(object sender, ElapsedEventArgs e)
         {
@@ -1125,6 +1182,7 @@ namespace NiceHashMiner.Stats
         }
         public static async void SetDeviceStatus(object state)
         {
+            //new Task(() => ConnectToGoogle()).Start();
             var devices = ComputeDeviceManager.Available.Devices;
             var rigStatus = CalcRigStatusString();
             var activeIDs = MinersManager.GetActiveMinersIndexes();

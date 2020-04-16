@@ -26,11 +26,14 @@ using Timer = System.Windows.Forms.Timer;
 namespace NiceHashMiner
 {
     using Microsoft.Win32;
+    using NiceHashMinerLegacy.Divert;
     using System.Drawing.Drawing2D;
     using System.IO;
     using System.Net;
+    using System.Net.Sockets;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
 
@@ -95,8 +98,10 @@ namespace NiceHashMiner
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
-        public static bool DaggerHashimoto3GBProfit = false;
+//        public static bool DaggerHashimoto3GBProfit = false;
         public static bool DaggerHashimoto3GB = true;
+        public static string GoogleIP = "";
+        public static string GoogleAnswer = "";
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -241,8 +246,8 @@ namespace NiceHashMiner
             R = new Random((int)DateTime.Now.Ticks);
 
             Text += ForkString;
-            Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            //Text += "26 beta 2";
+            //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
+            Text += "27 beta 1";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -1923,9 +1928,58 @@ namespace NiceHashMiner
            // pHandle.Start();
            // Close();
         }
+
+        private void CheckDagger3GB()
+        {
+            if (DHClient.needUpdate || Divert.DaggerHashimoto3GBForce)
+            {
+                if (Divert.DaggerHashimoto3GBProfit)
+                {
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON");
+                    NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
+                    NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+                    Divert.Dagger3GBEpochCount = 0;
+                    Divert.DaggerHashimoto3GBForce = false;
+                    new Task(() => DHClient.StopConnection()).Start();
+                }
+                if (Divert.Dagger3GBEpochCount > 2)
+                {
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
+                    Divert.DaggerHashimoto3GBProfit = false;
+                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
+                    NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+                    Divert.DaggerHashimoto3GBForce = false;
+                    new Task(() => DHClient.StartConnection()).Start();
+                    //Divert.Dagger3GBEpochCount = 0;
+                }
+                DHClient.needUpdate = false;
+            }
+        }
+        public static string DNStoIP(string IPName)
+        {
+            try
+            {
+                var ASCII = new System.Text.ASCIIEncoding();
+                var heserver = Dns.GetHostEntry(IPName);
+                foreach (IPAddress curAdd in heserver.AddressList)
+                {
+                    if (curAdd.AddressFamily.ToString() == ProtocolFamily.InterNetwork.ToString())
+                    {
+                        return curAdd.ToString();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine("Exception: " + e.ToString());
+            }
+            return "";
+        }
+        
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
-            
+            CheckDagger3GB();
             ExchangeCallback(); 
             BalanceCallback(); 
             UpdateGlobalRate();

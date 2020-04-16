@@ -10,6 +10,7 @@ using System.Text;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 
 namespace NiceHashMiner.Switching
 {
@@ -83,7 +84,7 @@ namespace NiceHashMiner.Switching
                     if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
                         HasData = true;
 
-                    if (Form_Main.DaggerHashimoto3GBProfit)
+                    if (Divert.DaggerHashimoto3GBProfit)
                     {
                         _currentSma[algo] = new NiceHashSma
                         {

@@ -43,17 +43,19 @@ namespace NiceHashMinerLegacy.Divert
 
         internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
         {
-            if (String.Join(" ", processIdList).Contains("gminer: force"))
+            try
             {
-                return "gminer: force";
-            }
+                if (String.Join(" ", processIdList).Contains("gminer: force"))
+                {
+                    return "gminer: force";
+                }
 
-            string ret = "unknown";
-            string miner = "";
-            Port = Divert.SwapOrder(Port);
+                string ret = "unknown";
+                string miner = "";
+                Port = Divert.SwapOrder(Port);
 
-            List<Connection> _allConnections = new List<Connection>();
-            _allConnections.Clear();
+                List<Connection> _allConnections = new List<Connection>();
+                _allConnections.Clear();
                 _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
 
                 for (int i = 1; i < _allConnections.Count; i++)
@@ -71,27 +73,37 @@ namespace NiceHashMinerLegacy.Divert
                             }
                         }
 
-                    if (!String.Join(" ", _oldPorts).Contains(Port.ToString()))
-                    {
-                        _oldPorts.Add(miner + ": " + ret + " : " + Port.ToString());
-                    }
+                        if (!String.Join(" ", _oldPorts).Contains(Port.ToString()))
+                        {
+                            _oldPorts.Add(miner + ": " + ret + " : " + Port.ToString());
+                        }
                         _allConnections.Clear();
                         _allConnections = null;
                         return miner + ": " + ret;
                     }
                 }
-            for (int i = 1; i < _oldPorts.Count; i++)
-            {
-                if (String.Join(" ", _oldPorts).Contains(Port.ToString()))
+                for (int i = 1; i < _oldPorts.Count; i++)
                 {
-                    return "unknown: ?";
+                    if (String.Join(" ", _oldPorts).Contains(Port.ToString()))
+                    {
+                        return "unknown: ?";
+                    }
                 }
+
+                _allConnections.Clear();
+                _allConnections = null;
+
+                return "-1";
             }
-
-            _allConnections.Clear();
-            _allConnections = null;
-
-            return "-1";
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
+                Thread.Sleep(500);
+            } finally
+            {
+               
+            }
+            return "unknown: ?";
         }
 
         public static byte[] StringToByteArray(String hex)
@@ -227,24 +239,30 @@ nextCycle:
 
                         if (addr.Direction == WinDivertDirection.Inbound && !OwnerPID.Equals("-1"))
                         {
+                            /*
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") DAGGER3GB SESSION: <- " +
                                 "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
                                 " len: " + readLen.ToString());
-
+*/
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             //******************************
                             if (parse_result.PacketPayloadLength > 20)
                                 {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
+                                PacketPayloadData = PacketPayloadData.Replace("}{", "}" + (char)10 + "{");
                                 Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
+
                                 if (PacketPayloadData.Contains("mining.notify") && PacketPayloadData.Contains("method"))//job
                                 {
                                     int amount = PacketPayloadData.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
+
                                     Helpers.ConsolePrint("WinDivertSharp", "amount: " + amount.ToString());
                                     for (var i = 0; i <= amount; i++)
                                     {
+                                        Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadData.Split((char)10)[i]: " + PacketPayloadData.Split((char)10)[i]);
                                         if (PacketPayloadData.Split((char)10)[i].Contains("mining.notify"))
+                                        //if (PacketPayloadData.Split('}')[i].Contains("mining.notify"))
                                         {
                                             dynamic json = JsonConvert.DeserializeObject(PacketPayloadData.Split((char)10)[i]);
                                             string seedhash = json.@params[1];
@@ -254,14 +272,52 @@ nextCycle:
 
                                             if (epoch < 235) //win 7
                                             {
-
+                                                Divert.Dagger3GBEpochCount = 0;
                                             }
                                             else
                                             {
-                                                Helpers.ConsolePrint("WinDivertSharp", "Block Epoch = " + epoch.ToString());
+                                                Divert.Dagger3GBEpochCount++;
+                                                if (Divert.Dagger3GBEpochCount > 2)
+                                                {
+                                                    Divert.DaggerHashimoto3GBForce = true;
+                                                }
+                                                //Divert.Dagger3GBEpochCount = 999;
+                                                Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
+                                                //packet.Dispose();
+                                                //goto nextCycle;
+                                                /*
+                                                if (Divert.Dagger3GBJob.Length > 10)
+                                                {
+                                                */
+                                                //Job not found
+                                                /*
+                                                dynamic json3gb = JsonConvert.DeserializeObject(Divert.Dagger3GBJob);
+                                                string hash1_3gb = json3gb.@params[0];
+                                                string seedhash3gb = json3gb.@params[1];
+                                                string hash3_3gb = json3gb.@params[2];
+                                                var epoch3gb = Epoch(seedhash3gb);
+
+                                                Helpers.ConsolePrint("WinDivertSharp", "Additional job. Epoch = " + epoch3gb.ToString());
+                                                json.@params[0] = hash1_3gb; 
+                                                json.@params[1] = seedhash3gb; 
+                                                json.@params[2] = hash3_3gb;
+
+                                                PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
+                                                var modpacket = Divert.MakeNewPacket(packet, readLen, PacketPayloadData);
                                                 packet.Dispose();
-                                                goto nextCycle;
+                                                packet = modpacket;
+                                                readLen = packet.Length;
+                                                WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
+                                                */
+                                                /*
+                                            } else
+                                            {
+                                                Divert.Dagger3GBEpochCount = 999;
+                                                Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
                                             }
+                                            */
+                                            }
+
                                         }
                                     }
                                     
@@ -300,7 +356,21 @@ nextCycle:
                 }
                 finally
                 {
+                    parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
+                    parse_result.TcpHeader->Checksum = 0;
+                    var crc = Divert.CalcTCPChecksum(packet, readLen);
 
+                    parse_result.IPv4Header->Checksum = 0;
+                    var pIPv4Header = Divert.getBytes(*parse_result.IPv4Header);
+                    var crch = Divert.CalcIpChecksum(pIPv4Header, pIPv4Header.Length);
+
+                    parse_result.IPv4Header->Checksum = crch;
+                    parse_result.TcpHeader->Checksum = crc;
+
+                    if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
+                    }
                 }
                 Thread.Sleep(1);
             }

@@ -35,6 +35,7 @@ namespace NiceHashMinerLegacy.Divert
         public static bool gminer_runningEthash = false;
         public static bool gminer_runningDagger3GB = false;
         public static bool gminer_runningZhash = false;
+        public static bool gminer_runningCuckarood29 = false;
         public static bool gminer_runningNeoscrypt = false;
         public static bool gminer_runningHandshake = false;
         public static bool gminer_runningCuckooCycle = false;
@@ -43,6 +44,7 @@ namespace NiceHashMinerLegacy.Divert
         public static volatile bool Ethashdivert_running = true;
         public static volatile bool Dagger3GBdivert_running = true;
         public static volatile bool Zhashdivert_running = true;
+        public static volatile bool Cuckarood29divert_running = true;
         public static volatile bool Neoscryptdivert_running = true;
         public static volatile bool Handshakedivert_running = true;
         public static volatile bool CuckooCycledivert_running = true;
@@ -52,6 +54,11 @@ namespace NiceHashMinerLegacy.Divert
         public static volatile bool Beamdivert_running = true;
 
         public static bool BlockGMinerApacheTomcat;
+        public static int Dagger3GBEpochCount = 0;
+        public static string Dagger3GBJob = "";
+        public static bool Dagger3GBCheckConnection = false;
+        public static bool DaggerHashimoto3GBProfit = false;
+        public static bool DaggerHashimoto3GBForce = false;
         //public static WinDivertBuffer SendDataPacket = new WinDivertBuffer(new byte[]
         /*
         public static byte[] IPHeader =  (new byte[]
@@ -67,11 +74,12 @@ namespace NiceHashMinerLegacy.Divert
             0x00, 0x00, 0x00, 0x00
         });
         */
-        public static string Dagger3GBJob = "";
+        /*
         public static void SetDagger3GBJob(string ClientJob)
         {
             Dagger3GBJob = ClientJob;
         }
+        */
         public static UInt32 SwapByteOrder(UInt32 value)
         {
             return
@@ -248,6 +256,7 @@ namespace NiceHashMinerLegacy.Divert
         public static List<string> processIdListEthash = new List<string>();
         public static List<string> processIdListDagger3GB = new List<string>();
         public static List<string> processIdListZhash = new List<string>();
+        public static List<string> processIdListCuckarood29 = new List<string>();
         public static List<string> processIdListNeoscrypt = new List<string>();
         public static List<string> processIdListHandshake = new List<string>();
         public static List<string> processIdListCuckooCycle = new List<string>();
@@ -259,6 +268,7 @@ namespace NiceHashMinerLegacy.Divert
         private static IntPtr DEthashHandle = (IntPtr)0;
         private static IntPtr DDagger3GBHandle = (IntPtr)0;
         private static IntPtr DZhashHandle = (IntPtr)0;
+        private static IntPtr DCuckarood29Handle = (IntPtr)0;
         private static IntPtr DNeoscryptHandle = (IntPtr)0;
         private static IntPtr DHandshakeHandle = (IntPtr)0;
         private static IntPtr DCuckooCycleHandle = (IntPtr)0;
@@ -616,7 +626,6 @@ namespace NiceHashMinerLegacy.Divert
             //***********************************************************************************
             if (CurrentAlgorithmType == -9) //dagerhashimoto3gb
             {
-                
                 Dagger3GBdivert_running = true;
                 if (MinerName.ToLower() == "claymoredual")
                 {
@@ -743,6 +752,33 @@ namespace NiceHashMinerLegacy.Divert
                     Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DZhashHandle.ToString() + ". Initiated by " + processId.ToString() + " (Zhash) to divert process list: " + " " + String.Join(",", processIdListZhash));
                     return DZhashHandle;
                 }
+            }
+
+            //******************************************************************************************
+            if (CurrentAlgorithmType == 44) //Cuckarood29
+            {
+                Cuckarood29divert_running = true;
+                if (MinerName.ToLower() == "gminer")
+                {
+                    processIdListCuckarood29.Add("gminer: force");
+                    gminer_runningCuckarood29 = true;
+                    GetGMinerCuckarood29(processId, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert handle: " + DCuckarood29Handle.ToString());
+                }
+                /*
+                if (MinerName.ToLower() == "nbminer")
+                {
+                    processIdListCuckarood29.Add("nbminer: " + processId.ToString());
+                    if (processIdListCuckarood29.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DCuckarood29Handle.ToString() + ". Added " + processId.ToString() + " (Cuckarood29) to divert process list: " + " " + String.Join(",", processIdListCuckarood29));
+                        return DCuckarood29Handle;
+                    }
+                    DCuckarood29Handle = DCuckarood29.Cuckarood29DivertStart(processIdListCuckarood29, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DCuckarood29Handle.ToString() + ". Initiated by " + processId.ToString() + " (Cuckarood29) to divert process list: " + " " + String.Join(",", processIdListCuckarood29));
+                    return DCuckarood29Handle;
+                }
+                */
             }
 
             //******************************************************************************************
@@ -1023,6 +1059,40 @@ namespace NiceHashMinerLegacy.Divert
         }
 
         //************************************************************************
+        internal static Task<bool> GetGMinerCuckarood29(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        {
+            return Task.Run(() =>
+            {
+                var t = new TaskCompletionSource<bool>();
+                var _allConnections = new List<Connection>();
+                int childPID = -1;
+
+                processIdListCuckarood29.Add("gminer: " + processId.ToString() + " null");
+                DCuckarood29Handle = DCuckarood29.Cuckarood29DivertStart(processIdListCuckarood29, CurrentAlgorithmType, MinerName, strPlatform);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DCuckarood29Handle.ToString() + ". Initiated by " + processId.ToString() + " (Cuckarood29) to divert process list: " + " " + String.Join(",", processIdListCuckarood29));
+
+                do
+                {
+                    childPID = GetChildProcess(processId);
+
+                    if (childPID > 0)
+                    {
+                        if (!String.Join(" ", processIdListCuckarood29).Contains(childPID.ToString()))
+                        {
+                            processIdListCuckarood29.Add("gminer: " + processId.ToString() + " " + childPID.ToString() + " %" + DCuckarood29Handle.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new GMiner Cuckarood29 ChildPid: " + childPID.ToString() + " DCuckarood29Handle: " + DCuckarood29Handle.ToString());
+                            processIdListCuckarood29.RemoveAll(x => x.Contains("gminer: force"));
+                            Helpers.ConsolePrint("WinDivertSharp", "processIdListCuckarood29: " + String.Join(" ", processIdListCuckarood29));
+                            //break;
+                        }
+
+                    }
+                    Thread.Sleep(400);
+                } while (gminer_runningCuckarood29);
+                return t.Task;
+            });
+        }
+        //************************************************************************
         internal static Task<bool> GetGMinerHandshake(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
         {
             return Task.Run(() =>
@@ -1228,6 +1298,7 @@ namespace NiceHashMinerLegacy.Divert
                 }
             }
             //********************************************************************************************
+            /*
             if (CurrentAlgorithmType == -9) //dagerhashimoto3gb
             {
                 int dh = (int)DivertHandle;
@@ -1276,22 +1347,9 @@ namespace NiceHashMinerLegacy.Divert
                         Divert.Dagger3GBdivert_running = false;
                     }
                 }
-                /*
-                //check gminer divert is running
-                bool gminerfound = false;
-                for (var i = 0; i < processIdListEthash.Count; i++)
-                {
-                    if (processIdListEthash[i].Contains("gminer"))
-                    {
-                        gminerfound = true;
-                    }
-                }
-                if (gminerfound == false)
-                {
-                    gminer_runningEthash = false;
-                }
-                */
+
             }
+        */
             //********************************************************************************************
             //zhash
             if (CurrentAlgorithmType == 36)
@@ -1354,6 +1412,71 @@ namespace NiceHashMinerLegacy.Divert
                 if (gminerfound == false)
                 {
                     gminer_runningZhash = false;
+                }
+            }
+
+            //********************************************************************************************
+            //Cuckarood29
+            if (CurrentAlgorithmType == 44)
+            {
+                Cuckarood29divert_running = false;
+                int dh = (int)DivertHandle;
+                if (processIdListCuckarood29.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListCuckarood29).Contains(Pid.ToString()))
+                {
+                    for (var i = 0; i < processIdListCuckarood29.Count; i++)
+                    {
+                        if (processIdListCuckarood29[i].Contains(Pid.ToString()))
+                        {
+                            processIdListCuckarood29.RemoveAt(i);
+                        }
+                    }
+
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                        " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListCuckarood29));
+                    Thread.Sleep(50);
+                }
+                else
+                {
+                    if (String.Join(" ", Divert.processIdListCuckarood29).Contains(Pid.ToString()))
+                    {
+                        for (var i = 0; i < processIdListCuckarood29.Count; i++)
+                        {
+                            if (processIdListCuckarood29[i].Contains(Pid.ToString()) && processIdListCuckarood29[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListCuckarood29[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
+                        Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                            " " + " " + GetProcessName(Pid) +
+                            " from divert process list: " + " " + String.Join(", ", processIdListCuckarood29));
+                        processIdListCuckarood29.RemoveAll(x => x.Contains(Pid.ToString()));
+
+                    }
+                    if (processIdListCuckarood29.Count < 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListCuckarood29. Stopping Cuckarood29 divert thread.");
+                        Cuckarood29divert_running = false;
+                        //Thread.Sleep(50);
+                        WinDivert.WinDivertClose(DivertHandle);
+                        DivertHandle = new IntPtr(0);
+                    }
+                }
+                //check gminer divert is running
+                bool gminerfound = false;
+                for (var i = 0; i < processIdListCuckarood29.Count; i++)
+                {
+                    if (processIdListCuckarood29[i].Contains("gminer"))
+                    {
+                        gminerfound = true;
+                    }
+                }
+                if (gminerfound == false)
+                {
+                    gminer_runningCuckarood29 = false;
                 }
             }
             //********************************************************************************************

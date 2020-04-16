@@ -356,7 +356,7 @@ namespace NiceHashMiner
             Ethlargement.Stop();
             RunCMDBeforeOrAfterMining(false);
             NiceHashStats._deviceUpdateTimer.Stop();
-            new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+            //new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
             //NiceHashStats.SetDeviceStatus("STOPPED");
         }
@@ -1237,7 +1237,7 @@ namespace NiceHashMiner
                     IsRunningNew = true;
                     //  NiceHashStats.SetDeviceStatus("MINING");
                     NiceHashStats._deviceUpdateTimer.Stop();
-                    new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+                    //new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
                     NiceHashStats._deviceUpdateTimer.Start();
                     string strPlatform = "";
                     foreach (var pair in MiningSetup.MiningPairs)
@@ -1261,6 +1261,7 @@ namespace NiceHashMiner
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
 
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
+
                         P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2,  MinerDeviceName,
                             strPlatform, w, ConfigManager.GeneralConfig.DivertLog,
                             ConfigManager.GeneralConfig.SaveDivertPackets,

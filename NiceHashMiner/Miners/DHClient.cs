@@ -23,8 +23,9 @@ namespace NiceHashMiner.Miners
     class DHClient
     {
         internal static TcpClient tcpClient = null;
-        internal static bool checkConnection = false;
-        private static int EpochCount = 0;
+        public static bool checkConnection = false;
+        public static bool needUpdate = false;
+        private static int waitReconnect = 60;
         public static string DNStoIP(string IPName)
         {
             try
@@ -98,9 +99,9 @@ namespace NiceHashMiner.Miners
                 if (tcpClient == null)
                 {
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Start connection");
-                    Thread.Sleep(1000 * 10);
+                    Thread.Sleep(1000 * 2);
                     new Task(() => ConnectToPool()).Start();
-                    Thread.Sleep(1000 * 10);
+                    Thread.Sleep(1000 * 5);
                 }
                 if (!tcpClient.Connected)
                 {
@@ -113,14 +114,24 @@ namespace NiceHashMiner.Miners
                     */
                     if (tcpClient != null)
                     {
+                        /*
                         tcpClient.Close();
                         tcpClient.Dispose();
+                        */
                     }
-                    Thread.Sleep(1000 * 10);
-                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Reconnect");
-                    new Task(() => ConnectToPool()).Start();
-                    Thread.Sleep(1000 * 10);
+
+                    if (checkConnection)
+                    {
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Reconnect wait: " + waitReconnect.ToString() + " sec");
+                        Thread.Sleep(1000 * waitReconnect);
+                        new Task(() => ConnectToPool()).Start();
+                    }
                 }
+            }
+            if (tcpClient != null)
+            {
+                tcpClient.Client.Disconnect(false);
+                tcpClient.Close();
             }
             /*
             if (tcpClient != null)
@@ -132,10 +143,19 @@ namespace NiceHashMiner.Miners
         }
         public static void StopConnection()
         {
-            checkConnection = false;
-            if (tcpClient != null)
+            try
             {
-                tcpClient.Close();
+                checkConnection = false;
+                /*
+                if (tcpClient != null)
+                {
+                    tcpClient.Client.Disconnect(false);
+                    tcpClient.Close();
+                }
+                */
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("DaggerHashimoto3GB", ex.ToString());
             }
         }
         public static void StartConnection()
@@ -147,6 +167,7 @@ namespace NiceHashMiner.Miners
             //new Task(() => ConnectToPool()).Start();
             //Thread.Sleep(1000);
             checkConnection = true;
+            tcpClient = null;
             new Task(() => CheckConnectionToPool()).Start();
         }
 
@@ -159,9 +180,9 @@ namespace NiceHashMiner.Miners
                 tcpClient = new TcpClient();
                 tcpClient.Connect(IPAddress.Parse(DNStoIP("daggerhashimoto.eu.nicehash.com")), 3353);
                 NetworkStream serverStream = tcpClient.GetStream();
-                serverStream.ReadTimeout = 1000 * 120;
+                serverStream.ReadTimeout = 1000 * 180;
                 ReadFromServer(serverStream, tcpClient);
-
+                
                 checkConnection = true;
                 //new Task(() => DHClient.CheckConnectionToPool()).Start();
 
@@ -206,7 +227,7 @@ namespace NiceHashMiner.Miners
         {
             System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
             bool Epoch3GB = false;
-            bool needUpdate = false;
+            
             byte[] messagePool = new byte[8192];
             int np = 0;
             int poolBytes;
@@ -226,6 +247,7 @@ namespace NiceHashMiner.Miners
             byte[] hashrateBytes = Encoding.ASCII.GetBytes(hashrate);
             byte[] submitBytes = Encoding.ASCII.GetBytes(submit);
             int epoch = 999;
+            waitReconnect = 60;
             //Helpers.ConsolePrint("DaggerHashimoto3GB", "-> " + Encoding.ASCII.GetString(subscribeBytes));
             if (serverStream == null)
             {
@@ -308,9 +330,10 @@ namespace NiceHashMiner.Miners
 
                             if (poolAnswer.Contains("mining.notify") && poolAnswer.Contains("method"))//job
                             {
+                                poolAnswer = poolAnswer.Replace("}{", "}" + (char)10 + "{");
                                 int amount = poolAnswer.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", amount.ToString());
-                                for (var i = 0; i < amount; i++)
+                                Helpers.ConsolePrint("DaggerHashimoto3GB", amount.ToString());
+                                for (var i = 0; i <= amount; i++)
                                 {
                                     if (poolAnswer.Split((char)10)[i].Contains("mining.notify"))
                                     {
@@ -322,45 +345,66 @@ namespace NiceHashMiner.Miners
                                         bool previousEpoch = Epoch3GB;
                                         if (epoch < 235) //win 7
                                         {
-                                            EpochCount = 0;
+                                            if (previousEpoch != Epoch3GB) needUpdate = true;
+                                            Divert.Dagger3GBEpochCount = 0;
+                                            Divert.Dagger3GBJob = poolAnswer.Split((char)10)[i];
                                             Epoch3GB = true;
-                                            Divert.SetDagger3GBJob(poolAnswer);
+                                            //checkConnection = false;
+                                            Divert.DaggerHashimoto3GBProfit = true;
+                                            //Thread.Sleep(1000);
+                                            //StopConnection();
+                                            //break;
                                         } else
                                         {
-                                            EpochCount++;
+                                            //Divert.Dagger3GBEpochCount++;
                                             Epoch3GB = false;
                                         }
-                                        if (previousEpoch != Epoch3GB) needUpdate = true;
+                                        
                                     }
                                 }
                                 if (needUpdate && Epoch3GB)
                                 {
+                                    /*
+                                    checkConnection = false;
+                                    Divert.DaggerHashimoto3GBProfit = true;
+                                    Thread.Sleep(1000);
+                                    StopConnection();
+                                    break;
+                                    */
+                                    /*
                                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON. Epoch: " + epoch.ToString());
-                                    Form_Main.DaggerHashimoto3GBProfit = true;
+                                    //Form_Main.DaggerHashimoto3GBProfit = true;
+                                    
                                     NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
                                     NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                                     needUpdate = false;
+                                    */
                                 }
+
                                 if (needUpdate && !Epoch3GB)
                                 {
-                                    if (EpochCount > 5)
+                                    /*
+                                    if (Divert.Dagger3GBEpochCount > 2)
                                     {
+                                        Divert.DaggerHashimoto3GBProfit = false;
+
                                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF. Epoch: " + epoch.ToString());
-                                        Form_Main.DaggerHashimoto3GBProfit = false;
+                                        //Form_Main.DaggerHashimoto3GBProfit = false;
                                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
                                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                                         needUpdate = false;
                                     } else
                                     {
-                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Wait to switch OFF. Count: " + EpochCount.ToString());
+                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Wait to switch OFF. Count: " + Divert.Dagger3GBEpochCount.ToString());
                                     }
+                                    */
                                 }
                             }
 
                             if (poolAnswer.Contains("set_difficulty"))
                             {
-                                serverStream.Write(subscribeBytes, 0, subscribeBytes.Length);
+                                //serverStream.Write(subscribeBytes, 0, subscribeBytes.Length);
                             }
 
                             if (poolAnswer.Contains("false"))
@@ -369,10 +413,25 @@ namespace NiceHashMiner.Miners
                                 //break;
                             }
 
-                            if (poolAnswer.Contains("reconnect"))
+                            if (poolAnswer.Contains("client.reconnect"))
                             {
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
-                                break;
+                                Helpers.ConsolePrint("DaggerHashimoto3GB", "Reconnect receive");
+                                waitReconnect = 600;
+                                Divert.Dagger3GBEpochCount = 999;
+                                if (tcpClient != null)
+                                {
+                                    if (tcpClient.Client != null)
+                                    {
+                                        tcpClient.Client.Disconnect(false);
+                                        tcpClient.Client.Shutdown(SocketShutdown.Both);
+                                    }
+                                    tcpClient.Close();
+                                    tcpClient.Dispose();
+                                    tcpClient = null;
+                                }
+                                serverStream.Close();
+                                serverStream.Dispose();
+                                serverStream = null;
                             }
 
                             if (poolAnswer.Contains("Invalid JSON request"))
@@ -388,20 +447,45 @@ namespace NiceHashMiner.Miners
                         } else
                         {
                             Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected");
+                            //Divert.Dagger3GBEpochCount = 999;
+                            //waitReconnect = 120;
                             if (tcpClient != null)
                             {
+                                if (tcpClient.Client != null)
+                                {
+                                    tcpClient.Client.Disconnect(false);
+                                    tcpClient.Client.Shutdown(SocketShutdown.Both);
+                                }
                                 tcpClient.Close();
+                                tcpClient.Dispose();
+                                tcpClient = null;
                             }
+                            serverStream.Close();
+                            serverStream.Dispose();
+                            serverStream = null;
                             break;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected (Exception)");
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected: " + ex.Message);
+                        //Divert.Dagger3GBEpochCount = 999;
                         if (tcpClient != null)
                         {
+                            /*
+                            if (tcpClient.Client != null)
+                            {
+                                tcpClient.Client.Disconnect(false);
+                                tcpClient.Client.Shutdown(SocketShutdown.Both);
+                            }
+                            */
                             tcpClient.Close();
+                            tcpClient.Dispose();
+                            tcpClient = null;
                         }
+                        serverStream.Close();
+                        serverStream.Dispose();
+                        serverStream = null;
                         //Helpers.ConsolePrint("DaggerHashimoto3GB", ex.Message);
                         break;
                     }

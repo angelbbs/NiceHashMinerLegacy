@@ -249,13 +249,7 @@ nextCycle:
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
 
-                        if (noPayload && np > 8)
-                        {
-                            modified = false;
-                            goto sendPacket;
-                        }
-
-                        
+                       
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
                             OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
@@ -355,10 +349,7 @@ nextCycle:
 
 
                         changeSrcDst:
-                        if (parse_result.PacketPayloadLength > 16)
-                        {
-                            noPayload = false;
-                        }
+
                         /*
                         Helpers.ConsolePrint("WinDivertSharp", "Before Src: "+ parse_result.IPv4Header->SrcAddr.ToString()+ ":"+ Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                             " Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +

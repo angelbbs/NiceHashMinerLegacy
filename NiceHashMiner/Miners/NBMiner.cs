@@ -59,7 +59,7 @@ namespace NiceHashMiner.Miners
                     case AlgorithmType.GrinCuckarood29:
                         return "cuckarood"; 
                     case AlgorithmType.Cuckaroom:
-                        return "cuckarood";
+                        return "cuckaroom";
                     case AlgorithmType.GrinCuckatoo31:
                         return "cuckatoo";
                     case AlgorithmType.CuckooCycle:

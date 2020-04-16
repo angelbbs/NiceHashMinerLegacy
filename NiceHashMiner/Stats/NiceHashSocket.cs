@@ -44,7 +44,6 @@ namespace NiceHashMiner.Stats
 
         public static WebSocket _webSocket;
         public bool IsAlive => _webSocket.ReadyState == WebSocketState.Open;
-        public static bool _restartConnection = false;
         private bool _attemptingReconnect;
         public static bool _endConnection = false;
         private bool _connectionAttempted;
@@ -70,16 +69,6 @@ namespace NiceHashMiner.Stats
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
 
-            // TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
-            _login.rig = ApplicationStateManager.RigID;
-
-            if (btc != null) _login.btc = btc;
-            if (worker != null) _login.worker = worker;
-            if (group != null) _login.group = group;
-#endif
-            // Helpers.ConsolePrint("rig:", RigID);
-         //  NiceHashStats.LoadSMA(); //for first run
             try
             {
                 if (_webSocket == null)
@@ -90,12 +79,11 @@ namespace NiceHashMiner.Stats
                     }
                 else
                 {
+                    _webSocket.Close();
+                    _webSocket = null;
                     Helpers.ConsolePrint("SOCKET", $"Credentials change reconnecting nhmws");
                     _connectionEstablished = false;
-                    _restartConnection = true;
-                    //_webSocket?.Close(CloseStatusCode.Normal, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
-                    //_webSocket?.Close(CloseStatusCode.Normal, $"Credentials change reconnecting.");
-                    _webSocket.Close();
+                    return;
                 }
                 Helpers.ConsolePrint("SOCKET", "Connecting");
             //    _webSocket.OnOpen += Login;
@@ -110,7 +98,6 @@ namespace NiceHashMiner.Stats
                 _webSocket.Connect();
                 Helpers.ConsolePrint("SOCKET", "Connected");
                 _connectionEstablished = true;
-                _restartConnection = false;
                 _endConnection = true;
 
             }
@@ -144,31 +131,15 @@ namespace NiceHashMiner.Stats
                 }
                 Thread.Sleep(1000 * 20);
             }
-
-            /*
-            if (!_restartConnection)
-            {
-                AttemptReconnectNew();
-            }
-            */
         }
 
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
         public bool SendDataNew(string data, bool recurs = false)
         {
-            //TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
-            // skip sending if no btc set send only login
-            if (CredentialValidators.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
-            {
-                NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Skipping SendData no BTC address");
-                return false;
-            }
-#endif
             try
             {
                 // Make sure connection is open
-                if (_webSocket != null && IsAlive)
+                if (_webSocket != null && _webSocket.IsAlive)
                 {
                     Helpers.ConsolePrint("SOCKETNEW", $"Sending data: {data}");
                     _webSocket.Send(data);
@@ -354,7 +325,8 @@ namespace NiceHashMiner.Stats
                     var loginJson = JsonConvert.SerializeObject(login);
                     //loginJson = loginJson.Replace("{", " { ");
                    // SendDataNew(loginJson);
-                new Task(() => SendDataNew(loginJson)).Start();
+                new Task(() => SendData(loginJson)).Start();
+                //new Task(() => SendDataNew(loginJson)).Start();
 
                 //NiceHashStats._deviceUpdateTimer.Stop();
                 Thread.Sleep(1000);
@@ -419,21 +391,16 @@ namespace NiceHashMiner.Stats
                     // Make sure connection is open
                     // Verify valid JSON and method
                     dynamic dataJson = JsonConvert.DeserializeObject(data);
-                    if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "login" || dataJson.method == "executed")
+                    //if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "login" || dataJson.method == "executed")
                     {
                         Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
                         _webSocket.Send(data);
-                        //return true;
-                        return await SendAsync(data);
+                        return true;
+                        //return await SendAsync(data);
                     }
                 } else if (_webSocket == null)
                 {
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
-                    if (_webSocket != null)
-                    {
-                        _webSocket.Close();
-                        _webSocket = null;
-                    }
                     Thread.Sleep(5000);
                     StartConnectionNew();
                     /*

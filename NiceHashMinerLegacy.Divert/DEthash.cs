@@ -310,13 +310,7 @@ namespace NiceHashMinerLegacy.Divert
                             if (cpacket0.Length > 60)
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
-                        /*
-                        if (noPayload && np > 5)
-                        {
-                            modified = false;
-                            goto sendPacket;
-                        }
-                        */
+
                         /*
                         if (stratumRatio < -7)
                         {
@@ -925,17 +919,6 @@ modifyData:
  
                         }
 changeSrcDst:
-                        if (parse_result.PacketPayloadLength > 20)
-                        {
-                            noPayload = false;
-                        }
-                        /*
-                        Helpers.ConsolePrint("WinDivertSharp", "Before Src: "+ parse_result.IPv4Header->SrcAddr.ToString()+ ":"+ Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-                            " Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                            " DevFeePort: " + Divert.SwapOrder(DevFeePort).ToString() +
-                            " Direction: " + addr.Direction.ToString() +
-                            " CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction));
-                          */
 
                         if (parse_result.TcpHeader->DstPort == DevFeePort &&
                                 addr.Direction == WinDivertDirection.Outbound &&

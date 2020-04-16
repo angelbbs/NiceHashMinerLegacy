@@ -68,6 +68,7 @@
     <Compile Include="DCuckooCycle.cs" />
     <Compile Include="DHandshake.cs" />
     <Compile Include="DNeoscrypt.cs" />
+    <Compile Include="DCuckarood29.cs" />
     <Compile Include="DZhash.cs" />
     <Compile Include="Ethash\ArrayExtensions.cs" />
     <Compile Include="Ethash\Converters.cs" />

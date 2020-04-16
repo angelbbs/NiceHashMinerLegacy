@@ -151,7 +151,7 @@ namespace NiceHashMiner.Miners
                 algo = "Handshake";
                 algoName = "handshake";
             }
-            
+
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
             {
@@ -425,7 +425,7 @@ namespace NiceHashMiner.Miners
                 " --server grincuckaroo29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3371 --ssl 0" +
                 GetDevicesCommandString();
             }
-            //start miner.exe--algo cuckarood29 --server eu.frostypool.com:3516--user angelbbs
+            //start miner.exe--algo cuckarood29 --server eu.frostypool.com:3516 --user angelbbs
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckarood29" +
@@ -493,7 +493,7 @@ namespace NiceHashMiner.Miners
                 " --server handshake.hk" + nhsuff + ".nicehash.com:3384 --user " + username + " --ssl 0" +
                 GetDevicesCommandString();
             }
-            
+
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo eth+ckb" +
@@ -686,7 +686,7 @@ namespace NiceHashMiner.Miners
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 return GetNumber(outdata, LookForStart, "g/s");
-            } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto || 
+            } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Handshake)
             {
