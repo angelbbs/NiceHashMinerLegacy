@@ -64,6 +64,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace>NiceHashMinerLegacy.CustomTabControl</RootNamespace>

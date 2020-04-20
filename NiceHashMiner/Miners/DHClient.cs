@@ -248,7 +248,7 @@ namespace NiceHashMiner.Miners
             byte[] submitBytes = Encoding.ASCII.GetBytes(submit);
             int epoch = 999;
             waitReconnect = 60;
-            //Helpers.ConsolePrint("DaggerHashimoto3GB", "-> " + Encoding.ASCII.GetString(subscribeBytes));
+
             if (serverStream == null)
             {
                 Helpers.ConsolePrint("DaggerHashimoto3GB", "Error in serverStream");
@@ -320,11 +320,10 @@ namespace NiceHashMiner.Miners
                             }
                             */
                             var poolAnswer = poolData.Split((char)0)[0];
-                            Helpers.ConsolePrint("DaggerHashimoto3GB", "<- " + poolAnswer);
+                            //Helpers.ConsolePrint("DaggerHashimoto3GB", "<- " + poolAnswer);
 
                             if (poolAnswer.Contains("mining.notify") && !poolAnswer.Contains("method"))
                             {
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", "-> " + Encoding.ASCII.GetString(authorizeBytes));
                                 serverStream.Write(authorizeBytes, 0, authorizeBytes.Length);
                             }
 
@@ -332,74 +331,37 @@ namespace NiceHashMiner.Miners
                             {
                                 poolAnswer = poolAnswer.Replace("}{", "}" + (char)10 + "{");
                                 int amount = poolAnswer.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
-                                Helpers.ConsolePrint("DaggerHashimoto3GB", amount.ToString());
+                                //Helpers.ConsolePrint("DaggerHashimoto3GB", amount.ToString());
                                 for (var i = 0; i <= amount; i++)
                                 {
                                     if (poolAnswer.Split((char)10)[i].Contains("mining.notify"))
                                     {
                                         dynamic json = JsonConvert.DeserializeObject(poolAnswer.Split((char)10)[i]);
                                         string seedhash = json.@params[1];
-                                        //Helpers.ConsolePrint("DaggerHashimoto3GB", "seedhash = " + seedhash);
                                         epoch = Epoch(seedhash);
                                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Epoch = " + epoch.ToString());
                                         bool previousEpoch = Epoch3GB;
                                         if (epoch < 235) //win 7
                                         {
+                                            Divert.DaggerHashimoto3GBProfit = true;
+                                            Divert.DaggerHashimoto3GBForce = true;
+                                            Thread.Sleep(2000);//wait for stop
+                                            /*
                                             if (previousEpoch != Epoch3GB) needUpdate = true;
                                             Divert.Dagger3GBEpochCount = 0;
                                             Divert.Dagger3GBJob = poolAnswer.Split((char)10)[i];
                                             Epoch3GB = true;
+                                            */
                                             //checkConnection = false;
-                                            Divert.DaggerHashimoto3GBProfit = true;
-                                            //Thread.Sleep(1000);
-                                            //StopConnection();
-                                            //break;
                                         } else
                                         {
                                             //Divert.Dagger3GBEpochCount++;
-                                            Epoch3GB = false;
+                                           // Epoch3GB = false;
                                         }
                                         
                                     }
                                 }
-                                if (needUpdate && Epoch3GB)
-                                {
-                                    /*
-                                    checkConnection = false;
-                                    Divert.DaggerHashimoto3GBProfit = true;
-                                    Thread.Sleep(1000);
-                                    StopConnection();
-                                    break;
-                                    */
-                                    /*
-                                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON. Epoch: " + epoch.ToString());
-                                    //Form_Main.DaggerHashimoto3GBProfit = true;
-                                    
-                                    NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-                                    NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                                    needUpdate = false;
-                                    */
-                                }
-
-                                if (needUpdate && !Epoch3GB)
-                                {
-                                    /*
-                                    if (Divert.Dagger3GBEpochCount > 2)
-                                    {
-                                        Divert.DaggerHashimoto3GBProfit = false;
-
-                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF. Epoch: " + epoch.ToString());
-                                        //Form_Main.DaggerHashimoto3GBProfit = false;
-                                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-                                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                                        needUpdate = false;
-                                    } else
-                                    {
-                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Wait to switch OFF. Count: " + Divert.Dagger3GBEpochCount.ToString());
-                                    }
-                                    */
-                                }
+                                
                             }
 
                             if (poolAnswer.Contains("set_difficulty"))

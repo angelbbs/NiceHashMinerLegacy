@@ -108,6 +108,7 @@ namespace NiceHashMiner
             { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
             //{ Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
         };//need to reread config data?
+        internal static bool DeviceStatusTimer_FirstTick = false;
 
         public Form_Main()
         {
@@ -1931,7 +1932,7 @@ namespace NiceHashMiner
 
         private void CheckDagger3GB()
         {
-            if (DHClient.needUpdate || Divert.DaggerHashimoto3GBForce)
+            if (Divert.DaggerHashimoto3GBForce)
             {
                 if (Divert.DaggerHashimoto3GBProfit)
                 {
@@ -1979,7 +1980,8 @@ namespace NiceHashMiner
         
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
-            CheckDagger3GB();
+            if (DeviceStatusTimer_FirstTick) CheckDagger3GB();
+            DeviceStatusTimer_FirstTick = true;
             ExchangeCallback(); 
             BalanceCallback(); 
             UpdateGlobalRate();

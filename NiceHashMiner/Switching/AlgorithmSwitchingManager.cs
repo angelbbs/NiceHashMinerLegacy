@@ -98,6 +98,7 @@ namespace NiceHashMiner.Switching
         /// Checks profits and updates normalization based on ticks
         /// </summary>
         internal static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
+            //это запускается дважды
         {
             Randomize();
 

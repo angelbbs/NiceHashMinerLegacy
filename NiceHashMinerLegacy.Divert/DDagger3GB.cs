@@ -239,12 +239,6 @@ nextCycle:
 
                         if (addr.Direction == WinDivertDirection.Inbound && !OwnerPID.Equals("-1"))
                         {
-                            /*
-                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") DAGGER3GB SESSION: <- " +
-                                "DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-                                "  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                                " len: " + readLen.ToString());
-*/
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             //******************************
                             if (parse_result.PacketPayloadLength > 20)
@@ -257,7 +251,7 @@ nextCycle:
                                 {
                                     int amount = PacketPayloadData.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
 
-                                    Helpers.ConsolePrint("WinDivertSharp", "amount: " + amount.ToString());
+                                    //Helpers.ConsolePrint("WinDivertSharp", "amount: " + amount.ToString());
                                     for (var i = 0; i <= amount; i++)
                                     {
                                         Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadData.Split((char)10)[i]: " + PacketPayloadData.Split((char)10)[i]);
@@ -266,7 +260,7 @@ nextCycle:
                                         {
                                             dynamic json = JsonConvert.DeserializeObject(PacketPayloadData.Split((char)10)[i]);
                                             string seedhash = json.@params[1];
-                                            Helpers.ConsolePrint("WinDivertSharp", "seedhash = " + seedhash);
+                                            //Helpers.ConsolePrint("WinDivertSharp", "seedhash = " + seedhash);
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
@@ -280,9 +274,10 @@ nextCycle:
                                                 if (Divert.Dagger3GBEpochCount > 2)
                                                 {
                                                     Divert.DaggerHashimoto3GBForce = true;
+                                                    Divert.DaggerHashimoto3GBProfit = false;
                                                 }
                                                 //Divert.Dagger3GBEpochCount = 999;
-                                                Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
+                                                //Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
                                                 //packet.Dispose();
                                                 //goto nextCycle;
                                                 /*
