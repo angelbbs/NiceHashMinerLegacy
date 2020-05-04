@@ -536,7 +536,7 @@ namespace NiceHashMiner
                             //Helpers.ConsolePrint("X509Store", cert.Subject);
                             //store.Remove(cert);
                             Form_Main.CertInstalled = true;
-                            Helpers.ConsolePrint("X509Store", "Certificate exist");
+                            //Helpers.ConsolePrint("X509Store", "Certificate exist");
                             break;
                         }
                     }
@@ -549,7 +549,7 @@ namespace NiceHashMiner
                     var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                     store.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
                     store.Add(certificate);
-                    Helpers.ConsolePrint("X509Store", "Add certificate");
+                    //Helpers.ConsolePrint("X509Store", "Add certificate");
                     store.Close();
                 }
                 //********************************************************************

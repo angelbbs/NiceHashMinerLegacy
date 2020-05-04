@@ -202,7 +202,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 CommandLine = "--coin GRIN-AT31 " +
-                " --pool grin.sparkpool.com;grincuckatoo31.usa" + nhsuff + ".nicehash.com --port 6667;3372 --user angelbbs@mail.ru." + worker + ";"+username+ " --pass x;x" +
+                " --pool grin.2miners.com;grincuckatoo31.usa" + nhsuff + ".nicehash.com --port 3030;3372 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner;"+username+ " --pass x;x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -229,7 +229,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 CommandLine = "--coin GRIN-C29M " +
-                " --pool grin.sparkpool.com;cuckaroom.usa" + nhsuff + ".nicehash.com --port 6666;3382 --user angelbbs@mail.ru." + worker + ";" + username + " --pass x;x" +
+                " --pool grin.2miners.com;cuckaroom.usa" + nhsuff + ".nicehash.com --port 3030;3382 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner" + ";" + username + " --pass x;x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -513,6 +513,27 @@ namespace NiceHashMiner.Miners
                     try
                     {
                             speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        BenchmarkSignalFinnished = true;
+                        return false;
+                    }
+                    count++;
+                }
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
+            {
+                if (outdata.Contains("Average speed (30s):"))
+                {
+                    int i = outdata.IndexOf("Average speed (30s):");
+                    int k = outdata.IndexOf("g/s");
+                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
+                    try
+                    {
+                        speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
                     }
                     catch
                     {

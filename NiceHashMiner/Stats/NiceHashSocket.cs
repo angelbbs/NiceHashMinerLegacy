@@ -423,7 +423,7 @@ namespace NiceHashMiner.Stats
                     } else
                     {
                         Helpers.ConsolePrint("SOCKET", "Socket died, retrying");
-                        _webSocket.Close();
+                        //_webSocket.Close();
                         _webSocket = null;
                         Thread.Sleep(5000);
                         StartConnectionNew();

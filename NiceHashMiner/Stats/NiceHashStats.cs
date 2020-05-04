@@ -1125,9 +1125,12 @@ namespace NiceHashMiner.Stats
             {
                 tcpClientGoogle = new TcpClient();
                 Form_Main.GoogleIP = Form_Main.DNStoIP("www.google.com");
+                tcpClientGoogle.SendTimeout = 1000 * 1;
+                tcpClientGoogle.ReceiveTimeout = 1000 * 1;
                 tcpClientGoogle.Connect(Form_Main.GoogleIP, 80);
                 NetworkStream serverStream = tcpClientGoogle.GetStream();
-                serverStream.ReadTimeout = 1000 * 5;
+                serverStream.WriteTimeout = 1000 * 1;
+                serverStream.ReadTimeout = 1000 * 1;
 
                 byte[] messageGoogle = new byte[1024];
                 int GoogleBytes;
@@ -1147,7 +1150,8 @@ namespace NiceHashMiner.Stats
                         messageGoogle[i] = 0;
                     }
                     GoogleBytes = serverStream.Read(messageGoogle, 0, 1024); //HTTP/1.1 200 OK
-                    var GoogleAnswer = Encoding.ASCII.GetString(messageGoogle);
+                    Form_Main.GoogleAnswer = Encoding.ASCII.GetString(messageGoogle);
+                    Form_Main.GoogleAvailable = true;
                     //Helpers.ConsolePrint("ConnectToGoogle", "Answer: " + GoogleAnswer);
                     if (tcpClientGoogle != null)
                     {
@@ -1165,6 +1169,7 @@ namespace NiceHashMiner.Stats
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("ConnectToGoogle", "Disconnected: " + ex.Message);
+                Form_Main.GoogleAvailable = false;
                 if (tcpClientGoogle != null)
                 {
                     tcpClientGoogle.Client.Disconnect(false);

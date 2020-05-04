@@ -20,12 +20,13 @@ namespace NiceHashMiner.Devices.Algorithms
         private static Dictionary<MinerBaseType, List<Algorithm>> All => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
+
                 MinerBaseType.XmrStak,
                 new List<Algorithm>
                 {
                 //    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7, ""),
                   //  new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, ""),
-                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, ""),
+                 //   new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, ""),
                   //  new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, ""),
 
                 }
@@ -43,7 +44,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>()
                 {
                     new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
-                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
+                    //new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
 //                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
              //       new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
 //                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
@@ -87,7 +88,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, ""),
                     //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7, ""),
                 //    new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV8, ""),
-                    new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightR, ""),
+                   // new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightR, ""),
                     new Algorithm(MinerBaseType.Xmrig, AlgorithmType.RandomX, ""),
                   //  new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightHeavy, "")
                 }
@@ -127,12 +128,15 @@ namespace NiceHashMiner.Devices.Algorithms
                        //     new Algorithm(MinerBaseType.CastXMR, AlgorithmType.CryptoNightHeavy, "cryptonightHeavy") { }
                         }
             },
+            /*
             {
                 MinerBaseType.lyclMiner,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.lyclMiner, AlgorithmType.Lyra2REv3, "Lyra2REv3") { }
                         }
             },
+            */
+            /*
             {
                 MinerBaseType.XmrigAMD,
                         new List<Algorithm>() {
@@ -143,6 +147,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.XmrigAMD, AlgorithmType.CryptoNightR, "CryptoNightR") { }
                         }
             },
+            */
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
@@ -195,9 +200,9 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                         //    new Algorithm(MinerBaseType.teamredminer, AlgorithmType.MTP, "MTP"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.GrinCuckarood29, "GrinCuckarood29"),
-                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Lyra2REv3, "Lyra2REv3"),
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Lyra2REv3, "Lyra2REv3")
                          //   new Algorithm(MinerBaseType.teamredminer, AlgorithmType.CryptoNightV8, "CryptoNightV8"),
-                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.CryptoNightR, "CryptoNightR")
+                           // new Algorithm(MinerBaseType.teamredminer, AlgorithmType.CryptoNightR, "CryptoNightR")
                         }
             },
             {
@@ -305,23 +310,19 @@ namespace NiceHashMiner.Devices.Algorithms
         public static Dictionary<MinerBaseType, List<Algorithm>> Nvidia => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
-                MinerBaseType.ccminer,
-                new List<Algorithm>
+                MinerBaseType.Claymore,
+                new List<Algorithm>()
                 {
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv2, "lyra2v2"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.MTP, "MTP")
-                    //{
-                    //            ExtraLaunchParameters = "-i 20 "
-                    //},
+                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
+
+                }
+            },
+            {
+                MinerBaseType.Phoenix,
+                new List<Algorithm>()
+                {
+                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
+
                 }
             },
             { MinerBaseType.hsrneoscrypt,
@@ -362,13 +363,14 @@ namespace NiceHashMiner.Devices.Algorithms
                         //    new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.Skunk, "Skunk"),
                         }
             },
-
+            /*
             { MinerBaseType.XmrigNVIDIA,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.XmrigNVIDIA, AlgorithmType.CryptoNightR, "CryptoNightR") { },
                             new Algorithm(MinerBaseType.XmrigNVIDIA, AlgorithmType.RandomX, "RandomX") { }
                         }
             },
+            */
             /*
             { MinerBaseType.TTMiner,
                         new List<Algorithm>() {

@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection.cs" />
+    <Compile Include="DTest.cs" />
     <Compile Include="DDagger3GB.cs" />
     <Compile Include="DEthash.cs" />
     <Compile Include="Divert.cs" />

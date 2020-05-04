@@ -84,11 +84,12 @@ namespace ComputeDeviceCPU
 
             foreach (var hardware in _mainboard.Hardware)
             {
-                hardware.Update(); //use hardware.Name to get CPU model
+                //hardware.Update(); //use hardware.Name to get CPU model
                 
                 if (hardware.HardwareType == HardwareType.Mainboard)
                 {
-                  //  Helpers.ConsolePrint("!all CPU:", hardware.Name + " " + hardware.HardwareType.ToString());
+                    hardware.Update();
+                    //  Helpers.ConsolePrint("!all CPU:", hardware.Name + " " + hardware.HardwareType.ToString());
 
                     foreach (var sensor in hardware.SubHardware)
                     {

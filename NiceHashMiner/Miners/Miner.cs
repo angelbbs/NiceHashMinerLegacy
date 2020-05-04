@@ -304,13 +304,20 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         try
                         {
-                            if (ConfigManager.GeneralConfig.DivertRun)
+                            if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                             {
+                                if (!DHClient.checkConnection)//
+                                {
+                                    if (Form_Main.DaggerHashimoto3GB)
+                                    {
+                                        new Task(() => DHClient.StopConnection()).Start();
+                                    }
+                                }
                                 Divert.DivertStop(pidData.DivertHandle, pidData.Pid, (int)MiningSetup.CurrentAlgorithmType, (int)MiningSetup.CurrentSecondaryAlgorithmType);
                             }
                             process.Kill();
                             process.Close();
-                            process.WaitForExit(1000 * 60 * 1);
+                            process.WaitForExit(1000 * 20);
                         }
                         catch (Exception e)
                         {
@@ -423,8 +430,16 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                if (ConfigManager.GeneralConfig.DivertRun)
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                 {
+                    //DHClient.checkConnection = false;
+                    if (!DHClient.checkConnection)//
+                    {
+                        if (Form_Main.DaggerHashimoto3GB)
+                        {
+                            new Task(() => DHClient.StopConnection()).Start();
+                        }
+                    }
                     Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, (int)MiningSetup.CurrentAlgorithmType, (int)MiningSetup.CurrentSecondaryAlgorithmType);
                 }
                 KillProcessAndChildren(pid);
@@ -1255,11 +1270,24 @@ namespace NiceHashMiner
                             strPlatform = "CPU";
                         }
                     }
-                    if (ConfigManager.GeneralConfig.DivertRun)
+                    if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
-
+                        if (Form_Main.DaggerHashimoto3GB)
+                        {
+                            if (DHClient.serverStream == null)
+                            {
+                                DHClient.checkConnection = true;
+                                Divert.Dagger3GBEpochCount = 999; //
+                                Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session");
+                                new Task(() => DHClient.StartConnection()).Start();
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint("DaggerHashimoto3GB", "DHClient.serverStream not null");
+                            }
+                        }
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
 
                         P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2,  MinerDeviceName,

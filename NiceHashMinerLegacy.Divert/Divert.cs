@@ -52,6 +52,7 @@ namespace NiceHashMinerLegacy.Divert
         public static volatile bool Grindivert_running = true;
         public static volatile bool RandomXdivert_running = true;
         public static volatile bool Beamdivert_running = true;
+        public static volatile bool Testdivert_running = true;
 
         public static bool BlockGMinerApacheTomcat;
         public static int Dagger3GBEpochCount = 0;
@@ -263,6 +264,7 @@ namespace NiceHashMinerLegacy.Divert
         public static List<string> processIdListX16rV2 = new List<string>();
         public static List<string> processIdListGrin = new List<string>();
         public static List<string> processIdListBeam = new List<string>();
+        public static List<string> processIdListTest = new List<string>();
         public static List<string> processIdListRandomX = new List<string>();
 
         private static IntPtr DEthashHandle = (IntPtr)0;
@@ -275,6 +277,7 @@ namespace NiceHashMinerLegacy.Divert
         private static IntPtr DX16rV2Handle = (IntPtr)0;
         private static IntPtr DGrinHandle = (IntPtr)0;
         private static IntPtr DBeamHandle = (IntPtr)0;
+        private static IntPtr DTestHandle = (IntPtr)0;
         private static IntPtr DRandomXHandle = (IntPtr)0;
 
         public static string worker = "";
@@ -371,28 +374,6 @@ namespace NiceHashMinerLegacy.Divert
             var urg = parse_result.TcpHeader->Urg;
             var urgp = parse_result.TcpHeader->UrgPtr;
             var wind = parse_result.TcpHeader->Window;
-/*
-            Helpers.ConsolePrint("WinDivertSharp", "ver: " + ver);
-            Helpers.ConsolePrint("WinDivertSharp", "ihl: " + ihl);
-            Helpers.ConsolePrint("WinDivertSharp", "tos: " + tos);
-            Helpers.ConsolePrint("WinDivertSharp", "tl: " + Divert.SwapOrder(tl));
-            Helpers.ConsolePrint("WinDivertSharp", "id: " + Divert.SwapOrder(id));
-            Helpers.ConsolePrint("WinDivertSharp", "df: " + df);
-            Helpers.ConsolePrint("WinDivertSharp", "fo: " + fo);
-            Helpers.ConsolePrint("WinDivertSharp", "ttl: " + ttl);
-            Helpers.ConsolePrint("WinDivertSharp", "protocol: " + protocol);
-
-            Helpers.ConsolePrint("WinDivertSharp", "ack: " + ack);
-            Helpers.ConsolePrint("WinDivertSharp", "ackn: " + ackn);
-            Helpers.ConsolePrint("WinDivertSharp", "fin: " + fin);
-            Helpers.ConsolePrint("WinDivertSharp", "psh: " + psh);
-            Helpers.ConsolePrint("WinDivertSharp", "rst: " + rst);
-            Helpers.ConsolePrint("WinDivertSharp", "sn: " + sn);
-            Helpers.ConsolePrint("WinDivertSharp", "syn: " + syn);
-            Helpers.ConsolePrint("WinDivertSharp", "urg: " + urg);
-            Helpers.ConsolePrint("WinDivertSharp", "urgp: " + urgp);
-            Helpers.ConsolePrint("WinDivertSharp", "wind: " + wind);
-*/
 
             var tcpPacket = new TcpPacket(Divert.SwapOrder(parse_result.TcpHeader->SrcPort), Divert.SwapOrder(parse_result.TcpHeader->DstPort));
             var ipv4Packet = new IPv4Packet(parse_result.IPv4Header->SrcAddr, parse_result.IPv4Header->DstAddr);
@@ -417,9 +398,6 @@ namespace NiceHashMinerLegacy.Divert
             tcpPacket.Syn = syn == 0 ? false : true;
             tcpPacket.Fin = fin == 0 ? false : true;
 
-//            Helpers.ConsolePrint("WinDivertSharp", "TcpHeader->Checksum: " + parse_result.TcpHeader->Checksum.ToString());
-//            Helpers.ConsolePrint("WinDivertSharp", "IPv4Header->Checksum: " + parse_result.IPv4Header->Checksum.ToString());
-
                 ipv4Packet.PayloadPacket = tcpPacket;
                 tcpPacket.ParentPacket = ipv4Packet;
                 ushort pl = (ushort)(tcpPacket.PayloadData.Length + 10);
@@ -434,6 +412,72 @@ namespace NiceHashMinerLegacy.Divert
             readLen = packet.Length;
             //    WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
             return packet;
+        }
+
+        public static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir, List<string> _oldPorts)
+        {
+            try
+            {
+                if (String.Join(" ", processIdList).Contains("gminer: force"))
+                {
+                    return "gminer: force";
+                }
+
+                string ret = "unknown";
+                string miner = "";
+                Port = Divert.SwapOrder(Port);
+
+                List<Connection> _allConnections = new List<Connection>();
+                _allConnections.Clear();
+                _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
+
+                for (int i = 1; i < _allConnections.Count; i++)
+                {
+                    if (String.Join(" ", processIdList).Contains(_allConnections[i].OwningPid.ToString()) &&
+                        (_allConnections[i].LocalEndPoint.Port == Port) ||
+                        _allConnections[i].RemoteEndPoint.Port == Port)
+                    {
+                        ret = _allConnections[i].OwningPid.ToString();
+                        for (var j = 0; j < processIdList.Count; j++)
+                        {
+                            if (processIdList[j].Contains(ret))
+                            {
+                                miner = processIdList[j].Split(':')[0];
+                            }
+                        }
+
+                        if (!String.Join(" ", _oldPorts).Contains(Port.ToString()))
+                        {
+                            _oldPorts.Add(miner + ": " + ret + " : " + Port.ToString());
+                        }
+                        _allConnections.Clear();
+                        _allConnections = null;
+                        return miner + ": " + ret;
+                    }
+                }
+                for (int i = 1; i < _oldPorts.Count; i++)
+                {
+                    if (String.Join(" ", _oldPorts).Contains(Port.ToString()))
+                    {
+                        return "unknown: ?";
+                    }
+                }
+
+                _allConnections.Clear();
+                _allConnections = null;
+
+                return "-1";
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
+                Thread.Sleep(500);
+            }
+            finally
+            {
+
+            }
+            return "unknown: ?";
         }
 
         public unsafe static WinDivertBuffer MakeNewPacket2(WinDivertBuffer packet, uint readLen, string PacketPayloadData = "")
@@ -600,8 +644,8 @@ namespace NiceHashMinerLegacy.Divert
             
             if ( CurrentAlgorithmType == 47 && MinerName.ToLower() == "xmrig") //for testing. Disable in productuon
             {
-              //  return IntPtr.Zero;
-                return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
+                return IntPtr.Zero;
+              //  return DXMrig.XMRigDivertStart(processId, CurrentAlgorithmType, MinerName);
             }
             
             if (CurrentAlgorithmType == 47 && MinerName.ToLower().Equals("xmrig")) 
@@ -629,7 +673,7 @@ namespace NiceHashMinerLegacy.Divert
                 Dagger3GBdivert_running = true;
                 if (MinerName.ToLower() == "claymoredual")
                 {
-                    /*
+                    
                     processIdListDagger3GB.Add("claymoredual: " + processId.ToString());
                     if (processIdListDagger3GB.Count > 1)
                     {
@@ -639,10 +683,10 @@ namespace NiceHashMinerLegacy.Divert
                     DDagger3GBHandle = DDagger3GB.Dagger3GBDivertStart(processIdListDagger3GB, CurrentAlgorithmType, MinerName, strPlatform);
                     Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DDagger3GBHandle.ToString() + ". Initiated by " + processId.ToString() + " (Dagger3GB) to divert process list: " + " " + String.Join(",", processIdListDagger3GB));
                     return DDagger3GBHandle;
-                    */
+                    
                     //processIdListEthash.Add("gminer: force");
                     //gminer_runningEthash = true;
-                    GetDagger3GB(processId, CurrentAlgorithmType, MinerName, strPlatform);
+                    //GetDagger3GB(processId, CurrentAlgorithmType, MinerName, strPlatform);
                 }
                 
             }
@@ -900,7 +944,21 @@ namespace NiceHashMinerLegacy.Divert
                     return DBeamHandle;
                 }
             }
-            
+
+            //******************************************************************************************
+            if (CurrentAlgorithmType == -100) //test
+            {
+                Testdivert_running = true;
+                    processIdListTest.Add("NiceHashMinerLegacy: " + processId.ToString());
+                    if (processIdListTest.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DTestHandle.ToString() + ". Added " + processId.ToString() + " (Test) to divert process list: " + " " + String.Join(",", processIdListTest));
+                        return DTestHandle;
+                    }
+                DTestHandle = DTest.TestDivertStart(processIdListTest, CurrentAlgorithmType, MinerName, strPlatform);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DTestHandle.ToString() + ". Initiated by " + processId.ToString() + " (Test) to divert process list: " + " " + String.Join(",", processIdListTest));
+                    return DTestHandle;
+            }
             return new IntPtr(0);
         }
 
@@ -1230,7 +1288,20 @@ namespace NiceHashMinerLegacy.Divert
             });
         }
 
-
+        public static void StopAll()
+        {
+            processIdListBeam.Clear();
+            processIdListCuckarood29.Clear();
+            processIdListCuckooCycle.Clear();
+            processIdListDagger3GB.Clear();
+            processIdListEthash.Clear();
+            processIdListGrin.Clear();
+            processIdListHandshake.Clear();
+            processIdListNeoscrypt.Clear();
+            processIdListRandomX.Clear();
+            processIdListX16rV2.Clear();
+            processIdListZhash.Clear();
+        }
 
         public static void DivertStop(IntPtr DivertHandle, int Pid, int CurrentAlgorithmType, int SecondaryAlgorithmType)
         {
@@ -1242,14 +1313,7 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
-
-                    for (var i = 0; i < processIdListEthash.Count; i++)
-                    {
-                        if (processIdListEthash[i].Contains(Pid.ToString()))
-                        {
-                            processIdListEthash.RemoveAt(i);
-                        }
-                    }
+                            processIdListEthash.Clear();
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1298,22 +1362,19 @@ namespace NiceHashMinerLegacy.Divert
                 }
             }
             //********************************************************************************************
-            /*
+            
             if (CurrentAlgorithmType == -9) //dagerhashimoto3gb
             {
+               
                 int dh = (int)DivertHandle;
                 if (processIdListDagger3GB.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListDagger3GB).Contains(Pid.ToString()))
                 {
                     Thread.Sleep(50);
+                    Divert.Dagger3GBdivert_running = false;
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListDagger3GB.Count; i++)
-                    {
-                        if (processIdListDagger3GB[i].Contains(Pid.ToString()))
-                        {
-                            processIdListDagger3GB.RemoveAt(i);
-                        }
-                    }
+                    processIdListDagger3GB.Clear();
+
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1347,9 +1408,9 @@ namespace NiceHashMinerLegacy.Divert
                         Divert.Dagger3GBdivert_running = false;
                     }
                 }
-
+               
             }
-        */
+        
             //********************************************************************************************
             //zhash
             if (CurrentAlgorithmType == 36)
@@ -1358,13 +1419,8 @@ namespace NiceHashMinerLegacy.Divert
                 int dh = (int)DivertHandle;
                 if (processIdListZhash.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListZhash).Contains(Pid.ToString()))
                 {
-                    for (var i = 0; i < processIdListZhash.Count; i++)
-                    {
-                        if (processIdListZhash[i].Contains(Pid.ToString()))
-                        {
-                            processIdListZhash.RemoveAt(i);
-                        }
-                    }
+                    processIdListZhash.Clear();
+
 
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
                         " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
@@ -1423,13 +1479,7 @@ namespace NiceHashMinerLegacy.Divert
                 int dh = (int)DivertHandle;
                 if (processIdListCuckarood29.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListCuckarood29).Contains(Pid.ToString()))
                 {
-                    for (var i = 0; i < processIdListCuckarood29.Count; i++)
-                    {
-                        if (processIdListCuckarood29[i].Contains(Pid.ToString()))
-                        {
-                            processIdListCuckarood29.RemoveAt(i);
-                        }
-                    }
+                    processIdListCuckarood29.Clear();
 
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
                         " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
@@ -1489,13 +1539,8 @@ namespace NiceHashMinerLegacy.Divert
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListNeoscrypt.Count; i++)
-                    {
-                        if (processIdListNeoscrypt[i].Contains(Pid.ToString()))
-                        {
-                            processIdListNeoscrypt.RemoveAt(i);
-                        }
-                    }
+
+                            processIdListNeoscrypt.Clear();
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1540,13 +1585,7 @@ namespace NiceHashMinerLegacy.Divert
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListHandshake.Count; i++)
-                    {
-                        if (processIdListHandshake[i].Contains(Pid.ToString()))
-                        {
-                            processIdListHandshake.RemoveAt(i);
-                        }
-                    }
+                            processIdListHandshake.Clear();
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1603,13 +1642,7 @@ namespace NiceHashMinerLegacy.Divert
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListCuckooCycle.Count; i++)
-                    {
-                        if (processIdListCuckooCycle[i].Contains(Pid.ToString()))
-                        {
-                            processIdListCuckooCycle.RemoveAt(i);
-                        }
-                    }
+                            processIdListCuckooCycle.Clear();
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1667,13 +1700,7 @@ namespace NiceHashMinerLegacy.Divert
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListX16rV2.Count; i++)
-                    {
-                        if (processIdListX16rV2[i].Contains(Pid.ToString()))
-                        {
-                            processIdListX16rV2.RemoveAt(i);
-                        }
-                    }
+                            processIdListX16rV2.Clear();
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1719,13 +1746,7 @@ namespace NiceHashMinerLegacy.Divert
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListGrin.Count; i++)
-                    {
-                        if (processIdListGrin[i].Contains(Pid.ToString()))
-                        {
-                            processIdListGrin.RemoveAt(i);
-                        }
-                    }
+                            processIdListGrin.Clear();
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1836,13 +1857,7 @@ namespace NiceHashMinerLegacy.Divert
                     Thread.Sleep(50);
                     WinDivert.WinDivertClose(DivertHandle);
 
-                    for (var i = 0; i < processIdListBeam.Count; i++)
-                    {
-                        if (processIdListBeam[i].Contains(Pid.ToString()))
-                        {
-                            processIdListBeam.RemoveAt(i);
-                        }
-                    }
+                            processIdListBeam.Clear();
 
                     DivertHandle = new IntPtr(0);
                     Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
@@ -1890,7 +1905,53 @@ namespace NiceHashMinerLegacy.Divert
                     gminer_runningBeam = false;
                 }
             }
-            
+            //********************************************************************************************
+            //test
+
+            if (CurrentAlgorithmType == -100)
+            {
+                int dh = (int)DivertHandle;
+                if (processIdListTest.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListTest).Contains(Pid.ToString()))
+                {
+                    Thread.Sleep(50);
+                    WinDivert.WinDivertClose(DivertHandle);
+
+                    processIdListTest.Clear();
+
+                    DivertHandle = new IntPtr(0);
+                    Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + dh.ToString() +
+                        " ProcessID: " + Pid.ToString() + " " + GetProcessName(Pid));
+                    Helpers.ConsolePrint("WinDivertSharp", "divert process list: " + " " + String.Join(",", processIdListTest));
+                    Thread.Sleep(50);
+                }
+                else
+                {
+                    if (String.Join(" ", Divert.processIdListTest).Contains(Pid.ToString()))
+                    {
+                        for (var i = 0; i < processIdListTest.Count; i++)
+                        {
+                            if (processIdListTest[i].Contains(Pid.ToString()) && processIdListTest[i].Contains("%"))
+                            {
+                                int.TryParse(processIdListTest[i].Split('%')[1], out var dHandle);
+                                Helpers.ConsolePrint("WinDivertSharp", "Try to close divert handle: " + dHandle.ToString());
+                                WinDivert.WinDivertClose((IntPtr)dHandle);
+                                break;
+                            }
+                        }
+                        Helpers.ConsolePrint("WinDivertSharp", "Try to remove processId " + Pid.ToString() +
+                            " " + " " + GetProcessName(Pid) +
+                            " from divert process list: " + " " + String.Join(", ", processIdListTest));
+                        processIdListTest.RemoveAll(x => x.Contains(Pid.ToString()));
+
+                    }
+                    if (processIdListTest.Count < 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", "Warning! Empty processIdListTest. Stopping Test divert thread.");
+                        Testdivert_running = false;
+                    }
+                }
+                
+            }
         }
     }
 }

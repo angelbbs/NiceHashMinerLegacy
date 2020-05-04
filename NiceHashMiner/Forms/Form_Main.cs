@@ -27,6 +27,7 @@ namespace NiceHashMiner
 {
     using Microsoft.Win32;
     using NiceHashMinerLegacy.Divert;
+    using OpenHardwareMonitor.Hardware;
     using System.Drawing.Drawing2D;
     using System.IO;
     using System.Net;
@@ -99,9 +100,11 @@ namespace NiceHashMiner
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
 //        public static bool DaggerHashimoto3GBProfit = false;
-        public static bool DaggerHashimoto3GB = true;
+        public static bool DaggerHashimoto3GB = false;
         public static string GoogleIP = "";
         public static string GoogleAnswer = "";
+        public static bool GoogleAvailable = false;
+        public static bool DivertAvailable = false;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -109,6 +112,8 @@ namespace NiceHashMiner
             //{ Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
         };//need to reread config data?
         internal static bool DeviceStatusTimer_FirstTick = false;
+        //private static readonly Computer _gpus = new Computer { GPUEnabled = true };
+        public static Computer thisComputer;
 
         public Form_Main()
         {
@@ -276,11 +281,11 @@ namespace NiceHashMiner
                // _mainFormHeight = 330 - _emtpyGroupPanelHeight;
             }
             //_mainFormHeight = Size.Height;
+
             ClearRatesAll();
             thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.Normal;
             //
-
         }
 
         private void InitLocalization()
@@ -571,6 +576,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
+
             Thread.Sleep(10);
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
@@ -585,10 +591,31 @@ namespace NiceHashMiner
             try
             {
                 CheckGithub();
+                NiceHashStats.ConnectToGoogle();
+                if (GoogleAnswer.Contains("HTTP"))
+                {
+                    Helpers.ConsolePrint("ConnectToGoogle", "Connect to google OK");
+                }
+                //divert test
+                Process thisProc = Process.GetCurrentProcess();
+                int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false);
+                if (dhandle != -1)
+                {
+                    DivertAvailable = true;
+                    Thread.Sleep(500);
+                    NiceHashStats.ConnectToGoogle();
+                    Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0);
+                }
+
             } catch (Exception er)
             {
                 Helpers.ConsolePrint("CheckGithub", er.ToString());
             }
+
+            thisComputer = new OpenHardwareMonitor.Hardware.Computer();
+            thisComputer.GPUEnabled = true;
+            thisComputer.CPUEnabled = true;
+            thisComputer.Open();
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
@@ -913,6 +940,7 @@ namespace NiceHashMiner
             _updateTimerCount = 0;
             _updateTimer.Start();
 
+
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
@@ -942,8 +970,17 @@ namespace NiceHashMiner
             {
                 if (ConfigManager.GeneralConfig.PeriodicalReconnect)
                 {
-                    Helpers.ConsolePrint("SOCKET", "Periodical reconnect");
-                    NiceHashSocket._webSocket.Close();
+                    try
+                    {
+                        if (NiceHashSocket._webSocket != null)
+                        {
+                            Helpers.ConsolePrint("SOCKET", "Periodical reconnect");
+                            NiceHashSocket._webSocket.Close();
+                        }
+                    } catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("SOCKET", "Periodical reconnect error: " + ex.ToString());
+                    }
                 }
                 _updateTimerCount = 0;
                 bool newver = false;
@@ -1416,6 +1453,15 @@ namespace NiceHashMiner
             }
         }
 
+        static int GetWinVer(Version ver)
+        {
+            if (ver.Major == 6 & ver.Minor == 1)
+                return 7;
+            else if (ver.Major == 6 & ver.Minor == 2)
+                return 8;
+            else
+                return 10;
+        }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1452,21 +1498,23 @@ namespace NiceHashMiner
             CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
             CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
             CMDconfigHandleOHM.Start();
-            /*
-            var CMDconfigHandleWD = new Process
-
+            
+            if (GetWinVer(Environment.OSVersion.Version) == 10)
             {
-                StartInfo =
+                var CMDconfigHandleWD = new Process
+
+                {
+                    StartInfo =
                 {
                     FileName = "sc.exe"
                 }
-            };
+                };
 
-            CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
-            CMDconfigHandleWD.StartInfo.UseShellExecute = false;
-            CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
-            CMDconfigHandleWD.Start();
-            */
+                CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
+                CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+                CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleWD.Start();
+            }
         }
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)
@@ -1538,6 +1586,7 @@ namespace NiceHashMiner
 
         private void ButtonStopMining_Click(object sender, EventArgs e)
         {
+            DHClient.checkConnection = false;
             firstRun = true;
             _isManuallyStarted = false;
             StopMining();
@@ -1942,19 +1991,20 @@ namespace NiceHashMiner
                     NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                     Divert.Dagger3GBEpochCount = 0;
                     Divert.DaggerHashimoto3GBForce = false;
-                    new Task(() => DHClient.StopConnection()).Start();
+                    DHClient.checkConnection = false;
+                    //DHClient.needStart = false;
+                    //new Task(() => DHClient.StopConnection()).Start();
                 }
-                if (Divert.Dagger3GBEpochCount > 2)
+                if (Divert.Dagger3GBEpochCount > 1)
                 {
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
-                    Divert.DaggerHashimoto3GBProfit = false;
                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
                     NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                     Divert.DaggerHashimoto3GBForce = false;
-                    new Task(() => DHClient.StartConnection()).Start();
-                    //Divert.Dagger3GBEpochCount = 0;
+                    DHClient.checkConnection = true;
+                    //new Task(() => DHClient.StartConnection()).Start();
                 }
-                DHClient.needUpdate = false;
+                //DHClient.needStart = false;
             }
         }
         public static string DNStoIP(string IPName)
@@ -1980,6 +2030,13 @@ namespace NiceHashMiner
         
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            foreach (var hardware in Form_Main.thisComputer.Hardware)
+            {
+                if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                {
+                    hardware.Update();
+                }
+            }
             if (DeviceStatusTimer_FirstTick) CheckDagger3GB();
             DeviceStatusTimer_FirstTick = true;
             ExchangeCallback(); 

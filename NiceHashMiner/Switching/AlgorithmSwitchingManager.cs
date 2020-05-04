@@ -70,10 +70,12 @@ namespace NiceHashMiner.Switching
             _smaCheckTimer.Start();
             //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
             {
+                /*
                 if (Form_Main.DaggerHashimoto3GB)
                 {
                     new Task(() => DHClient.StartConnection()).Start();
                 }
+                */
             }
         }
         public static void SmaCheckNow()
@@ -85,10 +87,12 @@ namespace NiceHashMiner.Switching
         {
             //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
             {
+                /*
                 if (Form_Main.DaggerHashimoto3GB)
                 {
                     DHClient.StopConnection();
                 }
+                */
             }
             _smaCheckTimer.Stop();
             _smaCheckTimer = null;

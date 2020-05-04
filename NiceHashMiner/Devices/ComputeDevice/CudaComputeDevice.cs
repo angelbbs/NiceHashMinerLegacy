@@ -11,6 +11,7 @@ using NiceHashMiner.Configs;
 using static NiceHashMiner.Devices.ComputeDeviceManager;
 using System.Diagnostics;
 using System.Windows.Forms;
+using OpenHardwareMonitor.Hardware;
 
 namespace NiceHashMiner.Devices
 {
@@ -19,7 +20,6 @@ namespace NiceHashMiner.Devices
         private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
         private readonly nvmlDevice _nvmlDevice; // For NVML
         private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
-        
         protected int SMMajor;
         protected int SMMinor;
         public readonly bool ShouldRunEthlargement;
@@ -27,23 +27,58 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                var load = -1;
+                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    var load = -1;
+                    try
+                    {
+                        var rates = new nvmlUtilization();
+                        var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
+                        if (ret != nvmlReturn.Success)
+                            throw new Exception($"NVML get load failed with code: {ret}");
 
+                        load = (int)rates.gpu;
+                    }
+                    catch (Exception e)
+                    {
+                        //Helpers.ConsolePrint("NVML", e.ToString());
+                    }
+                    return load;
+                }
+                
                 try
                 {
-                    var rates = new nvmlUtilization();
-                    var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
-                    if (ret != nvmlReturn.Success)
-                        throw new Exception($"NVML get load failed with code: {ret}");
 
-                    load = (int) rates.gpu;
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    {
+                        //hardware.Update();
+                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        {
+                            //hardware.Update();
+                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
+                            if (gpuId == ID)
+                            {
+                                foreach (var sensor in hardware.Sensors)
+                                {
+                                    if (sensor.SensorType == SensorType.Load)
+                                    {
+                                        if ((int)sensor.Value >= 0)
+                                        {
+                                            return (int)sensor.Value;
+                                        }
+                                        else return -1;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                catch (Exception e)
+                catch (Exception er)
                 {
-                    //Helpers.ConsolePrint("NVML", e.ToString());
+                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                 }
-
-                return load;
+                
+                return -1;
             }
         }
 
@@ -52,29 +87,64 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                var temp = -1f;
+                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    var temp = -1f;
+                    try
+                    {
+                        var utemp = 0u;
+                        var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu,
+                            ref utemp);
+                        if (ret != nvmlReturn.Success)
+                        {
+                            Form_Main.needRestart = true;
+                            //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
+                            //if(ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
 
+                            // throw new Exception($"NVML get temp failed with code: {ret}");
+                        }
+                        temp = utemp;
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("NVML", e.ToString());
+                    }
+                    return temp;
+                }
+                
                 try
                 {
-                    var utemp = 0u;
-                    var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu,
-                        ref utemp);
-                    if (ret != nvmlReturn.Success)
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
                     {
-                        Form_Main.needRestart = true;
-                        //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
-                        //if(ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
+                        //hardware.Update();
+                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        {
+                            //hardware.Update();
+                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
+                            if (gpuId == ID)
+                            {
+                                foreach (var sensor in hardware.Sensors)
+                                {
+                                    if (sensor.SensorType == SensorType.Temperature)
+                                    {
+                                        if ((int)sensor.Value > 0)
+                                        {
+                                            return (int)sensor.Value;
+                                        }
+                                        else return -1;
+                                    }
 
-                        // throw new Exception($"NVML get temp failed with code: {ret}");
+                                }
+                            }
+                        }
                     }
-                    temp = utemp;
                 }
-                catch (Exception e)
+                catch (Exception er)
                 {
-                    Helpers.ConsolePrint("NVML", e.ToString());
+                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                 }
-
-                return temp;
+                
+                return -1;
             }
         }
 
@@ -127,16 +197,18 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (!ConfigManager.GeneralConfig.ShowFanAsPercent)
+                //if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    var fanSpeed = -1;
+                    if (!ConfigManager.GeneralConfig.ShowFanAsPercent)
+                    {
+                        var fanSpeed = -1;
 
 
                         // we got the lock
                         var nvHandle = GetNvPhysicalGpuHandle();
                         if (!nvHandle.HasValue)
                         {
-                        Helpers.ConsolePrint("NVAPI", $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
+                            Helpers.ConsolePrint("NVAPI", $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
                             return -1;
                         }
 
@@ -151,32 +223,81 @@ namespace NiceHashMiner.Devices
                                 return -1;
                             }
                         }
-                    
-                    return fanSpeed;
-                } else
-                {
-                    var fan = -1;
 
-                    try
+                        return fanSpeed;
+                    }
+                    else
                     {
-                        var ufan = 0u;
-                        var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref ufan);
-                        if (ret != nvmlReturn.Success)
+                        var fan = -1;
+
+                        try
                         {
-                            Form_Main.needRestart = true;
-                            //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
-                            //throw new Exception($"NVML get fan speed failed with code: {ret}");
+                            var ufan = 0u;
+                            var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref ufan);
+                            if (ret != nvmlReturn.Success)
+                            {
+                                Form_Main.needRestart = true;
+                                //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
+                                //throw new Exception($"NVML get fan speed failed with code: {ret}");
+                            }
+                            fan = (int)ufan;
                         }
-                        fan = (int)ufan;
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("NVML", e.ToString());
-                    }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint("NVML", e.ToString());
+                        }
 
-                    return fan;
+                        return fan;
+                    }
+                    return 0;
                 }
-                return 0;
+                
+                try
+                {
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    {
+                        //hardware.Update();
+                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        {
+                            //hardware.Update();
+                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
+                            if (gpuId == ID)
+                            {
+                                foreach (var sensor in hardware.Sensors)
+                                {
+                                    if (ConfigManager.GeneralConfig.ShowFanAsPercent)
+                                    {
+                                        if (sensor.SensorType == SensorType.Control)
+                                        {
+                                            if ((int)sensor.Value >= 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (sensor.SensorType == SensorType.Fan)
+                                        {
+                                            if ((int)sensor.Value >= 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception er)
+                {
+                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
+                }
+                
+                return -1;
             }
         }
 
@@ -184,20 +305,54 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                //if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    try
+                    {
+                        var power = 0u;
+                        var ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref power);
+                        if (ret != nvmlReturn.Success)
+                            throw new Exception($"NVML power get failed with status: {ret}");
+
+                        return power * 0.001;
+                    }
+                    catch (Exception e)
+                    {
+                        // Helpers.ConsolePrint("NVML", e.ToString());
+                    }
+                }
+                
                 try
                 {
-                    var power = 0u;
-                    var ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref power);
-                    if (ret != nvmlReturn.Success)
-                        throw new Exception($"NVML power get failed with status: {ret}");
-
-                    return power * 0.001;
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    {
+                        //hardware.Update();
+                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        {
+                            //hardware.Update();
+                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
+                            if (gpuId == ID)
+                            {
+                                foreach (var sensor in hardware.Sensors)
+                                {
+                                    if (sensor.SensorType == SensorType.Power)
+                                    {
+                                        if ((int)sensor.Value >= 0)
+                                        {
+                                            return (int)sensor.Value;
+                                        }
+                                        else return -1;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                catch (Exception e)
+                catch (Exception er)
                 {
-                   // Helpers.ConsolePrint("NVML", e.ToString());
+                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                 }
-
+                
                 return -1;
             }
         }

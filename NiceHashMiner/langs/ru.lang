@@ -456,6 +456,7 @@
 "Form_Settings_MessageBoxUpdate": "Закрыть программу и начать установку новой версии?",
 "Form_Settings_EnableAlgos": "Включить * для всех устройств",
 "Form_Settings_DisableAlgos": "Выключить * для всех устройств",
+"Form_Settings_checkbox_Use_OpenHardwareMonitor": "Использовать OpenHardwareMonitor",
                 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

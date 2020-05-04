@@ -49,6 +49,7 @@ namespace NiceHashMiner.Miners
         {
             var username = GetUsername(btcAdress, worker);
             var platform = "";
+            url = url.Replace("daggerhashimoto3gb", "daggerhashimoto");
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
@@ -66,17 +67,13 @@ namespace NiceHashMiner.Miners
 
 
             Thread.Sleep(200);
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
-            var epools = String.Format("POOL: daggerhashimoto.{0}{1}.nicehash.com:3353, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[1, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}{1}.nicehash.com:3353, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[2, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}{1}.nicehash.com:3353, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[3, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}{1}.nicehash.com:3353, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[4, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}{1}.nicehash.com:3353, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[5, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}{1}.nicehash.com:3353, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[0, 0], nhsuff, username) + "\n";
+
+            var epools = String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[1, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[2, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[3, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[4, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[5, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[0, 0], username) + "\n";
             try
             {
                 FileStream fs = new FileStream("miners\\phoenix\\epools.txt", FileMode.Create, FileAccess.Write);
@@ -145,7 +142,7 @@ namespace NiceHashMiner.Miners
         protected override void _Stop(MinerStopType willswitch)
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
-            Thread.Sleep(500);
+            Thread.Sleep(200);
 
             foreach (var process in Process.GetProcessesByName("PhoenixMiner"))
             {

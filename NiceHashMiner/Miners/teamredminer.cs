@@ -178,25 +178,25 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = sc + " -a x16r" + apiBind +
                 " --url stratum+tcp://x16r.eu.mine.zpool.ca:3636" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --url stratum+tcp://x16r.eu" + nhsuff + ".nicehash.com:3366" + " --user " + username + " - p x -d ";
+                " -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 CommandLine = sc + " -a x16rv2" + apiBind +
                 " --url stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --url stratum+tcp://x16rv2.eu" + nhsuff + ".nicehash.com:3379" + " --user " + username + " - p x -d ";
+                " -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
             {
                 CommandLine = sc + " -a cuckarood29_grin" + apiBind +
-                " --url stratum+tcp://grin.sparkpool.com:6666" + " --user angelbbs@mail.ru/" + worker + " -p x " +
-                " --url stratum+tcp://grincuckaroo29.eu" + nhsuff + ".nicehash.com:3371" + " --user " + username + " -p x -d ";
+                " --url stratum+tcp://eu.frostypool.com:3516" + " --user angelbbs/teamred" + " -p x " +
+                " -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
             {
                 CommandLine = sc + " -a lyra2rev3" + apiBind +
                 " --url stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                 " --url stratum+tcp://lyra2rev3.eu" + nhsuff + ".nicehash.com:3373" + " --user " + username + " -p x -d ";
+                 " -d ";
             }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
@@ -557,11 +557,11 @@ namespace NiceHashMiner.Miners
                 {
                     kspeed = 1;
                 }
-                if (outdata.Substring(0, 65).ToUpper().Contains("KH/S"))
+                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
                 {
                     kspeed = 1000;
                 }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MH/S"))
+                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
                 {
                     kspeed = 1000000;
                 }
@@ -605,11 +605,11 @@ namespace NiceHashMiner.Miners
                 {
                     kspeed = 1;
                 }
-                if (outdata.Substring(0, 65).ToUpper().Contains("KH/S"))
+                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
                 {
                     kspeed = 1000;
                 }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MH/S"))
+                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
                 {
                     kspeed = 1000000;
                 }
@@ -643,10 +643,11 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
+            //GPU 0 [75C, fan 75%]       cuckarood29_grin: 3.470 g/s, avg 3.467 g/s, pool 0.000 g/s a:0 r:2 hw:0
             if (outdata.Contains("cuckarood29_grin: "))
             {
                 int i = outdata.IndexOf("avg ");
-                int k = outdata.IndexOf("h/s, avg");
+                int k = outdata.IndexOf("g/s, pool");
                 hashSpeed = outdata.Substring(i + 4, k - i - 5).Trim();
                 Helpers.ConsolePrint(hashSpeed, "");
                 if (outdata.ToUpper().Contains("G/S"))

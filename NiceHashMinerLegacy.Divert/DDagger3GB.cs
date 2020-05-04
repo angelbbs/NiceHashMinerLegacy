@@ -41,70 +41,7 @@ namespace NiceHashMinerLegacy.Divert
         private static WinDivertParseResult parse_result;
         private static string job = "";
 
-        internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
-        {
-            try
-            {
-                if (String.Join(" ", processIdList).Contains("gminer: force"))
-                {
-                    return "gminer: force";
-                }
-
-                string ret = "unknown";
-                string miner = "";
-                Port = Divert.SwapOrder(Port);
-
-                List<Connection> _allConnections = new List<Connection>();
-                _allConnections.Clear();
-                _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
-
-                for (int i = 1; i < _allConnections.Count; i++)
-                {
-                    if (String.Join(" ", processIdList).Contains(_allConnections[i].OwningPid.ToString()) &&
-                        (_allConnections[i].LocalEndPoint.Port == Port) ||
-                        _allConnections[i].RemoteEndPoint.Port == Port)
-                    {
-                        ret = _allConnections[i].OwningPid.ToString();
-                        for (var j = 0; j < processIdList.Count; j++)
-                        {
-                            if (processIdList[j].Contains(ret))
-                            {
-                                miner = processIdList[j].Split(':')[0];
-                            }
-                        }
-
-                        if (!String.Join(" ", _oldPorts).Contains(Port.ToString()))
-                        {
-                            _oldPorts.Add(miner + ": " + ret + " : " + Port.ToString());
-                        }
-                        _allConnections.Clear();
-                        _allConnections = null;
-                        return miner + ": " + ret;
-                    }
-                }
-                for (int i = 1; i < _oldPorts.Count; i++)
-                {
-                    if (String.Join(" ", _oldPorts).Contains(Port.ToString()))
-                    {
-                        return "unknown: ?";
-                    }
-                }
-
-                _allConnections.Clear();
-                _allConnections = null;
-
-                return "-1";
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
-                Thread.Sleep(500);
-            } finally
-            {
-               
-            }
-            return "unknown: ?";
-        }
+        
 
         public static byte[] StringToByteArray(String hex)
         {
@@ -229,11 +166,11 @@ nextCycle:
                        
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
 
@@ -271,13 +208,18 @@ nextCycle:
                                             else
                                             {
                                                 Divert.Dagger3GBEpochCount++;
-                                                if (Divert.Dagger3GBEpochCount > 2)
+                                                if (Divert.Dagger3GBEpochCount > 0)//1й пакет убираем
+                                                {
+                                                    //packet.Dispose();
+                                                }
+                                                if (Divert.Dagger3GBEpochCount > 0)
                                                 {
                                                     Divert.DaggerHashimoto3GBForce = true;
                                                     Divert.DaggerHashimoto3GBProfit = false;
+                                                    Divert.Dagger3GBEpochCount = 999;
                                                 }
                                                 //Divert.Dagger3GBEpochCount = 999;
-                                                //Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
+                                                Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
                                                 //packet.Dispose();
                                                 //goto nextCycle;
                                                 /*
