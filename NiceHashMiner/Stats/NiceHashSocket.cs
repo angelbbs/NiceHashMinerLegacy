@@ -73,7 +73,7 @@ namespace NiceHashMiner.Stats
             {
                 if (_webSocket == null)
                 {
-                    _webSocket = new WebSocket(_address, true);
+                    _webSocket = new WebSocket(_address);
 
                     //_webSocket.OnOpen += Login;
                     }
