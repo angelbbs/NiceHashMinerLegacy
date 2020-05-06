@@ -204,14 +204,14 @@ nextCycle:
                         if (addr.Direction == WinDivertDirection.Outbound )
                         {
                             count++;
-                            Helpers.ConsolePrint("WinDivertSharp", "Beam COUNT = " + count.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ")" + "Beam COUNT = " + count.ToString());
                             if (count > 5)
                             {
                                 Divert.Beamdivert_running = false;
                                 WinDivert.WinDivertClose(DivertHandle);
                                 Divert.processIdListBeam.Clear();
                                 Divert.gminer_runningBeam = false;
-                                continue;
+                                break;
                             }
                             //список соответствия src port и dst ip
                             if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))

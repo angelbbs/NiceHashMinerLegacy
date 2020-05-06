@@ -210,14 +210,14 @@ nextCycle:
                         if (addr.Direction == WinDivertDirection.Outbound )
                         {
                             count++;
-                            Helpers.ConsolePrint("WinDivertSharp", "Zhash COUNT = " + count.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ")" + "Zhash COUNT = " + count.ToString());
                             if (count > 5)
                             {
                                 Divert.Zhashdivert_running = false;
                                 WinDivert.WinDivertClose(DivertHandle);
                                 Divert.processIdListZhash.Clear();
                                 Divert.gminer_runningZhash = false;
-                                continue;
+                                break;
                             }
 
                             //список соответствия src port и dst ip

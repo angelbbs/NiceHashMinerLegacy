@@ -197,6 +197,20 @@ namespace NiceHashMiner.Miners
                 commandLine += GetDevicesCommandString();
                 _benchmarkTimeWait = time * 3;//more time for mtp
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                commandLine = "--algo kawpow" +
+                 " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trex" + " -p x " +
+                 " -o " + url + " -u " + username + " -p x " +
+                 " -o " + alg + ".hk" + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                 " -o " + alg + ".eu" + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                  MiningSetup,
+                                  DeviceType.NVIDIA) + " --no-watchdog -l " + GetLogFileName() +
+                              " -d ";
+                commandLine += GetDevicesCommandString();
+                _benchmarkTimeWait = time * 2;
+            }
             return commandLine;
         }
 
@@ -357,6 +371,9 @@ namespace NiceHashMiner.Miners
                            // if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.MTP))
                             {
                                 //if (line.Contains("1/1") || line.Contains("0/1"))
+                                //[ OK ] 2/2 - 6767.44 kH/s, 109ms
+                                //20200507 02:21:51 [ OK ] 31/31 - 19.73 MH/s, 177ms
+                                //20200507 02:52:41 [ OK ] 2/2 - 14.17 MH/s, 111ms
                                 if (line.Contains("[ OK ]") || line.Contains("[T:"))
                                 {
 
@@ -378,78 +395,7 @@ namespace NiceHashMiner.Miners
 
                                 }
                             }
-                            /*
-                            if (line.Contains("3/3") || line.Contains("2/3"))
-                            {
-
-                                var st = line.IndexOf("- ");
-                                var e = line.ToLower().IndexOf("h/s");
-                                var parse = line.Substring(st+2, e - st - 4).Trim();
-                                tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                                if (tmp != 0)
-                                {
-                                    shares++;
-                                }
-                                // save speed
-                                if (line.ToLower().Contains("kh/s"))
-                                    speed += tmp * 1000;
-                                else if (line.ToLower().Contains("mh/s"))
-                                    speed += tmp * 1000000;
-
-                                BenchmarkAlgorithm.BenchmarkSpeed = speed / shares;
-                                BenchmarkSignalFinnished = true;
-
-                            }
-                            */
-                            /*
-                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
-                            {
-                                // if (line.Contains("6/6") || line.Contains("5/6"))
-                                if (line.Contains("[ OK ]"))
-                                {
-
-                                    var st = line.IndexOf("- ");
-                                    var e = line.ToLower().IndexOf("h/s");
-                                    var parse = line.Substring(st + 2, e - st - 4).Trim();
-                                    tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                                    if (tmp != 0)
-                                    {
-                                        shares++;
-                                    }
-                                    // save speed
-                                    if (line.ToLower().Contains("kh/s"))
-                                        speed += tmp * 1000;
-                                    else if (line.ToLower().Contains("mh/s"))
-                                        speed += tmp * 1000000;
-
-                                    BenchmarkAlgorithm.BenchmarkSpeed = speed / shares;
-                                    BenchmarkSignalFinnished = true;
-                                }
-                            }
-                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
-                            {
-                               // if (line.Contains("6/6") || line.Contains("5/6"))
-                                if (line.Contains("[ OK ]"))
-                                {
-                                    var st = line.IndexOf("- ");
-                                    var e = line.ToLower().IndexOf("h/s");
-                                    var parse = line.Substring(st + 2, e - st - 4).Trim();
-                                    tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                                    if (tmp != 0)
-                                    {
-                                        shares++;
-                                    }
-                                    // save speed
-                                    if (line.ToLower().Contains("kh/s"))
-                                        speed += tmp * 1000;
-                                    else if (line.ToLower().Contains("mh/s"))
-                                        speed += tmp * 1000000;
-
-                                    BenchmarkAlgorithm.BenchmarkSpeed = speed / shares;
-                                    BenchmarkSignalFinnished = true;
-                                }
-                            }
-                            */
+                            
                         }
                     }
 
