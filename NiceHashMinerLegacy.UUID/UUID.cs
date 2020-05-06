@@ -91,6 +91,7 @@ namespace NiceHashMinerLegacy.UUID
             {
                 var readValue = Registry.GetValue(keyPath, value, new object());
                 Console.WriteLine("MachineGuid: " + (string)readValue);
+                //return (string)readValue;
                 return (string)readValue;
             }
             catch (Exception e)

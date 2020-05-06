@@ -14,7 +14,7 @@ namespace NiceHashMiner
     {
         public static string GetName(AlgorithmType type)
         {
-            if ((AlgorithmType.INVALID <= type && type <= AlgorithmType.Handshake) ||
+            if ((AlgorithmType.INVALID <= type && type <= AlgorithmType.KAWPOW) ||
                 (AlgorithmType.DaggerHandshake <= type && type <= AlgorithmType.DaggerPascal))
             {
                 return Enum.GetName(typeof(AlgorithmType), type);

@@ -210,12 +210,14 @@ nextCycle:
                         if (addr.Direction == WinDivertDirection.Outbound )
                         {
                             count++;
-                            Helpers.ConsolePrint("WinDivertSharp", "COUNT = " + count.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Zhash COUNT = " + count.ToString());
                             if (count > 5)
                             {
                                 Divert.Zhashdivert_running = false;
                                 WinDivert.WinDivertClose(DivertHandle);
-                                break;
+                                Divert.processIdListZhash.Clear();
+                                Divert.gminer_runningZhash = false;
+                                continue;
                             }
 
                             //список соответствия src port и dst ip
@@ -559,11 +561,10 @@ modifyData:
 
                             if (parse_result.PacketPayloadLength > 0)
                             {
-                                count = -1;
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") <- packet: " + PacketPayloadData);
                             }
-                            //modified = false;
+                            count = -1;
                             goto sendPacket;
                         }
 

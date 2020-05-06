@@ -355,6 +355,7 @@ namespace NiceHashMiner.Devices.Algorithms
                          //   new Algorithm(MinerBaseType.trex, AlgorithmType.MTP, "MTP"),
                             new Algorithm(MinerBaseType.trex, AlgorithmType.X16R, "X16R"),
                             new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16Rv2"),
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.KAWPOW, "KAWPOW"),
                         }
             },
 

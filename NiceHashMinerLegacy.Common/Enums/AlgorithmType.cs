@@ -104,7 +104,8 @@
         Eaglesong = 48,
         Cuckaroom = 49,
         GrinCuckatoo32 = 50,
-        Handshake = 51
+        Handshake = 51,
+        KAWPOW = 52
         #endregion // NiceHashAPI
     }
 }

@@ -81,7 +81,7 @@ namespace NiceHashMiner.Stats
         #endregion
 
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
-        private const int DeviceUpdateInterval = 45 * 1000;
+        private const int DeviceUpdateInterval = 30 * 1000;
 
         public static double Balance { get; private set; }
        // public static string Version { get; private set; }
@@ -140,7 +140,7 @@ namespace NiceHashMiner.Stats
             LoadCachedSMAData();
             _socket = null;
             _socket = new NiceHashSocket(address);
-           // _socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
+            //_socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
             _socket.OnDataReceived += SocketOnOnDataReceived;
          //   _socket.OnConnectionLost += SocketOnOnConnectionLost;
 
@@ -350,6 +350,8 @@ namespace NiceHashMiner.Stats
                     {
                         type = "1";
                         b64Web = UUID.GetB64UUID(device.NewUuid);
+                       // Helpers.ConsolePrint("device.NewUuid", device.NewUuid);
+                       // Helpers.ConsolePrint("device.Uuid", device.Uuid);
                         nuuid = $"{type}-{b64Web}";
                     }
                     if (device.DeviceType == DeviceType.NVIDIA)
@@ -882,7 +884,7 @@ namespace NiceHashMiner.Stats
         }
 
 
-/*
+
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
         {
             //DeviceStatus_Tick(null); // Send device to populate rig stats
@@ -891,9 +893,9 @@ namespace NiceHashMiner.Stats
             //Helpers.ConsolePrint("GITHUB", ghv);
             //SetVersion(ghv);
            // GetSmaAPICurrent();
-            OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
+           // OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
         }
-        */
+        
         #endregion
 
         #region Incoming socket calls
@@ -1221,6 +1223,8 @@ namespace NiceHashMiner.Stats
                         type = "1";
                         status = 8;
                         b64Web = UUID.GetB64UUID(device.NewUuid);
+                        //Helpers.ConsolePrint("device.NewUuid", device.NewUuid);
+                        //Helpers.ConsolePrint("device.Uuid", device.Uuid);
                         nuuid = $"{type}-{b64Web}";
                     }
                     if (device.DeviceType == DeviceType.NVIDIA)

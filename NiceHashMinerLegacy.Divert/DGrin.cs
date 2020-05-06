@@ -127,8 +127,7 @@ namespace NiceHashMinerLegacy.Divert
             uint readLen = 0;
             List<string> InboundPorts = new List<string>();
 
-        //Span<byte> packetData = null;
-
+            int count = 0;
             IntPtr recvEvent = IntPtr.Zero;
             bool modified = false;
             bool result;
@@ -206,9 +205,22 @@ nextCycle:
                         }
 
                             PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
-
-                        //список соответствия src port и dst ip
-                        if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
+                        //***************
+                        if (addr.Direction == WinDivertDirection.Outbound)
+                        {
+                            count++;
+                            Helpers.ConsolePrint("WinDivertSharp", "Zhash COUNT = " + count.ToString());
+                            if (count > 5)
+                            {
+                                Divert.Zhashdivert_running = false;
+                                WinDivert.WinDivertClose(DivertHandle);
+                                Divert.processIdListZhash.Clear();
+                                Divert.gminer_runningZhash = false;
+                                continue;
+                            }
+                        }
+                            //список соответствия src port и dst ip
+                            if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
                         {
                             InboundPorts.Add(Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                             ":" + parse_result.IPv4Header->DstAddr.ToString());
@@ -340,7 +352,7 @@ nextCycle:
                                 + "<- New DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 "  New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
 
-                            //modified = false;
+                            count = -1;
                             goto sendPacket;
                         }
 

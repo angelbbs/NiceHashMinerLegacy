@@ -642,9 +642,9 @@ namespace NiceHashMinerLegacy.Divert
         {
             _certInstalled = CertInstalled;
             logging = log;
-            logging = false;
+            //logging = false;
             _SaveDivertPackets = SaveDiverPackets;
-            _SaveDivertPackets = false;
+            //_SaveDivertPackets = false;
             worker = w;
             BlockGMinerApacheTomcat = BlockGMinerApacheTomcatConfig;
             Helpers.ConsolePrint("WinDivertSharp", "Miner: " + MinerName + " Algo: " + CurrentAlgorithmType + " AlgoDual: " + SecondaryAlgorithmType);

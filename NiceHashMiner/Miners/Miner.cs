@@ -361,7 +361,7 @@ namespace NiceHashMiner
 
         public virtual void Stop(MinerStopType willswitch = MinerStopType.SWITCH)
         {
-            new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
+            //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             _cooldownCheckTimer?.Stop();
             _Stop(willswitch);
             PreviousTotalMH = 0.0;
@@ -1204,7 +1204,7 @@ namespace NiceHashMiner
 
         protected virtual NiceHashProcess _Start()
         {
-            new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
+            //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             RunCMDBeforeOrAfterMining(true);
             // never start when ended
             if (_isEnded)
