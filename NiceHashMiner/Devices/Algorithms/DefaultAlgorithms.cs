@@ -317,6 +317,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
                 }
             },
+            /*
             {
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()
@@ -325,6 +326,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
                 }
             },
+            */
             { MinerBaseType.hsrneoscrypt,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.hsrneoscrypt, AlgorithmType.NeoScrypt, "Neoscrypt"),

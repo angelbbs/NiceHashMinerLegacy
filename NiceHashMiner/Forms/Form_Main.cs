@@ -493,6 +493,39 @@ namespace NiceHashMiner
             }
         }
         // This is a single shot _benchmarkTimer
+        private void CheckUpdates()
+        {
+            try
+            {
+                CheckGithub();
+                NiceHashStats.ConnectToGoogle();
+                if (GoogleAnswer.Contains("HTTP"))
+                {
+                    Helpers.ConsolePrint("ConnectToGoogle", "Connect to google OK");
+                }
+                checkD();
+
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("CheckGithub", er.ToString());
+            }
+        }
+        public static void checkD()
+        {
+            //divert test
+            Process thisProc = Process.GetCurrentProcess();
+            int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false);
+            if (dhandle != -1)
+            {
+                DivertAvailable = true;
+                Thread.Sleep(500);
+                NiceHashStats.ConnectToGoogle("Check connection");
+                Thread.Sleep(2000);
+                Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0);
+                //Helpers.ConsolePrint("ConnectToGoogle", GoogleAnswer); //is Running?
+            }
+        }
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             if (!ConfigManager.GeneralConfig.AutoStartMining)
@@ -588,29 +621,8 @@ namespace NiceHashMiner
             }
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            try
-            {
-                CheckGithub();
-                NiceHashStats.ConnectToGoogle();
-                if (GoogleAnswer.Contains("HTTP"))
-                {
-                    Helpers.ConsolePrint("ConnectToGoogle", "Connect to google OK");
-                }
-                //divert test
-                Process thisProc = Process.GetCurrentProcess();
-                int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false);
-                if (dhandle != -1)
-                {
-                    DivertAvailable = true;
-                    Thread.Sleep(500);
-                    NiceHashStats.ConnectToGoogle();
-                    Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0);
-                }
-
-            } catch (Exception er)
-            {
-                Helpers.ConsolePrint("CheckGithub", er.ToString());
-            }
+            
+            new Task(() => CheckUpdates()).Start();
 
             thisComputer = new OpenHardwareMonitor.Hardware.Computer();
             thisComputer.GPUEnabled = true;

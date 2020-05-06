@@ -292,8 +292,14 @@ namespace NiceHashMiner
 
         public void KillAllUsedMinerProcesses()
         {
+            Form_Main.checkD();
             var toRemovePidData = new List<MinerPidData>();
             Helpers.ConsolePrint(MinerTag(), "Trying to kill all miner processes for this instance:");
+            var algo = (int)MiningSetup.CurrentAlgorithmType;
+            if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
+            {
+                algo = -100;
+            }
             foreach (var pidData in _allPidData)
             {
                 try
@@ -313,7 +319,7 @@ namespace NiceHashMiner
                                         new Task(() => DHClient.StopConnection()).Start();
                                     }
                                 }
-                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, (int)MiningSetup.CurrentAlgorithmType, (int)MiningSetup.CurrentSecondaryAlgorithmType);
+                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo, (int)MiningSetup.CurrentSecondaryAlgorithmType);
                             }
                             process.Kill();
                             process.Close();
@@ -355,6 +361,7 @@ namespace NiceHashMiner
 
         public virtual void Stop(MinerStopType willswitch = MinerStopType.SWITCH)
         {
+            new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             _cooldownCheckTimer?.Stop();
             _Stop(willswitch);
             PreviousTotalMH = 0.0;
@@ -418,7 +425,12 @@ namespace NiceHashMiner
         }
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
         {
-
+            Form_Main.checkD();
+            var algo = (int)MiningSetup.CurrentAlgorithmType;
+            if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
+            {
+                algo = -100;
+            }
             if (IsRunning)
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Shutting down miner");
@@ -440,7 +452,7 @@ namespace NiceHashMiner
                             new Task(() => DHClient.StopConnection()).Start();
                         }
                     }
-                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, (int)MiningSetup.CurrentAlgorithmType, (int)MiningSetup.CurrentSecondaryAlgorithmType);
+                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo, (int)MiningSetup.CurrentSecondaryAlgorithmType);
                 }
                 KillProcessAndChildren(pid);
 
@@ -1192,7 +1204,7 @@ namespace NiceHashMiner
 
         protected virtual NiceHashProcess _Start()
         {
-
+            new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             RunCMDBeforeOrAfterMining(true);
             // never start when ended
             if (_isEnded)
@@ -1252,7 +1264,7 @@ namespace NiceHashMiner
                     IsRunningNew = true;
                     //  NiceHashStats.SetDeviceStatus("MINING");
                     NiceHashStats._deviceUpdateTimer.Stop();
-                    //new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+                    
                     NiceHashStats._deviceUpdateTimer.Start();
                     string strPlatform = "";
                     foreach (var pair in MiningSetup.MiningPairs)
@@ -1273,6 +1285,10 @@ namespace NiceHashMiner
                     if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
+                        if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
+                        {
+                            algo = -100;
+                        }
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
                         if (Form_Main.DaggerHashimoto3GB)
                         {

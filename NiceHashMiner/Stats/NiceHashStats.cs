@@ -1119,7 +1119,7 @@ namespace NiceHashMiner.Stats
             }
         }
         internal static TcpClient tcpClientGoogle = null;
-        public static void ConnectToGoogle()
+        public static void ConnectToGoogle(string request = "GET / HTTP/1.1\r\n\r\n")
         {
             try
             {
@@ -1135,7 +1135,7 @@ namespace NiceHashMiner.Stats
                 byte[] messageGoogle = new byte[1024];
                 int GoogleBytes;
                 System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-                var Request = enc.GetBytes("GET / HTTP/1.1\r\n\r\n");
+                var Request = enc.GetBytes(request);
 
                 if (serverStream == null)
                 {

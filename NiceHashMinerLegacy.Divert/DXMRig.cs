@@ -129,27 +129,11 @@ namespace NiceHashMinerLegacy.Divert
                 DivertLogin1 = "42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.divert";
                 filter = "ip && tcp && (inbound ? (tcp.SrcPort == 3380 || tcp.SrcPort == 3333 || tcp.SrcPort == 14444) : (tcp.DstPort == 3380 || tcp.DstPort == 3333 || tcp.DstPort == 14444))";//xmr
 
-                uint errorPos = 0;
-
-            if (!WinDivert.WinDivertHelperCheckFilter(filter, WinDivertLayer.Network, out string errorMsg, ref errorPos))
-            {
-                Helpers.ConsolePrint("WinDivertSharp", "Error in filter string at position: " + errorPos.ToString());
-                Helpers.ConsolePrint("WinDivertSharp", "Error: " + errorMsg);
-                return new IntPtr(-1);
-            }
-
-            DivertHandle = WinDivert.WinDivertOpen(filter, WinDivertLayer.Network, 0, WinDivertOpenFlags.None);
-
+            DivertHandle = Divert.OpenWinDivert(filter);
             if (DivertHandle == IntPtr.Zero || DivertHandle == new IntPtr(-1))
             {
-                Helpers.ConsolePrint("WinDivertSharp", "Invalid handle. Failed to open. Is run as Administrator?");
                 return new IntPtr(-1);
             }
-
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 16384);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 8000);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 33554432);
-
             RunDivert(DivertHandle, processId, CurrentAlgorithmType, MinerName);
 
             /*

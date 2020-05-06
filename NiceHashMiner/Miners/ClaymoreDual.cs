@@ -537,7 +537,15 @@ namespace NiceHashMiner.Miners
                                         + String.Format("  -epool daggerhashimoto.usa" + ".nicehash.com:3353 -ewal {0}/{1} -mport 127.0.0.1:-{2} -epsw x -esm 3 -allpools 1 -ftime 10 -retrydelay 5", username, worker, ApiPort)
                                         + dualModeParams;
             }
-            else
+            else if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB))
+            {
+
+                addParam = " "
+                                        + GetDevicesCommandString()
+                                        + String.Format("  -epool us-east.ethash-hub.miningpoolhub.com:20565 -ewal angelbbs.Claymore -esm 2 -mport 127.0.0.1:-{0} -epsw c=BTC -allcoins 1 -allpools 1 -ftime 10 -retrydelay 5", ApiPort)
+                                        + dualModeParams;
+            }
+            else 
             {
 
                 addParam = " "

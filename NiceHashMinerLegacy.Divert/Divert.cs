@@ -60,27 +60,7 @@ namespace NiceHashMinerLegacy.Divert
         public static bool Dagger3GBCheckConnection = false;
         public static bool DaggerHashimoto3GBProfit = false;
         public static bool DaggerHashimoto3GBForce = false;
-        //public static WinDivertBuffer SendDataPacket = new WinDivertBuffer(new byte[]
-        /*
-        public static byte[] IPHeader =  (new byte[]
-        {
-            0x45, 0x00, 0x00, 0x28, 0x7a, 0xda, 0x40, 0x00,
-            0x80, 0x06, 0x27, 0xe7, 0x0a, 0xb3, 0xa1, 0xe0,
-            0x0a, 0xb3, 0xa0, 0xc8
-        });
-        public static byte[] TCPHeader = (new byte[]
-        {
-            0x05, 0x92, 0x0c, 0x38, 0x8a, 0x17, 0x6b, 0xfb,
-            0xe4, 0x22, 0x4f, 0xda, 0x50, 0x10, 0x40, 0x29,
-            0x00, 0x00, 0x00, 0x00
-        });
-        */
-        /*
-        public static void SetDagger3GBJob(string ClientJob)
-        {
-            Dagger3GBJob = ClientJob;
-        }
-        */
+
         public static UInt32 SwapByteOrder(UInt32 value)
         {
             return
@@ -606,7 +586,7 @@ namespace NiceHashMinerLegacy.Divert
                 var _allConnections = new List<Connection>();
                 int childPID = -1;
 
-                processIdListDagger3GB.Add("claymoredual: " + processId.ToString());
+                processIdListDagger3GB.Add(MinerName.ToLower() + ": " + processId.ToString());
                 DDagger3GBHandle = DDagger3GB.Dagger3GBDivertStart(processIdListDagger3GB, CurrentAlgorithmType, MinerName, strPlatform);
                 Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DDagger3GBHandle.ToString() + ". Initiated by " + processId.ToString() + " (Dagger3GB) to divert process list: " + " " + String.Join(",", processIdListDagger3GB));
 
@@ -617,8 +597,8 @@ namespace NiceHashMinerLegacy.Divert
                     {
                         if (!String.Join(" ", processIdListDagger3GB).Contains(childPID.ToString()))
                         {
-                            processIdListDagger3GB.Add("claymoredual: " + processId.ToString() + " " + childPID.ToString() + " %" + DDagger3GBHandle.ToString());
-                            Helpers.ConsolePrint("WinDivertSharp", "Add new Claymore Dagger3GB ChildPid: " + childPID.ToString());
+                            processIdListDagger3GB.Add(MinerName.ToLower() + ": " + processId.ToString() + " " + childPID.ToString() + " %" + DDagger3GBHandle.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new Dagger3GB ChildPid: " + childPID.ToString());
                            // processIdListDagger3GB.RemoveAll(x => x.Contains("claymoredual: force"));
                             Helpers.ConsolePrint("WinDivertSharp", "processIdListDagger3GB: " + String.Join(" ", processIdListDagger3GB));
                             //break;
@@ -630,6 +610,31 @@ namespace NiceHashMinerLegacy.Divert
                 return t.Task;
             });
         }
+        private static IntPtr DivertHandle;
+        public static IntPtr OpenWinDivert(string filter)
+        {
+            uint errorPos = 0;
+
+            if (!WinDivert.WinDivertHelperCheckFilter(filter, WinDivertLayer.Network, out string errorMsg, ref errorPos))
+            {
+                Helpers.ConsolePrint("WinDivertSharp", "Error in filter string at position: " + errorPos.ToString());
+                Helpers.ConsolePrint("WinDivertSharp", "Error: " + errorMsg);
+                return new IntPtr(-1);
+            }
+
+            DivertHandle = WinDivert.WinDivertOpen(filter, WinDivertLayer.Network, 0, WinDivertOpenFlags.None);
+
+            if (DivertHandle == IntPtr.Zero || DivertHandle == new IntPtr(-1))
+            {
+                Helpers.ConsolePrint("WinDivertSharp", "Invalid handle. Failed to open. Is run as Administrator?");
+                return new IntPtr(-1);
+            }
+
+            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 2048); //16386
+            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 1000);
+            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 2097152);
+            return DivertHandle;
+        }
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, int SecondaryAlgorithmType, string MinerName, string strPlatform,
@@ -637,7 +642,9 @@ namespace NiceHashMinerLegacy.Divert
         {
             _certInstalled = CertInstalled;
             logging = log;
+            logging = false;
             _SaveDivertPackets = SaveDiverPackets;
+            _SaveDivertPackets = false;
             worker = w;
             BlockGMinerApacheTomcat = BlockGMinerApacheTomcatConfig;
             Helpers.ConsolePrint("WinDivertSharp", "Miner: " + MinerName + " Algo: " + CurrentAlgorithmType + " AlgoDual: " + SecondaryAlgorithmType);
@@ -671,10 +678,10 @@ namespace NiceHashMinerLegacy.Divert
             if (CurrentAlgorithmType == -9) //dagerhashimoto3gb
             {
                 Dagger3GBdivert_running = true;
-                if (MinerName.ToLower() == "claymoredual")
+                //if (MinerName.ToLower() == "claymoredual")
                 {
                     
-                    processIdListDagger3GB.Add("claymoredual: " + processId.ToString());
+                    processIdListDagger3GB.Add(MinerName.ToLower() + ": " + processId.ToString());
                     if (processIdListDagger3GB.Count > 1)
                     {
                         Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DDagger3GBHandle.ToString() + ". Added " + processId.ToString() + " (Dagger3GB) to divert process list: " + " " + String.Join(",", processIdListDagger3GB));
@@ -694,6 +701,7 @@ namespace NiceHashMinerLegacy.Divert
             //***********************************************************************************
             if (CurrentAlgorithmType == 20 && SecondaryAlgorithmType == -1) //dagerhashimoto
             {
+                if (!Divert._certInstalled) return new IntPtr(-1);
                 Ethashdivert_running = true;
                 if (MinerName.ToLower() == "claymoredual")
                 {
@@ -911,6 +919,7 @@ namespace NiceHashMinerLegacy.Divert
             //******************************************************************************************
             if (CurrentAlgorithmType == 39 || CurrentAlgorithmType == 49 || CurrentAlgorithmType == 50) //Grin
             {
+                if (!Divert._certInstalled) return new IntPtr(-1);
                 Grindivert_running = true;
                 if (MinerName.ToLower() == "gminer")
                 {
@@ -924,6 +933,7 @@ namespace NiceHashMinerLegacy.Divert
             //******************************************************************************************
             if (CurrentAlgorithmType == 45) //beam v2
             {
+                if (!Divert._certInstalled) return new IntPtr(-1);
                 Beamdivert_running = true;
                 if (MinerName.ToLower() == "gminer")
                 {
@@ -1308,6 +1318,7 @@ namespace NiceHashMinerLegacy.Divert
             //ethash
             if (CurrentAlgorithmType == 20 && SecondaryAlgorithmType == -1)
             {
+                if (!Divert._certInstalled) return;
                 int dh = (int)DivertHandle;
                 if (processIdListEthash.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListEthash).Contains(Pid.ToString()))
                 {
@@ -1740,6 +1751,7 @@ namespace NiceHashMinerLegacy.Divert
             //Grin
             if (CurrentAlgorithmType == 39 || CurrentAlgorithmType == 49 || CurrentAlgorithmType == 50) //Grin
             {
+                if (!Divert._certInstalled) return;
                 int dh = (int)DivertHandle;
                 if (processIdListGrin.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListGrin).Contains(Pid.ToString()))
                 {
@@ -1851,6 +1863,7 @@ namespace NiceHashMinerLegacy.Divert
             
             if (CurrentAlgorithmType == 45)
             {
+                if (!Divert._certInstalled) return;
                 int dh = (int)DivertHandle;
                 if (processIdListBeam.Count <= 1 && dh != 0 && String.Join(" ", Divert.processIdListBeam).Contains(Pid.ToString()))
                 {

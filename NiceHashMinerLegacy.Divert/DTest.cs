@@ -57,34 +57,18 @@ namespace NiceHashMinerLegacy.Divert
             Divert.Testdivert_running = true;
 
             DivertIP_Test = variables.ProxyIP;
-            //DivertIP_Test = "192.168.1.110";
-            DivertPort_Test = 3010;
+            DivertPort_Test = 4100;
 
-            filter = "(!loopback && outbound ? (tcp.DstPort == 80 || tcp.DstPort == 3010)" +
+            filter = "(!loopback && outbound ? (tcp.DstPort == 80 || tcp.DstPort == 4100)" +
                 " : " +
-                "(tcp.SrcPort == 80 || tcp.SrcPort == 3010)" +
+                "(tcp.SrcPort == 80 || tcp.SrcPort == 4100)" +
                 ")";
 
-            uint errorPos = 0;
-
-            if (!WinDivert.WinDivertHelperCheckFilter(filter, WinDivertLayer.Network, out string errorMsg, ref errorPos))
-            {
-                Helpers.ConsolePrint("WinDivertSharp", "Error in filter string at position: " + errorPos.ToString());
-                Helpers.ConsolePrint("WinDivertSharp", "Error: " + errorMsg);
-                return new IntPtr(-1);
-            }
-
-            DivertHandle = WinDivert.WinDivertOpen(filter, WinDivertLayer.Network, 0, WinDivertOpenFlags.None);
-
+            DivertHandle = Divert.OpenWinDivert(filter);
             if (DivertHandle == IntPtr.Zero || DivertHandle == new IntPtr(-1))
             {
-                Helpers.ConsolePrint("WinDivertSharp", "Invalid handle. Failed to open. Is run as Administrator?");
                 return new IntPtr(-1);
             }
-
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 2048); //16386
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 1000);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 2097152);
 
             RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
 
@@ -174,8 +158,7 @@ nextCycle:
                                 Helpers.ConsolePrint("WinDivertSharp",
                                 "(" + OwnerPID.ToString() + ") -> Test connection to (" +
                                 TestIP + ":" + Divert.SwapOrder(TestPort) + ")");
-
-                                DivertIP = DivertIP_Test;
+                               DivertIP = DivertIP_Test;
                                 DivertPort = Divert.SwapOrder(DivertPort_Test);
                                 modified = true;
                                 goto changeSrcDst;
@@ -200,10 +183,6 @@ nextCycle:
                             }
                         }
 
-                        Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") Unknown connection");
-                        //"DevFee SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-                        //"  DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                        //" len: " + readLen.ToString() + " packetLength: " + parse_result.PacketPayloadLength.ToString());
                         modified = false;
                         goto sendPacket;
 

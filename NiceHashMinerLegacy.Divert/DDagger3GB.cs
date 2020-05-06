@@ -80,27 +80,11 @@ namespace NiceHashMinerLegacy.Divert
                 "(tcp.SrcPort == 3353)" +
                 ")";
 
-            uint errorPos = 0;
-
-            if (!WinDivert.WinDivertHelperCheckFilter(filter, WinDivertLayer.Network, out string errorMsg, ref errorPos))
-            {
-                Helpers.ConsolePrint("WinDivertSharp", "Error in filter string at position: " + errorPos.ToString());
-                Helpers.ConsolePrint("WinDivertSharp", "Error: " + errorMsg);
-                return new IntPtr(-1);
-            }
-
-            DivertHandle = WinDivert.WinDivertOpen(filter, WinDivertLayer.Network, 0, WinDivertOpenFlags.None);
-
+            DivertHandle = Divert.OpenWinDivert(filter);
             if (DivertHandle == IntPtr.Zero || DivertHandle == new IntPtr(-1))
             {
-                Helpers.ConsolePrint("WinDivertSharp", "Invalid handle. Failed to open. Is run as Administrator?");
                 return new IntPtr(-1);
             }
-
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 2048); //16386
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 1000);
-            //WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 33554432);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 2097152);
 
             RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
 
@@ -207,6 +191,7 @@ nextCycle:
                                             }
                                             else
                                             {
+                                                packet.Dispose();
                                                 Divert.Dagger3GBEpochCount++;
                                                 if (Divert.Dagger3GBEpochCount > 0)//1й пакет убираем
                                                 {
@@ -214,6 +199,7 @@ nextCycle:
                                                 }
                                                 if (Divert.Dagger3GBEpochCount > 0)
                                                 {
+                                                    
                                                     Divert.DaggerHashimoto3GBForce = true;
                                                     Divert.DaggerHashimoto3GBProfit = false;
                                                     Divert.Dagger3GBEpochCount = 999;

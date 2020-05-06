@@ -74,59 +74,7 @@ namespace NiceHashMinerLegacy.Divert
         private static string RemoteIP;
         private static bool sslFixed = false;
 
-        internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
-        {
-            if (String.Join(" ", processIdList).Contains("gminer: force"))
-            {
-                return "gminer: force";
-            }
-
-            string ret = "unknown";
-            string miner = "";
-            Port = Divert.SwapOrder(Port);
-
-            List<Connection> _allConnections = new List<Connection>();
-            _allConnections.Clear();
-                _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
-
-                for (int i = 1; i < _allConnections.Count; i++)
-                {
-                    if (String.Join(" ", processIdList).Contains(_allConnections[i].OwningPid.ToString()) &&
-                        (_allConnections[i].LocalEndPoint.Port == Port) ||
-                        _allConnections[i].RemoteEndPoint.Port == Port)
-                    {
-                        ret = _allConnections[i].OwningPid.ToString();
-                        for (var j = 0; j < processIdList.Count; j++)
-                        {
-                            if (processIdList[j].Contains(ret))
-                            {
-                                miner = processIdList[j].Split(':')[0];
-                            }
-                        }
-
-                    if (!String.Join(" ", _oldPorts).Contains(Port.ToString()))
-                    {
-                        _oldPorts.Add(miner + ": " + ret + " : " + Port.ToString());
-                    }
-                        _allConnections.Clear();
-                        _allConnections = null;
-                        return miner + ": " + ret;
-                    }
-                }
-            for (int i = 1; i < _oldPorts.Count; i++)
-            {
-                if (String.Join(" ", _oldPorts).Contains(Port.ToString()))
-                {
-                    return "unknown: ?";
-                }
-            }
-
-            _allConnections.Clear();
-            _allConnections = null;
-
-            return "-1";
-        }
-
+        
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr NeoscryptDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
             {
@@ -148,28 +96,11 @@ namespace NiceHashMinerLegacy.Divert
                 "tcp.SrcPort == 4233)" +
                 ")";
 
-            uint errorPos = 0;
-
-            if (!WinDivert.WinDivertHelperCheckFilter(filter, WinDivertLayer.Network, out string errorMsg, ref errorPos))
-            {
-                Helpers.ConsolePrint("WinDivertSharp", "Error in filter string at position: " + errorPos.ToString());
-                Helpers.ConsolePrint("WinDivertSharp", "Error: " + errorMsg);
-                return new IntPtr(-1);
-            }
-
-            DivertHandle = WinDivert.WinDivertOpen(filter, WinDivertLayer.Network, 0, WinDivertOpenFlags.None);
-
+            DivertHandle = Divert.OpenWinDivert(filter);
             if (DivertHandle == IntPtr.Zero || DivertHandle == new IntPtr(-1))
             {
-                Helpers.ConsolePrint("WinDivertSharp", "Invalid handle. Failed to open. Is run as Administrator?");
                 return new IntPtr(-1);
             }
-
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 2048); //16386
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 1000);
-            //WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 33554432);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 2097152);
-
             RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
 
             return DivertHandle;
@@ -197,8 +128,7 @@ namespace NiceHashMinerLegacy.Divert
             uint readLen = 0;
             List<string> InboundPorts = new List<string>();
 
-        //Span<byte> packetData = null;
-
+            int count = 0;
             IntPtr recvEvent = IntPtr.Zero;
             bool modified = false;
             bool result;
@@ -250,54 +180,30 @@ nextCycle:
                         
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if (addr.Direction == WinDivertDirection.Outbound )
                         {
+                            count++;
+                            Helpers.ConsolePrint("WinDivertSharp", "COUNT = " + count.ToString());
+                            if (count > 5)
+                            {
+                                Divert.Neoscryptdivert_running = false;
+                                WinDivert.WinDivertClose(DivertHandle);
+                                break;
+                            }
                             //список соответствия src port и dst ip
-                            if(!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
+                            if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
                             {
                                 InboundPorts.Add(Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 ":" + parse_result.IPv4Header->DstAddr.ToString());
                             }
-                            /*
-                            if (OwnerPID.Contains("miniz") &&
-                                (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 14040)
-                                ) //ssl
-                            {
-                                DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                DevFeePort = parse_result.TcpHeader->DstPort;
-                                Helpers.ConsolePrint("WinDivertSharp",
-                                "(" + OwnerPID.ToString() + ") -> Devfee connection to (" +
-                                DevFeeIP + ":" + Divert.SwapOrder(DevFeePort) + ")");
 
-                                DivertIP = DivertIP_Proxy1;
-                                DivertPort = Divert.SwapOrder(DivertPort_Proxy1);
-                                modified = true;
-                                goto changeSrcDst;
-                            }
-                            */
-                            /*
-                            if (OwnerPID.Contains("miniz") && (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 20595)
-                                ) 
-                            {
-                                DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                DevFeePort = parse_result.TcpHeader->DstPort;
-                                Helpers.ConsolePrint("WinDivertSharp",
-                                "(" + OwnerPID.ToString() + ") -> Devfee connection to (" +
-                                DevFeeIP + ":" + Divert.SwapOrder(DevFeePort) + ")");
-
-                                DivertIP = DivertIP_Proxy1;
-                                DivertPort = Divert.SwapOrder(DivertPort_Proxy2);
-                                modified = true;
-                                goto changeSrcDst;
-                            }
-                            */
                             if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8113 ||
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 4505) 
                             {
@@ -312,24 +218,7 @@ nextCycle:
 
                                 goto parsePacket;
                             }
- /*
-                            if (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8817)
-                            {
-                                DevFeeIP = parse_result.IPv4Header->DstAddr.ToString();
-                                DevFeePort = parse_result.TcpHeader->DstPort;
-                                Helpers.ConsolePrint("WinDivertSharp",
-                                "(" + OwnerPID.ToString() + ") -> Devfee connection to (" +
-                                DevFeeIP + ":" + Divert.SwapOrder(DevFeePort) + ")");
-
-                                DivertIP = DivertIP_Proxy1;
-                                DivertPort = Divert.SwapOrder(DivertPort_Proxy1);
-                                modified = true;
-                                goto changeSrcDst;
-                            }
-                            */
                                 goto parsePacket;
-                            
-
                         }
 
                         //*************************************************************************************************************
@@ -352,11 +241,11 @@ nextCycle:
 
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if (addr.Direction == WinDivertDirection.Inbound &&
@@ -393,11 +282,11 @@ Divert:
                         //обход модификации пакета. Иначе пул проглатывает шары
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if(PacketPayloadData == null)
@@ -426,15 +315,6 @@ modifyData:
                             modified = false;
                             //dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") packet: " + PacketPayloadData);
-                            /*
-                            if (PacketPayloadData.Contains("mining.subscribe"))
-                            {
-                                dynamic json = JsonConvert.DeserializeObject(PacketPayloadData);
-                                json.@params[2] = "dcd";
-                                PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
-                                goto changePayloadData;
-                            }
-                            */
                             //{"id":2,"method":"mining.authorize","params":["3JoULMRfR2SxEv9fWC6WXE9i5mk1UJWziz","m=solo"]}
                             if (PacketPayloadData.Contains("mining.authorize") && (
                                 Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 8113 ||
@@ -495,14 +375,6 @@ modifyData:
 
                         }
 changeSrcDst:
-                        /*
-                        Helpers.ConsolePrint("WinDivertSharp", "Before Src: "+ parse_result.IPv4Header->SrcAddr.ToString()+ ":"+ Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-                            " Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-                            " DevFeePort: " + Divert.SwapOrder(DevFeePort).ToString() +
-                            " Direction: " + addr.Direction.ToString() +
-                            " CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction));
-                          */
-
                         if (parse_result.TcpHeader->DstPort == DevFeePort &&
                                 addr.Direction == WinDivertDirection.Outbound &&
                                 parse_result.IPv4Header->DstAddr.ToString() == DevFeeIP &&
@@ -529,11 +401,11 @@ changeSrcDst:
 
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if (parse_result.TcpHeader->SrcPort == DivertPort &&
@@ -557,21 +429,13 @@ changeSrcDst:
                             if (parse_result.PacketPayloadLength > 0)
                             {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
-                                //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") <- packet: " + PacketPayloadData);
                             }
-                            //modified = false;
+                            count = -1;
                             goto sendPacket;
                         }
 
 
 sendPacket:
-                        parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                        /*
-                        if (modified)
-                        {
-                            WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.All);
-                        }
-                        */
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                         parse_result.TcpHeader->Checksum = 0;
                         var crc = Divert.CalcTCPChecksum(packet, readLen);
@@ -601,25 +465,11 @@ sendPacket:
 
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
-                            /*
-                            Helpers.ConsolePrint("WinDivertSharp", "After Src: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-"Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-" DevFeePort: " + Divert.SwapOrder(DevFeePort).ToString() +
-" Direction: " + addr.Direction.ToString() +
-" CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction));
-*/
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
-                            /*
-                            Helpers.ConsolePrint("WinDivertSharp", "After Src: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
-" Dst: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
-" DevFeePort: " + Divert.SwapOrder(DevFeePort).ToString() +
-" Direction: " + addr.Direction.ToString() +
-" CheckParityConnections(processId, parse_result.TcpHeader->SrcPort): " + CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction));
-*/
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))

@@ -32,8 +32,7 @@ namespace NiceHashMinerLegacy.Divert
         private static string DevFeeIP = "";
         private static string DevFeeIP1 = "";
         private static string DevFeeIP2 = "";
-        private static string DevFeeIP3 = "";
-        private static string DevFeeIP4 = "";
+
         private static ushort DevFeePort = 0;
 
         private static string DivertIP = "";
@@ -48,8 +47,6 @@ namespace NiceHashMinerLegacy.Divert
         private static string DivertIP3 = "";
         private static ushort DivertPort3 = 0;
 
-        private static string DivertIP4 = "";
-        private static ushort DivertPort4 = 0;
 
         private static string DivertIP5 = "";
         private static ushort DivertPort5 = 0;
@@ -84,63 +81,7 @@ namespace NiceHashMinerLegacy.Divert
         private static string RemoteIP;
         private static bool noPayload = true;
 
-        internal static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir)
-        {
-            if (String.Join(" ", processIdList).Contains("gminer: force"))
-            {
-                return "gminer: force";
-            }
-            
-            string ret = "unknown";
-            string miner = "";
-            Port = Divert.SwapOrder(Port);
-
-            List<Connection> _allConnections = new List<Connection>();
-            _allConnections.Clear();
-                _allConnections.AddRange(NetworkInformation.GetTcpV4Connections());
-
-                for (int i = 1; i < _allConnections.Count; i++)
-                {
-                    if (String.Join(" ", processIdList).Contains(_allConnections[i].OwningPid.ToString()) &&
-                        (_allConnections[i].LocalEndPoint.Port == Port) ||
-                        _allConnections[i].RemoteEndPoint.Port == Port)
-                    {
-                        ret = _allConnections[i].OwningPid.ToString();
-                        for (var j = 0; j < processIdList.Count; j++)
-                        {
-                            if (processIdList[j].Contains(ret))
-                            {
-                                miner = processIdList[j].Split(':')[0];
-                            }
-                        }
-
-                    if (!String.Join(" ", _oldPorts).Contains(Port.ToString()))
-                    {
-                        _oldPorts.Add(miner + ": " + ret + " : " + Port.ToString());
-                        //Helpers.ConsolePrint("WinDivertSharp", "add _oldPorts: " + String.Join(" ", _oldPorts));
-                    }
-                        _allConnections.Clear();
-                        _allConnections = null;
-                        return miner + ": " + ret;
-                    }
-                }
-            for (int i = 1; i < _oldPorts.Count; i++)
-            {
-               //Helpers.ConsolePrint("WinDivertSharp", "_oldPorts: " + String.Join(" ", _oldPorts));
-                if (String.Join(" ", _oldPorts).Contains(Port.ToString()))
-                {
-                    //Helpers.ConsolePrint("WinDivertSharp", "_oldPorts found: " + Port.ToString());
-                    return "unknown: ?";
-                }
-            }
-
-               // Helpers.ConsolePrint("WinDivertSharp", "Error processIdList: " + String.Join(" ", processIdList) +
-               // " Port not found: " + Port.ToString() + " Direction: " + dir);
-            _allConnections.Clear();
-            _allConnections = null;
-
-            return "-1";
-        }
+        
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr EthashDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
@@ -151,16 +92,10 @@ namespace NiceHashMinerLegacy.Divert
 
             DivertIP1 = Divert.DNStoIP("eu1.ethermine.org");
             DivertPort1 = 4444;
-            //DivertIP1 = Divert.DNStoIP("eth-eu1.nanopool.org"); //не понимает логин клеймора
-            //DivertIP1 = Divert.DNStoIP("asia1.ethermine.org");
-            //DivertPort1 = 9999;
 
             DivertLogin2 = "angelbbs";
-            DivertIP2 = Divert.DNStoIP("eth.f2pool.com");//eth.f2pool.com:8008 //49.247.192.198:8008 - etp-kor1.topmining.co.kr:8008
+            DivertIP2 = Divert.DNStoIP("eth.f2pool.com");
             DivertPort2 = 6688;
-
-            //не работает. пока отключим шиткоины
-            //clo.2miners.com:3030 exp.2miners.com:3030 pirl.2miners.com:6060 etp.2miners.com:9292
 
             DivertLogin3 = "0x88d8fDa3075C6319637431b0bf4b9fE7a4Fe5eEC"; //etc
             DivertIP3 = Divert.DNStoIP("eu1-etc.ethermine.org");
@@ -180,46 +115,27 @@ namespace NiceHashMinerLegacy.Divert
             DivertPort_Proxy2 = 3010;//nbminer
             //-----------------------------------------------
 
-            //   " || tcp.SrcPort == 3030 || tcp.SrcPort == 6060 || tcp.SrcPort == 9292)" +
-            //   " || tcp.DstPort == 3030 || tcp.DstPort == 6060 || tcp.DstPort == 9292)" +
             filter = "(!loopback && outbound ? (tcp.DstPort == 3333 || tcp.DstPort == 4444 || tcp.DstPort == 13333 ||" +
                 " tcp.DstPort == 9999 || tcp.DstPort == 19999 || tcp.DstPort == 14444 || tcp.DstPort == 20555 ||" +
-                " tcp.DstPort == 8008 || tcp.DstPort == 8018 ||tcp.DstPort == 3030 || tcp.DstPort == 6060 || tcp.DstPort == 9292 ||" +
+                " tcp.DstPort == 8018 ||tcp.DstPort == 3030 || tcp.DstPort == 6060 || tcp.DstPort == 9292 ||" +
                 " tcp.DstPort == 6666 || tcp.DstPort == 8443 || tcp.DstPort == 20000 || tcp.DstPort == 20003 ||" +
                 " tcp.DstPort == 9433 || tcp.DstPort == 19433 || tcp.DstPort == 6688 ||" +
                 " tcp.DstPort == 5555 || tcp.DstPort == 3000 || tcp.DstPort == 3310)" +
                 " : " + 
                 "(tcp.SrcPort == 3333 || tcp.SrcPort == 4444 || tcp.SrcPort == 13333 ||" +
                 " tcp.SrcPort == 9999 || tcp.SrcPort == 19999 || tcp.SrcPort == 14444 || tcp.SrcPort == 20555 ||" +
-                " tcp.SrcPort == 8008 || tcp.SrcPort == 8018 || tcp.SrcPort == 3030 || tcp.SrcPort == 6060 || tcp.SrcPort == 9292 ||" +
+                " tcp.SrcPort == 8018 || tcp.SrcPort == 3030 || tcp.SrcPort == 6060 || tcp.SrcPort == 9292 ||" +
                 " tcp.SrcPort == 6666 || tcp.SrcPort == 8443 || tcp.SrcPort == 20000 || tcp.SrcPort == 20003 ||" +
                 " tcp.SrcPort == 20003 || tcp.SrcPort == 6688 ||" +
                 " tcp.SrcPort == 9433 || tcp.SrcPort == 19433 ||" +
                 " tcp.SrcPort == 5555 || tcp.SrcPort == 3000 || tcp.SrcPort == 3010)" +
                 ")";
 
-            uint errorPos = 0;
-
-            if (!WinDivert.WinDivertHelperCheckFilter(filter, WinDivertLayer.Network, out string errorMsg, ref errorPos))
-            {
-                Helpers.ConsolePrint("WinDivertSharp", "Error in filter string at position: " + errorPos.ToString());
-                Helpers.ConsolePrint("WinDivertSharp", "Error: " + errorMsg);
-                return new IntPtr(-1);
-            }
-
-            DivertHandle = WinDivert.WinDivertOpen(filter, WinDivertLayer.Network, 0, WinDivertOpenFlags.None);
-
+            DivertHandle = Divert.OpenWinDivert(filter);
             if (DivertHandle == IntPtr.Zero || DivertHandle == new IntPtr(-1))
             {
-                Helpers.ConsolePrint("WinDivertSharp", "Invalid handle. Failed to open. Is run as Administrator?");
                 return new IntPtr(-1);
             }
-
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueLen, 16384); //16386
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueTime, 1000);
-            WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 33554432);
-            //WinDivert.WinDivertSetParam(DivertHandle, WinDivertParam.QueueSize, 2097152);
-
             RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
 
             return DivertHandle;
@@ -246,9 +162,7 @@ namespace NiceHashMinerLegacy.Divert
             int np = 1;
             uint readLen = 0;
             List<string> InboundPorts = new List<string>();
-
-        //Span<byte> packetData = null;
-
+            int count = 0;
             NativeOverlapped recvOverlapped;
 
             IntPtr recvEvent = IntPtr.Zero;
@@ -311,28 +225,15 @@ namespace NiceHashMinerLegacy.Divert
                                 File.WriteAllText("temp/" + np.ToString() + "old-" + addr.Direction.ToString() + ".pkt", cpacket0);
                         }
 
-                        /*
-                        if (stratumRatio < -7)
-                        {
-                            Helpers.ConsolePrint("WinDivertSharp", "Alternate divert stratum, ratio: " + stratumRatio.ToString());
-                            DivertIP1 = Divert.DNStoIP("asia1.ethermine.org");
-                            DivertPort1 = 14444;
-                            stratumRatio = -100; //фиксируем на альтернативном пуле. Потом подумать, как обратно вернуть
-                        }
-                        if (stratumRatio > 10)
-                        {
-                            stratumRatio = 5;
-                        }
-                        */
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
@@ -396,6 +297,14 @@ namespace NiceHashMinerLegacy.Divert
 
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
+                            count++;
+                            Helpers.ConsolePrint("WinDivertSharp", "COUNT = " + count.ToString());
+                            if (count > 5)
+                            {
+                                Divert.Ethashdivert_running = false;
+                                WinDivert.WinDivertClose(DivertHandle);
+                                break;
+                            }
                             //список соответствия src port и dst ip
                             if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
                             {
@@ -619,11 +528,11 @@ namespace NiceHashMinerLegacy.Divert
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if (addr.Direction == WinDivertDirection.Inbound &&
@@ -674,11 +583,11 @@ Divert:
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if(PacketPayloadData == null)
@@ -947,11 +856,11 @@ changeSrcDst:
                         //OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if (parse_result.TcpHeader->SrcPort == DivertPort &&
@@ -983,7 +892,7 @@ changeSrcDst:
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 //Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") <- packet: " + PacketPayloadData);
                             }
-                            //modified = false;
+                            count = -1;
                             goto sendPacket;
                         }
 
@@ -1026,11 +935,11 @@ changeSrcDst:
 
                         if (addr.Direction == WinDivertDirection.Outbound)
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction);
+                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
                         if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
