@@ -291,6 +291,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
 
                             },
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW")
+                            {
+
+                            },
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                             {
                                 ExtraLaunchParameters = "--di 100"
@@ -409,6 +413,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Eaglesong, "Eaglesong"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Handshake, "Handshake"),
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                             {
