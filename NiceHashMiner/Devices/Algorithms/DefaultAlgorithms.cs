@@ -513,7 +513,7 @@ namespace NiceHashMiner.Devices.Algorithms
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
                     /*
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Handshake, "")
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "")
                     {
                     },
                     */
