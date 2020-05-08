@@ -155,7 +155,8 @@ namespace NiceHashMiner.Miners
                 string[,] myServers = Form_Main.myServers;
                 Random r = new Random();
                 int r1 = r.Next(0, 5);
-                IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[r1, 0] + ".nicehash.com"));
+                //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[r1, 0] + ".nicehash.com"));
+                IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[0, 0] + ".nicehash.com"));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
 
                 serverStream = null;
@@ -307,6 +308,7 @@ namespace NiceHashMiner.Miners
                             {
                                 //   continue;
                                 Helpers.ConsolePrint("DaggerHashimoto3GB", "clientZero");
+                                break;
                             }
                             /*
                             if (SavePackets)

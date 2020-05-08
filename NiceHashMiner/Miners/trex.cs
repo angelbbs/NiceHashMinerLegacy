@@ -209,7 +209,7 @@ namespace NiceHashMiner.Miners
                                   DeviceType.NVIDIA) + " --no-watchdog -l " + GetLogFileName() +
                               " -d ";
                 commandLine += GetDevicesCommandString();
-                _benchmarkTimeWait = time * 2;
+                _benchmarkTimeWait = time + 60;
             }
             return commandLine;
         }
@@ -381,17 +381,20 @@ namespace NiceHashMiner.Miners
                                     var e = line.ToLower().IndexOf("h/s");
                                     var parse = line.Substring(st + 2, e - st - 4).Trim();
                                     tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                                    if (tmp != 0)
-                                    {
+                                    //if (tmp != 0)
+                                    //{
                                         shares++;
-                                    }
+                                    //}
                                     // save speed
                                     if (line.ToLower().Contains("kh/s"))
                                         speed += tmp * 1000;
                                     else if (line.ToLower().Contains("mh/s"))
                                         speed += tmp * 1000000;
-                                    if (shares != 0) BenchmarkAlgorithm.BenchmarkSpeed = speed / shares;
-                                    BenchmarkSignalFinnished = true;
+                                    if (shares != 0)
+                                    {
+                                        BenchmarkAlgorithm.BenchmarkSpeed = speed / shares;
+                                        BenchmarkSignalFinnished = true;
+                                    }
 
                                 }
                             }

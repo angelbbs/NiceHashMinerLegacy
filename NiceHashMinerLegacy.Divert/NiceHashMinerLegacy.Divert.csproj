@@ -12,12 +12,14 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\Debug\</OutputPath>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -60,18 +62,7 @@
     <Compile Include="Connection.cs" />
     <Compile Include="DTest.cs" />
     <Compile Include="DDagger3GB.cs" />
-    <Compile Include="DEthash.cs" />
     <Compile Include="Divert.cs" />
-    <Compile Include="DXMRig.cs" />
-    <Compile Include="DBeam.cs" />
-    <Compile Include="DRandomX.cs" />
-    <Compile Include="DGrin.cs" />
-    <Compile Include="DX16rV2.cs" />
-    <Compile Include="DCuckooCycle.cs" />
-    <Compile Include="DHandshake.cs" />
-    <Compile Include="DNeoscrypt.cs" />
-    <Compile Include="DCuckarood29.cs" />
-    <Compile Include="DZhash.cs" />
     <Compile Include="Ethash\ArrayExtensions.cs" />
     <Compile Include="Ethash\Converters.cs" />
     <Compile Include="Ethash\Hash.cs" />
@@ -88,7 +79,16 @@
     <Compile Include="Logger.cs" />
     <Compile Include="NetworkInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicFunc.cs" />
     <Compile Include="variables.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
 </Project>

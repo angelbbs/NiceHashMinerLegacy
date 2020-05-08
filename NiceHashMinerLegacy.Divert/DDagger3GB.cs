@@ -197,7 +197,7 @@ nextCycle:
                                                 {
                                                     //packet.Dispose();
                                                 }
-                                                if (Divert.Dagger3GBEpochCount > 0)
+                                                if (Divert.Dagger3GBEpochCount > 1)
                                                 {
                                                     
                                                     Divert.DaggerHashimoto3GBForce = true;
@@ -206,39 +206,7 @@ nextCycle:
                                                 }
                                                 //Divert.Dagger3GBEpochCount = 999;
                                                 Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
-                                                //packet.Dispose();
-                                                //goto nextCycle;
-                                                /*
-                                                if (Divert.Dagger3GBJob.Length > 10)
-                                                {
-                                                */
-                                                //Job not found
-                                                /*
-                                                dynamic json3gb = JsonConvert.DeserializeObject(Divert.Dagger3GBJob);
-                                                string hash1_3gb = json3gb.@params[0];
-                                                string seedhash3gb = json3gb.@params[1];
-                                                string hash3_3gb = json3gb.@params[2];
-                                                var epoch3gb = Epoch(seedhash3gb);
 
-                                                Helpers.ConsolePrint("WinDivertSharp", "Additional job. Epoch = " + epoch3gb.ToString());
-                                                json.@params[0] = hash1_3gb; 
-                                                json.@params[1] = seedhash3gb; 
-                                                json.@params[2] = hash3_3gb;
-
-                                                PacketPayloadData = JsonConvert.SerializeObject(json).Replace(" ", "") + (char)10;
-                                                var modpacket = Divert.MakeNewPacket(packet, readLen, PacketPayloadData);
-                                                packet.Dispose();
-                                                packet = modpacket;
-                                                readLen = packet.Length;
-                                                WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
-                                                */
-                                                /*
-                                            } else
-                                            {
-                                                Divert.Dagger3GBEpochCount = 999;
-                                                Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
-                                            }
-                                            */
                                             }
 
                                         }

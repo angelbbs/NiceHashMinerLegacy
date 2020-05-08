@@ -292,13 +292,15 @@ namespace NiceHashMiner
 
         public void KillAllUsedMinerProcesses()
         {
-            Form_Main.checkD();
+            //new Task(() => Form_Main.checkD()).Start();
             var toRemovePidData = new List<MinerPidData>();
             Helpers.ConsolePrint(MinerTag(), "Trying to kill all miner processes for this instance:");
             var algo = (int)MiningSetup.CurrentAlgorithmType;
+            //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
+            //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
             if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
             {
-                algo = -100;
+               // algo = -100;
             }
             foreach (var pidData in _allPidData)
             {
@@ -310,8 +312,8 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         try
                         {
-                            if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
-                            {
+                            //if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
+                           // {
                                 if (!DHClient.checkConnection)//
                                 {
                                     if (Form_Main.DaggerHashimoto3GB)
@@ -319,8 +321,9 @@ namespace NiceHashMiner
                                         new Task(() => DHClient.StopConnection()).Start();
                                     }
                                 }
-                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo, (int)MiningSetup.CurrentSecondaryAlgorithmType);
-                            }
+                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo, 
+                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                          //  }
                             process.Kill();
                             process.Close();
                             process.WaitForExit(1000 * 20);
@@ -425,11 +428,13 @@ namespace NiceHashMiner
         }
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
         {
-            Form_Main.checkD();
+            //new Task(() => Form_Main.checkD()).Start();
             var algo = (int)MiningSetup.CurrentAlgorithmType;
+            //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
+            //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
             if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
             {
-                algo = -100;
+               // algo = -100;
             }
             if (IsRunning)
             {
@@ -442,8 +447,8 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
-                {
+                //if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
+                //{
                     //DHClient.checkConnection = false;
                     if (!DHClient.checkConnection)//
                     {
@@ -452,8 +457,9 @@ namespace NiceHashMiner
                             new Task(() => DHClient.StopConnection()).Start();
                         }
                     }
-                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo, (int)MiningSetup.CurrentSecondaryAlgorithmType);
-                }
+                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo, 
+                        (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                //}
                 KillProcessAndChildren(pid);
 
                 if (ProcessHandle != null)
@@ -1285,6 +1291,8 @@ namespace NiceHashMiner
                     if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
                         if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
                         {
                             algo = -100;

@@ -393,6 +393,7 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
                 {
                     if (outdata.Contains("Total Speed:") && outdata.Contains("g/s")) //grin

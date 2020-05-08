@@ -503,7 +503,8 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("ConnectToGoogle", "Connect to google OK");
                 }
-                checkD();
+                //checkD();
+                new Task(() => checkD()).Start();
 
             }
             catch (Exception er)
@@ -522,7 +523,7 @@ namespace NiceHashMiner
                 Thread.Sleep(500);
                 NiceHashStats.ConnectToGoogle("Check connection");
                 Thread.Sleep(2000);
-                Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0);
+                Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0, true);
                 //Helpers.ConsolePrint("ConnectToGoogle", GoogleAnswer); //is Running?
             }
         }
