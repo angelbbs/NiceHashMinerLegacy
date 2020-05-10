@@ -81,7 +81,7 @@ namespace NiceHashMiner.Stats
         #endregion
 
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
-        private const int DeviceUpdateInterval = 30 * 1000;
+        private const int DeviceUpdateInterval = 45 * 1000;
 
         public static double Balance { get; private set; }
        // public static string Version { get; private set; }
@@ -140,6 +140,7 @@ namespace NiceHashMiner.Stats
             LoadCachedSMAData();
             _socket = null;
             _socket = new NiceHashSocket(address);
+            
             //_socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
             _socket.OnDataReceived += SocketOnOnDataReceived;
          //   _socket.OnConnectionLost += SocketOnOnConnectionLost;
@@ -162,7 +163,7 @@ namespace NiceHashMiner.Stats
         */
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
-            //GC.Collect();
+            
             try
             {
                 if (e.IsText)
@@ -268,6 +269,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
             }
+            GC.Collect();
         }
 
         public class Rootobject
@@ -336,52 +338,6 @@ namespace NiceHashMiner.Stats
                 return;
             }
             Helpers.ConsolePrint("REMOTE", "id: "+id+" device: "+ deviceToSwitch);
-
-            string type;
-            string b64Web;
-            string nuuid = "";
-            var devices = ComputeDeviceManager.Available.Devices;
-            var deviceList = new JArray();
-            foreach (var device in devices)
-            {
-                try
-                {
-                    if (device.DeviceType == DeviceType.CPU)
-                    {
-                        type = "1";
-                        b64Web = UUID.GetB64UUID(device.NewUuid);
-                       // Helpers.ConsolePrint("device.NewUuid", device.NewUuid);
-                       // Helpers.ConsolePrint("device.Uuid", device.Uuid);
-                        nuuid = $"{type}-{b64Web}";
-                    }
-                    if (device.DeviceType == DeviceType.NVIDIA)
-                    {
-                        type = "2";
-                        b64Web = UUID.GetB64UUID(device.Uuid);
-                        nuuid = $"{type}-{b64Web}";
-                    }
-                    if (device.DeviceType == DeviceType.AMD)
-                    {
-                        type = "3";
-                        var uuidHEX = UUID.GetHexUUID(device.Uuid);//это не правильный uuid, но будет работать
-                        var Newuuid = $"AMD-{uuidHEX}";
-                        b64Web = UUID.GetB64UUID(Newuuid);
-                        nuuid = $"{type}-{b64Web}";
-                    }
-                    var deviceName = device.Name;
-                    device.Enabled = Enabled;
-                    remoteUpdateUI = true;
-                    /*
-                    if (rigStatus != "PENDING")
-                    {
-                        deviceName = "";
-                    }
-                    */
-
-                }
-                catch (Exception e) { Helpers.ConsolePrint("REMOTE", e.ToString()); }
-            }
-
 
             //var cExecutedNotImplemented = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Not implemented in Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".") + "\"]}";
             var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
@@ -1123,6 +1079,11 @@ namespace NiceHashMiner.Stats
         internal static TcpClient tcpClientGoogle = null;
         public static void ConnectToGoogle(string request = "GET / HTTP/1.1\r\n\r\n")
         {
+            if (!ConfigManager.GeneralConfig.DivertRun)
+            {
+                Form_Main.GoogleAnswer = "";
+                return;
+            }
             try
             {
                 tcpClientGoogle = new TcpClient();
@@ -1183,11 +1144,66 @@ namespace NiceHashMiner.Stats
             }
         }
 
+        private class NicehashLoginNew
+        {
+            public string method = "login";
+            public string version;
+            public int protocol = 1;
+            public string btc;
+            public string worker;
+            public string group;
+            public string rig;
+        }
+        public void SendLogin()
+        {
+            try
+            {
+                //send login
+                int protocol = 1;
+                string btc;
+                string worker;
+                string group = "";
+                string rig = UUID.GetDeviceB64UUID();
+                string CpuID = UUID.GetCpuID();
+
+                var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
+                    protocol = 3;
+                    version = "NHML/3.0.0.5"; //
+                    if (ConfigManager.GeneralConfig.Send_actual_version_info)
+                    {
+                        version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
+                    }
+                    btc = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;
+                    worker = Configs.ConfigManager.GeneralConfig.WorkerName;
+
+
+                    var login = new NicehashLoginNew
+                    {
+                        version = version,
+                        protocol = protocol,
+                        btc = btc,
+                        worker = worker,
+                        group = group,
+                        rig = rig
+
+                    };
+                    var loginJson = JsonConvert.SerializeObject(login);
+                    //loginJson = loginJson.Replace("{", " { ");
+                    _socket.SendData(loginJson);
+                
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("SendLogin", er.ToString());
+            }
+        }
         public static void DeviceStatus_TickNew(object sender, ElapsedEventArgs e)
         {
+            //_socket.ConnectCallback(null, null);
+           // _socket.SendData(sendData);
             SetDeviceStatus(null);
         }
-        public static async void SetDeviceStatus(object state)
+        public static async void SetDeviceStatus(object state, bool devName = false)
         {
             //new Task(() => ConnectToGoogle()).Start();
             var devices = ComputeDeviceManager.Available.Devices;
@@ -1238,12 +1254,17 @@ namespace NiceHashMiner.Stats
                     {
                         type = "3";
                         status = 24;
+                        /*
                         var uuidHEX = UUID.GetHexUUID(device.Uuid);//это не правильный uuid, но будет работать
                         var Newuuid = $"AMD-{uuidHEX}";
                         b64Web = UUID.GetB64UUID(Newuuid);
                         nuuid = $"{type}-{b64Web}";
+                        */
+                        b64Web = UUID.GetB64UUID(device.Uuid);
+                        nuuid = $"{type}-{b64Web}";
                     }
                     var deviceName = device.Name;
+                    if (!devName) deviceName = "";
                     /*
                     if (rigStatus != "PENDING")
                     {
@@ -1261,9 +1282,24 @@ namespace NiceHashMiner.Stats
 
                     //var status = ((int)device.DeviceType + 9) + Convert.ToInt32(Miner.IsRunningNew);
                     //var status =  9;
+                    int rigs = 0;
+                    if (rigStatus == "STOPPED")
+                    {
+                        rigs = 0;
+                    }
+                    if (rigStatus == "MINING")
+                    {
+                        rigs = 1;
+                    }
+                    if (rigStatus == "PENDING")
+                    {
+                        rigs = 0;
+                    }
                     if (device.Enabled)
                     {
-                        status = status + Convert.ToInt32(Miner.IsRunningNew) + Convert.ToInt32(device.Enabled);
+                        status = status + rigs + Convert.ToInt32(device.Enabled);
+                        //status = status + Convert.ToInt32(Miner.IsRunningNew) + Convert.ToInt32(device.Enabled);
+
                     }
                     //var status = 9;
                     array.Add(status);
@@ -1279,8 +1315,9 @@ namespace NiceHashMiner.Stats
                     }
                     else
                     */
+                    if (rigs == 1)
                     {
-                        speedsJson.Add(new JArray()); //  42, 55.0
+                       // speedsJson.Add(new JArray(52, 10000000)); //  номер алгоритма, хешрейт
                     }
                     //    }
                     //}

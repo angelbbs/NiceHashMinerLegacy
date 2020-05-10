@@ -597,7 +597,7 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(1000 * 5);
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
                 // find latest log file
                 var latestLogFile = "";

@@ -120,27 +120,4 @@ namespace NiceHashMinerLegacy.Divert
 
         }
     }
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
 }

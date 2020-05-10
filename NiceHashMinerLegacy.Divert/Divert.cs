@@ -584,9 +584,9 @@ namespace NiceHashMinerLegacy.Divert
         {
             _certInstalled = CertInstalled;
             logging = log;
-            //logging = false;
+            logging = false;
             _SaveDivertPackets = SaveDiverPackets;
-            //_SaveDivertPackets = false;
+            _SaveDivertPackets = false;
             worker = w;
             //***********************************************************************************
             if (CurrentAlgorithmType == -9) //dagerhashimoto3gb

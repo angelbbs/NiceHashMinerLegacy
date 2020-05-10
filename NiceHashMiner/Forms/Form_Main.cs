@@ -519,12 +519,12 @@ namespace NiceHashMiner
             int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false);
             if (dhandle != -1)
             {
-                DivertAvailable = true;
                 Thread.Sleep(500);
                 NiceHashStats.ConnectToGoogle("Check connection");
                 Thread.Sleep(2000);
                 Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0, true);
                 //Helpers.ConsolePrint("ConnectToGoogle", GoogleAnswer); //is Running?
+                if (GoogleAnswer.Contains("Running")) DivertAvailable = true;
             }
         }
         private void StartupTimer_Tick(object sender, EventArgs e)
@@ -2043,11 +2043,14 @@ namespace NiceHashMiner
         
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
-            foreach (var hardware in Form_Main.thisComputer.Hardware)
+            if (Form_Main.thisComputer != null)
             {
-                if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                foreach (var hardware in Form_Main.thisComputer.Hardware)
                 {
-                    hardware.Update();
+                    if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                    {
+                        hardware.Update();
+                    }
                 }
             }
             if (DeviceStatusTimer_FirstTick) CheckDagger3GB();
