@@ -311,16 +311,6 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.sgminer;
                 case MinerBaseType.CastXMR:
                     return MinerType.CastXMR;
-                case MinerBaseType.ccminer:
-                case MinerBaseType.ccminer_alexis:
-                case MinerBaseType.experimental:
-/*
-                    if (AlgorithmType.CryptoNight == algorithmType)
-                    {
-                        return MinerType.ccminer_CryptoNight;
-                    }
-*/
-                    return MinerType.ccminer;
                 case MinerBaseType.hsrneoscrypt:
                     return MinerType.hsrneoscrypt;
                 case MinerBaseType.CryptoDredge:
@@ -353,6 +343,8 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.miniZ;
                 case MinerBaseType.Nanominer:
                     return MinerType.Nanominer;
+                case MinerBaseType.Kawpowminer:
+                    return MinerType.Kawpowminer;
 
 
                 case MinerBaseType.Claymore:

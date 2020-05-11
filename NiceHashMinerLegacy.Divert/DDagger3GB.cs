@@ -193,6 +193,7 @@ nextCycle:
                                             {
                                                 packet.Dispose();
                                                 Divert.Dagger3GBEpochCount++;
+
                                                 if (Divert.Dagger3GBEpochCount > 0)//1й пакет убираем
                                                 {
                                                     //packet.Dispose();
@@ -205,7 +206,7 @@ nextCycle:
                                                     Divert.Dagger3GBEpochCount = 999;
                                                 }
                                                 //Divert.Dagger3GBEpochCount = 999;
-                                                Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
+                                                goto nextCycle;
 
                                             }
 

@@ -99,6 +99,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string TTMiner = minersBins + @"\TT-Miner\TT-Miner.exe";
             public const string NBMiner = minersBins + @"\NBMiner\nbminer.exe";
             public const string miniZ = minersBins + @"\miniZ\miniZ.exe";
+            public const string Kawpowminer = minersBins + @"\kawpowminer\kawpowminer.exe";
         }
 
         // NEW START
@@ -175,6 +176,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.miniZ;
                 case MinerBaseType.Nanominer:
                     return Data.Nanominer;
+                case MinerBaseType.Kawpowminer:
+                    return Data.Kawpowminer;
             }
             return Data.None;
         }
@@ -317,6 +320,22 @@ namespace NiceHashMiner.Miners.Grouping
                 }
                 // TODO wrong case?
                 return Data.None; // should not happen
+            }
+
+            public static string Kawpowminer(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
+            {
+                // sm21 and sm3x have same settings
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_2_1 || nvidiaGroup == DeviceGroupType.NVIDIA_3_x)
+                {
+                    return Data.Kawpowminer;
+                }
+                // sm5x and sm6x have same settings otherwise
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x)
+                {
+                    return Data.Kawpowminer;
+                }
+                // TODO wrong case?
+                return Data.Kawpowminer; // should not happen
             }
 
             public static string trex(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)

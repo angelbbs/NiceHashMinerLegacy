@@ -78,7 +78,14 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>()
 
             ),
+                new MinerOptionPackage(
+                MinerType.Kawpowminer,
+                new List<MinerOption>() {
+                    new MinerOption("Kawpowminer_nocolor", "--nocolor", "--nocolor", null, MinerOptionFlagType.Uni)
+                },
+                new List<MinerOption>()
 
+            ),
                 new MinerOptionPackage(
                 MinerType.TTMiner,
                 new List<MinerOption>() {

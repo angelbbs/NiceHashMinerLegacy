@@ -404,6 +404,14 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                         }
             },
+            { MinerBaseType.Kawpowminer,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.Kawpowminer, AlgorithmType.KAWPOW, "KAWPOW")
+                            {
+                                 //  ExtraLaunchParameters = " "
+                            },
+                        }
+            },
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29, "GrinCuckaroo29"),
@@ -512,11 +520,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
-                    
+
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "")
                     {
                     },
-                    
+
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

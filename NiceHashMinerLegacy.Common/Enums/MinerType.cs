@@ -44,6 +44,7 @@
         NBMiner,
         miniZ,
         Nanominer,
+        Kawpowminer,
         END
     }
 }

@@ -631,7 +631,8 @@ namespace NiceHashMiner.Devices
                 MinerBaseType.TTMiner,
                 MinerBaseType.NBMiner,
                 MinerBaseType.miniZ,
-                MinerBaseType.Nanominer
+                MinerBaseType.Nanominer,
+                MinerBaseType.Kawpowminer
             };
 
             return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);

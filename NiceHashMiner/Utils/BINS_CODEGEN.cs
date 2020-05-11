@@ -23,6 +23,7 @@ namespace NiceHashMiner.Utils
             @"/WildRig/wildrig.exe",
             @"/NBMiner/NBMiner.exe",
             @"/miniZ/miniZ.exe",
+            @"/kawpowminer/kawpowminer.exe",
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
             @"/Fork_Fix_26.txt"
         };
