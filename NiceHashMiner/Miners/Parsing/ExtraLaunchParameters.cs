@@ -71,8 +71,9 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("miniZ_nocolor", "--nocolor", "--nocolor", null, MinerOptionFlagType.Uni),
                     new MinerOption("miniZ_f11", "--f11=", "--f11=", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("miniZ_extra", "--extra", "--extra", null, MinerOptionFlagType.Uni),
-                    new MinerOption("miniZ_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("miniZ_oc2", "--oc2", "--oc2", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("miniZ_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.Uni, ""),
+                    new MinerOption("miniZ_oc2", "--oc2", "--oc2", null, MinerOptionFlagType.Uni, ""),
+                    new MinerOption("miniZ_ocX", "--ocX", "--ocX", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("miniZ_mod", "--mode=", "--mode=", "0", MinerOptionFlagType.MultiParam, "")
                 },
                 new List<MinerOption>()
