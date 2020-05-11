@@ -514,17 +514,20 @@ namespace NiceHashMiner
         }
         public static void checkD()
         {
-            //divert test
-            Process thisProc = Process.GetCurrentProcess();
-            int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false);
-            if (dhandle != -1)
+            if (ConfigManager.GeneralConfig.DivertRun)
             {
-                Thread.Sleep(500);
-                NiceHashStats.ConnectToGoogle("Check connection");
-                Thread.Sleep(2000);
-                Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0, true);
-                //Helpers.ConsolePrint("ConnectToGoogle", GoogleAnswer); //is Running?
-                if (GoogleAnswer.Contains("Running")) DivertAvailable = true;
+                //divert test
+                Process thisProc = Process.GetCurrentProcess();
+                int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false);
+                if (dhandle != -1)
+                {
+                    Thread.Sleep(500);
+                    NiceHashStats.ConnectToGoogle("Check connection");
+                    Thread.Sleep(2000);
+                    Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0, true);
+                    //Helpers.ConsolePrint("ConnectToGoogle", GoogleAnswer); //is Running?
+                    if (GoogleAnswer.Contains("Running")) DivertAvailable = true;
+                }
             }
         }
         private void StartupTimer_Tick(object sender, EventArgs e)
@@ -1994,30 +1997,33 @@ namespace NiceHashMiner
 
         private void CheckDagger3GB()
         {
-            if (Divert.DaggerHashimoto3GBForce)
+            if (ConfigManager.GeneralConfig.DivertRun)
             {
-                if (Divert.DaggerHashimoto3GBProfit)
+                if (Divert.DaggerHashimoto3GBForce)
                 {
-                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON");
-                    NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-                    NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                    Divert.Dagger3GBEpochCount = 0;
-                    Divert.DaggerHashimoto3GBForce = false;
-                    DHClient.checkConnection = false;
+                    if (Divert.DaggerHashimoto3GBProfit)
+                    {
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON");
+                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
+                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+                        Divert.Dagger3GBEpochCount = 0;
+                        Divert.DaggerHashimoto3GBForce = false;
+                        DHClient.checkConnection = false;
+                        //DHClient.needStart = false;
+                        //new Task(() => DHClient.StopConnection()).Start();
+                    }
+                    if (Divert.Dagger3GBEpochCount > 1)
+                    {
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
+                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
+                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+                        Divert.DaggerHashimoto3GBForce = false;
+                        DHClient.checkConnection = true;
+                        //new Task(() => DHClient.StartConnection()).Start();
+                    }
                     //DHClient.needStart = false;
-                    //new Task(() => DHClient.StopConnection()).Start();
                 }
-                if (Divert.Dagger3GBEpochCount > 1)
-                {
-                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
-                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-                    NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                    Divert.DaggerHashimoto3GBForce = false;
-                    DHClient.checkConnection = true;
-                    //new Task(() => DHClient.StartConnection()).Start();
-                }
-                //DHClient.needStart = false;
             }
         }
         public static string DNStoIP(string IPName)

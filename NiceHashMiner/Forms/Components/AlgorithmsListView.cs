@@ -504,14 +504,18 @@ namespace NiceHashMiner.Forms.Components
             if (e.Item.Tag is Algorithm algo)
             {
                 algo.Enabled = e.Item.Checked;
-                if ((algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB && algo.Enabled && !Form_Main.DivertAvailable) ||
-                    !ConfigManager.GeneralConfig.DivertRun)
+                if (ConfigManager.GeneralConfig.DivertRun)
                 {
-                    algo.Enabled = false;
-                    e.Item.Checked = false;
-                    MessageBox.Show("WinDivert driver error. DaggerHashimoto3GB disabled",
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if ((Form_Main.DaggerHashimoto3GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB &&
+                        algo.Enabled && !Form_Main.DivertAvailable) ||
+                        !ConfigManager.GeneralConfig.DivertRun)
+                    {
+                        algo.Enabled = false;
+                        e.Item.Checked = false;
+                        MessageBox.Show("WinDivert driver error. DaggerHashimoto3GB disabled",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                    }
                 }
             }
 

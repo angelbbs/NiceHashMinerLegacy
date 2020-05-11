@@ -78,7 +78,7 @@ namespace NiceHashMiner.Updater
                     Thread.Sleep(1000);
                     Process setupProcess = new Process();
                     setupProcess.StartInfo.FileName = @"temp\" + Form_Main.githubName;
-                    setupProcess.StartInfo.Arguments = "/silent /dir=" + curdir;
+                    setupProcess.StartInfo.Arguments = "/silent /dir=\"" + curdir + "\"";
                     setupProcess.Start();
                 }
             }
@@ -105,7 +105,7 @@ namespace NiceHashMiner.Updater
 
                         Process setupProcess = new Process();
                         setupProcess.StartInfo.FileName = @"temp\" + Form_Main.githubName;
-                        setupProcess.StartInfo.Arguments = "/dir=" + curdir;
+                        setupProcess.StartInfo.Arguments = "/dir=\"" + curdir + "\"";
                         setupProcess.Start();
                     }
                     else

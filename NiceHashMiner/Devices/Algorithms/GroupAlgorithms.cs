@@ -383,6 +383,9 @@ namespace NiceHashMiner.Devices.Algorithms
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam > (ulong)(1024 * 1024 * 1024 * 2.7) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7)))
             {
                 Form_Main.DaggerHashimoto3GB = true;
+            } else
+            {
+                Form_Main.DaggerHashimoto3GB = false;
             }
 
                 if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
