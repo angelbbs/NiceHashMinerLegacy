@@ -139,16 +139,16 @@ namespace NiceHashMiner.Miners
         }
         public static void StartConnection()
         {
-            NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-            NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
+            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
             checkConnection = true;
             new Task(() => ConnectToPool()).Start();
         }
 
         public static void ConnectToPool()
         {
-            NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-            NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
+            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
             LingerOption lingerOption = new LingerOption(true, 0);
             while (checkConnection)
             {

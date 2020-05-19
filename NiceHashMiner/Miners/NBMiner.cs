@@ -183,7 +183,7 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://kawpow." + myServers[1, 0] + ".nicehash.com:3385 -u1 " + user +
                     $" -o2 stratum+tcp://kawpow." + myServers[2, 0] + ".nicehash.com:3385 -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --strict-ssl " + platform;
             }
             cmd += extra;
 

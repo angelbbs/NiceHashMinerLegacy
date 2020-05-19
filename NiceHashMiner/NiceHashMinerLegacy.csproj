@@ -180,6 +180,11 @@
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />
     <Compile Include="Miners\Kawpowminer.cs" />
     <Compile Include="Miners\Z-Enemy.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
@@ -408,14 +413,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <None Include="langs\en.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -439,7 +439,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\root.crt" />
     <None Include="Resources\rootCA.crt" />
+    <None Include="Resources\WinDivert.cer" />
+    <None Include="Resources\WinDivert2.cer" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />

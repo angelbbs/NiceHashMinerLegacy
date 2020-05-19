@@ -559,7 +559,7 @@ namespace NiceHashMiner
                     //Helpers.ConsolePrint("X509Store", "Add certificate");
                     store.Close();
                 }
-                //********************************************************************
+                
                 var version = Assembly.GetExecutingAssembly().GetName().Version;
                 var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
                 Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner Legacy Fork Fix: Build date " + buildDate);

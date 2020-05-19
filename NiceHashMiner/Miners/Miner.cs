@@ -298,10 +298,12 @@ namespace NiceHashMiner
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
             //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
+            /*
             if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
             {
                // algo = -100;
             }
+            */
             foreach (var pidData in _allPidData)
             {
                 try
@@ -318,7 +320,7 @@ namespace NiceHashMiner
                                 {
                                     if (Form_Main.DaggerHashimoto3GB)
                                     {
-                                        new Task(() => DHClient.StopConnection()).Start();
+                                        //new Task(() => DHClient.StopConnection()).Start();
                                     }
                                 }
                                 Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo, 
@@ -432,10 +434,12 @@ namespace NiceHashMiner
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
             //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
+            /*
             if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
             {
                // algo = -100;
             }
+            */
             if (IsRunning)
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Shutting down miner");
@@ -447,13 +451,16 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -9)
                 {
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Stop from miner session 1");
                     //DHClient.checkConnection = false;
                     if (!DHClient.checkConnection)//
                     {
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Stop from miner session 2");
                         if (Form_Main.DaggerHashimoto3GB)
                         {
+                            Helpers.ConsolePrint("DaggerHashimoto3GB", "Stop from miner session 3");
                             new Task(() => DHClient.StopConnection()).Start();
                         }
                     }
@@ -1288,28 +1295,38 @@ namespace NiceHashMiner
                             strPlatform = "CPU";
                         }
                     }
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 1");
                     if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
                         //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
                         //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
+                        /*
                         if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
                         {
                             algo = -100;
                         }
+                        */
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
-                        if (Form_Main.DaggerHashimoto3GB)
+                        if (Form_Main.DaggerHashimoto3GB && algo != -9)
                         {
+                            Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 2");
                             if (DHClient.serverStream == null)
                             {
                                 DHClient.checkConnection = true;
                                 Divert.Dagger3GBEpochCount = 999; //
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session");
+                                Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 3");
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
                             else
                             {
                                 Helpers.ConsolePrint("DaggerHashimoto3GB", "DHClient.serverStream not null");
+                                DHClient.serverStream.Close();
+                                DHClient.serverStream.Dispose();
+                                DHClient.checkConnection = true;
+                                Divert.Dagger3GBEpochCount = 999; //
+                                Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 4");
+                                new Task(() => DHClient.StartConnection()).Start();
                             }
                         }
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
@@ -1613,7 +1630,7 @@ namespace NiceHashMiner
         /// </summary>
         private void CoolUp()
         {
-            _currentCooldownTimeInSeconds *= 2;
+            _currentCooldownTimeInSeconds += 30 * 1000;
             Helpers.ConsolePrint(MinerTag(),
                 $"{ProcessTag()} Cooling UP, cool time is {_currentCooldownTimeInSeconds} ms");
             if (_currentCooldownTimeInSeconds > _maxCooldownTimeInMilliseconds)
@@ -1702,7 +1719,7 @@ namespace NiceHashMiner
             {
                 minername = "Claymore";
             }
-
+            minername = minername.Replace("Z-Enemy", "ZEnemy");
             var gpus = "";
             gpus += string.Join(",", MiningSetup.MiningPairs.Select(mPair => mPair.Device.ID.ToString()).ToList());
 

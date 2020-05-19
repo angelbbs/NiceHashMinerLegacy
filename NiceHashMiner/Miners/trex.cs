@@ -26,7 +26,7 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 240;
         private string[,] myServers = Form_Main.myServers;
         private const int TotalDelim = 2;
-        public trex() : base("trex_NVIDIA")
+        public trex() : base("trex")
         {
         }
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.trex;

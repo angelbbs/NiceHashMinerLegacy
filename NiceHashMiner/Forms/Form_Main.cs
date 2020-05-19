@@ -104,7 +104,7 @@ namespace NiceHashMiner
         public static string GoogleIP = "";
         public static string GoogleAnswer = "";
         public static bool GoogleAvailable = false;
-        public static bool DivertAvailable = false;
+        public static bool DivertAvailable = true;
         private static string dialogClearBTC = "You want to delete BTC address?";
         //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
@@ -498,6 +498,8 @@ namespace NiceHashMiner
             try
             {
                 CheckGithub();
+                checkD();
+                /*
                 NiceHashStats.ConnectToGoogle();
                 if (GoogleAnswer.Contains("HTTP"))
                 {
@@ -505,6 +507,7 @@ namespace NiceHashMiner
                 }
                 //checkD();
                 new Task(() => checkD()).Start();
+                */
 
             }
             catch (Exception er)
@@ -512,6 +515,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("CheckGithub", er.ToString());
             }
         }
+        
         public static void checkD()
         {
             if (ConfigManager.GeneralConfig.DivertRun)
@@ -530,6 +534,7 @@ namespace NiceHashMiner
                 }
             }
         }
+        
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             if (!ConfigManager.GeneralConfig.AutoStartMining)

@@ -217,105 +217,112 @@ namespace NiceHashMiner.Devices.Querying
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("");
             stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
-            foreach (var dev in amdDevices)
+            try
             {
-                ComputeDeviceManager.Available.HasAmd = true;
-
-                var busID = dev.AMD_BUS_ID;
-                var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE;
-                
-                if (busID != -1 && _busIdInfos.ContainsKey(busID))
+                foreach (var dev in amdDevices)
                 {
-                    var deviceName = _busIdInfos[busID].Name;
-                    
-                    var newAmdDev = new AmdGpuDevice(dev, _driverOld[deviceName],
-                        _busIdInfos[busID].InfSection, _noNeoscryptLyra2[deviceName])
+                    ComputeDeviceManager.Available.HasAmd = true;
+
+                    var busID = dev.AMD_BUS_ID;
+                    var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE;
+
+                    if (busID != -1 && _busIdInfos.ContainsKey(busID))
                     {
-                        DeviceName = deviceName,
-                        UUID = _busIdInfos[busID].Uuid,
-                        AdapterIndex = _busIdInfos[busID].Adl1Index,
-                        DeviceGlobalMemory = gpuRAM
-                };
+                        var deviceName = _busIdInfos[busID].Name;
 
-                    //PNPDeviceID PCI\VEN_1002&DEV_6811&SUBSYS_2015174B&REV_81\4&14486AD3&0&00E0       
-                    //UUID: PCI_VEN_1002&DEV_6811_14486AD3
-                    //*************
-                    string PnpDeviceID = "";
-                    ulong gpumem = 0;
-                    ulong gpumemadd = 1048576; //add 1MB to gpumem
-                    var moc = new ManagementObjectSearcher("root\\CIMV2",
-                        "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
-
-                    foreach (var manObj in moc)
-                    {
-                        ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
-                        PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
-                        gpumem = memTmp + gpumemadd‬;
-
-                    }
-
-                    if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
-                    {
-                        if (newAmdDev.DeviceGlobalMemory < gpumem)
+                        var newAmdDev = new AmdGpuDevice(dev, _driverOld[deviceName],
+                            _busIdInfos[busID].InfSection, _noNeoscryptLyra2[deviceName])
                         {
-                            Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
-                            newAmdDev.DeviceGlobalMemory = gpumem;
-                            dev._CL_DEVICE_GLOBAL_MEM_SIZE = gpumem;
+                            DeviceName = deviceName,
+                            UUID = _busIdInfos[busID].Uuid,
+                            AdapterIndex = _busIdInfos[busID].Adl1Index,
+                            DeviceGlobalMemory = gpuRAM
+                        };
+
+                        //PNPDeviceID PCI\VEN_1002&DEV_6811&SUBSYS_2015174B&REV_81\4&14486AD3&0&00E0       
+                        //UUID: PCI_VEN_1002&DEV_6811_14486AD3
+                        //*************
+                        string PnpDeviceID = "";
+                        ulong gpumem = 0;
+                        ulong gpumemadd = 1048576; //add 1MB to gpumem
+                        var moc = new ManagementObjectSearcher("root\\CIMV2",
+                            "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
+
+                        foreach (var manObj in moc)
+                        {
+                            ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
+                            PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
+                            gpumem = memTmp + gpumemadd‬;
+
+                        }
+
+                        if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
+                        {
+                            if (newAmdDev.DeviceGlobalMemory < gpumem)
+                            {
+                                Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
+                                newAmdDev.DeviceGlobalMemory = gpumem;
+                                dev._CL_DEVICE_GLOBAL_MEM_SIZE = gpumem;
+                            }
+                        }
+
+                        //*************
+                        var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
+                            .DisableDetectionAMD;
+                        var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
+                        var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
+                        var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
+
+                        ComputeDeviceManager.Available.Devices.Add(
+                            new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, false,
+                                _busIdInfos[busID].Adl2Index));
+                        var infSection = newAmdDev.InfSection;
+                        //var PnpDeviceID = dev.PnpDeviceID;
+                        //var PnpDeviceID = vidController.PnpDeviceID;
+                        var infoToHashed = $"{newAmdDev.DeviceID}--{DeviceType.AMD}--{newAmdDev.DeviceGlobalMemory}--{newAmdDev.Codename}--{newAmdDev.DeviceName}";
+                        infoToHashed += newAmdDev.UUID.Replace("PCI_", "PCI/");//PnpDeviceID неверный!
+                                                                               //var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.AMD_BUS_ID).FirstOrDefault() ?? null;
+                                                                               //if (vidCtrl != null)
+                                                                               //{
+                                                                               //  infSection = vidCtrl.InfSection;
+                                                                               // infoToHashed += vidCtrl.PnpDeviceID;
+                                                                               //}
+                                                                               //else
+                                                                               //{
+                                                                               //  Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.AMD_BUS_ID}");
+                                                                               //}
+
+                        var uuidHEX = UUID.GetHexUUID(infoToHashed);
+                        var Newuuid = $"AMD-{uuidHEX}";
+                        newAmdDev.NewUUID = Newuuid;
+                        // just in case 
+                        try
+                        {
+                            stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
+                            stringBuilder.AppendLine($"\t\tID: {newAmdDev.DeviceID}");
+                            stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
+                            stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
+                            stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
+                            stringBuilder.AppendLine($"\t\tNewUUID: {newAmdDev.NewUUID}");
+                            stringBuilder.AppendLine($"\t\tBusID: {newAmdDev.BusID}");
+                            stringBuilder.AppendLine($"\t\tDeviceID: {newAmdDev.DeviceID}");
+                            stringBuilder.AppendLine($"\t\tInfSection: {newAmdDev.InfSection}");
+                            stringBuilder.AppendLine($"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
+                            stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
+                        }
+                        catch
+                        {
                         }
                     }
-
-                    //*************
-                    var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
-                        .DisableDetectionAMD;
-                    var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
-                    var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
-                    var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
-
-                    ComputeDeviceManager.Available.Devices.Add(
-                        new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, false,
-                            _busIdInfos[busID].Adl2Index));
-                    var infSection = newAmdDev.InfSection;
-                    //var PnpDeviceID = dev.PnpDeviceID;
-                    //var PnpDeviceID = vidController.PnpDeviceID;
-                     var infoToHashed = $"{newAmdDev.DeviceID}--{DeviceType.AMD}--{newAmdDev.DeviceGlobalMemory}--{newAmdDev.Codename}--{newAmdDev.DeviceName}";
-                    infoToHashed += newAmdDev.UUID.Replace("PCI_", "PCI/");//PnpDeviceID неверный!
-                    //var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.AMD_BUS_ID).FirstOrDefault() ?? null;
-                    //if (vidCtrl != null)
-                    //{
-                    //  infSection = vidCtrl.InfSection;
-                    // infoToHashed += vidCtrl.PnpDeviceID;
-                    //}
-                    //else
-                    //{
-                    //  Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.AMD_BUS_ID}");
-                    //}
-
-                    var uuidHEX = UUID.GetHexUUID(infoToHashed);
-                    var Newuuid = $"AMD-{uuidHEX}";
-                    newAmdDev.NewUUID = Newuuid;
-                    // just in case 
-                    try
+                    else
                     {
-                        stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                        stringBuilder.AppendLine($"\t\tID: {newAmdDev.DeviceID}");
-                        stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
-                        stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
-                        stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
-                        stringBuilder.AppendLine($"\t\tNewUUID: {newAmdDev.NewUUID}");
-                        stringBuilder.AppendLine($"\t\tBusID: {newAmdDev.BusID}");
-                        stringBuilder.AppendLine($"\t\tDeviceID: {newAmdDev.DeviceID}");
-                        stringBuilder.AppendLine($"\t\tInfSection: {newAmdDev.InfSection}");
-                        stringBuilder.AppendLine($"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
-                        stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-                    }
-                    catch
-                    {
+                        stringBuilder.AppendLine($"\tDevice not added, Bus No. {busID} not found:");
                     }
                 }
-                else
-                {
-                    stringBuilder.AppendLine($"\tDevice not added, Bus No. {busID} not found:");
-                }
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("AmdDeviceCreationPrimary", er.ToString());
             }
 
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
