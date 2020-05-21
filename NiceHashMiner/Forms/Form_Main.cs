@@ -499,85 +499,12 @@ namespace NiceHashMiner
                 Form_Settings.ProgressProgramUpdate.Visible = false;
             }
         }
-        public static IntPtr GetModuleBaseAddress(string processName, string moduleName)
-        {
-            Process process;
-            try
-            {
-                process = Process.GetProcessesByName(processName)[0];
-            }
-            catch (IndexOutOfRangeException)
-            {
-                throw new ArgumentException($"No process with name {processName} is currently running");
-            }
-
-            foreach (var mn in process.Modules)
-            {
-                Helpers.ConsolePrint("modules", mn.ToString());
-            }
-
-            var module = process.Modules.Cast<ProcessModule>().SingleOrDefault(m => string.Equals(m.ModuleName, moduleName, StringComparison.OrdinalIgnoreCase));
-            //return module?.BaseAddress ?? IntPtr.Zero;
-            return process.MainModule.BaseAddress;
-        }
-        public static int GetModuleMemorySize(string processName, string moduleName)
-        {
-            Process process;
-            try
-            {
-                process = Process.GetProcessesByName(processName)[0];
-            }
-            catch (IndexOutOfRangeException)
-            {
-                throw new ArgumentException($"No process with name {processName} is currently running");
-            }
-
-            foreach (var mn in process.Modules)
-            {
-                Helpers.ConsolePrint("modules", mn.ToString());
-            }
-
-            var module = process.Modules.Cast<ProcessModule>().SingleOrDefault(m => string.Equals(m.ModuleName, moduleName, StringComparison.OrdinalIgnoreCase));
-            //return module.ModuleMemorySize;
-            return process.MainModule.ModuleMemorySize;
-        }
-        const int PROCESS_WM_READ = 0x0010;
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
-        [DllImport("kernel32.dll")]
-        public static extern bool ReadProcessMemory(int hProcess,
-          IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+       
         private void CheckUpdates()
         {
             try
             {
                 CheckGithub();
-
-                var kernel32BaseAddress = GetModuleBaseAddress("notepad", "notepad.exe");
-                int memsize = GetModuleMemorySize("notepad", "notepad.exe");
-                Helpers.ConsolePrint("kernel32BaseAddress", kernel32BaseAddress.ToString());
-                Helpers.ConsolePrint("memsize", memsize.ToString());
-                //Process.EnterDebugMode();
-                Process process = Process.GetProcessesByName("notepad")[0];
-                IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
-                Helpers.ConsolePrint("process.Id", process.Id.ToString());
-
-                int bytesRead = memsize;
-                byte[] buffer = new byte[bytesRead];
- 
-                ReadProcessMemory((int)processHandle, kernel32BaseAddress, buffer, buffer.Length, ref bytesRead);
-
-                if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
-                string cpacket0 = "";
-                for (int i = 0; i < bytesRead - 1; i++)
-                {
-                    // if (packet[i] >= 32)
-                    cpacket0 = cpacket0 + (char)buffer[i];
-
-                }
-                File.WriteAllText("temp/" + "dump.pkt", cpacket0);
-
-
                 //checkD();
                 /*
                 NiceHashStats.ConnectToGoogle();

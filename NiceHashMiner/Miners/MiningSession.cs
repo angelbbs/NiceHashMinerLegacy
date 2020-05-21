@@ -402,7 +402,7 @@ namespace NiceHashMiner.Miners
             var currentProfit = 0.0d;
             var prevStateProfit = 0.0d;
 
-            // _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
+             _miningDevices = GroupSetupUtils.GetMiningDevices(devices, false);
             if (_miningDevices.Count > 0)
             {
                 GroupSetupUtils.AvarageSpeeds(_miningDevices);
