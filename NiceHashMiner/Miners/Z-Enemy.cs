@@ -19,7 +19,7 @@ namespace NiceHashMiner.Miners
 {
     public class ZEnemy : Miner
     {
-        public ZEnemy() : base("Z-Enemy_NVIDIA")
+        public ZEnemy() : base("ZEnemy")
         { }
 
         private int TotalCount = 2;
@@ -32,7 +32,7 @@ namespace NiceHashMiner.Miners
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
-            return 60 * 1000 * 4; 
+            return 60 * 1000 * 5; 
         }
 
         public override void Start(string url, string btcAdress, string worker)

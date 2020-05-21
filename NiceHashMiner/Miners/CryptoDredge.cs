@@ -379,10 +379,10 @@ namespace NiceHashMiner.Miners
                         var e = outdata.ToUpper().IndexOf("MH/S)");
                         var parse = outdata.Substring(st + 4, e - st - 4).Trim().Replace(",", ".");
                    // if (count > 0)//skip first
-                    {
+
                         tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
                         tmp *= 1000000;
-                    }
+
                         speed += tmp;
                         count++;
                         TotalCount--;

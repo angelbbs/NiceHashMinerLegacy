@@ -45,7 +45,7 @@ namespace NiceHashMiner.Devices
                     }
                     return load;
                 }
-                
+
                 try
                 {
 
@@ -77,12 +77,12 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                 }
-                
+
                 return -1;
             }
         }
 
-        
+
         public override float Temp
         {
             get
@@ -111,7 +111,7 @@ namespace NiceHashMiner.Devices
                     }
                     return temp;
                 }
-                
+
                 try
                 {
                     foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -143,7 +143,7 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                 }
-                
+
                 return -1;
             }
         }
@@ -198,7 +198,7 @@ namespace NiceHashMiner.Devices
             get
             {
                 //if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-                {
+
                     if (!ConfigManager.GeneralConfig.ShowFanAsPercent)
                     {
                         var fanSpeed = -1;
@@ -250,8 +250,8 @@ namespace NiceHashMiner.Devices
                         return fan;
                     }
                     return 0;
-                }
-                
+
+
                 try
                 {
                     foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -296,7 +296,7 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                 }
-                
+
                 return -1;
             }
         }
@@ -306,7 +306,7 @@ namespace NiceHashMiner.Devices
             get
             {
                 //if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-                {
+
                     try
                     {
                         var power = 0u;
@@ -320,8 +320,8 @@ namespace NiceHashMiner.Devices
                     {
                         // Helpers.ConsolePrint("NVML", e.ToString());
                     }
-                }
-                
+
+
                 try
                 {
                     foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -352,7 +352,7 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                 }
-                
+
                 return -1;
             }
         }

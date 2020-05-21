@@ -306,7 +306,7 @@
         "AlgorithmsListView_GroupBox": "Selected Algorithm: {0}",
         "AlgorithmsListView_GroupBox_NONE": "NONE",
         "BenchmarkOptions_Benchmark_Type": "Benchmark Type:",
-        "Form_Main_MiningDevices": "Mining Devices {0}:",
+        "Form_Main_MiningDevices": "Mining Devices {0}",
         "Form_Main_bins_folder_files_missing": "There are missing miners files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. Miner Legacy Fork Fix might not work properly without missing files. Click Yes to download miners to try to fix this issue.",
         "Form_Main_MINING_NOT_PROFITABLE": "CURRENTLY MINING NOT PROFITABLE.",
         "Form_Main_MINING_NO_INTERNET_CONNECTION": "CURRENTLY NOT MINING. NO INTERNET CONNECTION.",
@@ -466,6 +466,9 @@
 "Form_Settings_EnableAlgos": "Enable * for all devices",
 "Form_Settings_DisableAlgos": "Disable * for all devices",
 "Form_Settings_checkbox_Use_OpenHardwareMonitor": "Use OpenHardwareMonitor",
+"Form_Main_Uptime": "Uptime:",
+"Form_Main_Miner": "Miner: ",
+"Form_Settings_checkBox_ShowUptime": "Show uptime",
                 "Form_Settings_buttonLicence": "View licence"
     }
 }

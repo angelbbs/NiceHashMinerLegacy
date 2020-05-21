@@ -4,7 +4,9 @@
 */
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -29,9 +31,19 @@ namespace NiceHashMiner.Forms.Components
 
 
         public void UpdateProfitStats(string groupName, string deviceStringInfo,
-            string speedString, string btcRateString, string currencyRateString, string ProcessTag)
+            string speedString, DateTime StartMinerTime, string btcRateString, string currencyRateString, string ProcessTag)
         {
-            groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
+            if (ConfigManager.GeneralConfig.ShowUptime)
+            {
+                var timenow = DateTime.Now;
+                TimeSpan Uptime = timenow.Subtract(StartMinerTime);
+                groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo) +
+                    "  " + International.GetText("Form_Main_Miner") + groupName.Split('-')[0] +
+                    "  " + International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
+            } else
+            {
+                groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
+            }
             labelSpeedValue.Text = speedString;
             labelBTCRateValue.Text = btcRateString;
             labelCurentcyPerDayVaue.Text = currencyRateString;

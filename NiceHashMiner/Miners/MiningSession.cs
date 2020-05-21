@@ -91,7 +91,6 @@ namespace NiceHashMiner.Miners
             // init fixed
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
-
             _switchingManager = new AlgorithmSwitchingManager();
             NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
             //_switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
@@ -496,7 +495,7 @@ namespace NiceHashMiner.Miners
                     //device.CalculateProfits(e.NormalizedProfits);
                     // check if device has profitable algo
                     //if (device.HasProfitableAlgo())
-                    {
+
                         //profitableDevices.Add(device.GetMostProfitablePair());
                         currentProfit = device.GetCurrentMostProfitValue;
                         prevStateProfit = device.GetPrevMostProfitValue;
@@ -530,7 +529,7 @@ namespace NiceHashMiner.Miners
                                     $"{device.Device.GetFullName()}: Will SWITCH profit diff is {percDiff * 100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                             }
                         }
-                    }
+
                 }
             }
             if (!needSwitch) return;
@@ -752,10 +751,10 @@ namespace NiceHashMiner.Miners
                         NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
                         double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;
                         //if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
-                        {
+
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
 
-                        }
+
                         //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.CurrentRate: " + groupMiners.CurrentRate.ToString());
                         // Deduct power costs
                         //var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
@@ -781,9 +780,9 @@ namespace NiceHashMiner.Miners
                         // set empty
                         //if (groupMiners.DualAlgorithmType != AlgorithmType.NONE || groupMiners.AlgorithmType == AlgorithmType.Eaglesong)
                        // if (groupMiners.DualAlgorithmType == AlgorithmType.Eaglesong)
-                        {
+
                             ad = new ApiData(groupMiners.DualAlgorithmType);
-                        }
+
                         /*
                         else
                         {
@@ -794,7 +793,7 @@ namespace NiceHashMiner.Miners
                     currentProfit += groupMiners.CurrentRate;
                     // Update GUI
                     _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad,
-                        groupMiners.CurrentRate, groupMiners.PowerRate,
+                        groupMiners.CurrentRate, groupMiners.PowerRate, groupMiners.StartMinerTime,
                         m.IsApiReadException, m.ProcessTag());
                 }
             }

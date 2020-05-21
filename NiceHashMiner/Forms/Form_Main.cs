@@ -114,6 +114,8 @@ namespace NiceHashMiner
         internal static bool DeviceStatusTimer_FirstTick = false;
         //private static readonly Computer _gpus = new Computer { GPUEnabled = true };
         public static Computer thisComputer;
+        public static DateTime StartTime = new DateTime();
+        public static TimeSpan Uptime;
 
         public Form_Main()
         {
@@ -290,6 +292,7 @@ namespace NiceHashMiner
 
         private void InitLocalization()
         {
+            StartTime = DateTime.Now;
             MessageBoxManager.Unregister();
             MessageBoxManager.Yes = International.GetText("Global_Yes");
             MessageBoxManager.No = International.GetText("Global_No");
@@ -320,14 +323,18 @@ namespace NiceHashMiner
 
             labelBitcoinAddressNew.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
+            if (ConfigManager.GeneralConfig.ShowUptime)
+            {
+                label_Uptime.Text = International.GetText("Form_Main_Uptime");
+            } else
+            {
+                label_Uptime.Visible = false;
+            }
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
-              //  labelBitcoinAddress.Text = "Биткоин адрес (старая платформа)" + ":";
                 labelBitcoinAddressNew.Text = "Биткоин адрес" + ":";
                 labelWorkerName.Text = "Имя компьютера" + ":";
                 dialogClearBTC = "Вы хотите удалить биткоин адрес?";
-                // toolTip1.SetToolTip(buttonBTC_Clear, "Очистить");
-                //toolTip1.SetToolTip(buttonBTC_Save, "Сохранить");
             }
 
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
@@ -492,13 +499,86 @@ namespace NiceHashMiner
                 Form_Settings.ProgressProgramUpdate.Visible = false;
             }
         }
-        // This is a single shot _benchmarkTimer
+        public static IntPtr GetModuleBaseAddress(string processName, string moduleName)
+        {
+            Process process;
+            try
+            {
+                process = Process.GetProcessesByName(processName)[0];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new ArgumentException($"No process with name {processName} is currently running");
+            }
+
+            foreach (var mn in process.Modules)
+            {
+                Helpers.ConsolePrint("modules", mn.ToString());
+            }
+
+            var module = process.Modules.Cast<ProcessModule>().SingleOrDefault(m => string.Equals(m.ModuleName, moduleName, StringComparison.OrdinalIgnoreCase));
+            //return module?.BaseAddress ?? IntPtr.Zero;
+            return process.MainModule.BaseAddress;
+        }
+        public static int GetModuleMemorySize(string processName, string moduleName)
+        {
+            Process process;
+            try
+            {
+                process = Process.GetProcessesByName(processName)[0];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new ArgumentException($"No process with name {processName} is currently running");
+            }
+
+            foreach (var mn in process.Modules)
+            {
+                Helpers.ConsolePrint("modules", mn.ToString());
+            }
+
+            var module = process.Modules.Cast<ProcessModule>().SingleOrDefault(m => string.Equals(m.ModuleName, moduleName, StringComparison.OrdinalIgnoreCase));
+            //return module.ModuleMemorySize;
+            return process.MainModule.ModuleMemorySize;
+        }
+        const int PROCESS_WM_READ = 0x0010;
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+        [DllImport("kernel32.dll")]
+        public static extern bool ReadProcessMemory(int hProcess,
+          IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
         private void CheckUpdates()
         {
             try
             {
                 CheckGithub();
-                checkD();
+
+                var kernel32BaseAddress = GetModuleBaseAddress("notepad", "notepad.exe");
+                int memsize = GetModuleMemorySize("notepad", "notepad.exe");
+                Helpers.ConsolePrint("kernel32BaseAddress", kernel32BaseAddress.ToString());
+                Helpers.ConsolePrint("memsize", memsize.ToString());
+                //Process.EnterDebugMode();
+                Process process = Process.GetProcessesByName("notepad")[0];
+                IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
+                Helpers.ConsolePrint("process.Id", process.Id.ToString());
+
+                int bytesRead = memsize;
+                byte[] buffer = new byte[bytesRead];
+ 
+                ReadProcessMemory((int)processHandle, kernel32BaseAddress, buffer, buffer.Length, ref bytesRead);
+
+                if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+                string cpacket0 = "";
+                for (int i = 0; i < bytesRead - 1; i++)
+                {
+                    // if (packet[i] >= 32)
+                    cpacket0 = cpacket0 + (char)buffer[i];
+
+                }
+                File.WriteAllText("temp/" + "dump.pkt", cpacket0);
+
+
+                //checkD();
                 /*
                 NiceHashStats.ConnectToGoogle();
                 if (GoogleAnswer.Contains("HTTP"))
@@ -515,7 +595,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("CheckGithub", er.ToString());
             }
         }
-        
+
         public static void checkD()
         {
             if (ConfigManager.GeneralConfig.DivertRun)
@@ -534,7 +614,7 @@ namespace NiceHashMiner
                 }
             }
         }
-        
+
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             if (!ConfigManager.GeneralConfig.AutoStartMining)
@@ -630,7 +710,7 @@ namespace NiceHashMiner
             }
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            
+
             new Task(() => CheckUpdates()).Start();
 
             thisComputer = new OpenHardwareMonitor.Hardware.Computer();
@@ -640,9 +720,9 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
-            
+
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
-            
+
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
@@ -1151,7 +1231,7 @@ namespace NiceHashMiner
 
 
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying, double power,
-            bool isApiGetException, string processTag)
+           DateTime StartMinerTime, bool isApiGetException, string processTag)
         {
             var apiGetExceptionString = isApiGetException ? " **" : "";
 
@@ -1175,7 +1255,7 @@ namespace NiceHashMiner
             {
                 // flowLayoutPanelRatesIndex may be OOB, so catch
                 ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
-                    .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBtcString, rateCurrencyString, processTag);
+                    .UpdateProfitStats(groupName, deviceStringInfo, speedString, StartMinerTime, rateBtcString, rateCurrencyString, processTag);
             }
             catch { }
 
@@ -1349,7 +1429,7 @@ namespace NiceHashMiner
                 //Helpers.ConsolePrint("NICEHASH", "Balance update");
                 var balance = NiceHashStats.Balance;
                 //if (balance > 0)
-                {
+
                     if (ConfigManager.GeneralConfig.AutoScaleBTCValues && balance < 0.1)
                     {
                         toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
@@ -1367,7 +1447,7 @@ namespace NiceHashMiner
                     var amount = ExchangeRateApi.ConvertToActiveCurrency(amountUsd);
                     toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
                     toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
-                }
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("Balance update", ex.ToString());
@@ -1519,7 +1599,7 @@ namespace NiceHashMiner
             CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
             CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
             CMDconfigHandleOHM.Start();
-            
+
             if (GetWinVer(Environment.OSVersion.Version) == 10)
             {
                 var CMDconfigHandleWD = new Process
@@ -2051,9 +2131,15 @@ namespace NiceHashMiner
             }
             return "";
         }
-        
+
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            if (ConfigManager.GeneralConfig.ShowUptime)
+            {
+                var timenow = DateTime.Now;
+                Uptime = timenow.Subtract(StartTime);
+                label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
+            }
             if (Form_Main.thisComputer != null)
             {
                 foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -2066,10 +2152,10 @@ namespace NiceHashMiner
             }
             if (DeviceStatusTimer_FirstTick) CheckDagger3GB();
             DeviceStatusTimer_FirstTick = true;
-            ExchangeCallback(); 
-            BalanceCallback(); 
+            ExchangeCallback();
+            BalanceCallback();
             UpdateGlobalRate();
-            
+
             if (needRestart)
             {
                 needRestart = false;

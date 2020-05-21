@@ -453,14 +453,11 @@ namespace NiceHashMiner
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
                 if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -9)
                 {
-                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Stop from miner session 1");
                     //DHClient.checkConnection = false;
                     if (!DHClient.checkConnection)//
                     {
-                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Stop from miner session 2");
                         if (Form_Main.DaggerHashimoto3GB)
                         {
-                            Helpers.ConsolePrint("DaggerHashimoto3GB", "Stop from miner session 3");
                             new Task(() => DHClient.StopConnection()).Start();
                         }
                     }
@@ -1295,7 +1292,6 @@ namespace NiceHashMiner
                             strPlatform = "CPU";
                         }
                     }
-                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 1");
                     if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
@@ -1310,12 +1306,10 @@ namespace NiceHashMiner
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
                         if (Form_Main.DaggerHashimoto3GB && algo != -9)
                         {
-                            Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 2");
                             if (DHClient.serverStream == null)
                             {
                                 DHClient.checkConnection = true;
                                 Divert.Dagger3GBEpochCount = 999; //
-                                Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 3");
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
                             else
@@ -1325,7 +1319,6 @@ namespace NiceHashMiner
                                 DHClient.serverStream.Dispose();
                                 DHClient.checkConnection = true;
                                 Divert.Dagger3GBEpochCount = 999; //
-                                Helpers.ConsolePrint("DaggerHashimoto3GB", "Start from miner session 4");
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
                         }
@@ -1404,23 +1397,47 @@ namespace NiceHashMiner
                 ? ConfigManager.GeneralConfig.MinerRestartDelayMS
                 : ms;
             Helpers.ConsolePrint(MinerTag(), ProcessTag() + $" directly Miner_Exited Will restart in {restartInMs} ms");
-           // if (ConfigManager.GeneralConfig.CoolDownCheckEnabled)
-            //{
-             //   CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-              //  _needsRestart = true;
-               // _currentCooldownTimeInSecondsLeft = restartInMs;
-            //}
-           // else
+            var algo = (int)MiningSetup.CurrentAlgorithmType;
+            if (ProcessHandle != null)
             {
-                // directly restart since cooldown checker not running
-                Thread.Sleep(restartInMs);
-                Restart();
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -9)
+                {
+                    if (Form_Main.DaggerHashimoto3GB)
+                    {
+                        new Task(() => DHClient.StopConnection()).Start();
+                    }
+                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
+                        (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                }
             }
+            // if (ConfigManager.GeneralConfig.CoolDownCheckEnabled)
+            //{
+            //   CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+            //  _needsRestart = true;
+            // _currentCooldownTimeInSecondsLeft = restartInMs;
+            //}
+            // else
+            // directly restart since cooldown checker not running
+            Thread.Sleep(restartInMs);
+                Restart();
         }
 
         protected void Restart()
         {
             if (_isEnded) return;
+            var algo = (int)MiningSetup.CurrentAlgorithmType;
+            if (ProcessHandle != null)
+            {
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -9)
+                {
+                        if (Form_Main.DaggerHashimoto3GB)
+                        {
+                            new Task(() => DHClient.StopConnection()).Start();
+                        }
+                    Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
+                        (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                }
+            }
             Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Restarting miner..");
             Stop(MinerStopType.END); // stop miner first
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);

@@ -415,6 +415,7 @@ namespace NiceHashMiner.Forms
             checkbox_Use_OpenHardwareMonitor.Text = International.GetText("Form_Settings_checkbox_Use_OpenHardwareMonitor");
             Checkbox_Save_windows_size_and_position.Text = International.GetText("Form_Settings_Checkbox_Save_windows_size_and_position");
             checkBox_sorting_list_of_algorithms.Text = International.GetText("Form_Settings_checkBox_sorting_list_of_algorithms");
+            checkBox_ShowUptime.Text = International.GetText("Form_Settings_checkBox_ShowUptime");
             checkBox_ShowFanAsPercent.Text = International.GetText("Form_Settings_checkBox_ShowFanAsPercent");
             checkbox_Group_same_devices.Text = International.GetText("Form_Settings_checkbox_Group_same_devices");
             checkBox_Force_mining_if_nonprofitable.Text = International.GetText("Form_Settings_checkBox_Force_mining_if_nonprofitable");
@@ -676,6 +677,9 @@ namespace NiceHashMiner.Forms
                 checkBox_sorting_list_of_algorithms.BackColor = Form_Main._backColor;
                 checkBox_sorting_list_of_algorithms.ForeColor = Form_Main._textColor;
 
+                checkBox_ShowUptime.BackColor = Form_Main._backColor;
+                checkBox_ShowUptime.ForeColor = Form_Main._textColor;
+
                 checkBox_ShowFanAsPercent.BackColor = Form_Main._backColor;
                 checkBox_ShowFanAsPercent.ForeColor = Form_Main._textColor;
 
@@ -825,6 +829,7 @@ namespace NiceHashMiner.Forms
                 checkbox_Use_OpenHardwareMonitor.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_sorting_list_of_algorithms.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ShowUptime.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -914,7 +919,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 checkbox_Use_OpenHardwareMonitor.Checked = ConfigManager.GeneralConfig.Use_OpenHardwareMonitor;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
-                checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
+                checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ShowUptime;
+                checkBox_ShowUptime.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
                 checkBoxAutoupdate.Checked = ConfigManager.GeneralConfig.ProgramAutoUpdate;
@@ -1042,6 +1048,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Use_OpenHardwareMonitor = checkbox_Use_OpenHardwareMonitor.Checked;
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
+            ConfigManager.GeneralConfig.ShowUptime = checkBox_ShowUptime.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
             ConfigManager.GeneralConfig.ProgramAutoUpdate = checkBoxAutoupdate.Checked;

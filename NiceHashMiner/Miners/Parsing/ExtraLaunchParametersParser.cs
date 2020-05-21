@@ -276,7 +276,6 @@ namespace NiceHashMiner.Miners.Parsing
             }
 
             LogParser($"Final extra launch params parse \"{retVal}\"");
-
             return retVal;
         }
 
@@ -489,7 +488,8 @@ namespace NiceHashMiner.Miners.Parsing
             }
 
             string ret;
-            var general = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions, ignoreDcri);
+            var temp = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions, ignoreDcri);
+
             // temp control and parse
             /*
             if (ConfigManager.GeneralConfig.DisableAMDTempControl)
@@ -499,14 +499,12 @@ namespace NiceHashMiner.Miners.Parsing
             }
             else
             */
-            {
-              //  LogParser("AMD parsing temperature control parameters");
-                // temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, true, minerOptionPackage.GeneralOptions);
-                var temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions, ignoreDcri);
+            //  LogParser("AMD parsing temperature control parameters");
+            // temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, true, minerOptionPackage.GeneralOptions);
+            var general = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions, ignoreDcri);
 
-               // ret = general + "  " + temp;
-                ret = general + "  ";
-            }
+                ret = general + "  " + temp;
+                //ret = general + "  ";
 
             return ret;
         }

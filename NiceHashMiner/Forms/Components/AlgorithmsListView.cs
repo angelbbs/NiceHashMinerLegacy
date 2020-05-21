@@ -142,9 +142,9 @@ namespace NiceHashMiner.Forms.Components
               //  AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, SystemColors.ControlLightLight, Form_Main._textColor);
             //}
             //else
-            {
+
                 AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Form_Main._backColor, Form_Main._textColor);
-            }
+
 
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += ListViewAlgorithms_ItemSelectionChanged;

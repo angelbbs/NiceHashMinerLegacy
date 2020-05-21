@@ -5,6 +5,7 @@
 using NiceHashMiner.Configs;
 using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -26,6 +27,7 @@ namespace NiceHashMiner.Miners.Grouping
 
         public double TotalPower { get; }
 
+        public DateTime StartMinerTime { get; set; }
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key)
         {
@@ -35,6 +37,7 @@ namespace NiceHashMiner.Miners.Grouping
             CurrentRate = 0;
             PowerRate = 0;
             Key = key;
+            StartMinerTime = DateTime.Now;
             if (miningPairs.Count > 0)
             {
                 // sort pairs by device id

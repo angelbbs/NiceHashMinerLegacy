@@ -65,7 +65,7 @@ namespace NiceHashMiner.Switching
 
         public void Start()
         {
-            _smaCheckTimer = new Timer(100);
+            _smaCheckTimer = new Timer(1000);
             _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
             _smaCheckTimer.Start();
             //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
@@ -102,10 +102,8 @@ namespace NiceHashMiner.Switching
         /// Checks profits and updates normalization based on ticks
         /// </summary>
         internal static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
-            //это запускается дважды
         {
             Randomize();
-
             // Will be null if manually called (in tests)
             if (_smaCheckTimer != null)
                 _smaCheckTimer.Interval = _smaCheckTime * 1000;

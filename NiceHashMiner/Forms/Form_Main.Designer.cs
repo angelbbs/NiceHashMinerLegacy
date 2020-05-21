@@ -69,6 +69,7 @@ namespace NiceHashMiner
             this.labelBitcoinAddressNew = new System.Windows.Forms.Label();
             this.textBoxBTCAddress_new = new System.Windows.Forms.TextBox();
             this.buttonBTC_Clear = new System.Windows.Forms.Button();
+            this.label_Uptime = new System.Windows.Forms.Label();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -440,6 +441,15 @@ namespace NiceHashMiner
             this.buttonBTC_Clear.MouseLeave += new System.EventHandler(this.buttonBTC_Clear_MouseLeave);
             this.buttonBTC_Clear.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Clear_MouseMove);
             // 
+            // label_Uptime
+            // 
+            this.label_Uptime.AutoSize = true;
+            this.label_Uptime.Location = new System.Drawing.Point(223, 62);
+            this.label_Uptime.Name = "label_Uptime";
+            this.label_Uptime.Size = new System.Drawing.Size(43, 13);
+            this.label_Uptime.TabIndex = 115;
+            this.label_Uptime.Text = "Uptime:";
+            // 
             // devicesListViewEnableControl1
             // 
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -462,6 +472,7 @@ namespace NiceHashMiner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 333);
+            this.Controls.Add(this.label_Uptime);
             this.Controls.Add(this.buttonBTC_Clear);
             this.Controls.Add(this.buttonBTC_Save);
             this.Controls.Add(this.labelBitcoinAddressNew);
@@ -540,6 +551,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.Button buttonBTC_Clear;
         public System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         public System.Windows.Forms.TextBox textBoxWorkerName;
+        private System.Windows.Forms.Label label_Uptime;
     }
 }
 

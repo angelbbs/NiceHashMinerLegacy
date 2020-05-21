@@ -101,7 +101,7 @@ namespace NiceHashMiner.Miners
                 {
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "tcpClient != null");
                 }
-                
+
                 if (!tcpClient.Connected)
                 {
                     if (checkConnection)
@@ -124,14 +124,14 @@ namespace NiceHashMiner.Miners
             {
                 Thread.Sleep(200);
                 //if (tcpClient != null)
-                {
-                   
+
+
                     if (DHClient.serverStream != null)
                     {
                         serverStream.Close();
                         DHClient.serverStream = null;
                     }
-                }
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("DaggerHashimoto3GB", ex.ToString());
@@ -186,7 +186,7 @@ namespace NiceHashMiner.Miners
                                 ReadFromServer(serverStream, tcpClient);
                             }
                             tcpClient.Close();
-                        } 
+                        }
                     } catch (Exception ex)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Exception: " + ex);
@@ -196,7 +196,7 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Already connected");
                     ReadFromServer(serverStream, tcpClient);
                 }
-                                       
+
                 if (!checkConnection)
                 {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Stop connecting");
@@ -212,7 +212,7 @@ namespace NiceHashMiner.Miners
                 Thread.Sleep(5 * 1000);
             }
             Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. End connection");
-            
+
         }
 
         public static byte[] StringToByteArray(String hex)
@@ -245,7 +245,7 @@ namespace NiceHashMiner.Miners
         {
             System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
             bool Epoch3GB = false;
-            
+
             byte[] messagePool = new byte[8192];
             int np = 0;
             int poolBytes;
@@ -284,7 +284,7 @@ namespace NiceHashMiner.Miners
                 Thread.Sleep(100);
                 int serverBytes;
                 //if (serverStream.CanRead)
-                {
+
                     try
                     {
                         if (tcpClient.Connected)
@@ -359,10 +359,10 @@ namespace NiceHashMiner.Miners
                                         {
 
                                         }
-                                        
+
                                     }
                                 }
-                                
+
                             }
 
                             if (poolAnswer.Contains("set_difficulty"))
@@ -388,7 +388,7 @@ namespace NiceHashMiner.Miners
                                 //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
                                 break;
                             }
- 
+
                             byte[] bytes = Encoding.ASCII.GetBytes(poolAnswer);
                             //serverStream.Write(bytes, 0, bytes.Length);
                             bytes = null;
@@ -404,7 +404,7 @@ namespace NiceHashMiner.Miners
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected ex: " + ex.Message);
                         break;
                     }
-                }
+
             }
         }
     }
