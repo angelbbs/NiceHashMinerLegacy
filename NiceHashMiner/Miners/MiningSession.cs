@@ -127,6 +127,7 @@ namespace NiceHashMiner.Miners
                 _internetCheckTimer.Start();
             }
 
+            _switchingManager.Stop();
             _switchingManager.Start();
 
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;

@@ -1158,13 +1158,28 @@ namespace WebSocketSharp
       }
 
       if (code == 1005) { // == no status
-        closeAsync (PayloadData.Empty, true, true, false);
-        return;
+                try
+                {
+                    closeAsync(PayloadData.Empty, true, true, false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    _logger.Debug(ex.ToString());
+                }
+                return;
       }
-
-      var send = !code.IsReserved ();
-      closeAsync (new PayloadData (code, reason), send, send, false);
-    }
+            try
+            {
+                var send = !code.IsReserved();
+                closeAsync(new PayloadData(code, reason), send, send, false);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Debug(ex.ToString());
+            }
+        }
 
     private void closeAsync (
       PayloadData payloadData, bool send, bool receive, bool received
@@ -1432,23 +1447,47 @@ namespace WebSocketSharp
 
     private void fatal (string message, Exception exception)
     {
-      var code = exception is WebSocketException
-                 ? ((WebSocketException) exception).Code
-                 : CloseStatusCode.Abnormal;
+            try
+            {
+                var code = exception is WebSocketException
+                           ? ((WebSocketException)exception).Code
+                           : CloseStatusCode.Abnormal;
 
-      fatal (message, (ushort) code);
-    }
+                fatal(message, (ushort)code);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Debug(ex.ToString());
+            }
+        }
 
     private void fatal (string message, ushort code)
     {
-      var payload = new PayloadData (code, message);
-      close (payload, !code.IsReserved (), false, false);
-    }
+            try
+            {
+                var payload = new PayloadData(code, message);
+                close(payload, !code.IsReserved(), false, false);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Debug(ex.ToString());
+            }
+        }
 
     private void fatal (string message, CloseStatusCode code)
     {
-      fatal (message, (ushort) code);
-    }
+            try
+            {
+                fatal(message, (ushort)code);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Debug(ex.ToString());
+            }
+        }
 
     private ClientSslConfiguration getSslConfiguration ()
     {
@@ -1531,28 +1570,40 @@ namespace WebSocketSharp
 
     private void open ()
     {
-      _inMessage = true;
-      startReceiving ();
-      try {
-        OnOpen.Emit (this, EventArgs.Empty);
-      }
-      catch (Exception ex) {
-        _logger.Error (ex.ToString ());
-        error ("An error has occurred during the OnOpen event.", ex);
-      }
+            try
+            {
+                _inMessage = true;
+                startReceiving();
+                try
+                {
+                    OnOpen.Emit(this, EventArgs.Empty);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.ToString());
+                    error("An error has occurred during the OnOpen event.", ex);
+                }
 
-      MessageEventArgs e = null;
-      lock (_forMessageEventQueue) {
-        if (_messageEventQueue.Count == 0 || _readyState != WebSocketState.Open) {
-          _inMessage = false;
-          return;
+                MessageEventArgs e = null;
+                lock (_forMessageEventQueue)
+                {
+                    if (_messageEventQueue.Count == 0 || _readyState != WebSocketState.Open)
+                    {
+                        _inMessage = false;
+                        return;
+                    }
+
+                    e = _messageEventQueue.Dequeue();
+                }
+
+                _message.BeginInvoke(e, ar => _message.EndInvoke(ar), null);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Debug(ex.ToString());
+            }
         }
-
-        e = _messageEventQueue.Dequeue ();
-      }
-
-      _message.BeginInvoke (e, ar => _message.EndInvoke (ar), null);
-    }
 
     private bool ping (byte[] data)
     {

@@ -22,6 +22,7 @@ using System.Management;
 using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner
 {
@@ -82,8 +83,43 @@ namespace NiceHashMiner
                 Culture = CultureInfo.InvariantCulture
             };
 
+            bool BackupRestoreFile = false;
+            if (Directory.Exists("backup"))
+            {
+                var dirInfo = new DirectoryInfo("backup");
+                foreach (var file in dirInfo.GetFiles())
+                {
+                    if (file.Name.Contains("backup_") && file.Name.Contains(".zip"))
+                    {
+                        BackupRestoreFile = true;
+                    }
+                }
+            }
+
             // #1 first initialize config
-            ConfigManager.InitializeConfig();
+            if (!ConfigManager.InitializeConfig() && BackupRestoreFile)
+            {
+                var dialogRes = Utils.MessageBoxEx.Show("Restore from backup?", "Restore", MessageBoxButtons.YesNo, MessageBoxIcon.Question, 15000);
+                if (dialogRes == System.Windows.Forms.DialogResult.Yes)
+                {
+                    var CMDconfigHandleOHM = new Process
+
+                    {
+                        StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+                    };
+
+                    CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleOHM.Start();
+                    MinersManager.StopAllMiners();
+                    System.Threading.Thread.Sleep(5000);
+                    Process.Start("backup\\restore.cmd");
+                }
+            }
 
             // #2 check if multiple instances are allowed
             var startProgram = true;
@@ -114,170 +150,7 @@ namespace NiceHashMiner
                 {
                     PInvokeHelpers.AllocConsole();
                 }
-                //**
-                /*
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 4)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (File.Exists("internals\\MinerOptionPackage_glg.json"))
-                        File.Delete("internals\\MinerOptionPackage_glg.json");
-
-                    if (File.Exists("internals\\MinerOptionPackage_ClaymoreDual.json"))
-                        File.Delete("internals\\MinerOptionPackage_ClaymoreDual.json");
-
-                    if (File.Exists("bin\\ccminer_klaust\\ccminer.exe"))
-                        File.Delete("bin\\ccminer_klaust\\ccminer.exe");
-                    ConfigManager.GeneralConfig.ForkFixVersion = 4;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 4.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (File.Exists("internals\\MinerOptionPackage_ClaymoreDual.json"))
-                        File.Delete("internals\\MinerOptionPackage_ClaymoreDual.json");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 4.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 5)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 5;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 6)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 6;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 7)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 7;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 8)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 8;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 8.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 8.2;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 9)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 9;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 9.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    if (File.Exists("bin_3rdparty\\t-rex\\t-rex.exe"))
-                        File.Delete("bin_3rdparty\\t-rex\\t-rex.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 9.1;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 9.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    if (File.Exists("bin_3rdparty\\t-rex\\t-rex.exe"))
-                        File.Delete("bin_3rdparty\\t-rex\\t-rex.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 9.2;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 9.3)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    if (File.Exists("bin_3rdparty\\t-rex\\t-rex.exe"))
-                        File.Delete("bin_3rdparty\\t-rex\\t-rex.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 9.3;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 10)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    if (File.Exists("bin_3rdparty\\t-rex\\t-rex.exe"))
-                        File.Delete("bin_3rdparty\\t-rex\\t-rex.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 10;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 11)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    if (File.Exists("bin\\xmrig\\xmrig.exe"))
-                        File.Delete("bin\\xmrig\\xmrig.exe");
-
-                    if (File.Exists("bin_3rdparty\\t-rex\\t-rex.exe"))
-                        File.Delete("bin_3rdparty\\t-rex\\t-rex.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 11;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 11.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-
-                    if (File.Exists("bin_3rdparty\\t-rex\\t-rex.exe"))
-                        File.Delete("bin_3rdparty\\t-rex\\t-rex.exe");
-
-                    ConfigManager.GeneralConfig.ForkFixVersion = 11.1;
-                }
-*/
+                
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 11.2)
                 {
                     Helpers.ConsolePrint("NICEHASH", "Old version");

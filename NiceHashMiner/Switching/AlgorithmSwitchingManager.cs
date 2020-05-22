@@ -94,8 +94,11 @@ namespace NiceHashMiner.Switching
                 }
                 */
             }
-            _smaCheckTimer.Stop();
-            _smaCheckTimer = null;
+            if (_smaCheckTimer != null)
+            {
+                _smaCheckTimer.Stop();
+                _smaCheckTimer = null;
+            }
         }
 
         /// <summary>

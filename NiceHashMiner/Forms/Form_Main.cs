@@ -215,7 +215,7 @@ namespace NiceHashMiner
                     break;
             }
             Helpers.ConsolePrint("NICEHASH", "Start InitializeComponent");
-
+            StartTime = DateTime.Now;
             Process thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.High;
 
@@ -292,7 +292,6 @@ namespace NiceHashMiner
 
         private void InitLocalization()
         {
-            StartTime = DateTime.Now;
             MessageBoxManager.Unregister();
             MessageBoxManager.Yes = International.GetText("Global_Yes");
             MessageBoxManager.No = International.GetText("Global_No");

@@ -31,7 +31,7 @@ namespace NiceHashMiner.Configs
         private static Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigsBackup =
             new Dictionary<string, DeviceBenchmarkConfig>();
 
-        public static void InitializeConfig()
+        public static bool InitializeConfig()
         {
             // init defaults
             GeneralConfig.SetDefaults();
@@ -66,7 +66,9 @@ namespace NiceHashMiner.Configs
             else
             {
                 GeneralConfigFileCommit();
+                return false;
             }
+            return true;
         }
 
         public static bool GeneralConfigIsFileExist()

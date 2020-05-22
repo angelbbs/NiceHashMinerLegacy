@@ -1278,7 +1278,10 @@ namespace NiceHashMiner.Forms
                 UpdateListView_timer.Stop();
                 UpdateListView_timer = null;
             }
-            Form_Settings.ActiveForm.Close();
+            if (Form_Settings.ActiveForm != null)
+            {
+                Form_Settings.ActiveForm.Close();
+            }
         }
 
         private void ButtonCloseNoSave_Click(object sender, EventArgs e)
