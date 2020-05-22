@@ -372,67 +372,74 @@ namespace NiceHashMiner.Forms.Components
 
         public void UpdateLvi()
         {
-            if (_computeDevice != null)
+            try
             {
-                foreach (ListViewItem lvi in listViewAlgorithms.Items)
+                if (_computeDevice != null)
                 {
-                    if (lvi.Tag is Algorithm algorithm)
+                    foreach (ListViewItem lvi in listViewAlgorithms.Items)
                     {
-                        var algo = lvi.Tag as Algorithm;
-                        if (algo != null)
+                        if (lvi.Tag is Algorithm algorithm)
                         {
-                            if (algorithm is DualAlgorithm dualAlg)
+                            var algo = lvi.Tag as Algorithm;
+                            if (algo != null)
                             {
-                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
-                            }
-                            else
-                            {
-                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
-                            }
-                            double.TryParse(algorithm.CurPayingRate, out var valueRate);
-                            double WithPowerRate = 0;
-                            WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
-                            if (!ConfigManager.GeneralConfig.DecreasePowerCost)
-                            {
-                                WithPowerRate = valueRate;
-                            }
-                            string rateCurrencyString = ExchangeRateApi
-                                     .ConvertToActiveCurrency((WithPowerRate) * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
-                                     .ToString("F2", CultureInfo.InvariantCulture);
-                            string fiatCurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" +
-                                 International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                            string btcCurrencyName = "BTC/" +
-                                 International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                                if (algorithm is DualAlgorithm dualAlg)
+                                {
+                                    lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
+                                }
+                                else
+                                {
+                                    lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                                }
+                                double.TryParse(algorithm.CurPayingRate, out var valueRate);
+                                double WithPowerRate = 0;
+                                WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+                                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
+                                {
+                                    WithPowerRate = valueRate;
+                                }
+                                string rateCurrencyString = ExchangeRateApi
+                                         .ConvertToActiveCurrency((WithPowerRate) * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
+                                         .ToString("F2", CultureInfo.InvariantCulture);
+                                string fiatCurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" +
+                                     International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                                string btcCurrencyName = "BTC/" +
+                                     International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
-                            if (ConfigManager.GeneralConfig.DecreasePowerCost)
-                            {
-                                if (ConfigManager.GeneralConfig.FiatCurrency)
+                                if (ConfigManager.GeneralConfig.DecreasePowerCost)
                                 {
-                                    columnHeader6.Text = fiatCurrencyName;
-                                    lvi.SubItems[RATE].Text =  rateCurrencyString;
+                                    if (ConfigManager.GeneralConfig.FiatCurrency)
+                                    {
+                                        columnHeader6.Text = fiatCurrencyName;
+                                        lvi.SubItems[RATE].Text = rateCurrencyString;
+                                    }
+                                    else
+                                    {
+                                        columnHeader6.Text = btcCurrencyName;
+                                        lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
+                                    }
                                 }
                                 else
                                 {
-                                    columnHeader6.Text = btcCurrencyName;
-                                    lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
-                                }
-                            }
-                            else
-                            {
-                                if (ConfigManager.GeneralConfig.FiatCurrency)
-                                {
-                                    columnHeader6.Text = fiatCurrencyName;
-                                    lvi.SubItems[RATE].Text = rateCurrencyString;
-                                }
-                                else
-                                {
-                                    columnHeader6.Text = btcCurrencyName;
-                                    lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                                    if (ConfigManager.GeneralConfig.FiatCurrency)
+                                    {
+                                        columnHeader6.Text = fiatCurrencyName;
+                                        lvi.SubItems[RATE].Text = rateCurrencyString;
+                                    }
+                                    else
+                                    {
+                                        columnHeader6.Text = btcCurrencyName;
+                                        lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("UpdateLvi", er.ToString());
             }
         }
         public void RepaintStatus(bool isEnabled, string uuid)
