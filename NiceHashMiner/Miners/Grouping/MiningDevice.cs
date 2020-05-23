@@ -181,7 +181,7 @@ namespace NiceHashMiner.Miners.Grouping
                     {
                         maxProfit = algo.CurrentProfit;
                         MostProfitableAlgorithmType = algo.DualNiceHashID;
-                        MostProfitableMinerBaseType = algo.MinerBaseType;
+                    MostProfitableMinerBaseType = algo.MinerBaseType;
 //                        Helpers.ConsolePrint("PROFIT", "WARNING! Mining nonprofitable");
                     }
             }

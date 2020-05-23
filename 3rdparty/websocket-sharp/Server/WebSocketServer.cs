@@ -931,26 +931,36 @@ namespace WebSocketSharp.Server
       }
     }
 
-    private void startReceiving ()
-    {
-      if (_reuseAddress) {
-        _listener.Server.SetSocketOption (
-          SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true
-        );
-      }
+        private void startReceiving()
+        {
+            if (_reuseAddress)
+            {
+                _listener.Server.SetSocketOption(
+                  SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true
+                );
+            }
 
-      try {
-        _listener.Start ();
-      }
-      catch (Exception ex) {
-        var msg = "The underlying listener has failed to start.";
-        throw new InvalidOperationException (msg, ex);
-      }
-
-      _receiveThread = new Thread (new ThreadStart (receiveRequest));
-      _receiveThread.IsBackground = true;
-      _receiveThread.Start ();
-    }
+            try
+            {
+                _listener.Start();
+            }
+            catch (Exception ex)
+            {
+                var msg = "The underlying listener has failed to start.";
+                throw new InvalidOperationException(msg, ex);
+            }
+            try
+            {
+                _receiveThread = new Thread(new ThreadStart(receiveRequest));
+                _receiveThread.IsBackground = true;
+                _receiveThread.Start();
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
 
     private void stop (ushort code, string reason)
     {
@@ -1007,18 +1017,27 @@ namespace WebSocketSharp.Server
       }
     }
 
-    private void stopReceiving (int millisecondsTimeout)
-    {
-      try {
-        _listener.Stop ();
-      }
-      catch (Exception ex) {
-        var msg = "The underlying listener has failed to stop.";
-        throw new InvalidOperationException (msg, ex);
-      }
-
-      _receiveThread.Join (millisecondsTimeout);
-    }
+        private void stopReceiving(int millisecondsTimeout)
+        {
+            try
+            {
+                _listener.Stop();
+            }
+            catch (Exception ex)
+            {
+                var msg = "The underlying listener has failed to stop.";
+                throw new InvalidOperationException(msg, ex);
+            }
+            try
+            {
+                _receiveThread.Join(millisecondsTimeout);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
 
     private static bool tryCreateUri (
       string uriString, out Uri result, out string message

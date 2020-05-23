@@ -36,335 +36,351 @@ using WebSocketSharp.Net;
 
 namespace WebSocketSharp.Server
 {
-  /// <summary>
-  /// Provides the management function for the WebSocket services.
-  /// </summary>
-  /// <remarks>
-  /// This class manages the WebSocket services provided by
-  /// the <see cref="WebSocketServer"/> or <see cref="HttpServer"/>.
-  /// </remarks>
-  public class WebSocketServiceManager
-  {
-    #region Private Fields
-
-    private volatile bool                            _clean;
-    private Dictionary<string, WebSocketServiceHost> _hosts;
-    private Logger                                   _log;
-    private volatile ServerState                     _state;
-    private object                                   _sync;
-    private TimeSpan                                 _waitTime;
-
-    #endregion
-
-    #region Internal Constructors
-
-    internal WebSocketServiceManager (Logger log)
-    {
-      _log = log;
-
-      _clean = true;
-      _hosts = new Dictionary<string, WebSocketServiceHost> ();
-      _state = ServerState.Ready;
-      _sync = ((ICollection) _hosts).SyncRoot;
-      _waitTime = TimeSpan.FromSeconds (1);
-    }
-
-    #endregion
-
-    #region Public Properties
-
     /// <summary>
-    /// Gets the number of the WebSocket services.
-    /// </summary>
-    /// <value>
-    /// An <see cref="int"/> that represents the number of the services.
-    /// </value>
-    public int Count {
-      get {
-        lock (_sync)
-          return _hosts.Count;
-      }
-    }
-
-    /// <summary>
-    /// Gets the host instances for the WebSocket services.
-    /// </summary>
-    /// <value>
-    ///   <para>
-    ///   An <c>IEnumerable&lt;WebSocketServiceHost&gt;</c> instance.
-    ///   </para>
-    ///   <para>
-    ///   It provides an enumerator which supports the iteration over
-    ///   the collection of the host instances.
-    ///   </para>
-    /// </value>
-    public IEnumerable<WebSocketServiceHost> Hosts {
-      get {
-        lock (_sync)
-          return _hosts.Values.ToList ();
-      }
-    }
-
-    /// <summary>
-    /// Gets the host instance for a WebSocket service with the specified path.
-    /// </summary>
-    /// <value>
-    ///   <para>
-    ///   A <see cref="WebSocketServiceHost"/> instance or
-    ///   <see langword="null"/> if not found.
-    ///   </para>
-    ///   <para>
-    ///   The host instance provides the function to access
-    ///   the information in the service.
-    ///   </para>
-    /// </value>
-    /// <param name="path">
-    ///   <para>
-    ///   A <see cref="string"/> that represents an absolute path to
-    ///   the service to find.
-    ///   </para>
-    ///   <para>
-    ///   / is trimmed from the end of the string if present.
-    ///   </para>
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="path"/> is <see langword="null"/>.
-    /// </exception>
-    /// <exception cref="ArgumentException">
-    ///   <para>
-    ///   <paramref name="path"/> is empty.
-    ///   </para>
-    ///   <para>
-    ///   -or-
-    ///   </para>
-    ///   <para>
-    ///   <paramref name="path"/> is not an absolute path.
-    ///   </para>
-    ///   <para>
-    ///   -or-
-    ///   </para>
-    ///   <para>
-    ///   <paramref name="path"/> includes either or both
-    ///   query and fragment components.
-    ///   </para>
-    /// </exception>
-    public WebSocketServiceHost this[string path] {
-      get {
-        if (path == null)
-          throw new ArgumentNullException ("path");
-
-        if (path.Length == 0)
-          throw new ArgumentException ("An empty string.", "path");
-
-        if (path[0] != '/')
-          throw new ArgumentException ("Not an absolute path.", "path");
-
-        if (path.IndexOfAny (new[] { '?', '#' }) > -1) {
-          var msg = "It includes either or both query and fragment components.";
-          throw new ArgumentException (msg, "path");
-        }
-
-        WebSocketServiceHost host;
-        InternalTryGetServiceHost (path, out host);
-
-        return host;
-      }
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the inactive sessions in
-    /// the WebSocket services are cleaned up periodically.
+    /// Provides the management function for the WebSocket services.
     /// </summary>
     /// <remarks>
-    /// The set operation does nothing if the server has already started or
-    /// it is shutting down.
+    /// This class manages the WebSocket services provided by
+    /// the <see cref="WebSocketServer"/> or <see cref="HttpServer"/>.
     /// </remarks>
-    /// <value>
-    /// <c>true</c> if the inactive sessions are cleaned up every 60 seconds;
-    /// otherwise, <c>false</c>.
-    /// </value>
-    public bool KeepClean {
-      get {
-        return _clean;
-      }
-
-      set {
-        string msg;
-        if (!canSet (out msg)) {
-          _log.Warn (msg);
-          return;
-        }
-
-        lock (_sync) {
-          if (!canSet (out msg)) {
-            _log.Warn (msg);
-            return;
-          }
-
-          foreach (var host in _hosts.Values)
-            host.KeepClean = value;
-
-          _clean = value;
-        }
-      }
-    }
-
-    /// <summary>
-    /// Gets the paths for the WebSocket services.
-    /// </summary>
-    /// <value>
-    ///   <para>
-    ///   An <c>IEnumerable&lt;string&gt;</c> instance.
-    ///   </para>
-    ///   <para>
-    ///   It provides an enumerator which supports the iteration over
-    ///   the collection of the paths.
-    ///   </para>
-    /// </value>
-    public IEnumerable<string> Paths {
-      get {
-        lock (_sync)
-          return _hosts.Keys.ToList ();
-      }
-    }
-
-    /// <summary>
-    /// Gets the total number of the sessions in the WebSocket services.
-    /// </summary>
-    /// <value>
-    /// An <see cref="int"/> that represents the total number of
-    /// the sessions in the services.
-    /// </value>
-    [Obsolete ("This property will be removed.")]
-    public int SessionCount {
-      get {
-        var cnt = 0;
-        foreach (var host in Hosts) {
-          if (_state != ServerState.Start)
-            break;
-
-          cnt += host.Sessions.Count;
-        }
-
-        return cnt;
-      }
-    }
-
-    /// <summary>
-    /// Gets or sets the time to wait for the response to the WebSocket Ping or
-    /// Close.
-    /// </summary>
-    /// <remarks>
-    /// The set operation does nothing if the server has already started or
-    /// it is shutting down.
-    /// </remarks>
-    /// <value>
-    /// A <see cref="TimeSpan"/> to wait for the response.
-    /// </value>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// The value specified for a set operation is zero or less.
-    /// </exception>
-    public TimeSpan WaitTime {
-      get {
-        return _waitTime;
-      }
-
-      set {
-        if (value <= TimeSpan.Zero)
-          throw new ArgumentOutOfRangeException ("value", "Zero or less.");
-
-        string msg;
-        if (!canSet (out msg)) {
-          _log.Warn (msg);
-          return;
-        }
-
-        lock (_sync) {
-          if (!canSet (out msg)) {
-            _log.Warn (msg);
-            return;
-          }
-
-          foreach (var host in _hosts.Values)
-            host.WaitTime = value;
-
-          _waitTime = value;
-        }
-      }
-    }
-
-    #endregion
-
-    #region Private Methods
-
-    private void broadcast (Opcode opcode, byte[] data, Action completed)
+    public class WebSocketServiceManager
     {
-      var cache = new Dictionary<CompressionMethod, byte[]> ();
+        #region Private Fields
 
-      try {
-        foreach (var host in Hosts) {
-          if (_state != ServerState.Start) {
-            _log.Error ("The server is shutting down.");
-            break;
-          }
+        private volatile bool _clean;
+        private Dictionary<string, WebSocketServiceHost> _hosts;
+        private Logger _log;
+        private volatile ServerState _state;
+        private object _sync;
+        private TimeSpan _waitTime;
 
-          host.Sessions.Broadcast (opcode, data, cache);
+        #endregion
+
+        #region Internal Constructors
+
+        internal WebSocketServiceManager(Logger log)
+        {
+            _log = log;
+
+            _clean = true;
+            _hosts = new Dictionary<string, WebSocketServiceHost>();
+            _state = ServerState.Ready;
+            _sync = ((ICollection)_hosts).SyncRoot;
+            _waitTime = TimeSpan.FromSeconds(1);
         }
 
-        if (completed != null)
-          completed ();
-      }
-      catch (Exception ex) {
-        _log.Error (ex.Message);
-        _log.Debug (ex.ToString ());
-      }
-      finally {
-        cache.Clear ();
-      }
-    }
+        #endregion
 
-    private void broadcast (Opcode opcode, Stream stream, Action completed)
-    {
-      var cache = new Dictionary<CompressionMethod, Stream> ();
+        #region Public Properties
 
-      try {
-        foreach (var host in Hosts) {
-          if (_state != ServerState.Start) {
-            _log.Error ("The server is shutting down.");
-            break;
-          }
-
-          host.Sessions.Broadcast (opcode, stream, cache);
+        /// <summary>
+        /// Gets the number of the WebSocket services.
+        /// </summary>
+        /// <value>
+        /// An <see cref="int"/> that represents the number of the services.
+        /// </value>
+        public int Count {
+            get {
+                lock (_sync)
+                    return _hosts.Count;
+            }
         }
 
-        if (completed != null)
-          completed ();
-      }
-      catch (Exception ex) {
-        _log.Error (ex.Message);
-        _log.Debug (ex.ToString ());
-      }
-      finally {
-        foreach (var cached in cache.Values)
-          cached.Dispose ();
+        /// <summary>
+        /// Gets the host instances for the WebSocket services.
+        /// </summary>
+        /// <value>
+        ///   <para>
+        ///   An <c>IEnumerable&lt;WebSocketServiceHost&gt;</c> instance.
+        ///   </para>
+        ///   <para>
+        ///   It provides an enumerator which supports the iteration over
+        ///   the collection of the host instances.
+        ///   </para>
+        /// </value>
+        public IEnumerable<WebSocketServiceHost> Hosts {
+            get {
+                lock (_sync)
+                    return _hosts.Values.ToList();
+            }
+        }
 
-        cache.Clear ();
-      }
+        /// <summary>
+        /// Gets the host instance for a WebSocket service with the specified path.
+        /// </summary>
+        /// <value>
+        ///   <para>
+        ///   A <see cref="WebSocketServiceHost"/> instance or
+        ///   <see langword="null"/> if not found.
+        ///   </para>
+        ///   <para>
+        ///   The host instance provides the function to access
+        ///   the information in the service.
+        ///   </para>
+        /// </value>
+        /// <param name="path">
+        ///   <para>
+        ///   A <see cref="string"/> that represents an absolute path to
+        ///   the service to find.
+        ///   </para>
+        ///   <para>
+        ///   / is trimmed from the end of the string if present.
+        ///   </para>
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///   <para>
+        ///   <paramref name="path"/> is empty.
+        ///   </para>
+        ///   <para>
+        ///   -or-
+        ///   </para>
+        ///   <para>
+        ///   <paramref name="path"/> is not an absolute path.
+        ///   </para>
+        ///   <para>
+        ///   -or-
+        ///   </para>
+        ///   <para>
+        ///   <paramref name="path"/> includes either or both
+        ///   query and fragment components.
+        ///   </para>
+        /// </exception>
+        public WebSocketServiceHost this[string path] {
+            get {
+                if (path == null)
+                    throw new ArgumentNullException("path");
+
+                if (path.Length == 0)
+                    throw new ArgumentException("An empty string.", "path");
+
+                if (path[0] != '/')
+                    throw new ArgumentException("Not an absolute path.", "path");
+
+                if (path.IndexOfAny(new[] { '?', '#' }) > -1) {
+                    var msg = "It includes either or both query and fragment components.";
+                    throw new ArgumentException(msg, "path");
+                }
+
+                WebSocketServiceHost host;
+                InternalTryGetServiceHost(path, out host);
+
+                return host;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the inactive sessions in
+        /// the WebSocket services are cleaned up periodically.
+        /// </summary>
+        /// <remarks>
+        /// The set operation does nothing if the server has already started or
+        /// it is shutting down.
+        /// </remarks>
+        /// <value>
+        /// <c>true</c> if the inactive sessions are cleaned up every 60 seconds;
+        /// otherwise, <c>false</c>.
+        /// </value>
+        public bool KeepClean {
+            get {
+                return _clean;
+            }
+
+            set {
+                string msg;
+                if (!canSet(out msg)) {
+                    _log.Warn(msg);
+                    return;
+                }
+
+                lock (_sync) {
+                    if (!canSet(out msg)) {
+                        _log.Warn(msg);
+                        return;
+                    }
+
+                    foreach (var host in _hosts.Values)
+                        host.KeepClean = value;
+
+                    _clean = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the paths for the WebSocket services.
+        /// </summary>
+        /// <value>
+        ///   <para>
+        ///   An <c>IEnumerable&lt;string&gt;</c> instance.
+        ///   </para>
+        ///   <para>
+        ///   It provides an enumerator which supports the iteration over
+        ///   the collection of the paths.
+        ///   </para>
+        /// </value>
+        public IEnumerable<string> Paths {
+            get {
+                lock (_sync)
+                    return _hosts.Keys.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Gets the total number of the sessions in the WebSocket services.
+        /// </summary>
+        /// <value>
+        /// An <see cref="int"/> that represents the total number of
+        /// the sessions in the services.
+        /// </value>
+        [Obsolete("This property will be removed.")]
+        public int SessionCount {
+            get {
+                var cnt = 0;
+                foreach (var host in Hosts) {
+                    if (_state != ServerState.Start)
+                        break;
+
+                    cnt += host.Sessions.Count;
+                }
+
+                return cnt;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the time to wait for the response to the WebSocket Ping or
+        /// Close.
+        /// </summary>
+        /// <remarks>
+        /// The set operation does nothing if the server has already started or
+        /// it is shutting down.
+        /// </remarks>
+        /// <value>
+        /// A <see cref="TimeSpan"/> to wait for the response.
+        /// </value>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The value specified for a set operation is zero or less.
+        /// </exception>
+        public TimeSpan WaitTime {
+            get {
+                return _waitTime;
+            }
+
+            set {
+                if (value <= TimeSpan.Zero)
+                    throw new ArgumentOutOfRangeException("value", "Zero or less.");
+
+                string msg;
+                if (!canSet(out msg)) {
+                    _log.Warn(msg);
+                    return;
+                }
+
+                lock (_sync) {
+                    if (!canSet(out msg)) {
+                        _log.Warn(msg);
+                        return;
+                    }
+
+                    foreach (var host in _hosts.Values)
+                        host.WaitTime = value;
+
+                    _waitTime = value;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void broadcast(Opcode opcode, byte[] data, Action completed)
+        {
+            var cache = new Dictionary<CompressionMethod, byte[]>();
+
+            try {
+                foreach (var host in Hosts) {
+                    if (_state != ServerState.Start) {
+                        _log.Error("The server is shutting down.");
+                        break;
+                    }
+
+                    host.Sessions.Broadcast(opcode, data, cache);
+                }
+
+                if (completed != null)
+                    completed();
+            }
+            catch (Exception ex) {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
+            finally {
+                cache.Clear();
+            }
+        }
+
+        private void broadcast(Opcode opcode, Stream stream, Action completed)
+        {
+            var cache = new Dictionary<CompressionMethod, Stream>();
+
+            try {
+                foreach (var host in Hosts) {
+                    if (_state != ServerState.Start) {
+                        _log.Error("The server is shutting down.");
+                        break;
+                    }
+
+                    host.Sessions.Broadcast(opcode, stream, cache);
+                }
+
+                if (completed != null)
+                    completed();
+            }
+            catch (Exception ex) {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
+            finally {
+                foreach (var cached in cache.Values)
+                    cached.Dispose();
+
+                cache.Clear();
+            }
+        }
+
+        private void broadcastAsync(Opcode opcode, byte[] data, Action completed)
+        {
+            try
+            {
+                ThreadPool.QueueUserWorkItem(
+                  state => broadcast(opcode, data, completed)
+                );
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
     }
 
-    private void broadcastAsync (Opcode opcode, byte[] data, Action completed)
-    {
-      ThreadPool.QueueUserWorkItem (
-        state => broadcast (opcode, data, completed)
-      );
-    }
-
-    private void broadcastAsync (Opcode opcode, Stream stream, Action completed)
-    {
-      ThreadPool.QueueUserWorkItem (
-        state => broadcast (opcode, stream, completed)
-      );
-    }
+        private void broadcastAsync(Opcode opcode, Stream stream, Action completed)
+        {
+            try
+            {
+                ThreadPool.QueueUserWorkItem(
+                  state => broadcast(opcode, stream, completed)
+                );
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
 
     private Dictionary<string, Dictionary<string, bool>> broadping (
       byte[] frameAsBytes, TimeSpan timeout

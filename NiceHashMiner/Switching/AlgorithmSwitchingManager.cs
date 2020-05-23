@@ -65,9 +65,13 @@ namespace NiceHashMiner.Switching
 
         public void Start()
         {
-            _smaCheckTimer = new Timer(1000);
-            _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
-            _smaCheckTimer.Start();
+            if (_smaCheckTimer == null)
+            {
+                Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
+                _smaCheckTimer = new Timer(1000);
+                _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
+                _smaCheckTimer.Start();
+            }
             //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
             {
                 /*
@@ -85,6 +89,7 @@ namespace NiceHashMiner.Switching
 
         public void Stop()
         {
+            Helpers.ConsolePrint("AlgorithmSwitchingManager", "Stop");
             //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
             {
                 /*
@@ -96,7 +101,11 @@ namespace NiceHashMiner.Switching
             }
             if (_smaCheckTimer != null)
             {
+                SmaCheck += null;
+                _smaCheckTimer.Elapsed += null;
                 _smaCheckTimer.Stop();
+                _smaCheckTimer.Close();
+                _smaCheckTimer.Dispose();
                 _smaCheckTimer = null;
             }
         }
@@ -106,6 +115,7 @@ namespace NiceHashMiner.Switching
         /// </summary>
         internal static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
+            Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed");
             Randomize();
             // Will be null if manually called (in tests)
             if (_smaCheckTimer != null)

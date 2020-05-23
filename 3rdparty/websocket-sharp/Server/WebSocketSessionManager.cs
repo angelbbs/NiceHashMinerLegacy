@@ -368,19 +368,35 @@ namespace WebSocketSharp.Server
       }
     }
 
-    private void broadcastAsync (Opcode opcode, byte[] data, Action completed)
-    {
-      ThreadPool.QueueUserWorkItem (
-        state => broadcast (opcode, data, completed)
-      );
-    }
+        private void broadcastAsync(Opcode opcode, byte[] data, Action completed)
+        {
+            try
+            {
+                ThreadPool.QueueUserWorkItem(
+                  state => broadcast(opcode, data, completed)
+                );
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
 
-    private void broadcastAsync (Opcode opcode, Stream stream, Action completed)
-    {
-      ThreadPool.QueueUserWorkItem (
-        state => broadcast (opcode, stream, completed)
-      );
-    }
+        private void broadcastAsync(Opcode opcode, Stream stream, Action completed)
+        {
+            try
+            {
+                ThreadPool.QueueUserWorkItem(
+                  state => broadcast(opcode, stream, completed)
+                );
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
 
     private Dictionary<string, bool> broadping (byte[] frameAsBytes)
     {

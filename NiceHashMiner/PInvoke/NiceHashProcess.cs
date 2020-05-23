@@ -138,7 +138,7 @@ namespace NiceHashMiner
         public IntPtr DivertHandle;
 
         private Thread _tHandle;
-        private bool _bRunning;
+        public bool _bRunning;
         private IntPtr _pHandle;
 
         public NiceHashProcess()
@@ -300,8 +300,15 @@ namespace NiceHashMiner
                     {
                         CloseHandle(_pHandle);
                         _pHandle = IntPtr.Zero;
-                        ExitEvent();
-                        return;
+                        try
+                        {
+                            if (ExitEvent != null) ExitEvent();
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint("CThread error: ", e.ToString());
+                        }
+                            return;
                     }
                 }
             }

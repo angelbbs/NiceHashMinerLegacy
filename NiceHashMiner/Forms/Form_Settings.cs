@@ -1262,7 +1262,6 @@ namespace NiceHashMiner.Forms
 
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
-
             MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
                 International.GetText("Form_Settings_buttonSaveTitle"),
                 MessageBoxButtons.OK, MessageBoxIcon.Information);

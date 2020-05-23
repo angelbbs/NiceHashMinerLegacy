@@ -1564,9 +1564,16 @@ namespace WebSocketSharp
 
         e = _messageEventQueue.Dequeue ();
       }
-
-      ThreadPool.QueueUserWorkItem (state => messages (e));
-    }
+            try
+            {
+                ThreadPool.QueueUserWorkItem(state => messages(e));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.ToString());
+                error("An error has occurred during the messages event.", ex);
+            }
+        }
 
     private void open ()
     {

@@ -29,6 +29,7 @@ using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Divert;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner
 {
@@ -441,23 +442,16 @@ namespace NiceHashMiner
         }
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
         {
-            //new Task(() => Form_Main.checkD()).Start();
             var algo = (int)MiningSetup.CurrentAlgorithmType;
-            //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
-            //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
-            /*
-            if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
-            {
-               // algo = -100;
-            }
-            */
             if (IsRunning)
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Shutting down miner");
             }
-
+            
             if (ProcessHandle != null)
             {
+                ProcessHandle._bRunning = false;
+                ProcessHandle.ExitEvent = null;
                 int k = ProcessTag().IndexOf("pid(");
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
@@ -1404,6 +1398,7 @@ namespace NiceHashMiner
 
         protected void ScheduleRestart(int ms)
         {
+            if (!ProcessHandle._bRunning) return;
             var restartInMs = ConfigManager.GeneralConfig.MinerRestartDelayMS > ms
                 ? ConfigManager.GeneralConfig.MinerRestartDelayMS
                 : ms;

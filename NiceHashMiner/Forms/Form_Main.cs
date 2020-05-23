@@ -1247,10 +1247,11 @@ namespace NiceHashMiner
         {
             try
             {
-                BeginInvoke((Action)(() =>
-               {
-                   MinerStatsCheck_Tick(null, null);
-               }));
+                new Task(() => MinerStatsCheck_Tick(null, null));
+                // BeginInvoke((Action)(() =>
+                //{
+               // MinerStatsCheck_Tick(null, null);
+               //}));
             }
             catch (Exception e)
             {
@@ -1616,6 +1617,7 @@ namespace NiceHashMiner
             DHClient.checkConnection = false;
             firstRun = true;
             _isManuallyStarted = false;
+            //AlgorithmSwitchingManager._smaCheckTimer.Enabled = false;
             StopMining();
         }
 
@@ -2103,7 +2105,7 @@ namespace NiceHashMiner
             _isNotProfitable = false;
 
             MinersManager.StopAllMiners();
-
+            MiningSession.FuncAttached = false;
             textBoxBTCAddress_new.Enabled = true;
            // textBoxBTCAddress.Enabled = true;
             textBoxWorkerName.Enabled = true;

@@ -153,7 +153,7 @@ namespace NiceHashMiner.Miners
                 try {
                     process.Kill();
                     Thread.Sleep(500);
-                    process.Kill();
+                    //process.Kill();
                 }
                 catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
             }
