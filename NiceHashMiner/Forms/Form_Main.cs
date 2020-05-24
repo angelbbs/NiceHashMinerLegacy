@@ -77,7 +77,7 @@ namespace NiceHashMiner
         private bool _isNotProfitable = false;
 
         //private bool _isSmaUpdated = false;
-
+        private Process mainproc = Process.GetCurrentProcess();
         public static double _factorTimeUnit = 1.0;
         public static int nanominerCount = 0;
         private int _mainFormHeight = 0;
@@ -325,6 +325,7 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.ShowUptime)
             {
                 label_Uptime.Text = International.GetText("Form_Main_Uptime");
+                label_Uptime.Visible = true;
             } else
             {
                 label_Uptime.Visible = false;
@@ -1515,12 +1516,12 @@ namespace NiceHashMiner
             //stop openhardwaremonitor
             var CMDconfigHandleOHM = new Process
 
-                {
-                    StartInfo =
+            {
+                StartInfo =
                 {
                     FileName = "sc.exe"
                 }
-                };
+            };
 
             CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
             CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
@@ -1543,7 +1544,28 @@ namespace NiceHashMiner
                 CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleWD.Start();
             }
-        }
+            //mainproc = Process.GetCurrentProcess();
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                    ("Select * From Win32_Process Where ParentProcessID=" + mainproc.Id.ToString());
+            ManagementObjectCollection moc = searcher.Get();
+               // Helpers.ConsolePrint("Closing", moc.Count.ToString());
+                foreach (ManagementObject mo in moc)
+                {
+                    try
+                    {
+                        Process proc = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
+                        Helpers.ConsolePrint("Closing", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
+                        proc.Kill();
+                    }
+                    catch (ArgumentException ex)
+                    {
+                    Helpers.ConsolePrint("Closing", ex.ToString());
+                    }
+                }
+                Process mproc = Process.GetProcessById(mainproc.Id);
+            Helpers.ConsolePrint("Closing", mproc.Id.ToString() + " " + mproc.ProcessName);
+            mproc.Kill();
+            }
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)
         {
@@ -2066,6 +2088,7 @@ namespace NiceHashMiner
             {
                 var timenow = DateTime.Now;
                 Uptime = timenow.Subtract(StartTime);
+                label_Uptime.Visible = true;
                 label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
             }
             if (Form_Main.thisComputer != null)

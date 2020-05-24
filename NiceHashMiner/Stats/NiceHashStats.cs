@@ -138,17 +138,24 @@ namespace NiceHashMiner.Stats
         {
             NHSmaData.InitializeIfNeeded();
             LoadCachedSMAData();
-            _socket = null;
-            _socket = new NiceHashSocket(address);
-            
-            //_socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
-            _socket.OnDataReceived += SocketOnOnDataReceived;
-         //   _socket.OnConnectionLost += SocketOnOnConnectionLost;
+            try
+            {
+                _socket = null;
+                _socket = new NiceHashSocket(address);
 
-            Helpers.ConsolePrint("SOCKET-address:", address);
-            _socket.StartConnectionNew();
+                //_socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
+                _socket.OnDataReceived += SocketOnOnDataReceived;
+                //   _socket.OnConnectionLost += SocketOnOnConnectionLost;
 
-            _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
+                Helpers.ConsolePrint("SOCKET-address:", address);
+                _socket.StartConnectionNew();
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("StartConnection", er.ToString());
+            }
+
+    _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
             _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
             _deviceUpdateTimer.Start();
 

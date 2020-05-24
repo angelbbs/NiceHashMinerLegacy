@@ -28,6 +28,7 @@ namespace NiceHashMiner
 {
     static class Program
     {
+        /*
         // Handle the UI exceptions by showing a dialog box, and asking the user whether
         // or not they wish to abort execution.
         private static void Form1_UIThreadException(object sender, ThreadExceptionEventArgs t)
@@ -100,6 +101,7 @@ namespace NiceHashMiner
             return MessageBox.Show(errorMsg, title, MessageBoxButtons.AbortRetryIgnore,
                 MessageBoxIcon.Stop);
         }
+        */
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -107,7 +109,7 @@ namespace NiceHashMiner
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
         static void Main(string[] argv)
         {
-
+/*
             // Add the event handler for handling UI thread exceptions to the event.
             Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);
 
@@ -118,7 +120,7 @@ namespace NiceHashMiner
             // Add the event handler for handling non-UI thread exceptions to the event.
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
+*/
             WindowsPrincipal pricipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             bool hasAdministrativeRight = pricipal.IsInRole(WindowsBuiltInRole.Administrator);
             var proc = Process.GetCurrentProcess();
@@ -201,6 +203,29 @@ namespace NiceHashMiner
                     MinersManager.StopAllMiners();
                     System.Threading.Thread.Sleep(5000);
                     Process.Start("backup\\restore.cmd");
+                }
+            }
+
+            var mainproc = Process.GetCurrentProcess();
+            if (File.Exists("MinerLegacyForkFixMonitor.exe"))
+            {
+                var MonitorProc = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "MinerLegacyForkFixMonitor.exe"
+                }
+                };
+
+                MonitorProc.StartInfo.Arguments = mainproc.Id.ToString();
+                MonitorProc.StartInfo.UseShellExecute = false;
+                MonitorProc.StartInfo.CreateNoWindow = true;
+                if (MonitorProc.Start())
+                {
+                    Helpers.ConsolePrint("Monitor", "Starting OK");
+                } else
+                {
+                    Helpers.ConsolePrint("Monitor", "Starting ERROR");
                 }
             }
 
@@ -521,6 +546,22 @@ namespace NiceHashMiner
                     store.Add(certificate);
                     //Helpers.ConsolePrint("X509Store", "Add certificate");
                     store.Close();
+                    //check after install
+                    using (var store2 = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
+                    {
+                        store2.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
+
+                        foreach (X509Certificate2 cert in store2.Certificates)
+                        {
+                            if (cert.IssuerName.Name.Contains("Angelbbs"))
+                            {
+                                certexist = true;
+                                Form_Main.CertInstalled = true;
+                                break;
+                            }
+                        }
+                        store2.Close();
+                    }
                 }
                 
                 var version = Assembly.GetExecutingAssembly().GetName().Version;

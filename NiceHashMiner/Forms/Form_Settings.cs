@@ -919,8 +919,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 checkbox_Use_OpenHardwareMonitor.Checked = ConfigManager.GeneralConfig.Use_OpenHardwareMonitor;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
-                checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ShowUptime;
-                checkBox_ShowUptime.Checked = ConfigManager.GeneralConfig.ColumnSort;
+                checkBox_ShowUptime.Checked = ConfigManager.GeneralConfig.ShowUptime;
+                checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
                 checkBoxAutoupdate.Checked = ConfigManager.GeneralConfig.ProgramAutoUpdate;

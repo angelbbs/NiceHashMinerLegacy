@@ -31,7 +31,7 @@ namespace NiceHashMiner.Switching
         private static int _ticksForStable;
         private static int _ticksForUnstable;
         private static double _smaCheckTime;
-
+        private static bool SmaCheckTimerOnElapsedRun = false;
         // Simplify accessing config objects
         public static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
         public static Interval UnstableRange => ConfigManager.GeneralConfig.SwitchSmaTicksUnstable;
@@ -65,6 +65,7 @@ namespace NiceHashMiner.Switching
 
         public void Start()
         {
+
             if (_smaCheckTimer == null)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
@@ -115,6 +116,8 @@ namespace NiceHashMiner.Switching
         /// </summary>
         internal static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
+            if (SmaCheckTimerOnElapsedRun) return;
+            SmaCheckTimerOnElapsedRun = true;
             Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed");
             Randomize();
             // Will be null if manually called (in tests)
@@ -148,6 +151,7 @@ namespace NiceHashMiner.Switching
 
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
             SmaCheck?.Invoke(sender, args);
+            SmaCheckTimerOnElapsedRun = false;
         }
 
         /// <summary>
