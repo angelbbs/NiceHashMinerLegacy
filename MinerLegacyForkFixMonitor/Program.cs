@@ -35,6 +35,13 @@ namespace MinerLegacyForkFixMonitor
                 catch
                 {
                     Helpers.ConsolePrint("Monitor", "Process not exist");
+                    foreach (var process in Process.GetProcessesByName("miner"))
+                    {
+                        try { process.Kill(); }
+                        catch (Exception e)
+                        {
+                        }
+                    }
                     foreach (var pid in processIdList)
                     {
                         try
@@ -45,12 +52,6 @@ namespace MinerLegacyForkFixMonitor
                         } catch
                         {
 
-                        }
-                    }
-                    foreach (var process in Process.GetProcessesByName("miner"))
-                    {
-                        try { process.Kill(); }
-                        catch (Exception e) {
                         }
                     }
 
