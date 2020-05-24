@@ -47,6 +47,13 @@ namespace MinerLegacyForkFixMonitor
 
                         }
                     }
+                    foreach (var process in Process.GetProcessesByName("miner"))
+                    {
+                        try { process.Kill(); }
+                        catch (Exception e) {
+                        }
+                    }
+
                     Thread.Sleep(1000);
                     if (File.Exists("NiceHashMinerLegacy.exe"))
                     {
