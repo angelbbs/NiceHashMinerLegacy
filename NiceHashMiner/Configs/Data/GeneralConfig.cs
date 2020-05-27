@@ -30,6 +30,7 @@ namespace NiceHashMiner.Configs.Data
         public bool SaveDivertPackets = false;
         public bool BlockGMinerApacheTomcat = false;
         public bool ShowUptime = true;
+        public bool ProgramMonitoring = true;
         public bool DebugConsole = false;
         public bool NewPlatform = true;
         public string BitcoinAddress = "";
@@ -203,6 +204,7 @@ namespace NiceHashMiner.Configs.Data
             TimeUnit = TimeUnitType.Day;
             ServiceLocation = 0;
             ShowUptime = true;
+            ProgramMonitoring = true;
             AutoStartMining = false;
             AutoStartMiningDelay = 0;
             //LessThreads = 0;

@@ -207,25 +207,29 @@ namespace NiceHashMiner
             }
 
             var mainproc = Process.GetCurrentProcess();
-            if (File.Exists("MinerLegacyForkFixMonitor.exe"))
+            if (ConfigManager.GeneralConfig.ProgramMonitoring)
             {
-                var MonitorProc = new Process
+                if (File.Exists("MinerLegacyForkFixMonitor.exe"))
                 {
-                    StartInfo =
+                    var MonitorProc = new Process
+                    {
+                        StartInfo =
                 {
                     FileName = "MinerLegacyForkFixMonitor.exe"
                 }
-                };
+                    };
 
-                MonitorProc.StartInfo.Arguments = mainproc.Id.ToString();
-                MonitorProc.StartInfo.UseShellExecute = false;
-                MonitorProc.StartInfo.CreateNoWindow = true;
-                if (MonitorProc.Start())
-                {
-                    Helpers.ConsolePrint("Monitor", "Starting OK");
-                } else
-                {
-                    Helpers.ConsolePrint("Monitor", "Starting ERROR");
+                    MonitorProc.StartInfo.Arguments = mainproc.Id.ToString();
+                    MonitorProc.StartInfo.UseShellExecute = false;
+                    MonitorProc.StartInfo.CreateNoWindow = true;
+                    if (MonitorProc.Start())
+                    {
+                        Helpers.ConsolePrint("Monitor", "Starting OK");
+                    }
+                    else
+                    {
+                        Helpers.ConsolePrint("Monitor", "Starting ERROR");
+                    }
                 }
             }
 

@@ -59,6 +59,7 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_ShowUptime = new System.Windows.Forms.CheckBox();
             this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.checkBox_sorting_list_of_algorithms = new System.Windows.Forms.CheckBox();
             this.Checkbox_Save_windows_size_and_position = new System.Windows.Forms.CheckBox();
@@ -163,7 +164,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBox_ShowUptime = new System.Windows.Forms.CheckBox();
+            this.checkBox_program_monitoring = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -567,6 +568,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.checkBox_program_monitoring);
             this.groupBox_Misc.Controls.Add(this.checkBox_ShowUptime);
             this.groupBox_Misc.Controls.Add(this.checkBox_AlwaysOnTop);
             this.groupBox_Misc.Controls.Add(this.checkBox_sorting_list_of_algorithms);
@@ -602,6 +604,18 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
+            // 
+            // checkBox_ShowUptime
+            // 
+            this.checkBox_ShowUptime.AutoSize = true;
+            this.checkBox_ShowUptime.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_ShowUptime.Location = new System.Drawing.Point(7, 372);
+            this.checkBox_ShowUptime.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ShowUptime.Name = "checkBox_ShowUptime";
+            this.checkBox_ShowUptime.Size = new System.Drawing.Size(87, 17);
+            this.checkBox_ShowUptime.TabIndex = 383;
+            this.checkBox_ShowUptime.Text = "Show uptime";
+            this.checkBox_ShowUptime.UseVisualStyleBackColor = true;
             // 
             // checkBox_AlwaysOnTop
             // 
@@ -1870,17 +1884,17 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // checkBox_ShowUptime
+            // checkBox_program_monitoring
             // 
-            this.checkBox_ShowUptime.AutoSize = true;
-            this.checkBox_ShowUptime.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ShowUptime.Location = new System.Drawing.Point(7, 372);
-            this.checkBox_ShowUptime.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_ShowUptime.Name = "checkBox_ShowUptime";
-            this.checkBox_ShowUptime.Size = new System.Drawing.Size(87, 17);
-            this.checkBox_ShowUptime.TabIndex = 383;
-            this.checkBox_ShowUptime.Text = "Show uptime";
-            this.checkBox_ShowUptime.UseVisualStyleBackColor = true;
+            this.checkBox_program_monitoring.AutoSize = true;
+            this.checkBox_program_monitoring.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_program_monitoring.Location = new System.Drawing.Point(7, 394);
+            this.checkBox_program_monitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_program_monitoring.Name = "checkBox_program_monitoring";
+            this.checkBox_program_monitoring.Size = new System.Drawing.Size(116, 17);
+            this.checkBox_program_monitoring.TabIndex = 384;
+            this.checkBox_program_monitoring.Text = "Program monitoring";
+            this.checkBox_program_monitoring.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -2098,5 +2112,6 @@ namespace NiceHashMiner.Forms
         public System.Windows.Forms.CustomTabControl tabControlGeneral;
         private System.Windows.Forms.CheckBox checkbox_Use_OpenHardwareMonitor;
         private System.Windows.Forms.CheckBox checkBox_ShowUptime;
+        private System.Windows.Forms.CheckBox checkBox_program_monitoring;
     }
 }

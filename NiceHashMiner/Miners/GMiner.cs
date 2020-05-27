@@ -158,7 +158,13 @@ namespace NiceHashMiner.Miners
                 algoName = "kawpow";
                 ssl = " --ssl 0";
             }
-
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC)
+            {
+                algo = "bfc";
+                algoName = "cuckaroo29bfc";
+                ssl = " --ssl 0";
+            }
+            
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
             {
@@ -489,6 +495,13 @@ namespace NiceHashMiner.Miners
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo kawpow" +
                 " --server rvn.2miners.com:6060 --user RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.GMiner --pass x " +
                 " --server kawpow.eu.nicehash.com:3385 --user " + username + " --pass x --proto stratum" +
+                GetDevicesCommandString();
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC)
+            {
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo bfc" +
+                " --server bfc.f2pool.com:4900 --user angelbbs.GMiner --pass x " +
+                " --server cuckaroo29bfc.eu.nicehash.com:3386 --user " + username + " --pass x --proto stratum" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)

@@ -467,6 +467,22 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
+                    if (algo.NiceHashID == AlgorithmType.Cuckaroo29BFC && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                    if (algo.NiceHashID == AlgorithmType.Cuckaroo29BFC && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.GMiner])
+                {
                     if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
                     {
                         algo.Enabled = false;
@@ -504,6 +520,22 @@ namespace NiceHashMiner.Devices.Algorithms
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])
                 {
                     if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.4))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.Cuckaroo29BFC && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                    if (algo.NiceHashID == AlgorithmType.Cuckaroo29BFC && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;

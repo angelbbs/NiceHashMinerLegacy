@@ -54,8 +54,10 @@ namespace MinerLegacyForkFixMonitor
 
                         }
                     }
-
                     Thread.Sleep(1000);
+                    Process.Start("AfterBenchmark.cmd");
+
+                    Thread.Sleep(1000 * 5);
                     if (File.Exists("NiceHashMinerLegacy.exe"))
                     {
                         var MonitorProc = new Process

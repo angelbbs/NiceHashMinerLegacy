@@ -505,7 +505,7 @@ namespace NiceHashMiner
             try
             {
                 CheckGithub();
-                //checkD();
+                checkD();
                 /*
                 NiceHashStats.ConnectToGoogle();
                 if (GoogleAnswer.Contains("HTTP"))
@@ -1555,7 +1555,10 @@ namespace NiceHashMiner
                     {
                         Process proc = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
                         Helpers.ConsolePrint("Closing", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
+                    if (!Convert.ToInt32(mo["ProcessID"]).ToString().Contains("NiceHashMinerLegacy"))
+                    {
                         proc.Kill();
+                    }
                     }
                     catch (ArgumentException ex)
                     {
