@@ -16,7 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using WinDivertSharp;
 
 namespace NiceHashMiner.Miners
 {
@@ -139,6 +139,14 @@ namespace NiceHashMiner.Miners
         }
         public static void StartConnection()
         {
+            var DivertHandle = Divert.OpenWinDivert("!loopback && outbound && tcp.DstPort == 9999");
+            if ((int)DivertHandle <= 0)
+            {
+                Helpers.ConsolePrint("DaggerHashimoto3GB", "WinDivert error. DaggerHashimoto3GB not running");
+                return;
+            }
+            WinDivert.WinDivertClose(DivertHandle);
+
             //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
             //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
             checkConnection = true;

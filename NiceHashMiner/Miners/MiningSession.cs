@@ -22,6 +22,7 @@ using System.Threading;
 using System.Globalization;
 using System.Management;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace NiceHashMiner.Miners
 {
@@ -58,6 +59,7 @@ namespace NiceHashMiner.Miners
 
         // timers
         private readonly Timer _preventSleepTimer;
+        public static Timer _smaCheckTimer;
 
         // check internet connection
         private readonly Timer _internetCheckTimer;
@@ -67,6 +69,8 @@ namespace NiceHashMiner.Miners
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
 
+        private static Action nonStaticMethodAction;
+        
         public List<int> ActiveDeviceIndexes
         {
             get
@@ -84,6 +88,24 @@ namespace NiceHashMiner.Miners
             }
         }
 
+
+        
+        public static void StopEvent()
+        {
+            //NiceHashMiner.Switching.AlgorithmSwitchingManager.
+            //SwichMostProfitableGroupUpMethod.
+            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck = null;
+            /*
+            foreach (EventHandler eh in NiceHashMiner.Switching.AlgorithmSwitchingManager)
+            {
+                MyRealEvent -= eh;
+            }
+            delegates.Clear();
+            */
+            //EventHandler<SmaUpdateEventArgs> SwichMostProfitableGroupUpMethod = new SwichMostProfitableGroupUpMethod();
+            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
+        }
+        
         public MiningSession(List<ComputeDevice> devices,
             IMainFormRatesComunication mainFormRatesComunication,
             string miningLocation, string worker, string btcAdress)
@@ -92,9 +114,12 @@ namespace NiceHashMiner.Miners
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
             _switchingManager = new AlgorithmSwitchingManager();
+            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck -= this.SwichMostProfitableGroupUpMethod;
             if (!FuncAttached)
             {
+                Helpers.ConsolePrint("MiningSession", "Process attached");
                 NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+                
                 FuncAttached = true;
             }
             //_switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
@@ -131,10 +156,14 @@ namespace NiceHashMiner.Miners
                 _internetCheckTimer.Start();
             }
 
+            /*
             _switchingManager.Stop();
             _switchingManager.Start();
-
+            */
+            AlgorithmSwitchingManager.Stop();
+            AlgorithmSwitchingManager.Start();
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
+            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
         }
 
         #region Timers stuff
@@ -234,7 +263,8 @@ namespace NiceHashMiner.Miners
                 _ethminerAmdPaused = null;
             }
 
-            _switchingManager.Stop();
+            //_switchingManager.Stop();
+            AlgorithmSwitchingManager.Stop();
 
             _mainFormRatesComunication?.ClearRatesAll();
 
@@ -397,11 +427,13 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
-        private void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
+       
+        public void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
 #endif
+            AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = true;
             var profitableDevices = new List<MiningPair>();
             var currentProfit = 0.0d;
             var prevStateProfit = 0.0d;
@@ -419,12 +451,15 @@ namespace NiceHashMiner.Miners
             }
             var stringBuilderFull = new StringBuilder();
             stringBuilderFull.AppendLine("Current device profits:");
+            double smaTmp = 0;
             foreach (var device in _miningDevices)
             {
                 var stringBuilderDevice = new StringBuilder();
                 stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
+                
                 foreach (var algo in device.Algorithms)
                 {
+                    smaTmp = smaTmp + algo.CurNhmSmaDataVal;
                     stringBuilderDevice.AppendLine(
                         $"\tPROFIT = {Math.Round(algo.CurrentProfit, 10).ToString(DoubleFormat).PadRight(17)}" +
                             $"\tSPEED = {Math.Round(algo.AvaragedSpeed, 3).ToString().PadRight(13)}" +
@@ -455,10 +490,13 @@ namespace NiceHashMiner.Miners
                 {
                     device.SetNotMining();
                 }
-
+                AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
                 return;
             }
-
+            if (smaTmp == 0)
+            {
+                Helpers.ConsolePrint(Tag, "SMA Error");
+            }
             // check profit threshold
             bool needSwitch = false;
             foreach (var device in _miningDevices)
@@ -491,7 +529,11 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
-            if (!needSwitch) return;
+            if (!needSwitch)
+            {
+                AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
+                return;
+            }
             // group new miners
             var newGroupedMiningPairs = new Dictionary<string, List<MiningPair>>();
             // group devices with same supported algorithms
@@ -663,7 +705,7 @@ namespace NiceHashMiner.Miners
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
             //await MinerStatsCheck();
             //}
-
+            AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
             _mainFormRatesComunication?.ForceMinerStatsUpdate();
         }
 

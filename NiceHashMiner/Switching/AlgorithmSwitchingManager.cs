@@ -31,7 +31,7 @@ namespace NiceHashMiner.Switching
         private static int _ticksForStable;
         private static int _ticksForUnstable;
         private static double _smaCheckTime;
-        private static bool SmaCheckTimerOnElapsedRun = false;
+        public static bool SmaCheckTimerOnElapsedRun = false;
         // Simplify accessing config objects
         public static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
         public static Interval UnstableRange => ConfigManager.GeneralConfig.SwitchSmaTicksUnstable;
@@ -63,7 +63,7 @@ namespace NiceHashMiner.Switching
             }
         }
 
-        public void Start()
+        public static void Start()
         {
 
             if (_smaCheckTimer == null)
@@ -71,6 +71,7 @@ namespace NiceHashMiner.Switching
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
                 _smaCheckTimer = new Timer(1000);
                 _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
+                _smaCheckTimer.AutoReset = false;
                 _smaCheckTimer.Start();
             }
             //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
@@ -88,7 +89,7 @@ namespace NiceHashMiner.Switching
             SmaCheckTimerOnElapsed(null, null);
         }
 
-        public void Stop()
+        public static void Stop()
         {
             Helpers.ConsolePrint("AlgorithmSwitchingManager", "Stop");
             //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
@@ -102,19 +103,23 @@ namespace NiceHashMiner.Switching
             }
             if (_smaCheckTimer != null)
             {
-                SmaCheck += null;
-                _smaCheckTimer.Elapsed += null;
-                _smaCheckTimer.Stop();
+                MiningSession.StopEvent();
+                _smaCheckTimer?.Stop();
                 _smaCheckTimer.Close();
                 _smaCheckTimer.Dispose();
                 _smaCheckTimer = null;
+                foreach (Delegate d in SmaCheck.GetInvocationList())
+                {
+                    SmaCheck -= (EventHandler<SmaUpdateEventArgs>)d;
+                }
             }
+
         }
 
         /// <summary>
         /// Checks profits and updates normalization based on ticks
         /// </summary>
-        internal static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
+        public static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             if (SmaCheckTimerOnElapsedRun) return;
             SmaCheckTimerOnElapsedRun = true;
@@ -150,8 +155,11 @@ namespace NiceHashMiner.Switching
             }
 
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
-            SmaCheck?.Invoke(sender, args);
             SmaCheckTimerOnElapsedRun = false;
+            new Task(() => SmaCheck(sender, args)).Start();
+//            SmaCheck?.Invoke(sender, args);
+
+            //new MiningSession().SwichMostProfitableGroupUpMethod();
         }
 
         /// <summary>

@@ -81,7 +81,6 @@
     <Compile Include="NetworkInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicFunc.cs" />
-    <Compile Include="variables.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

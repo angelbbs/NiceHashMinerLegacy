@@ -56,7 +56,9 @@ namespace NiceHashMinerLegacy.Divert
         {
             Divert.Testdivert_running = true;
 
-            DivertIP_Test = variables.ProxyIP;
+            DivertIP_Test = Divert.ProxyIP;
+            if (DivertIP_Test.Length < 8) DivertIP_Test = Divert.DNStoIP("google.com");
+
             DivertPort_Test = 4100;
 
             filter = "(!loopback && outbound ? (tcp.DstPort == 80 || tcp.DstPort == 4100)" +

@@ -23,6 +23,7 @@ using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using NiceHashMiner.Miners;
+using System.Security.Permissions;
 
 namespace NiceHashMiner
 {
@@ -520,38 +521,53 @@ namespace NiceHashMiner
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************
-                bool certexist = false;
-                using (var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
+                new StorePermission(PermissionState.Unrestricted) { Flags = StorePermissionFlags.AddToStore }.Assert();
+                X509Certificate2 certificate = new X509Certificate2(Properties.Resources.rootCA, "", X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                
+                using (var storeCU = new X509Store(StoreName.My, StoreLocation.CurrentUser))
                 {
-                    store.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
+                    storeCU.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
 
-                    foreach (X509Certificate2 cert in store.Certificates)
+                    foreach (X509Certificate2 cert in storeCU.Certificates)
                     {
-                        if (cert.IssuerName.Name.Contains("Angelbbs"))
+                        //if (cert.IssuerName.Name.Contains("Angelbbs"))
                         {
-                            certexist = true;
                             //Helpers.ConsolePrint("X509Store", cert.SerialNumber);
                             //Helpers.ConsolePrint("X509Store", cert.IssuerName.Name);
                             //Helpers.ConsolePrint("X509Store", cert.Subject);
-                            //store.Remove(cert);
-                            Form_Main.CertInstalled = true;
+                            //storeCU.Remove(cert);
+                            storeCU.Add(certificate);
+                            storeCU.Close();
                             //Helpers.ConsolePrint("X509Store", "Certificate exist");
                             break;
                         }
                     }
-                    store.Close();
+                    storeCU.Close();
                 }
-                if (!certexist)
+                
+                using (var storeLM = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
                 {
-                    //00A3302D9D56DBF591
-                    X509Certificate2 certificate = new X509Certificate2(Properties.Resources.rootCA, "", X509KeyStorageFlags.PersistKeySet);
-                    var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                    store.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
-                    store.Add(certificate);
-                    //Helpers.ConsolePrint("X509Store", "Add certificate");
-                    store.Close();
-                    //check after install
-                    using (var store2 = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
+                    storeLM.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
+
+                    foreach (X509Certificate2 cert in storeLM.Certificates)
+                    {
+                        //if (cert.IssuerName.Name.Contains("Angelbbs"))
+                        {
+                            //Helpers.ConsolePrint("X509Store", cert.SerialNumber);
+                            //Helpers.ConsolePrint("X509Store", cert.IssuerName.Name);
+                            //Helpers.ConsolePrint("X509Store", cert.Subject);
+                            //storeLM.Remove(cert);
+                            storeLM.Add(certificate);
+                            storeLM.Close();
+                            //Helpers.ConsolePrint("X509Store", "Certificate exist");
+                            break;
+                        }
+                    }
+                    storeLM.Close();
+                }
+
+                //check after install
+                using (var store2 = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
                     {
                         store2.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
 
@@ -559,15 +575,26 @@ namespace NiceHashMiner
                         {
                             if (cert.IssuerName.Name.Contains("Angelbbs"))
                             {
-                                certexist = true;
                                 Form_Main.CertInstalled = true;
                                 break;
                             }
                         }
                         store2.Close();
                     }
-                }
                 
+                var CMDconfigHandleWD = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+                };
+
+                CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
+                CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+                CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleWD.Start();
+
                 var version = Assembly.GetExecutingAssembly().GetName().Version;
                 var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
                 Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner Legacy Fork Fix: Build date " + buildDate);

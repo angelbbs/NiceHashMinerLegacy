@@ -28,6 +28,7 @@ namespace NiceHashMiner
     using Microsoft.Win32;
     using NiceHashMinerLegacy.Divert;
     using OpenHardwareMonitor.Hardware;
+    using System.ComponentModel;
     using System.Drawing.Drawing2D;
     using System.IO;
     using System.Net;
@@ -499,7 +500,38 @@ namespace NiceHashMiner
                 Form_Settings.ProgressProgramUpdate.Visible = false;
             }
         }
-       
+
+        private bool CheckGithubDownload()
+        {
+            if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                WebClient client = new WebClient();
+                client.UseDefaultCredentials = false;
+                client.DownloadFileAsync(new Uri("https://github.com/angelbbs/NiceHashMinerLegacy/raw/master-old/NiceHashMiner/github.test"), "temp/github.test");
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("CheckGithubDownload", ex.ToString());
+                return false;
+            }
+            
+            return true;
+        }
+        static void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                Helpers.ConsolePrint("CheckGithubDownload: ", e.Error.Message);
+                return;
+            } else
+            {
+                Helpers.ConsolePrint("CheckGithubDownload", "true");
+            }
+            return;
+        }
+
         private void CheckUpdates()
         {
             try
@@ -596,7 +628,7 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
-
+            new Task(() => CheckGithubDownload()).Start();
             _loadingScreen.SetInfoMsg("Set firewall rules");
             new Task(() => Firewall.AddToFirewall()).Start();
            // Firewall.AddToFirewall();
@@ -652,13 +684,6 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
-
-            //NiceHashStats.OnBalanceUpdate += BalanceCallback;
-            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            //NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
-            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
-           // NiceHashStats.OnExchangeUpdate += ExchangeCallback;
-            //Thread.Sleep(50);
 
             firstStartConnection = true;
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
@@ -996,6 +1021,7 @@ namespace NiceHashMiner
 
             if (_updateTimerCount >= period)
             {
+                /*
                 if (ConfigManager.GeneralConfig.PeriodicalReconnect)
                 {
                     try
@@ -1010,6 +1036,7 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint("SOCKET", "Periodical reconnect error: " + ex.ToString());
                     }
                 }
+                */
                 _updateTimerCount = 0;
                 bool newver = false;
                 try
@@ -1545,6 +1572,7 @@ namespace NiceHashMiner
                 CMDconfigHandleWD.Start();
             }
             //mainproc = Process.GetCurrentProcess();
+
             ManagementObjectSearcher searcher = new ManagementObjectSearcher
                     ("Select * From Win32_Process Where ParentProcessID=" + mainproc.Id.ToString());
             ManagementObjectCollection moc = searcher.Get();
@@ -1554,7 +1582,7 @@ namespace NiceHashMiner
                     try
                     {
                         Process proc = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
-                        Helpers.ConsolePrint("Closing", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
+                        //Helpers.ConsolePrint("Closing", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
                     if (!Convert.ToInt32(mo["ProcessID"]).ToString().Contains("NiceHashMinerLegacy"))
                     {
                         proc.Kill();
@@ -2039,7 +2067,7 @@ namespace NiceHashMiner
             {
                 if (Divert.DaggerHashimoto3GBForce)
                 {
-                    if (Divert.DaggerHashimoto3GBProfit)
+                    if (Divert.DaggerHashimoto3GBProfit && DHClient.checkConnection)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON");
                         NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
@@ -2051,7 +2079,7 @@ namespace NiceHashMiner
                         //DHClient.needStart = false;
                         //new Task(() => DHClient.StopConnection()).Start();
                     }
-                    if (Divert.Dagger3GBEpochCount > 1)
+                    if (Divert.Dagger3GBEpochCount > 1 && !DHClient.checkConnection)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
@@ -2119,6 +2147,7 @@ namespace NiceHashMiner
         }
         private void StopMining()
         {
+            AlgorithmSwitchingManager.Stop();
             NiceHashStats._deviceUpdateTimer.Stop();
             new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
             NiceHashStats._deviceUpdateTimer.Stop();
