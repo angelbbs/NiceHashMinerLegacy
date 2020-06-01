@@ -189,6 +189,7 @@ namespace NiceHashMiner.Configs.Data
         public int SwitchingAlgorithmsIndex = 2;
         public int DevicesCountIndex = 1;
         public bool ProgramAutoUpdate = true;
+        public bool BackupBeforeUpdate = true;
         public int ProgramUpdateIndex = 1;
         public bool PeriodicalReconnect = true;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();

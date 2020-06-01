@@ -316,6 +316,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
 
             checkBoxAutoupdate.Text = International.GetText("Form_Settings_checkBoxAutoupdate");
+            checkBox_BackupBeforeUpdate.Text = International.GetText("Form_Settings_checkBox_backup_before_update");
             labelCheckforprogramupdatesevery.Text = International.GetText("Form_Settings_labelCheckforprogramupdatesevery");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
@@ -839,6 +840,7 @@ namespace NiceHashMiner.Forms
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxAutoupdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_BackupBeforeUpdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
@@ -930,6 +932,7 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
                 checkBoxAutoupdate.Checked = ConfigManager.GeneralConfig.ProgramAutoUpdate;
+                checkBox_BackupBeforeUpdate.Checked = ConfigManager.GeneralConfig.BackupBeforeUpdate;
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
             }
@@ -1059,6 +1062,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
             ConfigManager.GeneralConfig.ProgramAutoUpdate = checkBoxAutoupdate.Checked;
+            ConfigManager.GeneralConfig.BackupBeforeUpdate = checkBox_BackupBeforeUpdate.Checked;
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
             ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
             if (checkBox_LogToFile.Checked)
@@ -2001,15 +2005,15 @@ namespace NiceHashMiner.Forms
                 Helpers.ConsolePrint("BACKUP", "Error code: " + CMDconfigHandleBackup.ExitCode);
                 if (CMDconfigHandleBackup.ExitCode != 0)
                 {
-                    MessageBox.Show("Error code: " + CMDconfigHandleBackup.ExitCode,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //MessageBox.Show("Error code: " + CMDconfigHandleBackup.ExitCode,
+                    //"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("Backup", ex.ToString());
-                MessageBox.Show("Unknown error ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show("Unknown error ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2030,7 +2034,8 @@ namespace NiceHashMiner.Forms
                 try
                 {
                     var cmdFile = "@echo off\r\n" +
-                        "taskkill /F /IM \"NiceHashMinerLegacy.exe\"\r\n" +
+                        "taskkill /F /IM \"MinerLegacyForkFixMonitor.exe /T\"\r\n" +
+                        "taskkill /F /IM \"NiceHashMinerLegacy.exe /T\"\r\n" +
                         "timeout /T 2 /NOBREAK\r\n" +
                         "utils\\7z.exe x -r -y " + "backup\\backup_" + fname + ".zip" + "\r\n" +
                         "start NiceHashMinerLegacy.exe\r\n";

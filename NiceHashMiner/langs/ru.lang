@@ -461,6 +461,7 @@
 "Form_Main_Miner": "Майнер: ",
 "Form_Settings_checkBox_ShowUptime": "Показывать время работы",
 "Form_Settings_checkBox_program_monitoring": "Мониторинг программы",
+"Form_Settings_checkBox_backup_before_update": "Создать резервную копию перед обновлением",
                 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

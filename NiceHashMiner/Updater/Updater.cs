@@ -22,6 +22,10 @@ namespace NiceHashMiner.Updater
         private static bool _autoupdate;
         public static void Downloader(bool autoupdate)
         {
+            if (ConfigManager.GeneralConfig.BackupBeforeUpdate)
+            {
+                CreateBackup();
+            }
             if (autoupdate)
             {
                 var dialogRes = Utils.MessageBoxEx.Show("Continue update?", "Autoupdate", MessageBoxButtons.YesNo, MessageBoxIcon.Question, 5000);
@@ -119,6 +123,81 @@ namespace NiceHashMiner.Updater
         {
             Form_Main.ProgressBarUpd(e);
             
+        }
+
+        private static void CreateBackup()
+        {
+            string fname = Form_Main.currentBuild.ToString("00000000.00");
+            try
+            {
+                var CMDconfigHandleBackup = new Process
+
+                {
+                    StartInfo =
+                {
+                    FileName = "utils\\7z.exe"
+                }
+                };
+
+                if (Directory.Exists("backup"))
+                {
+                    var dirInfo = new DirectoryInfo("backup");
+                    foreach (var file in dirInfo.GetFiles()) file.Delete();
+                    dirInfo.Delete();
+                }
+
+                CMDconfigHandleBackup.StartInfo.Arguments = "a -tzip -mx3 -ssw -r -y -x!backup backup\\backup_" + fname + ".zip";
+                CMDconfigHandleBackup.StartInfo.UseShellExecute = false;
+                CMDconfigHandleBackup.StartInfo.CreateNoWindow = false;
+                //CMDconfigHandleBackup.Exited += new EventHandler(CMDconfigHandleBackup_Exited);
+                CMDconfigHandleBackup.Start();
+                CMDconfigHandleBackup.WaitForExit();
+                Helpers.ConsolePrint("BACKUP", "Error code: " + CMDconfigHandleBackup.ExitCode);
+                if (CMDconfigHandleBackup.ExitCode != 0)
+                {
+                    //MessageBox.Show("Error code: " + CMDconfigHandleBackup.ExitCode,
+                    //"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Backup", ex.ToString());
+                //MessageBox.Show("Unknown error ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (Directory.Exists("backup"))
+            {
+                var dirInfo = new DirectoryInfo("backup");
+                foreach (var file in dirInfo.GetFiles())
+                {
+                    if (file.Name.Contains("backup_") && file.Name.Contains(".zip"))
+                    {
+                        Form_Main.BackupFileName = file.Name.Replace("backup_", "").Replace(".zip", "");
+                        Form_Main.BackupFileDate = file.CreationTime.ToString("dd.MM.yyyy HH:mm");
+                    }
+                }
+
+                try
+                {
+                    var cmdFile = "@echo off\r\n" +
+                        "taskkill /F /IM \"MinerLegacyForkFixMonitor.exe /T\"\r\n" +
+                        "taskkill /F /IM \"NiceHashMinerLegacy.exe /T\"\r\n" +
+                        "timeout /T 2 /NOBREAK\r\n" +
+                        "utils\\7z.exe x -r -y " + "backup\\backup_" + fname + ".zip" + "\r\n" +
+                        "start NiceHashMinerLegacy.exe\r\n";
+                    FileStream fs = new FileStream("backup\\restore.cmd", FileMode.Create, FileAccess.Write);
+                    StreamWriter w = new StreamWriter(fs);
+                    w.WriteAsync(cmdFile);
+                    w.Flush();
+                    w.Close();
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("Restore", ex.ToString());
+                }
+            }
         }
 
         public static Tuple<string, double> GetVersion()

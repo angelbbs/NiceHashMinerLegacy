@@ -518,6 +518,13 @@ namespace NiceHashMiner
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 27.1;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 27.2)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    if (Directory.Exists("internals"))
+                        Directory.Delete("internals", true);
+                    ConfigManager.GeneralConfig.ForkFixVersion = 27.2;
+                }
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************
@@ -530,7 +537,7 @@ namespace NiceHashMiner
 
                     foreach (X509Certificate2 cert in storeCU.Certificates)
                     {
-                        //if (cert.IssuerName.Name.Contains("Angelbbs"))
+                        if (!cert.IssuerName.Name.Contains("Angelbbs"))
                         {
                             //Helpers.ConsolePrint("X509Store", cert.SerialNumber);
                             //Helpers.ConsolePrint("X509Store", cert.IssuerName.Name);
@@ -551,7 +558,7 @@ namespace NiceHashMiner
 
                     foreach (X509Certificate2 cert in storeLM.Certificates)
                     {
-                        //if (cert.IssuerName.Name.Contains("Angelbbs"))
+                        if (!cert.IssuerName.Name.Contains("Angelbbs"))
                         {
                             //Helpers.ConsolePrint("X509Store", cert.SerialNumber);
                             //Helpers.ConsolePrint("X509Store", cert.IssuerName.Name);

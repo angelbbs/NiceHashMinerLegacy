@@ -59,6 +59,7 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_program_monitoring = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowUptime = new System.Windows.Forms.CheckBox();
             this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.checkBox_sorting_list_of_algorithms = new System.Windows.Forms.CheckBox();
@@ -164,7 +165,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBox_program_monitoring = new System.Windows.Forms.CheckBox();
+            this.checkBox_BackupBeforeUpdate = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -604,6 +605,18 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
+            // 
+            // checkBox_program_monitoring
+            // 
+            this.checkBox_program_monitoring.AutoSize = true;
+            this.checkBox_program_monitoring.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_program_monitoring.Location = new System.Drawing.Point(7, 394);
+            this.checkBox_program_monitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_program_monitoring.Name = "checkBox_program_monitoring";
+            this.checkBox_program_monitoring.Size = new System.Drawing.Size(116, 17);
+            this.checkBox_program_monitoring.TabIndex = 384;
+            this.checkBox_program_monitoring.Text = "Program monitoring";
+            this.checkBox_program_monitoring.UseVisualStyleBackColor = true;
             // 
             // checkBox_ShowUptime
             // 
@@ -1687,6 +1700,7 @@ namespace NiceHashMiner.Forms
             // 
             this.groupBoxBackup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxBackup.Controls.Add(this.checkBox_BackupBeforeUpdate);
             this.groupBoxBackup.Controls.Add(this.labelBackupCopy);
             this.groupBoxBackup.Controls.Add(this.buttonRestoreBackup);
             this.groupBoxBackup.Controls.Add(this.buttonCreateBackup);
@@ -1694,7 +1708,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxBackup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxBackup.Name = "groupBoxBackup";
             this.groupBoxBackup.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxBackup.Size = new System.Drawing.Size(659, 47);
+            this.groupBoxBackup.Size = new System.Drawing.Size(659, 67);
             this.groupBoxBackup.TabIndex = 395;
             this.groupBoxBackup.TabStop = false;
             this.groupBoxBackup.Text = "Backup copies";
@@ -1743,7 +1757,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.Controls.Add(this.buttonUpdate);
             this.groupBoxUpdates.Controls.Add(this.buttonCheckNewVersion);
             this.groupBoxUpdates.Controls.Add(this.progressBarUpdate);
-            this.groupBoxUpdates.Location = new System.Drawing.Point(4, 150);
+            this.groupBoxUpdates.Location = new System.Drawing.Point(4, 170);
             this.groupBoxUpdates.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxUpdates.Name = "groupBoxUpdates";
             this.groupBoxUpdates.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1884,17 +1898,17 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // checkBox_program_monitoring
+            // checkBox_BackupBeforeUpdate
             // 
-            this.checkBox_program_monitoring.AutoSize = true;
-            this.checkBox_program_monitoring.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_program_monitoring.Location = new System.Drawing.Point(7, 394);
-            this.checkBox_program_monitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_program_monitoring.Name = "checkBox_program_monitoring";
-            this.checkBox_program_monitoring.Size = new System.Drawing.Size(116, 17);
-            this.checkBox_program_monitoring.TabIndex = 384;
-            this.checkBox_program_monitoring.Text = "Program monitoring";
-            this.checkBox_program_monitoring.UseVisualStyleBackColor = true;
+            this.checkBox_BackupBeforeUpdate.AutoSize = true;
+            this.checkBox_BackupBeforeUpdate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_BackupBeforeUpdate.Location = new System.Drawing.Point(9, 41);
+            this.checkBox_BackupBeforeUpdate.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_BackupBeforeUpdate.Name = "checkBox_BackupBeforeUpdate";
+            this.checkBox_BackupBeforeUpdate.Size = new System.Drawing.Size(165, 17);
+            this.checkBox_BackupBeforeUpdate.TabIndex = 408;
+            this.checkBox_BackupBeforeUpdate.Text = "Create backup before update";
+            this.checkBox_BackupBeforeUpdate.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -2113,5 +2127,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkbox_Use_OpenHardwareMonitor;
         private System.Windows.Forms.CheckBox checkBox_ShowUptime;
         private System.Windows.Forms.CheckBox checkBox_program_monitoring;
+        private System.Windows.Forms.CheckBox checkBox_BackupBeforeUpdate;
     }
 }
