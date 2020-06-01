@@ -238,6 +238,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--opencl-threads 2 --opencl-launch 18x0 "
                             },
+                            new Algorithm(MinerBaseType.WildRig, AlgorithmType.KAWPOW, "KAWPOW")
+                            {
+                                ExtraLaunchParameters = "--opencl-threads auto --opencl-launch auto "
+                            },
                             new Algorithm(MinerBaseType.WildRig, AlgorithmType.Lyra2REv3, "Lyra2REv3")
                             {
                                 ExtraLaunchParameters = "--opencl-threads auto --opencl-launch auto "
@@ -273,11 +277,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
 
                             },
+                            /*
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroo29BFC, "Cuckaroo29BFC")
                             {
 
                             },
-                            
+                            */
                             /*
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                             {
@@ -395,7 +400,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Eaglesong, "Eaglesong"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Handshake, "Handshake"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroo29BFC, "Cuckaroo29BFC"),
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroo29BFC, "Cuckaroo29BFC"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             /*
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
@@ -501,9 +506,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "")
                     {
                     },
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroo29BFC, "")
                     {
                     },
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

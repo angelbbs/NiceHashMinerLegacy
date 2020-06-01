@@ -81,6 +81,7 @@ namespace NiceHashMiner.Configs.Data
         public int SettingsFormLeft = 0;
 
         public bool MinimizeMiningWindows = false;
+        public bool ResetProtocols = true;
 
         //public int LessThreads;
         public CpuExtensionType ForceCPUExtension = CpuExtensionType.Automatic;

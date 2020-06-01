@@ -1291,6 +1291,9 @@ namespace NiceHashMiner
                     string strPlatform = "";
                     foreach (var pair in MiningSetup.MiningPairs)
                     {
+                        int a = (int)pair.Algorithm.NiceHashID;
+                        pair.Device.AlgorithmID = a;
+
                         if (pair.Device.DeviceType == DeviceType.NVIDIA)
                         {
                             strPlatform = "NVIDIA";

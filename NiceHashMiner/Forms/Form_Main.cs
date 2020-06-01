@@ -531,6 +531,37 @@ namespace NiceHashMiner
             }
             return;
         }
+        private void ResetProtocols()
+        {
+            var CMDconfigHandleDS = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "reg.exe"
+                }
+            };
+
+            CMDconfigHandleDS.StartInfo.Arguments = "import utils\\ds.reg";
+            CMDconfigHandleDS.StartInfo.UseShellExecute = false;
+            CMDconfigHandleDS.StartInfo.CreateNoWindow = true;
+            CMDconfigHandleDS.Start();
+
+            if (Configs.ConfigManager.GeneralConfig.ResetProtocols)
+            {
+                var CMDconfigHandleP = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "reg.exe"
+                }
+                };
+
+                CMDconfigHandleP.StartInfo.Arguments = "import utils\\Protocols.reg";
+                CMDconfigHandleP.StartInfo.UseShellExecute = false;
+                CMDconfigHandleP.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleP.Start();
+            }
+        }
 
         private void CheckUpdates()
         {
@@ -671,6 +702,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
 
             new Task(() => CheckUpdates()).Start();
+            new Task(() => ResetProtocols()).Start();
 
             thisComputer = new OpenHardwareMonitor.Hardware.Computer();
             thisComputer.GPUEnabled = true;
@@ -1539,6 +1571,7 @@ namespace NiceHashMiner
             if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
             MessageBoxManager.Unregister();
             ConfigManager.GeneralConfigFileCommit();
+            if(File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
 
             //stop openhardwaremonitor
             var CMDconfigHandleOHM = new Process

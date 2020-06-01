@@ -73,17 +73,18 @@ namespace NiceHashMiner.Miners
                 algo = "lyra2v3";
                 port = "3373";
             }
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
+                algo = "kawpow";
+                port = "3385";
             }
+
             string username = GetUsername(btcAdress, worker);
             return $" -a {algo} -o {url} -u {username}:x {extras} --api-port {ApiPort} "
-                + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-                + $" -o stratum+tcp://{algo}.{myServers[2, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-                + $" -o stratum+tcp://{algo}.{myServers[3, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-                + $" -o stratum+tcp://{algo}.{myServers[4, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
+                + $" -o stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} -u {username}:x "
+                + $" -o stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} -u {username}:x "
+                + $" -o stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} -u {username}:x "
+                + $" -o stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} -u {username}:x "
                 + " --opencl-devices=" + GetDevicesCommandString().TrimStart(); 
         }
 
@@ -128,6 +129,14 @@ namespace NiceHashMiner.Miners
                 port = "3366";
                 return $" -a lyra2v3 -o stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
                + $" -o stratum+tcp://{algo}.eu{nhsuff}.nicehash.com:{port} -u {username}:x "
+               + " --multiple-instance --opencl-devices=" + GetDevicesCommandString().TrimStart();
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                algo = "kawpow";
+                port = "3385";
+                return $" -a kawpow -o stratum+tcp://rvn.2miners.com:6060 -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.WildRig -p x {extras} --api-port {ApiPort} "
+               + $" -o stratum+tcp://{algo}.eu.nicehash.com:{port} -u {username}:x "
                + " --multiple-instance --opencl-devices=" + GetDevicesCommandString().TrimStart();
             }
             return "oops... strange algo";

@@ -104,6 +104,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "BeamHashII";
                 algoName = "beamv2";
+                ssl = " --ssl_verification 0";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
             {
@@ -130,6 +131,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "grin32";
                 algoName = "grincuckatoo32";
+                ssl = " --ssl_verification 0";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
