@@ -526,6 +526,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
+
             if (algoSettings.ContainsKey(MinerBaseType.NBMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])

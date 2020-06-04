@@ -35,7 +35,7 @@ namespace NiceHashMiner.Miners
         private string[,] myServers = Form_Main.myServers;
 
         public teamredminer()
-            : base("teamredminer_AMD")
+            : base("teamredminer")
         {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
             IsKillAllUsedMinerProcs = true;
@@ -78,11 +78,7 @@ namespace NiceHashMiner.Miners
 
             var algo = "";
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
             {
                 algo = " -a cnv8";
@@ -119,6 +115,10 @@ namespace NiceHashMiner.Miners
             {
                 algo = " -a ethash";
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                algo = " -a kawpow";
+            }
             var sc = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
             {
@@ -127,11 +127,11 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine = sc + " --watchdog_script " + algo + " -o " + url +
                               " -u " + username + " -p x " +
-                               " -o stratum+tcp://" + alg + "." + myServers[4, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + myServers[3, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                               apiBind +
                               " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
@@ -220,6 +220,11 @@ namespace NiceHashMiner.Miners
                 CommandLine = sc + " -a ethash" +
                  " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.teamred" + " -p x -d ";
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                CommandLine = sc + " -a kawpow" +
+                 " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.teamred" + " -p x -d ";
+            }
             //return $" -o stratum+tcp://xmr-eu.dwarfpool.com:8005 {variant} -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.{worker} -p x {extras} --api-port {ApiPort} --donate-level=1"
             /*
             CommandLine = " -a lyra2z "+
@@ -231,7 +236,8 @@ namespace NiceHashMiner.Miners
                                                                 DeviceType.AMD) +
                           " -d ";
 */
-            CommandLine += GetDevicesCommandString();
+            
+            CommandLine += GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             TotalCount = (time / 30) * 2;
             return CommandLine;
 
@@ -498,6 +504,54 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
+            if (outdata.Contains("kawpow: "))
+            {
+                int i = outdata.IndexOf("kawpow: ");
+                int k = outdata.IndexOf("h/s, avg");
+                hashSpeed = outdata.Substring(i + 8, k - i - 9).Trim();
+                Helpers.ConsolePrint(hashSpeed, "");
+                if (outdata.ToUpper().Contains("H/S"))
+                {
+                    kspeed = 1;
+                }
+                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
+                {
+                    kspeed = 1000;
+                }
+                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
+                {
+                    kspeed = 1000000;
+                }
+                count++;
+                if (count >= 4) //skip 2*30=1min
+                {
+                    try
+                    {
+                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        BenchmarkSignalFinnished = true;
+                        return false;
+                    }
+                    if (tmp > 0)
+                    {
+                        speed = speed + tmp;
+                    }
+                    else
+                    {
+                        count--;
+                    }
+                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
+                    if (count >= TotalCount)
+                    {
+                        BenchmarkSignalFinnished = true;
+                        return true;
+                    }
+                }
+            }
             //GPU 0 [56C, fan 35%] lyra2z: 1.410Mh/s, avg 1.437Mh/s, pool   0.0 h/s a:0 r:0 hw:0
             if (outdata.Contains("lyra2z: ") )
             {
@@ -539,7 +593,7 @@ namespace NiceHashMiner.Miners
                     {
                         count--;
                     }
-                    BenchmarkAlgorithm.BenchmarkSpeed =  speed / (count - 3);
+                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(speed / (count - 3));
                     if (count >= TotalCount)
                     {
                         BenchmarkSignalFinnished = true;

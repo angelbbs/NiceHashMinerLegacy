@@ -469,7 +469,7 @@
 "Form_Main_Uptime": "Uptime:",
 "Form_Main_Miner": "Miner: ",
 "Form_Settings_checkBox_ShowUptime": "Show uptime",
-"Form_Settings_checkBox_program_monitoring": "Program monitoring",
+"Form_Settings_checkBox_program_monitoring": "Enable watchdog",
 "Form_Settings_checkBox_backup_before_update": "Create backup before update",
                 "Form_Settings_buttonLicence": "View licence"
     }

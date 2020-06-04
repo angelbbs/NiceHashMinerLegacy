@@ -545,7 +545,7 @@ namespace NiceHashMiner
             CMDconfigHandleDS.StartInfo.UseShellExecute = false;
             CMDconfigHandleDS.StartInfo.CreateNoWindow = true;
             CMDconfigHandleDS.Start();
-
+            /*
             if (Configs.ConfigManager.GeneralConfig.ResetProtocols)
             {
                 var CMDconfigHandleP = new Process
@@ -561,6 +561,7 @@ namespace NiceHashMiner
                 CMDconfigHandleP.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleP.Start();
             }
+            */
         }
 
         private void CheckUpdates()
@@ -568,7 +569,7 @@ namespace NiceHashMiner
             try
             {
                 CheckGithub();
-                checkD();
+                //checkD();
                 /*
                 NiceHashStats.ConnectToGoogle();
                 if (GoogleAnswer.Contains("HTTP"))
@@ -1571,8 +1572,13 @@ namespace NiceHashMiner
             if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
             MessageBoxManager.Unregister();
             ConfigManager.GeneralConfigFileCommit();
-            if(File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
+            try
+            {
+                if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
+            } catch (Exception ex)
+            {
 
+            }
             //stop openhardwaremonitor
             var CMDconfigHandleOHM = new Process
 
@@ -1618,10 +1624,13 @@ namespace NiceHashMiner
                         //Helpers.ConsolePrint("Closing", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
                     if (!Convert.ToInt32(mo["ProcessID"]).ToString().Contains("NiceHashMinerLegacy"))
                     {
-                        proc.Kill();
+                        if (proc != null)
+                        {
+                            proc.Kill();
+                        }
                     }
                     }
-                    catch (ArgumentException ex)
+                    catch (Exception ex)
                     {
                     Helpers.ConsolePrint("Closing", ex.ToString());
                     }

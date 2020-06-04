@@ -618,15 +618,6 @@ namespace NiceHashMiner.Forms.Components
             if (e.Button == MouseButtons.Right)
             {
                 contextMenuStrip1.Items.Clear();
-                // disable all
-                {
-                    var disableAllItems = new ToolStripMenuItem
-                    {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll")
-                    };
-                    disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
-                    contextMenuStrip1.Items.Add(disableAllItems);
-                }
                 // enable all
                 {
                     var enableAllItems = new ToolStripMenuItem
@@ -635,6 +626,15 @@ namespace NiceHashMiner.Forms.Components
                     };
                     enableAllItems.Click += ToolStripMenuItemEnableAll_Click;
                     contextMenuStrip1.Items.Add(enableAllItems);
+                }
+                // disable all
+                {
+                    var disableAllItems = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll")
+                    };
+                    disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
+                    contextMenuStrip1.Items.Add(disableAllItems);
                 }
                 // test this
                 {

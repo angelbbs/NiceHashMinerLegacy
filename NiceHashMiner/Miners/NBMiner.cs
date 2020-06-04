@@ -72,6 +72,8 @@ namespace NiceHashMiner.Miners
                         return "hns";
                     case AlgorithmType.KAWPOW:
                         return "kawpow";
+                    case AlgorithmType.Cuckaroo29BFC:
+                        return "bfc";
                     default:
                         return "";
                 }
@@ -159,6 +161,12 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u1 " + user +
                     $" -o2 stratum+tcp://handshake." + myServers[2, 0] + ".nicehash.com:3384 -u2 " + user +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
+            {
+                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://cuckaroo29bfc." + myServers[1, 0] + ".nicehash.com:3386 -u1 " + user +
+                    $" -o2 stratum+tcp://cuckaroo29bfc." + myServers[2, 0] + ".nicehash.com:3386 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
 
@@ -275,6 +283,12 @@ namespace NiceHashMiner.Miners
                     $" -o2 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
+            {
+                cmd = $"-a {AlgoName} -o stratum+tcp://bfc.f2pool.com:4900 -u angelbbs.nbminer -o1 stratum+tcp://cuckaroo29bfc." + myServers[0, 0] + ".nicehash.com:3386 -u1 " + username +
+                    $" -o2 stratum+tcp://cuckaroo29bfc." + myServers[1, 0] + ".nicehash.com:3386 -u2 " + username +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
 
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong) //dual
             {
@@ -374,6 +388,16 @@ namespace NiceHashMiner.Miners
                         speedSec *= 1000000;
                         goto norm;
                     }
+                    if (outdata.Contains("Total Speed:") && outdata.Contains("h/s") && outdata.Contains("bfc")) 
+                    {
+                        var startStr = "Total Speed: ";
+                        var endStr = "h/s";
+                        var st = outdata.IndexOf(startStr);
+                        var e = outdata.IndexOf(endStr);
+                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
+                        speedSec = Double.Parse(parse, CultureInfo.InvariantCulture);
+                        goto norm;
+                    }
                     norm:
                     if (speed > 0.0d && speedSec > 0.0d)
                     {
@@ -394,6 +418,7 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
                 {
                     if (outdata.Contains("Total Speed:") && outdata.Contains("g/s")) //grin
@@ -417,6 +442,17 @@ namespace NiceHashMiner.Miners
                         speed *= 1000000;
                         goto norm;
                     }
+                    if (outdata.Contains("Total Speed:") && outdata.Contains("h/s") &&
+                        MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC) 
+                    {
+                        var startStr = "Total Speed: ";
+                        var endStr = "h/s";
+                        var st = outdata.IndexOf(startStr);
+                        var e = outdata.IndexOf(endStr);
+                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
+                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
+                        goto norm;
+                    }
 
                     norm:
                     if (speed > 0.0d)
@@ -427,6 +463,10 @@ namespace NiceHashMiner.Miners
                     }
 
                     return false;
+                }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
+                {
+
                 }
             }
             catch

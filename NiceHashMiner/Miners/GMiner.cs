@@ -719,6 +719,7 @@ namespace NiceHashMiner.Miners
             } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW ||
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Handshake)
             {
                 return GetNumber(outdata, LookForStart, "h/s");

@@ -330,8 +330,8 @@ namespace NiceHashMiner.Forms
             Double.TryParse(build.ToString(), out Form_Main.currentBuild);
 
             linkLabelCurrentVersion.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabelCurrentVersion.Text = International.GetText("Form_Settings_Currentversion") + 
-                ver + International.GetText("Form_Settings_Currentbuild") + 
+            linkLabelCurrentVersion.Text = International.GetText("Form_Settings_Currentversion") +
+                ver + International.GetText("Form_Settings_Currentbuild") +
                 Form_Main.currentBuild.ToString("00000000.00");
 
             linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
@@ -366,7 +366,7 @@ namespace NiceHashMiner.Forms
 
             if (Form_Main.currentBuild < Form_Main.githubBuild)
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") + 
+                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") +
                     Form_Main.githubBuild.ToString("{0:00000000.00}");
                 buttonUpdate.Visible = true;
                 linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
@@ -672,7 +672,7 @@ namespace NiceHashMiner.Forms
 
                 checkbox_Use_OpenHardwareMonitor.BackColor = Form_Main._backColor;
                 checkbox_Use_OpenHardwareMonitor.ForeColor = Form_Main._textColor;
-                
+
                 Checkbox_Save_windows_size_and_position.BackColor = Form_Main._backColor;
                 Checkbox_Save_windows_size_and_position.ForeColor = Form_Main._textColor;
 
@@ -2034,8 +2034,9 @@ namespace NiceHashMiner.Forms
                 try
                 {
                     var cmdFile = "@echo off\r\n" +
-                        "taskkill /F /IM \"MinerLegacyForkFixMonitor.exe /T\"\r\n" +
-                        "taskkill /F /IM \"NiceHashMinerLegacy.exe /T\"\r\n" +
+                        "taskkill /F /IM \"MinerLegacyForkFixMonitor.exe\"\r\n" +
+                        "taskkill /F /IM \"NiceHashMinerLegacy.exe\"\r\n" +
+                        "call AfterBenchmark.cmd\"\r\n" +
                         "timeout /T 2 /NOBREAK\r\n" +
                         "utils\\7z.exe x -r -y " + "backup\\backup_" + fname + ".zip" + "\r\n" +
                         "start NiceHashMinerLegacy.exe\r\n";
