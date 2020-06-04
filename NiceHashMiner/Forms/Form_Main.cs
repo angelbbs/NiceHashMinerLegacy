@@ -53,6 +53,7 @@ namespace NiceHashMiner
         private Timer _deviceStatusTimer;
         private Timer _updateTimer;
         private int _updateTimerCount;
+        private int _updateTimerRestartProgramCount;
         private int _AutoStartMiningDelay = 0;
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
@@ -1086,6 +1087,89 @@ namespace NiceHashMiner
                 if (ConfigManager.GeneralConfig.ProgramAutoUpdate && newver)
                 {
                     Updater.Updater.Downloader(true);
+                }
+            }
+            //***********
+            _updateTimerRestartProgramCount++;
+            int periodRestartProgram = 0;
+            switch (ConfigManager.GeneralConfig.ProgramRestartIndex)
+            {
+                case 0:
+                    periodRestartProgram = -1;
+                    break;
+                case 1:
+                    periodRestartProgram = 12;
+                    break;
+                case 2:
+                    periodRestartProgram = 24;
+                    break;
+                case 3:
+                    periodRestartProgram = 72;
+                    break;
+                case 4:
+                    periodRestartProgram = 168;
+                    break;
+            }
+            if (periodRestartProgram < 0) return;
+            if (_updateTimerRestartProgramCount >= periodRestartProgram)
+            {
+                try
+                {
+                    MinersManager.StopAllMiners();
+                    if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
+                    MessageBoxManager.Unregister();
+                    ConfigManager.GeneralConfigFileCommit();
+                    try
+                    {
+                        if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    //stop openhardwaremonitor
+                    var CMDconfigHandleOHM = new Process
+
+                    {
+                        StartInfo =
+                        {
+                            FileName = "sc.exe"
+                        }
+                    };
+
+                    CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleOHM.Start();
+
+                    if (GetWinVer(Environment.OSVersion.Version) == 10)
+                    {
+                        var CMDconfigHandleWD = new Process
+
+                        {
+                            StartInfo =
+                            {
+                                FileName = "sc.exe"
+                            }
+                        };
+
+                        CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
+                        CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+                        CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+                        CMDconfigHandleWD.Start();
+                    }
+                    Thread.Sleep(500);
+                    var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
+                    {
+                        WindowStyle = ProcessWindowStyle.Minimized
+                    };
+                    Helpers.ConsolePrint("SheduleRestart", "Shedule restart program after " + (periodRestartProgram/60).ToString() + "h");
+                    Process.Start(RestartProgram);
+                }
+                catch (Exception er)
+                {
+                    Helpers.ConsolePrint("SheduleRestart", er.ToString());
+                    return;
                 }
             }
         }

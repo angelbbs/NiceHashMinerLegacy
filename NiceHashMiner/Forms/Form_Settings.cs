@@ -468,6 +468,13 @@ namespace NiceHashMiner.Forms
             comboBoxCheckforprogramupdatesevery.Items.Add(International.GetText("Form_Settings_comboBoxCheckforprogramupdatesevery12"));
             comboBoxCheckforprogramupdatesevery.Items.Add(International.GetText("Form_Settings_comboBoxCheckforprogramupdatesevery24"));
 
+            labelRestartProgram.Text = International.GetText("Form_Settings_checkBox_RestartProgram");
+            comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram0"));
+            comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram1"));
+            comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram2"));
+            comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram3"));
+            comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram4"));
+
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated;
 
             radioButtonMOPA1.Checked = ConfigManager.GeneralConfig.MOPA1;
@@ -638,6 +645,7 @@ namespace NiceHashMiner.Forms
                 comboBox_switching_algorithms.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_devices_count.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBoxCheckforprogramupdatesevery.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBoxRestartProgram.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 foreach (var lbl in this.tabPageGeneral.Controls.OfType<GroupBox>())
                 {
@@ -747,6 +755,9 @@ namespace NiceHashMiner.Forms
                 textBox_SwitchProfitabilityThreshold.BackColor = Form_Main._backColor;
                 textBox_SwitchProfitabilityThreshold.ForeColor = Form_Main._foreColor;
                 textBox_SwitchProfitabilityThreshold.BorderStyle = BorderStyle.FixedSingle;
+
+                labelRestartProgram.BackColor = Form_Main._backColor;
+                labelRestartProgram.ForeColor = Form_Main._foreColor;
 
                 pictureBox_AllowMultipleInstances.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_APIBindPortStart.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -873,6 +884,7 @@ namespace NiceHashMiner.Forms
                 comboBox_switching_algorithms.Leave += GeneralComboBoxes_Leave;
                 comboBox_devices_count.Leave += GeneralComboBoxes_Leave;
                 comboBoxCheckforprogramupdatesevery.Leave += GeneralComboBoxes_Leave;
+                comboBoxRestartProgram.Leave += GeneralComboBoxes_Leave;
             }
         }
 
@@ -991,6 +1003,7 @@ namespace NiceHashMiner.Forms
                 comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
                 comboBox_devices_count.SelectedIndex = ConfigManager.GeneralConfig.DevicesCountIndex;
                 comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
+                comboBoxRestartProgram.SelectedIndex = ConfigManager.GeneralConfig.ProgramRestartIndex;
             }
         }
 
@@ -1186,6 +1199,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = comboBox_switching_algorithms.SelectedIndex;
             ConfigManager.GeneralConfig.DevicesCountIndex = comboBox_devices_count.SelectedIndex;
             ConfigManager.GeneralConfig.ProgramUpdateIndex = comboBoxCheckforprogramupdatesevery.SelectedIndex;
+            ConfigManager.GeneralConfig.ProgramRestartIndex = comboBoxRestartProgram.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
         }
 
@@ -2096,6 +2110,11 @@ namespace NiceHashMiner.Forms
         {
             checkBoxRestartWindows.Checked = false;
             checkBoxRestartDriver.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+        }
+
+        private void comboBoxRestartProgram_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_ServiceLocation_DrawItem(sender, e);
         }
     }
 }

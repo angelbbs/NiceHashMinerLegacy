@@ -125,6 +125,8 @@ namespace NiceHashMiner.Forms
             this.label_SwitchMinSeconds = new System.Windows.Forms.Label();
             this.textBox_SwitchMaxSeconds = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxRestartDriver = new System.Windows.Forms.CheckBox();
+            this.checkBoxRestartWindows = new System.Windows.Forms.CheckBox();
             this.checkbox_Use_OpenHardwareMonitor = new System.Windows.Forms.CheckBox();
             this.label_devices_count = new System.Windows.Forms.Label();
             this.comboBox_devices_count = new System.Windows.Forms.ComboBox();
@@ -160,8 +162,8 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBoxRestartWindows = new System.Windows.Forms.CheckBox();
-            this.checkBoxRestartDriver = new System.Windows.Forms.CheckBox();
+            this.labelRestartProgram = new System.Windows.Forms.Label();
+            this.comboBoxRestartProgram = new System.Windows.Forms.ComboBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -568,6 +570,8 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.labelRestartProgram);
+            this.groupBox_Misc.Controls.Add(this.comboBoxRestartProgram);
             this.groupBox_Misc.Controls.Add(this.checkBox_program_monitoring);
             this.groupBox_Misc.Controls.Add(this.checkBox_ShowUptime);
             this.groupBox_Misc.Controls.Add(this.checkBox_AlwaysOnTop);
@@ -1407,6 +1411,30 @@ namespace NiceHashMiner.Forms
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
             // 
+            // checkBoxRestartDriver
+            // 
+            this.checkBoxRestartDriver.AutoSize = true;
+            this.checkBoxRestartDriver.Location = new System.Drawing.Point(32, 156);
+            this.checkBoxRestartDriver.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxRestartDriver.Name = "checkBoxRestartDriver";
+            this.checkBoxRestartDriver.Size = new System.Drawing.Size(206, 17);
+            this.checkBoxRestartDriver.TabIndex = 408;
+            this.checkBoxRestartDriver.Text = "Restart driver when CUDA GPU is lost";
+            this.checkBoxRestartDriver.UseVisualStyleBackColor = true;
+            this.checkBoxRestartDriver.CheckedChanged += new System.EventHandler(this.checkBoxRestartDriver_CheckedChanged);
+            // 
+            // checkBoxRestartWindows
+            // 
+            this.checkBoxRestartWindows.AutoSize = true;
+            this.checkBoxRestartWindows.Location = new System.Drawing.Point(32, 133);
+            this.checkBoxRestartWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxRestartWindows.Name = "checkBoxRestartWindows";
+            this.checkBoxRestartWindows.Size = new System.Drawing.Size(224, 17);
+            this.checkBoxRestartWindows.TabIndex = 397;
+            this.checkBoxRestartWindows.Text = "Restart Windows when CUDA GPU is lost";
+            this.checkBoxRestartWindows.UseVisualStyleBackColor = true;
+            this.checkBoxRestartWindows.CheckedChanged += new System.EventHandler(this.checkBoxRestartWindows_CheckedChanged);
+            // 
             // checkbox_Use_OpenHardwareMonitor
             // 
             this.checkbox_Use_OpenHardwareMonitor.AutoSize = true;
@@ -1832,29 +1860,26 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // checkBoxRestartWindows
+            // labelRestartProgram
             // 
-            this.checkBoxRestartWindows.AutoSize = true;
-            this.checkBoxRestartWindows.Location = new System.Drawing.Point(32, 133);
-            this.checkBoxRestartWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBoxRestartWindows.Name = "checkBoxRestartWindows";
-            this.checkBoxRestartWindows.Size = new System.Drawing.Size(224, 17);
-            this.checkBoxRestartWindows.TabIndex = 397;
-            this.checkBoxRestartWindows.Text = "Restart Windows when CUDA GPU is lost";
-            this.checkBoxRestartWindows.UseVisualStyleBackColor = true;
-            this.checkBoxRestartWindows.CheckedChanged += new System.EventHandler(this.checkBoxRestartWindows_CheckedChanged);
+            this.labelRestartProgram.AutoSize = true;
+            this.labelRestartProgram.Location = new System.Drawing.Point(4, 398);
+            this.labelRestartProgram.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelRestartProgram.Name = "labelRestartProgram";
+            this.labelRestartProgram.Size = new System.Drawing.Size(82, 13);
+            this.labelRestartProgram.TabIndex = 406;
+            this.labelRestartProgram.Text = "Restart program";
             // 
-            // checkBoxRestartDriver
+            // comboBoxRestartProgram
             // 
-            this.checkBoxRestartDriver.AutoSize = true;
-            this.checkBoxRestartDriver.Location = new System.Drawing.Point(32, 156);
-            this.checkBoxRestartDriver.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBoxRestartDriver.Name = "checkBoxRestartDriver";
-            this.checkBoxRestartDriver.Size = new System.Drawing.Size(206, 17);
-            this.checkBoxRestartDriver.TabIndex = 408;
-            this.checkBoxRestartDriver.Text = "Restart driver when CUDA GPU is lost";
-            this.checkBoxRestartDriver.UseVisualStyleBackColor = true;
-            this.checkBoxRestartDriver.CheckedChanged += new System.EventHandler(this.checkBoxRestartDriver_CheckedChanged);
+            this.comboBoxRestartProgram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRestartProgram.FormattingEnabled = true;
+            this.comboBoxRestartProgram.Location = new System.Drawing.Point(154, 395);
+            this.comboBoxRestartProgram.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBoxRestartProgram.Name = "comboBoxRestartProgram";
+            this.comboBoxRestartProgram.Size = new System.Drawing.Size(117, 21);
+            this.comboBoxRestartProgram.TabIndex = 405;
+            this.comboBoxRestartProgram.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxRestartProgram_DrawItem);
             // 
             // algorithmsListView1
             // 
@@ -2128,5 +2153,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_BackupBeforeUpdate;
         private System.Windows.Forms.CheckBox checkBoxRestartDriver;
         private System.Windows.Forms.CheckBox checkBoxRestartWindows;
+        private System.Windows.Forms.Label labelRestartProgram;
+        private System.Windows.Forms.ComboBox comboBoxRestartProgram;
     }
 }

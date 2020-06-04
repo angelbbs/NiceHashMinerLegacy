@@ -192,6 +192,7 @@ namespace NiceHashMiner.Configs.Data
         public bool ProgramAutoUpdate = true;
         public bool BackupBeforeUpdate = true;
         public int ProgramUpdateIndex = 1;
+        public int ProgramRestartIndex = 0;
         public bool PeriodicalReconnect = true;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();
         public bool UseEthlargement = false;

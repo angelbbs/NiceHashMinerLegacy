@@ -464,6 +464,12 @@
 "Form_Settings_checkBox_backup_before_update": "Создать резервную копию перед обновлением",
 "Form_Settings_checkBox_RestartDriver": "Перезапуск драйвера при потере CUDA GPU",
 "Form_Settings_checkBox_RestartWindows": "Перезапуск Windows при потере CUDA GPU",
-                "Form_Settings_buttonLicence": "Просмотр лицензии"
+"Form_Settings_checkBox_RestartProgram": "Перезапуск программы",
+"Form_Settings_comboBoxRestartProgram0": "никогда",
+"Form_Settings_comboBoxRestartProgram1": "через 12 часов",
+"Form_Settings_comboBoxRestartProgram2": "через 24 часа",
+"Form_Settings_comboBoxRestartProgram3": "через 3 суток",
+"Form_Settings_comboBoxRestartProgram4": "через 7 суток",
+"Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }
