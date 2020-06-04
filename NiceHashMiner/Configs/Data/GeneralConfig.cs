@@ -126,7 +126,8 @@ namespace NiceHashMiner.Configs.Data
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
 
-        public bool RunScriptOnCUDA_GPU_Lost = false;
+        public bool RestartDriverOnCUDA_GPU_Lost = false;
+        public bool RestartWindowsOnCUDA_GPU_Lost = false;
         public bool Allow_remote_management = true;
         public bool Send_actual_version_info = false;
         public bool Force_mining_if_nonprofitable = true;
@@ -253,7 +254,8 @@ namespace NiceHashMiner.Configs.Data
             NormalizedProfitHistory = 15;
             IQRNormalizeFactor = 0.0;
             CoolDownCheckEnabled = true;
-            RunScriptOnCUDA_GPU_Lost = false;
+            RestartDriverOnCUDA_GPU_Lost = false;
+            RestartWindowsOnCUDA_GPU_Lost = false;
             Allow_remote_management = true;
             ForceSkipAMDNeoscryptLyraCheck = false;
             OverrideAMDBusIds = "";

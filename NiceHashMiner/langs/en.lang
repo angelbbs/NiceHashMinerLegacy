@@ -471,6 +471,8 @@
 "Form_Settings_checkBox_ShowUptime": "Show uptime",
 "Form_Settings_checkBox_program_monitoring": "Enable watchdog",
 "Form_Settings_checkBox_backup_before_update": "Create backup before update",
+"Form_Settings_checkBox_RestartDriver": "Restart driver when CUDA GPU is lost",
+"Form_Settings_checkBox_RestartWindows": "Restart Windows when CUDA GPU is lost",
                 "Form_Settings_buttonLicence": "View licence"
     }
 }

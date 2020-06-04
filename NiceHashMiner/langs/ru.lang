@@ -462,6 +462,8 @@
 "Form_Settings_checkBox_ShowUptime": "Показывать время работы",
 "Form_Settings_checkBox_program_monitoring": "Включить сторожевой процесс",
 "Form_Settings_checkBox_backup_before_update": "Создать резервную копию перед обновлением",
+"Form_Settings_checkBox_RestartDriver": "Перезапуск драйвера при потере CUDA GPU",
+"Form_Settings_checkBox_RestartWindows": "Перезапуск Windows при потере CUDA GPU",
                 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

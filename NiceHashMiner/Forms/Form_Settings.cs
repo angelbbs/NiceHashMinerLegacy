@@ -237,11 +237,6 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(pictureBox_NVIDIAP0State,
                 International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
 
-            toolTip1.SetToolTip(checkBox_RunScriptOnCUDA_GPU_Lost,
-                International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
-            toolTip1.SetToolTip(pictureBox_RunScriptOnCUDA_GPU_Lost,
-                International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
-
             toolTip1.SetToolTip(checkBox_RunAtStartup,
                 International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
             toolTip1.SetToolTip(pictureBox_RunAtStartup,
@@ -312,8 +307,8 @@ namespace NiceHashMiner.Forms
             checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
             checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
 
-            checkBox_RunScriptOnCUDA_GPU_Lost.Text =
-                International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
+            checkBoxRestartDriver.Text = International.GetText("Form_Settings_checkBox_RestartDriver");
+            checkBoxRestartWindows.Text = International.GetText("Form_Settings_checkBox_RestartWindows");
 
             checkBoxAutoupdate.Text = International.GetText("Form_Settings_checkBoxAutoupdate");
             checkBox_BackupBeforeUpdate.Text = International.GetText("Form_Settings_checkBox_backup_before_update");
@@ -771,7 +766,6 @@ namespace NiceHashMiner.Forms
                 pictureBox_MinProfit.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_NVIDIAP0State.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunAtStartup.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_RunScriptOnCUDA_GPU_Lost.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_StartMiningWhenIdle.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_SwitchMaxSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_SwitchMinSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -825,7 +819,8 @@ namespace NiceHashMiner.Forms
                 checkBox_AutoStartMining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AllowMultipleInstances.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxRestartDriver.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxRestartWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -917,7 +912,8 @@ namespace NiceHashMiner.Forms
                 checkBox_RunAtStartup.Checked = IsInStartupRegistry();
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
                 checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
-                checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
+                checkBoxRestartDriver.Checked = ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost;
+                checkBoxRestartWindows.Checked = ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost;
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
@@ -1047,7 +1043,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
-            ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
+            ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost = checkBoxRestartDriver.Checked;
+            ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost = checkBoxRestartWindows.Checked;
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
@@ -2087,6 +2084,18 @@ namespace NiceHashMiner.Forms
         private void comboBoxCheckforprogramupdatesevery_DrawItem(object sender, DrawItemEventArgs e)
         {
             comboBox_ServiceLocation_DrawItem(sender, e);
+        }
+
+        private void checkBoxRestartWindows_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxRestartDriver.Checked = false;
+            checkBoxRestartDriver.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+        }
+
+        private void checkBoxRestartDriver_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxRestartWindows.Checked = false;
+            checkBoxRestartDriver.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
         }
     }
 }

@@ -117,6 +117,7 @@ namespace NiceHashMiner
         public static Computer thisComputer;
         public static DateTime StartTime = new DateTime();
         public static TimeSpan Uptime;
+        private static bool CheckVideoControllersCount = false;
 
         public Form_Main()
         {
@@ -1134,22 +1135,39 @@ namespace NiceHashMiner
 
         private static void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
         {
-            if (ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
+            bool check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
+            if (check && CheckVideoControllersCount)
             {
                 // less GPUs than before, ACT!
                 try
                 {
-                    var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                    if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
                     {
-                        WindowStyle = ProcessWindowStyle.Minimized
-                    };
-                    Process.Start(onGpusLost);
+                        var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                        {
+                            WindowStyle = ProcessWindowStyle.Minimized
+                        };
+                        onGpusLost.Arguments = "1";
+                        Helpers.ConsolePrint("ERROR", "Restart Windows due CUDA GPU is lost");
+                        Process.Start(onGpusLost);
+                    }
+                    if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost)
+                    {
+                        var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                        {
+                            WindowStyle = ProcessWindowStyle.Minimized
+                        };
+                        onGpusLost.Arguments = "2";
+                        Helpers.ConsolePrint("ERROR", "Restart driver due CUDA GPU is lost");
+                        Process.Start(onGpusLost);
+                    }
                 }
                 catch (Exception ex)
                 {
                     Helpers.ConsolePrint("NICEHASH", "OnGPUsLost.bat error: " + ex.Message);
                 }
             }
+                CheckVideoControllersCount = check;
         }
 
         private void InitFlowPanelStart()
@@ -2056,7 +2074,7 @@ namespace NiceHashMiner
             new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
             //NiceHashStats.SetDeviceStatus("MINING");
-            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+            if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost || ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
             {
                 _computeDevicesCheckTimer = new SystemTimer();
                 _computeDevicesCheckTimer.Elapsed += ComputeDevicesCheckTimer_Tick;
