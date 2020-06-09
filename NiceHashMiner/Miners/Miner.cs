@@ -325,7 +325,7 @@ namespace NiceHashMiner
                                     }
                                 }
                                 Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo, 
-                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
                             }
                             process.Kill();
                             process.Close();
@@ -469,7 +469,7 @@ namespace NiceHashMiner
                             }
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
                     }
                     catch (Exception e)
                     {
@@ -1425,7 +1425,7 @@ namespace NiceHashMiner
                             new Task(() => DHClient.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
                     }
                     catch (Exception e)
                     {
@@ -1460,7 +1460,7 @@ namespace NiceHashMiner
                             new Task(() => DHClient.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
                     }
                     catch (Exception e)
                     {

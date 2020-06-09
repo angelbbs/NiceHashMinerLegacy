@@ -258,7 +258,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "28 beta 1";
+            Text += "28";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -601,7 +601,7 @@ namespace NiceHashMiner
                     Thread.Sleep(500);
                     NiceHashStats.ConnectToGoogle("Check connection");
                     Thread.Sleep(2000);
-                    Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0, true);
+                    Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0, true, "");
                     //Helpers.ConsolePrint("ConnectToGoogle", GoogleAnswer); //is Running?
                     if (GoogleAnswer.Contains("Running")) DivertAvailable = true;
                 }

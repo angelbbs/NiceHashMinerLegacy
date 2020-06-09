@@ -633,7 +633,7 @@ namespace NiceHashMinerLegacy.Divert
 
         
 
-        public static void DivertStop(IntPtr DivertHandle, int Pid, int CurrentAlgorithmType, int SecondaryAlgorithmType, bool CertInstalled)
+        public static void DivertStop(IntPtr DivertHandle, int Pid, int CurrentAlgorithmType, int SecondaryAlgorithmType, bool CertInstalled, string MinerName)
         {
             _certInstalled = CertInstalled;
             Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + ((int)DivertHandle).ToString() +

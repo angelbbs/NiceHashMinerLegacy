@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners
     public class SRBMiner : Miner
     {
         private readonly int GPUPlatformNumber;
-        private int _benchmarkTimeWait = 190;
+        private int _benchmarkTimeWait = 210;
 
        // private int TotalCount = 2;
         private const int TotalDelim = 2;
@@ -208,9 +208,9 @@ namespace NiceHashMiner.Miners
                 BenchLines.Add(line);
                 var lineLowered = line.ToLower();
 
-                if (lineLowered.Contains("Total:".ToLower()))
+                if (lineLowered.Contains("total:".ToLower()))
                 {
-                    var st = lineLowered.IndexOf("Total: ".ToLower());
+                    var st = lineLowered.IndexOf("total: ".ToLower());
                     var e = lineLowered.IndexOf("/s".ToLower());
 
                     if (lineLowered.Contains("kh/s"))

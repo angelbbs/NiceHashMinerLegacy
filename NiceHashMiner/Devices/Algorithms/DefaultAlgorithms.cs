@@ -404,7 +404,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Eaglesong, "Eaglesong"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Handshake, "Handshake"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroo29BFC, "Cuckaroo29BFC"),
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroo29BFC, "Cuckaroo29BFC"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             /*
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
