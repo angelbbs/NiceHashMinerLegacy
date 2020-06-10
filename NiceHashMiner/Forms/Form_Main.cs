@@ -1115,79 +1115,83 @@ namespace NiceHashMiner
                     periodRestartProgram = -1;
                     break;
                 case 1:
-                    periodRestartProgram = 12;
+                    periodRestartProgram = 12 * 60;
                     break;
                 case 2:
-                    periodRestartProgram = 24;
+                    periodRestartProgram = 24 * 60;
                     break;
                 case 3:
-                    periodRestartProgram = 72;
+                    periodRestartProgram = 72 * 60;
                     break;
                 case 4:
-                    periodRestartProgram = 168;
+                    periodRestartProgram = 168 * 60;
                     break;
             }
             if (periodRestartProgram < 0) return;
             if (_updateTimerRestartProgramCount >= periodRestartProgram)
             {
+                MakeRestart(periodRestartProgram);
+            }
+        }
+        public void MakeRestart(int periodRestartProgram)
+        {
+            try
+            {
+                MinersManager.StopAllMiners();
+                if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
+                MessageBoxManager.Unregister();
+                ConfigManager.GeneralConfigFileCommit();
                 try
                 {
-                    MinersManager.StopAllMiners();
-                    if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
-                    MessageBoxManager.Unregister();
-                    ConfigManager.GeneralConfigFileCommit();
-                    try
-                    {
-                        if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
-                    }
-                    catch (Exception ex)
-                    {
+                    if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
+                }
+                catch (Exception ex)
+                {
 
-                    }
-                    //stop openhardwaremonitor
-                    var CMDconfigHandleOHM = new Process
+                }
+                //stop openhardwaremonitor
+                var CMDconfigHandleOHM = new Process
 
-                    {
-                        StartInfo =
+                {
+                    StartInfo =
                         {
                             FileName = "sc.exe"
                         }
-                    };
+                };
 
-                    CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
-                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
-                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
-                    CMDconfigHandleOHM.Start();
+                CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleOHM.Start();
 
-                    if (GetWinVer(Environment.OSVersion.Version) == 10)
+                if (GetWinVer(Environment.OSVersion.Version) == 10)
+                {
+                    var CMDconfigHandleWD = new Process
+
                     {
-                        var CMDconfigHandleWD = new Process
-
-                        {
-                            StartInfo =
+                        StartInfo =
                             {
                                 FileName = "sc.exe"
                             }
-                        };
-
-                        CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
-                        CMDconfigHandleWD.StartInfo.UseShellExecute = false;
-                        CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
-                        CMDconfigHandleWD.Start();
-                    }
-                    Thread.Sleep(500);
-                    var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
-                    {
-                        WindowStyle = ProcessWindowStyle.Minimized
                     };
-                    Helpers.ConsolePrint("SheduleRestart", "Shedule restart program after " + (periodRestartProgram/60).ToString() + "h");
-                    Process.Start(RestartProgram);
+
+                    CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
+                    CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleWD.Start();
                 }
-                catch (Exception er)
+                Thread.Sleep(500);
+                var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
                 {
-                    Helpers.ConsolePrint("SheduleRestart", er.ToString());
-                    return;
-                }
+                    WindowStyle = ProcessWindowStyle.Minimized
+                };
+                Helpers.ConsolePrint("SheduleRestart", "Schedule or config changed restart program after " + (periodRestartProgram / 60).ToString() + "h");
+                Process.Start(RestartProgram);
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("SheduleRestart", er.ToString());
+                return;
             }
         }
         public bool CheckGithub()
@@ -1795,6 +1799,7 @@ namespace NiceHashMiner
                     International.GetText("Form_Main_Restart_Required_Msg"),
                     International.GetText("Form_Main_Restart_Required_Title"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+                /*
                 var pHandle = new Process
                 {
                     StartInfo =
@@ -1804,6 +1809,8 @@ namespace NiceHashMiner
                 };
                 pHandle.Start();
                 Close();
+                */
+                MakeRestart(0);
             }
             else if (settings.IsChange && settings.IsChangeSaved)
             {
