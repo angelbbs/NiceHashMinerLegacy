@@ -420,6 +420,7 @@ namespace NiceHashMiner
             }
         }
 
+
         public void AfterLoadComplete()
         {
             if (ConfigManager.GeneralConfig.DivertRun)
@@ -706,6 +707,7 @@ namespace NiceHashMiner
 
             new Task(() => CheckUpdates()).Start();
             new Task(() => ResetProtocols()).Start();
+            new Task(() => FlushCache()).Start();
 
             thisComputer = new OpenHardwareMonitor.Hardware.Computer();
             thisComputer.GPUEnabled = true;
@@ -761,6 +763,21 @@ namespace NiceHashMiner
             //Form_Main.ActiveForm.TopMost = true;
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
 
+        }
+        [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]
+        static extern UInt32 DnsFlushResolverCache();
+
+        [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCacheEntry_A")]
+        public static extern int DnsFlushResolverCacheEntry(string hostName);
+
+        public static void FlushCache()
+        {
+            DnsFlushResolverCache();
+        }
+
+        public static void FlushCache(string hostName)
+        {
+            DnsFlushResolverCacheEntry(hostName);
         }
         private bool IsVcRedistInstalled()
         {
