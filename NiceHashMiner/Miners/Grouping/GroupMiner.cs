@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners.Grouping
 
         public double TotalPower { get; }
 
-        public DateTime StartMinerTime { get; set; }
+        public DateTime StartMinerTime { get; protected set; }
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key)
         {
@@ -37,7 +37,7 @@ namespace NiceHashMiner.Miners.Grouping
             CurrentRate = 0;
             PowerRate = 0;
             Key = key;
-            StartMinerTime = DateTime.Now;
+            
             if (miningPairs.Count > 0)
             {
                 // sort pairs by device id
@@ -65,6 +65,7 @@ namespace NiceHashMiner.Miners.Grouping
                         Miner.InitMiningSetup(new MiningSetup(miningPairs));
                         AlgorithmType = mPair.Algorithm.NiceHashID;
                         DualAlgorithmType = mPair.Algorithm.DualNiceHashID;
+                        StartMinerTime = DateTime.Now;
                     }
                 }
             }
