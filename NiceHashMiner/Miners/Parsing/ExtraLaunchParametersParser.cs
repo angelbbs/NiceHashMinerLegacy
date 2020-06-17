@@ -501,9 +501,9 @@ namespace NiceHashMiner.Miners.Parsing
             */
             //  LogParser("AMD parsing temperature control parameters");
             // temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, true, minerOptionPackage.GeneralOptions);
-            var general = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions, ignoreDcri);
+            //var general = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions, ignoreDcri);
 
-                ret = general + "  " + temp;
+                ret = temp;
                 //ret = general + "  ";
 
             return ret;

@@ -98,7 +98,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
-                algo = "150,5";
+                algo = "150,5,3";
                 algoName = "beamv2";
             }
             string nhsuff = "";
