@@ -210,24 +210,28 @@ namespace NiceHashMiner.Devices.Algorithms
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.ZHash, "ZHash")
                             {
-                                ExtraLaunchParameters = "--asm 1 "
+                                ExtraLaunchParameters = ""
                             },
                             //lolminer broken
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.BeamV2, "BeamV2")
                             {
-                                ExtraLaunchParameters = "--asm 1 "
+                                ExtraLaunchParameters = ""
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.BeamV3, "BeamV3")
+                            {
+                                ExtraLaunchParameters = ""
                             },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckarood29, "GrinCuckarood29")
                             {
-                                ExtraLaunchParameters = "--asm 1 "
+                                ExtraLaunchParameters = ""
                             },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Cuckaroom, "Cuckaroom")
                             {
-                                ExtraLaunchParameters = "--asm 1 "
+                                ExtraLaunchParameters = ""
                             },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31")
                             {
-                                ExtraLaunchParameters = "--asm 1 "
+                                ExtraLaunchParameters = ""
                             },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
                             {
@@ -335,7 +339,6 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.X16RV2, "X16Rv2"),
                            new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.Lyra2REv3, "Lyra2REv3"),
-                           new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.GrinCuckaroo29, "GrinCuckaroo29"),
                           // new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.CuckooCycle, "CuckooCycle"),
                         }
             },
@@ -378,11 +381,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             */
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV2, "BeamV2")
                             {
-                                //ExtraLaunchParameters = "--mode=3 --extra "
+                            },
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")
+                            {
                             },
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
-                              //  ExtraLaunchParameters = "--mode=3 --extra "
                             },
                         }
             },
@@ -396,10 +400,10 @@ namespace NiceHashMiner.Devices.Algorithms
             },
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29, "GrinCuckaroo29"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckarood29, "GrinCuckarood29"),
                             //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroom, "Cuckaroom"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),
                             //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Eaglesong, "Eaglesong"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Handshake, "Handshake"),
@@ -425,46 +429,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash, "ZHash")
                 }
             },
-            /*
-            {
-            MinerBaseType.Bminer,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.DaggerHashimoto, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    },
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.ZHash, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    },
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.BeamV2, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    },
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckaroo29, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    },
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckarood29, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    },
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.Cuckaroom, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    },
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.CuckooCycle, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    },
-                    new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckatoo31, "")
-                    {
-                                //ExtraLaunchParameters = "--pec 1 "
-                    }
-                }
-            },
-            */
             {
             MinerBaseType.GMiner,
                 new List<Algorithm>
@@ -488,15 +452,12 @@ namespace NiceHashMiner.Devices.Algorithms
                     },
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.BeamV2, "")
                     {
-                                //ExtraLaunchParameters = "--pec 1 "
                     },
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29, "")
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.BeamV3, "BeamV3")
                     {
-                                //ExtraLaunchParameters = "--pec 1 "
                     },
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckarood29, "")
                     {
-                                //ExtraLaunchParameters = "--pec 1 "
                     },
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroom, "")
                     {

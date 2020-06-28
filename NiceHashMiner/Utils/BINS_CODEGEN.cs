@@ -25,7 +25,7 @@ namespace NiceHashMiner.Utils
             @"/miniZ/miniZ.exe",
             @"/kawpowminer/kawpowminer.exe",
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
-            @"/Fork_Fix_28.txt"
+            @"/Fork_Fix_29.txt"
         };
     }
 }

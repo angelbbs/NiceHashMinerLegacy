@@ -532,6 +532,13 @@ namespace NiceHashMiner
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 28;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 29)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    if (Directory.Exists("internals"))
+                        Directory.Delete("internals", true);
+                    ConfigManager.GeneralConfig.ForkFixVersion = 29;
+                }
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

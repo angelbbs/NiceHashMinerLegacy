@@ -175,6 +175,7 @@ namespace NiceHashMiner
                 case AlgorithmType.ZHash:
                 case AlgorithmType.Beam:
                 case AlgorithmType.BeamV2:
+                case AlgorithmType.BeamV3:
                     unit = "Sol/s ";
                     break;
                 case AlgorithmType.GrinCuckarood29:

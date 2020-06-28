@@ -62,6 +62,8 @@ namespace NiceHashMiner.Miners
                         return "cuckaroom";
                     case AlgorithmType.GrinCuckatoo31:
                         return "cuckatoo";
+                    case AlgorithmType.GrinCuckatoo32:
+                        return "cuckatoo32";
                     case AlgorithmType.CuckooCycle:
                         return "cuckoo_ae";
                     case AlgorithmType.DaggerHashimoto:
@@ -145,7 +147,13 @@ namespace NiceHashMiner.Miners
                     $" -o2 stratum+tcp://grincuckatoo31." + myServers[2, 0] + ".nicehash.com:3372 -u2 " +user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            if(MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
+            {
+                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://grincuckatoo32." + myServers[1, 0] + ".nicehash.com:3383 -u1 " + user +
+                    $" -o2 stratum+tcp://grincuckatoo32." + myServers[2, 0] + ".nicehash.com:3383 -u2 " + user +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://cuckoocycle." + myServers[1, 0] + ".nicehash.com:3376 -u1 " + user +
                     $" -o2 stratum+tcp://cuckoocycle." + myServers[2, 0] + ".nicehash.com:3376 -u2 " + user +
@@ -191,7 +199,7 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://kawpow." + myServers[1, 0] + ".nicehash.com:3385 -u1 " + user +
                     $" -o2 stratum+tcp://kawpow." + myServers[2, 0] + ".nicehash.com:3385 -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --strict-ssl " + platform;
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
 
@@ -263,6 +271,12 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o stratum+tcp://grin.sparkpool.com:6667 -u angelbbs@mail.ru.{worker} -o1 stratum+tcp://grincuckatoo31." + myServers[0, 0] + ".nicehash.com:3372 -u1 " + username +
                     $" -o2 stratum+tcp://grincuckatoo31." + myServers[1, 0] + ".nicehash.com:3372 -u2 " + username +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
+            {
+                cmd = $"-a {AlgoName} -o stratum+tcp://grin.2miners.com:3030 -u 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.{worker} -o1 stratum+tcp://grincuckatoo32." + myServers[0, 0] + ".nicehash.com:3383 -u1 " + username +
+                    $" -o2 stratum+tcp://grincuckatoo32." + myServers[1, 0] + ".nicehash.com:3383 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
@@ -416,6 +430,7 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||

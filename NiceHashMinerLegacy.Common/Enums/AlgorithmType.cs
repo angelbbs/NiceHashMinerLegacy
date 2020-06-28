@@ -106,7 +106,8 @@
         GrinCuckatoo32 = 50,
         Handshake = 51,
         KAWPOW = 52,
-        Cuckaroo29BFC = 53
+        Cuckaroo29BFC = 53,
+        BeamV3 = 54
         #endregion // NiceHashAPI
     }
 }

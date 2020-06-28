@@ -101,6 +101,11 @@ namespace NiceHashMiner.Miners
                 algo = "150,5,3";
                 algoName = "beamv2";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
+            {
+                algo = "beam3";
+                algoName = "beamv3";
+            }
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
             {
@@ -203,9 +208,26 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
-                algo = "150,5";
-                algoName = "beam";
-                stratumPort = "3370";
+                algo = "150,5,3";
+                algoName = "beamv2";
+                stratumPort = "3378";
+                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
+                      + "  --log-file=" + GetLogFileName()
+                      + " --pers auto --par=" + algo
+                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.2miners.com:5252"
+                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.f2pool.com:5000"
+                      //+ " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + "@beam-eu.sparkpool.com:2222"
+                      + " --url " + username + "@" + algoName + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + stratumPort
+                      + " --url " + username + "@" + algoName + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + stratumPort
+                      + " --url " + username + "@" + algoName + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + stratumPort
+                      + " --pass=x" + " --telemetry=" + ApiPort;
+                _benchmarkTimeWait = time;
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
+            {
+                algo = "beam3";
+                algoName = "beamv3";
+                stratumPort = "3387";
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + "  --log-file=" + GetLogFileName()
                       + " --pers auto --par=" + algo

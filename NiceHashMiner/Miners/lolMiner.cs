@@ -70,7 +70,7 @@ namespace NiceHashMiner.Miners
 
             //var algo = "";
             url = url.Replace("stratum+tcp://", "");
-            url = url.Substring(0, url.IndexOf(":"));
+            //url = url.Substring(0, url.IndexOf(":"));
             var apiBind = " --apiport " + ApiPort;
             string nhsuff = "";
             if (Configs.ConfigManager.GeneralConfig.NewPlatform)
@@ -80,11 +80,13 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
-                LastCommandLine = "--coin AUTO144_5 --pool " + url + ";zhash." + myServers[1, 0] + nhsuff + ".nicehash.com;zhash." + myServers[2, 0] + nhsuff + ".nicehash.com;zhash." + myServers[3, 0] + nhsuff + ".nicehash.com;zhash." + myServers[4, 0] + nhsuff + ".nicehash.com;zhash." + myServers[5, 0] + nhsuff + ".nicehash.com" +
-                              " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" +
-                              " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" +
-                              " -p x;x;x;x;x;x " + apiBind +
-                              " " +
+                LastCommandLine = "--coin AUTO144_5 --pool " + url + " --user " + username + " --pass x" +
+                    " --pool zhash." + myServers[1, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + myServers[2, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + myServers[3, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + myServers[4, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + myServers[5, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    apiBind + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.AMD) +
@@ -93,11 +95,27 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
-                LastCommandLine = "--coin BEAM-II --pool " + url + ";beam." + myServers[1, 0] + nhsuff + ".nicehash.com;beam." + myServers[2, 0] + nhsuff + ".nicehash.com;beam." + myServers[3, 0] + nhsuff + ".nicehash.com;beam." + myServers[4, 0] + nhsuff + ".nicehash.com;beam." + myServers[5, 0] + nhsuff + ".nicehash.com" +
-                             " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
-                             " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
-                             " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
-                             " " +
+                LastCommandLine = "--algo BEAM-II --pool " + url + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + myServers[1, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + myServers[2, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + myServers[3, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + myServers[4, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + myServers[5, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                             apiBind + " " +
+                             ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                               MiningSetup,
+                                                               DeviceType.AMD) +
+                             " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
+            {
+                LastCommandLine = "--algo BEAM-III --pool " + url + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + myServers[1, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + myServers[2, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + myServers[3, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + myServers[4, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + myServers[5, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                             apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
                                                                DeviceType.AMD) +
@@ -106,11 +124,13 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
-                LastCommandLine = "--coin GRIN-AT31 --pool " + url + ";grincuckatoo31." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckatoo31." + myServers[5, 0] + nhsuff + ".nicehash.com" +
-                             " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
-                             " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
-                             " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
-                             " " +
+                LastCommandLine = "--coin MWC-C31 --pool " + url + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + myServers[1, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + myServers[2, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + myServers[3, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + myServers[4, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + myServers[5, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
                                                                DeviceType.AMD) +
@@ -118,11 +138,13 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
-                LastCommandLine = "--coin GRIN-C32 --pool " + url + ";grincuckatoo32." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckatoo32." + myServers[5, 0] + nhsuff + ".nicehash.com" +
-                             " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
-                             " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
-                             " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
-                             " " +
+                LastCommandLine = "--coin GRIN-C32 --pool " + url + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + myServers[1, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + myServers[2, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + myServers[3, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + myServers[4, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + myServers[5, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
                                                                DeviceType.AMD) +
@@ -130,11 +152,13 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                LastCommandLine = "--coin MWC-C29D --pool " + url + ";grincuckarood29." + myServers[1, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[2, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[3, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[4, 0] + nhsuff + ".nicehash.com;grincuckarood29." + myServers[5, 0] + nhsuff + ".nicehash.com" +
-                             " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
-                             " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
-                             " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
-                             " " +
+                LastCommandLine = "--coin MWC-C29D --pool " + url + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + myServers[2, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + myServers[3, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + myServers[4, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + myServers[5, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
                                                                DeviceType.AMD) +
@@ -142,17 +166,20 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
-                LastCommandLine = "--coin GRIN-C29M --pool " + url + ";cuckaroom." + myServers[1, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[2, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[3, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[4, 0] + nhsuff + ".nicehash.com;cuckaroom." + myServers[5, 0] + nhsuff + ".nicehash.com" +
-                             " --port " + port + ";" + port + ";" + port + ";" + port + ";" + port + ";" + port +
-                             " --user " + username + ";" + username + ";" + username + ";" + username + ";" + username + ";" + username +
-                             " -p x;x;x;x;x;x --tls 0;0;0;0;0;0 " + apiBind +
-                             " " +
+                LastCommandLine = "--coin GRIN-C29M --pool " + url + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + myServers[1, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + myServers[2, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + myServers[3, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + myServers[4, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + myServers[5, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
                                                                DeviceType.AMD) +
                              " --devices ";
             }
             LastCommandLine += GetDevicesCommandString() + " ";//
+            LastCommandLine = LastCommandLine.Replace("--asm 1", "");
             ProcessHandle = _Start();
         }
 
@@ -178,11 +205,23 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
-                CommandLine = "--coin BEAM-II " +
-                " --pool beam-eu.sparkpool.com;beam-asia.sparkpool.com;beamv2.eu" + nhsuff + ".nicehash.com;beamv2.hk" + nhsuff + ".nicehash.com" +
-                " --port 2222;12222;3378;3378" +
-                " --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + ";2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + ";" + username + ";" + username +
-                " --pass x;x;x;x --tls 1;1;0;0 " +
+                CommandLine = "--algo BEAM-II " +
+                    " --pool beamv2.usa.nicehash.com:3378 --user " + username + " --pass x --tls 0" +
+                //" --pool beam-eu.sparkpool.com:2222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
+                //" --pool beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
+               // " --pass x;x;x;x --tls 1;1;0;0 " +
+                                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
+                                                                DeviceType.AMD) +
+                " --devices ";
+            }
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
+            {
+                CommandLine = "--algo BEAM-III " +
+                " --pool beam-eu.sparkpool.com:2222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
+                " --pool beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
+                                              // " --pass x;x;x;x --tls 1;1;0;0 " +
                                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.AMD) +
@@ -191,8 +230,8 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
-                CommandLine = "--coin AUTO144_5 --overwritePersonal BgoldPoW" +
-                " --pool europe.equihash-hub.miningpoolhub.com --port 20595 --user angelbbs.lol --pass x" +
+                CommandLine = "-a EQUI144_5 --pers BgoldPoW" +
+                " --pool europe.equihash-hub.miningpoolhub.com:20595 --user angelbbs.lol --pass x" +
                                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.AMD) +
@@ -201,8 +240,9 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
-                CommandLine = "--coin GRIN-AT31 " +
-                " --pool grin.2miners.com;grincuckatoo31.usa" + nhsuff + ".nicehash.com --port 3030;3372 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner;"+username+ " --pass x;x" +
+                CommandLine = "--coin MWC-C31 " +
+                " --pool grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner --pass x " +
+                "--pool grincuckatoo31.usa.nicehash.com:3372 --user " +username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -210,8 +250,9 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
-                CommandLine = "--coin GRIN-C32 " +
-                " --pool grin.2miners.com;grincuckatoo32.usa" + nhsuff + ".nicehash.com --port 3030;3383 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA." + worker + ";" + username + " --pass x;x" +
+                CommandLine = "--coin GRIN-C32" +
+                " --pool grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner --pass x" +
+                " --pool grincuckatoo32.usa.nicehash.com:3383 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -219,8 +260,9 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                CommandLine = "--coin MWC-C29D " +
-                " --pool eu.frostypool.com;grincuckaroo29.usa" + nhsuff + ".nicehash.com --port 3516;3372 --user angelbbs.lolMiner;" + username + " --pass x;x" +
+                CommandLine = "--coin MWC-C29D " + 
+                " --pool eu.frostypool.com:3516 --user angelbbs.lolMiner --pass x" + 
+                " --pool grincuckaroo29.usa.nicehash.com:3372 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -229,7 +271,8 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 CommandLine = "--coin GRIN-C29M " +
-                " --pool grin.2miners.com;cuckaroom.usa" + nhsuff + ".nicehash.com --port 3030;3382 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner" + ";" + username + " --pass x;x" +
+                " --pool grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner --pass x" +
+                " --pool cuckaroom.usa.nicehash.com:3382 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -237,6 +280,7 @@ namespace NiceHashMiner.Miners
             }
             CommandLine += GetDevicesCommandString(); //amd карты перечисляются первыми
             _benchmarkTimeWait = time;
+            CommandLine = CommandLine.Replace("--asm 1", "");
             return CommandLine;
 
         }
@@ -418,7 +462,8 @@ namespace NiceHashMiner.Miners
             //Average speed (30s): 25.5 sol/s 
             //GPU 3: Share accepted (45 ms)
             //Average speed (30s): 0.13 g/s 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2 || 
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 if (outdata.Contains("Average speed (30s):"))
                 {

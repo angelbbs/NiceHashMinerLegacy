@@ -106,6 +106,12 @@ namespace NiceHashMiner.Miners
                 algoName = "beamv2";
                 ssl = " --ssl_verification 0";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
+            {
+                algo = "BeamHashIII";
+                algoName = "beamv3";
+                ssl = " --ssl_verification 0";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
             {
                 algo = "cuckaroo29";
@@ -381,8 +387,7 @@ namespace NiceHashMiner.Miners
             _benchmarkTimeWait = time;
             var ret = "";
             var suff = "0_";
-            //var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-              // Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
+
             var btcAddress = Globals.GetBitcoinUser();
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
             string username = GetUsername(btcAddress, worker);
@@ -426,6 +431,16 @@ namespace NiceHashMiner.Miners
             {
                 //_benchmarkTimeWait = 180;
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashII" +
+                " --server beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
+                " --server beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
+                " --server beamv2.eu.nicehash.com:3378 --user " + username + " --pass x --ssl 0" +
+                " --server beamv2.hk.nicehash.com:3378 --user " + username + " --pass x --ssl 0" +
+                GetDevicesCommandString();
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
+            {
+                //_benchmarkTimeWait = 180;
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashIII" +
                 " --server beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
                 " --server beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
                 " --server beamv2.eu.nicehash.com:3378 --user " + username + " --pass x --ssl 0" +
