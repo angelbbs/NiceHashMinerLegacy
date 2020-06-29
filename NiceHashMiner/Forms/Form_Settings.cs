@@ -2076,19 +2076,22 @@ namespace NiceHashMiner.Forms
         private void buttonRestoreBackup_Click(object sender, EventArgs e)
         {
             //stop openhardwaremonitor
-            var CMDconfigHandleOHM = new Process
-
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {
-                StartInfo =
+                var CMDconfigHandleOHM = new Process
+
+                {
+                    StartInfo =
                 {
                     FileName = "sc.exe"
                 }
-            };
+                };
 
-            CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
-            CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
-            CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
-            CMDconfigHandleOHM.Start();
+                CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleOHM.Start();
+            }
             MinersManager.StopAllMiners();
             System.Threading.Thread.Sleep(1000);
             Process.Start("backup\\restore.cmd");

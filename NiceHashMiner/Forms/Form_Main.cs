@@ -708,12 +708,13 @@ namespace NiceHashMiner
             new Task(() => CheckUpdates()).Start();
             new Task(() => ResetProtocols()).Start();
             new Task(() => FlushCache()).Start();
-
-            thisComputer = new OpenHardwareMonitor.Hardware.Computer();
-            thisComputer.GPUEnabled = true;
-            thisComputer.CPUEnabled = true;
-            thisComputer.Open();
-
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                thisComputer = new OpenHardwareMonitor.Hardware.Computer();
+                thisComputer.GPUEnabled = true;
+                thisComputer.CPUEnabled = true;
+                thisComputer.Open();
+            }
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
 
@@ -1150,20 +1151,22 @@ namespace NiceHashMiner
 
                 }
                 //stop openhardwaremonitor
-                var CMDconfigHandleOHM = new Process
-
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    StartInfo =
+                    var CMDconfigHandleOHM = new Process
+
+                    {
+                        StartInfo =
                         {
                             FileName = "sc.exe"
                         }
-                };
+                    };
 
-                CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
-                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
-                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
-                CMDconfigHandleOHM.Start();
-
+                    CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleOHM.Start();
+                }
                 if (GetWinVer(Environment.OSVersion.Version) == 10)
                 {
                     var CMDconfigHandleWD = new Process
@@ -1703,20 +1706,22 @@ namespace NiceHashMiner
 
             }
             //stop openhardwaremonitor
-            var CMDconfigHandleOHM = new Process
-
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {
-                StartInfo =
+                var CMDconfigHandleOHM = new Process
+
+                {
+                    StartInfo =
                 {
                     FileName = "sc.exe"
                 }
-            };
+                };
 
-            CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
-            CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
-            CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
-            CMDconfigHandleOHM.Start();
-
+                CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleOHM.Start();
+            }
             if (GetWinVer(Environment.OSVersion.Version) == 10)
             {
                 var CMDconfigHandleWD = new Process
@@ -2290,13 +2295,16 @@ namespace NiceHashMiner
                 label_Uptime.Visible = true;
                 label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
             }
-            if (Form_Main.thisComputer != null)
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {
-                foreach (var hardware in Form_Main.thisComputer.Hardware)
+                if (Form_Main.thisComputer != null)
                 {
-                    if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
                     {
-                        hardware.Update();
+                        if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                        {
+                            hardware.Update();
+                        }
                     }
                 }
             }
