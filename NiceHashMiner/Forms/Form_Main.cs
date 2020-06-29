@@ -709,11 +709,13 @@ namespace NiceHashMiner
             new Task(() => ResetProtocols()).Start();
             new Task(() => FlushCache()).Start();
 
-            thisComputer = new OpenHardwareMonitor.Hardware.Computer();
-            thisComputer.GPUEnabled = true;
-            thisComputer.CPUEnabled = true;
-            thisComputer.Open();
-
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                thisComputer = new OpenHardwareMonitor.Hardware.Computer();
+                thisComputer.GPUEnabled = true;
+                thisComputer.CPUEnabled = true;
+                thisComputer.Open();
+            }
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
 
@@ -1149,37 +1151,40 @@ namespace NiceHashMiner
                 {
 
                 }
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 //stop openhardwaremonitor
-                var CMDconfigHandleOHM = new Process
-
                 {
-                    StartInfo =
-                        {
-                            FileName = "sc.exe"
-                        }
-                };
-
-                CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
-                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
-                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
-                CMDconfigHandleOHM.Start();
-
-                if (GetWinVer(Environment.OSVersion.Version) == 10)
-                {
-                    var CMDconfigHandleWD = new Process
+                    var CMDconfigHandleOHM = new Process
 
                     {
                         StartInfo =
+                        {
+                            FileName = "sc.exe"
+                        }
+                    };
+
+                    CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleOHM.Start();
+                }
+                    if (GetWinVer(Environment.OSVersion.Version) == 10)
+                    {
+                        var CMDconfigHandleWD = new Process
+
+                        {
+                            StartInfo =
                             {
                                 FileName = "sc.exe"
                             }
-                    };
+                        };
 
-                    CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
-                    CMDconfigHandleWD.StartInfo.UseShellExecute = false;
-                    CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
-                    CMDconfigHandleWD.Start();
-                }
+                        CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
+                        CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+                        CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+                        CMDconfigHandleWD.Start();
+                    }
+                
                 Thread.Sleep(500);
                 var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
                 {
@@ -1702,24 +1707,10 @@ namespace NiceHashMiner
             {
 
             }
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             //stop openhardwaremonitor
-            var CMDconfigHandleOHM = new Process
-
             {
-                StartInfo =
-                {
-                    FileName = "sc.exe"
-                }
-            };
-
-            CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
-            CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
-            CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
-            CMDconfigHandleOHM.Start();
-
-            if (GetWinVer(Environment.OSVersion.Version) == 10)
-            {
-                var CMDconfigHandleWD = new Process
+                var CMDconfigHandleOHM = new Process
 
                 {
                     StartInfo =
@@ -1728,13 +1719,29 @@ namespace NiceHashMiner
                 }
                 };
 
-                CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
-                CMDconfigHandleWD.StartInfo.UseShellExecute = false;
-                CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
-                CMDconfigHandleWD.Start();
+                CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleOHM.Start();
             }
-            //mainproc = Process.GetCurrentProcess();
+                if (GetWinVer(Environment.OSVersion.Version) == 10)
+                {
+                    var CMDconfigHandleWD = new Process
 
+                    {
+                        StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+                    };
+
+                    CMDconfigHandleWD.StartInfo.Arguments = "stop WinDivert1.4";
+                    CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleWD.Start();
+                }
+                //mainproc = Process.GetCurrentProcess();
+            
             ManagementObjectSearcher searcher = new ManagementObjectSearcher
                     ("Select * From Win32_Process Where ParentProcessID=" + mainproc.Id.ToString());
             ManagementObjectCollection moc = searcher.Get();

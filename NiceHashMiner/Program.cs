@@ -188,19 +188,23 @@ namespace NiceHashMiner
                 var dialogRes = Utils.MessageBoxEx.Show("Restore from backup?", "Restore", MessageBoxButtons.YesNo, MessageBoxIcon.Question, 15000);
                 if (dialogRes == System.Windows.Forms.DialogResult.Yes)
                 {
-                    var CMDconfigHandleOHM = new Process
-
+                    if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                     {
-                        StartInfo =
-                {
-                    FileName = "sc.exe"
-                }
-                    };
+                        var CMDconfigHandleOHM = new Process
 
-                    CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
-                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
-                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
-                    CMDconfigHandleOHM.Start();
+                        {
+                            StartInfo =
+                        {
+                        FileName = "sc.exe"
+                        }
+                        };
+
+                        CMDconfigHandleOHM.StartInfo.Arguments = "stop winring0_1_2_0";
+                        CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                        CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                        CMDconfigHandleOHM.Start();
+                    }
+
                     MinersManager.StopAllMiners();
                     System.Threading.Thread.Sleep(5000);
                     Process.Start("backup\\restore.cmd");

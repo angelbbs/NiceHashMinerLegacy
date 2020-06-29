@@ -44,7 +44,8 @@ namespace NiceHashMiner.Devices
                         return adlf.FanSpeed;
                     }
                 }
-                
+                else
+                {
                     try
                     {
                         foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -52,8 +53,8 @@ namespace NiceHashMiner.Devices
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                            //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -68,7 +69,8 @@ namespace NiceHashMiner.Devices
                                                 }
                                                 else return -1;
                                             }
-                                        } else
+                                        }
+                                        else
                                         {
                                             if (sensor.SensorType == SensorType.Fan)
                                             {
@@ -88,7 +90,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
-                
+                }
                 return -1;
             }
         }
@@ -106,7 +108,8 @@ namespace NiceHashMiner.Devices
                         return adlt.Temperature * 0.001f;
                     }
                 }
-                
+                else
+                {
                     try
                     {
                         foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -114,8 +117,8 @@ namespace NiceHashMiner.Devices
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                            //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -138,7 +141,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
-                    
+                }
                 return -1;
             }
         }
@@ -156,7 +159,8 @@ namespace NiceHashMiner.Devices
                         return adlp.ActivityPercent;
                     }
                 }
-                
+                else
+                {
                     try
                     {
                         foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -164,8 +168,8 @@ namespace NiceHashMiner.Devices
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                            //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -187,7 +191,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
-                
+                }
                 return -1;
             }
         }
@@ -209,50 +213,51 @@ namespace NiceHashMiner.Devices
                         }
                     }
                 }
-                
+                else
+                {
                     try
                     {
                         foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
-                        
-                        //hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuAti)
-                        {
+
                             //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
-                            if (gpuId == _adapterIndex)
+                            if (hardware.HardwareType == HardwareType.GpuAti)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                if (gpuId == _adapterIndex)
+                                {
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                    if (sensor.SensorType == SensorType.Power)
+                                        if (sensor.SensorType == SensorType.Power)
                                         {
-                                        if ((int)sensor.Value >= 0)
+                                            if ((int)sensor.Value >= 0)
                                             {
                                                 return (int)sensor.Value;
                                             }
                                         }
                                     }
                                 }
-                            //internal
-                            var power = -1;
-                            if (_adlContext != IntPtr.Zero && ADL.ADL2_Overdrive6_CurrentPower_Get != null)
-                            {
-                                var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex2, 0, ref power); //0
-                                if (result == ADL.ADL_SUCCESS)
+                                //internal
+                                var power = -1;
+                                if (_adlContext != IntPtr.Zero && ADL.ADL2_Overdrive6_CurrentPower_Get != null)
                                 {
-                                    //Helpers.ConsolePrint("ADL", power.ToString());
-                                    return (double)power / (1 << 8);
+                                    var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex2, 0, ref power); //0
+                                    if (result == ADL.ADL_SUCCESS)
+                                    {
+                                        //Helpers.ConsolePrint("ADL", power.ToString());
+                                        return (double)power / (1 << 8);
+                                    }
                                 }
                             }
-                        }
                         }
                     }
                     catch (Exception er)
                     {
                         Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                     }
-                
 
+                }
                 return -1;
             }
         }
