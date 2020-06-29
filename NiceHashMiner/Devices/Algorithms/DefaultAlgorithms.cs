@@ -189,6 +189,9 @@ namespace NiceHashMiner.Devices.Algorithms
                         },
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroo29BFC, "")
                         {
+                        },
+                        new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29, "")
+                        {
                         }
                     }
             },
