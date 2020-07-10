@@ -119,6 +119,7 @@ namespace NiceHashMiner
         public static DateTime StartTime = new DateTime();
         public static TimeSpan Uptime;
         private static bool CheckVideoControllersCount = false;
+        public static bool AntivirusInstalled = false;
 
         public Form_Main()
         {
@@ -286,7 +287,7 @@ namespace NiceHashMiner
                // _mainFormHeight = 330 - _emtpyGroupPanelHeight;
             }
             //_mainFormHeight = Size.Height;
-
+            AntivirusInstalled = Helpers.AntivirusInstalled();
             ClearRatesAll();
             thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.Normal;

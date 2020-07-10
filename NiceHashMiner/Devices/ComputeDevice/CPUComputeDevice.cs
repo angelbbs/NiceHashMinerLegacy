@@ -4,6 +4,7 @@
 */
 using System;
 using System.Diagnostics;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -17,14 +18,17 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                try
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    // if (_cpuCounter != null) return _cpuCounter.NextValue();
-                    return ComputeDeviceCPU.CpuReader.GetLoad();
-                }
-                catch (Exception e)
-                {
-                //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    try
+                    {
+                        // if (_cpuCounter != null) return _cpuCounter.NextValue();
+                        return ComputeDeviceCPU.CpuReader.GetLoad();
+                    }
+                    catch (Exception e)
+                    {
+                        //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    }
                 }
                 return -1;
             }
@@ -34,13 +38,16 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                try
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    return ComputeDeviceCPU.CpuReader.GetTemperaturesInCelsius(); 
-                }
-                catch (Exception e)
-                {
-                    //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    try
+                    {
+                        return ComputeDeviceCPU.CpuReader.GetTemperaturesInCelsius();
+                    }
+                    catch (Exception e)
+                    {
+                        //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    }
                 }
                 return -1;
             }
@@ -50,13 +57,16 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                try
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    return ComputeDeviceCPU.CpuReader.GetFan();
-                }
-                catch (Exception e)
-                {
+                    try
+                    {
+                        return ComputeDeviceCPU.CpuReader.GetFan();
+                    }
+                    catch (Exception e)
+                    {
                         Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    }
                 }
                 return -1;
             }
@@ -66,13 +76,16 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                try
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    return ComputeDeviceCPU.CpuReader.GetPower();
-                }
-                catch (Exception e)
-                {
+                    try
+                    {
+                        return ComputeDeviceCPU.CpuReader.GetPower();
+                    }
+                    catch (Exception e)
+                    {
                         Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    }
                 }
                 return -1;
             }

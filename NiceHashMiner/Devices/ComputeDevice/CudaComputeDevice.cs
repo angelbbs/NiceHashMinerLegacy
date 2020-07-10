@@ -45,39 +45,40 @@ namespace NiceHashMiner.Devices
                     }
                     return load;
                 }
-
-                try
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-
-                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    try
                     {
-                        //hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
-                            if (gpuId == ID)
+                            if (hardware.HardwareType == HardwareType.GpuNvidia)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
+                                if (gpuId == ID)
                                 {
-                                    if (sensor.SensorType == SensorType.Load)
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                        if ((int)sensor.Value >= 0)
+                                        if (sensor.SensorType == SensorType.Load)
                                         {
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value >= 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
                                     }
                                 }
                             }
                         }
                     }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
+                    }
                 }
-                catch (Exception er)
-                {
-                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
-                }
-
                 return -1;
             }
         }
@@ -111,39 +112,40 @@ namespace NiceHashMiner.Devices
                     }
                     return temp;
                 }
-
-                try
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    try
                     {
-                        //hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
-                            if (gpuId == ID)
+                            if (hardware.HardwareType == HardwareType.GpuNvidia)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
+                                if (gpuId == ID)
                                 {
-                                    if (sensor.SensorType == SensorType.Temperature)
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                        if ((int)sensor.Value > 0)
+                                        if (sensor.SensorType == SensorType.Temperature)
                                         {
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value > 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
-                                    }
 
+                                    }
                                 }
                             }
                         }
                     }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
+                    }
                 }
-                catch (Exception er)
-                {
-                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
-                }
-
                 return -1;
             }
         }
@@ -305,8 +307,8 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                //if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-
+                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                { 
                     try
                     {
                         var power = 0u;
@@ -320,39 +322,40 @@ namespace NiceHashMiner.Devices
                     {
                         // Helpers.ConsolePrint("NVML", e.ToString());
                     }
-
-
-                try
+                }
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    try
                     {
-                        //hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
-                            if (gpuId == ID)
+                            if (hardware.HardwareType == HardwareType.GpuNvidia)
                             {
-                                foreach (var sensor in hardware.Sensors)
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
+                                if (gpuId == ID)
                                 {
-                                    if (sensor.SensorType == SensorType.Power)
+                                    foreach (var sensor in hardware.Sensors)
                                     {
-                                        if ((int)sensor.Value >= 0)
+                                        if (sensor.SensorType == SensorType.Power)
                                         {
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value >= 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
                                     }
                                 }
                             }
                         }
                     }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
+                    }
                 }
-                catch (Exception er)
-                {
-                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
-                }
-
                 return -1;
             }
         }

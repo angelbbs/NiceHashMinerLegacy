@@ -481,7 +481,11 @@ namespace NiceHashMiner.Miners
                 stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
             Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
-
+            if (smaTmp == 0)
+            {
+                Helpers.ConsolePrint(Tag, "SMA Error");
+                return;
+            }
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
             if (CheckIfShouldMine(currentProfit) == false)
@@ -493,10 +497,7 @@ namespace NiceHashMiner.Miners
                 AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
                 return;
             }
-            if (smaTmp == 0)
-            {
-                Helpers.ConsolePrint(Tag, "SMA Error");
-            }
+
             // check profit threshold
             bool needSwitch = false;
             foreach (var device in _miningDevices)

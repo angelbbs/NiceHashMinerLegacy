@@ -122,6 +122,7 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.ColorProfileIndex != _generalConfigBackup.ColorProfileIndex
                    || GeneralConfig.DevicesCountIndex != _generalConfigBackup.DevicesCountIndex
                    || GeneralConfig.ProgramMonitoring != _generalConfigBackup.ProgramMonitoring
+                   || GeneralConfig.Use_OpenHardwareMonitor != _generalConfigBackup.Use_OpenHardwareMonitor
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting;
         }
 

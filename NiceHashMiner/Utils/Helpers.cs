@@ -13,6 +13,7 @@ using NiceHashMiner.PInvoke;
 using System.Management;
 using NiceHashMinerLegacy.Common.Enums;
 using System.Security.Principal;
+using System.Linq;
 
 namespace NiceHashMiner
 {
@@ -30,7 +31,43 @@ namespace NiceHashMiner
                 IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
+        public static bool AntivirusInstalled()
+        {
+            string wmipathstr = @"\" + Environment.MachineName + @"\root\SecurityCenter";
+            bool ret = false;
+            try
+            {
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\SecurityCenter2", "SELECT * FROM AntivirusProduct");
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    uint productState = (uint)queryObj["productState"];
+                    uint realtimeStatus = (productState & 0xff00) >> 8;
+                    string displayName = (string)queryObj["displayName"];
+                    //Helpers.ConsolePrint("Antivirus installed: ", displayName);
+                    switch (realtimeStatus)
+                    {
+                        case 0x00:
+                            Helpers.ConsolePrint(displayName, "off"); ret = false; break;
+                        case 0x01:
+                            Helpers.ConsolePrint(displayName, "expired"); break;
+                        case 0x10:
+                            Helpers.ConsolePrint(displayName, "on"); ret = true; break;
+                        case 0x11:
+                            Helpers.ConsolePrint(displayName, "snoozed"); ret = false; break;
+                        default:
+                            Helpers.ConsolePrint(displayName, "unknown"); break;
+                    }
+                }
+                return ret;
+            }
 
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("Check antivirus error: ", e.Message);
+            }
+            Helpers.ConsolePrint("Antivirus not detected", "");
+            return false;
+        }
         public static bool InternalCheckIsWow64()
         {
             if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) ||
