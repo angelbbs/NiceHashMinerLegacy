@@ -388,7 +388,23 @@ namespace NiceHashMiner.Devices.Algorithms
                 Form_Main.DaggerHashimoto3GB = false;
             }
 
-                if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
+            if (device.DeviceType == DeviceType.AMD && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.DaggerHashimoto4GB
+                    });
+            }
+            if (device.DeviceType == DeviceType.AMD && (device.GpuRam > (ulong)(1024 * 1024 * 1024 * 3.2) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7)))
+            {
+                Form_Main.DaggerHashimoto4GB = true;
+            }
+            else
+            {
+                Form_Main.DaggerHashimoto4GB = false;
+            }
+
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {

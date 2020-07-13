@@ -26,7 +26,7 @@ using HashLib;
 
 namespace NiceHashMinerLegacy.Divert
 {
-    public class DDagger3GB
+    public class DDagger4GB
     {
         private static IntPtr DivertHandle;
        
@@ -71,9 +71,9 @@ namespace NiceHashMinerLegacy.Divert
 
 
         [HandleProcessCorruptedStateExceptions]
-        public static IntPtr Dagger3GBDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        public static IntPtr Dagger4GBDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
             {
-            Divert.Dagger3GBdivert_running = true;
+            Divert.Dagger4GBdivert_running = true;
 
             filter = "(!loopback && outbound ? (tcp.DstPort == 3353)" +
                 " : " +
@@ -86,26 +86,26 @@ namespace NiceHashMinerLegacy.Divert
                 return new IntPtr(-1);
             }
 
-            RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
+            RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
 
             return DivertHandle;
         }
 
         [HandleProcessCorruptedStateExceptions]
-        internal static Task<bool> RunDivert(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        internal static Task<bool> RunDivert(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
         {
 
             return Task.Run(() =>
             {
                 var t = new TaskCompletionSource<bool>();
-                RunDivert1(handle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
+                RunDivert1(handle, processIdList, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
                 return t.Task;
             });
         }
 
         // [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [HandleProcessCorruptedStateExceptions]
-        internal unsafe static async Task RunDivert1(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        internal unsafe static async Task RunDivert1(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
         {
             var packet = new WinDivertBuffer();
             var addr = new WinDivertAddress();
@@ -124,7 +124,7 @@ namespace NiceHashMinerLegacy.Divert
                 try
                 {
 nextCycle:
-                    if (Divert.Dagger3GBdivert_running)
+                    if (Divert.Dagger4GBdivert_running)
                     {
                         readLen = 0;
                         modified = false;
@@ -140,7 +140,7 @@ nextCycle:
                         {
                             {
 
-                                Divert.Dagger3GBdivert_running = false;
+                                Divert.Dagger4GBdivert_running = false;
                                 Helpers.ConsolePrint($"WinDivertSharp", "WinDivertRecv error.");
                                 continue;
                             }
@@ -166,7 +166,7 @@ nextCycle:
                                 {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 PacketPayloadData = PacketPayloadData.Replace("}{", "}" + (char)10 + "{");
-                                Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
+                               // Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
 
                                 if (PacketPayloadData.Contains("mining.notify") && PacketPayloadData.Contains("method"))//job
                                 {
@@ -175,7 +175,7 @@ nextCycle:
                                     //Helpers.ConsolePrint("WinDivertSharp", "amount: " + amount.ToString());
                                     for (var i = 0; i <= amount; i++)
                                     {
-                                        Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadData.Split((char)10)[i]: " + PacketPayloadData.Split((char)10)[i]);
+                                        //Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadData.Split((char)10)[i]: " + PacketPayloadData.Split((char)10)[i]);
                                         if (PacketPayloadData.Split((char)10)[i].Contains("mining.notify"))
                                         //if (PacketPayloadData.Split('}')[i].Contains("mining.notify"))
                                         {
@@ -185,34 +185,30 @@ nextCycle:
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch < 235) //win 7
+                                            if (epoch < MaxEpoch) //win 10
                                             {
-                                                Divert.Dagger3GBEpochCount = 0;
+                                                Divert.Dagger4GBEpochCount = 0;
                                             }
                                             else
                                             {
                                                 packet.Dispose();
-                                                Divert.Dagger3GBEpochCount++;
+                                                Divert.Dagger4GBEpochCount++;
 
-                                                if (Divert.Dagger3GBEpochCount > 0)//1й пакет убираем
+                                                if (Divert.Dagger4GBEpochCount > 0)//1й пакет убираем
                                                 {
                                                     //packet.Dispose();
                                                 }
-                                                if (Divert.Dagger3GBEpochCount > 1)
+                                                if (Divert.Dagger4GBEpochCount > 1)
                                                 {
                                                     
-                                                    Divert.DaggerHashimoto3GBForce = true;
-                                                    Divert.DaggerHashimoto3GBProfit = false;
-                                                    Divert.Dagger3GBEpochCount = 999;
+                                                    Divert.DaggerHashimoto4GBForce = true;
+                                                    Divert.DaggerHashimoto4GBProfit = false;
+                                                    Divert.Dagger4GBEpochCount = 999;
                                                 }
-                                                //Divert.Dagger3GBEpochCount = 999;
                                                 goto nextCycle;
-
                                             }
-
                                         }
                                     }
-                                    
                                 }
                             }
                             //******************************
@@ -259,7 +255,7 @@ nextCycle:
                 }
                 Thread.Sleep(1);
             }
-            while (Divert.Dagger3GBdivert_running);
+            while (Divert.Dagger4GBdivert_running);
 
         }
     }

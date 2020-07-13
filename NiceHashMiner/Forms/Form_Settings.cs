@@ -493,6 +493,9 @@ namespace NiceHashMiner.Forms
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
             label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
+            labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch");
+            labelMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
+            textBoxMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
 
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
@@ -756,6 +759,10 @@ namespace NiceHashMiner.Forms
                 textBox_SwitchProfitabilityThreshold.ForeColor = Form_Main._foreColor;
                 textBox_SwitchProfitabilityThreshold.BorderStyle = BorderStyle.FixedSingle;
 
+                textBoxMaxEpoch.BackColor = Form_Main._backColor;
+                textBoxMaxEpoch.ForeColor = Form_Main._foreColor;
+                textBoxMaxEpoch.BorderStyle = BorderStyle.FixedSingle;
+
                 labelRestartProgram.BackColor = Form_Main._backColor;
                 labelRestartProgram.ForeColor = Form_Main._foreColor;
 
@@ -864,6 +871,7 @@ namespace NiceHashMiner.Forms
                 textBox_psu.Leave += GeneralTextBoxes_Leave;
                 textBox_mb.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchProfitabilityThreshold.Leave += GeneralTextBoxes_Leave;
+                textBoxMaxEpoch.Leave += GeneralTextBoxes_Leave;
                 // set int only keypress
                 textBox_SwitchMaxSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 textBox_SwitchMinSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
@@ -961,6 +969,7 @@ namespace NiceHashMiner.Forms
                 textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
                 textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
                 textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString();
+                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString();
             }
 
             // set custom control referances
@@ -1170,6 +1179,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
             ConfigManager.GeneralConfig.PowerMB = Helpers.ParseInt(textBox_mb.Text);
             ConfigManager.GeneralConfig.PowerPSU = Helpers.ParseInt(textBox_psu.Text);
+            ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
 
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
@@ -1188,6 +1198,7 @@ namespace NiceHashMiner.Forms
             textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
             textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString("");
             textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString("");
+            textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString("");
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)

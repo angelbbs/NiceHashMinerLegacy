@@ -50,6 +50,7 @@ namespace NiceHashMiner.Miners
             var username = GetUsername(btcAdress, worker);
             var platform = "";
             url = url.Replace("daggerhashimoto3gb", "daggerhashimoto");
+            url = url.Replace("daggerhashimoto4gb", "daggerhashimoto");
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
@@ -165,9 +166,17 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             var url = GetServiceUrl(algorithm.NiceHashID);
-
-            var ret = GetStartBenchmarkCommand("stratum+tcp://eu1.ethermine.org:4444", "0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Phoenix", "")
+            string ret = "";
+            if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
+            {
+                ret = GetStartBenchmarkCommand("stratum+tcp://eu1.ethermine.org:4444", "0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Phoenix", "")
                          + " -logfile " + GetLogFileName();
+            }
+            if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto4GB)
+            {
+                ret = GetStartBenchmarkCommand("stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565", "angelbbs.Phoenix4", "") + " -proto 1"
+                         + " -logfile " + GetLogFileName();
+            }
 
             //BenchmarkTimeWait = Math.Max(60, Math.Min(120, time * 3));
             return ret;

@@ -74,15 +74,6 @@ namespace NiceHashMiner.Switching
                 _smaCheckTimer.AutoReset = false;
                 _smaCheckTimer.Start();
             }
-            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
-            {
-                /*
-                if (Form_Main.DaggerHashimoto3GB)
-                {
-                    new Task(() => DHClient.StartConnection()).Start();
-                }
-                */
-            }
         }
         public static void SmaCheckNow()
         {
@@ -92,15 +83,7 @@ namespace NiceHashMiner.Switching
         public static void Stop()
         {
             Helpers.ConsolePrint("AlgorithmSwitchingManager", "Stop");
-            //if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto3GB)
-            {
-                /*
-                if (Form_Main.DaggerHashimoto3GB)
-                {
-                    DHClient.StopConnection();
-                }
-                */
-            }
+
             if (_smaCheckTimer != null)
             {
                 MiningSession.StopEvent();
@@ -183,7 +166,7 @@ namespace NiceHashMiner.Switching
                     {
                         updated = true;
                         var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
-                        if (i >= ticks  || algo == AlgorithmType.DaggerHashimoto3GB)
+                        if (i >= ticks || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                         {
                             _lastLegitPaying[algo] = paying;
                             sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i} {cTicks} for {algo}");

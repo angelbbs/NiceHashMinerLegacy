@@ -104,6 +104,33 @@ namespace NiceHashMiner.Switching
                         };
                     }
                 }
+                if (algo == AlgorithmType.DaggerHashimoto4GB)
+                {
+                    var paying = 0d;
+                    if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
+                        HasData = true;
+
+                    if (Divert.DaggerHashimoto4GBProfit)
+                    {
+                        _currentSma[algo] = new NiceHashSma
+                        {
+                            Port = 3353,
+                            Name = algo.ToString().ToLower(),
+                            Algo = (int)algo,
+                            Paying = paying
+                        };
+                    }
+                    else
+                    {
+                        _currentSma[algo] = new NiceHashSma
+                        {
+                            Port = 3353,
+                            Name = algo.ToString().ToLower(),
+                            Algo = (int)algo,
+                            Paying = 0.0d
+                        };
+                    }
+                }
             }
 
             Initialized = true;
@@ -248,14 +275,7 @@ namespace NiceHashMiner.Switching
         public static bool TryGetPaying(AlgorithmType algo, out double paying)
         {
             CheckInit();
-            /*
-            if (algo == AlgorithmType.DaggerHashimoto3GB)
-            {
-                TryGetSma(AlgorithmType.DaggerHashimoto, out var smaDH);
-                paying = smaDH.Paying;
-                return true;
-            }
-            */
+
             if (TryGetSma(algo, out var sma))
             {
                 paying = sma.Paying;

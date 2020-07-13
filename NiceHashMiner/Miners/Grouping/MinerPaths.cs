@@ -372,6 +372,8 @@ namespace NiceHashMiner.Miners.Grouping
                         return Data.ClaymoreDual;
                     case AlgorithmType.DaggerHashimoto3GB:
                         return Data.ClaymoreDual;
+                    case AlgorithmType.DaggerHashimoto4GB:
+                        return Data.ClaymoreDual;
                     case AlgorithmType.NeoScrypt:
                         return Data.ClaymoreNeoscryptMiner;
                 }

@@ -297,14 +297,7 @@ namespace NiceHashMiner
             var toRemovePidData = new List<MinerPidData>();
             Helpers.ConsolePrint(MinerTag(), "Trying to kill all miner processes for this instance:");
             var algo = (int)MiningSetup.CurrentAlgorithmType;
-            //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
-            //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
-            /*
-            if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
-            {
-               // algo = -100;
-            }
-            */
+
             foreach (var pidData in _allPidData)
             {
                 try
@@ -317,13 +310,6 @@ namespace NiceHashMiner
                         {
                             if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                             {
-                                if (!DHClient.checkConnection)//
-                                {
-                                    if (Form_Main.DaggerHashimoto3GB)
-                                    {
-                                        //new Task(() => DHClient.StopConnection()).Start();
-                                    }
-                                }
                                 Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo, 
                                     (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
                             }
@@ -456,16 +442,22 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -9)
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
                 {
                     try
                     {
-                        //DHClient.checkConnection = false;
                         if (!DHClient.checkConnection)//
                         {
                             if (Form_Main.DaggerHashimoto3GB)
                             {
                                 new Task(() => DHClient.StopConnection()).Start();
+                            }
+                        }
+                        if (!DHClient4gb.checkConnection)//
+                        {
+                            if (Form_Main.DaggerHashimoto4GB)
+                            {
+                                new Task(() => DHClient4gb.StopConnection()).Start();
                             }
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
@@ -1310,14 +1302,7 @@ namespace NiceHashMiner
                     if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
-                        //Helpers.ConsolePrint("DaggerHashimoto3GB", "algo = " + algo.ToString());
-                        //Helpers.ConsolePrint("DaggerHashimoto3GB", "Form_Main.GoogleAnswer: " + Form_Main.GoogleAnswer);
-                        /*
-                        if (algo != -9 && !Form_Main.GoogleAnswer.Contains("Running"))
-                        {
-                            algo = -100;
-                        }
-                        */
+
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
                         if (Form_Main.DaggerHashimoto3GB && algo != -9)
                         {
@@ -1337,12 +1322,31 @@ namespace NiceHashMiner
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
                         }
+                        if (Form_Main.DaggerHashimoto4GB && algo != -12)
+                        {
+                            if (DHClient4gb.serverStream == null)
+                            {
+                                DHClient4gb.checkConnection = true;
+                                Divert.Dagger4GBEpochCount = 999; //
+                                new Task(() => DHClient4gb.StartConnection()).Start();
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint("DaggerHashimoto4GB", "DHClient5gb.serverStream not null");
+                                DHClient4gb.serverStream.Close();
+                                DHClient4gb.serverStream.Dispose();
+                                DHClient4gb.checkConnection = true;
+                                Divert.Dagger4GBEpochCount = 999; //
+                                new Task(() => DHClient4gb.StartConnection()).Start();
+                            }
+                        }
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
 
                         P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2,  MinerDeviceName,
                             strPlatform, w, ConfigManager.GeneralConfig.DivertLog,
                             ConfigManager.GeneralConfig.SaveDivertPackets,
-                            ConfigManager.GeneralConfig.BlockGMinerApacheTomcat, Form_Main.CertInstalled);
+                            ConfigManager.GeneralConfig.BlockGMinerApacheTomcat, Form_Main.CertInstalled,
+                            ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch);
 
                         _currentPidData = new MinerPidData
                         {
@@ -1416,13 +1420,17 @@ namespace NiceHashMiner
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             if (ProcessHandle != null)
             {
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -9)
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
                 {
                     try
                     {
                         if (Form_Main.DaggerHashimoto3GB)
                         {
                             new Task(() => DHClient.StopConnection()).Start();
+                        }
+                        if (Form_Main.DaggerHashimoto4GB)
+                        {
+                            new Task(() => DHClient4gb.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
                             (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
@@ -1458,6 +1466,26 @@ namespace NiceHashMiner
                         if (Form_Main.DaggerHashimoto3GB)
                         {
                             new Task(() => DHClient.StopConnection()).Start();
+                        }
+                        if (Form_Main.DaggerHashimoto4GB)
+                        {
+                            new Task(() => DHClient4gb.StopConnection()).Start();
+                        }
+                        Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("Restart error: ", e.ToString());
+                    }
+                }
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -12)
+                {
+                    try
+                    {
+                        if (Form_Main.DaggerHashimoto4GB)
+                        {
+                            new Task(() => DHClient4gb.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
                             (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);

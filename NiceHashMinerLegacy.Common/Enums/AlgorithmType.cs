@@ -7,6 +7,7 @@
     public enum AlgorithmType
     {
         // dual algos for grouping
+        DaggerHashimoto4GB = -12,
         DaggerHandshake = -11,
         DaggerEaglesong = -10,
         DaggerHashimoto3GB = -9,

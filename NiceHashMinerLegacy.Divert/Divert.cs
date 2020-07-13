@@ -38,6 +38,18 @@ namespace NiceHashMinerLegacy.Divert
         public static bool DaggerHashimoto3GBForce = false;
         public static List<string> processIdListDagger3GB = new List<string>();
         private static IntPtr DDagger3GBHandle = (IntPtr)0;
+
+        public static volatile bool Dagger4GBdivert_running = true;
+        public static bool gminer_runningDagger4GB = false;
+        public static int Dagger4GBEpochCount = 0;
+        public static string Dagger4GBJob = "";
+        public static bool Dagger4GBCheckConnection = false;
+        public static bool DaggerHashimoto4GBProfit = false;
+        public static bool DaggerHashimoto4GBForce = false;
+        public static List<string> processIdListDagger4GB = new List<string>();
+        private static IntPtr DDagger4GBHandle = (IntPtr)0;
+
+
         public static bool _SaveDivertPackets;
         public static bool _certInstalled = false;
         public static volatile bool Testdivert_running = true;
@@ -550,6 +562,37 @@ namespace NiceHashMinerLegacy.Divert
                 return t.Task;
             });
         }
+        internal static Task<bool> GetDagger4GB(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
+        {
+            return Task.Run(() =>
+            {
+                var t = new TaskCompletionSource<bool>();
+                var _allConnections = new List<Connection>();
+                int childPID = -1;
+
+                processIdListDagger4GB.Add(MinerName.ToLower() + ": " + processId.ToString());
+                DDagger4GBHandle = DDagger4GB.Dagger4GBDivertStart(processIdListDagger4GB, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
+                Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DDagger4GBHandle.ToString() + ". Initiated by " + processId.ToString() + " (Dagger4GB) to divert process list: " + " " + String.Join(",", processIdListDagger4GB));
+
+                do
+                {
+                    childPID = PublicFunc.GetChildProcess(processId);
+                    if (childPID > 0)
+                    {
+                        if (!String.Join(" ", processIdListDagger4GB).Contains(childPID.ToString()))
+                        {
+                            processIdListDagger4GB.Add(MinerName.ToLower() + ": " + processId.ToString() + " " + childPID.ToString() + " %" + DDagger4GBHandle.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "Add new Dagger4GB ChildPid: " + childPID.ToString());
+                            Helpers.ConsolePrint("WinDivertSharp", "processIdListDagger4GB: " + String.Join(" ", processIdListDagger4GB));
+                        }
+
+                    }
+                    Thread.Sleep(400);
+                } while (Dagger4GBdivert_running);
+                return t.Task;
+            });
+        }
+
 
         public static IntPtr OpenWinDivert(string filter)
         {
@@ -580,7 +623,7 @@ namespace NiceHashMinerLegacy.Divert
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, int SecondaryAlgorithmType, string MinerName, string strPlatform,
-            string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig, bool CertInstalled)
+            string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig, bool CertInstalled, int MaxEpoch)
         {
             _certInstalled = CertInstalled;
             logging = log;
@@ -611,6 +654,27 @@ namespace NiceHashMinerLegacy.Divert
                 }
 
             }
+            //******************************************************************************************
+            if (CurrentAlgorithmType == -12) //dagerhashimoto4gb
+            {
+                Dagger4GBdivert_running = true;
+                //if (MinerName.ToLower() == "claymoredual")
+                {
+
+                    processIdListDagger4GB.Add(MinerName.ToLower() + ": " + processId.ToString());
+                    if (processIdListDagger4GB.Count > 1)
+                    {
+                        Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DDagger4GBHandle.ToString() + ". Added " + processId.ToString() + " (Dagger4GB) to divert process list: " + " " + String.Join(",", processIdListDagger4GB));
+                        return DDagger4GBHandle;
+                    }
+                    DDagger4GBHandle = DDagger4GB.Dagger4GBDivertStart(processIdListDagger4GB, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
+                    Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DDagger4GBHandle.ToString() + ". Initiated by " + processId.ToString() + " (Dagger4GB) to divert process list: " + " " + String.Join(",", processIdListDagger4GB));
+                    //return DDagger4GBHandle;
+
+                }
+
+            }
+
             //******************************************************************************************
             if (CurrentAlgorithmType == -100) //test
             {

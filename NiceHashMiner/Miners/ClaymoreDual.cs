@@ -66,6 +66,7 @@ namespace NiceHashMiner.Miners
             string dpoolsFile = "";
 
             url = url.Replace("daggerhashimoto3gb", "daggerhashimoto");
+            url = url.Replace("daggerhashimoto4gb", "daggerhashimoto");
 
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -542,7 +543,15 @@ namespace NiceHashMiner.Miners
 
                 addParam = " "
                                         + GetDevicesCommandString()
-                                        + String.Format("  -epool us-east.ethash-hub.miningpoolhub.com:20565 -ewal angelbbs.Claymore -esm 2 -mport 127.0.0.1:-{0} -epsw c=BTC -allcoins 1 -allpools 1 -ftime 10 -retrydelay 5", ApiPort)
+                                        + String.Format("  -epool us-east.ethash-hub.miningpoolhub.com:20565 -ewal angelbbs.Claymore3 -esm 2 -mport 127.0.0.1:-{0} -epsw c=BTC -allcoins 1 -allpools 1 -ftime 10 -retrydelay 5", ApiPort)
+                                        + dualModeParams;
+            }
+            else if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB))
+            {
+
+                addParam = " "
+                                        + GetDevicesCommandString()
+                                        + String.Format("  -epool us-east.ethash-hub.miningpoolhub.com:20565 -ewal angelbbs.Claymore4 -esm 2 -mport 127.0.0.1:-{0} -epsw c=BTC -allcoins 1 -allpools 1 -ftime 10 -retrydelay 5", ApiPort)
                                         + dualModeParams;
             }
             else 

@@ -257,8 +257,19 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.Claymore,
                             new List<Algorithm>
                             {
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.NeoScrypt, "neoscrypt")
+                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.NeoScrypt, "neoscrypt"),
+                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto4GB, "DaggerHashimoto4GB")
                             }
+            },
+                        {
+                MinerBaseType.Phoenix,
+                new List<Algorithm>()
+                {
+                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto4GB, "")
+                    {
+    //                    ExtraLaunchParameters = "-rvram -1 -eres 0 "
+                    }
+                }
             },
             {
                  MinerBaseType.NBMiner,

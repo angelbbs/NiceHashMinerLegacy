@@ -59,6 +59,8 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.labelRestartProgram = new System.Windows.Forms.Label();
+            this.comboBoxRestartProgram = new System.Windows.Forms.ComboBox();
             this.checkBox_program_monitoring = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowUptime = new System.Windows.Forms.CheckBox();
             this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
@@ -162,8 +164,8 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.labelRestartProgram = new System.Windows.Forms.Label();
-            this.comboBoxRestartProgram = new System.Windows.Forms.ComboBox();
+            this.labelMaxEpoch = new System.Windows.Forms.Label();
+            this.textBoxMaxEpoch = new System.Windows.Forms.TextBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -606,6 +608,27 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
+            // 
+            // labelRestartProgram
+            // 
+            this.labelRestartProgram.AutoSize = true;
+            this.labelRestartProgram.Location = new System.Drawing.Point(4, 398);
+            this.labelRestartProgram.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelRestartProgram.Name = "labelRestartProgram";
+            this.labelRestartProgram.Size = new System.Drawing.Size(82, 13);
+            this.labelRestartProgram.TabIndex = 406;
+            this.labelRestartProgram.Text = "Restart program";
+            // 
+            // comboBoxRestartProgram
+            // 
+            this.comboBoxRestartProgram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRestartProgram.FormattingEnabled = true;
+            this.comboBoxRestartProgram.Location = new System.Drawing.Point(154, 395);
+            this.comboBoxRestartProgram.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBoxRestartProgram.Name = "comboBoxRestartProgram";
+            this.comboBoxRestartProgram.Size = new System.Drawing.Size(117, 21);
+            this.comboBoxRestartProgram.TabIndex = 405;
+            this.comboBoxRestartProgram.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxRestartProgram_DrawItem);
             // 
             // checkBox_program_monitoring
             // 
@@ -1164,6 +1187,8 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Miners
             // 
+            this.groupBox_Miners.Controls.Add(this.textBoxMaxEpoch);
+            this.groupBox_Miners.Controls.Add(this.labelMaxEpoch);
             this.groupBox_Miners.Controls.Add(this.label_switching_algorithms);
             this.groupBox_Miners.Controls.Add(this.label_RunEthlargement);
             this.groupBox_Miners.Controls.Add(this.checkBox_RunEthlargement);
@@ -1860,26 +1885,23 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // labelRestartProgram
+            // labelMaxEpoch
             // 
-            this.labelRestartProgram.AutoSize = true;
-            this.labelRestartProgram.Location = new System.Drawing.Point(4, 398);
-            this.labelRestartProgram.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelRestartProgram.Name = "labelRestartProgram";
-            this.labelRestartProgram.Size = new System.Drawing.Size(82, 13);
-            this.labelRestartProgram.TabIndex = 406;
-            this.labelRestartProgram.Text = "Restart program";
+            this.labelMaxEpoch.AutoSize = true;
+            this.labelMaxEpoch.Location = new System.Drawing.Point(242, 116);
+            this.labelMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelMaxEpoch.Name = "labelMaxEpoch";
+            this.labelMaxEpoch.Size = new System.Drawing.Size(206, 13);
+            this.labelMaxEpoch.TabIndex = 405;
+            this.labelMaxEpoch.Text = "Maximum Epoch of DaggerHashimoto4GB";
             // 
-            // comboBoxRestartProgram
+            // textBoxMaxEpoch
             // 
-            this.comboBoxRestartProgram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxRestartProgram.FormattingEnabled = true;
-            this.comboBoxRestartProgram.Location = new System.Drawing.Point(154, 395);
-            this.comboBoxRestartProgram.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.comboBoxRestartProgram.Name = "comboBoxRestartProgram";
-            this.comboBoxRestartProgram.Size = new System.Drawing.Size(117, 21);
-            this.comboBoxRestartProgram.TabIndex = 405;
-            this.comboBoxRestartProgram.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxRestartProgram_DrawItem);
+            this.textBoxMaxEpoch.Location = new System.Drawing.Point(471, 113);
+            this.textBoxMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxMaxEpoch.Name = "textBoxMaxEpoch";
+            this.textBoxMaxEpoch.Size = new System.Drawing.Size(37, 20);
+            this.textBoxMaxEpoch.TabIndex = 406;
             // 
             // algorithmsListView1
             // 
@@ -2155,5 +2177,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxRestartWindows;
         private System.Windows.Forms.Label labelRestartProgram;
         private System.Windows.Forms.ComboBox comboBoxRestartProgram;
+        private System.Windows.Forms.TextBox textBoxMaxEpoch;
+        private System.Windows.Forms.Label labelMaxEpoch;
     }
 }

@@ -470,6 +470,7 @@
 "Form_Settings_comboBoxRestartProgram2": "через 24 часа",
 "Form_Settings_comboBoxRestartProgram3": "через 3 суток",
 "Form_Settings_comboBoxRestartProgram4": "через 7 суток",
+"Form_Settings_MaxEpoch": "Максимальная эпоха DaggerHashimoto4GB",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

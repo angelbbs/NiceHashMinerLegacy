@@ -479,6 +479,7 @@
 "Form_Settings_comboBoxRestartProgram2": "after 24h",
 "Form_Settings_comboBoxRestartProgram3": "after 3d",
 "Form_Settings_comboBoxRestartProgram4": "after 7d",
+"Form_Settings_MaxEpoch": "Maximum Epoch of DaggerHashimoto4GB",
                 "Form_Settings_buttonLicence": "View licence"
     }
 }

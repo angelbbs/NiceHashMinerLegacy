@@ -511,6 +511,23 @@ namespace NiceHashMiner.Forms.Components
             if (e.Item.Tag is Algorithm algo)
             {
                 algo.Enabled = e.Item.Checked;
+                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto3GB && 
+                    algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB && algo.Enabled)
+                {
+                    algo.Enabled = false;
+                    e.Item.Checked = false;
+                    MessageBox.Show("WinDivert driver error. DaggerHashimoto3GB disabled",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto4GB && 
+                    algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB && algo.Enabled)
+                {
+                    algo.Enabled = false;
+                    e.Item.Checked = false;
+                    MessageBox.Show("WinDivert driver error. DaggerHashimoto4GB disabled",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                /*
                 if (ConfigManager.GeneralConfig.DivertRun)
                 {
                     if ((Form_Main.DaggerHashimoto3GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB &&
@@ -523,7 +540,18 @@ namespace NiceHashMiner.Forms.Components
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     }
+                    if ((Form_Main.DaggerHashimoto4GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB &&
+                        algo.Enabled && !Form_Main.DivertAvailable) ||
+                        !ConfigManager.GeneralConfig.DivertRun)
+                    {
+                        algo.Enabled = false;
+                        e.Item.Checked = false;
+                        MessageBox.Show("WinDivert driver error. DaggerHashimoto4GB disabled",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    }
                 }
+                */
             }
 
             ComunicationInterface?.HandleCheck(e.Item);

@@ -23,6 +23,7 @@ namespace NiceHashMiner.Configs.Data
         public bool NoForceTRexClose;
         public bool UseNegativeProfit = false;
         public double DaggerOrderMaxPay = 0;
+        public int DaggerHashimoto4GBMaxEpoch = 359;
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";
         public bool DivertRun = true;

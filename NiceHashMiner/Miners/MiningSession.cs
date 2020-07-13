@@ -774,7 +774,7 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
-                        if (groupMiners.AlgorithmType != AlgorithmType.DaggerHashimoto3GB)
+                        if (groupMiners.AlgorithmType != AlgorithmType.DaggerHashimoto3GB || groupMiners.AlgorithmType != AlgorithmType.DaggerHashimoto4GB)
                         {
                             groupMiners.CurrentRate = 0;
                         }

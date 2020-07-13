@@ -345,38 +345,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("ClaymoreCryptoNight_fanmin", "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
                 }
                 ),
-            /*
-            new MinerOptionPackage(
-                MinerType.ClaymoreCryptoNight,
-                new List<MinerOption>
-                {
-                    new MinerOption("ClaymoreCryptoNight_a", "-a", "-a", "0", MinerOptionFlagType.MultiParam),
-                    new MinerOption("ClaymoreCryptoNight_wd", "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
-                    //new MinerOption(ClaymoreCryptoNight_r      , , , , MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_nofee", "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_V7"  , "-pow7", "-pow7", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_li", "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_h", "-h", "-h", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_allpools", "-allpools", "0", MinerOptionFlagType.SingleParam),
-                    new MinerOption("ClaymoreCryptoNight_cclock", "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_mclock", "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_powlim", "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_cvddc", "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_mvddc", "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
-                },
-                /*
-               new List<MinerOption>
-                {
-                    // temperature stuff
-                    //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
-                    new MinerOption("ClaymoreCryptoNight_tt", "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_tstop", "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_fanmax", "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_fanmin", "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
-                }
-            ),
-            */
-
+            
             new MinerOptionPackage(
                 MinerType.XmrigAMD,
                 new List<MinerOption>() {
@@ -475,6 +444,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("ClaymoreDual_nofee", "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("ClaymoreDual_li", "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ClaymoreDual_lidag", "-lidag", "-lidag", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ClaymoreDual_logfile", "-logfile", "-logfile", "", MinerOptionFlagType.SingleParam, ""),
 
                     //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
                     new MinerOption("ClaymoreDual_cclock", "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),

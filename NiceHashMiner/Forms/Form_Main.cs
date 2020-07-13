@@ -101,8 +101,8 @@ namespace NiceHashMiner
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
-//        public static bool DaggerHashimoto3GBProfit = false;
         public static bool DaggerHashimoto3GB = false;
+        public static bool DaggerHashimoto4GB = false;
         public static string GoogleIP = "";
         public static string GoogleAnswer = "";
         public static bool GoogleAvailable = false;
@@ -597,7 +597,7 @@ namespace NiceHashMiner
             {
                 //divert test
                 Process thisProc = Process.GetCurrentProcess();
-                int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false);
+                int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false, 9999);
                 if (dhandle != -1)
                 {
                     Thread.Sleep(500);
@@ -2266,6 +2266,37 @@ namespace NiceHashMiner
                 }
             }
         }
+        private void CheckDagger4GB()
+        {
+            if (ConfigManager.GeneralConfig.DivertRun)
+            {
+                if (Divert.DaggerHashimoto4GBForce)
+                {
+                    if (Divert.DaggerHashimoto4GBProfit && DHClient4gb.checkConnection)
+                    {
+                        Helpers.ConsolePrint("DaggerHashimoto4GB", "Force switch ON");
+                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
+                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+                        Divert.Dagger4GBEpochCount = 0;
+                        Divert.DaggerHashimoto4GBForce = false;
+                        DHClient4gb.checkConnection = false;
+                        //DHClient.needStart = false;
+                        //new Task(() => DHClient.StopConnection()).Start();
+                    }
+                    if (Divert.Dagger4GBEpochCount > 1 && !DHClient4gb.checkConnection)
+                    {
+                        Helpers.ConsolePrint("DaggerHashimoto4GB", "Force switch OFF");
+                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, 0.0d);
+                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
+                        Divert.DaggerHashimoto4GBForce = false;
+                        DHClient4gb.checkConnection = true;
+                        //new Task(() => DHClient.StartConnection()).Start();
+                    }
+                    //DHClient.needStart = false;
+                }
+            }
+        }
         public static string DNStoIP(string IPName)
         {
             try
@@ -2309,7 +2340,11 @@ namespace NiceHashMiner
                     }
                 }
             }
-            if (DeviceStatusTimer_FirstTick) CheckDagger3GB();
+            if (DeviceStatusTimer_FirstTick)
+            {
+                CheckDagger3GB();
+                CheckDagger4GB();
+            }
             DeviceStatusTimer_FirstTick = true;
             ExchangeCallback();
             BalanceCallback();

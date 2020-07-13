@@ -149,6 +149,7 @@
     <Compile Include="Miners\castxmr.cs" />
     <Compile Include="Miners\ClaymoreNeoscryptMiner.cs" />
     <Compile Include="Miners\CryptoDredge.cs" />
+    <Compile Include="Miners\DHClient4gb.cs" />
     <Compile Include="Miners\DHClient.cs" />
     <Compile Include="Miners\Ethash\ArrayExtensions.cs" />
     <Compile Include="Miners\Ethash\Converters.cs" />
