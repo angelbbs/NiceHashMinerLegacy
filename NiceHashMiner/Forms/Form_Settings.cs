@@ -494,8 +494,8 @@ namespace NiceHashMiner.Forms
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
             label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
             labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch");
-            labelMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
-            textBoxMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
+            labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
+            //textBoxMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
 
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();

@@ -23,6 +23,7 @@ using System.Globalization;
 using System.Management;
 using System.Diagnostics;
 using System.Reflection;
+using NiceHashMinerLegacy.Divert;
 
 namespace NiceHashMiner.Miners
 {
@@ -524,7 +525,21 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
-                        needSwitch = true;
+                        if (device.GetMostProfitableString().Contains("DaggerHashimoto3GB") && ConfigManager.GeneralConfig.DivertRun)
+                        {
+                            if (Divert.DaggerHashimoto3GBForce)
+                            {
+                                if (Divert.DaggerHashimoto3GBProfit && DHClient.checkConnection)
+                                {
+                                    //Divert.Dagger3GBEpochCount = 0;
+                                    //Divert.DaggerHashimoto3GBForce = false;
+                                    //DHClient.checkConnection = false;
+
+                                }
+                            }
+                        }
+
+                                    needSwitch = true;
                         Helpers.ConsolePrint(Tag,
                             $"Will SWITCH profit diff is {percDiff * 100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                     }

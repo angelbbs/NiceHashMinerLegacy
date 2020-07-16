@@ -108,7 +108,8 @@
         Handshake = 51,
         KAWPOW = 52,
         Cuckaroo29BFC = 53,
-        BeamV3 = 54
+        BeamV3 = 54,
+        CuckaRooz29 = 55
         #endregion // NiceHashAPI
     }
 }

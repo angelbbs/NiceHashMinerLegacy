@@ -508,6 +508,11 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Phoenix_rvram", "-rvram", "-rvram", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_nvf", "-nvf", "-nvf", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_mt", "-mt", "-mt", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_straps", "-straps", "-straps", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_vmt1", "-vmt1", "-vmt1", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_vmt2", "-vmt2", "-vmt2", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_vmt3", "-vmt3", "-vmt3", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_vmr", "-vmr", "-vmr", "0", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>
                 {
