@@ -128,6 +128,11 @@ namespace NiceHashMiner.Miners
                 algo = "cuckaroom29";
                 algoName = "cuckaroom";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckaRooz29)
+            {
+                algo = "cuckarooz29";
+                algoName = "cuckarooz29";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 algo = "grin31";
@@ -466,9 +471,8 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
-                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckaroom29" +
-                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
-                " --server grin.sparkpool.com:6666 --user angelbbs@mail.ru/" + worker + " --pass x --ssl 0" +
+                ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckaroom29_qitmeer" +
+                " --server pmeercuckaroom.uupool.cn:9660 --user Tmk9X8FPuu5SxP6mW32zQ5N68SNsn76xZrY.gminer --pass x  --ssl 0" +
                 " --server cuckaroom.eu.nicehash.com:3382 --user " + username + " --pass x --ssl 0" +
                 " --server cuckaroom.hk.nicehash.com:3382 --user " + username + " --pass x --ssl 0" +
                 GetDevicesCommandString();
@@ -736,6 +740,7 @@ namespace NiceHashMiner.Miners
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckaRooz29 ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 return GetNumber(outdata, LookForStart, "g/s");
