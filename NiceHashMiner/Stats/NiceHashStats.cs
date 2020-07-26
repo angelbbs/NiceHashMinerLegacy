@@ -921,7 +921,7 @@ namespace NiceHashMiner.Stats
 
                             payingDict[algoKey] = algo[1].Value<double>() * mult;
                         }
-                        else
+                        //else
                         {
                             /*
                             double treshold = 1;

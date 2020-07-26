@@ -513,6 +513,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Phoenix_vmt2", "-vmt2", "-vmt2", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_vmt3", "-vmt3", "-vmt3", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_vmr", "-vmr", "-vmr", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_nvmem", "-nvmem", "-nvmem", "0", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>
                 {
