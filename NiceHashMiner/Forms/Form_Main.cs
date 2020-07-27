@@ -1135,7 +1135,7 @@ namespace NiceHashMiner
                 MakeRestart(periodRestartProgram);
             }
         }
-        public void MakeRestart(int periodRestartProgram)
+        public static void MakeRestart(int periodRestartProgram)
         {
             try
             {

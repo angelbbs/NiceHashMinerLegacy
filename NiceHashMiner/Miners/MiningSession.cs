@@ -484,7 +484,8 @@ namespace NiceHashMiner.Miners
             Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
             if (smaTmp == 0)
             {
-                Helpers.ConsolePrint(Tag, "SMA Error");
+                Helpers.ConsolePrint(Tag, "SMA Error. Restart program");
+                Form_Main.MakeRestart(0);
                 return;
             }
             // check if should mine
