@@ -163,6 +163,7 @@ namespace NiceHashMiner.Switching
                         {
                             _currentSma[algo].Paying = newSma[algo];
                         }
+                        
                     }
                 }
                 catch (Exception e)

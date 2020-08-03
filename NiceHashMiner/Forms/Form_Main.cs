@@ -1701,7 +1701,16 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfigFileCommit();
             try
             {
-                if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
+                DirectoryInfo dirInfo = new DirectoryInfo("TEMP\\");
+
+                foreach (FileInfo file in dirInfo.GetFiles())
+                {
+                    if (file.Name.Contains("pkt") || file.Name.Contains("dmp") || file.Name.Contains("github.test"))
+                    {
+                        file.Delete();
+                    }
+                }
+                //if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
             } catch (Exception ex)
             {
 

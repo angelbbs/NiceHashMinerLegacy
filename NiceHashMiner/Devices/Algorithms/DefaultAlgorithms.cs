@@ -194,7 +194,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.X16RV2, "X16Rv2"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.GrinCuckarood29, "GrinCuckarood29"),
-                            //new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW"),
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Lyra2REv3, "Lyra2REv3")
                         }
             },

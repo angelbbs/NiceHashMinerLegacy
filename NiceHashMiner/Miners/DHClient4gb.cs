@@ -201,6 +201,7 @@ namespace NiceHashMiner.Miners
                         Helpers.ConsolePrint("DaggerHashimoto4GB", "Disconnected. Need reconnect");
                     checkConnection = true;
                         Thread.Sleep(1000);
+                    Form_Main.MakeRestart(0);
                 }
 
                 Thread.Sleep(5 * 1000);
