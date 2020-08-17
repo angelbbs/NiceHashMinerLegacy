@@ -241,7 +241,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 CommandLine = "--coin MWC-C31 " +
-                " --pool grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner --pass x " +
+                " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x " +
                 "--pool grincuckatoo31.usa.nicehash.com:3372 --user " +username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
@@ -260,8 +260,8 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                CommandLine = "--coin MWC-C29D " + 
-                " --pool eu.frostypool.com:3516 --user angelbbs.lolMiner --pass x" + 
+                CommandLine = "--coin MWC-C29D " +
+                " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x" + 
                 " --pool grincuckaroo29.usa.nicehash.com:3372 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,

@@ -108,6 +108,7 @@ namespace NiceHashMiner.Miners
         }
         public static void StopConnection()
         {
+            checkConnection = false;
             Helpers.ConsolePrint("DaggerHashimoto3GB", "StopConnection()");
             try
             {
@@ -161,6 +162,7 @@ namespace NiceHashMiner.Miners
                 {
                     tcpClient.Close();
                     tcpClient.Dispose();
+                    tcpClient = null;
                 }
                 var iep = new IPEndPoint(addrl, 3353);
 
@@ -202,9 +204,11 @@ namespace NiceHashMiner.Miners
                 } else
                 {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Need reconnect");
+                    StopConnection();
                     checkConnection = true;
-                        Thread.Sleep(1000);
-                    Form_Main.MakeRestart(0);
+                        Thread.Sleep(5000);
+                    StartConnection();
+                    //Form_Main.MakeRestart(0);
                 }
 
                 Thread.Sleep(5 * 1000);

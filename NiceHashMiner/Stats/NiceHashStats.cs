@@ -1325,7 +1325,10 @@ namespace NiceHashMiner.Stats
                     if (rigs == 1 & device.AlgorithmID > 0)
                     {
                         speedsJson.Add(new JArray(device.AlgorithmID, 0)); //  номер алгоритма, хешрейт
-                       // speedsJson.Add(new JArray(52, 10000000)); //  номер алгоритма, хешрейт
+                    }
+                    if (rigs == 1 & (device.AlgorithmID == -9) || device.AlgorithmID == -12) //dagger 3-4
+                    {
+                        speedsJson.Add(new JArray(20, 0)); //  номер алгоритма, хешрейт
                     }
                     //    }
                     //}

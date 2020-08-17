@@ -70,64 +70,18 @@ namespace NiceHashMiner.Miners
             var pers = "";
             var nicehashstratum = "";
             string username = GetUsername(btcAddress, worker);
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
-            {
-                algo = "equihash1445";
-                algoName = "zhash";
-                pers = " -pers auto ";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
-            {
-                algo = "BeamHashI";
-                algoName = "beam";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
-            {
-                algo = "BeamHashII";
-                algoName = "beamv2";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
-            {
-                algo = "cuckaroo29";
-                algoName = "grincuckaroo29";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
-            {
-                algo = "cuckarood29";
-                algoName = "grincuckarood29";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
-            {
-                //algo = "grin29";
-                algo = "cuckaroom29";
-                algoName = "cuckaroom";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
-            {
-                algo = "grin31";
-                algoName = "grincuckatoo31";
-            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
-                algo = "grin32";
+                algo = "cuckatoo32";
                 algoName = "grincuckatoo32";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
-            {
-                algo = "aeternity";
-                algoName = "cuckoocycle";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
-            {
-                algo = "ethash";
-                algoName = "daggerhashimoto";
-                nicehashstratum = " --proto stratum";
-            }
+
             var port = url.Split(':')[1];
             url = url.Replace("stratum+tcp://", "");
             var ret = GetDevicesCommandString() + pers + " -api 127.0.0.1:" + ApiPort
-                + " -no-runtime-info -uri " + algo + "://" + username + "@" + url
-                + " -uri2 " + "://" + username + "@" + algoName + "." + myServers[1, 0] + ".nicehash.com:" + port;
+                + " -no-runtime-info -uri " + algo + "://" + username + "@" + url + ","
+                + algo + "://" + username + "@" + algoName + "." + myServers[1, 0] + ".nicehash.com:" + port;
             return ret;
         }
         protected override string GetDevicesCommandString()
@@ -294,98 +248,23 @@ namespace NiceHashMiner.Miners
             if (File.Exists("miners\\bminer\\" + suff + GetLogFileName()))
                 File.Delete("miners\\bminer\\" + suff + GetLogFileName());
 
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
-
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
-            {
-                ret = GetDevicesCommandString() + " -pers auto -api 127.0.0.1:" + ApiPort
-                    + " -no-runtime-info -uri equihash1445://1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC@equihash144.eu.mine.zpool.ca"
-                    + "-uri equihash1445://GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.Bminer@btg.2miners.com";
-            }
-            Helpers.ConsolePrint("BENCHMARK-suff:", suff);
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
-            {
-                //_benchmarkTimeWait = 180;
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashI" +
-                //  " --server beam-eu.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 2222 --ssl 1 " +
-                //  " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 12222 --ssl 1 " +
-                " --server beam.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3370 --ssl 0" +
-                " --server beam.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3370 --ssl 0" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
-            {
-                //_benchmarkTimeWait = 180;
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo BeamHashII" +
-                " --server beam-eu.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 2222 --ssl 1 " +
-                " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 12222 --ssl 1 " +
-                " --server beamv2.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3378 --ssl 0" +
-                " --server beamv2.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3378 --ssl 0" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
-            {
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckaroo29" +
-                //" --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
-                " --server grincuckaroo29.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3371 --ssl 0" +
-                " --server grincuckaroo29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3371 --ssl 0" +
-                GetDevicesCommandString();
-            }
-            //start miner.exe--algo cuckarood29 --server eu.frostypool.com:3516--user angelbbs
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
-            {
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckarood29" +
-                " --server eu.frostypool.com:3516 --user angelbbs --ssl 0" +
-                " --server grincuckarood29.eu:3377" + nhsuff + ".nicehash.com --user " + username + " --ssl 0" +
-                " --server grincuckarood29.hk:3377" + nhsuff + ".nicehash.com --user " + username + " --ssl 0" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
-            {
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckaroom29" +
-                " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
-                " --server grincuckarood29.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
-                " --server grincuckarood29.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3377 --ssl 0" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
-            {
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin31" +
-                " --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6667 --ssl 0" +
-                " --server grincuckatoo31.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3372 --ssl 0" +
-                " --server grincuckatoo31.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3372 --ssl 0" +
-                GetDevicesCommandString();
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin32" +
-                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA." + worker + " --pass x  --ssl 0" +
-                " --server grincuckatoo32.eu" + nhsuff + ".nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
-                " --server grincuckatoo32.hk" + nhsuff + ".nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
-            {
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo aeternity" +
-                " --server ae.f2pool.com --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + worker + " --pass x --port 7898 --ssl 0" +
-                " --server ae.2miners.com --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + worker + " --pass x --port 4040 --ssl 0" +
-                " --server cuckoocycle.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3376 --ssl 0" +
-                " --server cuckoocycle.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3376 --ssl 0" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
-            {
-                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() + " --color 0 --pec --algo ethash" +
-                " --server eu1.ethermine.org --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Bminer --pass x --port 4444 --ssl 0 --proto proxy" +
-                " --server daggerhashimoto.eu" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3353 --ssl 0 --proto stratum" +
-                " --server daggerhashimoto.hk" + nhsuff + ".nicehash.com --user " + username + " --pass x --port 3353 --ssl 0 --proto stratum" +
-                GetDevicesCommandString();
-            }
+                /*
+                             var port = url.Split(':')[1];
+            url = url.Replace("stratum+tcp://", "");
+            var ret = GetDevicesCommandString() + pers + " -api 127.0.0.1:" + ApiPort
+                + " -no-runtime-info -uri " + algo + "://" + username + "@" + url
+                + " -uri2 " + "://" + username + "@" + algoName + "." + myServers[1, 0] + ".nicehash.com:" + port;
+                 */
 
+                ret = " -no-runtime-info -logfile " + suff + GetLogFileName() +
+                " -uri cuckatoo32://2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.bminer@grin.2miners.com:3030," +
+                "cuckatoo32://" + username + "@grincuckatoo32.eu.nicehash.com:3383" +
+                GetDevicesCommandString();
+            }
+           
             return ret;
         }
 

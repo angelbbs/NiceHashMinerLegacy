@@ -263,25 +263,30 @@ namespace NiceHashMiner.Miners
             //start miner.exe --algo cuckarood29 --server eu.frostypool.com:3516 --user angelbbs
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://eu.frostypool.com:3516 -u angelbbs -o1 stratum+tcp://grincuckarood29." + myServers[0, 0] + ".nicehash.com:3377 -u1 " + username +
-                    $" -o2 stratum+tcp://grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 -u2 " + username +
+                /*
+                cmd = $"-a {AlgoName} -o stratum+tcp://mwc.2miners.com:1111 -u 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.nbminer -o1 stratum+tcp://grincuckarood29." + myServers[0, 0] + ".nicehash.com:3377 -u1 " + username +
+    $" -o2 stratum+tcp://grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 -u2 " + username +
+    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+    */
+                cmd = $"-a {AlgoName} -o stratum+tcp://grincuckarood29." + myServers[0, 0] + ".nicehash.com:3377 -u " + username +
+                    $" -o1 stratum+tcp://grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 -u1 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://grin.sparkpool.com:6667 -u angelbbs@mail.ru.{worker} -o1 stratum+tcp://grincuckatoo31." + myServers[0, 0] + ".nicehash.com:3372 -u1 " + username +
+                cmd = $"-a {AlgoName} -o stratum+tcp://mwc.2miners.com:1111 -u 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.nbminer -o1 stratum+tcp://grincuckatoo31." + myServers[0, 0] + ".nicehash.com:3372 -u1 " + username +
                     $" -o2 stratum+tcp://grincuckatoo31." + myServers[1, 0] + ".nicehash.com:3372 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://grin.2miners.com:3030 -u 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.{worker} -o1 stratum+tcp://grincuckatoo32." + myServers[0, 0] + ".nicehash.com:3383 -u1 " + username +
+                cmd = $"-a {AlgoName} -o stratum+tcp://grin.2miners.com:3030 -u 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.nbminer -o1 stratum+tcp://grincuckatoo32." + myServers[0, 0] + ".nicehash.com:3383 -u1 " + username +
                     $" -o2 stratum+tcp://grincuckatoo32." + myServers[1, 0] + ".nicehash.com:3383 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://ae.2miners.com:4040 -u ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.{worker} -o1 stratum+tcp://cuckoocycle." + myServers[0, 0] + ".nicehash.com:3376 -u1 " + username +
+                cmd = $"-a {AlgoName} -o stratum+tcp://ae.2miners.com:4040 -u ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.nbminer -o1 stratum+tcp://cuckoocycle." + myServers[0, 0] + ".nicehash.com:3376 -u1 " + username +
                     $" -o2 stratum+tcp://cuckoocycle." + myServers[1, 0] + ".nicehash.com:3376 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }

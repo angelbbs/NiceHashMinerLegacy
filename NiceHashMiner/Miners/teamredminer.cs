@@ -189,7 +189,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
             {
                 CommandLine = sc + " -a cuckarood29_grin" + apiBind +
-                " --url stratum+tcp://eu.frostypool.com:3516" + " --user angelbbs/teamred" + " -p x " +
+                " --url stratum+tcp://mwc.2miners.com:1111" + " --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.teamred" + " -p x " +
                 " -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))

@@ -453,6 +453,8 @@ namespace NiceHashMiner.Miners
             var stringBuilderFull = new StringBuilder();
             stringBuilderFull.AppendLine("Current device profits:");
             double smaTmp = 0;
+            Form_Main.DaggerHashimoto4GBEnabled = false;
+            Form_Main.DaggerHashimoto3GBEnabled = false;
             foreach (var device in _miningDevices)
             {
                 var stringBuilderDevice = new StringBuilder();
@@ -460,6 +462,14 @@ namespace NiceHashMiner.Miners
                 
                 foreach (var algo in device.Algorithms)
                 {
+                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB)
+                    {
+                        Form_Main.DaggerHashimoto3GBEnabled = true;
+                    }
+                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB)
+                    {
+                        Form_Main.DaggerHashimoto4GBEnabled = true;
+                    }
                     smaTmp = smaTmp + algo.CurNhmSmaDataVal;
                     stringBuilderDevice.AppendLine(
                         $"\tPROFIT = {Math.Round(algo.CurrentProfit, 10).ToString(DoubleFormat).PadRight(17)}" +

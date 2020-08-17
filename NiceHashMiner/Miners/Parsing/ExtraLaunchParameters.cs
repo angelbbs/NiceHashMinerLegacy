@@ -345,7 +345,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("ClaymoreCryptoNight_fanmin", "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
                 }
                 ),
-            
+
             new MinerOptionPackage(
                 MinerType.XmrigAMD,
                 new List<MinerOption>() {
@@ -546,7 +546,7 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.Nanominer,
                 new List<MinerOption>
                 {
-                    new MinerOption("Nanominer_memTweak", "memTweak = ", "-1", MinerOptionFlagType.SingleParam),
+                    new MinerOption("Nanominer_memTweak", "memTweak = ", "1", MinerOptionFlagType.SingleParam),
                 },
                 new List<MinerOption>()
             ),
@@ -577,6 +577,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Bminer_max-temperature", "-max-temperature", "-max-temperature", "85", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("Bminer_share-check", "-share-check", "-share-check", "900", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("Bminer_gpucheck", "-gpucheck", "-gpucheck", "90", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("Bminer_intensity", "-intensity", "-intensity", "-1", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>()
             ),

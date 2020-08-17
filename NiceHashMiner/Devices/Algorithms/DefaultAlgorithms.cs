@@ -59,7 +59,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.Nanominer, AlgorithmType.DaggerHashimoto, "")
                     {
-                        ExtraLaunchParameters = "memTweak = 0 "
+                        ExtraLaunchParameters = ""
                     }
                 }
             },
@@ -405,6 +405,13 @@ namespace NiceHashMiner.Devices.Algorithms
                             */
                         }
             },
+            /*
+            { MinerBaseType.Bminer,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
+                        }
+            },
+            */
             {
             MinerBaseType.EWBF,
                 new List<Algorithm>
@@ -439,11 +446,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "")
                     {
                     },
-                    
+
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroo29BFC, "")
                     {
                     },
-                    
+
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

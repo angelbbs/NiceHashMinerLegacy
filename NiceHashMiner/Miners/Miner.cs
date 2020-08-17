@@ -192,7 +192,36 @@ namespace NiceHashMiner
         {
             // free the port
             MinersApiPortsManager.RemovePort(ApiPort);
+            DHClientsStop();
             Helpers.ConsolePrint(MinerTag(), "MINER DESTROYED");
+        }
+
+        private void DHClientsStop()
+        {
+            if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
+            {
+                try
+                {
+                    if (!DHClient.checkConnection)//
+                    {
+                        if (Form_Main.DaggerHashimoto3GB && Form_Main.DaggerHashimoto3GBEnabled)
+                        {
+                            new Task(() => DHClient.StopConnection()).Start();
+                        }
+                    }
+                    if (!DHClient4gb.checkConnection)//
+                    {
+                        if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
+                        {
+                            new Task(() => DHClient4gb.StopConnection()).Start();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("DHClientsStop error: ", e.ToString());
+                }
+            }
         }
 
         protected void SetWorkingDirAndProgName(string fullPath)
@@ -310,7 +339,7 @@ namespace NiceHashMiner
                         {
                             if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                             {
-                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo, 
+                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo,
                                     (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
                             }
                             process.Kill();
@@ -433,7 +462,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Shutting down miner");
             }
-            
+
             if (ProcessHandle != null)
             {
                 ProcessHandle._bRunning = false;
@@ -446,16 +475,16 @@ namespace NiceHashMiner
                 {
                     try
                     {
-                        if (!DHClient.checkConnection)//
+                       // if (!DHClient.checkConnection)//
                         {
-                            if (Form_Main.DaggerHashimoto3GB)
+                            if (Form_Main.DaggerHashimoto3GB && Form_Main.DaggerHashimoto3GBEnabled)
                             {
                                 new Task(() => DHClient.StopConnection()).Start();
                             }
                         }
-                        if (!DHClient4gb.checkConnection)//
+                       // if (!DHClient4gb.checkConnection)//
                         {
-                            if (Form_Main.DaggerHashimoto4GB)
+                            if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
                             {
                                 new Task(() => DHClient4gb.StopConnection()).Start();
                             }
@@ -661,11 +690,29 @@ namespace NiceHashMiner
                 }
             };
 
-
+            if (this is Bminer)
+            {
+                //Directory.SetCurrentDirectory("miners/bminer");
+                //BenchmarkProcessPath = "cmd /C \\cd /d miners/bminer && bminer.exe ";
+                //benchmarkHandle.StartInfo.FileName = "bminer.exe";
+                BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
+                Helpers.ConsolePrint(MinerTag(), "Starting miner: " + BenchmarkProcessPath);
+                Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
+                //Helpers.ConsolePrint(MinerTag(), "WorkingDirectory: " + WorkingDirectory);
+                //WorkingDirectory = "";
+                benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
+            }
+            else
+            {
                 BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-
+            }
+            /*
+            BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
+                Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
+                benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
+                */
             // set sys variables
             if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
             {
@@ -1278,7 +1325,7 @@ namespace NiceHashMiner
                     IsRunningNew = true;
                     //  NiceHashStats.SetDeviceStatus("MINING");
                     NiceHashStats._deviceUpdateTimer.Stop();
-                    
+
                     NiceHashStats._deviceUpdateTimer.Start();
                     string strPlatform = "";
                     foreach (var pair in MiningSetup.MiningPairs)
@@ -1304,7 +1351,7 @@ namespace NiceHashMiner
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
 
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
-                        if (Form_Main.DaggerHashimoto3GB && algo != -9)
+                        if (Form_Main.DaggerHashimoto3GB && algo != -9 && Form_Main.DaggerHashimoto3GBEnabled)
                         {
                             if (DHClient.serverStream == null)
                             {
@@ -1322,7 +1369,7 @@ namespace NiceHashMiner
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
                         }
-                        if (Form_Main.DaggerHashimoto4GB && algo != -12)
+                        if (Form_Main.DaggerHashimoto4GB && algo != -12 && Form_Main.DaggerHashimoto4GBEnabled)
                         {
                             if (DHClient4gb.serverStream == null)
                             {
@@ -1332,7 +1379,7 @@ namespace NiceHashMiner
                             }
                             else
                             {
-                                Helpers.ConsolePrint("DaggerHashimoto4GB", "DHClient5gb.serverStream not null");
+                                Helpers.ConsolePrint("DaggerHashimoto4GB", "DHClient4gb.serverStream not null");
                                 DHClient4gb.serverStream.Close();
                                 DHClient4gb.serverStream.Dispose();
                                 DHClient4gb.checkConnection = true;
@@ -1424,11 +1471,11 @@ namespace NiceHashMiner
                 {
                     try
                     {
-                        if (Form_Main.DaggerHashimoto3GB)
+                        if (Form_Main.DaggerHashimoto3GB && Form_Main.DaggerHashimoto3GBEnabled)
                         {
                             new Task(() => DHClient.StopConnection()).Start();
                         }
-                        if (Form_Main.DaggerHashimoto4GB)
+                        if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
                         {
                             new Task(() => DHClient4gb.StopConnection()).Start();
                         }
@@ -1459,31 +1506,15 @@ namespace NiceHashMiner
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             if (ProcessHandle != null)
             {
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -9)
+                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
                 {
                     try
                     {
-                        if (Form_Main.DaggerHashimoto3GB)
+                        if (Form_Main.DaggerHashimoto3GB && Form_Main.DaggerHashimoto3GBEnabled)
                         {
                             new Task(() => DHClient.StopConnection()).Start();
                         }
-                        if (Form_Main.DaggerHashimoto4GB)
-                        {
-                            new Task(() => DHClient4gb.StopConnection()).Start();
-                        }
-                        Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("Restart error: ", e.ToString());
-                    }
-                }
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && algo != -12)
-                {
-                    try
-                    {
-                        if (Form_Main.DaggerHashimoto4GB)
+                        if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
                         {
                             new Task(() => DHClient4gb.StopConnection()).Start();
                         }

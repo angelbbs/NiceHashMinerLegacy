@@ -46,15 +46,18 @@ namespace NiceHashMiner.Miners
         private string GetStartCommand(string url, string btcAdress, string worker)
         {
             var platform = "";
+            var param = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     platform = "nvidia";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
                 }
                 else
                 {
                     platform = "amd";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
                 }
             }
 
@@ -68,8 +71,7 @@ namespace NiceHashMiner.Miners
             var cfgFile =
                String.Format("webPort = {0}", ApiPort) + "\n"
                + String.Format("protocol = stratum\n")
-               + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).TrimStart(' ') + (char)10
-               + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).TrimStart(' ') + (char)10
+               + String.Format(param) + "\n"
                + String.Format("[Ethash]\n")
                + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                + String.Format("wallet = {0}", btcAdress) + "\n"

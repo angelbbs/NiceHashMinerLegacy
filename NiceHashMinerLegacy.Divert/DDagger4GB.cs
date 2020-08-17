@@ -185,7 +185,7 @@ nextCycle:
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch < MaxEpoch) //win 10
+                                            if (epoch <= MaxEpoch) //win 10 352
                                             {
                                                 Divert.Dagger4GBEpochCount = 0;
                                             }

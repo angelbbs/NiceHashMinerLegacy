@@ -107,9 +107,9 @@ namespace NiceHashMiner.Switching
             if (SmaCheckTimerOnElapsedRun) return;
             SmaCheckTimerOnElapsedRun = true;
             Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed");
-            NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-            NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-            NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
+            //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
+            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
 
             Randomize();
             // Will be null if manually called (in tests)

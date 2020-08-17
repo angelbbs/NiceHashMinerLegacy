@@ -501,6 +501,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
+            Form_Main.DaggerHashimoto4GBEnabled = false;
             if (IsInBenchmark)
             {
                 //listViewAlgorithms.CheckBoxes = false;
@@ -526,6 +527,14 @@ namespace NiceHashMiner.Forms.Components
                     e.Item.Checked = false;
                     MessageBox.Show("WinDivert driver error. DaggerHashimoto4GB disabled",
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                if (Form_Main.DaggerHashimoto3GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB && algo.Enabled)
+                {
+                    Form_Main.DaggerHashimoto3GBEnabled = true;
+                }
+                if (Form_Main.DaggerHashimoto4GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB && algo.Enabled)
+                {
+                    Form_Main.DaggerHashimoto4GBEnabled = true;
                 }
                 /*
                 if (ConfigManager.GeneralConfig.DivertRun)

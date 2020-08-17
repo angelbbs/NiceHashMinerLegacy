@@ -102,7 +102,9 @@ namespace NiceHashMiner
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
         public static bool DaggerHashimoto3GB = false;
+        public static bool DaggerHashimoto3GBEnabled = false;
         public static bool DaggerHashimoto4GB = false;
+        public static bool DaggerHashimoto4GBEnabled = false;
         public static string GoogleIP = "";
         public static string GoogleAnswer = "";
         public static bool GoogleAvailable = false;
@@ -2248,6 +2250,8 @@ namespace NiceHashMiner
         {
             if (ConfigManager.GeneralConfig.DivertRun)
             {
+                //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+                //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
                 if (Divert.DaggerHashimoto3GBForce)
                 {
                     if (Divert.DaggerHashimoto3GBProfit && DHClient.checkConnection)
@@ -2271,12 +2275,22 @@ namespace NiceHashMiner
                     }
                     //DHClient.needStart = false;
                 }
+                else
+                {
+                    if (Divert.Dagger3GBEpochCount == 0)
+                    {
+                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
+                    }
+                }
             }
         }
         private void CheckDagger4GB()
         {
             if (ConfigManager.GeneralConfig.DivertRun)
             {
+                //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+                //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
                 if (Divert.DaggerHashimoto4GBForce)
                 {
                     if (Divert.DaggerHashimoto4GBProfit && DHClient4gb.checkConnection)
@@ -2301,6 +2315,14 @@ namespace NiceHashMiner
                         //new Task(() => DHClient.StartConnection()).Start();
                     }
                     //DHClient.needStart = false;
+                }
+                else
+                {
+                    if (Divert.Dagger4GBEpochCount == 0)
+                    {
+                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
+                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
+                    }
                 }
             }
         }

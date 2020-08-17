@@ -464,7 +464,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo cuckarood29" +
-                " --server eu.frostypool.com:3516 --user angelbbs --ssl 0" +
+                " --server  mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.gminer --ssl 0" +
                 " --server grincuckarood29.eu:3377" + nhsuff + ".nicehash.com --user " + username + " --ssl 0" +
                 " --server grincuckarood29.hk:3377" + nhsuff + ".nicehash.com --user " + username + " --ssl 0" +
                 GetDevicesCommandString();
@@ -480,8 +480,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 ret = " --logfile " + suff + GetLogFileName() + " --color 0 --pec --algo grin31" +
-                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
-                " --server grin.sparkpool.com:6667 --user angelbbs@mail.ru/" + worker + " --pass x --ssl 0" +
+                " --server mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.gminer --pass x  --ssl 0" +
                 " --server grincuckatoo31.eu.nicehash.com:3372 --user " + username + " --pass x --ssl 0" +
                 " --server grincuckatoo31.hk.nicehash.com:3372 --user " + username + " --pass x --ssl 0" +
                 GetDevicesCommandString();
