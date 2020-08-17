@@ -148,7 +148,7 @@ namespace NiceHashMiner.Miners
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             Thread.Sleep(200);
-
+            /*
             foreach (var process in Process.GetProcessesByName("PhoenixMiner"))
             {
                 try {
@@ -158,6 +158,7 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
             }
+            */
         }
 
 
