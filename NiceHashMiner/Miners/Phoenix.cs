@@ -146,10 +146,11 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch)
         {
-            try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
-            Thread.Sleep(200);
-            Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
-            Thread.Sleep(200);
+            //try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
+            //Thread.Sleep(200);
+            //Helpers.ConsolePrint("Phoenix", "Stop");
+             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
+            // Thread.Sleep(200);
             /*
             foreach (var process in Process.GetProcessesByName("PhoenixMiner"))
             {

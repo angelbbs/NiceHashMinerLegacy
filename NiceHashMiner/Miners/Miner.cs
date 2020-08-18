@@ -497,6 +497,8 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint("Stop_cpu_ccminer_sgminer_nheqminer error: ", e.ToString());
                     }
                 }
+                try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
+                Thread.Sleep(200);
                 KillProcessAndChildren(pid);
 
                 if (ProcessHandle != null)

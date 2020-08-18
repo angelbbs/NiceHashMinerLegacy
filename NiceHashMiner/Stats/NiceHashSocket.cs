@@ -98,7 +98,8 @@ namespace NiceHashMiner.Stats
                     _webSocket.Close();
                 }
                 Helpers.ConsolePrint("SOCKET", "Connecting");
-            //    _webSocket.OnOpen += Login;
+                //    _webSocket.OnOpen += Login;
+                _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                 _webSocket.OnOpen += ConnectCallback;
                 _webSocket.OnMessage += ReceiveCallbackNew;
                 _webSocket.OnError += ErrorCallbackNew;
@@ -290,6 +291,7 @@ namespace NiceHashMiner.Stats
                 }
 
                 //_webSocket.OnOpen += Login;
+                _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                 _webSocket.OnOpen += ConnectCallback;
                 _webSocket.OnMessage += ReceiveCallback;
                 _webSocket.OnError += ErrorCallback;
@@ -320,6 +322,7 @@ namespace NiceHashMiner.Stats
                 {
                     _webSocket.Close();
                 }
+                _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                 _webSocket.OnOpen += ConnectCallback;
                 _webSocket.OnMessage += ReceiveCallback;
                 _webSocket.OnError += ErrorCallback;
@@ -374,7 +377,7 @@ namespace NiceHashMiner.Stats
                 if (Configs.ConfigManager.GeneralConfig.NewPlatform)
                 {
                     protocol = 3;
-                    version = "NHML/3.0.0.9"; //
+                    version = "NHML/3.0.4.2"; //
                     if (ConfigManager.GeneralConfig.Send_actual_version_info)
                     {
                         version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
@@ -399,7 +402,7 @@ namespace NiceHashMiner.Stats
                 } else
                 {
                     protocol = 1;
-                    version = "NHML/3.0.0.9";
+                    version = "NHML/3.0.4.2";
 
 
                     var login = new NicehashLogin
