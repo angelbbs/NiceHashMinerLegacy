@@ -47,6 +47,7 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.trex,
                 new List<MinerOption>() {
                     new MinerOption("Intensity", "-i", "--intensity", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_mt", "--mt", "--mt", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.SingleParam)
                 },
