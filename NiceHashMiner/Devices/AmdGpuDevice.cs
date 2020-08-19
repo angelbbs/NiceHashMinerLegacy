@@ -31,6 +31,7 @@ namespace NiceHashMiner.Devices
         public string Codename => _openClSubset._CL_DEVICE_NAME;
 
         public string NewUUID { get; internal set; }
+        public string Manufacturer { get; set; }
 
         public int AdapterIndex; // init this with the ADL
 

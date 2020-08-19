@@ -418,6 +418,78 @@ namespace NiceHashMiner.Devices
                 {
                     QueryVideoControllers(AvaliableVideoControllers, true);
                 }
+                public static string GetManufacturer(string man)
+                {
+                    switch (man)
+                    {
+                        case "1002":
+                            man = "AMD";
+                            break;
+                        case "1043":
+                            man = "ASUSTeK";
+                            break;
+                        case "196D":
+                            man = "Club 3D";
+                            break;
+                        case "1092":
+                            man = "Diamond Multimedia";
+                            break;
+                        case "18BC":
+                            man = "GeCube";
+                            break;
+                        case "1458":
+                            man = "Gigabyte";
+                            break;
+                        case "17AF":
+                            man = "HIS";
+                            break;
+                        case "16F3":
+                            man = "Jetway";
+                            break;
+                        case "1462":
+                            man = "MSI";
+                            break;
+                        case "1DA2":
+                            man = "Sapphire";
+                            break;
+                        case "148C":
+                            man = "PowerColor";
+                            break;
+                        case "1682":
+                            man = "XFX";
+                            break;
+                        case "107D":
+                            man = "Leadtek";
+                            break;
+                        case "10B0":
+                            man = "Gainward";
+                            break;
+                        case "10DE":
+                            man = "NVIDIA";
+                            break;
+                        case "154B":
+                            man = "PNY";
+                            break;
+                        case "19DA":
+                            man = "Zotac";
+                            break;
+                        case "19F1":
+                            man = "BFG";
+                            break;
+                        case "1B4C":
+                            man = "KFA2";
+                            break;
+                        case "3842":
+                            man = "EVGA";
+                            break;
+                        case "7377":
+                            man = "Colorful";
+                            break;
+                        default:
+                            break;
+                    }
+                    return man;
+                }
 
                 private static void QueryVideoControllers(List<VideoControllerData> avaliableVideoControllers,
                     bool warningsEnabled)
@@ -432,10 +504,12 @@ namespace NiceHashMiner.Devices
                     {
                         //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
                         ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
+                        var man = SafeGetProperty(manObj, "PNPDeviceID").Split('&')[2];
                         var vidController = new VideoControllerData
                         {
                             Name = SafeGetProperty(manObj, "Name"),
                             Description = SafeGetProperty(manObj, "Description"),
+                            Manufacturer = man.Substring(man.Length - 4),
                             PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
                             DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
                             Status = SafeGetProperty(manObj, "Status"),
@@ -445,6 +519,7 @@ namespace NiceHashMiner.Devices
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
                         stringBuilder.AppendLine($"\t\tName {vidController.Name}");
                         stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
+                        stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)}");
                         stringBuilder.AppendLine($"\t\tPNPDeviceID {vidController.PnpDeviceID}");
                         stringBuilder.AppendLine($"\t\tDriverVersion {vidController.DriverVersion}");
                         stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");

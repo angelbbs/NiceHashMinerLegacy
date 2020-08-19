@@ -240,7 +240,6 @@ namespace NiceHashMiner.Devices.Querying
                             AdapterIndex = _busIdInfos[busID].Adl1Index,
                             DeviceGlobalMemory = gpuRAM
                         };
-
                         //PNPDeviceID PCI\VEN_1002&DEV_6811&SUBSYS_2015174B&REV_81\4&14486AD3&0&00E0       
                         //UUID: PCI_VEN_1002&DEV_6811_14486AD3
                         //*************
