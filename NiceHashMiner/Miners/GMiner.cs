@@ -249,11 +249,11 @@ namespace NiceHashMiner.Miners
             {
                 if (ConfigManager.GeneralConfig.GMinerIDByBusEnumeration)
                 {
-                    id = mPair.Device.IDByBus + variables.mPairDeviceIDByBus_GMiner;
+                    id = mPair.Device.IDByBus;
                     Helpers.ConsolePrint("GMinerIndexing", "IDByBus: " + id);
                 } else
                 {
-                    id = mPair.Device.ID + variables.mPairDeviceIDByBus_GMiner;
+                    id = mPair.Device.ID;
                     Helpers.ConsolePrint("GMinerIndexing", "ID: " + id);
                 }
                 /*

@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Linq;
 
 namespace NiceHashMiner.Miners
 {
@@ -143,6 +144,21 @@ namespace NiceHashMiner.Miners
             ProcessHandle = _Start();
         }
 
+        protected override string GetDevicesCommandString()
+        {
+            var deviceStringCommand = "";
+            var ids = new List<string>();
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+            int id;
+            foreach (var mPair in sortedMinerPairs)
+            {
+                id = mPair.Device.IDByBus;
+                ids.Add(id.ToString());
+            }
+
+            deviceStringCommand += string.Join(",", ids);
+            return deviceStringCommand;
+        }
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 

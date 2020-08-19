@@ -158,7 +158,9 @@ namespace NiceHashMiner.Forms.Components
             {
                 if (ConfigManager.GeneralConfig.Additional_info_about_device && computeDevice.DeviceType != DeviceType.CPU)
                 {
-                    addInfo = " (" + computeDevice.GpuRam / 1073741824 + " GB)" + " (" + computeDevice.Uuid.Substring(computeDevice.Uuid.Length - 4, 4).ToUpper() + ")";
+                    addInfo = " (" + computeDevice.GpuRam / 1073741824 + " GB)" + 
+                        " (" + computeDevice.Uuid.Substring(computeDevice.Uuid.Length - 4, 4).ToUpper() + ")" + 
+                        " (BusID: " + computeDevice.BusID.ToString() + ")";
                 }
                 var lvi = new ListViewItem
                 {

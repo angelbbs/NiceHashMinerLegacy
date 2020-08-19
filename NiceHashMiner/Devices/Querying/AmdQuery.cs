@@ -27,6 +27,7 @@ namespace NiceHashMiner.Devices.Querying
         private readonly Dictionary<string, bool> _driverOld = new Dictionary<string, bool>();
         private readonly Dictionary<string, bool> _noNeoscryptLyra2 = new Dictionary<string, bool>();
         private readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
+        //private readonly SortedDictionary<int, BusIdInfo> _busIdInfos = new SortedDictionary<int, BusIdInfo>();
         private readonly List<string> _amdDeviceUuid = new List<string>();
 
         private static string SafeGetProperty(ManagementBaseObject mbo, string key)
@@ -219,6 +220,7 @@ namespace NiceHashMiner.Devices.Querying
             stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
             try
             {
+                //foreach (var dev in amdDevices.OrderBy(i => i.AMD_BUS_ID))
                 foreach (var dev in amdDevices)
                 {
                     ComputeDeviceManager.Available.HasAmd = true;

@@ -497,8 +497,11 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint("Stop_cpu_ccminer_sgminer_nheqminer error: ", e.ToString());
                     }
                 }
-                try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
-                Thread.Sleep(200);
+                if (MinerTag().Contains("Phoenix"))
+                {
+                    try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
+                    Thread.Sleep(500);
+                }
                 KillProcessAndChildren(pid);
 
                 if (ProcessHandle != null)

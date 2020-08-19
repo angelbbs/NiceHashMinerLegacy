@@ -415,7 +415,7 @@ namespace NiceHashMiner.Miners
             Helpers.ConsolePrint("lolMinerIndexing", $"Found {amdDeviceCount} AMD devices");
             //   var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.ID.ToString()).ToList();
             //var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.DeviceType).ToList();
-            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.Uuid).ToList();
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             foreach (var mPair in sortedMinerPairs)
             {
                 // var id = mPair.Device.ID;
@@ -427,11 +427,14 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("lolMinerIndexing", "lol: " + mPair.Device.lolMinerBusID);
                 
                 //список карт выводить --devices 999
-                double id = mPair.Device.lolMinerBusID;
+                double id = mPair.Device.IDByBus;
+                //double id = mPair.Device.lolMinerBusID;
+                /*
                 if (ConfigManager.GeneralConfig.lolMinerOldEnumeration)
                 {
                     id = mPair.Device.ID;
                 }
+                */
                 if (id < 0)
                 {
                     Helpers.ConsolePrint("lolMinerIndexing", "ID too low: " + id + " skipping device");

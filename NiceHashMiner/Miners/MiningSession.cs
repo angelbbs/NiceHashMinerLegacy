@@ -244,11 +244,16 @@ namespace NiceHashMiner.Miners
         {
             if (_runningGroupMiners != null)
             {
-                foreach (var groupMiner in _runningGroupMiners.Values)
+                try
                 {
-                    groupMiner.End();
+                    foreach (var groupMiner in _runningGroupMiners.Values)
+                    {
+                        groupMiner.End();
+                    }
+                } catch (Exception e)
+                {
+                    Helpers.ConsolePrint("StopAllMiners", e.ToString());
                 }
-
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
 

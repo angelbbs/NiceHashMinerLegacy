@@ -412,6 +412,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         }
             },
             */
+            /*
             {
             MinerBaseType.EWBF,
                 new List<Algorithm>
@@ -419,6 +420,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash, "ZHash")
                 }
             },
+            */
             {
             MinerBaseType.GMiner,
                 new List<Algorithm>
