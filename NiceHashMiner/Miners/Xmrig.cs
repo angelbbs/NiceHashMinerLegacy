@@ -355,7 +355,9 @@ namespace NiceHashMiner.Miners
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
-
+            int repeats = 0;
+            double summspeed = 0.0d;
+            BenchmarkAlgorithm.BenchmarkSpeed = 0;
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             if (File.Exists("bin\\xmrig\\" + platform_prefix + GetLogFileName()))
@@ -419,6 +421,20 @@ namespace NiceHashMiner.Miners
 
                     // wait a second reduce CPU load
                     Thread.Sleep(1000);
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        repeats++;
+                        if (repeats > 5)//skip first 5s
+                        {
+                            summspeed += ad.Result.Speed;
+                        }
+                        if (repeats >= 20)
+                        {
+                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 2);//15s speed
+                            break;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -427,6 +443,7 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
+                /*
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
                 // find latest log file
                 string latestLogFile = "";
@@ -447,7 +464,7 @@ namespace NiceHashMiner.Miners
                 //    Helpers.ConsolePrint("BENCHMARK-routineAlt", lines.ToString());
                     ProcessBenchLinesAlternate(lines);
                 }
-
+                */
                 BenchmarkThreadRoutineFinish();
             }
         }

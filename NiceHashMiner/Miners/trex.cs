@@ -160,7 +160,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 commandLine = "--algo x16rv2" +
-                 " -o stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
+                 " -o stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " + 
                  " -o " + url + " -u " + username + " -p x " +
                  " -o " + alg + ".hk" + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                  " -o " + alg + ".jp" + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
@@ -173,7 +173,7 @@ namespace NiceHashMiner.Miners
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
                                   DeviceType.NVIDIA) +
-                                  " -l " + GetLogFileName() +
+                                  " -l " + GetLogFileName() + " -b 127.0.0.1:" + ApiPort +
                               " -d ";
                 commandLine += GetDevicesCommandString();
                 //_benchmarkTimeWait = 180;
@@ -192,7 +192,7 @@ namespace NiceHashMiner.Miners
                  " -o " + alg + ".eu" + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
-                                  DeviceType.NVIDIA) + " --no-watchdog -l " + GetLogFileName() +
+                                  DeviceType.NVIDIA) + " --no-watchdog -l " + GetLogFileName() + " -b 127.0.0.1:" + ApiPort +
                               " -d ";
                 commandLine += GetDevicesCommandString();
                 _benchmarkTimeWait = time * 3;//more time for mtp
@@ -206,10 +206,10 @@ namespace NiceHashMiner.Miners
                  " -o " + alg + ".eu" + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
-                                  DeviceType.NVIDIA) + " --no-watchdog -l " + GetLogFileName() +
+                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog -l " + GetLogFileName() + " -b 127.0.0.1:" + ApiPort +
                               " -d ";
                 commandLine += GetDevicesCommandString();
-                _benchmarkTimeWait = time + 60;
+                _benchmarkTimeWait = time;
             }
             return commandLine;
         }
@@ -223,29 +223,15 @@ namespace NiceHashMiner.Miners
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
-
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            int repeats = 0;
+            double summspeed = 0.0d;
+            //Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
             {
-                /*
-                try
-                {
-                    var latestLogFile = GetLogFileName();
-                    var dirInfo = new DirectoryInfo(WorkingDirectory);
-                    if (File.Exists(WorkingDirectory + latestLogFile))
-                    {
-                        var loglines = File.ReadAllLines(WorkingDirectory + latestLogFile);
-                    }
-                }
-                catch
-                {
-                    Helpers.ConsolePrint("BENCHMARK", "Benchmark skip");
-                    return;
-                }
-                */
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
-                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
+                //Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string) commandLine);
                 BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
@@ -313,6 +299,20 @@ namespace NiceHashMiner.Miners
 
                     // wait a second reduce CPU load
                     Thread.Sleep(1000);
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        repeats++;
+                        if (repeats > 5)//skip first 5s
+                        {
+                            summspeed += ad.Result.Speed;
+                        }
+                        if (repeats >= 20)
+                        {
+                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 2);//15s speed
+                            break;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -321,9 +321,8 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-
-                BenchmarkAlgorithm.BenchmarkSpeed = 0;
-
+                BenchmarkSignalFinnished = true;
+                /*
                 var latestLogFile = GetLogFileName();
                 var dirInfo = new DirectoryInfo(WorkingDirectory);
 
@@ -394,16 +393,17 @@ namespace NiceHashMiner.Miners
                                     {
                                         BenchmarkAlgorithm.BenchmarkSpeed = speed / shares;
                                         BenchmarkSignalFinnished = true;
-                                    }
+                                    } 
 
                                 }
                             }
                             
                         }
+                        
                     }
-
+                    
                 }
-
+                */
                 BenchmarkThreadRoutineFinish();
             }
         }
@@ -452,9 +452,6 @@ namespace NiceHashMiner.Miners
                 var parse = resp.Substring(st + 5, e - st - 5).Trim();
                 double tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
                 ad.Speed = tmp * 1000;
-
-
-
 
                 if (ad.Speed == 0)
                 {

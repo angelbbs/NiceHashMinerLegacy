@@ -122,6 +122,7 @@ namespace NiceHashMiner
         public static TimeSpan Uptime;
         private static bool CheckVideoControllersCount = false;
         public static bool AntivirusInstalled = false;
+        public static int smaCount = 0;
 
         public Form_Main()
         {
@@ -1241,6 +1242,11 @@ namespace NiceHashMiner
         }
         private async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
+            if (!_deviceStatusTimer.Enabled & buttonStartMining.Enabled)
+            {
+                Helpers.ConsolePrint("ERROR", "_deviceStatusTimer fail");
+                restartProgram();
+            }
             await MinersManager.MinerStatsCheck();
         }
 
@@ -1999,9 +2005,6 @@ namespace NiceHashMiner
                 _autostartTimer.Stop();
                 _autostartTimer = null;
             }
-
-            if (true)
-            {
                 NiceHashStats._deviceUpdateTimer.Stop();
                 new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
                 NiceHashStats._deviceUpdateTimer.Start();
@@ -2042,7 +2045,7 @@ namespace NiceHashMiner
                     //NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
-            }
+            
             /*
             else
             {
@@ -2154,6 +2157,7 @@ namespace NiceHashMiner
             textBoxWorkerName.Enabled = false;
             comboBoxLocation.Enabled = false;
             //buttonBenchmark.Enabled = false;
+            Form_Main.smaCount = 0;
             buttonStartMining.Enabled = false;
             //buttonSettings.Enabled = false;
             devicesListViewEnableControl1.IsMining = true;
@@ -2349,45 +2353,54 @@ namespace NiceHashMiner
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
-            if (ConfigManager.GeneralConfig.ShowUptime)
+            try
             {
-                var timenow = DateTime.Now;
-                Uptime = timenow.Subtract(StartTime);
-                label_Uptime.Visible = true;
-                label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
-            }
-            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-            {
-                if (Form_Main.thisComputer != null)
+                if (ConfigManager.GeneralConfig.ShowUptime)
                 {
-                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    var timenow = DateTime.Now;
+                    Uptime = timenow.Subtract(StartTime);
+                    label_Uptime.Visible = true;
+                    label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
+                }
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    if (Form_Main.thisComputer != null)
                     {
-                        if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
-                            hardware.Update();
+                            if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                            {
+                                hardware.Update();
+                            }
                         }
                     }
                 }
-            }
-            if (DeviceStatusTimer_FirstTick)
-            {
-                CheckDagger3GB();
-                CheckDagger4GB();
-            }
-            DeviceStatusTimer_FirstTick = true;
-            ExchangeCallback();
-            BalanceCallback();
-            UpdateGlobalRate();
+                if (DeviceStatusTimer_FirstTick)
+                {
+                    CheckDagger3GB();
+                    CheckDagger4GB();
+                }
+                DeviceStatusTimer_FirstTick = true;
+                ExchangeCallback();
+                BalanceCallback();
+                UpdateGlobalRate();
 
-            if (needRestart)
-            {
-                needRestart = false;
-                restartProgram();
+                if (needRestart)
+                {
+                    needRestart = false;
+                    restartProgram();
+                }
+                devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices);
             }
-            devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices);
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("DeviceStatusTimer_Tick error: ", ex.ToString());
+                Thread.Sleep(500);
+            }
         }
         private void StopMining()
         {
+            Form_Main.smaCount = 0;
             AlgorithmSwitchingManager.Stop();
             NiceHashStats._deviceUpdateTimer.Stop();
             new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();

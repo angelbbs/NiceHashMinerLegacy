@@ -57,7 +57,7 @@ namespace NiceHashMiner.Devices
         public readonly bool IsEtherumCapale;
         public static readonly ulong Memory3Gb = 3221225472;
         public static readonly ulong Memory4Gb = 4293918720;
-
+        public static double HashRate = 0.0d;
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
         public string Codename { get; protected set; }

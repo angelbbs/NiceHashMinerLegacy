@@ -90,7 +90,7 @@ namespace NiceHashMiner
         protected bool IsKillAllUsedMinerProcs { get; set; }
 
 
-        public  bool IsRunning { get; protected set; }
+        public bool IsRunning { get; protected set; }
         public static bool IsRunningNew { get; protected set; }
         protected string Path { get; private set; }
 
@@ -173,7 +173,7 @@ namespace NiceHashMiner
             WorkingDirectory = "";
 
             IsRunning = false;
-            IsRunningNew = false;
+            IsRunningNew = IsRunning;
             PreviousTotalMH = 0.0;
 
             LastCommandLine = "";
@@ -387,7 +387,7 @@ namespace NiceHashMiner
             _Stop(willswitch);
             PreviousTotalMH = 0.0;
             IsRunning = false;
-            IsRunningNew = false;
+            IsRunningNew = IsRunning;
             Ethlargement.Stop();
             RunCMDBeforeOrAfterMining(false);
             NiceHashStats._deviceUpdateTimer.Stop();
@@ -1327,7 +1327,7 @@ namespace NiceHashMiner
                 if (P.Start())
                 {
                     IsRunning = true;
-                    IsRunningNew = true;
+                    IsRunningNew = IsRunning;
                     //  NiceHashStats.SetDeviceStatus("MINING");
                     NiceHashStats._deviceUpdateTimer.Stop();
 

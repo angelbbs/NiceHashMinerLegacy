@@ -70,8 +70,6 @@ namespace NiceHashMiner.Miners
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
 
-        private static Action nonStaticMethodAction;
-        
         public List<int> ActiveDeviceIndexes
         {
             get
@@ -497,6 +495,7 @@ namespace NiceHashMiner.Miners
                 stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
             Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
+            Form_Main.smaCount = 0;
             if (smaTmp == 0)
             {
                 Helpers.ConsolePrint(Tag, "SMA Error. Restart program");
@@ -779,6 +778,7 @@ namespace NiceHashMiner.Miners
                     //NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
                     if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
+                        ComputeDevice.HashRate = ad.Speed;
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
                         NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
                         double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;

@@ -166,7 +166,7 @@ nextCycle:
                                 {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 PacketPayloadData = PacketPayloadData.Replace("}{", "}" + (char)10 + "{");
-                                Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
+                                //Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
 
                                 if (PacketPayloadData.Contains("mining.notify") && PacketPayloadData.Contains("method"))//job
                                 {
@@ -175,7 +175,7 @@ nextCycle:
                                     //Helpers.ConsolePrint("WinDivertSharp", "amount: " + amount.ToString());
                                     for (var i = 0; i <= amount; i++)
                                     {
-                                        Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadData.Split((char)10)[i]: " + PacketPayloadData.Split((char)10)[i]);
+                                        //Helpers.ConsolePrint("WinDivertSharp", "PacketPayloadData.Split((char)10)[i]: " + PacketPayloadData.Split((char)10)[i]);
                                         if (PacketPayloadData.Split((char)10)[i].Contains("mining.notify"))
                                         //if (PacketPayloadData.Split('}')[i].Contains("mining.notify"))
                                         {

@@ -140,6 +140,7 @@ namespace NiceHashMiner.Miners
             //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
             //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
             checkConnection = true;
+            Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool()");
             new Task(() => ConnectToPool()).Start();
         }
 
@@ -156,7 +157,7 @@ namespace NiceHashMiner.Miners
                 //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[r1, 0] + ".nicehash.com"));
                 IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[0, 0] + ".nicehash.com"));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
-
+Reconnect:
                 serverStream = null;
                 if (tcpClient != null)
                 {
@@ -204,10 +205,15 @@ namespace NiceHashMiner.Miners
                 } else
                 {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Need reconnect");
-                    StopConnection();
+                    //StopConnection();
+                    //checkConnection = false;
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 1");
+                    Thread.Sleep(5000);
+                    goto Reconnect;
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 2");
                     checkConnection = true;
-                        Thread.Sleep(5000);
                     StartConnection();
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 3");
                     //Form_Main.MakeRestart(0);
                 }
 
@@ -287,125 +293,130 @@ namespace NiceHashMiner.Miners
                 int serverBytes;
                 //if (serverStream.CanRead)
 
-                    try
+                try
+                {
+                    if (tcpClient.Connected)
                     {
-                        if (tcpClient.Connected)
+                        for (int i = 0; i < 1024; i++)
                         {
-                            for (int i = 0; i < 1024; i++)
-                            {
-                                messagePool[i] = 0;
-                            }
+                            messagePool[i] = 0;
+                        }
 
-                            serverBytes = serverStream.Read(messagePool, 0, 8192);
+                        serverBytes = serverStream.Read(messagePool, 0, 8192);
 
-                            bool clientZero = true;
-                            for (int i = 0; i < 2048; i++)
-                            {
-                                if (messagePool[i] != (char)0)
-                                {
-                                    clientZero = false;
-                                }
-                            }
-                            if (clientZero)
-                            {
-                                //   continue;
-                                Helpers.ConsolePrint("DaggerHashimoto3GB", "clientZero");
-                                break;
-                            }
-                            /*
-                            if (SavePackets)
-                            {
-                                if (!Directory.Exists("temp//3GB")) Directory.CreateDirectory("temp//3GB");
-                                np++;
-                                string cpacket0 = "";
-                                for (int i = 0; i < 2048; i++)
-                                {
-                                    cpacket0 = cpacket0 + (char)messagePool[i];
-                                }
-                                //if (cpacket0.Length > 60)
-                                File.WriteAllText("temp//3GB//" + np.ToString() + "server.pkt", cpacket0);
-                            }
-                            */
-                            // jsonrpc
-                            var poolData = Encoding.ASCII.GetString(messagePool);
-
-                            var poolAnswer = poolData.Split((char)0)[0];
-                            //Helpers.ConsolePrint("DaggerHashimoto3GB", "<- " + poolAnswer);
-
-                            if (poolAnswer.Contains("mining.notify") && !poolAnswer.Contains("method"))
-                            {
-                                serverStream.Write(authorizeBytes, 0, authorizeBytes.Length);
-                            }
-
-                            if (poolAnswer.Contains("mining.notify") && poolAnswer.Contains("method"))//job
-                            {
-                                poolAnswer = poolAnswer.Replace("}{", "}" + (char)10 + "{");
-                                int amount = poolAnswer.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", amount.ToString());
-                                for (var i = 0; i <= amount; i++)
-                                {
-                                    if (poolAnswer.Split((char)10)[i].Contains("mining.notify"))
-                                    {
-                                        dynamic json = JsonConvert.DeserializeObject(poolAnswer.Split((char)10)[i]);
-                                        string seedhash = json.@params[1];
-                                        epoch = Epoch(seedhash);
-                                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Epoch = " + epoch.ToString());
-                                        bool previousEpoch = Epoch3GB;
-                                        if (epoch < 235) //win 7
-                                        {
-                                            Divert.DaggerHashimoto3GBProfit = true;
-                                            Divert.DaggerHashimoto3GBForce = true;
-                                            Thread.Sleep(2000);//wait for stop
-
-                                        } else
-                                        {
-
-                                        }
-
-                                    }
-                                }
-
-                            }
-
-                            if (poolAnswer.Contains("set_difficulty"))
-                            {
-                                //serverStream.Write(subscribeBytes, 0, subscribeBytes.Length);
-                            }
-
-                            if (poolAnswer.Contains("false"))
-                            {
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
-                                //break;
-                            }
-
-                            if (poolAnswer.Contains("client.reconnect"))
-                            {
-                                Helpers.ConsolePrint("DaggerHashimoto3GB", "Reconnect receive");
-                                waitReconnect = 600;
-                                Divert.Dagger3GBEpochCount = 999;
-                            }
-
-                            if (poolAnswer.Contains("Invalid JSON request"))
-                            {
-                                //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
-                                break;
-                            }
-
-                            byte[] bytes = Encoding.ASCII.GetBytes(poolAnswer);
-                            //serverStream.Write(bytes, 0, bytes.Length);
-                            bytes = null;
-
-                        } else
+                        bool clientZero = true;
+                        for (int i = 0; i < 2048; i++)
                         {
-                            Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected");
+                            if (messagePool[i] != (char)0)
+                            {
+                                clientZero = false;
+                            }
+                        }
+                        if (clientZero)
+                        {
+                            //   continue;
+                            Helpers.ConsolePrint("DaggerHashimoto3GB", "clientZero");
                             break;
                         }
+                        /*
+                        if (SavePackets)
+                        {
+                            if (!Directory.Exists("temp//3GB")) Directory.CreateDirectory("temp//3GB");
+                            np++;
+                            string cpacket0 = "";
+                            for (int i = 0; i < 2048; i++)
+                            {
+                                cpacket0 = cpacket0 + (char)messagePool[i];
+                            }
+                            //if (cpacket0.Length > 60)
+                            File.WriteAllText("temp//3GB//" + np.ToString() + "server.pkt", cpacket0);
+                        }
+                        */
+                        // jsonrpc
+                        var poolData = Encoding.ASCII.GetString(messagePool);
+
+                        var poolAnswer = poolData.Split((char)0)[0];
+                        //Helpers.ConsolePrint("DaggerHashimoto3GB", "<- " + poolAnswer);
+
+                        if (poolAnswer.Contains("mining.notify") && !poolAnswer.Contains("method"))
+                        {
+                            serverStream.Write(authorizeBytes, 0, authorizeBytes.Length);
+                        }
+
+                        if (poolAnswer.Contains("mining.notify") && poolAnswer.Contains("method"))//job
+                        {
+                            poolAnswer = poolAnswer.Replace("}{", "}" + (char)10 + "{");
+                            int amount = poolAnswer.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
+                            //Helpers.ConsolePrint("DaggerHashimoto3GB", amount.ToString());
+                            for (var i = 0; i <= amount; i++)
+                            {
+                                if (poolAnswer.Split((char)10)[i].Contains("mining.notify"))
+                                {
+                                    dynamic json = JsonConvert.DeserializeObject(poolAnswer.Split((char)10)[i]);
+                                    string seedhash = json.@params[1];
+                                    epoch = Epoch(seedhash);
+                                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Epoch = " + epoch.ToString());
+                                    bool previousEpoch = Epoch3GB;
+                                    if (epoch < 235) //win 7
+                                    {
+                                        Divert.DaggerHashimoto3GBProfit = true;
+                                        Divert.DaggerHashimoto3GBForce = true;
+                                        Thread.Sleep(2000);//wait for stop
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                        if (poolAnswer.Contains("set_difficulty"))
+                        {
+                            //serverStream.Write(subscribeBytes, 0, subscribeBytes.Length);
+                        }
+
+                        if (poolAnswer.Contains("false"))
+                        {
+                            //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
+                            //break;
+                        }
+
+                        if (poolAnswer.Contains("client.reconnect"))
+                        {
+                            Helpers.ConsolePrint("DaggerHashimoto3GB", "Reconnect receive");
+                            waitReconnect = 600;
+                            Divert.Dagger3GBEpochCount = 999;
+                            tcpClient.Close();
+                            tcpClient.Dispose();
+                            tcpClient = null;
+                        }
+
+                        if (poolAnswer.Contains("Invalid JSON request"))
+                        {
+                            //Helpers.ConsolePrint("DaggerHashimoto3GB", tosend);
+                            break;
+                        }
+
+                        byte[] bytes = Encoding.ASCII.GetBytes(poolAnswer);
+                        //serverStream.Write(bytes, 0, bytes.Length);
+                        bytes = null;
+
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected ex: " + ex.Message);
+                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected");
                         break;
                     }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected ex: " + ex.Message);
+                    break;
+                }
 
             }
         }

@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using System.Net.Sockets;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Stats
 {
@@ -222,7 +223,20 @@ namespace NiceHashMiner.Stats
 
                                 SetAlgorithmRates(message.data);
                                 GetSmaAPI();
-
+                                if (Miner.IsRunningNew)
+                                {
+                                    Form_Main.smaCount++;
+                                } else
+                                {
+                                    Form_Main.smaCount = 0;
+                                }
+                                //Helpers.ConsolePrint("Form_Main.smaCount", Form_Main.smaCount.ToString());
+                                if (Form_Main.smaCount > 3)
+                                {
+                                    Helpers.ConsolePrint("SocketOnOnDataReceived", "PROFIT calc Error. Restart program");
+                                    Form_Main.MakeRestart(0);
+                                    return;
+                                }
                                 // if (!GetSmaAPI())
                                 // {
                                 // }
@@ -1219,6 +1233,7 @@ namespace NiceHashMiner.Stats
             string type;
             string b64Web;
             string nuuid = "";
+            double HashRate = 0.0d;
 
             if (state != null)
                 rigStatus = state.ToString();
@@ -1322,13 +1337,15 @@ namespace NiceHashMiner.Stats
                     }
                     else
                     */
+                    //HashRate = Math.Round(ComputeDevice.HashRate / (devices.Count - 1), 2);
+                    HashRate = 0;
                     if (rigs == 1 & device.AlgorithmID > 0)
                     {
-                        speedsJson.Add(new JArray(device.AlgorithmID, 0)); //  номер алгоритма, хешрейт
+                        speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
                     }
                     if (rigs == 1 & (device.AlgorithmID == -9) || device.AlgorithmID == -12) //dagger 3-4
                     {
-                        speedsJson.Add(new JArray(20, 0)); //  номер алгоритма, хешрейт
+                        speedsJson.Add(new JArray(20, HashRate)); //  номер алгоритма, хешрейт
                     }
                     //    }
                     //}

@@ -21,6 +21,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.Linq;
+using System.Diagnostics;
 
 namespace NiceHashMiner.Miners
 {
@@ -106,7 +107,7 @@ namespace NiceHashMiner.Miners
                 port = "3380";
 
                 return $" --algorithm randomx --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username}"
-                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark --nicehash false --extended-log --log-file {GetLogFileName()} {extras}";
+                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()} {extras}";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Handshake))
             {
@@ -197,6 +198,122 @@ namespace NiceHashMiner.Miners
         protected override void BenchmarkThreadRoutine(object CommandLine)
         {
             BenchmarkThreadRoutineAlternate(CommandLine, _benchmarkTimeWait);
+        }
+        protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait)
+        {
+            CleanOldLogs();
+
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+            int repeats = 0;
+            double summspeed = 0.0d;
+            BenchmarkAlgorithm.BenchmarkSpeed = 0;
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
+            try
+            {
+                Helpers.ConsolePrint("BENCHMARK-routineAlt", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
+                var benchmarkTimer = new Stopwatch();
+                benchmarkTimer.Reset();
+                benchmarkTimer.Start();
+                //BenchmarkThreadRoutineStartSettup();
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                var keepRunning = true;
+                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
+                {
+                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
+                    // terminate process situations
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 2)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null)
+                    {
+                        var imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        KillProspectorClaymoreMinerBase(imageName);
+                        if (BenchmarkSignalTimedout)
+                        {
+                            throw new Exception("Benchmark timedout");
+                        }
+
+                        if (BenchmarkException != null)
+                        {
+                            throw BenchmarkException;
+                        }
+
+                        if (BenchmarkSignalQuit)
+                        {
+                            throw new Exception("Termined by user request");
+                        }
+
+                        if (BenchmarkSignalFinnished)
+                        {
+                            break;
+                        }
+
+                        keepRunning = false;
+                        break;
+                    }
+
+                    // wait a second reduce CPU load
+                    Thread.Sleep(1000);
+                    var ad = GetSummaryAsync();
+
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        Helpers.ConsolePrint(MinerTag(), ad.Result.Speed.ToString());
+                        repeats++;
+                        if (repeats > 5)//skip first 5s
+                        {
+                            summspeed += ad.Result.Speed;
+                        }
+                        if (repeats >= 20)
+                        {
+                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 1);//15s speed
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BenchmarkThreadRoutineCatch(ex);
+            }
+            finally
+            {
+                /*
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+                // find latest log file
+                string latestLogFile = "";
+                var dirInfo = new DirectoryInfo(WorkingDirectory);
+                foreach (var file in dirInfo.GetFiles(GetLogFileName()))
+                {
+                    latestLogFile = file.Name;
+                    break;
+                }
+
+                BenchmarkHandle?.WaitForExit(10000);
+                // read file log
+                if (File.Exists(WorkingDirectory + latestLogFile))
+                {
+                    var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                    ProcessBenchLinesAlternate(lines);
+                }
+                */
+                BenchmarkThreadRoutineFinish();
+            }
         }
 
         protected override void ProcessBenchLinesAlternate(string[] lines)
