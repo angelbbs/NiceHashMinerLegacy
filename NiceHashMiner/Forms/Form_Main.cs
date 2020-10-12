@@ -710,7 +710,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
 
             new Task(() => CheckUpdates()).Start();
-            //new Task(() => ResetProtocols()).Start();
+            new Task(() => ResetProtocols()).Start();
             new Task(() => FlushCache()).Start();
             if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {
@@ -1858,8 +1858,7 @@ namespace NiceHashMiner
 
         private void ButtonStopMining_Click(object sender, EventArgs e)
         {
-            Divert.checkConnection3GB = false;
-            Divert.checkConnection4GB = false;
+            DHClient.checkConnection = false;
             firstRun = true;
             _isManuallyStarted = false;
             //AlgorithmSwitchingManager._smaCheckTimer.Enabled = false;
@@ -2259,7 +2258,7 @@ namespace NiceHashMiner
                 //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
                 if (Divert.DaggerHashimoto3GBForce)
                 {
-                    if (Divert.DaggerHashimoto3GBProfit && Divert.checkConnection3GB)
+                    if (Divert.DaggerHashimoto3GBProfit && DHClient.checkConnection)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON");
                         NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
@@ -2267,15 +2266,15 @@ namespace NiceHashMiner
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                         Divert.Dagger3GBEpochCount = 0;
                         Divert.DaggerHashimoto3GBForce = false;
-                        Divert.checkConnection3GB = false;
+                        DHClient.checkConnection = false;
                     }
-                    if (Divert.Dagger3GBEpochCount > 1 && !Divert.checkConnection3GB)
+                    if (Divert.Dagger3GBEpochCount > 1 && !DHClient.checkConnection)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                         Divert.DaggerHashimoto3GBForce = false;
-                        Divert.checkConnection3GB = true;
+                        DHClient.checkConnection = true;
                         //new Task(() => DHClient.StartConnection()).Start();
                     }
                     //DHClient.needStart = false;
@@ -2298,7 +2297,7 @@ namespace NiceHashMiner
                 //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
                 if (Divert.DaggerHashimoto4GBForce)
                 {
-                    if (Divert.DaggerHashimoto4GBProfit && Divert.checkConnection4GB)
+                    if (Divert.DaggerHashimoto4GBProfit && DHClient4gb.checkConnection)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto4GB", "Force switch ON");
                         NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
@@ -2306,17 +2305,17 @@ namespace NiceHashMiner
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                         Divert.Dagger4GBEpochCount = 0;
                         Divert.DaggerHashimoto4GBForce = false;
-                        Divert.checkConnection4GB = false;
+                        DHClient4gb.checkConnection = false;
                         //DHClient.needStart = false;
                         //new Task(() => DHClient.StopConnection()).Start();
                     }
-                    if (Divert.Dagger4GBEpochCount > 1 && !Divert.checkConnection4GB)
+                    if (Divert.Dagger4GBEpochCount > 1 && !DHClient4gb.checkConnection)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto4GB", "Force switch OFF");
                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, 0.0d);
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                         Divert.DaggerHashimoto4GBForce = false;
-                        Divert.checkConnection4GB = true;
+                        DHClient4gb.checkConnection = true;
                         //new Task(() => DHClient.StartConnection()).Start();
                     }
                     //DHClient.needStart = false;

@@ -25,7 +25,7 @@ namespace NiceHashMiner.Miners
         internal static TcpClient tcpClient = null;
         public static NetworkStream serverStream = null;
         private static List<TcpClient> tcpClientList = new List<TcpClient>();
-        
+        public static bool checkConnection = false;
         public static bool needStart = false;
         private static int waitReconnect = 300;
         private static int ci = 0;
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Miners
             while (true)
             {
                 Thread.Sleep(1000);
-                if (!Divert.checkConnection3GB) break;
+                if (!checkConnection) break;
 
                 if (tcpClient == null)
                 {
@@ -93,7 +93,7 @@ namespace NiceHashMiner.Miners
 
                 if (!tcpClient.Connected)
                 {
-                    if (Divert.checkConnection3GB)
+                    if (checkConnection)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Reconnect wait: " + waitReconnect.ToString() + " sec");
                         Thread.Sleep(1000 * waitReconnect);
@@ -108,7 +108,7 @@ namespace NiceHashMiner.Miners
         }
         public static void StopConnection()
         {
-            Divert.checkConnection3GB = false;
+            checkConnection = false;
             Helpers.ConsolePrint("DaggerHashimoto3GB", "StopConnection()");
             try
             {
@@ -139,7 +139,7 @@ namespace NiceHashMiner.Miners
 
             //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
             //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-            Divert.checkConnection3GB = true;
+            checkConnection = true;
             Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool()");
             new Task(() => ConnectToPool()).Start();
         }
@@ -149,7 +149,7 @@ namespace NiceHashMiner.Miners
             //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
             //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
             LingerOption lingerOption = new LingerOption(true, 0);
-            while (Divert.checkConnection3GB)
+            while (checkConnection)
             {
                 string[,] myServers = Form_Main.myServers;
                 Random r = new Random();
@@ -197,7 +197,7 @@ Reconnect:
                     ReadFromServer(serverStream, tcpClient);
                 }
 
-                if (!Divert.checkConnection3GB)
+                if (!checkConnection)
                 {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Stop connecting");
                         Thread.Sleep(1000);
@@ -211,7 +211,7 @@ Reconnect:
                     Thread.Sleep(5000);
                     goto Reconnect;
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 2");
-                    Divert.checkConnection3GB = true;
+                    checkConnection = true;
                     StartConnection();
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 3");
                     //Form_Main.MakeRestart(0);
@@ -287,7 +287,7 @@ Reconnect:
                 messagePool[i] = 0;
             }
 
-            while (Divert.checkConnection3GB)
+            while (checkConnection)
             {
                 Thread.Sleep(100);
                 int serverBytes;

@@ -193,18 +193,17 @@ nextCycle:
                                             {
                                                 packet.Dispose();
                                                 Divert.Dagger4GBEpochCount++;
-                                                /*
+
                                                 if (Divert.Dagger4GBEpochCount > 0)//1й пакет убираем
                                                 {
                                                     //packet.Dispose();
                                                 }
-                                                */
-                                                if (Divert.Dagger4GBEpochCount > 0)
+                                                if (Divert.Dagger4GBEpochCount > 1)
                                                 {
-                                                    Divert.DaggerHashimoto3GBForce = true;
-                                                    Divert.Dagger3GBEpochCount = 999;
-                                                    Divert.checkConnection3GB = false;
-                                                    //Divert.checkConnection4GB = false;
+                                                    
+                                                    Divert.DaggerHashimoto4GBForce = true;
+                                                    Divert.DaggerHashimoto4GBProfit = false;
+                                                    Divert.Dagger4GBEpochCount = 999;
                                                 }
                                                 goto nextCycle;
                                             }

@@ -118,6 +118,7 @@ namespace NiceHashMinerLegacy.Divert
             IntPtr recvEvent = IntPtr.Zero;
             bool modified = false;
             bool result;
+
             do
             {
                 try
@@ -192,22 +193,17 @@ nextCycle:
                                             {
                                                 packet.Dispose();
                                                 Divert.Dagger3GBEpochCount++;
-                                                /*
-                                                if (Divert.Dagger3GBEpochCount > 0 && Divert.firstRun3GB == false)//1й пакет убираем
+
+                                                if (Divert.Dagger3GBEpochCount > 0)//1й пакет убираем
                                                 {
+                                                    //packet.Dispose();
+                                                }
+                                                if (Divert.Dagger3GBEpochCount > 1)
+                                                {
+                                                    
                                                     Divert.DaggerHashimoto3GBForce = true;
                                                     Divert.DaggerHashimoto3GBProfit = false;
                                                     Divert.Dagger3GBEpochCount = 999;
-                                                    Divert.firstRun3GB = true;
-                                                }
-                                                */
-                                                if (Divert.Dagger3GBEpochCount > 0)
-                                                {
-                                                    Divert.DaggerHashimoto3GBForce = true;
-                                                    Divert.Dagger3GBEpochCount = 999;
-                                                    Divert.checkConnection3GB = false;
-
-                                                    //Divert.checkConnection3GB = false;
                                                 }
                                                 //Divert.Dagger3GBEpochCount = 999;
                                                 goto nextCycle;

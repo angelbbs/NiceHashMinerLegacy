@@ -43,7 +43,7 @@ namespace NiceHashMiner.Miners
         {
             var deviceStringCommand = " ";
 
-            var ids = MiningSetup.MiningPairs.OrderBy(mPair => mPair.Device.ID.ToString()).ToList();
+            var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
             deviceStringCommand += string.Join(",", ids);
 
             return deviceStringCommand;
@@ -85,7 +85,7 @@ namespace NiceHashMiner.Miners
                 + $" -o stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} -u {username}:x "
                 + $" -o stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} -u {username}:x "
                 + $" -o stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} -u {username}:x "
-                + "  --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart(); 
+                + " --opencl-devices=" + GetDevicesCommandString().TrimStart(); 
         }
 
         private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
@@ -121,7 +121,7 @@ namespace NiceHashMiner.Miners
                 port = "3379";
                 return $" --benchmark -a {algo} -o stratum+tcp://x16rv2.eu.mine.zpool.ca:3637 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
                + $" -o stratum+tcp://{algo}.eu{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + " --multiple-instance --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
+               + " --multiple-instance --opencl-devices=" + GetDevicesCommandString().TrimStart();
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
             {
@@ -129,7 +129,7 @@ namespace NiceHashMiner.Miners
                 port = "3366";
                 return $" -a lyra2v3 -o stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
                + $" -o stratum+tcp://{algo}.eu{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + " --multiple-instance --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
+               + " --multiple-instance --opencl-devices=" + GetDevicesCommandString().TrimStart();
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
@@ -137,7 +137,7 @@ namespace NiceHashMiner.Miners
                 port = "3385";
                 return $" -a kawpow -o stratum+tcp://rvn.2miners.com:6060 -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.WildRig -p x {extras} --api-port {ApiPort} "
                + $" -o stratum+tcp://{algo}.eu.nicehash.com:{port} -u {username}:x "
-               + " --multiple-instance --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
+               + " --multiple-instance --opencl-devices=" + GetDevicesCommandString().TrimStart();
             }
             return "oops... strange algo";
         }

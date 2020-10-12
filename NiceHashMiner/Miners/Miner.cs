@@ -202,14 +202,14 @@ namespace NiceHashMiner
             {
                 try
                 {
-                    if (!Divert.checkConnection3GB)//
+                    if (!DHClient.checkConnection)//
                     {
                         if (Form_Main.DaggerHashimoto3GB && Form_Main.DaggerHashimoto3GBEnabled)
                         {
                             new Task(() => DHClient.StopConnection()).Start();
                         }
                     }
-                    if (!Divert.checkConnection4GB)//
+                    if (!DHClient4gb.checkConnection)//
                     {
                         if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
                         {
@@ -1360,7 +1360,7 @@ namespace NiceHashMiner
                         {
                             if (DHClient.serverStream == null)
                             {
-                                Divert.checkConnection3GB = true;
+                                DHClient.checkConnection = true;
                                 Divert.Dagger3GBEpochCount = 999; //
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
@@ -1369,7 +1369,7 @@ namespace NiceHashMiner
                                 Helpers.ConsolePrint("DaggerHashimoto3GB", "DHClient.serverStream not null");
                                 DHClient.serverStream.Close();
                                 DHClient.serverStream.Dispose();
-                                Divert.checkConnection3GB = true;
+                                DHClient.checkConnection = true;
                                 Divert.Dagger3GBEpochCount = 999; //
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
@@ -1378,7 +1378,7 @@ namespace NiceHashMiner
                         {
                             if (DHClient4gb.serverStream == null)
                             {
-                                Divert.checkConnection4GB = true;
+                                DHClient4gb.checkConnection = true;
                                 Divert.Dagger4GBEpochCount = 999; //
                                 new Task(() => DHClient4gb.StartConnection()).Start();
                             }
@@ -1387,7 +1387,7 @@ namespace NiceHashMiner
                                 Helpers.ConsolePrint("DaggerHashimoto4GB", "DHClient4gb.serverStream not null");
                                 DHClient4gb.serverStream.Close();
                                 DHClient4gb.serverStream.Dispose();
-                                Divert.checkConnection4GB = true;
+                                DHClient4gb.checkConnection = true;
                                 Divert.Dagger4GBEpochCount = 999; //
                                 new Task(() => DHClient4gb.StartConnection()).Start();
                             }
@@ -1459,7 +1459,7 @@ namespace NiceHashMiner
 
         protected virtual void Miner_Exited()
         {
-            ScheduleRestart(6000);
+            ScheduleRestart(5000);
         }
 
         protected void ScheduleRestart(int ms)

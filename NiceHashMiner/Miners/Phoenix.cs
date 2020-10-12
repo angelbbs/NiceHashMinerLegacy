@@ -91,11 +91,11 @@ namespace NiceHashMiner.Miners
 
             if (platform == " -amd ")
             {
-                return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
+                return " -rvram -1 -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
                        + $" -pool {url} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
                        ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             }
-            return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
+            return " -rvram -1 -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
        + $" -pool {url} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
        ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
         }
@@ -123,7 +123,7 @@ namespace NiceHashMiner.Miners
 
             Thread.Sleep(200);
 
-            return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
+            return " -rvram -1 -eres 0 -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
                    + $" -pool {url} -wal {btcAdress} -cdmport  127.0.0.1:{ApiPort} -pass x " +
                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
 
