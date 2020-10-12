@@ -544,7 +544,7 @@ namespace NiceHashMiner.Miners
                         {
                             if (Divert.DaggerHashimoto3GBForce)
                             {
-                                if (Divert.DaggerHashimoto3GBProfit && DHClient.checkConnection)
+                                if (Divert.DaggerHashimoto3GBProfit && Divert.checkConnection3GB)
                                 {
                                     //Divert.Dagger3GBEpochCount = 0;
                                     //Divert.DaggerHashimoto3GBForce = false;

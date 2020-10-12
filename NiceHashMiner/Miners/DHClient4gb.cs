@@ -27,7 +27,6 @@ namespace NiceHashMiner.Miners
         internal static TcpClient tcpClient = null;
         public static NetworkStream serverStream = null;
         private static List<TcpClient> tcpClientList = new List<TcpClient>();
-        public static bool checkConnection = false;
         public static bool needStart = false;
         private static int waitReconnect = 300;
         private static int ci = 0;
@@ -82,7 +81,7 @@ namespace NiceHashMiner.Miners
             while (true)
             {
                 Thread.Sleep(1000);
-                if (!checkConnection) break;
+                if (!Divert.checkConnection3GB) break;
 
                 if (tcpClient == null)
                 {
@@ -95,7 +94,7 @@ namespace NiceHashMiner.Miners
 
                 if (!tcpClient.Connected)
                 {
-                    if (checkConnection)
+                    if (Divert.checkConnection3GB)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto4GB", "Reconnect wait: " + waitReconnect.ToString() + " sec");
                         Thread.Sleep(1000 * waitReconnect);
@@ -110,7 +109,7 @@ namespace NiceHashMiner.Miners
         }
         public static void StopConnection()
         {
-            checkConnection = false;
+            Divert.checkConnection3GB = false;
             Helpers.ConsolePrint("DaggerHashimoto4GB", "StopConnection()");
             try
             {
@@ -139,14 +138,14 @@ namespace NiceHashMiner.Miners
             }
             WinDivert.WinDivertClose(DivertHandle);
 
-            checkConnection = true;
+            Divert.checkConnection3GB = true;
             new Task(() => ConnectToPool()).Start();
         }
 
         public static void ConnectToPool()
         {
             LingerOption lingerOption = new LingerOption(true, 0);
-            while (checkConnection)
+            while (Divert.checkConnection3GB)
             {
                 string[,] myServers = Form_Main.myServers;
                 Random r = new Random();
@@ -193,7 +192,7 @@ namespace NiceHashMiner.Miners
                     ReadFromServer(serverStream, tcpClient);
                 }
 
-                if (!checkConnection)
+                if (!Divert.checkConnection3GB)
                 {
                         Helpers.ConsolePrint("DaggerHashimoto4GB", "Disconnected. Stop connecting");
                         Thread.Sleep(1000);
@@ -202,9 +201,9 @@ namespace NiceHashMiner.Miners
                 {
                         Helpers.ConsolePrint("DaggerHashimoto4GB", "Disconnected. Need reconnect");
                     //StopConnection();
-                    checkConnection = false;
+                    Divert.checkConnection3GB = false;
                     Thread.Sleep(5000);
-                    checkConnection = true;
+                    Divert.checkConnection3GB = true;
                     StartConnection();
                     //Form_Main.MakeRestart(0);
                 }
@@ -279,7 +278,7 @@ namespace NiceHashMiner.Miners
                 messagePool[i] = 0;
             }
 
-            while (checkConnection)
+            while (Divert.checkConnection3GB)
             {
                 Thread.Sleep(100);
                 int serverBytes;
