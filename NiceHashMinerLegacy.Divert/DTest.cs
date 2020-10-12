@@ -56,7 +56,7 @@ namespace NiceHashMinerLegacy.Divert
         {
             Divert.Testdivert_running = true;
 
-            DivertIP_Test = Divert.DNStoIP("www.google.com");
+            DivertIP_Test = Divert.DNStoIP("www.google.com")[0];
             //if (DivertIP_Test.Length < 8) DivertIP_Test = Divert.DNStoIP("google.com");
 
             DivertPort_Test = 4100;

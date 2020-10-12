@@ -76,6 +76,8 @@ namespace NiceHashMiner.Miners
                         return "kawpow";
                     case AlgorithmType.Cuckaroo29BFC:
                         return "bfc";
+                    case AlgorithmType.BeamV3:
+                        return "beamv3";
                     default:
                         return "";
                 }
@@ -199,6 +201,12 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://kawpow." + myServers[1, 0] + ".nicehash.com:3385 -u1 " + user +
                     $" -o2 stratum+tcp://kawpow." + myServers[2, 0] + ".nicehash.com:3385 -u2 " + user +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
+            {
+                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://beamv3." + myServers[1, 0] + ".nicehash.com:3387 -u1 " + user +
+                    $" -o2 stratum+tcp://beamv3." + myServers[2, 0] + ".nicehash.com:3387 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
@@ -327,8 +335,12 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://rvn.2miners.com:6060 -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.nbminer -o1 stratum+tcp://handshake." + myServers[0, 0] + ".nicehash.com:3385 -u1 " + username +
-                    $" -o2 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u2 " + username +
+                cmd = $"-a {AlgoName} -o stratum+tcp://rvn.2miners.com:6060 -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.nbminer " +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
+            {
+                cmd = $"-a {AlgoName} -o stratum+ssl://beam.2miners.com:5252 -u 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
@@ -438,6 +450,7 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3 ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
                     MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
                 {
@@ -473,6 +486,17 @@ namespace NiceHashMiner.Miners
                         speed = Double.Parse(parse, CultureInfo.InvariantCulture);
                         goto norm;
                     }
+                    if (outdata.Contains("Total Speed:") && outdata.Contains("sol/s") &&
+                        MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
+                    {
+                        var startStr = "Total Speed: ";
+                        var endStr = "sol/s";
+                        var st = outdata.IndexOf(startStr);
+                        var e = outdata.IndexOf(endStr);
+                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
+                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
+                        goto norm;
+                    }
 
                     norm:
                     if (speed > 0.0d)
@@ -483,10 +507,6 @@ namespace NiceHashMiner.Miners
                     }
 
                     return false;
-                }
-                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
-                {
-
                 }
             }
             catch
