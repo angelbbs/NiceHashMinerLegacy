@@ -122,7 +122,10 @@ namespace NiceHashMiner.Forms
             {
                 Helpers.ConsolePrint("SETTINGS", e.ToString());
             }
-            Form_Settings.ActiveForm.Update();
+            if (Form_Settings.ActiveForm != null)
+            {
+                Form_Settings.ActiveForm.Update();
+            }
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
 
             if (UpdateListView_timer == null)

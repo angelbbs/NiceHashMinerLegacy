@@ -12,7 +12,7 @@ using System.Security.Principal;
 
 namespace MinerLegacyForkFixMonitor
 {
-    internal class Helpers 
+    internal class Helpers
     //internal class Helpers : PInvokeHelpers
     {
         public static readonly bool IsElevated;
@@ -25,7 +25,7 @@ namespace MinerLegacyForkFixMonitor
                 IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
-        
+
         public static void ConsolePrint(string grp, string text)
         {
             // try will prevent an error if something tries to print an invalid character
@@ -130,7 +130,7 @@ namespace MinerLegacyForkFixMonitor
                 {
                     FileName = "nvidiasetp0state.exe",
                     Verb = "runas",
-                    UseShellExecute = true,
+                    UseShellExecute = false,
                     CreateNoWindow = true
                 };
                 var p = Process.Start(psi);
@@ -146,6 +146,6 @@ namespace MinerLegacyForkFixMonitor
             }
         }
 
-        
+
     }
 }

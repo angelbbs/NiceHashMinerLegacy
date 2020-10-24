@@ -1142,9 +1142,12 @@ namespace NiceHashMiner
         {
             try
             {
-                MinersManager.StopAllMiners();
-                if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
-                MessageBoxManager.Unregister();
+                new Task(() => MinersManager.StopAllMiners()).Start();
+                Thread.Sleep(1000);
+                if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled)
+                    new Task(() => Miner._cooldownCheckTimer.Stop()).Start();
+                new Task(() => MessageBoxManager.Unregister()).Start();
+                
                 ConfigManager.GeneralConfigFileCommit();
                 try
                 {

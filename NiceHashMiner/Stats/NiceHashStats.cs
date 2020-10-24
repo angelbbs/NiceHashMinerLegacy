@@ -234,6 +234,7 @@ namespace NiceHashMiner.Stats
                                 if (Form_Main.smaCount > 3)
                                 {
                                     Helpers.ConsolePrint("SocketOnOnDataReceived", "PROFIT calc Error. Restart program");
+                                    Thread.Sleep(1000);
                                     Form_Main.MakeRestart(0);
                                     return;
                                 }

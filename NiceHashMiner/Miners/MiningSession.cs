@@ -772,6 +772,10 @@ namespace NiceHashMiner.Miners
                     if (ad == null)
                     {
                         Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
+                        Thread.Sleep(1500);
+                        m.IsUpdatingApi = true;
+                        ad = await m.GetSummaryAsync();
+                        m.IsUpdatingApi = false;
                     }
 
                     // set rates

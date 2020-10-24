@@ -30,26 +30,27 @@ namespace NiceHashMinerLegacy.Divert
     {
         public static bool logging;
         public static volatile bool Dagger3GBdivert_running = true;
-        public static bool gminer_runningDagger3GB = false;
-        public static int Dagger3GBEpochCount = 0;
-        public static string Dagger3GBJob = "";
-        public static bool Dagger3GBCheckConnection = false;
-        public static bool DaggerHashimoto3GBProfit = false;
-        public static bool DaggerHashimoto3GBForce = false;
-        public static List<string> processIdListDagger3GB = new List<string>();
-        private static IntPtr DDagger3GBHandle = (IntPtr)0;
-
         public static volatile bool Dagger4GBdivert_running = true;
+        public static bool gminer_runningDagger3GB = false;
         public static bool gminer_runningDagger4GB = false;
+        public static int Dagger3GBEpochCount = 0;
         public static int Dagger4GBEpochCount = 0;
+        public static string Dagger3GBJob = "";
         public static string Dagger4GBJob = "";
+        public static bool Dagger3GBCheckConnection = false;
         public static bool Dagger4GBCheckConnection = false;
+        public static bool DaggerHashimoto3GBProfit = false;
         public static bool DaggerHashimoto4GBProfit = false;
+        public static bool DaggerHashimoto3GBForce = false;
         public static bool DaggerHashimoto4GBForce = false;
+        public static bool checkConnection3GB = false;
+        public static bool checkConnection4GB = false;
+        public static bool firstRun3GB = false;
+        public static bool firstRun4GB = false;
+        public static List<string> processIdListDagger3GB = new List<string>();
         public static List<string> processIdListDagger4GB = new List<string>();
+        private static IntPtr DDagger3GBHandle = (IntPtr)0;
         private static IntPtr DDagger4GBHandle = (IntPtr)0;
-
-
         public static bool _SaveDivertPackets;
         public static bool _certInstalled = false;
         public static volatile bool Testdivert_running = true;
@@ -78,7 +79,7 @@ namespace NiceHashMinerLegacy.Divert
               ((value & 0x00000000000000ffL) << 56);
         }
 
-       
+
         public static ushort SwapOrder(ushort val)
         {
             return (ushort)(((val & 0xFF00) >> 8) | ((val & 0x00FF) << 8));
@@ -151,7 +152,7 @@ namespace NiceHashMinerLegacy.Divert
             {
                 packet[i] = buffer[i];
             }
-            // TCP Header 
+            // TCP Header
             for (x = 20; x < packet.Length - 1; x += 2)
             {
                 sumTCP += (ushort)(((packet[x + 1] << 8) & 0xFF00) + (packet[x] & 0xFF));
@@ -214,7 +215,7 @@ namespace NiceHashMinerLegacy.Divert
         }
 
 
-        
+
 
         public static string worker = "";
 
@@ -226,8 +227,11 @@ namespace NiceHashMinerLegacy.Divert
 
         private static System.Text.ASCIIEncoding ASCII;
         private static IPHostEntry heserver;
-        public static string DNStoIP(string DivertIPName)
+        public static string[] DNStoIP(string DivertIPName)
         {
+            //var arrString = new string[3];
+            string[] arrString = { "111.222.212.121", "111.222.212.121", "111.222.212.121" };
+            int i = 0;
             try
             {
                 ASCII = new System.Text.ASCIIEncoding();
@@ -236,16 +240,21 @@ namespace NiceHashMinerLegacy.Divert
                 {
                     if (curAdd.AddressFamily.ToString() == ProtocolFamily.InterNetwork.ToString())
                     {
-                        return curAdd.ToString();
+                        arrString[i] = curAdd.ToString();
+                        //return curAdd.ToString();
                        // break; //only 1st IP
+                    } else
+                    {
+                        arrString[i] = "111.222.212.121";
                     }
+                    i++;
                 }
             }
             catch (Exception e)
             {
                 Helpers.ConsolePrint("WinDivertSharp", "Exception: " + e.ToString());
             }
-            return "";
+            return arrString;
         }
 
         public static string GetRemoteIP(List<string> PortList, string port)
@@ -619,7 +628,7 @@ namespace NiceHashMinerLegacy.Divert
             return DivertHandle;
         }
 
-        
+
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, int SecondaryAlgorithmType, string MinerName, string strPlatform,
@@ -690,12 +699,12 @@ namespace NiceHashMinerLegacy.Divert
                 return DTestHandle;
             }
 
-            
+
             return new IntPtr(0);
         }
 
 
-        
+
 
         public static void DivertStop(IntPtr DivertHandle, int Pid, int CurrentAlgorithmType, int SecondaryAlgorithmType, bool CertInstalled, string MinerName)
         {
@@ -800,7 +809,7 @@ namespace NiceHashMinerLegacy.Divert
 
             }
 
-            
+
         }
     }
 }

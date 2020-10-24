@@ -435,7 +435,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("ClaymoreDual_etha", "-etha", "-etha", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ClaymoreDual_ethi", "-ethi", "-ethi", "8", MinerOptionFlagType.MultiParam, ","),
 
-                    new MinerOption("ClaymoreDual_eres", "-eres", "-eres", "2", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("ClaymoreDual_eres", "-eres", "-eres", "2", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ClaymoreDual_erate", "-erate", "-erate", "1", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("ClaymoreDual_estale", "-estale", "-estale", "1", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("ClaymoreDual_gser", "-gser", "-gser", "0", MinerOptionFlagType.SingleParam, ","),
@@ -462,7 +462,6 @@ namespace NiceHashMiner.Miners.Parsing
                         ","), // this is not well supported in MultiParam
 
                     new MinerOption("ClaymoreDual_ftime", "-ftime", "-ftime", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreDual_eres", "-eres", "-eres", "2", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("ClaymoreDual_dpool", "-dpool", "-dpool", "", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("ClaymoreDual_dwal", "-dwal", "-dwal", "", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("ClaymoreDual_dpsw", "-dpsw", "-dpsw", "", MinerOptionFlagType.SingleParam, ","),
@@ -504,7 +503,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Phoenix_clNew", "-clNew", "-clNew", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_clf", "-clf", "-clf", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_nvNew", "-nvNew", "-nvNew", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("Phoenix_eres", "-eres", "-eres", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("Phoenix_eres", "-eres", "-eres", "2", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_dagrestart", "-dagrestart", "-dagrestart", "0", MinerOptionFlagType.SingleParam),
                     new MinerOption("Phoenix_rvram", "-rvram", "-rvram", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_nvf", "-nvf", "-nvf", "0", MinerOptionFlagType.MultiParam, ","),
@@ -515,10 +514,6 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Phoenix_vmt3", "-vmt3", "-vmt3", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_vmr", "-vmr", "-vmr", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_nvmem", "-nvmem", "-nvmem", "0", MinerOptionFlagType.MultiParam, ","),
-                },
-                new List<MinerOption>
-                {
-                    // temperature stuff
                     new MinerOption("Phoenix_fanmax", "-fanmax", "-fanmax", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_fanmin", "-fanmin", "-fanmin", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_tmax", "-tmax", "-tmax", "-1", MinerOptionFlagType.MultiParam, ","),
@@ -526,7 +521,12 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Phoenix_cclock", "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_cvddc", "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_mclock", "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("Phoenix_mvddc", "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),                   }
+                    new MinerOption("Phoenix_mvddc", "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
+                },
+                new List<MinerOption>
+                {
+                    // temperature stuff
+                 }
             ),
             new MinerOptionPackage(
                 MinerType.EWBF,

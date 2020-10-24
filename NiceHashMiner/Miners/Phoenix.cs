@@ -140,7 +140,7 @@ namespace NiceHashMiner.Miners
         public override void Start(string url, string btcAdress, string worker)
         {
             LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -logfile " + GetLogFileName();
-            IsApiReadException = false;
+            //IsApiReadException = false;
             ProcessHandle = _Start();
         }
 
@@ -296,11 +296,9 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             // CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-            CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
+            //CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
 
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-
 
             try
             {
@@ -356,7 +354,7 @@ namespace NiceHashMiner.Miners
 
             if (ad.Speed == 0)
             {
-                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                //CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
             }
             else
             {

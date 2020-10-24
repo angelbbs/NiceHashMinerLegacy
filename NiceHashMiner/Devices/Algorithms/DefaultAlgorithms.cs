@@ -69,7 +69,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto, "")
                     {
-    //                    ExtraLaunchParameters = "-rvram -1 -eres 0 "
+    //                    ExtraLaunchParameters = "-rvram -1 "
                     }
                 }
             },
@@ -254,7 +254,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto4GB, "")
                     {
-    //                    ExtraLaunchParameters = "-rvram -1 -eres 0 "
+    //                    ExtraLaunchParameters = "-rvram -1 "
                     }
                 }
             },
@@ -320,7 +320,14 @@ namespace NiceHashMiner.Devices.Algorithms
             { MinerBaseType.trex,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16Rv2"),
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.KAWPOW, "KAWPOW"),
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.KAWPOW, "KAWPOW")
+                            {    
+                                ExtraLaunchParameters = "--mt 1 "
+                            },
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            {
+                                ExtraLaunchParameters = "--mt 1 "
+                            },
                         }
             },
 
@@ -362,6 +369,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                         }
             },
+            /*
             { MinerBaseType.Kawpowminer,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.Kawpowminer, AlgorithmType.KAWPOW, "KAWPOW")
@@ -370,6 +378,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                         }
             },
+            */
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckarood29, "GrinCuckarood29"),
