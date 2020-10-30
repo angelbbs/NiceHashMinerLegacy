@@ -207,6 +207,9 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     // SingleParam
                     new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("lolMiner_enablezilcache", "--enablezilcache", "--enablezilcache", "0", MinerOptionFlagType.MultiParam, ""),
+                    new MinerOption("lolMiner_win4galloc", "", "--win4galloc", "0", MinerOptionFlagType.MultiParam, ""),
                     new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, "")
                 },
                 // TemperatureOptions

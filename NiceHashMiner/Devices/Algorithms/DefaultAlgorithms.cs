@@ -217,9 +217,13 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            {
+                                ExtraLaunchParameters = "--enablezilcache=1"
+                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
                             {
-                                ExtraLaunchParameters = "--asm 1 "
+                                ExtraLaunchParameters = ""
                             }
                         }
             },

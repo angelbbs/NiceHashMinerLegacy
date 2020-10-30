@@ -33,11 +33,12 @@ namespace NiceHashMiner.Miners
         private readonly int GPUPlatformNumber;
         Stopwatch _benchmarkTimer = new Stopwatch();
         int count = 0;
+        int firstcount = 0;
         double speed = 0;
         private int _benchmarkTimeWait = 240;
         private string[,] myServers = Form_Main.myServers;
         public lolMiner()
-            : base("lolMiner_AMD")
+            : base("lolMiner")
         {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
             IsKillAllUsedMinerProcs = true;
@@ -72,11 +73,6 @@ namespace NiceHashMiner.Miners
             url = url.Replace("stratum+tcp://", "");
             //url = url.Substring(0, url.IndexOf(":"));
             var apiBind = " --apiport " + ApiPort;
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
@@ -178,6 +174,20 @@ namespace NiceHashMiner.Miners
                                                                DeviceType.AMD) +
                              " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+            {
+                LastCommandLine = "--algo ETHASH --pool " + url + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + myServers[2, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + myServers[3, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + myServers[4, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + myServers[5, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                apiBind + " " +
+                             ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                               MiningSetup,
+                                                               DeviceType.AMD) +
+                             " --devices ";
+            }
             LastCommandLine += GetDevicesCommandString() + " ";//
             LastCommandLine = LastCommandLine.Replace("--asm 1", "");
             ProcessHandle = _Start();
@@ -197,19 +207,10 @@ namespace NiceHashMiner.Miners
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
             string username = GetUsername(btcAddress, worker);
 
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
-
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 CommandLine = "--algo BEAM-II " +
                     " --pool beamv2.usa.nicehash.com:3378 --user " + username + " --pass x --tls 0" +
-                //" --pool beam-eu.sparkpool.com:2222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
-                //" --pool beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
-               // " --pass x;x;x;x --tls 1;1;0;0 " +
                                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.AMD) +
@@ -273,6 +274,16 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--coin GRIN-C29M " +
                 " --pool grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner --pass x" +
                 " --pool cuckaroom.usa.nicehash.com:3382 --user " + username + " --pass x" +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                MiningSetup,
+                                                DeviceType.AMD) +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+            {
+                CommandLine = "--algo ETHASH " +
+                " --pool eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.lolMiner --pass x" +
+                " --pool daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -427,7 +438,7 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("lolMinerIndexing", "lol: " + mPair.Device.lolMinerBusID);
                 
                 //список карт выводить --devices 999
-                double id = mPair.Device.IDByBus;
+                double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
                 //double id = mPair.Device.lolMinerBusID;
                 /*
                 if (ConfigManager.GeneralConfig.lolMinerOldEnumeration)
@@ -440,13 +451,13 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint("lolMinerIndexing", "ID too low: " + id + " skipping device");
                     continue;
                 }
-                /*
+                
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     Helpers.ConsolePrint("lolMinerIndexing", "NVIDIA found. Increasing index");
                     id ++;
                 }
-                */
+                
                 Helpers.ConsolePrint("lolMinerIndexing", "ID: " + id );
                 {
                     ids.Add(id.ToString());
@@ -593,6 +604,32 @@ namespace NiceHashMiner.Miners
                     count++;
                 }
             }
+            //Average speed (30s): 11.20 mh/s
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+            {
+                if (outdata.Contains("Average speed (30s):") && firstcount > 0)
+                {
+                    int i = outdata.IndexOf("Average speed (30s):");
+                    int k = outdata.IndexOf("mh/s");
+                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
+                    try
+                    {
+                        speed = speed + (Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * 1000000);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        BenchmarkSignalFinnished = true;
+                        return false;
+                    }
+                    count++;
+                }
+                if (outdata.Contains("Average speed (30s):"))
+                {
+                    firstcount++;
+                }
+            }
             /*
             if ((outdata.Contains("Share accepted") && speed != 0 && count > 4) || (count > 8 && speed != 0))
             {
@@ -667,7 +704,14 @@ namespace NiceHashMiner.Miners
             if (resp != null)
             {
                 double totals = resp.Session.Performance_Summary;
-                ad.Speed = totals;
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+                {
+                    ad.Speed = totals * 1000000;
+                }
+                else
+                {
+                    ad.Speed = totals;
+                }
                 if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;

@@ -201,7 +201,7 @@ namespace NiceHashMiner.Switching
                     throw new ArgumentException("Algo not setup in SMA");
                 _currentSma[algo].Paying = paying;
             }
-
+            //Helpers.ConsolePrint("UpdatePayingForAlgo", "algo: " + algo.ToString() + " paying: " + paying.ToString());
             HasData = true;
         }
 

@@ -201,9 +201,9 @@ nextCycle:
                                                 */
                                                 if (Divert.Dagger4GBEpochCount > 0)
                                                 {
-                                                    Divert.DaggerHashimoto3GBForce = true;
-                                                    Divert.Dagger3GBEpochCount = 999;
-                                                    Divert.checkConnection3GB = false;
+                                                    Divert.DaggerHashimoto4GBForce = true;
+                                                    Divert.Dagger4GBEpochCount = 999;
+                                                    Divert.checkConnection4GB = false;
                                                     //Divert.checkConnection4GB = false;
                                                 }
                                                 goto nextCycle;
