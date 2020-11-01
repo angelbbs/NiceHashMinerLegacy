@@ -18,6 +18,7 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using System.Threading;
+using System.Diagnostics;
 
 namespace NiceHashMiner.Miners
 {
@@ -39,13 +40,8 @@ namespace NiceHashMiner.Miners
             public double? TotalHashrate => miner?.total_hashrate_raw;
             public double? TotalHashrate2 => miner?.total_hashrate2_raw;
         }
-
-        private double _benchHashes;
-        private int _benchIters;
+        private int _benchmarkTimeWait = 240;
         private int _targetBenchIters;
-        private double speed;
-        private double speedSec;
-        private int count;
         private string[,] myServers = Form_Main.myServers;
 
         private string AlgoName
@@ -114,13 +110,13 @@ namespace NiceHashMiner.Miners
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 1";
+                    platform = "--platform 1 --log --no-watchdog";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
                 }
                 else
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 2";
+                    platform = "--platform 2 --log --no-watchdog";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
             }
@@ -225,8 +221,6 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            _benchHashes = 0;
-            _benchIters = 0;
             _targetBenchIters = Math.Max(1, (int) Math.Floor(time / 20d));
 
             var url = GetServiceUrl(algorithm.NiceHashID);
@@ -344,6 +338,7 @@ namespace NiceHashMiner.Miners
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
+            _benchmarkTimeWait = time;
             return cmd; 
             // return GetStartCommand(url, btc, worker);
         }
@@ -353,172 +348,87 @@ namespace NiceHashMiner.Miners
             CheckOutdata(outdata);
         }
 
-        protected override bool BenchmarkParseLine(string outdata)
+        protected override void BenchmarkThreadRoutine(object commandLine)
         {
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+            double repeats = 0.0d;
+            double summspeed = 0.0d;
+            //Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
             try
             {
-                double tmp = 0;
-                if (SecondaryAlgorithmType == AlgorithmType.Handshake) //dual
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                //Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
+                var benchmarkTimer = new Stopwatch();
+                benchmarkTimer.Reset();
+                benchmarkTimer.Start();
+                BenchmarkThreadRoutineStartSettup();
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                while (IsActiveProcess(BenchmarkHandle.Id))
                 {
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("Mh/s") && outdata.Contains("ethash")) //eth
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 2)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null)
                     {
-                        var startStr = "Total Speed: ";
-                        var endStr = "Mh/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        speed *= 1000000;
-                        goto norm;
-                    }
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("Mh/s") && outdata.Contains("hns")) 
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "Mh/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speedSec = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        speedSec *= 1000000;
-                        goto norm;
-                    }
-                    norm:
-                    if (speed > 0.0d && speedSec > 0.0d)
-                    {
-                        BenchmarkAlgorithm.BenchmarkSpeed = speed;
-                        if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo)
+                        if (BenchmarkSignalTimedout)
                         {
-                            dualBenchAlgo.SecondaryBenchmarkSpeed = speedSec;
+                            throw new Exception("Benchmark timedout");
                         }
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                    return false;
-                }
-                if (SecondaryAlgorithmType == AlgorithmType.Eaglesong) //dual
-                {
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("Mh/s") && outdata.Contains("ethash")) //eth
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "Mh/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        speed *= 1000000;
-                        goto norm;
-                    }
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("Mh/s") && outdata.Contains("eaglesong")) //ckb
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "Mh/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speedSec = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        speedSec *= 1000000;
-                        goto norm;
-                    }
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("h/s") && outdata.Contains("bfc")) 
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "h/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speedSec = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        goto norm;
-                    }
-                    norm:
-                    if (speed > 0.0d && speedSec > 0.0d)
-                    {
-                        BenchmarkAlgorithm.BenchmarkSpeed = speed;
-                        if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo)
+
+                        if (BenchmarkException != null)
                         {
-                            dualBenchAlgo.SecondaryBenchmarkSpeed = speedSec;
+                            throw BenchmarkException;
                         }
-                        BenchmarkSignalFinnished = true;
-                        return true;
+
+                        if (BenchmarkSignalQuit)
+                        {
+                            throw new Exception("Termined by user request");
+                        }
+
+                        if (BenchmarkSignalFinnished)
+                        {
+                            break;
+                        }
+
+                        break;
                     }
-                    return false;
+
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        Helpers.ConsolePrint(MinerTag(), "ad.Result.Speed: " + ad.Result.Speed.ToString());
+                        repeats++;
+                        if (repeats > 5)//skip first 5s
+                        {
+                            summspeed += ad.Result.Speed;
+                        }
+                        //if (repeats >= 15)
+                        //{
+                        //BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 2);//15s speed
+                        //  break;
+                        //}
+                    }
                 }
-
-                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29 ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29 ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3 ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
-                    MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
-                {
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("g/s")) //grin
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "g/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        goto norm;
-                    }
-                    else if (outdata.Contains("Total Speed:") && outdata.Contains("Mh/s")) //eth
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "Mh/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        speed *= 1000000;
-                        goto norm;
-                    }
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("h/s") &&
-                        MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC) 
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "h/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        goto norm;
-                    }
-                    if (outdata.Contains("Total Speed:") && outdata.Contains("sol/s") &&
-                        MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
-                    {
-                        var startStr = "Total Speed: ";
-                        var endStr = "sol/s";
-                        var st = outdata.IndexOf(startStr);
-                        var e = outdata.IndexOf(endStr);
-                        var parse = outdata.Substring(st + startStr.Length, e - st - startStr.Length).Trim().Replace(",", ".");
-                        speed = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        goto norm;
-                    }
-
-                    norm:
-                    if (speed > 0.0d)
-                    {
-                        BenchmarkAlgorithm.BenchmarkSpeed = speed;
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-
-                    return false;
-                }
+                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - 5), 2);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Unsupported miner version " + MiningSetup.MinerPath,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                BenchmarkSignalFinnished = true;
-                return false;
+                BenchmarkThreadRoutineCatch(ex);
             }
-            //BenchmarkAlgorithm.BenchmarkSpeed = speed;
-            BenchmarkSignalFinnished = false;
-            return false;
+            finally
+            {
+                BenchmarkSignalFinnished = true;
+                BenchmarkThreadRoutineFinish();
+            }
         }
         protected override bool IsApiEof(byte third, byte second, byte last)
         {
@@ -601,6 +511,11 @@ namespace NiceHashMiner.Miners
         protected override void _Stop(MinerStopType willswitch)
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
+        }
+
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return false;
         }
     }
 }

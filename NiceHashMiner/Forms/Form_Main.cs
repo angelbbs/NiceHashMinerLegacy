@@ -1760,17 +1760,16 @@ namespace NiceHashMiner
                 CMDconfigHandleWD.Start();
             }
             //mainproc = Process.GetCurrentProcess();
-
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher
-                    ("Select * From Win32_Process Where ParentProcessID=" + mainproc.Id.ToString());
-            ManagementObjectCollection moc = searcher.Get();
-               // Helpers.ConsolePrint("Closing", moc.Count.ToString());
+            try
+            {
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                        ("Select * From Win32_Process Where ParentProcessID=" + mainproc.Id.ToString());
+                ManagementObjectCollection moc = searcher.Get();
                 foreach (ManagementObject mo in moc)
                 {
-                    try
-                    {
-                        Process proc = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
-                        //Helpers.ConsolePrint("Closing", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
+
+                    Process proc = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
+                    //Helpers.ConsolePrint("Closing", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
                     if (!Convert.ToInt32(mo["ProcessID"]).ToString().Contains("NiceHashMinerLegacy"))
                     {
                         if (proc != null)
@@ -1778,16 +1777,18 @@ namespace NiceHashMiner
                             proc.Kill();
                         }
                     }
-                    }
-                    catch (Exception ex)
-                    {
-                    Helpers.ConsolePrint("Closing", ex.ToString());
-                    }
+
+
                 }
                 Process mproc = Process.GetProcessById(mainproc.Id);
-            Helpers.ConsolePrint("Closing", mproc.Id.ToString() + " " + mproc.ProcessName);
-            mproc.Kill();
+                Helpers.ConsolePrint("Closing", mproc.Id.ToString() + " " + mproc.ProcessName);
+                mproc.Kill();
             }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Closing", ex.ToString());
+            }
+        }
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)
         {
