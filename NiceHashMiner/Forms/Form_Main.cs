@@ -1464,13 +1464,16 @@ namespace NiceHashMiner
             {
                 double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
                 var totalRate = MinersManager.GetTotalRate();
-                //var totalPowerRate = MinersManager.GetTotalPowerRate();
+                
                 var powerString = "";
                 double TotalPower = 0;
+                TotalPower = MinersManager.GetTotalPowerRate();
+
                 foreach (var computeDevice in Available.Devices)
                 {
                     TotalPower += computeDevice.PowerUsage;
                 }
+
                 double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
                 totalPower = Math.Round(totalPower, 0);
                 var totalPowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 * _factorTimeUnit / 1000;

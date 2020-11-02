@@ -10,6 +10,7 @@ using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Configs;
 using OpenHardwareMonitor.Hardware;
+using NiceHashMiner.Miners.Grouping;
 
 namespace NiceHashMiner.Devices
 {
@@ -214,6 +215,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                double addAMD = ConfigManager.GeneralConfig.PowerAddAMD;
                 if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
                 {
                     return -1;
@@ -226,8 +228,7 @@ namespace NiceHashMiner.Devices
                         var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex2, 0, ref power); //0
                         if (result == ADL.ADL_SUCCESS)
                         {
-                            // Helpers.ConsolePrint("ADL", power.ToString());
-                            return (double)power / (1 << 8);
+                            return (double)(power / (1 << 8)) + addAMD;
                         }
                     }
                 }
@@ -251,7 +252,7 @@ namespace NiceHashMiner.Devices
                                         {
                                             if ((int)sensor.Value >= 0)
                                             {
-                                                return (int)sensor.Value;
+                                                return (int)sensor.Value + addAMD;
                                             }
                                         }
                                     }
@@ -264,7 +265,7 @@ namespace NiceHashMiner.Devices
                                     if (result == ADL.ADL_SUCCESS)
                                     {
                                         //Helpers.ConsolePrint("ADL", power.ToString());
-                                        return (double)power / (1 << 8);
+                                        return (double)(power / (1 << 8)) + addAMD;
                                     }
                                 }
                             }

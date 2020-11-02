@@ -52,6 +52,9 @@ namespace NiceHashMiner.Miners.Grouping
                         DevIndexes.Add(pair.Device.Index);
                         //TotalPower += pair.Device.PowerUsage;
                         TotalPower += pair.Algorithm.PowerUsage;
+                        //Helpers.ConsolePrint("pair.Device.PowerUsage: ", pair.Device.PowerUsage.ToString());
+                        //Helpers.ConsolePrint("pair.Algorithm.PowerUsage: ", pair.Algorithm.PowerUsage.ToString());
+                        //Helpers.ConsolePrint("TotalPower: ", TotalPower.ToString());
                     }
                     DevicesInfoString = "{ " + string.Join(", ", deviceNames) + " }";
                 }

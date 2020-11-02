@@ -185,6 +185,7 @@ namespace NiceHashMiner.Configs.Data
         public double KwhPrice = 0;
         public int PowerPSU = 80;
         public int PowerMB = 60;
+        public int PowerAddAMD = 0;
 
         /// <summary>
         /// True if NHML should try to cache SMA values for next launch

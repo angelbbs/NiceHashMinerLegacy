@@ -285,7 +285,7 @@
         "Form_Settings_Text_ContinueMiningIfNoInternetAccess": "Idle When No Internet Access",
         "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "If enabled Miner Legacy Fork Fix will stop mining without internet connectivity",
         "Form_Settings_ToolTip_UseIFTTT": "If enabled, Miner Legacy Fork Fix will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.",
-        "Form_Settings_DisplayCurrency": "Display Currency",
+        "Form_Settings_DisplayCurrency": "Currency",
         "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining profit.",
         "Form_Settings_APIBindPortStart": "API Bind port pool start",
         "Form_Settings_ToolTip_APIBindPortStart": "Set starting port number from which miner API Bind ports will be set for communication.",
@@ -293,7 +293,7 @@
         "Form_Settings_ToolTip_DagGeneration": "Sets Dag Load Mode for ethminers.",
         "Form_Settings_General_UseIFTTT": "Use IFTTT",
         "Form_Settings_IFTTTAPIKey": "IFTTT API Key",
-        "Form_Settings_ElectricityCost": "Electricity Cost (/KWh)", 
+        "Form_Settings_ElectricityCost": "Electricity Cost (KWh)", 
         "AlgorithmsListView_Enabled": "On",
         "AlgorithmsListView_Algorithm": "Algorithm",
         "AlgorithmsListView_Speed": "Speed",
@@ -417,8 +417,8 @@
                 "Form_Settings_checkBox_Show_profit_with_power_consumption": "Show profit with power consumption",
                 "Form_Settings_checkBox_fiat": "Show profitability of algorithms in fiat currency",
                 "Form_Settings_checkBox_AlwaysOnTop": "Always on Top",
-                "Form_Settings_label_psu": "Power supply unit efficiency (%)",
-                "Form_Settings_label_MBpower": "Power consumption of MB, HDD etc (W)",
+                "Form_Settings_label_psu": "PSU efficiency (%)",
+                "Form_Settings_label_MBpower": "Power consumption of Motherboard, HDD(SSD) etc (W)",
                 "Form_Settings_checkBox_Disable_extra_launch_parameter_checking": "Disable extra launch parameter checking",
                 "Form_Settings_checkBox_DisableDetectionCPU": "Disable CPU detection",
                 "Form_Settings_label_AutoStartMiningDelay": "Autostart Mining Delay (sec)",
@@ -483,6 +483,7 @@
 "Form_Settings_General_AMDmonitoring": "Disable AMD GPU monitoring",
 "Form_Settings_General_NVMonitoring": "Disable NVIDIA GPU monitoring",
 "Form_Settings_General_CPUmonitoring": "Disable CPU monitoring",
+"Form_Settings_label_AddAMD": "Additional AMD GPU power consumption (W)",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

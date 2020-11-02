@@ -427,6 +427,7 @@ namespace NiceHashMiner.Forms
             checkBox_AlwaysOnTop.Text = International.GetText("Form_Settings_checkBox_AlwaysOnTop");
             label_psu.Text = International.GetText("Form_Settings_label_psu");
             label_MBpower.Text = International.GetText("Form_Settings_label_MBpower");
+            labelAddAMD.Text = International.GetText("Form_Settings_label_AddAMD");
             checkBox_Disable_extra_launch_parameter_checking.Text = International.GetText("Form_Settings_checkBox_Disable_extra_launch_parameter_checking");
             checkBox_DisableDetectionCPU.Text = International.GetText("Form_Settings_checkBox_DisableDetectionCPU");
             label_AutoStartMiningDelay.Text = International.GetText("Form_Settings_label_AutoStartMiningDelay");
@@ -737,6 +738,10 @@ namespace NiceHashMiner.Forms
                 textBox_mb.ForeColor = Form_Main._foreColor;
                 textBox_mb.BorderStyle = BorderStyle.FixedSingle;
 
+                textBoxAddAMD.BackColor = Form_Main._backColor;
+                textBoxAddAMD.ForeColor = Form_Main._foreColor;
+                textBoxAddAMD.BorderStyle = BorderStyle.FixedSingle;
+
                 textBox_LogMaxFileSize.BackColor = Form_Main._backColor;
                 textBox_LogMaxFileSize.ForeColor = Form_Main._foreColor;
                 textBox_LogMaxFileSize.BorderStyle = BorderStyle.FixedSingle;
@@ -879,6 +884,7 @@ namespace NiceHashMiner.Forms
                 textBox_ElectricityCost.Leave += GeneralTextBoxes_Leave;
                 textBox_psu.Leave += GeneralTextBoxes_Leave;
                 textBox_mb.Leave += GeneralTextBoxes_Leave;
+                textBoxAddAMD.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchProfitabilityThreshold.Leave += GeneralTextBoxes_Leave;
                 textBoxMaxEpoch.Leave += GeneralTextBoxes_Leave;
                 // set int only keypress
@@ -892,6 +898,7 @@ namespace NiceHashMiner.Forms
                 textBox_ElectricityCost.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBox_psu.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBox_mb.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBoxAddAMD.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -980,6 +987,7 @@ namespace NiceHashMiner.Forms
                 textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
                 textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
                 textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString();
+                textBoxAddAMD.Text = ConfigManager.GeneralConfig.PowerAddAMD.ToString();
                 textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString();
             }
 
@@ -1192,6 +1200,7 @@ namespace NiceHashMiner.Forms
 
             ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
             ConfigManager.GeneralConfig.PowerMB = Helpers.ParseInt(textBox_mb.Text);
+            ConfigManager.GeneralConfig.PowerAddAMD = Helpers.ParseInt(textBoxAddAMD.Text);
             ConfigManager.GeneralConfig.PowerPSU = Helpers.ParseInt(textBox_psu.Text);
             ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
 
@@ -1212,6 +1221,7 @@ namespace NiceHashMiner.Forms
             textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
             textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString("");
             textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString("");
+            textBoxAddAMD.Text = ConfigManager.GeneralConfig.PowerAddAMD.ToString("");
             textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString("");
         }
 
@@ -2143,6 +2153,26 @@ namespace NiceHashMiner.Forms
         private void comboBoxRestartProgram_DrawItem(object sender, DrawItemEventArgs e)
         {
             comboBox_ServiceLocation_DrawItem(sender, e);
+        }
+
+        private void label_TimeUnit_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox_MinProfit_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox_MinProfit_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox_fiat_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

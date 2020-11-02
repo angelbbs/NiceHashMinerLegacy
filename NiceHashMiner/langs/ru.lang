@@ -147,7 +147,7 @@
     "Form_Settings_General_MinimizeToTray": "Свернуть в трей",
     "Form_Settings_General_DisableDetection": "Отключить определение {0}",
     "Form_Settings_General_AutoScaleBTCValues": "Автомасштаб значений BTC",
-    "Form_Settings_General_StartMiningWhenIdle": "Запуск майнинга при простое",
+    "Form_Settings_General_StartMiningWhenIdle": "Запуск при простое",
     "Form_Settings_General_ShowDriverVersionWarning": "Предупреждать о версии драйвера",
     "Form_Settings_General_DisableWindowsErrorReporting": "Отключить ошибки",
     "Form_Settings_General_ShowInternetConnectionWarning": "Уведомлять об интернет-соединении",
@@ -408,8 +408,8 @@
                 "Form_Settings_checkBox_Show_profit_with_power_consumption": "Показывать прибыльность с учетом рахода на эл.энергию",
                 "Form_Settings_checkBox_fiat": "Показывать прибыльность алгоритмов в фиатной валюте",
                 "Form_Settings_checkBox_AlwaysOnTop": "Поверх остальных окон",
-                "Form_Settings_label_psu": "КПД блока питания (%)",
-                "Form_Settings_label_MBpower": "Потребление м.платы, диска и т.п. (Вт)",
+                "Form_Settings_label_psu": "КПД блока пит.(%)",
+                "Form_Settings_label_MBpower": "Потребление материнской платы, диска и т.п. (Вт)",
                 "Form_Settings_checkBox_Disable_extra_launch_parameter_checking": "Отключить проверку дополнительных параметров",
                 "Form_Settings_checkBox_DisableDetectionCPU": "Отключить определение CPU",
                 "Form_Settings_label_AutoStartMiningDelay": "Задержка автозапуска майнинга (сек)",
@@ -474,6 +474,8 @@
 "Form_Settings_General_AMDmonitoring": "Отключить мониторинг AMD",
 "Form_Settings_General_NVMonitoring": "Отключить мониторинг NVIDIA",
 "Form_Settings_General_CPUmonitoring": "Отключить мониторинг CPU",
+"Form_Settings_ElectricityCost": "Стоим. эл.эн.(за кВт.ч)", 
+"Form_Settings_label_AddAMD": "Дополнительное потребление AMD GPU (Вт)",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

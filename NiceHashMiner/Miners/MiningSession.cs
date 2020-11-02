@@ -790,7 +790,6 @@ namespace NiceHashMiner.Miners
 
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
 
-
                         //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.CurrentRate: " + groupMiners.CurrentRate.ToString());
                         // Deduct power costs
                         //var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
