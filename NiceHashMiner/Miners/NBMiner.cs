@@ -3,7 +3,6 @@
 * PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 */
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -11,9 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Extensions;
-using System.Globalization;
-using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
@@ -110,13 +106,13 @@ namespace NiceHashMiner.Miners
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 1 --log --no-watchdog";
+                    platform = "--platform 1 --no-watchdog";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
                 }
                 else
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 2 --log --no-watchdog";
+                    platform = "--platform 2 --no-watchdog";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
             }
@@ -215,7 +211,6 @@ namespace NiceHashMiner.Miners
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.NBMiner;
             IsApiReadException = false;
-
             ProcessHandle = _Start();
         }
 

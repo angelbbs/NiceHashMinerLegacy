@@ -480,6 +480,9 @@
 "Form_Settings_comboBoxRestartProgram3": "after 3d",
 "Form_Settings_comboBoxRestartProgram4": "after 7d",
 "Form_Settings_MaxEpoch": "Maximum Epoch of DaggerHashimoto4GB",
-                "Form_Settings_buttonLicence": "View licence"
+"Form_Settings_General_AMDmonitoring": "Disable AMD GPU monitoring",
+"Form_Settings_General_NVMonitoring": "Disable NVIDIA GPU monitoring",
+"Form_Settings_General_CPUmonitoring": "Disable CPU monitoring",
+"Form_Settings_buttonLicence": "View licence"
     }
 }

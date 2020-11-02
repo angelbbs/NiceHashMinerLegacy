@@ -25,6 +25,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                {
+                    return -1;
+                }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var adlf = new ADLFanSpeedValue
@@ -100,6 +104,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                {
+                    return -1;
+                }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var adlt = new ADLTemperature();
@@ -152,6 +160,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                {
+                    return -1;
+                }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var adlp = new ADLPMActivity();
@@ -202,6 +214,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                {
+                    return -1;
+                }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var power = -1;

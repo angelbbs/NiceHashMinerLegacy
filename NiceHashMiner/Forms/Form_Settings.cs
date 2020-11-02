@@ -299,6 +299,9 @@ namespace NiceHashMiner.Forms
                 string.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA");
             checkBox_DisableDetectionAMD.Text =
                 string.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
+            checkBoxAMDmonitoring.Text = International.GetText("Form_Settings_General_AMDmonitoring");
+            checkBoxNVMonitoring.Text = International.GetText("Form_Settings_General_NVMonitoring");
+            checkBoxCPUmonitoring.Text = International.GetText("Form_Settings_General_CPUmonitoring");
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
 
@@ -831,6 +834,9 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionCPU.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableDetectionAMD.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableDetectionNVIDIA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxCPUmonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxNVMonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxAMDmonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_HideMiningWindows.CheckedChanged +=GeneralCheckBoxes_CheckedChanged;
                 checkBox_AlwaysOnTop.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -915,10 +921,12 @@ namespace NiceHashMiner.Forms
                 checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.GeneralConfig.MinimizeToTray;
                 checkBox_AlwaysOnTop.Checked = ConfigManager.GeneralConfig.AlwaysOnTop;
-                checkBox_DisableDetectionNVIDIA.Checked =
-                    ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
+                checkBox_DisableDetectionNVIDIA.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 checkBox_DisableDetectionCPU.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU;
                 checkBox_DisableDetectionAMD.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                checkBoxCPUmonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringCPU;
+                checkBoxNVMonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringNVIDIA;
+                checkBoxAMDmonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringAMD;
                 checkBox_AutoScaleBTCValues.Checked = ConfigManager.GeneralConfig.AutoScaleBTCValues;
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
                 checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
@@ -1062,6 +1070,9 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionNVIDIA.Checked;
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD = checkBox_DisableDetectionAMD.Checked;
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU = checkBox_DisableDetectionCPU.Checked;
+            ConfigManager.GeneralConfig.DisableMonitoringAMD = checkBoxAMDmonitoring.Checked;
+            ConfigManager.GeneralConfig.DisableMonitoringCPU = checkBoxCPUmonitoring.Checked;
+            ConfigManager.GeneralConfig.DisableMonitoringNVIDIA = checkBoxNVMonitoring.Checked;
             ConfigManager.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
             ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
             ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;

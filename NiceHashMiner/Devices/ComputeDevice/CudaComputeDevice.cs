@@ -27,6 +27,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var load = -1;
@@ -88,6 +92,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var temp = -1f;
@@ -199,9 +207,12 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                //if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
 
-                    if (!ConfigManager.GeneralConfig.ShowFanAsPercent)
+                if (!ConfigManager.GeneralConfig.ShowFanAsPercent)
                     {
                         var fanSpeed = -1;
 
@@ -307,6 +318,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 { 
                     try

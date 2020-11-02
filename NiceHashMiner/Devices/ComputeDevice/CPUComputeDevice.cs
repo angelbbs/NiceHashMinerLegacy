@@ -18,6 +18,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringCPU)
+                {
+                    return -1;
+                }
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     try
@@ -38,6 +42,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringCPU)
+                {
+                    return -1;
+                }
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     try
@@ -57,6 +65,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringCPU)
+                {
+                    return -1;
+                }
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     try
@@ -76,6 +88,10 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableMonitoringCPU)
+                {
+                    return -1;
+                }
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     try

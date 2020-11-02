@@ -139,6 +139,10 @@ namespace NiceHashMiner.Configs.Data
         public bool Group_same_devices = true;
         public string MachineGuid = "";
         public string CpuID = "";
+        public bool DisableMonitoringCPU = false;
+        public bool DisableMonitoringAMD = false;
+        public bool DisableMonitoringNVIDIA = false;
+
 
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.YES;
