@@ -114,7 +114,7 @@ namespace NiceHashMiner.Configs.Data
         // in bytes
         public long LogMaxFileSize = 16777216;
 
-        public bool ShowDriverVersionWarning = false;
+        public bool ShowDriverVersionWarning = true;
         public bool DisableWindowsErrorReporting = true;
         public bool ShowInternetConnectionWarning = true;
         public bool NVIDIAP0State = false;
@@ -235,7 +235,7 @@ namespace NiceHashMiner.Configs.Data
             StartMiningWhenIdle = false;
             LogToFile = true;
             LogMaxFileSize = 1048576;
-            ShowDriverVersionWarning = false;
+            ShowDriverVersionWarning = true;
             DisableWindowsErrorReporting = true;
             ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;

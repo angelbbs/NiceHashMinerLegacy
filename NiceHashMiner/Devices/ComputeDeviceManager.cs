@@ -21,6 +21,7 @@ using System.Windows.Forms;
 using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices
 {
@@ -71,15 +72,17 @@ namespace NiceHashMiner.Devices
             }
 
             //private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
-            private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(418, 96); 
+            private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(456, 81); 
             //private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
-            private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(398, 26); 
+            private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(456, 81); 
             private static NvidiaSmiDriver _currentNvidiaSmiDriver = new NvidiaSmiDriver(-1, -1);
             private static readonly NvidiaSmiDriver InvalidSmiDriver = new NvidiaSmiDriver(-1, -1);
 
             private static readonly NvidiaSmiDriver NvidiaCuda92Driver = new NvidiaSmiDriver(398,26); 
             private static readonly NvidiaSmiDriver NvidiaCuda10Driver = new NvidiaSmiDriver(411,31); 
             private static readonly NvidiaSmiDriver NvidiaCuda101Driver = new NvidiaSmiDriver(418,96);
+            private static readonly NvidiaSmiDriver NvidiaCuda11Driver = new NvidiaSmiDriver(451,48);
+            private static readonly NvidiaSmiDriver NvidiaCuda111Driver = new NvidiaSmiDriver(456,81);
 
             public static string CUDA_version;
             // naming purposes
@@ -275,6 +278,14 @@ namespace NiceHashMiner.Devices
                 }
                 // allerts
                 _currentNvidiaSmiDriver = GetNvidiaSmiDriver();
+                if (!_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda111Driver))
+                {
+                    CUDA_version = "CUDA 11.1";
+                }
+                if (!_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda11Driver))
+                {
+                    CUDA_version = "CUDA 11.0";
+                }
                 if ( !_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda101Driver))
                 {
                     CUDA_version = "CUDA 10.1";
@@ -305,8 +316,10 @@ namespace NiceHashMiner.Devices
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 // recomended driver
-                if (showWarning && _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
-                    !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
+                //if (showWarning && _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
+                //  !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
+                if (_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
+  !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
                 {
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
                     var nvdriverString = _currentNvidiaSmiDriver.LeftPart > -1
@@ -314,11 +327,18 @@ namespace NiceHashMiner.Devices
                             International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"),
                             _currentNvidiaSmiDriver)
                         : "";
+                    new Task(() => MessageBox.Show(string.Format(
+                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
+                            recomendDrvier, nvdriverString, recomendDrvier),
+                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning)).Start();
+                    /*
                     MessageBox.Show(string.Format(
                             International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
                             recomendDrvier, nvdriverString, recomendDrvier),
                         International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        */
                 }
 
                 // no devices found
