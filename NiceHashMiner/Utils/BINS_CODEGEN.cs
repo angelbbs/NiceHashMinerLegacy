@@ -20,11 +20,10 @@ namespace NiceHashMiner.Utils
             @"/teamredminer/teamredminer.exe",
             @"/gminer/miner.exe",
             @"/lolMiner/lolMiner.exe",
-            @"/WildRig/wildrig.exe",
             @"/NBMiner/NBMiner.exe",
             @"/miniZ/miniZ.exe",
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
-            @"/Fork_Fix_31.1.txt"
+            @"/Fork_Fix_32.txt"
         };
     }
 }

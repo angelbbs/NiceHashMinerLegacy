@@ -563,7 +563,6 @@ namespace NiceHashMiner
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 31.1;
                 }
-                /*
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 32.0)
                 {
                     Helpers.ConsolePrint("NICEHASH", "Old version");
@@ -572,7 +571,7 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
                     ConfigManager.GeneralConfig.ForkFixVersion = 32.0;
                 }
-                */
+                
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

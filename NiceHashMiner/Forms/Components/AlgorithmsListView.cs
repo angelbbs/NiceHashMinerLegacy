@@ -674,6 +674,7 @@ namespace NiceHashMiner.Forms.Components
                     contextMenuStrip1.Items.Add(disableAllItems);
                 }
                 // test this
+                this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                 {
                     var testItem = new ToolStripMenuItem
                     {
@@ -684,6 +685,7 @@ namespace NiceHashMiner.Forms.Components
                     testItem.Click += ToolStripMenuItemTest_Click;
                     contextMenuStrip1.Items.Add(testItem);
                 }
+                this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                 // enable benchmarked only
                 {
                     var enableBenchedItem = new ToolStripMenuItem
@@ -695,12 +697,14 @@ namespace NiceHashMiner.Forms.Components
                 }
                 // clear item
                 {
+                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                     var clearItem = new ToolStripMenuItem
                     {
                         Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem")
                     };
                     clearItem.Click += ToolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
+                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                 }
                 {
                     var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
@@ -926,6 +930,42 @@ namespace NiceHashMiner.Forms.Components
 
         private void listViewAlgorithms_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("3GB"))
+                {
+                    Form_Main.DaggerHashimoto3GBVisible = true;
+                    Form_Main.DaggerHashimoto4GBVisible = false;
+                    Form_Main.DaggerHashimoto1070Visible = false;
+                    Form_Main.DaggerHashimotoMaxEpochUpdated = true;
+                }
+                else
+                if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("4GB"))
+                {
+                    Form_Main.DaggerHashimoto3GBVisible = false;
+                    Form_Main.DaggerHashimoto4GBVisible = true;
+                    Form_Main.DaggerHashimoto1070Visible = false;
+                    Form_Main.DaggerHashimotoMaxEpochUpdated = true;
+                }
+                else
+                if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("1070"))
+                {
+                    Form_Main.DaggerHashimoto3GBVisible = false;
+                    Form_Main.DaggerHashimoto4GBVisible = false;
+                    Form_Main.DaggerHashimoto1070Visible = true;
+                    Form_Main.DaggerHashimotoMaxEpochUpdated = true;
+                }
+                else
+                {
+                    Form_Main.DaggerHashimoto3GBVisible = false;
+                    Form_Main.DaggerHashimoto4GBVisible = false;
+                    Form_Main.DaggerHashimoto1070Visible = false;
+                    Form_Main.DaggerHashimotoMaxEpochUpdated = false;
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("listViewAlgorithms_Click", ex.ToString());
+            }
             if (!isListViewEnabled)
             {
                 listViewAlgorithms.SelectedItems.Clear();

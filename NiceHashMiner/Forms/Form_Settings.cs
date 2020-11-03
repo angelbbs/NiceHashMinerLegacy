@@ -132,7 +132,7 @@ namespace NiceHashMiner.Forms
             {
                 UpdateListView_timer = new Timer();
                 UpdateListView_timer.Tick += UpdateLvi_Tick;
-                UpdateListView_timer.Interval = 10000;
+                UpdateListView_timer.Interval = 100;
                 UpdateListView_timer.Start();
             }
 
@@ -142,6 +142,33 @@ namespace NiceHashMiner.Forms
         private void UpdateLvi_Tick(object sender, EventArgs e)
         {
             algorithmsListView1.UpdateLvi();
+            if (Form_Main.DaggerHashimoto3GBVisible && Form_Main.DaggerHashimotoMaxEpochUpdated)
+            {
+                labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch") + "3GB";
+                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto3GBMaxEpoch.ToString();
+                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
+                Form_Main.DaggerHashimotoMaxEpochUpdated = false;
+            } else
+            if (Form_Main.DaggerHashimoto4GBVisible && Form_Main.DaggerHashimotoMaxEpochUpdated)
+            {
+                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString();
+                labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch") + "4GB";
+                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
+                Form_Main.DaggerHashimotoMaxEpochUpdated = false;
+            } else
+            if (Form_Main.DaggerHashimoto1070Visible && Form_Main.DaggerHashimotoMaxEpochUpdated)
+            {
+                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto1070MaxEpoch.ToString();
+                labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch") + "1070";
+                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
+                Form_Main.DaggerHashimotoMaxEpochUpdated = false;
+            }
+            if (!Form_Main.DaggerHashimoto1070Visible && !Form_Main.DaggerHashimoto4GBVisible &&
+                !Form_Main.DaggerHashimoto3GBVisible && !Form_Main.DaggerHashimotoMaxEpochUpdated)
+            {
+                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = false;
+                Form_Main.DaggerHashimotoMaxEpochUpdated = true;
+            }
         }
 
        #region Initializations
@@ -501,9 +528,6 @@ namespace NiceHashMiner.Forms
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
             label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
-            labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch");
-            labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
-            //textBoxMaxEpoch.Visible = Form_Main.DaggerHashimoto4GB;
 
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
@@ -830,6 +854,8 @@ namespace NiceHashMiner.Forms
 
             label_SwitchProfitabilityThreshold.Text =
                 International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
+            textBoxMaxEpoch.Visible = false;
+            labelMaxEpoch.Visible = false;
         }
 
         private void InitializeGeneralTabCallbacks()
@@ -991,7 +1017,6 @@ namespace NiceHashMiner.Forms
                 textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
                 textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString();
                 textBoxAddAMD.Text = ConfigManager.GeneralConfig.PowerAddAMD.ToString();
-                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString();
             }
 
             // set custom control referances
@@ -1206,7 +1231,18 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.PowerMB = Helpers.ParseInt(textBox_mb.Text);
             ConfigManager.GeneralConfig.PowerAddAMD = Helpers.ParseInt(textBoxAddAMD.Text);
             ConfigManager.GeneralConfig.PowerPSU = Helpers.ParseInt(textBox_psu.Text);
-            ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
+            if (Form_Main.DaggerHashimoto3GBVisible)
+            {
+                ConfigManager.GeneralConfig.DaggerHashimoto3GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
+            }
+            if (Form_Main.DaggerHashimoto4GBVisible)
+            {
+                ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
+            }
+            if (Form_Main.DaggerHashimoto1070Visible)
+            {
+                ConfigManager.GeneralConfig.DaggerHashimoto1070MaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
+            }
 
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();

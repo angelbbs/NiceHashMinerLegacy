@@ -102,9 +102,15 @@ namespace NiceHashMiner
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
         public static bool DaggerHashimoto3GB = false;
+        public static bool DaggerHashimoto3GBVisible = false;
         public static bool DaggerHashimoto3GBEnabled = false;
         public static bool DaggerHashimoto4GB = false;
+        public static bool DaggerHashimoto4GBVisible = false;
         public static bool DaggerHashimoto4GBEnabled = false;
+        public static bool DaggerHashimoto1070 = false;
+        public static bool DaggerHashimoto1070Visible = false;
+        public static bool DaggerHashimoto1070Enabled = false;
+        public static bool DaggerHashimotoMaxEpochUpdated = false;
         public static string GoogleIP = "";
         public static string GoogleAnswer = "";
         public static bool GoogleAvailable = false;
@@ -262,7 +268,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "31.1";
+            Text += "32";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;

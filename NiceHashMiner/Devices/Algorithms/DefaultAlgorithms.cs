@@ -228,23 +228,6 @@ namespace NiceHashMiner.Devices.Algorithms
                         }
             },
             {
-                MinerBaseType.WildRig,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.WildRig, AlgorithmType.X16RV2, "X16RV2")
-                            {
-                                ExtraLaunchParameters = "--opencl-threads 2 --opencl-launch 18x0 "
-                            },
-                            new Algorithm(MinerBaseType.WildRig, AlgorithmType.KAWPOW, "KAWPOW")
-                            {
-                                ExtraLaunchParameters = "--opencl-threads auto --opencl-launch auto "
-                            },
-                            new Algorithm(MinerBaseType.WildRig, AlgorithmType.Lyra2REv3, "Lyra2REv3")
-                            {
-                                ExtraLaunchParameters = "--opencl-threads auto --opencl-launch auto "
-                            }
-                        }
-            },
-            {
                 MinerBaseType.Claymore,
                             new List<Algorithm>
                             {
@@ -317,7 +300,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.X16RV2, "X16Rv2"),
-                           new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.Lyra2REv3, "Lyra2REv3"),
+                           //new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.Lyra2REv3, "Lyra2REv3"),
                           // new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.CuckooCycle, "CuckooCycle"),
                         }
             },

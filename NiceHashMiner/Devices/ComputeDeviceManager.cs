@@ -309,17 +309,16 @@ namespace NiceHashMiner.Devices
                     isNvidiaErrorShown = true;
                     var minDriver = NvidiaMinDetectionDriver.ToString();
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
+                    new Task(() => 
                     MessageBox.Show(string.Format(
                             International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Detection"),
                             minDriver, recomendDrvier),
                         International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                 }
                 // recomended driver
-                //if (showWarning && _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
-                //  !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
-                if (_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
-  !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
+                if (showWarning && _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
+                  !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
                 {
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
                     var nvdriverString = _currentNvidiaSmiDriver.LeftPart > -1
