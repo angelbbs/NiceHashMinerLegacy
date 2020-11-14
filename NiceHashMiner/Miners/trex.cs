@@ -48,23 +48,18 @@ namespace NiceHashMiner.Miners
             algo = "-a " + MiningSetup.MinerName.ToLower();
             apiBind = " -b 127.0.0.1:" + ApiPort;
             IsApiReadException = false;
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
 
             //  url = url.Replace(".nicehash.", "-new.nicehash.");
             algo = algo.Replace("daggerhashimoto", "ethash");
             url = url.Replace("stratum+tcp", "stratum2+tcp");
             LastCommandLine = algo +
      " -o " + url + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[3, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[4, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[5, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + myServers[5, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
      apiBind +
      " -d " + GetDevicesCommandString() + " --no-watchdog " +
      ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -148,7 +143,6 @@ namespace NiceHashMiner.Miners
             BenchmarkException = null;
             double repeats = 0.0d;
             double summspeed = 0.0d;
-            //Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
             {
@@ -161,10 +155,6 @@ namespace NiceHashMiner.Miners
                 benchmarkTimer.Reset();
                 benchmarkTimer.Start();
                 BenchmarkThreadRoutineStartSettup();
-                // wait a little longer then the benchmark routine if exit false throw
-                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
-                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
-                // don't use wait for it breaks everything
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 var keepRunning = true;
                 while (IsActiveProcess(BenchmarkHandle.Id))
@@ -182,14 +172,7 @@ namespace NiceHashMiner.Miners
                         var imageName = MinerExeName.Replace(".exe", "");
                         // maybe will have to KILL process
                         KillMinerBase(imageName);
-                        //Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType.END);
-                        /*
-                        if (ProcessHandle != null)
-                        {
-                            try { ProcessHandle.Kill(); }
-                            catch { }
-                        }
-                        */
+
                         int k = ProcessTag().IndexOf("pid(");
                         int i = ProcessTag().IndexOf(")|bin");
                         var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
@@ -220,25 +203,66 @@ namespace NiceHashMiner.Miners
                         break;
                     }
 
-                    // wait a second reduce CPU load
+                    // wait a second due api request
                     Thread.Sleep(1000);
+
+                    int delay_before_calc_hashrate = 90;
+                    int bench_time = 30;
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        bench_time = 20;
+                    }
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        bench_time = 20;
+                    }
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        bench_time = 20;
+                    }
+                    
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
-                        //Helpers.ConsolePrint(MinerTag(), "ad.Result.Speed: " + ad.Result.Speed.ToString());
+
                         repeats++;
-                        if (repeats > 5)//skip first 5s
+                        if (repeats > delay_before_calc_hashrate)
                         {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
                             summspeed += ad.Result.Speed;
                         }
-                        //if (repeats >= 15)
-                        //{
-                            //BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 2);//15s speed
-                          //  break;
-                        //}
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        if (repeats >= bench_time + delay_before_calc_hashrate)
+                        {
+                            //Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString() + " bench_time:" + bench_time.ToString());
+                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (bench_time), 2);
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+                            BenchmarkHandle.Dispose();
+
+                            var imageName = MinerExeName.Replace(".exe", "");
+                            // maybe will have to KILL process
+                            KillMinerBase(imageName);
+
+                            int k = ProcessTag().IndexOf("pid(");
+                            int i = ProcessTag().IndexOf(")|bin");
+                            var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
+                            int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
+                            KillProcessAndChildren(pid);
+                            break;
+                        }
+
                     }
                 }
-                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats-5), 2);
             }
             catch (Exception ex)
             {
@@ -246,89 +270,7 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-                BenchmarkSignalFinnished = true;
-                /*
-                var latestLogFile = GetLogFileName();
-                var dirInfo = new DirectoryInfo(WorkingDirectory);
 
-                // read file log
-                Thread.Sleep(1000);
-                if (File.Exists(WorkingDirectory + latestLogFile))
-                {
-                    var lines = new string[0];
-                    var read = false;
-                    var iteration = 0;
-                    while (!read)
-                    {
-                        if (iteration < 10)
-                        {
-                            try
-                            {
-                                lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
-                                read = true;
-                                Helpers.ConsolePrint(MinerTag(),
-                                    "Successfully read log after " + iteration + " iterations");
-                            }
-                            catch (Exception ex)
-                            {
-                                Helpers.ConsolePrint(MinerTag(), ex.Message);
-                                Thread.Sleep(1000);
-                            }
-
-                            iteration++;
-                        }
-                        else
-                        {
-                            read = true; // Give up after 10s
-                            Helpers.ConsolePrint(MinerTag(), "Gave up on iteration " + iteration);
-                        }
-                    }
-
-                    var addBenchLines = BenchLines.Count == 0;
-                    int shares = 0;
-                    double tmp = 0.0d;
-                    double speed = 0.0d;
-                    foreach (var line in lines)
-                    {
-                        if (line != null)
-                        {
-                           // if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.MTP))
-                            {
-                                //if (line.Contains("1/1") || line.Contains("0/1"))
-                                //[ OK ] 2/2 - 6767.44 kH/s, 109ms
-                                //20200507 02:21:51 [ OK ] 31/31 - 19.73 MH/s, 177ms
-                                //20200507 02:52:41 [ OK ] 2/2 - 14.17 MH/s, 111ms
-                                if (line.Contains("[ OK ]") || line.Contains("[T:"))
-                                {
-
-                                    var st = line.IndexOf("- ");
-                                    var e = line.ToLower().IndexOf("h/s");
-                                    var parse = line.Substring(st + 2, e - st - 4).Trim();
-                                    tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                                    //if (tmp != 0)
-                                    //{
-                                        shares++;
-                                    //}
-                                    // save speed
-                                    if (line.ToLower().Contains("kh/s"))
-                                        speed += tmp * 1000;
-                                    else if (line.ToLower().Contains("mh/s"))
-                                        speed += tmp * 1000000;
-                                    if (shares != 0)
-                                    {
-                                        BenchmarkAlgorithm.BenchmarkSpeed = speed / shares;
-                                        BenchmarkSignalFinnished = true;
-                                    } 
-
-                                }
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
-                */
                 BenchmarkThreadRoutineFinish();
             }
         }

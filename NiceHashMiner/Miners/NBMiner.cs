@@ -400,7 +400,7 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
-                        Helpers.ConsolePrint(MinerTag(), "ad.Result.Speed: " + ad.Result.Speed.ToString());
+                        //Helpers.ConsolePrint(MinerTag(), "ad.Result.Speed: " + ad.Result.Speed.ToString());
                         repeats++;
                         if (repeats > 5)//skip first 5s
                         {

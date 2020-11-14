@@ -148,6 +148,23 @@ namespace NiceHashMiner.Miners
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             Thread.Sleep(200);
+            if (ProcessHandle != null)
+            {
+                try
+                {
+                    ProcessHandle.Kill();
+                }
+                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+            }
+            /*
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                if (pair.Device.DeviceType == DeviceType.AMD)
+                {
+                    ProcessHandle.Kill();
+                }
+            }
+            */
             /*
             foreach (var process in Process.GetProcessesByName("PhoenixMiner"))
             {

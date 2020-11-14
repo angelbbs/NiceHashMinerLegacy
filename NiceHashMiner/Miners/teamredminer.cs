@@ -34,6 +34,7 @@ namespace NiceHashMiner.Miners
         private double speed = 0;
         private double tmp = 0;
         private string[,] myServers = Form_Main.myServers;
+        private int _benchmarkTimeWait = 240;
 
         public teamredminer()
             : base("teamredminer")
@@ -179,23 +180,7 @@ namespace NiceHashMiner.Miners
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
                 worker = ConfigManager.GeneralConfig.WorkerName.Trim();
             }
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
-            {
-                CommandLine = sc + " -a lyra2z" + apiBind +
-                " --url stratum+tcp://lyra2z.eu.mine.zpool.ca:4553" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --url stratum+tcp://lyra2z.eu" + nhsuff + ".nicehash.com:3365" + " --user " + username + " - p x -d ";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
-            {
-                CommandLine = sc + " -a x16r" + apiBind +
-                " --url stratum+tcp://x16r.eu.mine.zpool.ca:3636" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " -d ";
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 CommandLine = sc + " -a x16rv2" + apiBind +
@@ -215,22 +200,6 @@ namespace NiceHashMiner.Miners
                  " -d ";
             }
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
-            {
-                CommandLine = sc + " -a cnv8" + apiBind +
-                " --url stratum+tcp://cryptonightv8.eu" + nhsuff + ".nicehash.com:3367" + " --user " + username + " -p x -d ";
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightR))
-            {
-                CommandLine = sc + " -a cnr" +
-                " -o stratum+tcp://cryptonightr.eu" + nhsuff + ".nicehash.com:3375" + " -u " + username + " -p x -d ";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.MTP))
-            {
-                CommandLine = sc + " -a mtp --allow_all_devices" +
-                 " -o stratum+tcp://xzc.2miners.com:8080" + " -u aMGfYX8ARy4wKE57fPxkEBcnNuHegDBweE" + " -p x -d ";
-            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 CommandLine = sc + " -a ethash" +
@@ -241,542 +210,151 @@ namespace NiceHashMiner.Miners
                 CommandLine = sc + " -a kawpow" +
                  " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.teamred" + " -p x -d ";
             }
-            //return $" -o stratum+tcp://xmr-eu.dwarfpool.com:8005 {variant} -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.{worker} -p x {extras} --api-port {ApiPort} --donate-level=1"
-            /*
-            CommandLine = " -a lyra2z "+
-                          " --url " + url +
-                          " --user " + username +
-                          " -p x " +
-                          ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD) +
-                          " -d ";
-*/
+
             
-            CommandLine += GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+            CommandLine += GetDevicesCommandString() + 
+                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD)+
+                apiBind;
             TotalCount = (time / 30) * 2;
             return CommandLine;
 
         }
 
         protected override bool BenchmarkParseLine(string outdata) {
-            string hashSpeed = "";
-            int kspeed = 1;
-
-            //Helpers.ConsolePrint("TEAMRED:", outdata);
-            //[2019-02-02 23:44:25] GPU 0 [64C, fan 39%] lyra2rev3: 22.58Mh/s, avg 22.93Mh/s,
-            //[2019-03-09 11:21:02] GPU 1 [ 0C, fan  0%]       cnr: 3.072kh/s, avg 1.531kh/s, pool 1.579kh/s a:3 r:0 hw:0
-            if (outdata.Contains("lyra2rev3: "))
-            {
-                int i = outdata.IndexOf("lyra2rev3: ");
-                int k = outdata.IndexOf("h/s, avg");
-                hashSpeed = outdata.Substring(i + 11, k - i - 12).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    if (count - 3 > 0)
-                    {
-                        BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3); ////PVS-Studio - stupid program! Выше условие на больше нуля
-                    }
-                    else BenchmarkAlgorithm.BenchmarkSpeed = 0d;
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            if (outdata.Contains("cnv8: "))
-            {
-                int i = outdata.IndexOf("cnv8: ");
-                int k = outdata.IndexOf("h/s, avg");
-                hashSpeed = outdata.Substring(i + 5, k - i - 6).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0,65).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    if (count - 3 > 0)
-                    {
-                        BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    }
-                    else BenchmarkAlgorithm.BenchmarkSpeed = 0d;
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            if (outdata.Contains("cnr: "))
-            {
-                int i = outdata.IndexOf("cnr: ");
-                int k = outdata.IndexOf("h/s, avg");
-                hashSpeed = outdata.Substring(i + 5, k - i - 6).Trim();
-                //Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    if (count - 3 > 0)
-                    {
-                        BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    }
-                    else BenchmarkAlgorithm.BenchmarkSpeed = 0d;
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-
-            if (outdata.Contains("mtp: "))
-            {
-                int i = outdata.IndexOf("mtp: ");
-                int k = outdata.IndexOf("h/s, avg");
-                hashSpeed = outdata.Substring(i + 5, k - i - 6).Trim();
-                //Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            //Total                      ethash: 28.63Mh/s, avg 25.96Mh/s, pool 49.99Mh/s 
-            if (outdata.Contains("ethash: "))
-            {
-                int i = outdata.IndexOf("ethash: ");
-                int k = outdata.IndexOf("h/s, avg");
-                hashSpeed = outdata.Substring(i + 8, k - i - 9).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            if (outdata.Contains("kawpow: "))
-            {
-                int i = outdata.IndexOf("kawpow: ");
-                int k = outdata.IndexOf("h/s, avg");
-                hashSpeed = outdata.Substring(i + 8, k - i - 9).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            //GPU 0 [56C, fan 35%] lyra2z: 1.410Mh/s, avg 1.437Mh/s, pool   0.0 h/s a:0 r:0 hw:0
-            if (outdata.Contains("lyra2z: ") )
-            {
-                int i = outdata.IndexOf("lyra2z: ");
-                int k = outdata.IndexOf("h/s, avg");
-                hashSpeed = outdata.Substring(i+8 , k - i-9).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(speed / (count - 3));
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            if (outdata.Contains("x16r: "))
-            {
-                int i = outdata.IndexOf("avg ");
-                int k = outdata.IndexOf("h/s, pool");
-                hashSpeed = outdata.Substring(i + 4, k - i - 5).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            if (outdata.Contains("x16rv2: "))
-            {
-                int i = outdata.IndexOf("avg ");
-                int k = outdata.IndexOf("h/s, pool");
-                hashSpeed = outdata.Substring(i + 4, k - i - 5).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("H/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("KH/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 70).ToUpper().Contains("MH/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            //GPU 0 [75C, fan 75%]       cuckarood29_grin: 3.470 g/s, avg 3.467 g/s, pool 0.000 g/s a:0 r:2 hw:0
-            if (outdata.Contains("cuckarood29_grin: "))
-            {
-                int i = outdata.IndexOf("avg ");
-                int k = outdata.IndexOf("g/s, pool");
-                hashSpeed = outdata.Substring(i + 4, k - i - 5).Trim();
-                Helpers.ConsolePrint(hashSpeed, "");
-                if (outdata.ToUpper().Contains("G/S"))
-                {
-                    kspeed = 1;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("KG/S"))
-                {
-                    kspeed = 1000;
-                }
-                if (outdata.Substring(0, 65).ToUpper().Contains("MG/S"))
-                {
-                    kspeed = 1000000;
-                }
-                count++;
-                if (count >= 4) //skip 2*30=1min
-                {
-                    try
-                    {
-                        tmp = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * kspeed;
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    if (tmp > 0)
-                    {
-                        speed = speed + tmp;
-                    }
-                    else
-                    {
-                        count--;
-                    }
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count - 3);
-                    if (count >= TotalCount)
-                    {
-                        BenchmarkSignalFinnished = true;
-                        return true;
-                    }
-                }
-            }
-            
             return false;
 
         }
 
-      
+        protected override void BenchmarkThreadRoutine(object commandLine)
+        {
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+            double repeats = 0.0d;
+            double summspeed = 0.0d;
+
+            try
+            {
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                //Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
+                var benchmarkTimer = new Stopwatch();
+                benchmarkTimer.Reset();
+                benchmarkTimer.Start();
+                BenchmarkThreadRoutineStartSettup();
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                while (IsActiveProcess(BenchmarkHandle.Id))
+                {
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 2)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null)
+                    {
+                        var imageName = MinerExeName.Replace(".exe", "");
+                        int k = ProcessTag().IndexOf("pid(");
+                        int i = ProcessTag().IndexOf(")|bin");
+                        var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
+                        int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
+                        KillProcessAndChildren(pid);
+
+                        if (BenchmarkSignalTimedout)
+                        {
+                            throw new Exception("Benchmark timedout");
+                        }
+
+                        if (BenchmarkException != null)
+                        {
+                            throw BenchmarkException;
+                        }
+
+                        if (BenchmarkSignalQuit)
+                        {
+                            throw new Exception("Termined by user request");
+                        }
+
+                        if (BenchmarkSignalFinnished)
+                        {
+                            break;
+                        }
+                        break;
+                    }
+
+                    // wait a second due api request
+                    Thread.Sleep(1000);
+                    
+                    int delay_before_calc_hashrate = 90;
+                    int bench_time = 30;
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        delay_before_calc_hashrate = 60;
+                        bench_time = 30;
+                    }
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
+                    {
+                        delay_before_calc_hashrate = 30;
+                        bench_time = 30;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                    {
+                        delay_before_calc_hashrate = 60;
+                        bench_time = 30;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                    {
+                        delay_before_calc_hashrate = 60;
+                        bench_time = 30;
+                    }
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        
+                        repeats++;
+                        if (repeats > delay_before_calc_hashrate)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            summspeed += ad.Result.Speed;
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+                        
+                        if (repeats >= bench_time + delay_before_calc_hashrate)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString() + " bench_time:" + bench_time.ToString());
+                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (bench_time), 2);
+                          break;
+                        }
+                        
+                    }
+                }
+                //BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - 5), 2);
+            }
+            catch (Exception ex)
+            {
+                BenchmarkThreadRoutineCatch(ex);
+            }
+            finally
+            {
+
+                BenchmarkThreadRoutineFinish();
+            }
+        }
+
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
-            CheckOutdata(outdata);
+            //CheckOutdata(outdata);
         }
 
 
         #endregion // Decoupled benchmarking routines
 
-        // TODO _currentMinerReadStatus
         public override async Task<ApiData> GetSummaryAsync()
         {
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
@@ -803,18 +381,6 @@ namespace NiceHashMiner.Miners
 
                 var checkGpuStatus = resp2.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
-                /*
-                for (var i = 1; i < checkGpuStatus.Length - 1; i++)
-                {
-                    if (checkGpuStatus[i].Contains("Enabled=Y") && !checkGpuStatus[i].Contains("Status=Alive"))
-                    {
-                        Helpers.ConsolePrint(MinerTag(),
-                            ProcessTag() + " GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
-                        CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
-                        return null;
-                    }
-                }
-                */
                 var resps = resp.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (resps[1].Contains("SUMMARY"))
