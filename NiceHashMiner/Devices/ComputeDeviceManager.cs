@@ -29,8 +29,22 @@ namespace NiceHashMiner.Devices
     /// ComputeDeviceManager class is used to query ComputeDevices avaliable on the system.
     /// Query CPUs, GPUs [Nvidia, AMD]
     /// </summary>
-    public class ComputeDeviceManager
+    public static class ComputeDeviceManager
     {
+        #region JSON settings
+        private static JsonSerializerSettings _jsonSettings;
+
+        public static void DeviceDetectionPrinter()
+        {
+            _jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                Culture = CultureInfo.InvariantCulture
+            };
+        }
+        #endregion JSON settings
+
         public static class Query
         {
             private const string Tag = "ComputeDeviceManager.Query";
@@ -175,14 +189,14 @@ namespace NiceHashMiner.Devices
                 */
 
                 // check CUDA devices
-                var currentCudaDevices = new List<CudaDevice>();
+                //var currentCudaDevices = new List<CudaDevice>();
+                var currentCudaDevices = new CudaDevicesList();
               //  if (!Nvidia.IsSkipNvidia())
                     Nvidia.QueryCudaDevices(ref currentCudaDevices);
+                var currentCudaDevices2 = new CudaDevicesList();
 
-                var currentCudaDevices2 = new List<CudaDevice>();
-
-                var gpusOld = _cudaDevices.Count;
-                var gpusNew = Math.Max(currentCudaDevices.Count, currentCudaDevices2.Count);
+                var gpusOld = _cudaDevices.CudaDevices.Count;
+                var gpusNew = Math.Max(currentCudaDevices.CudaDevices.Count, currentCudaDevices2.CudaDevices.Count);
 
                 Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
                     "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
@@ -267,14 +281,15 @@ namespace NiceHashMiner.Devices
                             Helpers.ConsolePrint(Tag,
                                 "Device not supported NVIDIA/CUDA device not supported " + vidCtrl.Name);
                         }
-                        amdCount += (vidCtrl.Name.ToLower().Contains("amd")) ? 1 : 0;
+                        amdCount += (vidCtrl.Name.ToLower().Contains("amd") || vidCtrl.Name.ToLower().Contains("radeon")) ? 1 : 0;
                     }
                     Helpers.ConsolePrint(Tag,
-                        nvidiaCount == _cudaDevices.Count
+                        nvidiaCount == _cudaDevices.CudaDevices.Count
                             ? "Cuda NVIDIA/CUDA device count GOOD"
                             : "Cuda NVIDIA/CUDA device count BAD!!!");
                     Helpers.ConsolePrint(Tag,
-                        amdCount == AmdDevices.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!!");
+                        amdCount == AmdDevices.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!! " +
+                        amdCount.ToString() + " " + AmdDevices.Count.ToString());
                 }
                 // allerts
                 _currentNvidiaSmiDriver = GetNvidiaSmiDriver();
@@ -303,7 +318,7 @@ namespace NiceHashMiner.Devices
                 var isNvidiaErrorShown = false; // to prevent showing twice
                 var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning &&
                                   WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && _cudaDevices.Count != nvidiaCount &&
+                if (showWarning && _cudaDevices.CudaDevices.Count != nvidiaCount &&
                     _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaMinDetectionDriver))
                 {
                     isNvidiaErrorShown = true;
@@ -653,7 +668,7 @@ namespace NiceHashMiner.Devices
                 }
             }
 
-            private static List<CudaDevice> _cudaDevices = new List<CudaDevice>();
+            private static CudaDevicesList _cudaDevices = new CudaDevicesList();
 
             public static class Nvidia
             {
@@ -677,7 +692,7 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
                     QueryCudaDevices(ref _cudaDevices);
 
-                    if (_cudaDevices != null && _cudaDevices.Count != 0)
+                    if (_cudaDevices != null && _cudaDevices.CudaDevices.Count != 0)
                     {
                         Available.HasNvidia = true;
                         var stringBuilder = new StringBuilder();
@@ -736,7 +751,7 @@ namespace NiceHashMiner.Devices
                             Helpers.ConsolePrint("NVML", e.ToString());
                         }
 
-                        foreach (var cudaDev in _cudaDevices)
+                        foreach (var cudaDev in _cudaDevices.CudaDevices)
                         {
                             // check sm vesrions
                             bool isUnderSM21;
@@ -756,7 +771,7 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
                             stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
                             stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
-                            stringBuilder.AppendLine($"\t\tSM: {cudaDev.SMVersionString}");
+                            stringBuilder.AppendLine($"\t\tMonitor?: {cudaDev.HasMonitorConnected}");
                             stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
                             stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
 
@@ -803,7 +818,8 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
                 }
 
-                public static void QueryCudaDevices(ref List<CudaDevice> cudaDevices)
+                private static List<CudaDevices2> _CudaDeviceList = new List<CudaDevices2>();
+                public static void QueryCudaDevices(ref CudaDevicesList _cudaDevices)
                 {
                     _queryCudaDevicesString = "";
 
@@ -811,8 +827,9 @@ namespace NiceHashMiner.Devices
                     {
                         StartInfo =
                         {
-                            FileName = "CudaDeviceDetection.exe",
+                            FileName = "common/DeviceDetection/device_detection.exe",
                             UseShellExecute = false,
+                            Arguments = "cuda",
                             RedirectStandardError = true,
                             RedirectStandardOutput = true,
                             CreateNoWindow = true
@@ -849,22 +866,25 @@ namespace NiceHashMiner.Devices
                         {
                             try
                             {
-                                cudaDevices =
-                                    JsonConvert.DeserializeObject<List<CudaDevice>>(_queryCudaDevicesString,
-                                        Globals.JsonSettings);
+                                _cudaDevices = JsonConvert.DeserializeObject<CudaDevicesList>(_queryCudaDevicesString);
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("QueryCudaDevices", ex.ToString());
+                                _cudaDevices = null;
+                            }
 
-                            if (_cudaDevices == null || _cudaDevices.Count == 0)
+                                if (_cudaDevices == null || _cudaDevices.CudaDevices.Count == 0)
                                 Helpers.ConsolePrint(Tag,
-                                    "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
+                                    "CudaDevicesDetection found no devices("+ _cudaDevices.CudaDevices.Count.ToString()+"). CudaDevicesDetection returned: " +
                                     _queryCudaDevicesString);
                         }
                     }
                 }
             }
 
-            private static List<OpenCLJsonData> _openCLJsonData = new List<OpenCLJsonData>();
+            private static List<OpenCLDevice> _OpenCLDevice = new List<OpenCLDevice>();
+            private static OpenCLJsonData _openCLJsonData = new OpenCLJsonData();
             private static bool _isOpenCLQuerySuccess = false;
 
             private static class OpenCL
@@ -886,8 +906,9 @@ namespace NiceHashMiner.Devices
                     {
                         StartInfo =
                         {
-                            FileName = "AMDOpenCLDeviceDetection.exe",
+                            FileName = "common/DeviceDetection/device_detection.exe",
                             UseShellExecute = false,
+                            Arguments = "ocl",
                             RedirectStandardError = true,
                             RedirectStandardOutput = true,
                             CreateNoWindow = true
@@ -924,12 +945,11 @@ namespace NiceHashMiner.Devices
                         {
                             try
                             {
-                                _openCLJsonData =
-                                    JsonConvert.DeserializeObject<List<OpenCLJsonData>>(_queryOpenCLDevicesString,
-                                        Globals.JsonSettings);
+                                _openCLJsonData = JsonConvert.DeserializeObject<OpenCLJsonData>(_queryOpenCLDevicesString);
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                Helpers.ConsolePrint("QueryOpenCLDevices", ex.ToString());
                                 _openCLJsonData = null;
                             }
                         }
@@ -947,10 +967,10 @@ namespace NiceHashMiner.Devices
                         var stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
-                        foreach (var oclElem in _openCLJsonData)
+                        foreach (var oclPlat in _openCLJsonData.Platforms)
                         {
-                            stringBuilder.AppendLine($"\tFound devices for platform: {oclElem.PlatformName}");
-                            foreach (var oclDev in oclElem.Devices)
+                            stringBuilder.AppendLine($"\tFound devices for platform: {oclPlat.PlatformName}");
+                            foreach (var oclDev in oclPlat.Devices)
                             {
                                 stringBuilder.AppendLine("\t\tDevice:");
                                 stringBuilder.AppendLine($"\t\t\tDevice ID {oclDev.DeviceID}");

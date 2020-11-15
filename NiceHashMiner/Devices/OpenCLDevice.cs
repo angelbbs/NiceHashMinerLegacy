@@ -9,14 +9,15 @@ namespace NiceHashMiner.Devices
     [Serializable]
     public class OpenCLDevice
     {
-        public uint DeviceID;
-        public string _CL_DEVICE_NAME;
-        public string _CL_DEVICE_TYPE;
-        public ulong _CL_DEVICE_GLOBAL_MEM_SIZE = 0;
-        public ulong _CL_DEVICE_MAX_MEM_ALLOC_SIZE = 0;
-        public string _CL_DEVICE_VENDOR;
-        public string _CL_DEVICE_VERSION;
-        public string _CL_DRIVER_VERSION;
-        public int AMD_BUS_ID = -1; // -1 indicates that it is not set
+        public int BUS_ID { get; set; } = -1; // -1 indicates that it is not set
+        public uint DeviceID { get; set; }
+        public ulong _CL_DEVICE_GLOBAL_MEM_SIZE { get; set; } = 0;
+        public string _CL_DEVICE_NAME { get; set; }
+        public string _CL_DEVICE_TYPE { get; set; }
+        public string _CL_DEVICE_VENDOR { get; set; }
+        public string _CL_DEVICE_VERSION { get; set; }
+        public string _CL_DRIVER_VERSION { get; set; }
+        public string _CL_DEVICE_BOARD_NAME_AMD { get; set; }
+
     }
 }

@@ -50,7 +50,7 @@ namespace NiceHashMiner.Devices.Querying
             _availableControllers = availControllers;
         }
 
-        public List<OpenCLDevice> QueryAmd(bool openCLSuccess, IEnumerable<OpenCLJsonData> openCLData)
+        public List<OpenCLDevice> QueryAmd(bool openCLSuccess, OpenCLJsonData openCLData)
         {
             Helpers.ConsolePrint(Tag, "QueryAMD START");
 
@@ -113,13 +113,14 @@ namespace NiceHashMiner.Devices.Querying
             }
         }
 
-        private List<OpenCLDevice> ProcessDevices(IEnumerable<OpenCLJsonData> openCLData)
+        //private List<OpenCLDevice> ProcessDevices(IEnumerable<OpenCLJsonData> openCLData)
+        private List<OpenCLDevice> ProcessDevices(OpenCLJsonData openCLData)
         {
             var amdOclDevices = new List<OpenCLDevice>();
             var amdDevices = new List<OpenCLDevice>();
 
             var amdPlatformNumFound = false;
-            foreach (var oclEl in openCLData)
+            foreach (var oclEl in openCLData.Platforms)
             {
                 if (!oclEl.PlatformName.Contains("AMD") && !oclEl.PlatformName.Contains("amd")) continue;
                 amdPlatformNumFound = true;
@@ -177,16 +178,16 @@ namespace NiceHashMiner.Devices.Querying
                         int.TryParse(overrides[i], out var overrideBus) &&
                         overrideBus >= 0)
                     {
-                        amdOclDev.AMD_BUS_ID = overrideBus;
+                        amdOclDev.BUS_ID = overrideBus;
                     }
 
-                    if (amdOclDev.AMD_BUS_ID < 0 || !_busIdInfos.ContainsKey(amdOclDev.AMD_BUS_ID))
+                    if (amdOclDev.BUS_ID < 0 || !_busIdInfos.ContainsKey(amdOclDev.BUS_ID))
                     {
                         isBusIDOk = false;
                         break;
                     }
 
-                    busIDs.Add(amdOclDev.AMD_BUS_ID);
+                    busIDs.Add(amdOclDev.BUS_ID);
                 }
 
                 // check if unique
@@ -225,7 +226,7 @@ namespace NiceHashMiner.Devices.Querying
                 {
                     ComputeDeviceManager.Available.HasAmd = true;
 
-                    var busID = dev.AMD_BUS_ID;
+                    var busID = dev.BUS_ID;
                     var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE;
 
                     if (busID != -1 && _busIdInfos.ContainsKey(busID))

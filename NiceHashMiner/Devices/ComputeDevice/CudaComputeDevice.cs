@@ -375,7 +375,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int gpuCount,
+        public CudaComputeDevice(CudaDevices2 cudaDevice, DeviceGroupType group, int gpuCount,
             NvPhysicalGpuHandle nvHandle, nvmlDevice nvmlHandle)
             : base((int) cudaDevice.DeviceID,
                 cudaDevice.GetName(),

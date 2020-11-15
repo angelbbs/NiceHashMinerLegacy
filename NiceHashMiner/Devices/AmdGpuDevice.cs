@@ -14,7 +14,7 @@ namespace NiceHashMiner.Devices
         public const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " + " --temp-target 75 --auto-fan --auto-gpu ";
 
         public int DeviceID => (int) _openClSubset.DeviceID;
-        public int BusID => (int) _openClSubset.AMD_BUS_ID;
+        public int BusID => (int) _openClSubset.BUS_ID;
         public string DeviceName; // init this with the ADL
         public string UUID; // init this with the ADL, use PCI_VEN & DEV IDs
         //public ulong DeviceGlobalMemory => _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE;
