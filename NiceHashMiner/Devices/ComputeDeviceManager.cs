@@ -44,7 +44,7 @@ namespace NiceHashMiner.Devices
             };
         }
         #endregion JSON settings
-
+        private static int CUDAQueryCount = 1;
         public static class Query
         {
             private const string Tag = "ComputeDeviceManager.Query";
@@ -200,7 +200,18 @@ namespace NiceHashMiner.Devices
 
                 Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
                     "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
-
+                if (gpusOld == gpusNew)
+                {
+                    CUDAQueryCount = 0;
+                    return false;
+                } else
+                {
+                    CUDAQueryCount++;
+                }
+                if (CUDAQueryCount >= 2)
+                {
+                    return true;
+                }
                 return (gpusNew < gpusOld);
             }
 
@@ -822,23 +833,35 @@ namespace NiceHashMiner.Devices
                 public static void QueryCudaDevices(ref CudaDevicesList _cudaDevices)
                 {
                     _queryCudaDevicesString = "";
-
+                    /*
                     var cudaDevicesDetection = new Process
                     {
-                        StartInfo =
+                        StartInfo = new StartInfo
                         {
                             FileName = "common/DeviceDetection/device_detection.exe",
-                            UseShellExecute = false,
-                            Arguments = "cuda",
+                            UseShellExecute = true,
+                            Arguments = "cuda -n",
                             RedirectStandardError = true,
                             RedirectStandardOutput = true,
                             CreateNoWindow = true
                         }
                     };
+                    */
+                    Process cudaDevicesDetection = new Process();
+                    cudaDevicesDetection.StartInfo.FileName = "common/DeviceDetection/device_detection.exe";
+                    cudaDevicesDetection.StartInfo.Arguments = "cuda -n";
+                    cudaDevicesDetection.StartInfo.UseShellExecute = false;
+                    cudaDevicesDetection.StartInfo.RedirectStandardOutput = true;
+                    cudaDevicesDetection.StartInfo.RedirectStandardError = true;
+                    cudaDevicesDetection.StartInfo.CreateNoWindow = true;
+                    //cudaDevicesDetection.Start();
+                    //cudaDevicesDetection.WaitForExit();
+
+                    /*
                     cudaDevicesDetection.OutputDataReceived += QueryCudaDevicesOutputErrorDataReceived;
                     cudaDevicesDetection.ErrorDataReceived += QueryCudaDevicesOutputErrorDataReceived;
-
-                    const int waitTime = 30 * 1000; // 30seconds
+                    */
+                    const int waitTime = 5 * 1000; // 30seconds
                     try
                     {
                         if (!cudaDevicesDetection.Start())
@@ -847,12 +870,19 @@ namespace NiceHashMiner.Devices
                         }
                         else
                         {
+                            Helpers.ConsolePrint(Tag, "CudaDevicesDetection process start sucessful");
+
+                            _queryCudaDevicesString += cudaDevicesDetection.StandardOutput.ReadToEnd();
+                            _queryCudaDevicesString += cudaDevicesDetection.StandardError.ReadToEnd();
+                            /*
                             cudaDevicesDetection.BeginErrorReadLine();
                             cudaDevicesDetection.BeginOutputReadLine();
+                            */
                             if (cudaDevicesDetection.WaitForExit(waitTime))
                             {
                                 cudaDevicesDetection.Close();
                             }
+                            
                         }
                     }
                     catch (Exception ex)
@@ -862,6 +892,12 @@ namespace NiceHashMiner.Devices
                     }
                     finally
                     {
+                        Helpers.ConsolePrint(Tag, _queryCudaDevicesString);
+                        if (cudaDevicesDetection != null)
+                        {
+                            cudaDevicesDetection.Close();
+                            cudaDevicesDetection.Dispose();
+                        }
                         if (_queryCudaDevicesString != "")
                         {
                             try
@@ -902,13 +938,14 @@ namespace NiceHashMiner.Devices
                 public static void QueryOpenCLDevices()
                 {
                     Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
+                    /*
                     var openCLDevicesDetection = new Process
                     {
                         StartInfo =
                         {
                             FileName = "common/DeviceDetection/device_detection.exe",
                             UseShellExecute = false,
-                            Arguments = "ocl",
+                            Arguments = "ocl -n",
                             RedirectStandardError = true,
                             RedirectStandardOutput = true,
                             CreateNoWindow = true
@@ -916,8 +953,16 @@ namespace NiceHashMiner.Devices
                     };
                     openCLDevicesDetection.OutputDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
                     openCLDevicesDetection.ErrorDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
+                    */
+                    Process openCLDevicesDetection = new Process();
+                    openCLDevicesDetection.StartInfo.FileName = "common/DeviceDetection/device_detection.exe";
+                    openCLDevicesDetection.StartInfo.Arguments = "ocl -n";
+                    openCLDevicesDetection.StartInfo.UseShellExecute = false;
+                    openCLDevicesDetection.StartInfo.RedirectStandardOutput = true;
+                    openCLDevicesDetection.StartInfo.RedirectStandardError = true;
+                    openCLDevicesDetection.StartInfo.CreateNoWindow = true;
 
-                    const int waitTime = 30 * 1000; // 30seconds
+                    const int waitTime = 5 * 1000; // 30seconds
                     try
                     {
                         if (!openCLDevicesDetection.Start())
@@ -926,8 +971,12 @@ namespace NiceHashMiner.Devices
                         }
                         else
                         {
+                            _queryOpenCLDevicesString += openCLDevicesDetection.StandardOutput.ReadToEnd();
+                            _queryOpenCLDevicesString += openCLDevicesDetection.StandardError.ReadToEnd();
+                            /*
                             openCLDevicesDetection.BeginErrorReadLine();
                             openCLDevicesDetection.BeginOutputReadLine();
+                            */
                             if (openCLDevicesDetection.WaitForExit(waitTime))
                             {
                                 openCLDevicesDetection.Close();

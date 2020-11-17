@@ -60,11 +60,10 @@ namespace NiceHashMiner
                     port = sslPort;
                     break;
             }
-            var nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
                 return prefix
                    + name
                    + "." + miningLocation
-                   + nhsuff + ".nicehash.com:"
+                   + ".nicehash.com:"
                    + port;
 
         }

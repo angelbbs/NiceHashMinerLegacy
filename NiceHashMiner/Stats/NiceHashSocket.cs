@@ -56,7 +56,6 @@ namespace NiceHashMiner.Stats
         public event EventHandler<MessageEventArgs> OnDataReceived;
         public event EventHandler OnConnectionLost;
         public static string RigID => UUID.GetDeviceB64UUID();
-        private Timer _attemptReconnect;
 
         public NiceHashSocket(string address)
         {
@@ -78,27 +77,20 @@ namespace NiceHashMiner.Stats
             if (worker != null) _login.worker = worker;
             if (group != null) _login.group = group;
 #endif
-            // Helpers.ConsolePrint("rig:", RigID);
-         //  NiceHashStats.LoadSMA(); //for first run
             try
             {
                 if (_webSocket == null)
                 {
                     _webSocket = new WebSocket(_address);
-
-                    //_webSocket.OnOpen += Login;
                     }
                 else
                 {
                     Helpers.ConsolePrint("SOCKET", $"Credentials change reconnecting nhmws");
                     _connectionEstablished = false;
                     _restartConnection = true;
-                    //_webSocket?.Close(CloseStatusCode.Normal, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
-                    //_webSocket?.Close(CloseStatusCode.Normal, $"Credentials change reconnecting.");
                     _webSocket.Close();
                 }
                 Helpers.ConsolePrint("SOCKET", "Connecting");
-                //    _webSocket.OnOpen += Login;
                 _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                 _webSocket.OnOpen += ConnectCallback;
                 _webSocket.OnMessage += ReceiveCallbackNew;
@@ -174,18 +166,7 @@ namespace NiceHashMiner.Stats
                 {
                     _webSocket = null; //force
                     StartConnectionNew();
-                    /*
-                    if (AttemptReconnectNew() && !recurs)
-                   // if (AttemptReconnectNew())
-                    {
-                        // Reconnect was successful, send data again (safety to prevent recursion overload)
-                        SendDataNew(data, true);
-                    }
-                    else
-                    {
-                        Helpers.ConsolePrint("SOCKETNEW", "Socket connection unsuccessfull, will try again on next device update (1min)");
-                    }
-                    */
+
                 }
                 else
                 {
@@ -363,62 +344,39 @@ namespace NiceHashMiner.Stats
 
                 if (!Configs.ConfigManager.GeneralConfig.MachineGuid.Equals(rig) && Configs.ConfigManager.GeneralConfig.CpuID.Equals(CpuID))
                 {
-                    /*
-                    Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.MachineGuid);
-                    Helpers.ConsolePrint("UUID", rig);
-                    Helpers.ConsolePrint("UUID", Configs.ConfigManager.GeneralConfig.CpuID);
-                    Helpers.ConsolePrint("UUID", CpuID);
-                    */
                     Helpers.ConsolePrint("UUID", "New MachineGuid. Maybe error. Using previous MachineGuid");
                     rig = Configs.ConfigManager.GeneralConfig.MachineGuid;
                 }
                 var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
 
-                if (Configs.ConfigManager.GeneralConfig.NewPlatform)
+                protocol = 3;
+                version = "NHML/3.0.4.2"; //
+                if (ConfigManager.GeneralConfig.Send_actual_version_info)
                 {
-                    protocol = 3;
-                    version = "NHML/3.0.4.2"; //
-                    if (ConfigManager.GeneralConfig.Send_actual_version_info)
-                    {
-                        version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
-                    }
-                    btc = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;
-                    worker = Configs.ConfigManager.GeneralConfig.WorkerName;
-
-
-                    var login = new NicehashLoginNew
-                    {
-                        version = version,
-                        protocol = protocol,
-                        btc = btc,
-                        worker = worker,
-                        group = group,
-                        rig = rig
-
-                    };
-                    var loginJson = JsonConvert.SerializeObject(login);
-                    //loginJson = loginJson.Replace("{", " { ");
-                    SendDataNew(loginJson);
-                } else
-                {
-                    protocol = 1;
-                    version = "NHML/3.0.4.2";
-
-
-                    var login = new NicehashLogin
-                    {
-                        version = version,
-                        protocol = protocol
-                    };
-                    var loginJson = JsonConvert.SerializeObject(login);
-                        SendDataNew(loginJson);
+                    version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
                 }
-                   // NiceHashStats.SetDeviceStatus("PENDING");
-                    Thread.Sleep(500);
-                    NiceHashStats.SetDeviceStatus("STOPPED", true);
+                btc = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;
+                worker = Configs.ConfigManager.GeneralConfig.WorkerName;
+
+
+                var login = new NicehashLoginNew
+                {
+                    version = version,
+                    protocol = protocol,
+                    btc = btc,
+                    worker = worker,
+                    group = group,
+                    rig = rig
+
+                };
+                var loginJson = JsonConvert.SerializeObject(login);
+                SendDataNew(loginJson);
+                Thread.Sleep(500);
+                NiceHashStats.SetDeviceStatus("STOPPED", true);
 
                 OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
-            } catch (Exception er)
+            }
+            catch (Exception er)
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
             }

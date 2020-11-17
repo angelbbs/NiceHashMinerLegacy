@@ -112,8 +112,7 @@ namespace NiceHashMiner.Configs
 
         public static bool IsRestartNeeded()
         {
-            return GeneralConfig.DebugConsole != _generalConfigBackup.DebugConsole
-                   || GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
+            return GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
                    || GeneralConfig.LogToFile != _generalConfigBackup.LogToFile
                    || GeneralConfig.SwitchMinSecondsFixed != _generalConfigBackup.SwitchMinSecondsFixed
                    || GeneralConfig.SwitchMinSecondsAMD != _generalConfigBackup.SwitchMinSecondsAMD
@@ -123,7 +122,9 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.DevicesCountIndex != _generalConfigBackup.DevicesCountIndex
                    || GeneralConfig.ProgramMonitoring != _generalConfigBackup.ProgramMonitoring
                    || GeneralConfig.Use_OpenHardwareMonitor != _generalConfigBackup.Use_OpenHardwareMonitor
-                   || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting;
+                   || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
+                   || GeneralConfig.RestartDriverOnCUDA_GPU_Lost != _generalConfigBackup.RestartDriverOnCUDA_GPU_Lost
+                   || GeneralConfig.RestartWindowsOnCUDA_GPU_Lost != _generalConfigBackup.RestartWindowsOnCUDA_GPU_Lost;
         }
 
         public static void GeneralConfigFileCommit()

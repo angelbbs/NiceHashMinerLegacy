@@ -33,28 +33,16 @@ namespace NiceHashMiner.Miners
             {
                 case MinerBaseType.Claymore:
                     return CreateClaymore(algorithm);
-                case MinerBaseType.XmrStak:
-                    return new XmrStak.XmrStak();
-                case MinerBaseType.EWBF:
-                    return new Ewbf();
                 case MinerBaseType.Xmrig:
-                    return new Xmrig();
-                case MinerBaseType.XmrigAMD:
                     return new Xmrig();
                 case MinerBaseType.SRBMiner:
                     return new SRBMiner();
-                case MinerBaseType.cpuminer:
-                    return new CpuMiner();
-                case MinerBaseType.CastXMR:
-                    return new CastXMR();
                 case MinerBaseType.hsrneoscrypt:
                     return new hsrneoscrypt();
                 case MinerBaseType.CryptoDredge:
                     return new CryptoDredge();
                 case MinerBaseType.ZEnemy:
                     return new ZEnemy();
-                case MinerBaseType.lyclMiner:
-                    return new lyclMiner();
                 case MinerBaseType.trex:
                     return new trex();
                 case MinerBaseType.teamredminer:
@@ -67,12 +55,6 @@ namespace NiceHashMiner.Miners
                     return new lolMiner();
                 case MinerBaseType.WildRig:
                     return new WildRig();
-                case MinerBaseType.Bminer:
-                    return new Bminer();
-                case MinerBaseType.TTMiner:
-                    return new TTMiner();
-                case MinerBaseType.XmrigNVIDIA:
-                    return new Xmrig();
                 case MinerBaseType.NBMiner:
                     return new NBMiner(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.miniZ:

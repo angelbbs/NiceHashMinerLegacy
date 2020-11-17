@@ -19,8 +19,6 @@ namespace NiceHashMiner.Devices
         private readonly int _adapterIndex; // For ADL
         private readonly int _adapterIndex2; // For ADL2
         private readonly IntPtr _adlContext;
-        private bool _powerHasFailed;
-        //private static readonly Computer _gpus = new Computer { GPUEnabled = true };
 
         public override int FanSpeed
         {

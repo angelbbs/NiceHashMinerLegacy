@@ -261,11 +261,6 @@ namespace NiceHashMiner
                 {
                     Logger.ConfigureWithFile();
                 }
-
-                if (ConfigManager.GeneralConfig.DebugConsole)
-                {
-                    PInvokeHelpers.AllocConsole();
-                }
                 
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 11.2)
                 {

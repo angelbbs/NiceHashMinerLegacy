@@ -41,11 +41,7 @@ namespace NiceHashMiner
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
-        private string _visitUrlNew = Links.VisitUrlNew;
-
         public Timer _minerStatsCheck;
-        //private Timer _smaMinerCheck;
-        //private Timer _bitcoinExchangeCheck;
         private Timer _startupTimer;
         private Timer _remoteTimer;
         private Timer _autostartTimer;
@@ -59,7 +55,6 @@ namespace NiceHashMiner
         private SystemTimer _computeDevicesCheckTimer;
         public static bool needRestart = false;
 
-        private bool _showWarningNiceHashData;
         private bool _demoMode;
 
         private readonly Random R;
@@ -78,14 +73,12 @@ namespace NiceHashMiner
         private bool _isManuallyStarted = false;
         private bool _isNotProfitable = false;
 
-        //private bool _isSmaUpdated = false;
         private Process mainproc = Process.GetCurrentProcess();
         public static double _factorTimeUnit = 1.0;
         public static int nanominerCount = 0;
         private int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
         private int groupBox1Top = 0;
-        bool firstStartConnection = false;
         private bool firstRun = false;
         public static Color _backColor;
         public static Color _foreColor;
@@ -391,7 +384,6 @@ namespace NiceHashMiner
             textBoxBTCAddress_new.Text = ConfigManager.GeneralConfig.BitcoinAddressNew;
             textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
 
-            _showWarningNiceHashData = true;
             _demoMode = false;
 
             // init active display currency after config load
@@ -599,7 +591,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("CheckGithub", er.ToString());
             }
         }
-
+        /*
         public static void checkD()
         {
             if (ConfigManager.GeneralConfig.DivertRun)
@@ -618,7 +610,7 @@ namespace NiceHashMiner
                 }
             }
         }
-
+        */
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             if (!ConfigManager.GeneralConfig.AutoStartMining)
@@ -733,7 +725,6 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
-            firstStartConnection = true;
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
 
             if (!MinersExistanceChecker.IsMinersBinsInit())

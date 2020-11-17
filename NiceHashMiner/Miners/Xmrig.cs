@@ -85,11 +85,8 @@ namespace NiceHashMiner.Miners
             var algo = "cryptonightv7";
             var port = "3363";
             var variant = " --variant 1 ";
-            //cn/r cryptonight/r
-            string nhsuff = "";
-            string username = GetUsername(btcAdress, worker);
 
-            //FreeMem();
+            string username = GetUsername(btcAdress, worker);
 
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -107,53 +104,6 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
-            {
-                algo = "cryptonightv8";
-                port = "3367";
-                variant = " --variant 2 ";
-                return $" -o {url} {variant} -u {username}:x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
-               + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[2, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[3, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[4, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[5, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {platform}"
-               + GetDevicesCommandString().TrimStart();
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightHeavy))
-            {
-                algo = "cryptonightheavy";
-                port = "3364";
-                variant = "";
-                return $" --algo=cryptonight-heavy -o {url} {variant} -u {username}:x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
-               + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[2, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[3, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[4, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[5, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {platform}"
-               + GetDevicesCommandString().TrimStart();
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightR))
-            {
-                algo = "cryptonightr";
-                port = "3375";
-                variant = "";
-                return $" --algo=cryptonight/r -o {url} {variant} -u {username}:x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
-               + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[2, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[3, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[4, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[5, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-               + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {platform}"
-               + GetDevicesCommandString().TrimStart();
-            }
-
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
                 algo = "randomxmonero";
@@ -161,25 +111,20 @@ namespace NiceHashMiner.Miners
                 variant = "";
                 url = url.Replace("randomx", "randomxmonero");
                 return $" --algo=rx/0 -o {url} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
-               + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[2, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[3, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[4, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username} -p x {platform}"
+               + $" -o stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} -u {username} -p x "
+               + $" -o stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} -u {username} -p x "
+               + $" -o stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} -u {username} -p x "
+               + $" -o stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} -u {username} -p x "
+               + $" -o stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} -u {username} -p x {platform}"
                + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";
         }
         private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
         {
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
             if (url.Contains("Auto"))
             {
-                url = url.Replace("Auto", "eu" + nhsuff);
+                url = url.Replace("Auto", "eu");
             }
 
             foreach (var pair in MiningSetup.MiningPairs)
@@ -206,34 +151,6 @@ namespace NiceHashMiner.Miners
             var port = "3363";
             var variant = " --variant 1 ";
             string username = GetUsername(btcAdress, worker);
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
-            {
-                algo = "cryptonightv8";
-                port = "3367";
-                variant = " --variant 2 ";
-                //return $" -o stratum+tcp://xmr-eu.dwarfpool.com:8005 {variant} -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.{worker} -p x {extras} --api-port {ApiPort} --donate-level=1 "
-                return $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x "
-                + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {platform}"
-               + GetDevicesCommandString().TrimStart();
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightHeavy))
-            {
-                algo = "cryptonightheavy";
-                port = "3364";
-                variant = "";
-                return $" --algo=cryptonight-heavy -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {extras} --http-port {ApiPort} --donate-level=1 "
-                + $" -o stratum+tcp://{algo}.{myServers[1, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {platform}"
-               + GetDevicesCommandString().TrimStart();
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightR))
-            {
-                algo = "cryptonightr";
-                port = "3375";
-                variant = "";
-                return $" --algo=cryptonight/r -o stratum+tcp://xmr-eu1.nanopool.org:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.{worker} -p x {extras} --http-port {ApiPort} --donate-level=1 "
-                + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {platform}"
-               + GetDevicesCommandString().TrimStart();
-            }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
@@ -241,8 +158,7 @@ namespace NiceHashMiner.Miners
                 port = "3380";
                 variant = "";
                 return $" --algo=rx/0 -o stratum+tcp://pool.supportxmr.com:3333 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p x {extras} --http-port {ApiPort} --donate-level=1 "
-                //return $" --algo=rx/0 {extras} --http-port {ApiPort} --donate-level=1 "
-                + $" -o stratum+tcp://{algo}.{myServers[0, 0]}{nhsuff}.nicehash.com:{port} -u {username}:x {platform}"
+                + $" -o stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} -u {username}:x {platform}"
                + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";

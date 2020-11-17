@@ -40,7 +40,7 @@ namespace NiceHashMiner.Stats
                     Interlocked.Exchange(ref _usdBtcRate, value);
                     Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
                 }
-                if (value > 0 && value < 100 && Configs.ConfigManager.GeneralConfig.NewPlatform)
+                if (value > 0 && value < 100)
                 {
                     Helpers.ConsolePrint("NICEHASH", "BTC rate error: "+value.ToString());
                     GetNewBTCRate();

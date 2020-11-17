@@ -492,7 +492,6 @@ namespace NiceHashMiner.Devices.Querying
                                 var udid = osAdapterInfoData.ADLAdapterInfo[i].UDID;
                                 const int pciVenIDStrSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                 var uuid = udid.Substring(0, pciVenIDStrSize) + "_" + serial;
-                                var Newuuid = "";
                                 var budId = osAdapterInfoData.ADLAdapterInfo[i].BusNumber;
                                 var index = osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex;
 

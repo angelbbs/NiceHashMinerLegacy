@@ -29,17 +29,10 @@ namespace NiceHashMiner.Configs.Data
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";
         public bool DivertRun = true;
-        public bool DivertLog = false;
-        public bool SaveDivertPackets = false;
-        public bool BlockGMinerApacheTomcat = false;
         public bool ShowUptime = true;
         public bool ProgramMonitoring = true;
-        public bool DebugConsole = false;
-        public bool NewPlatform = true;
-        public string BitcoinAddress = "";
         public string BitcoinAddressNew = "";
         public string WorkerName = "worker1";
-        public string StratumSuff = "";
         public TimeUnitType TimeUnit = TimeUnitType.Day;
         public string IFTTTKey = "";
         public int ServiceLocation = 0;
@@ -48,8 +41,8 @@ namespace NiceHashMiner.Configs.Data
         public bool HideMiningWindows = false;
         public bool MinimizeToTray = false;
         public bool AlwaysOnTop = false;
-        public bool Lyra2z = false;
         public bool ShowFanAsPercent = false;
+        public bool ShowToolsFolder = false;
         public bool MOPA1 = true;
         public bool MOPA2 = false;
         public bool MOPA3 = false;
@@ -84,7 +77,6 @@ namespace NiceHashMiner.Configs.Data
         public int SettingsFormLeft = 0;
 
         public bool MinimizeMiningWindows = false;
-        public bool ResetProtocols = true;
 
         //public int LessThreads;
         public CpuExtensionType ForceCPUExtension = CpuExtensionType.Automatic;
@@ -211,7 +203,6 @@ namespace NiceHashMiner.Configs.Data
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             Language = LanguageType.En;
             ForceCPUExtension = CpuExtensionType.Automatic;
-            BitcoinAddress = "";
             WorkerName = "worker1";
             TimeUnit = TimeUnitType.Day;
             ServiceLocation = 0;
@@ -221,12 +212,7 @@ namespace NiceHashMiner.Configs.Data
             AutoStartMiningDelay = 0;
             //LessThreads = 0;
             DivertRun = true;
-            DivertLog = false;
-            SaveDivertPackets = false;
-            BlockGMinerApacheTomcat = false;
-            DebugConsole = false;
             HideMiningWindows = false;
-            Lyra2z = false;
             MinimizeToTray = false;
             AlwaysOnTop = false;
             BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
@@ -236,7 +222,7 @@ namespace NiceHashMiner.Configs.Data
             AutoScaleBTCValues = true;
             StartMiningWhenIdle = false;
             LogToFile = true;
-            LogMaxFileSize = 1048576;
+            LogMaxFileSize = 10485760;
             ShowDriverVersionWarning = true;
             DisableWindowsErrorReporting = true;
             ShowInternetConnectionWarning = true;
@@ -342,7 +328,7 @@ namespace NiceHashMiner.Configs.Data
             }
             if (LogMaxFileSize <= 0)
             {
-                LogMaxFileSize = 1048576;
+                LogMaxFileSize = 10485760;
             }
             // check port start number, leave about 2000 ports pool size, huge yea!
             if (ApiBindPortPoolStart > (65535 - 2000))

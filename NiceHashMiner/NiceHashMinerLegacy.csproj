@@ -145,8 +145,6 @@
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
-    <Compile Include="Miners\Bminer.cs" />
-    <Compile Include="Miners\castxmr.cs" />
     <Compile Include="Miners\ClaymoreNeoscryptMiner.cs" />
     <Compile Include="Miners\CryptoDredge.cs" />
     <Compile Include="Miners\DHClient4gb.cs" />
@@ -164,7 +162,6 @@
     <Compile Include="Miners\Ethash\IHashInfo.cs" />
     <Compile Include="Miners\Ethash\Keccak.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
-    <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\hsrneoscrypt.cs" />
     <Compile Include="Miners\lolMiner.cs" />
@@ -176,13 +173,7 @@
     <Compile Include="Miners\SRBMiner.cs" />
     <Compile Include="Miners\teamredminer.cs" />
     <Compile Include="Miners\trex.cs" />
-    <Compile Include="Miners\TTMiner.cs" />
     <Compile Include="Miners\WildRig.cs" />
-    <Compile Include="Miners\XmrigAMD.cs" />
-    <Compile Include="Miners\XmrigNVIDIA.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />
     <Compile Include="Miners\Kawpowminer.cs" />
     <Compile Include="Miners\Z-Enemy.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -192,8 +183,6 @@
     </Compile>
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
-    <Compile Include="Miners\XmrStak\XmrStak.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
@@ -331,7 +320,6 @@
     </Compile>
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
-    <Compile Include="Miners\CpuMiner.cs" />
     <Compile Include="Forms\Form_Main.cs">
       <SubType>Form</SubType>
     </Compile>

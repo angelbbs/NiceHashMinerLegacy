@@ -227,7 +227,6 @@ namespace NiceHashMiner.Devices
 
                         if (NVAPI.NvAPI_GPU_GetTachReading != null)
                         {
-                            //var result = NVAPI.NvAPI_GPU_GetTachReading(_nvHandle, out fanSpeed);
                             var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
                             if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                             {
@@ -250,8 +249,6 @@ namespace NiceHashMiner.Devices
                             if (ret != nvmlReturn.Success)
                             {
                                 Form_Main.needRestart = true;
-                                //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
-                                //throw new Exception($"NVML get fan speed failed with code: {ret}");
                             }
                             fan = (int)ufan;
                         }
@@ -262,55 +259,6 @@ namespace NiceHashMiner.Devices
 
                         return fan;
                     }
-                    return 0;
-
-
-                try
-                {
-                    foreach (var hardware in Form_Main.thisComputer.Hardware)
-                    {
-                        //hardware.Update();
-                        if (hardware.HardwareType == HardwareType.GpuNvidia)
-                        {
-                            //hardware.Update();
-                            int.TryParse(hardware.Identifier.ToString().Replace("/nvidiagpu/", ""), out var gpuId);
-                            if (gpuId == ID)
-                            {
-                                foreach (var sensor in hardware.Sensors)
-                                {
-                                    if (ConfigManager.GeneralConfig.ShowFanAsPercent)
-                                    {
-                                        if (sensor.SensorType == SensorType.Control)
-                                        {
-                                            if ((int)sensor.Value >= 0)
-                                            {
-                                                return (int)sensor.Value;
-                                            }
-                                            else return -1;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (sensor.SensorType == SensorType.Fan)
-                                        {
-                                            if ((int)sensor.Value >= 0)
-                                            {
-                                                return (int)sensor.Value;
-                                            }
-                                            else return -1;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception er)
-                {
-                    Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
-                }
-
-                return -1;
             }
         }
 

@@ -28,11 +28,6 @@ namespace NiceHashMiner.Miners
     public class GMiner : Miner
     {
         private int _benchmarkTimeWait = 120;
-        private int _benchmarkReadCount;
-        private double _benchmarkSum;
-        private double _benchmarkSumSecond;
-        //|  GPU0 63 C  53.8 Sol/s    4/0 127 W 0.42 Sol/W |
-      //  private const string LookForStart = "total speed: ";
         private const string LookForStart = " c ";
         private const string LookForStartDual = "h/s + ";
         private const string LookForEnd = "sol/s";
@@ -177,12 +172,6 @@ namespace NiceHashMiner.Miners
                 algoName = "cuckaroo29bfc";
                 ssl = " --ssl 0";
             }
-            
-            string nhsuff = "";
-            if (Configs.ConfigManager.GeneralConfig.NewPlatform)
-            {
-                nhsuff = Configs.ConfigManager.GeneralConfig.StratumSuff;
-            }
 
             if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
             {
@@ -225,15 +214,15 @@ namespace NiceHashMiner.Miners
             var ret = GetDevicesCommandString()
                       + " --algo " + algo + pers + " --server " + url.Split(':')[0]
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[1, 0] + nhsuff + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + myServers[1, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[2, 0] + nhsuff + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + myServers[2, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[3, 0] + nhsuff + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + myServers[3, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[4, 0] + nhsuff + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + myServers[4, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[5, 0] + nhsuff + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + myServers[5, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
                       + " --api " + ApiPort;
             return ret;

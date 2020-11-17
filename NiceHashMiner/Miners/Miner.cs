@@ -326,6 +326,25 @@ namespace NiceHashMiner
             var toRemovePidData = new List<MinerPidData>();
             Helpers.ConsolePrint(MinerTag(), "Trying to kill all miner processes for this instance:");
             var algo = (int)MiningSetup.CurrentAlgorithmType;
+            string strPlatform = "";
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                int a = (int)pair.Algorithm.NiceHashID;
+                pair.Device.AlgorithmID = a;
+
+                if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    strPlatform = "NVIDIA";
+                }
+                else if (pair.Device.DeviceType == DeviceType.AMD)
+                {
+                    strPlatform = "AMD";
+                }
+                else if (pair.Device.DeviceType == DeviceType.CPU)
+                {
+                    strPlatform = "CPU";
+                }
+            }
 
             foreach (var pidData in _allPidData)
             {
@@ -340,7 +359,7 @@ namespace NiceHashMiner
                             if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                             {
                                 Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo,
-                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
+                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
                             }
                             process.Kill();
                             process.Close();
@@ -458,6 +477,25 @@ namespace NiceHashMiner
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
         {
             var algo = (int)MiningSetup.CurrentAlgorithmType;
+            string strPlatform = "";
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                int a = (int)pair.Algorithm.NiceHashID;
+                pair.Device.AlgorithmID = a;
+
+                if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    strPlatform = "NVIDIA";
+                }
+                else if (pair.Device.DeviceType == DeviceType.AMD)
+                {
+                    strPlatform = "AMD";
+                }
+                else if (pair.Device.DeviceType == DeviceType.CPU)
+                {
+                    strPlatform = "CPU";
+                }
+            }
             if (IsRunning)
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Shutting down miner");
@@ -490,7 +528,7 @@ namespace NiceHashMiner
                             }
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
                     {
@@ -695,29 +733,10 @@ namespace NiceHashMiner
                 }
             };
 
-            if (this is Bminer)
-            {
-                //Directory.SetCurrentDirectory("miners/bminer");
-                //BenchmarkProcessPath = "cmd /C \\cd /d miners/bminer && bminer.exe ";
-                //benchmarkHandle.StartInfo.FileName = "bminer.exe";
-                BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
-                Helpers.ConsolePrint(MinerTag(), "Starting miner: " + BenchmarkProcessPath);
-                Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
-                //Helpers.ConsolePrint(MinerTag(), "WorkingDirectory: " + WorkingDirectory);
-                //WorkingDirectory = "";
-                benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-            }
-            else
-            {
                 BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-            }
-            /*
-            BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
-                Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
-                benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-                */
+
             // set sys variables
             if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
             {
@@ -1395,9 +1414,9 @@ namespace NiceHashMiner
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
 
                         P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2,  MinerDeviceName,
-                            strPlatform, w, ConfigManager.GeneralConfig.DivertLog,
-                            ConfigManager.GeneralConfig.SaveDivertPackets,
-                            ConfigManager.GeneralConfig.BlockGMinerApacheTomcat, Form_Main.CertInstalled,
+                            strPlatform, w, false,
+                            false,
+                            false, true,
                             ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch);
 
                         _currentPidData = new MinerPidData
@@ -1470,6 +1489,25 @@ namespace NiceHashMiner
                 : ms;
             Helpers.ConsolePrint(MinerTag(), ProcessTag() + $" directly Miner_Exited Will restart in {restartInMs} ms");
             var algo = (int)MiningSetup.CurrentAlgorithmType;
+            string strPlatform = "";
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                int a = (int)pair.Algorithm.NiceHashID;
+                pair.Device.AlgorithmID = a;
+
+                if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    strPlatform = "NVIDIA";
+                }
+                else if (pair.Device.DeviceType == DeviceType.AMD)
+                {
+                    strPlatform = "AMD";
+                }
+                else if (pair.Device.DeviceType == DeviceType.CPU)
+                {
+                    strPlatform = "CPU";
+                }
+            }
             if (ProcessHandle != null)
             {
                 if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
@@ -1485,7 +1523,7 @@ namespace NiceHashMiner
                             new Task(() => DHClient4gb.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
                     {
@@ -1509,6 +1547,25 @@ namespace NiceHashMiner
         {
             if (_isEnded) return;
             var algo = (int)MiningSetup.CurrentAlgorithmType;
+            string strPlatform = "";
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                int a = (int)pair.Algorithm.NiceHashID;
+                pair.Device.AlgorithmID = a;
+
+                if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    strPlatform = "NVIDIA";
+                }
+                else if (pair.Device.DeviceType == DeviceType.AMD)
+                {
+                    strPlatform = "AMD";
+                }
+                else if (pair.Device.DeviceType == DeviceType.CPU)
+                {
+                    strPlatform = "CPU";
+                }
+            }
             if (ProcessHandle != null)
             {
                 if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
@@ -1524,7 +1581,7 @@ namespace NiceHashMiner
                             new Task(() => DHClient4gb.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
                     {
