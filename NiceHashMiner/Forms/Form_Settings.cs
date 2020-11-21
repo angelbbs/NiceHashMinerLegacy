@@ -1061,6 +1061,13 @@ namespace NiceHashMiner.Forms
                 comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
                 comboBoxRestartProgram.SelectedIndex = ConfigManager.GeneralConfig.ProgramRestartIndex;
             }
+/*
+            if (!ConfigManager.GeneralConfig.ShowToolsFolder)
+            {
+                var tp = tabPageTools;
+                tabControlGeneral.TabPages.Remove(tp);
+            }
+*/
         }
 
         private void InitializeGeneralTab()
@@ -2212,6 +2219,68 @@ namespace NiceHashMiner.Forms
 
         private void checkBox_fiat_CheckedChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void buttonCurrPorts_Click(object sender, EventArgs e)
+        {
+            var cports = new ProcessStartInfo
+            {
+                FileName = "utils/cports-x64/cports.exe",
+                CreateNoWindow = false,
+                UseShellExecute = false
+            };
+            Process.Start(cports);
+        }
+
+        private void buttonOverdriveNTool_Click(object sender, EventArgs e)
+        {
+            var OverdriveNTool = new ProcessStartInfo
+            {
+                FileName = "utils/OverdriveNTool.exe",
+                CreateNoWindow = false,
+                UseShellExecute = false
+            };
+            Process.Start(OverdriveNTool);
+        }
+
+        private void buttonNVIDIAinspector_Click(object sender, EventArgs e)
+        {
+            var nvidiaInspector = new ProcessStartInfo
+            {
+                FileName = "utils/nvidiaInspector.exe",
+                CreateNoWindow = false,
+                UseShellExecute = false
+            };
+            Process.Start(nvidiaInspector);
+        }
+
+        private void buttonCheckNiceHashStatus_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://status.nicehash.com/");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var ps = Miner.PingServers();
+            if (ps < 0)
+            {
+                richTextBoxCheckNiceHashservers.Text += "NiceHash speedtest down. Try alternate method\n";
+                Miner.PingServers("daggerhashimoto");
+                for (int i = 0; i < 6; i++)
+                {
+                    var server = "daggerhashimoto." + Globals.MiningLocation[i] + ".nicehash.com";
+                    richTextBoxCheckNiceHashservers.Text += server + " ping: " + Form_Main.myServers[i, 1] + " ms\n";
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    var server = "speedtest." + Globals.MiningLocation[i] + ".nicehash.com";
+                    richTextBoxCheckNiceHashservers.Text += server + " ping: " + Form_Main.myServers[i, 1] + " ms\n";
+                }
+            }
 
         }
     }

@@ -150,9 +150,20 @@ namespace NiceHashMiner.Forms
             this.pictureBox_DisableDetectionNVIDIA = new System.Windows.Forms.PictureBox();
             this.checkBox_DisableDetectionAMD = new System.Windows.Forms.CheckBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
+            this.textBoxMaxEpoch = new System.Windows.Forms.TextBox();
+            this.labelMaxEpoch = new System.Windows.Forms.Label();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.buttonGPUtuning = new System.Windows.Forms.Button();
+            this.tabPageTools = new System.Windows.Forms.TabPage();
+            this.groupBoxToolsNH = new System.Windows.Forms.GroupBox();
+            this.buttonCheckNiceHashservers = new System.Windows.Forms.Button();
+            this.buttonCheckNiceHashStatus = new System.Windows.Forms.Button();
+            this.groupBoxToolsNET = new System.Windows.Forms.GroupBox();
+            this.buttonCurrPorts = new System.Windows.Forms.Button();
+            this.groupBoxToolsGPU = new System.Windows.Forms.GroupBox();
+            this.buttonNVIDIAinspector = new System.Windows.Forms.Button();
+            this.buttonOverdriveNTool = new System.Windows.Forms.Button();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
             this.groupBoxBackup = new System.Windows.Forms.GroupBox();
             this.checkBox_BackupBeforeUpdate = new System.Windows.Forms.CheckBox();
@@ -170,8 +181,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.textBoxMaxEpoch = new System.Windows.Forms.TextBox();
-            this.labelMaxEpoch = new System.Windows.Forms.Label();
+            this.richTextBoxCheckNiceHashservers = new System.Windows.Forms.RichTextBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -214,6 +224,10 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVIDIA)).BeginInit();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            this.tabPageTools.SuspendLayout();
+            this.groupBoxToolsNH.SuspendLayout();
+            this.groupBoxToolsNET.SuspendLayout();
+            this.groupBoxToolsGPU.SuspendLayout();
             this.tabPageAbout.SuspendLayout();
             this.groupBoxBackup.SuspendLayout();
             this.groupBoxUpdates.SuspendLayout();
@@ -269,6 +283,7 @@ namespace NiceHashMiner.Forms
             this.tabControlGeneral.Controls.Add(this.tabPageGeneral);
             this.tabControlGeneral.Controls.Add(this.tabPageAdvanced1);
             this.tabControlGeneral.Controls.Add(this.tabPageDevicesAlgos);
+            this.tabControlGeneral.Controls.Add(this.tabPageTools);
             this.tabControlGeneral.Controls.Add(this.tabPageAbout);
             // 
             // 
@@ -1711,6 +1726,24 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             // 
+            // textBoxMaxEpoch
+            // 
+            this.textBoxMaxEpoch.Location = new System.Drawing.Point(233, 222);
+            this.textBoxMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxMaxEpoch.Name = "textBoxMaxEpoch";
+            this.textBoxMaxEpoch.Size = new System.Drawing.Size(32, 20);
+            this.textBoxMaxEpoch.TabIndex = 408;
+            // 
+            // labelMaxEpoch
+            // 
+            this.labelMaxEpoch.AutoSize = true;
+            this.labelMaxEpoch.Location = new System.Drawing.Point(5, 225);
+            this.labelMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelMaxEpoch.Name = "labelMaxEpoch";
+            this.labelMaxEpoch.Size = new System.Drawing.Size(206, 13);
+            this.labelMaxEpoch.TabIndex = 407;
+            this.labelMaxEpoch.Text = "Maximum Epoch of DaggerHashimoto4GB";
+            // 
             // checkBox_Disable_extra_launch_parameter_checking
             // 
             this.checkBox_Disable_extra_launch_parameter_checking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1750,6 +1783,123 @@ namespace NiceHashMiner.Forms
             this.buttonGPUtuning.Text = "GPU tuning";
             this.buttonGPUtuning.UseVisualStyleBackColor = true;
             this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
+            // 
+            // tabPageTools
+            // 
+            this.tabPageTools.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageTools.Controls.Add(this.groupBoxToolsNH);
+            this.tabPageTools.Controls.Add(this.groupBoxToolsNET);
+            this.tabPageTools.Controls.Add(this.groupBoxToolsGPU);
+            this.tabPageTools.Location = new System.Drawing.Point(4, 23);
+            this.tabPageTools.Name = "tabPageTools";
+            this.tabPageTools.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTools.Size = new System.Drawing.Size(669, 439);
+            this.tabPageTools.TabIndex = 4;
+            this.tabPageTools.Text = "Tools";
+            // 
+            // groupBoxToolsNH
+            // 
+            this.groupBoxToolsNH.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxToolsNH.Controls.Add(this.richTextBoxCheckNiceHashservers);
+            this.groupBoxToolsNH.Controls.Add(this.buttonCheckNiceHashservers);
+            this.groupBoxToolsNH.Controls.Add(this.buttonCheckNiceHashStatus);
+            this.groupBoxToolsNH.Location = new System.Drawing.Point(5, 6);
+            this.groupBoxToolsNH.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxToolsNH.Name = "groupBoxToolsNH";
+            this.groupBoxToolsNH.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxToolsNH.Size = new System.Drawing.Size(657, 108);
+            this.groupBoxToolsNH.TabIndex = 398;
+            this.groupBoxToolsNH.TabStop = false;
+            this.groupBoxToolsNH.Text = "NiceHash";
+            // 
+            // buttonCheckNiceHashservers
+            // 
+            this.buttonCheckNiceHashservers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCheckNiceHashservers.Location = new System.Drawing.Point(177, 19);
+            this.buttonCheckNiceHashservers.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonCheckNiceHashservers.Name = "buttonCheckNiceHashservers";
+            this.buttonCheckNiceHashservers.Size = new System.Drawing.Size(144, 23);
+            this.buttonCheckNiceHashservers.TabIndex = 45;
+            this.buttonCheckNiceHashservers.Text = "Check NiceHash servers";
+            this.buttonCheckNiceHashservers.UseVisualStyleBackColor = true;
+            this.buttonCheckNiceHashservers.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // buttonCheckNiceHashStatus
+            // 
+            this.buttonCheckNiceHashStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCheckNiceHashStatus.Location = new System.Drawing.Point(4, 19);
+            this.buttonCheckNiceHashStatus.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonCheckNiceHashStatus.Name = "buttonCheckNiceHashStatus";
+            this.buttonCheckNiceHashStatus.Size = new System.Drawing.Size(144, 23);
+            this.buttonCheckNiceHashStatus.TabIndex = 44;
+            this.buttonCheckNiceHashStatus.Text = "Check NiceHash status";
+            this.buttonCheckNiceHashStatus.UseVisualStyleBackColor = true;
+            this.buttonCheckNiceHashStatus.Click += new System.EventHandler(this.buttonCheckNiceHashStatus_Click);
+            // 
+            // groupBoxToolsNET
+            // 
+            this.groupBoxToolsNET.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxToolsNET.Controls.Add(this.buttonCurrPorts);
+            this.groupBoxToolsNET.Location = new System.Drawing.Point(5, 120);
+            this.groupBoxToolsNET.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxToolsNET.Name = "groupBoxToolsNET";
+            this.groupBoxToolsNET.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxToolsNET.Size = new System.Drawing.Size(657, 108);
+            this.groupBoxToolsNET.TabIndex = 397;
+            this.groupBoxToolsNET.TabStop = false;
+            this.groupBoxToolsNET.Text = "Network";
+            // 
+            // buttonCurrPorts
+            // 
+            this.buttonCurrPorts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCurrPorts.Location = new System.Drawing.Point(4, 19);
+            this.buttonCurrPorts.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonCurrPorts.Name = "buttonCurrPorts";
+            this.buttonCurrPorts.Size = new System.Drawing.Size(144, 23);
+            this.buttonCurrPorts.TabIndex = 45;
+            this.buttonCurrPorts.Text = "Run CurrPorts";
+            this.buttonCurrPorts.UseVisualStyleBackColor = true;
+            this.buttonCurrPorts.Click += new System.EventHandler(this.buttonCurrPorts_Click);
+            // 
+            // groupBoxToolsGPU
+            // 
+            this.groupBoxToolsGPU.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxToolsGPU.Controls.Add(this.buttonNVIDIAinspector);
+            this.groupBoxToolsGPU.Controls.Add(this.buttonOverdriveNTool);
+            this.groupBoxToolsGPU.Location = new System.Drawing.Point(4, 234);
+            this.groupBoxToolsGPU.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxToolsGPU.Name = "groupBoxToolsGPU";
+            this.groupBoxToolsGPU.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxToolsGPU.Size = new System.Drawing.Size(657, 108);
+            this.groupBoxToolsGPU.TabIndex = 396;
+            this.groupBoxToolsGPU.TabStop = false;
+            this.groupBoxToolsGPU.Text = "GPU";
+            // 
+            // buttonNVIDIAinspector
+            // 
+            this.buttonNVIDIAinspector.Location = new System.Drawing.Point(178, 19);
+            this.buttonNVIDIAinspector.Name = "buttonNVIDIAinspector";
+            this.buttonNVIDIAinspector.Size = new System.Drawing.Size(131, 23);
+            this.buttonNVIDIAinspector.TabIndex = 1;
+            this.buttonNVIDIAinspector.Text = "NVIDIA Inspector";
+            this.buttonNVIDIAinspector.UseVisualStyleBackColor = true;
+            this.buttonNVIDIAinspector.Click += new System.EventHandler(this.buttonNVIDIAinspector_Click);
+            // 
+            // buttonOverdriveNTool
+            // 
+            this.buttonOverdriveNTool.Location = new System.Drawing.Point(18, 20);
+            this.buttonOverdriveNTool.Name = "buttonOverdriveNTool";
+            this.buttonOverdriveNTool.Size = new System.Drawing.Size(131, 23);
+            this.buttonOverdriveNTool.TabIndex = 0;
+            this.buttonOverdriveNTool.Text = "AMD OverdriveNTool";
+            this.buttonOverdriveNTool.UseVisualStyleBackColor = true;
+            this.buttonOverdriveNTool.Click += new System.EventHandler(this.buttonOverdriveNTool_Click);
             // 
             // tabPageAbout
             // 
@@ -1963,23 +2113,13 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // textBoxMaxEpoch
+            // richTextBoxCheckNiceHashservers
             // 
-            this.textBoxMaxEpoch.Location = new System.Drawing.Point(233, 222);
-            this.textBoxMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxMaxEpoch.Name = "textBoxMaxEpoch";
-            this.textBoxMaxEpoch.Size = new System.Drawing.Size(32, 20);
-            this.textBoxMaxEpoch.TabIndex = 408;
-            // 
-            // labelMaxEpoch
-            // 
-            this.labelMaxEpoch.AutoSize = true;
-            this.labelMaxEpoch.Location = new System.Drawing.Point(5, 225);
-            this.labelMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelMaxEpoch.Name = "labelMaxEpoch";
-            this.labelMaxEpoch.Size = new System.Drawing.Size(206, 13);
-            this.labelMaxEpoch.TabIndex = 407;
-            this.labelMaxEpoch.Text = "Maximum Epoch of DaggerHashimoto4GB";
+            this.richTextBoxCheckNiceHashservers.Location = new System.Drawing.Point(326, 19);
+            this.richTextBoxCheckNiceHashservers.Name = "richTextBoxCheckNiceHashservers";
+            this.richTextBoxCheckNiceHashservers.Size = new System.Drawing.Size(283, 83);
+            this.richTextBoxCheckNiceHashservers.TabIndex = 46;
+            this.richTextBoxCheckNiceHashservers.Text = "";
             // 
             // algorithmsListView1
             // 
@@ -2103,6 +2243,10 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            this.tabPageTools.ResumeLayout(false);
+            this.groupBoxToolsNH.ResumeLayout(false);
+            this.groupBoxToolsNET.ResumeLayout(false);
+            this.groupBoxToolsGPU.ResumeLayout(false);
             this.tabPageAbout.ResumeLayout(false);
             this.groupBoxBackup.ResumeLayout(false);
             this.groupBoxBackup.PerformLayout();
@@ -2263,5 +2407,15 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxDriverWarning;
         private System.Windows.Forms.TextBox textBoxMaxEpoch;
         private System.Windows.Forms.Label labelMaxEpoch;
+        private System.Windows.Forms.TabPage tabPageTools;
+        private System.Windows.Forms.GroupBox groupBoxToolsNET;
+        private System.Windows.Forms.GroupBox groupBoxToolsGPU;
+        private System.Windows.Forms.Button buttonOverdriveNTool;
+        private System.Windows.Forms.GroupBox groupBoxToolsNH;
+        private System.Windows.Forms.Button buttonCheckNiceHashservers;
+        private System.Windows.Forms.Button buttonCheckNiceHashStatus;
+        private System.Windows.Forms.Button buttonCurrPorts;
+        private System.Windows.Forms.Button buttonNVIDIAinspector;
+        private System.Windows.Forms.RichTextBox richTextBoxCheckNiceHashservers;
     }
 }

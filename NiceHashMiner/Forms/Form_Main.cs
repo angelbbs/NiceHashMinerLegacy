@@ -261,7 +261,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "32";
+            Text += "32.1 beta 1";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -1716,7 +1716,8 @@ namespace NiceHashMiner
 
                 foreach (FileInfo file in dirInfo.GetFiles())
                 {
-                    if (file.Name.Contains("pkt") || file.Name.Contains("dmp") || file.Name.Contains("github.test"))
+                    if (file.Name.Contains("pkt") || file.Name.Contains("dmp") || file.Name.Contains("github.test") ||
+                        file.Name.Contains("MinerOptionPackage_"))
                     {
                         file.Delete();
                     }
@@ -2194,7 +2195,12 @@ namespace NiceHashMiner
             }
             else
             {
-                isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[Miner.PingServers()],
+                var ml = Miner.PingServers();
+                if (ml < 0)
+                {
+                    ml = Miner.PingServers("daggerhashimoto");
+                }
+                isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[ml],
                     textBoxWorkerName.Text.Trim(), btcAdress);
             }
 

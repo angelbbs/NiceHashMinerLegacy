@@ -833,20 +833,7 @@ namespace NiceHashMiner.Devices
                 public static void QueryCudaDevices(ref CudaDevicesList _cudaDevices)
                 {
                     _queryCudaDevicesString = "";
-                    /*
-                    var cudaDevicesDetection = new Process
-                    {
-                        StartInfo = new StartInfo
-                        {
-                            FileName = "common/DeviceDetection/device_detection.exe",
-                            UseShellExecute = true,
-                            Arguments = "cuda -n",
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true
-                        }
-                    };
-                    */
+
                     Process cudaDevicesDetection = new Process();
                     cudaDevicesDetection.StartInfo.FileName = "common/DeviceDetection/device_detection.exe";
                     cudaDevicesDetection.StartInfo.Arguments = "cuda -n";
@@ -854,13 +841,7 @@ namespace NiceHashMiner.Devices
                     cudaDevicesDetection.StartInfo.RedirectStandardOutput = true;
                     cudaDevicesDetection.StartInfo.RedirectStandardError = true;
                     cudaDevicesDetection.StartInfo.CreateNoWindow = true;
-                    //cudaDevicesDetection.Start();
-                    //cudaDevicesDetection.WaitForExit();
 
-                    /*
-                    cudaDevicesDetection.OutputDataReceived += QueryCudaDevicesOutputErrorDataReceived;
-                    cudaDevicesDetection.ErrorDataReceived += QueryCudaDevicesOutputErrorDataReceived;
-                    */
                     const int waitTime = 5 * 1000; // 30seconds
                     try
                     {
@@ -870,14 +851,9 @@ namespace NiceHashMiner.Devices
                         }
                         else
                         {
-                            Helpers.ConsolePrint(Tag, "CudaDevicesDetection process start sucessful");
-
                             _queryCudaDevicesString += cudaDevicesDetection.StandardOutput.ReadToEnd();
                             _queryCudaDevicesString += cudaDevicesDetection.StandardError.ReadToEnd();
-                            /*
-                            cudaDevicesDetection.BeginErrorReadLine();
-                            cudaDevicesDetection.BeginOutputReadLine();
-                            */
+
                             if (cudaDevicesDetection.WaitForExit(waitTime))
                             {
                                 cudaDevicesDetection.Close();
@@ -892,7 +868,6 @@ namespace NiceHashMiner.Devices
                     }
                     finally
                     {
-                        Helpers.ConsolePrint(Tag, _queryCudaDevicesString);
                         if (cudaDevicesDetection != null)
                         {
                             cudaDevicesDetection.Close();
@@ -938,22 +913,7 @@ namespace NiceHashMiner.Devices
                 public static void QueryOpenCLDevices()
                 {
                     Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
-                    /*
-                    var openCLDevicesDetection = new Process
-                    {
-                        StartInfo =
-                        {
-                            FileName = "common/DeviceDetection/device_detection.exe",
-                            UseShellExecute = false,
-                            Arguments = "ocl -n",
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true
-                        }
-                    };
-                    openCLDevicesDetection.OutputDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
-                    openCLDevicesDetection.ErrorDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
-                    */
+
                     Process openCLDevicesDetection = new Process();
                     openCLDevicesDetection.StartInfo.FileName = "common/DeviceDetection/device_detection.exe";
                     openCLDevicesDetection.StartInfo.Arguments = "ocl -n";
@@ -973,10 +933,7 @@ namespace NiceHashMiner.Devices
                         {
                             _queryOpenCLDevicesString += openCLDevicesDetection.StandardOutput.ReadToEnd();
                             _queryOpenCLDevicesString += openCLDevicesDetection.StandardError.ReadToEnd();
-                            /*
-                            openCLDevicesDetection.BeginErrorReadLine();
-                            openCLDevicesDetection.BeginOutputReadLine();
-                            */
+
                             if (openCLDevicesDetection.WaitForExit(waitTime))
                             {
                                 openCLDevicesDetection.Close();

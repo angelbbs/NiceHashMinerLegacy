@@ -1198,7 +1198,7 @@ namespace NiceHashMiner
         protected abstract bool BenchmarkParseLine(string outdata);
 
 
-        public static int PingServers()
+        public static int PingServers( string serv = "")
         {
             string[,] myServers = Form_Main.myServers;
             Ping ping = new Ping();
@@ -1212,8 +1212,14 @@ namespace NiceHashMiner
             {
                 try
                 {
-                    server = "speedtest." + Globals.MiningLocation[i] + ".nicehash.com";
-                    // Helpers.ConsolePrint("PingServers:", myServers[i,0]);
+                    if (serv.Contains("daggerhashimoto"))
+                    {
+                        server = "daggerhashimoto." + Globals.MiningLocation[i] + ".nicehash.com";
+                    }
+                    else
+                    {
+                        server = "speedtest." + Globals.MiningLocation[i] + ".nicehash.com";
+                    }
                     var pingReply = ping.Send(server, 1000);
                     if (pingReply.Status != IPStatus.TimedOut)
                     {
@@ -1229,13 +1235,17 @@ namespace NiceHashMiner
                     else
                     {
                         Helpers.ConsolePrint("PingServers", server + " out of range");
+                        bestServerId = -1;
                     }
                 } catch (PingException)
                 {
-                    Helpers.ConsolePrint("PingServers", server + " offline");
+                    Helpers.ConsolePrint("PingServers", server + " offline "  + i.ToString());
+                    myServers[i, 1] = "-1";
+                    bestServerId = -1;
                 }
                 serverId++;
             }
+
             string[,] tmpServers = { { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
             int pingReplyTimeTmp;
             long bestReplyTimeTmp = 10000;
@@ -1259,13 +1269,12 @@ namespace NiceHashMiner
             }
 
             Form_Main.myServers = tmpServers;
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 5; i++)
             {
                 server = "speedtest." + Form_Main.myServers[i, 0] + ".nicehash.com";
-                Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
+                //Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
             }
-
-             Helpers.ConsolePrint("PingServers", "BestServer: " + Globals.MiningLocation[bestServerId]);
+            //Helpers.ConsolePrint("PingServers", "BestServer: " + Globals.MiningLocation[bestServerId]);
             return bestServerId;
         }
         protected string GetServiceUrl(AlgorithmType algo)
