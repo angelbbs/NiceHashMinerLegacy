@@ -162,12 +162,16 @@ namespace NiceHashMiner.Devices
                 }
                 return InvalidSmiDriver;
             }
-
+            /*
             private static void ShowMessageAndStep(string infoMsg)
             {
                 MessageNotifier?.SetMessageAndIncrementStep(infoMsg);
             }
-
+            */
+            private static void SetValueAndMsg(int num, string infoMsg)
+            {
+                MessageNotifier?.SetValueAndMsg(num, infoMsg);
+            }
             public static IMessageNotifier MessageNotifier { get; private set; }
 
             public static bool CheckVideoControllersCountMismath()
@@ -254,22 +258,26 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
+                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
+                    SetValueAndMsg(2, International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
                     Nvidia.QueryCudaDevices();
                 }
                 // OpenCL and AMD
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
+                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
+                    SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
                 }
                 else
                 {
                     // #3 OpenCL
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
+                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
+                    SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
                     OpenCL.QueryOpenCLDevices();
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+                    SetValueAndMsg(4, International.GetText("Compute_Device_Query_Manager_AMD_Query"));
                     var amd = new AmdQuery(AvaliableVideoControllers);
                     AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
                 }

@@ -22,13 +22,6 @@ namespace NiceHashMiner.Stats
         #region JSON Models
 #pragma warning disable 649, IDE1006
 
-        private class NicehashLogin
-        {
-            public string method = "login";
-            public string version;
-            public int protocol = 1;
-        }
-
         private class NicehashLoginNew
         {
             public string method = "login";
@@ -111,15 +104,6 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
-        }
-
-        public void EndConnectionNew()
-        {
-            Helpers.ConsolePrint("SOCKET", "End connection to new platform");
-            _endConnection = true;
-            // TODO client away
-            //CloseStatusCode.Away
-            _webSocket?.Close(CloseStatusCode.Normal, $"Exiting");
         }
 
         private void ReceiveCallbackNew(object sender, MessageEventArgs e)
@@ -255,7 +239,7 @@ namespace NiceHashMiner.Stats
 
         public void StartConnection()
         {
-            Helpers.ConsolePrint("SOCKET", "Start connection to old platform");
+            Helpers.ConsolePrint("SOCKET", "Start connection");
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
 
@@ -289,37 +273,6 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        public void StartConnectionold()
-        {
-            NHSmaData.InitializeIfNeeded();
-            _connectionAttempted = true;
-            try
-            {
-                if (_webSocket == null)
-                {
-                    _webSocket = new WebSocket(Links.NhmSocketAddress_old);
-                }
-                else
-                {
-                    _webSocket.Close();
-                }
-                _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                _webSocket.OnOpen += ConnectCallback;
-                _webSocket.OnMessage += ReceiveCallback;
-                _webSocket.OnError += ErrorCallback;
-                _webSocket.OnClose += CloseCallback;
-                _webSocket.Log.Level = LogLevel.Debug;
-                _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET_OLD", data.ToString());
-                _webSocket.EnableRedirection = true;
-                _webSocket.Connect();
-                _connectionEstablished = true;
-                _restartConnection = false;
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET_OLD", e.ToString());
-            }
-        }
 
         public void ConnectCallback(object sender, EventArgs e)
         {
@@ -523,10 +476,6 @@ namespace NiceHashMiner.Stats
                 {
                     if (e.Message == "A series of reconnecting has failed.")
                     {
-                        // Need to recreate websocket
-                       // Helpers.ConsolePrint("SOCKET", "Try old method");
-                       // _webSocket = null;
-                       // StartConnectionold();
                         break;
                     }
                 }

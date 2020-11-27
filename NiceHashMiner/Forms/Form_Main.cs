@@ -30,6 +30,7 @@ namespace NiceHashMiner
     using OpenHardwareMonitor.Hardware;
     using System.ComponentModel;
     using System.Drawing.Drawing2D;
+    using System.Drawing.Text;
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
@@ -38,6 +39,8 @@ namespace NiceHashMiner
     using System.Text;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
+
+    
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
@@ -425,25 +428,6 @@ namespace NiceHashMiner
 
         public void AfterLoadComplete()
         {
-            if (ConfigManager.GeneralConfig.DivertRun)
-            {
-                /*
-                var CMDconfigHandle = new Process
-
-                {
-                    StartInfo =
-                {
-                    FileName = "sc.exe"
-                }
-                };
-
-                CMDconfigHandle.StartInfo.Arguments = "start WinDivert1.4";
-                CMDconfigHandle.StartInfo.UseShellExecute = false;
-                CMDconfigHandle.StartInfo.CreateNoWindow = true;
-                CMDconfigHandle.Start();
-                */
-            }
-
             _loadingScreen = null;
             Enabled = true;
 
@@ -536,38 +520,6 @@ namespace NiceHashMiner
             }
             return;
         }
-        private void ResetProtocols()
-        {
-            var CMDconfigHandleDS = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "reg.exe"
-                }
-            };
-
-            CMDconfigHandleDS.StartInfo.Arguments = "import utils\\ds.reg";
-            CMDconfigHandleDS.StartInfo.UseShellExecute = false;
-            CMDconfigHandleDS.StartInfo.CreateNoWindow = true;
-            CMDconfigHandleDS.Start();
-            /*
-            if (Configs.ConfigManager.GeneralConfig.ResetProtocols)
-            {
-                var CMDconfigHandleP = new Process
-                {
-                    StartInfo =
-                {
-                    FileName = "reg.exe"
-                }
-                };
-
-                CMDconfigHandleP.StartInfo.Arguments = "import utils\\Protocols.reg";
-                CMDconfigHandleP.StartInfo.UseShellExecute = false;
-                CMDconfigHandleP.StartInfo.CreateNoWindow = true;
-                CMDconfigHandleP.Start();
-            }
-            */
-        }
 
         private void CheckUpdates()
         {
@@ -611,6 +563,10 @@ namespace NiceHashMiner
             }
         }
         */
+
+        public static int ProgressMinimum = 0;
+        public static int ProgressMaximum = 100;
+        public static int ProgressValue = 0;
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             if (!ConfigManager.GeneralConfig.AutoStartMining)
@@ -651,62 +607,55 @@ namespace NiceHashMiner
             }
 
             // Query Available ComputeDevices
-            //Thread.Sleep(100);
+
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
-            //Thread.Sleep(200);
+
             _isDeviceDetectionInitialized = true;
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
-            _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
+            _loadingScreen.SetValueAndMsg(4, International.GetText("Form_Main_loadtext_SaveConfig"));
+            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
             //Thread.Sleep(200);
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
             new Task(() => CheckGithubDownload()).Start();
-            _loadingScreen.SetInfoMsg("Set firewall rules");
+            //_loadingScreen.SetInfoMsg("Set firewall rules");
+            _loadingScreen.SetValueAndMsg(4, "Set firewall rules");
+
+            flowLayoutPanelRates.Visible = true;
+
             new Task(() => Firewall.AddToFirewall()).Start();
-           // Firewall.AddToFirewall();
 
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
-            //buttonStopMining.Enabled = false;
-            //_smaMinerCheck = new Timer();
-            //_smaMinerCheck.Tick += SMAMinerCheck_Tick;
-            //_smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
-            //                          R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            //if (ComputeDeviceManager.Group.ContainsAmdGpus)
-            //{
-            //    _smaMinerCheck.Interval =
-            //        (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
-            //         ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
-            //        R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            //}
 
-
-            _loadingScreen.IncreaseLoadCounterAndMessage(
-                International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            //_loadingScreen.IncreaseLoadCounterAndMessage(
+            //  International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
-           // Thread.Sleep(200);
-            _loadingScreen.IncreaseLoadCounterAndMessage(
-                International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
+            // Thread.Sleep(200);
+            //_loadingScreen.IncreaseLoadCounterAndMessage(
+            //  International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
+            _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
 
             Thread.Sleep(10);
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
-           // _loadingScreen.IncreaseLoadCounter();
             if (ConfigManager.GeneralConfig.NVIDIAP0State)
             {
-                _loadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
+                //_loadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
+                _loadingScreen.SetValueAndMsg(7, International.GetText("Form_Main_loadtext_NVIDIAP0State"));
                 Helpers.SetNvidiaP0State();
             }
 
-            _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-
+            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
+            _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             new Task(() => CheckUpdates()).Start();
             //new Task(() => ResetProtocols()).Start();
             new Task(() => FlushCache()).Start();
@@ -717,12 +666,14 @@ namespace NiceHashMiner
                 thisComputer.CPUEnabled = true;
                 thisComputer.Open();
             }
-            _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            _loadingScreen.SetValueAndMsg(9, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
 
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
-            _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
+            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
+            _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
@@ -747,7 +698,8 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            _loadingScreen.IncreaseLoadCounterAndMessage("Check VC redistributable");
+            //_loadingScreen.IncreaseLoadCounterAndMessage("Check VC redistributable");
+            _loadingScreen.SetValueAndMsg(11, International.GetText("Check VC redistributable"));
             InstallVcRedist();
             _loadingScreen.FinishLoad();
 
@@ -2655,6 +2607,4 @@ namespace NiceHashMiner
 
         }
     }
-
-
 }

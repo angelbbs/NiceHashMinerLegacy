@@ -22,7 +22,7 @@ namespace NiceHashMiner
         }
 
         private int LoadCounter = 0;
-        private int TotalLoadSteps = 7 * 2;
+        private int TotalLoadSteps = 11;
         private readonly IAfterInitializationCaller AfterInitCaller;
 
         // init loading stuff
@@ -143,6 +143,16 @@ namespace NiceHashMiner
         private void Form_Loading_Shown(object sender, EventArgs e) {
             if (_minersDownloader != null) {
                 _minersDownloader.Start(this);
+            }
+        }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                const int CS_DROPSHADOW = 0x00020000;
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle |= CS_DROPSHADOW;
+                return cp;
             }
         }
     }

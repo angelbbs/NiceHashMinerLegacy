@@ -136,39 +136,6 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>()
             ),
             new MinerOptionPackage(
-                MinerType.sgminer,
-                new List<MinerOption>
-                {
-                    // SingleParam
-                    new MinerOption("KeccakUnroll", "", "--keccak-unroll", "0", MinerOptionFlagType.SingleParam),
-                    new MinerOption("HamsiExpandBig", "", "--hamsi-expand-big", "4", MinerOptionFlagType.SingleParam),
-                    new MinerOption("Nfactor", "", "--nfactor", "10", MinerOptionFlagType.SingleParam),
-                    // MultiParam TODO IMPORTANT check defaults
-                    new MinerOption("Intensity", "-I", "--intensity", "d", MinerOptionFlagType.MultiParam,
-                        ","), // default is "d" check if -1 works
-                    new MinerOption("Xintensity", "-X", "--xintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    new MinerOption("Rawintensity", "", "--rawintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    new MinerOption("ThreadConcurrency", "", "--thread-concurrency", "-1", MinerOptionFlagType.MultiParam,
-                        ","), // default none
-                    new MinerOption("Worksize", "-w", "--worksize", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    new MinerOption("GpuThreads", "-g", "--gpu-threads", "1", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("LookupGap", "", "--lookup-gap", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    // Uni
-                    new MinerOption("RemoveDisabled", "--remove-disabled", "--remove-disabled", "",
-                        MinerOptionFlagType.Uni), // default none
-                },
-                // TemperatureOptions
-                new List<MinerOption>
-                {
-                    new MinerOption("GpuFan", "", "--gpu-fan", "30-60", MinerOptionFlagType.MultiParam, ","), // default none
-                    new MinerOption("TempCutoff", "", "--temp-cutoff", "95", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("TempOverheat", "", "--temp-overheat", "85", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("TempTarget", "", "--temp-target", "75", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("AutoFan", "", "--auto-fan", null, MinerOptionFlagType.Uni),
-                    new MinerOption("AutoGpu", "", "--auto-gpu", null, MinerOptionFlagType.Uni)
-                }
-            ),
-            new MinerOptionPackage(
                 MinerType.mkxminer,
                 new List<MinerOption>() {
                     // SingleParam

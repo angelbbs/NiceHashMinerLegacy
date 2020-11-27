@@ -11,5 +11,6 @@ namespace NiceHashMiner.Interfaces
     {
         void SetMessage(string infoMsg);
         void SetMessageAndIncrementStep(string infoMsg);
+        void SetValueAndMsg(int num, string infoMsg);
     }
 }
