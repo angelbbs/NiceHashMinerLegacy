@@ -1061,13 +1061,13 @@ namespace NiceHashMiner.Forms
                 comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
                 comboBoxRestartProgram.SelectedIndex = ConfigManager.GeneralConfig.ProgramRestartIndex;
             }
-/*
-            if (!ConfigManager.GeneralConfig.ShowToolsFolder)
+
+            //if (!ConfigManager.GeneralConfig.ShowToolsFolder)
             {
                 var tp = tabPageTools;
                 tabControlGeneral.TabPages.Remove(tp);
             }
-*/
+
         }
 
         private void InitializeGeneralTab()
@@ -2265,7 +2265,7 @@ namespace NiceHashMiner.Forms
             var ps = Miner.PingServers();
             if (ps < 0)
             {
-                richTextBoxCheckNiceHashservers.Text += "NiceHash speedtest down. Try alternate method\n";
+                richTextBoxCheckNiceHashservers.Text += "NiceHash speedtest servers down. Try alternate method\n";
                 Miner.PingServers("daggerhashimoto");
                 for (int i = 0; i < 6; i++)
                 {

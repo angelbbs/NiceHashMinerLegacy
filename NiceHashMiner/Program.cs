@@ -566,7 +566,15 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
                     ConfigManager.GeneralConfig.ForkFixVersion = 32.0;
                 }
-                
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 33.0)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    if (Directory.Exists("internals"))
+                        Directory.Delete("internals", true);
+                    ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
+                    ConfigManager.GeneralConfig.ForkFixVersion = 33.0;
+                }
+
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

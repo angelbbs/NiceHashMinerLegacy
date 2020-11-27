@@ -264,7 +264,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "32.1 beta 1";
+            Text += "33";
 
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
