@@ -109,7 +109,8 @@
         KAWPOW = 52,
         Cuckaroo29BFC = 53,
         BeamV3 = 54,
-        CuckaRooz29 = 55
+        CuckaRooz29 = 55,
+        Octopus = 56
         #endregion // NiceHashAPI
     }
 }

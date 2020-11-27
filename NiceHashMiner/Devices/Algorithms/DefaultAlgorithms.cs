@@ -262,12 +262,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
 
                             },
-                            /*
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Cuckaroo29BFC, "Cuckaroo29BFC")
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus")
                             {
 
                             },
-                            */
                  }
             },
         }.ConcatDictList(All, Gpu);
@@ -377,7 +375,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),
-                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Handshake, "Handshake"),
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.BeamV3, "BeamV3"),
@@ -400,15 +398,6 @@ namespace NiceHashMiner.Devices.Algorithms
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.Bminer, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
                         }
-            },
-            */
-            /*
-            {
-            MinerBaseType.EWBF,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash, "ZHash")
-                }
             },
             */
             {

@@ -70,6 +70,8 @@ namespace NiceHashMiner.Miners
                         return "bfc";
                     case AlgorithmType.BeamV3:
                         return "beamv3";
+                    case AlgorithmType.Octopus:
+                        return "octopus";
                     default:
                         return "";
                 }
@@ -201,6 +203,12 @@ namespace NiceHashMiner.Miners
                     $" -o2 stratum+tcp://beamv3." + myServers[2, 0] + ".nicehash.com:3387 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+            {
+                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://octopus." + myServers[1, 0] + ".nicehash.com:3389 -u1 " + user +
+                    $" -o2 stratum+tcp://octopus." + myServers[2, 0] + ".nicehash.com:3389 -u2 " + user +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
             cmd += extra;
 
             return cmd;
@@ -257,14 +265,9 @@ namespace NiceHashMiner.Miners
                     $" -o1 stratum+tcp://grincuckaroo29." + myServers[1, 0] + ".nicehash.com:3371 -u1 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            //start miner.exe --algo cuckarood29 --server eu.frostypool.com:3516 --user angelbbs
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
             {
-                /*
-                cmd = $"-a {AlgoName} -o stratum+tcp://mwc.2miners.com:1111 -u 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.nbminer -o1 stratum+tcp://grincuckarood29." + myServers[0, 0] + ".nicehash.com:3377 -u1 " + username +
-    $" -o2 stratum+tcp://grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 -u2 " + username +
-    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-    */
                 cmd = $"-a {AlgoName} -o stratum+tcp://grincuckarood29." + myServers[0, 0] + ".nicehash.com:3377 -u " + username +
                     $" -o1 stratum+tcp://grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 -u1 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
@@ -330,6 +333,11 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
             {
                 cmd = $"-a {AlgoName} -o stratum+ssl://beam.2miners.com:5252 -u 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.nbminer " +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+            {
+                cmd = $"-a {AlgoName} -o stratum+tcp://cfx.woolypooly.com:3094 -u 0x13097ee19fd453AfD6F2ecf155927f2b7380307F.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;

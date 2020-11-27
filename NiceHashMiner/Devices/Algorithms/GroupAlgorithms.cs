@@ -451,6 +451,14 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.Octopus
+                    });
+            }
+
             if (algoSettings.ContainsKey(MinerBaseType.Bminer) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
