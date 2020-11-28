@@ -29,9 +29,9 @@ namespace NiceHashMiner
         public Form_Loading(IAfterInitializationCaller initCaller, string loadFormTitle, string startInfoMsg, int totalLoadSteps)
         {
             InitializeComponent();
-            int R = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).R - 20);
-            int G = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).G - 20);
-            int B = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).B - 20);
+            int R = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).R - 10);
+            int G = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).G - 10);
+            int B = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).B - 10);
             
             //Helpers.ConsolePrint("RGB", "R: " + R.ToString() + " G: " + G.ToString() + " B:" + B.ToString());
             this.BackColor = Color.FromArgb(255, R, G, B);

@@ -28,6 +28,7 @@ namespace NiceHashMiner
     using Microsoft.Win32;
     using NiceHashMinerLegacy.Divert;
     using OpenHardwareMonitor.Hardware;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing.Drawing2D;
     using System.Drawing.Text;
@@ -1140,17 +1141,52 @@ namespace NiceHashMiner
                     CMDconfigHandleWD.Start();
                 }
                 Thread.Sleep(500);
+                /*
                 var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
                 {
                     WindowStyle = ProcessWindowStyle.Minimized
                 };
                 Helpers.ConsolePrint("SheduleRestart", "Schedule or config changed restart program after " + (periodRestartProgram / 60).ToString() + "h");
                 Process.Start(RestartProgram);
+                */
+
+                CloseChilds(Process.GetCurrentProcess());
+                System.Windows.Forms.Application.Restart();
+                System.Environment.Exit(1);
             }
             catch (Exception er)
             {
                 Helpers.ConsolePrint("SheduleRestart", er.ToString());
                 return;
+            }
+        }
+
+public static void CloseChilds(Process parentId)
+        {
+            try
+            {
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                        ("Select * From Win32_Process Where ParentProcessID=" + parentId.Id.ToString());
+                ManagementObjectCollection moc = searcher.Get();
+                foreach (ManagementObject mo in moc)
+                {
+
+                    Process proc = Process.GetProcessById(Convert.ToInt32(mo["ProcessID"]));
+                    Helpers.ConsolePrint("Closing****", Convert.ToInt32(mo["ProcessID"]).ToString() + " " + proc.ProcessName);
+                    if (Convert.ToInt32(mo["ProcessID"]).ToString().Contains("NiceHashMinerLegacy"))
+                    {
+                        if (proc != null)
+                        {
+                            proc.Kill();
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Closing", ex.ToString());
             }
         }
         public bool CheckGithub()
@@ -1712,7 +1748,7 @@ namespace NiceHashMiner
                 CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleWD.Start();
             }
-            //mainproc = Process.GetCurrentProcess();
+
             try
             {
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher
@@ -2199,9 +2235,10 @@ namespace NiceHashMiner
             //_remoteTimer.Stop();
             //_remoteTimer= null;
         }
-
+        
         private void restartProgram()
         {
+            /*
             var pHandle = new Process
             {
                 StartInfo =
@@ -2209,10 +2246,12 @@ namespace NiceHashMiner
                         FileName = Application.ExecutablePath
                     }
             };
-           // pHandle.Start();
-           // Close();
+            */
+            CloseChilds(Process.GetCurrentProcess());
+            System.Windows.Forms.Application.Restart();
+            System.Environment.Exit(1);
         }
-
+        
         private void CheckDagger3GB()
         {
             if (ConfigManager.GeneralConfig.DivertRun)
