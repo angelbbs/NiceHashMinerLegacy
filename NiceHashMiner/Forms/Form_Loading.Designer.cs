@@ -61,7 +61,7 @@ namespace NiceHashMiner
             // 
             this.label_LoadingText.AutoSize = true;
             this.label_LoadingText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label_LoadingText.ForeColor = System.Drawing.Color.Black;
+            this.label_LoadingText.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label_LoadingText.Location = new System.Drawing.Point(84, 9);
             this.label_LoadingText.Name = "label_LoadingText";
             this.label_LoadingText.Size = new System.Drawing.Size(136, 13);

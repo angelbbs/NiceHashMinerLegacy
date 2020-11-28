@@ -124,7 +124,10 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.Use_OpenHardwareMonitor != _generalConfigBackup.Use_OpenHardwareMonitor
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
                    || GeneralConfig.RestartDriverOnCUDA_GPU_Lost != _generalConfigBackup.RestartDriverOnCUDA_GPU_Lost
-                   || GeneralConfig.RestartWindowsOnCUDA_GPU_Lost != _generalConfigBackup.RestartWindowsOnCUDA_GPU_Lost;
+                   || GeneralConfig.RestartWindowsOnCUDA_GPU_Lost != _generalConfigBackup.RestartWindowsOnCUDA_GPU_Lost
+                   || GeneralConfig.DeviceDetection.DisableDetectionAMD != _generalConfigBackup.DeviceDetection.DisableDetectionAMD
+                   || GeneralConfig.DeviceDetection.DisableDetectionCPU != _generalConfigBackup.DeviceDetection.DisableDetectionCPU
+                   || GeneralConfig.DeviceDetection.DisableDetectionNVIDIA != _generalConfigBackup.DeviceDetection.DisableDetectionNVIDIA;
         }
 
         public static void GeneralConfigFileCommit()

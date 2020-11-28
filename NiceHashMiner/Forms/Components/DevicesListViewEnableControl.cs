@@ -420,9 +420,15 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
         {
+            int devNumInc = 0;
             if (IsInBenchmark) return;
             if (IsMining) return;
-            if (e.Button == MouseButtons.Right)
+            if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU)
+            {
+                devNumInc = 1;//костыль. при многопроцессорной конфигурации это работать не будет
+            }
+
+                if (e.Button == MouseButtons.Right)
             {
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location))
                 {
@@ -444,7 +450,7 @@ namespace NiceHashMiner.Forms.Components
                                     {
                                         var copyBenchDropDownItem = new ToolStripMenuItem
                                         {
-                                            Text = "GPU#" + cDev.Index.ToString() + " " + cDev.Name,
+                                            Text = "GPU#" + (cDev.Index + devNumInc).ToString() + " " + cDev.Name,
                                             Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
                                         };
                                         copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
@@ -453,7 +459,7 @@ namespace NiceHashMiner.Forms.Components
 
                                         var copyTuningDropDownItem = new ToolStripMenuItem
                                         {
-                                            Text = "GPU#" + cDev.Index.ToString() + " " + cDev.Name
+                                            Text = "GPU#" + (cDev.Index + devNumInc).ToString() + " " + cDev.Name
                                             //Checked = cDev.UUID == CDevice.TuningCopyUUID
                                         };
                                         copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;

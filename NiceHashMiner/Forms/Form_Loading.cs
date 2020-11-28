@@ -29,7 +29,20 @@ namespace NiceHashMiner
         public Form_Loading(IAfterInitializationCaller initCaller, string loadFormTitle, string startInfoMsg, int totalLoadSteps)
         {
             InitializeComponent();
-
+            int R = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).R - 20);
+            int G = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).G - 20);
+            int B = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).B - 20);
+            
+            //Helpers.ConsolePrint("RGB", "R: " + R.ToString() + " G: " + G.ToString() + " B:" + B.ToString());
+            this.BackColor = Color.FromArgb(255, R, G, B);
+            if (R * 256 * 256 + G * 256 + B > 12000000)
+            {
+                this.ForeColor = Color.Black;
+            }
+            else
+            {
+                this.ForeColor = Color.White;
+            }
             label_LoadingText.Text = loadFormTitle;
             label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
 

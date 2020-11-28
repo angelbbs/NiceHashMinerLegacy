@@ -86,17 +86,17 @@ namespace NiceHashMiner.Devices
             }
 
             //private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
-            private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(456, 81); 
+            private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(456, 71);
             //private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
-            private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(456, 81); 
+            private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(456, 71);
             private static NvidiaSmiDriver _currentNvidiaSmiDriver = new NvidiaSmiDriver(-1, -1);
             private static readonly NvidiaSmiDriver InvalidSmiDriver = new NvidiaSmiDriver(-1, -1);
 
-            private static readonly NvidiaSmiDriver NvidiaCuda92Driver = new NvidiaSmiDriver(398,26); 
-            private static readonly NvidiaSmiDriver NvidiaCuda10Driver = new NvidiaSmiDriver(411,31); 
+            private static readonly NvidiaSmiDriver NvidiaCuda92Driver = new NvidiaSmiDriver(398,26);
+            private static readonly NvidiaSmiDriver NvidiaCuda10Driver = new NvidiaSmiDriver(411,31);
             private static readonly NvidiaSmiDriver NvidiaCuda101Driver = new NvidiaSmiDriver(418,96);
             private static readonly NvidiaSmiDriver NvidiaCuda11Driver = new NvidiaSmiDriver(451,48);
-            private static readonly NvidiaSmiDriver NvidiaCuda111Driver = new NvidiaSmiDriver(456,81);
+            private static readonly NvidiaSmiDriver NvidiaCuda111Driver = new NvidiaSmiDriver(456,71);
 
             public static string CUDA_version;
             // naming purposes
@@ -184,7 +184,7 @@ namespace NiceHashMiner.Devices
                 // first check windows video controlers
                 List<VideoControllerData> currentAvaliableVideoControllers = new List<VideoControllerData>();
                 WindowsDisplayAdapters.QueryVideoControllers(currentAvaliableVideoControllers, false);
-                
+
 
                 int GPUsOld = AvaliableVideoControllers.Count;
                 int GPUsNew = currentAvaliableVideoControllers.Count;
@@ -343,7 +343,7 @@ namespace NiceHashMiner.Devices
                     isNvidiaErrorShown = true;
                     var minDriver = NvidiaMinDetectionDriver.ToString();
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
-                    new Task(() => 
+                    new Task(() =>
                     MessageBox.Show(string.Format(
                             International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Detection"),
                             minDriver, recomendDrvier),
@@ -866,7 +866,7 @@ namespace NiceHashMiner.Devices
                             {
                                 cudaDevicesDetection.Close();
                             }
-                            
+
                         }
                     }
                     catch (Exception ex)
