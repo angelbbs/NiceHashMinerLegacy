@@ -143,7 +143,7 @@ namespace NiceHashMiner.Configs.Data
 
         public bool DownloadInit3rdParty = false;
 
-        public bool AllowMultipleInstances = true;
+        public bool AllowMultipleInstances = false;
 
         // device enabled disabled stuff
         public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
@@ -237,7 +237,7 @@ namespace NiceHashMiner.Configs.Data
             IdleWhenNoInternetAccess = true;
             Use3rdPartyMiners = Use3rdPartyMiners.YES;
             DownloadInit3rdParty = false;
-            AllowMultipleInstances = true;
+            AllowMultipleInstances = false;
             UseIFTTT = false;
             CoolDownCheckEnabled = true;
             RestartDriverOnCUDA_GPU_Lost = false;

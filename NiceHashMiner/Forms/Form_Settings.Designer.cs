@@ -157,6 +157,7 @@ namespace NiceHashMiner.Forms
             this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.tabPageTools = new System.Windows.Forms.TabPage();
             this.groupBoxToolsNH = new System.Windows.Forms.GroupBox();
+            this.richTextBoxCheckNiceHashservers = new System.Windows.Forms.RichTextBox();
             this.buttonCheckNiceHashservers = new System.Windows.Forms.Button();
             this.buttonCheckNiceHashStatus = new System.Windows.Forms.Button();
             this.groupBoxToolsNET = new System.Windows.Forms.GroupBox();
@@ -181,7 +182,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.richTextBoxCheckNiceHashservers = new System.Windows.Forms.RichTextBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -686,6 +686,7 @@ namespace NiceHashMiner.Forms
             this.checkBox_program_monitoring.TabIndex = 384;
             this.checkBox_program_monitoring.Text = "Program monitoring";
             this.checkBox_program_monitoring.UseVisualStyleBackColor = true;
+            this.checkBox_program_monitoring.CheckedChanged += new System.EventHandler(this.checkBox_program_monitoring_CheckedChanged);
             // 
             // checkBox_ShowUptime
             // 
@@ -854,6 +855,7 @@ namespace NiceHashMiner.Forms
             this.checkBox_AllowMultipleInstances.TabIndex = 365;
             this.checkBox_AllowMultipleInstances.Text = "Allow Multiple Instances";
             this.checkBox_AllowMultipleInstances.UseVisualStyleBackColor = true;
+            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.checkBox_AllowMultipleInstances_CheckedChanged);
             // 
             // checkBox_AutoStartMining
             // 
@@ -1814,6 +1816,14 @@ namespace NiceHashMiner.Forms
             this.groupBoxToolsNH.TabStop = false;
             this.groupBoxToolsNH.Text = "NiceHash";
             // 
+            // richTextBoxCheckNiceHashservers
+            // 
+            this.richTextBoxCheckNiceHashservers.Location = new System.Drawing.Point(326, 19);
+            this.richTextBoxCheckNiceHashservers.Name = "richTextBoxCheckNiceHashservers";
+            this.richTextBoxCheckNiceHashservers.Size = new System.Drawing.Size(283, 83);
+            this.richTextBoxCheckNiceHashservers.TabIndex = 46;
+            this.richTextBoxCheckNiceHashservers.Text = "";
+            // 
             // buttonCheckNiceHashservers
             // 
             this.buttonCheckNiceHashservers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -2112,14 +2122,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.Text = "View licence";
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
-            // 
-            // richTextBoxCheckNiceHashservers
-            // 
-            this.richTextBoxCheckNiceHashservers.Location = new System.Drawing.Point(326, 19);
-            this.richTextBoxCheckNiceHashservers.Name = "richTextBoxCheckNiceHashservers";
-            this.richTextBoxCheckNiceHashservers.Size = new System.Drawing.Size(283, 83);
-            this.richTextBoxCheckNiceHashservers.TabIndex = 46;
-            this.richTextBoxCheckNiceHashservers.Text = "";
             // 
             // algorithmsListView1
             // 

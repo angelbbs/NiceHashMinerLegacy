@@ -237,6 +237,13 @@ namespace NiceHashMiner
                 }
             }
 
+
+            //checking for incompatibilities
+            if (ConfigManager.GeneralConfig.AllowMultipleInstances && ConfigManager.GeneralConfig.ProgramMonitoring)
+            {
+                ConfigManager.GeneralConfig.AllowMultipleInstances = false;
+                ConfigManager.GeneralConfigFileCommit();
+            }
             // #2 check if multiple instances are allowed
             var startProgram = true;
             if (ConfigManager.GeneralConfig.AllowMultipleInstances == false)
@@ -574,7 +581,14 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
                     ConfigManager.GeneralConfig.ForkFixVersion = 33.0;
                 }
-
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 33.1)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    if (Directory.Exists("internals"))
+                        Directory.Delete("internals", true);
+                    ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
+                    ConfigManager.GeneralConfig.ForkFixVersion = 33.1;
+                }
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

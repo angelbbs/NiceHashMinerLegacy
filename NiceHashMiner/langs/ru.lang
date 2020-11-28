@@ -476,6 +476,7 @@
 "Form_Settings_General_CPUmonitoring": "Отключить мониторинг CPU",
 "Form_Settings_ElectricityCost": "Стоим. эл.эн.(за кВт.ч)", 
 "Form_Settings_label_AddAMD": "Дополнительное потребление AMD GPU (Вт)",
+"Form_Settings_uncompatible_options1": "Параметры \"Разрешить неколько экземпляров\" и \"Включить сторожевой процесс\" несовместимы",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

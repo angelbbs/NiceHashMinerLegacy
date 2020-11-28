@@ -2283,5 +2283,25 @@ namespace NiceHashMiner.Forms
             }
 
         }
+
+        private void checkBox_program_monitoring_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_AllowMultipleInstances.Checked && checkBox_program_monitoring.Checked)
+            {
+                MessageBox.Show(International.GetText("Form_Settings_uncompatible_options1"),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                checkBox_AllowMultipleInstances.Checked = false;
+            }
+        }
+        private void checkBox_AllowMultipleInstances_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_AllowMultipleInstances.Checked && checkBox_program_monitoring.Checked)
+            {
+                    MessageBox.Show(International.GetText("Form_Settings_uncompatible_options1"),
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                checkBox_AllowMultipleInstances.Checked = false;
+            }
+        }
+
     }
 }
