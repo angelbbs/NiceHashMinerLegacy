@@ -117,7 +117,7 @@ namespace NiceHashMiner.Configs.Data
         public DagGenerationType EthminerDagGenerationType = DagGenerationType.SingleKeep;
         public int ApiBindPortPoolStart = 5100;
         public double MinimumProfit = 0;
-        public bool IdleWhenNoInternetAccess = true;
+        public bool IdleWhenNoInternetAccess = false;
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
 
@@ -127,6 +127,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Send_actual_version_info = false;
         public bool Force_mining_if_nonprofitable = true;
         public bool Additional_info_about_device = false;
+        public bool Show_device_manufacturer = false;
         public bool Use_OpenHardwareMonitor = true;
         public bool Disable_extra_launch_parameter_checking = false;
         public bool Save_windows_size_and_position = true;
@@ -234,7 +235,7 @@ namespace NiceHashMiner.Configs.Data
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
             DownloadInit = false;
-            IdleWhenNoInternetAccess = true;
+            IdleWhenNoInternetAccess = false;
             Use3rdPartyMiners = Use3rdPartyMiners.YES;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = false;

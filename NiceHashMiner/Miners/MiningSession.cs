@@ -24,6 +24,7 @@ using System.Management;
 using System.Diagnostics;
 using System.Reflection;
 using NiceHashMinerLegacy.Divert;
+using System.Data;
 
 namespace NiceHashMiner.Miners
 {
@@ -60,7 +61,7 @@ namespace NiceHashMiner.Miners
 
         // timers
         private readonly Timer _preventSleepTimer;
-        public static Timer _smaCheckTimer;
+        //public static Timer _smaCheckTimer;
 
         // check internet connection
         private readonly Timer _internetCheckTimer;
@@ -91,20 +92,9 @@ namespace NiceHashMiner.Miners
         
         public static void StopEvent()
         {
-            //NiceHashMiner.Switching.AlgorithmSwitchingManager.
-            //SwichMostProfitableGroupUpMethod.
-            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck = null;
-            /*
-            foreach (EventHandler eh in NiceHashMiner.Switching.AlgorithmSwitchingManager)
-            {
-                MyRealEvent -= eh;
-            }
-            delegates.Clear();
-            */
-            //EventHandler<SmaUpdateEventArgs> SwichMostProfitableGroupUpMethod = new SwichMostProfitableGroupUpMethod();
-            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
+
         }
-        
+
         public MiningSession(List<ComputeDevice> devices,
             IMainFormRatesComunication mainFormRatesComunication,
             string miningLocation, string worker, string btcAdress)
@@ -113,7 +103,7 @@ namespace NiceHashMiner.Miners
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
             _switchingManager = new AlgorithmSwitchingManager();
-            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck -= this.SwichMostProfitableGroupUpMethod;
+
             if (!FuncAttached)
             {
                 Helpers.ConsolePrint("MiningSession", "Process attached");
@@ -121,7 +111,6 @@ namespace NiceHashMiner.Miners
                 
                 FuncAttached = true;
             }
-            //_switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
 
             _btcAdress = btcAdress;
             _worker = worker;
@@ -155,14 +144,9 @@ namespace NiceHashMiner.Miners
                 _internetCheckTimer.Start();
             }
 
-            /*
-            _switchingManager.Stop();
-            _switchingManager.Start();
-            */
             AlgorithmSwitchingManager.Stop();
             AlgorithmSwitchingManager.Start();
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
-            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
         }
 
         #region Timers stuff

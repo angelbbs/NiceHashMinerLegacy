@@ -89,9 +89,11 @@ namespace NiceHashMiner.Devices.Querying
                     if (greaterOrEqual)
                     {
                         _noNeoscryptLyra2[vidContrllr.Name] = true;
+                        /*
                         Helpers.ConsolePrint(Tag,
                             "Driver version seems to be " + sgminerNoNeoscryptLyra2RE +
                             " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
+                            */
                     }
                 }
 
@@ -102,7 +104,7 @@ namespace NiceHashMiner.Devices.Querying
                 _driverOld[vidContrllr.Name] = true;
                 Helpers.ConsolePrint(Tag,
                     "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
-                    "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
+                    "speed will not be optimal. Consider upgrading AMD GPU driver.");
             }
 
             if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && showWarningDialog)
@@ -221,17 +223,19 @@ namespace NiceHashMiner.Devices.Querying
             stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
             try
             {
-                //foreach (var dev in amdDevices.OrderBy(i => i.AMD_BUS_ID))
+                //foreach (var dev in amdDevices.OrderBy(i => i.AMD_BUS_ID))//****************************************************
                 foreach (var dev in amdDevices)
                 {
                     ComputeDeviceManager.Available.HasAmd = true;
 
                     var busID = dev.BUS_ID;
                     var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE;
+                    //var man = dev._CL_DEVICE_VENDOR_ID;
 
                     if (busID != -1 && _busIdInfos.ContainsKey(busID))
                     {
                         var deviceName = _busIdInfos[busID].Name;
+                        var manufacturer = _busIdInfos[busID].MF;
 
                         var newAmdDev = new AmdGpuDevice(dev, _driverOld[deviceName],
                             _busIdInfos[busID].InfSection, _noNeoscryptLyra2[deviceName])
@@ -239,10 +243,14 @@ namespace NiceHashMiner.Devices.Querying
                             DeviceName = deviceName,
                             UUID = _busIdInfos[busID].Uuid,
                             AdapterIndex = _busIdInfos[busID].Adl1Index,
+                            AMDManufacturer = _busIdInfos[busID].MF,
                             DeviceGlobalMemory = gpuRAM
                         };
+                        //PCI_VEN_1002&DEV_67DF_18803EC9
                         //PNPDeviceID PCI\VEN_1002&DEV_6811&SUBSYS_2015174B&REV_81\4&14486AD3&0&00E0       
                         //UUID: PCI_VEN_1002&DEV_6811_14486AD3
+                        //PCI\VEN_1002&DEV_67DF&SUBSYS_2379148C&REV_EF powercolor
+
                         //*************
                         string PnpDeviceID = "";
                         ulong gpumem = 0;
@@ -254,12 +262,16 @@ namespace NiceHashMiner.Devices.Querying
                         {
                             ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
                             PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
+                            Helpers.ConsolePrint("AMDQUERY", "DeviceID: " + SafeGetProperty(manObj, "DeviceID"));
                             gpumem = memTmp + gpumemadd‬;
 
                         }
 
                         if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
                         {
+                            Helpers.ConsolePrint("AMDQUERY", "PnpDeviceID.Split('&')[4]=" + PnpDeviceID.Split('&')[4].ToString() +
+                                " newAmdDev.UUID.Split('_')[4]" + newAmdDev.UUID.Split('_')[4].ToString() +
+                                " " + dev._CL_DEVICE_NAME);
                             if (newAmdDev.DeviceGlobalMemory < gpumem)
                             {
                                 Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
@@ -304,6 +316,7 @@ namespace NiceHashMiner.Devices.Querying
                             stringBuilder.AppendLine($"\t\tID: {newAmdDev.DeviceID}");
                             stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
                             stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
+                            stringBuilder.AppendLine($"\t\tManufacturer: {newAmdDev.AMDManufacturer}");
                             stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
                             stringBuilder.AppendLine($"\t\tNewUUID: {newAmdDev.NewUUID}");
                             stringBuilder.AppendLine($"\t\tBusID: {newAmdDev.BusID}");
@@ -474,10 +487,12 @@ namespace NiceHashMiner.Devices.Querying
                                 var pnpStr = osAdapterInfoData.ADLAdapterInfo[i].PNPString;
                                 // find vi controller pnp
                                 var infSection = "";
+                                string mf = "";
                                 foreach (var vCtrl in _availableControllers)
                                 {
                                     if (vCtrl.PnpDeviceID == pnpStr)
                                     {
+                                        mf = vCtrl.Manufacturer;
                                         infSection = vCtrl.InfSection;
                                     }
                                 }
@@ -492,7 +507,7 @@ namespace NiceHashMiner.Devices.Querying
                                 var udid = osAdapterInfoData.ADLAdapterInfo[i].UDID;
                                 const int pciVenIDStrSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                 var uuid = udid.Substring(0, pciVenIDStrSize) + "_" + serial;
-                                var budId = osAdapterInfoData.ADLAdapterInfo[i].BusNumber;
+                                var busId = osAdapterInfoData.ADLAdapterInfo[i].BusNumber;
                                 var index = osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex;
 
                                 if (_amdDeviceUuid.Contains(uuid)) continue;
@@ -500,7 +515,7 @@ namespace NiceHashMiner.Devices.Querying
                                 try
                                 {
                                     Helpers.ConsolePrint(Tag,
-                                        $"ADL device added BusNumber:{budId}  NAME:{devName}  UUID:{uuid}");
+                                        $"ADL device added BusNumber:{busId}  NAME:{devName}  MANUFACTURER:{mf}  UUID:{uuid}");
                                 }
                                 catch (Exception e)
                                 {
@@ -511,7 +526,7 @@ namespace NiceHashMiner.Devices.Querying
                                 //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                 //_amdDeviceName.Add(devName);
 
-                                if (_busIdInfos.ContainsKey(budId)) continue;
+                                if (_busIdInfos.ContainsKey(busId)) continue;
 
                                 var adl2Index = -1;
                                 if (adl2Ret == ADL.ADL_SUCCESS)
@@ -524,13 +539,14 @@ namespace NiceHashMiner.Devices.Querying
                                 var info = new BusIdInfo
                                 {
                                     Name = devName,
+                                    MF = mf,
                                     Uuid = uuid,
                                     InfSection = infSection,
                                     Adl1Index = index,
                                     Adl2Index = adl2Index
                                 };
 
-                                _busIdInfos.Add(budId, info);
+                                _busIdInfos.Add(busId, info);
                             }
                         }
                         else
@@ -572,6 +588,7 @@ namespace NiceHashMiner.Devices.Querying
         private struct BusIdInfo
         {
             public string Name;
+            public string MF;
             public string Uuid;
             public string InfSection;
             public int Adl1Index;

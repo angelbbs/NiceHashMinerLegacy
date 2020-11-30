@@ -409,6 +409,7 @@
                 "Form_Settings_checkBox_Allow_remote_management": "Allow remote management",
                 "Form_Settings_checkBox_Send_actual_version_info": "Send actual version info",
                 "Form_Settings_checkBox_Additional_info_about_device": "Additional info about device",
+                "Form_Settings_checkBox_show_device_manufacturer": "Show devices manufacturer",
                 "Form_Settings_Checkbox_Save_windows_size_and_position": "Save windows size and position",
                 "Form_Settings_checkBox_sorting_list_of_algorithms": "Sorting list of algorithms",
                 "Form_Settings_checkBox_ShowFanAsPercent": "Show fan rpm as percent",

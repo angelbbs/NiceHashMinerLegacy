@@ -508,6 +508,9 @@ namespace NiceHashMiner.Devices
                         case "148C":
                             man = "PowerColor";
                             break;
+                        case "1545":
+                            man = "VisionTek";
+                            break;
                         case "1682":
                             man = "XFX";
                             break;
@@ -558,6 +561,7 @@ namespace NiceHashMiner.Devices
                         //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
                         ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
                         var man = SafeGetProperty(manObj, "PNPDeviceID").Split('&')[2];
+                        //PCI\VEN_1002&DEV_67DF&SUBSYS_2379148C&REV_EF\4&18803EC9&0&00E4
                         var vidController = new VideoControllerData
                         {
                             Name = SafeGetProperty(manObj, "Name"),
@@ -569,10 +573,18 @@ namespace NiceHashMiner.Devices
                             InfSection = SafeGetProperty(manObj, "InfSection"),
                             AdapterRam = memTmp
                         };
+                        //ComputeDevice.Manufactur o = new ComputeDevice.Manufactur();
+                        //o.Manufacturer
+                        //ComputeDevice.Manufactur().
+
+                        //o.Manufacturer = GetManufacturer(vidController.Manufacturer);
+                        //MessageBox.Show(o.Manufacturer, "!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //ComputeDevice.Manufacturer = GetManufacturer(vidController.Manufacturer);
+                        //ComputeDevice.m
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
                         stringBuilder.AppendLine($"\t\tName {vidController.Name}");
                         stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
-                        stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)}");
+                        stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)} ({vidController.Manufacturer})");
                         stringBuilder.AppendLine($"\t\tPNPDeviceID {vidController.PnpDeviceID}");
                         stringBuilder.AppendLine($"\t\tDriverVersion {vidController.DriverVersion}");
                         stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");
@@ -779,6 +791,8 @@ namespace NiceHashMiner.Devices
                                 var isUnderSM1Minor = cudaDev.SM_minor < 1;
                                 isUnderSM21 = isUnderSM2Major && isUnderSM1Minor;
                             }
+                            string Manufacturer = (cudaDev.pciSubSystemId).ToString("X16").Substring((cudaDev.pciSubSystemId).ToString("X16").Length - 4);
+                            cudaDev.CUDAManufacturer = Manufacturer;
                             //bool isOverSM6 = cudaDev.SM_major > 6;
                             var skip = isUnderSM21;
                             var skipOrAdd = skip ? "SKIPED" : "ADDED";
@@ -788,6 +802,7 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine($"\t\tID: {cudaDev.DeviceID}");
                             stringBuilder.AppendLine($"\t\tBusID: {cudaDev.pciBusID}");
                             stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
+                            stringBuilder.AppendLine($"\t\tMANUFACTURER: {cudaDev.CUDAManufacturer} ({Manufacturer})");
                             stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
                             stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
                             stringBuilder.AppendLine($"\t\tMonitor?: {cudaDev.HasMonitorConnected}");

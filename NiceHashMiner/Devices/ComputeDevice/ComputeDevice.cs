@@ -61,6 +61,7 @@ namespace NiceHashMiner.Devices
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
         public string Codename { get; protected set; }
+        public string Manufacturer = "UNK";
 
         public string InfSection { get; protected set; }
 
@@ -325,7 +326,7 @@ namespace NiceHashMiner.Devices
         //********************************************************************************************************************
         // Ambiguous constructor
         protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,
-            DeviceType type, string nameCount, ulong gpuRam)
+            DeviceType type, string nameCount, ulong gpuRam, string manufacturer)
         {
             ID = id;
             Name = name;
@@ -335,6 +336,7 @@ namespace NiceHashMiner.Devices
             DeviceType = type;
             NameCount = nameCount;
             GpuRam = gpuRam;
+            Manufacturer = manufacturer;
         }
 
         // Fake dev
@@ -693,6 +695,82 @@ namespace NiceHashMiner.Devices
         public static bool operator !=(ComputeDevice left, ComputeDevice right)
         {
             return !Equals(left, right);
+        }
+        public static string GetManufacturer(string man)
+        {
+            switch (man)
+            {
+                case "1002":
+                    man = "AMD";
+                    break;
+                case "1043":
+                    man = "ASUSTeK";
+                    break;
+                case "196D":
+                    man = "Club 3D";
+                    break;
+                case "1092":
+                    man = "Diamond Multimedia";
+                    break;
+                case "18BC":
+                    man = "GeCube";
+                    break;
+                case "1458":
+                    man = "Gigabyte";
+                    break;
+                case "17AF":
+                    man = "HIS";
+                    break;
+                case "16F3":
+                    man = "Jetway";
+                    break;
+                case "1462":
+                    man = "MSI";
+                    break;
+                case "1DA2":
+                    man = "Sapphire";
+                    break;
+                case "148C":
+                    man = "PowerColor";
+                    break;
+                case "1545":
+                    man = "VisionTek";
+                    break;
+                case "1682":
+                    man = "XFX";
+                    break;
+                case "107D":
+                    man = "Leadtek";
+                    break;
+                case "10B0":
+                    man = "Gainward";
+                    break;
+                case "10DE":
+                    man = "NVIDIA";
+                    break;
+                case "154B":
+                    man = "PNY";
+                    break;
+                case "19DA":
+                    man = "Zotac";
+                    break;
+                case "19F1":
+                    man = "BFG";
+                    break;
+                case "1B4C":
+                    man = "KFA2";
+                    break;
+                case "3842":
+                    man = "EVGA";
+                    break;
+                case "7377":
+                    man = "Colorful";
+                    break;
+                default:
+                    break;
+            }
+
+            return man;
         }
     }
 }

@@ -153,19 +153,33 @@ namespace NiceHashMiner.Forms.Components
             listViewDevices.BeginUpdate();
             listViewDevices.Items.Clear();
             string addInfo = "";
+            string Manufacturer = "";
+            string devNum = "";
+            string devInfo = "";
             // set devices
             foreach (var computeDevice in computeDevices)
             {
+                devNum = computeDevice.NameCount; ;
+                devInfo = computeDevice.Name;
+
                 if (ConfigManager.GeneralConfig.Additional_info_about_device && computeDevice.DeviceType != DeviceType.CPU)
                 {
-                    addInfo = " (" + computeDevice.GpuRam / 1073741824 + " GB)" + 
-                        " (" + computeDevice.Uuid.Substring(computeDevice.Uuid.Length - 4, 4).ToUpper() + ")" + 
-                        " (BusID: " + computeDevice.BusID.ToString() + ")";
+                    addInfo = "(" + computeDevice.GpuRam / 1073741824 + " GB)" +
+                    " (" + computeDevice.Uuid.Substring(computeDevice.Uuid.Length - 4, 4).ToUpper() + ")" +
+                    " (BusID: " + computeDevice.BusID.ToString() + ")";
                 }
+                if (ConfigManager.GeneralConfig.Show_device_manufacturer && computeDevice.DeviceType != DeviceType.CPU)
+                {
+                    if (!devInfo.Contains(ComputeDevice.GetManufacturer(computeDevice.Manufacturer)))
+                    {
+                        Manufacturer = ComputeDevice.GetManufacturer(computeDevice.Manufacturer);
+                    }
+                }
+
                 var lvi = new ListViewItem
                 {
                     Checked = computeDevice.Enabled,
-                    Text = computeDevice.GetFullName() + addInfo,
+                    Text = devNum + " " + Manufacturer + " " + devInfo + " " + addInfo,
                     Tag = computeDevice
                 };
                 //lvi.SubItems.Add(computeDevice.Name);

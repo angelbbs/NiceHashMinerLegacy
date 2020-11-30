@@ -1098,7 +1098,7 @@ namespace NiceHashMiner
                     new Task(() => Miner._cooldownCheckTimer.Stop()).Start();
                 new Task(() => MessageBoxManager.Unregister()).Start();
                 
-                ConfigManager.GeneralConfigFileCommit();
+                //ConfigManager.GeneralConfigFileCommit();
                 try
                 {
                     if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
@@ -1141,18 +1141,20 @@ namespace NiceHashMiner
                     CMDconfigHandleWD.Start();
                 }
                 Thread.Sleep(500);
-                /*
+                
                 var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
                 {
                     WindowStyle = ProcessWindowStyle.Minimized
                 };
                 Helpers.ConsolePrint("SheduleRestart", "Schedule or config changed restart program after " + (periodRestartProgram / 60).ToString() + "h");
                 Process.Start(RestartProgram);
-                */
 
-                CloseChilds(Process.GetCurrentProcess());
-                System.Windows.Forms.Application.Restart();
-                System.Environment.Exit(1);
+
+                //CloseChilds(Process.GetCurrentProcess());
+                //Thread.Sleep(2);
+                //System.Windows.Forms.Application.Restart();
+                //Process.GetCurrentProcess().Kill();
+                //System.Environment.Exit(1);
             }
             catch (Exception er)
             {
@@ -1986,7 +1988,8 @@ public static void CloseChilds(Process parentId)
             IgnoreMsg
         }
 
-        private StartMiningReturnType StartMining(bool showWarnings)
+
+        public StartMiningReturnType StartMining(bool showWarnings)
         {
             if (_autostartTimerDelay != null)
             {
@@ -2247,7 +2250,9 @@ public static void CloseChilds(Process parentId)
                     }
             };
             */
+            
             CloseChilds(Process.GetCurrentProcess());
+            Thread.Sleep(100);
             System.Windows.Forms.Application.Restart();
             System.Environment.Exit(1);
         }

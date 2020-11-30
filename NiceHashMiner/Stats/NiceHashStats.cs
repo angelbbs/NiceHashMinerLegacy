@@ -223,6 +223,15 @@ namespace NiceHashMiner.Stats
 
                                 SetAlgorithmRates(message.data);
                                 GetSmaAPI();
+                                
+                                if (AlgorithmSwitchingManager._smaCheckTimer != null)
+                                {
+                                    AlgorithmSwitchingManager._smaCheckTimer.Stop();
+                                    AlgorithmSwitchingManager._smaCheckTimer.Dispose();
+                                    AlgorithmSwitchingManager._smaCheckTimer = null;
+                                    AlgorithmSwitchingManager.Start();//************************
+                                }
+                                
                                 if (Miner.IsRunningNew)
                                 {
                                     Form_Main.smaCount++;
@@ -233,8 +242,17 @@ namespace NiceHashMiner.Stats
                                 //Helpers.ConsolePrint("Form_Main.smaCount", Form_Main.smaCount.ToString());
                                 if (Form_Main.smaCount > 3)
                                 {
+                                    dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
+                                    Helpers.ConsolePrint("SOCKET", "Using previous SMA");
+                                    JArray smadata = (JArray.Parse(jsonData));
+                                    SetAlgorithmRates(smadata);
+                                }
+                                //new Task(() => MiningSession.st()).Start();
+
+                                if (Form_Main.smaCount > 5)
+                                {
                                     Helpers.ConsolePrint("SocketOnOnDataReceived", "PROFIT calc Error. Restart program");
-                                    Thread.Sleep(1000);
+
                                     Form_Main.MakeRestart(0);
                                     return;
                                 }

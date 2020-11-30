@@ -23,6 +23,7 @@ namespace NiceHashMiner.Devices
         public ulong DeviceGlobalMemory;
         public uint DeviceID;
         public string DeviceName;
+        public string CUDAManufacturer;
         public int HasMonitorConnected;
         public int SMX;
         public int SM_major;

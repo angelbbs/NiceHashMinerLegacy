@@ -30,7 +30,7 @@ namespace NiceHashMiner.Switching
 
         private static int _ticksForStable;
         private static int _ticksForUnstable;
-        private static double _smaCheckTime;
+        private static double _smaCheckTime = 180;
         public static bool SmaCheckTimerOnElapsedRun = false;
         // Simplify accessing config objects
         public static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
@@ -202,7 +202,7 @@ namespace NiceHashMiner.Switching
             {
                 _ticksForStable = StableRange.RandomInt(_random);
                 _ticksForUnstable = UnstableRange.RandomInt(_random);
-                _smaCheckTime = SmaCheckRange.RandomInt(_random);
+                //_smaCheckTime = SmaCheckRange.RandomInt(_random);
                 /*
                 _ticksForStable = 5;
                 _ticksForUnstable = 5;
@@ -210,31 +210,31 @@ namespace NiceHashMiner.Switching
                 */
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 0)
                 {
-                    _smaCheckTime = 60;
+                    //_smaCheckTime = 60;
                     _ticksForStable = 1;
                     _ticksForUnstable = 1;
                 }
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 1)
                 {
-                    _smaCheckTime = 60;
+                    //_smaCheckTime = 60;
                     _ticksForStable = 3;
                     _ticksForUnstable = 3;
                 }
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 2)
                 {
-                    _smaCheckTime = 60;
+                    //_smaCheckTime = 60;
                     _ticksForStable = 5;
                     _ticksForUnstable = 5;
                 }
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 3)
                 {
-                    _smaCheckTime = 60;
+                    //_smaCheckTime = 60;
                     _ticksForStable = 10;
                     _ticksForUnstable = 10;
                 }
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 4)
                 {
-                        _smaCheckTime = 60;
+                        //_smaCheckTime = 60;
                         _ticksForStable = 15;
                         _ticksForUnstable = 15;
                 }
@@ -242,7 +242,7 @@ namespace NiceHashMiner.Switching
                 {
                     _ticksForStable = StableRange.RandomInt(_random);
                     _ticksForUnstable = UnstableRange.RandomInt(_random);
-                    _smaCheckTime = SmaCheckRange.RandomInt(_random);
+                    //_smaCheckTime = SmaCheckRange.RandomInt(_random);
                 }
             }
         }

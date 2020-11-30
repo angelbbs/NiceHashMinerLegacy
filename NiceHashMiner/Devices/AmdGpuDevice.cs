@@ -25,13 +25,13 @@ namespace NiceHashMiner.Devices
 
         public readonly string InfSection; // has arhitecture string
 
-        // new drivers make some algorithms unusable 21.19.164.1 => driver not working with NeoScrypt and 
+        // new drivers make some algorithms unusable 21.19.164.1 => driver not working with NeoScrypt and
         public bool DriverDisableAlgos { get; }
 
         public string Codename => _openClSubset._CL_DEVICE_NAME;
 
         public string NewUUID { get; internal set; }
-        public string Manufacturer { get; set; }
+        public string AMDManufacturer = "";
 
         public int AdapterIndex; // init this with the ADL
 

@@ -182,6 +182,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.checkBox_show_device_manufacturer = new System.Windows.Forms.CheckBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -1456,6 +1457,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox_show_device_manufacturer);
             this.groupBox1.Controls.Add(this.checkBoxDriverWarning);
             this.groupBox1.Controls.Add(this.checkBoxCPUmonitoring);
             this.groupBox1.Controls.Add(this.checkBoxNVMonitoring);
@@ -2123,6 +2125,18 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
+            // checkBox_show_device_manufacturer
+            // 
+            this.checkBox_show_device_manufacturer.AutoSize = true;
+            this.checkBox_show_device_manufacturer.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_show_device_manufacturer.Location = new System.Drawing.Point(242, 112);
+            this.checkBox_show_device_manufacturer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_show_device_manufacturer.Name = "checkBox_show_device_manufacturer";
+            this.checkBox_show_device_manufacturer.Size = new System.Drawing.Size(153, 17);
+            this.checkBox_show_device_manufacturer.TabIndex = 413;
+            this.checkBox_show_device_manufacturer.Text = "Show device manufacturer";
+            this.checkBox_show_device_manufacturer.UseVisualStyleBackColor = true;
+            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2419,5 +2433,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonCurrPorts;
         private System.Windows.Forms.Button buttonNVIDIAinspector;
         private System.Windows.Forms.RichTextBox richTextBoxCheckNiceHashservers;
+        private System.Windows.Forms.CheckBox checkBox_show_device_manufacturer;
     }
 }
