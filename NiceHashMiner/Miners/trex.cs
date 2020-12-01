@@ -129,6 +129,18 @@ namespace NiceHashMiner.Miners
                 commandLine += GetDevicesCommandString();
                 _benchmarkTimeWait = time;
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+            {
+                commandLine = "--algo octopus" +
+                 " -o stratum+tcp://cfx.woolypooly.com:3094" + " -u 0x13097ee19fd453AfD6F2ecf155927f2b7380307F.trex" + " -p x " +
+                 " -o " + url + " -u " + username + " -p x " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                  MiningSetup,
+                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog -l " + GetLogFileName() + " -b 127.0.0.1:" + ApiPort +
+                              " -d ";
+                commandLine += GetDevicesCommandString();
+                _benchmarkTimeWait = time;
+            }
             return commandLine;
         }
 
@@ -225,7 +237,13 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 10;
                         bench_time = 20;
                     }
-                    
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus)) // not tested
+                    {
+                        delay_before_calc_hashrate = 10;
+                        bench_time = 20;
+                    }
+
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {

@@ -310,6 +310,7 @@ namespace NiceHashMiner.Devices.Algorithms
             { MinerBaseType.trex,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16Rv2"),
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.trex, AlgorithmType.KAWPOW, "KAWPOW")
                             {    
                                 ExtraLaunchParameters = "--mt 1 "
