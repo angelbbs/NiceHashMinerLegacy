@@ -439,13 +439,7 @@ namespace NiceHashMiner.Miners
                 
                 //список карт выводить --devices 999
                 double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
-                //double id = mPair.Device.lolMinerBusID;
-                /*
-                if (ConfigManager.GeneralConfig.lolMinerOldEnumeration)
-                {
-                    id = mPair.Device.ID;
-                }
-                */
+
                 if (id < 0)
                 {
                     Helpers.ConsolePrint("lolMinerIndexing", "ID too low: " + id + " skipping device");

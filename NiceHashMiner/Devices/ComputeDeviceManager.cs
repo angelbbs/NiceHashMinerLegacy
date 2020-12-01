@@ -479,7 +479,7 @@ namespace NiceHashMiner.Devices
                             man = "AMD";
                             break;
                         case "1043":
-                            man = "ASUSTeK";
+                            man = "ASUS";
                             break;
                         case "196D":
                             man = "Club 3D";
@@ -503,6 +503,9 @@ namespace NiceHashMiner.Devices
                             man = "MSI";
                             break;
                         case "1DA2":
+                            man = "Sapphire";
+                            break;
+                        case "174B":
                             man = "Sapphire";
                             break;
                         case "148C":
@@ -782,7 +785,7 @@ namespace NiceHashMiner.Devices
                             Helpers.ConsolePrint("NVML", e.ToString());
                         }
 
-                        foreach (var cudaDev in _cudaDevices.CudaDevices)
+                        foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
                             // check sm vesrions
                             bool isUnderSM21;
@@ -792,7 +795,7 @@ namespace NiceHashMiner.Devices
                                 isUnderSM21 = isUnderSM2Major && isUnderSM1Minor;
                             }
                             string Manufacturer = (cudaDev.pciSubSystemId).ToString("X16").Substring((cudaDev.pciSubSystemId).ToString("X16").Length - 4);
-                            cudaDev.CUDAManufacturer = Manufacturer;
+                            cudaDev.CUDAManufacturer = ComputeDevice.GetManufacturer(Manufacturer);
                             //bool isOverSM6 = cudaDev.SM_major > 6;
                             var skip = isUnderSM21;
                             var skipOrAdd = skip ? "SKIPED" : "ADDED";

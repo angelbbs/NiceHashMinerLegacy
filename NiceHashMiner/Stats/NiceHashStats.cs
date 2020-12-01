@@ -85,34 +85,17 @@ namespace NiceHashMiner.Stats
         private const int DeviceUpdateInterval = 45 * 1000;
 
         public static double Balance { get; private set; }
-       // public static string Version { get; private set; }
         public static string Version = "";
-        /*
-        class github_version
-        {
-            public string tag_name;
-            public string target_commitish;
-            public List<T> assets;
-        }
-        */
+
     public static bool IsAlive => _socket?.IsAlive ?? false;
 
-        // Event handlers for socket
-       // public static event EventHandler OnBalanceUpdate;
-
         public static event EventHandler OnSmaUpdate;
-        //public static event EventHandler OnVersionUpdate;
-       // public static event EventHandler OnConnectionLost;
-       // public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
-       // public static event EventHandler OnExchangeUpdate;
 
         public static NiceHashSocket _socket;
         public static NiceHashSocket _socketold;
 
-        //public static System.Threading.Timer _deviceUpdateTimer;
         public static System.Timers.Timer _deviceUpdateTimer;
-        //public static System.Threading.Timer _deviceUpdateTimerNew;
 
         public static bool remoteMiningStart = false;
         public static bool remoteMiningStop = false;
@@ -163,12 +146,6 @@ namespace NiceHashMiner.Stats
         }
 
         #region Socket Callbacks
-        /*
-        private static void SocketOnOnConnectionLost(object sender, EventArgs eventArgs)
-        {
-            OnConnectionLost?.Invoke(sender, eventArgs);
-        }
-        */
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
             
@@ -183,24 +160,6 @@ namespace NiceHashMiner.Stats
                     {
                         case "sma":
                             {
-                                /*
-                                // Try in case stable is not sent, we still get updated paying rates
-                                try
-                                {
-                                    var stable = JsonConvert.DeserializeObject(message.stable.Value);
-                                    SetStableAlgorithms(stable);
-                                    FileStream fs0 = new FileStream("configs\\stable.dat", FileMode.Create, FileAccess.Write);
-                                    StreamWriter w0 = new StreamWriter(fs0);
-                                    w0.Write(stable.data);
-                                    //w.Write(JsonConvert.SerializeObject(message));
-                                    w0.Flush();
-                                    w0.Close();
-                                }
-                                catch
-                                {
-                                    Helpers.ConsolePrint("SOCKET", "Exception: " + e.ToString());
-                                }
-                                */
                                 //***************************
                                 FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                                 StreamWriter w = new StreamWriter(fs);
@@ -247,7 +206,6 @@ namespace NiceHashMiner.Stats
                                     JArray smadata = (JArray.Parse(jsonData));
                                     SetAlgorithmRates(smadata);
                                 }
-                                //new Task(() => MiningSession.st()).Start();
 
                                 if (Form_Main.smaCount > 5)
                                 {
@@ -256,10 +214,6 @@ namespace NiceHashMiner.Stats
                                     Form_Main.MakeRestart(0);
                                     return;
                                 }
-                                // if (!GetSmaAPI())
-                                // {
-                                // }
-
 
                                 break;
                             }
@@ -719,14 +673,7 @@ namespace NiceHashMiner.Stats
                     JArray smadata = (JArray.Parse(outProf));
 
                     NiceHashStats.SetAlgorithmRates(smadata, 10, 1.1);
-                    /*
-                    FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
-                    StreamWriter w = new StreamWriter(fs);
-                    w.Write(smadata);
-                    //w.Write(JsonConvert.SerializeObject(message));
-                    w.Flush();
-                    w.Close();
-                    */
+
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
                         Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h OK");
@@ -788,30 +735,6 @@ namespace NiceHashMiner.Stats
             }
             try
             {
-                /*
-                if (System.IO.File.Exists("configs\\versions.dat"))
-                {
-                    FileStream fs1 = new FileStream("configs\\versions.dat", FileMode.Open, FileAccess.Read);
-                    StreamReader w1 = new StreamReader(fs1);
-                    String fakeSMA1 = w1.ReadToEnd();
-                    dynamic message1 = JsonConvert.DeserializeObject(fakeSMA1);
-                    //      Helpers.ConsolePrint("SOCKET-oldSMA", "Received: " + fakeSMA1);
-                    Helpers.ConsolePrint("SOCKET", "Using previous versions data");
-                    w1.Close();
-                    if (message1.method == "versions")
-                    {
-                        SetVersion(message1.legacy.Value);
-                    }
-                }
-                else
-                {
-                    //                    Helpers.ConsolePrint("SOCKET", "Using default SMA");
-
-                    //                    dynamic defversion = "{\"method\":\"versions\",\"v2\":\"2.0.1.1\",\"legacy\":\"1.8.1.5\"}";
-                    //                    JArray verdata = (JArray.Parse(defversion));
-                    //                    SetVersion(verdata.legacy.Value);
-                }
-                */
                 //******
                 if (!GetSmaAPI())
                 {
@@ -915,14 +838,9 @@ namespace NiceHashMiner.Stats
                             Paying = paying
                         };
                         payingDict[algo] = paying;
-                        //_recentPaying[algo] = new List<double>
-                        //{
-                        //    0
-                        //};
                     }
                 }
 
-                //NiceHashSma.Initialized = true;
                 NHSmaData.UpdateSmaPaying(payingDict);
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);
@@ -1010,8 +928,7 @@ namespace NiceHashMiner.Stats
                                 }
                             }
                         }
-                        //DaggerOrderMaxPay = 0
-                        //0.001418488464
+
                         if (ConfigManager.GeneralConfig.DaggerOrderMaxPay > 0 && algoKey == AlgorithmType.DaggerHashimoto && Math.Abs(algo[1].Value<double>()) > ConfigManager.GeneralConfig.DaggerOrderMaxPay)
                         {
                             Helpers.ConsolePrint("SMA", "Sets DaggerHashimoto to 0");
@@ -1056,13 +973,7 @@ namespace NiceHashMiner.Stats
             }
          //  Helpers.ConsolePrint("SOCKET", "Received7: " + balance);
         }
-        /*
-        public static void SetVersion(string version)
-        {
-            Version = version;
-            OnVersionUpdate?.Invoke(null, EventArgs.Empty);
-        }
-        */
+
         private static void SetExchangeRates(string data)
         {
             try
@@ -1305,7 +1216,20 @@ namespace NiceHashMiner.Stats
                         nuuid = $"{type}-{b64Web}";
                     }
                     var deviceName = device.Name;
-                    if (!devName) deviceName = "";
+                    string Manufacturer = "";
+                    if (ConfigManager.GeneralConfig.Show_device_manufacturer && device.DeviceType != DeviceType.CPU)
+                    {
+                        if (!device.Name.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                        {
+                            Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                        }
+                    }
+
+                    if (!devName)
+                    {
+                        deviceName = "";
+                        Manufacturer = "";
+                    }
                     /*
                     if (rigStatus != "PENDING")
                     {
@@ -1314,7 +1238,7 @@ namespace NiceHashMiner.Stats
                     */
                     var array = new JArray
                     {
-                        deviceName,
+                        Manufacturer + deviceName,
                         nuuid
                     };
 
@@ -1557,104 +1481,6 @@ namespace NiceHashMiner.Stats
             }
 
         }
-        /*
-        public string B64Uuid
-        {
-            get
-            {
-                //UUIDs
-                //RIG - 0
-                //CPU - 1
-                //GPU - 2 // NVIDIA
-                //AMD - 3
-                // types
-
-                int type = 1; // assume type is CPU
-
-                if (device. == DeviceType.NVIDIA)
-                {
-                    type = 2;
-                }
-                else if (DeviceType == DeviceType.AMD)
-                {
-                    type = 3;
-                }
-                var b64Web = UUID.GetB64UUID(Uuid);
-                return $"{type}-{b64Web}";
-            }
-        }
-        private string deviceB64Uuid()
-        {
-            return "";
-        }
-        private static void SendMinerStatus(bool sendDeviceNames)
-        {
-            var devices = Available.Devices;
-            var rigStatus = CalcRigStatusString();
-            var paramList = new List<JToken>
-            {
-                rigStatus
-            };
-
-            var deviceList = new JArray();
-            foreach (var device in devices)
-            {
-                try
-                {
-                    var array = new JArray
-                    {
-                        sendDeviceNames ? device.Name : "",
-                        //device.B64Uuid  // TODO
-                    };
-                    var status = DeviceReportStatus(device.DeviceType, device.State);
-                    array.Add(status);
-
-                    array.Add((int)Math.Round(device.Load));
-
-                    var speedsJson = new JArray();
-                    var speeds = MiningStats.GetSpeedForDevice(device.Uuid);
-                    if (speeds != null && device.State == DeviceState.Mining)
-                    {
-                        foreach (var kvp in speeds)
-                        {
-                            speedsJson.Add(new JArray((int)kvp.type, kvp.speed));
-                        }
-                    }
-                    array.Add(speedsJson);
-
-                    // Hardware monitoring
-                    array.Add((int)Math.Round(device.Temp));
-                    array.Add(device.FanSpeed);
-                    array.Add((int)Math.Round(device.PowerUsage));
-
-                    // Power mode
-                    array.Add((int)device.PowerLevel);
-
-                    // Intensity mode
-                    array.Add(0);
-
-                    deviceList.Add(array);
-                }
-                catch (Exception e)
-                {
-                    NHM.Common.Logger.Error("SOCKET", e.Message);
-                }
-            }
-
-            paramList.Add(deviceList);
-
-            var data = new MinerStatusMessage
-            {
-                param = paramList
-            };
-            var sendData = JsonConvert.SerializeObject(data);
-
-            // This function is run every minute and sends data every run which has two auxiliary effects
-            // Keeps connection alive and attempts reconnection if internet was dropped
-            _socket?.SendData(sendData);
-        }
-*/
-
     }
 }
 

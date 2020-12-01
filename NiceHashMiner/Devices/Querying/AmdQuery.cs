@@ -223,8 +223,8 @@ namespace NiceHashMiner.Devices.Querying
             stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
             try
             {
-                //foreach (var dev in amdDevices.OrderBy(i => i.AMD_BUS_ID))//****************************************************
-                foreach (var dev in amdDevices)
+                foreach (var dev in amdDevices.OrderBy(i => i.BUS_ID))//****************************************************
+                //foreach (var dev in amdDevices)
                 {
                     ComputeDeviceManager.Available.HasAmd = true;
 

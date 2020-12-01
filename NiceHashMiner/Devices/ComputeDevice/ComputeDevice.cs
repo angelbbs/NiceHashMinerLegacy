@@ -704,7 +704,7 @@ namespace NiceHashMiner.Devices
                     man = "AMD";
                     break;
                 case "1043":
-                    man = "ASUSTeK";
+                    man = "ASUS";
                     break;
                 case "196D":
                     man = "Club 3D";
@@ -728,6 +728,9 @@ namespace NiceHashMiner.Devices
                     man = "MSI";
                     break;
                 case "1DA2":
+                    man = "Sapphire";
+                    break;
+                case "174B":
                     man = "Sapphire";
                     break;
                 case "148C":

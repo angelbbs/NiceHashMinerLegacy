@@ -435,6 +435,7 @@ namespace NiceHashMiner.Forms.Components
         private void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
         {
             int devNumInc = 0;
+            string Manufacturer = "";
             if (IsInBenchmark) return;
             if (IsMining) return;
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU)
@@ -458,13 +459,22 @@ namespace NiceHashMiner.Forms.Components
                                 var copyBenchItem = new ToolStripMenuItem();
                                 var copyTuningItem = new ToolStripMenuItem();
                                 //copyBenchItem.DropDownItems
+                                //foreach (var cDev in sameDevTypes.OrderBy(i => i.IDByBus))
                                 foreach (var cDev in sameDevTypes)
                                 {
                                     if (cDev.Enabled)
                                     {
+                                        if (ConfigManager.GeneralConfig.Show_device_manufacturer && cDev.DeviceType != DeviceType.CPU)
+                                        {
+                                            if (!cDev.Name.Contains(ComputeDevice.GetManufacturer(cDev.Manufacturer)))
+                                            {
+                                                Manufacturer = ComputeDevice.GetManufacturer(cDev.Manufacturer) + " ";
+                                            }
+                                        }
+
                                         var copyBenchDropDownItem = new ToolStripMenuItem
                                         {
-                                            Text = "GPU#" + (cDev.Index + devNumInc).ToString() + " " + cDev.Name,
+                                            Text = (cDev.NameCount).ToString() + " " + Manufacturer + cDev.Name,
                                             Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
                                         };
                                         copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
@@ -473,7 +483,7 @@ namespace NiceHashMiner.Forms.Components
 
                                         var copyTuningDropDownItem = new ToolStripMenuItem
                                         {
-                                            Text = "GPU#" + (cDev.Index + devNumInc).ToString() + " " + cDev.Name
+                                            Text = (cDev.NameCount).ToString() + " " + Manufacturer + cDev.Name
                                             //Checked = cDev.UUID == CDevice.TuningCopyUUID
                                         };
                                         copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;

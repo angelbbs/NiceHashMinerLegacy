@@ -1898,7 +1898,9 @@ namespace NiceHashMiner
             }
             minername = minername.Replace("Z-Enemy", "ZEnemy");
             var gpus = "";
-            gpus += string.Join(",", MiningSetup.MiningPairs.Select(mPair => mPair.Device.ID.ToString()).ToList());
+            List<string> l = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
+            l.Sort();
+            gpus += string.Join(",", l);
 
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -1935,27 +1937,7 @@ namespace NiceHashMiner
             {
                 CMDconfigHandle.StartInfo.FileName = "GPU-Reset.cmd";
             }
-//            Helpers.ConsolePrint("BeforeMiningString:", BeforeMiningString);
-/*
-            if (!File.Exists(CMDconfigHandle.StartInfo.FileName))
-            {
-                try
-                {
-                    FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Create, FileAccess.Write);
-                    StreamWriter w = new StreamWriter(fs);
-                    w.Write(BeforeOrAfterMiningString);
-                    w.Flush();
-                    w.Close();
-                    Thread.Sleep(1000); //wait for file close
-                    return null;
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("RunCMDBeforeOrAfterMining", e.ToString());
-                }
 
-            } else
-            */
             {
                 var cmd = "";
                 FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Open, FileAccess.Read);
