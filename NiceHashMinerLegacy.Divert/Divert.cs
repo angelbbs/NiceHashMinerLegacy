@@ -15,7 +15,6 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
-using PacketDotNet;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Management;
@@ -285,78 +284,7 @@ namespace NiceHashMinerLegacy.Divert
             return true;
         }
 
-        public unsafe static WinDivertBuffer MakeNewPacket(WinDivertBuffer packet, uint readLen, string PacketPayloadData)
-        {
-            WinDivertParseResult parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-            //store old tcp/ip data
-            var dstaddr = parse_result.IPv4Header->DstAddr;
-            var dstport = parse_result.TcpHeader->DstPort;
-
-            var srcaddr = parse_result.IPv4Header->SrcAddr;
-            var srcport = parse_result.TcpHeader->SrcPort;
-
-            var hdrlen = parse_result.IPv4Header->HdrLength;
-            var len = parse_result.IPv4Header->Length;
-
-            var ver = parse_result.IPv4Header->Version;
-            var ihl = parse_result.IPv4Header->HdrLength;
-            var tos = parse_result.IPv4Header->TOS;
-            var tl = parse_result.IPv4Header->Length;
-            var id = parse_result.IPv4Header->Id;
-            var df = parse_result.IPv4Header->Df;
-            var fo = parse_result.IPv4Header->FragOff;
-
-            var ttl = parse_result.IPv4Header->TTL;
-            var protocol = parse_result.IPv4Header->Protocol;
-
-            var ack = parse_result.TcpHeader->Ack;
-            var ackn = parse_result.TcpHeader->AckNum;
-            var fin = parse_result.TcpHeader->Fin;
-            var psh = parse_result.TcpHeader->Psh;
-            var rst = parse_result.TcpHeader->Rst;
-            var sn = parse_result.TcpHeader->SeqNum;
-            var syn = parse_result.TcpHeader->Syn;
-            var urg = parse_result.TcpHeader->Urg;
-            var urgp = parse_result.TcpHeader->UrgPtr;
-            var wind = parse_result.TcpHeader->Window;
-
-            var tcpPacket = new TcpPacket(Divert.SwapOrder(parse_result.TcpHeader->SrcPort), Divert.SwapOrder(parse_result.TcpHeader->DstPort));
-            var ipv4Packet = new IPv4Packet(parse_result.IPv4Header->SrcAddr, parse_result.IPv4Header->DstAddr);
-
-            var payload = Divert.StringToByteArray(PacketPayloadData);
-            ipv4Packet.Id = Divert.SwapOrder(id);
-            ipv4Packet.TimeToLive = ttl;
-            ipv4Packet.Protocol = (PacketDotNet.IPProtocolType.TCP);
-            ipv4Packet.TypeOfService = tos;
-            ipv4Packet.FragmentFlags = 2;
-            ipv4Packet.FragmentOffset = 0;
-
-            tcpPacket.PayloadData = payload;
-
-            tcpPacket.SequenceNumber = Divert.SwapByteOrder(sn);
-            tcpPacket.AcknowledgmentNumber = Divert.SwapByteOrder(ackn);
-
-            tcpPacket.Urg = urg == 0 ? false : true;
-            tcpPacket.Ack = ack == 0 ? false : true;
-            tcpPacket.Psh = psh == 0 ? false : true;
-            tcpPacket.Rst = rst == 0 ? false : true;
-            tcpPacket.Syn = syn == 0 ? false : true;
-            tcpPacket.Fin = fin == 0 ? false : true;
-
-                ipv4Packet.PayloadPacket = tcpPacket;
-                tcpPacket.ParentPacket = ipv4Packet;
-                ushort pl = (ushort)(tcpPacket.PayloadData.Length + 10);
-                tcpPacket.WindowSize = Divert.SwapOrder(pl);
-                tcpPacket.Checksum = (ushort)0;
-
-            var ip4 = ipv4Packet.Bytes;
-            packet.Dispose();
-            packet = new WinDivertBuffer(ip4);
-            readLen = packet.Length;
-            //    WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
-            return packet;
-        }
-
+        
         public static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir, List<string> _oldPorts)
         {
             try
@@ -423,123 +351,6 @@ namespace NiceHashMinerLegacy.Divert
             return "unknown: ?";
         }
 
-        public unsafe static WinDivertBuffer MakeNewPacket2(WinDivertBuffer packet, uint readLen, string PacketPayloadData = "")
-        {
-            try
-            {
-                WinDivertParseResult parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                //store old tcp/ip data
-                var dstaddr = parse_result.IPv4Header->DstAddr;
-                var dstport = parse_result.TcpHeader->DstPort;
-
-                var srcaddr = parse_result.IPv4Header->SrcAddr;
-                var srcport = parse_result.TcpHeader->SrcPort;
-
-                var hdrlen = parse_result.IPv4Header->HdrLength;
-                var len = parse_result.IPv4Header->Length;
-
-                var ver = parse_result.IPv4Header->Version;
-                var ihl = parse_result.IPv4Header->HdrLength;
-                var tos = parse_result.IPv4Header->TOS;
-                var tl = parse_result.IPv4Header->Length;
-                var id = parse_result.IPv4Header->Id;
-                var df = parse_result.IPv4Header->Df;
-                var fo = parse_result.IPv4Header->FragOff;
-
-                var ttl = parse_result.IPv4Header->TTL;
-                var protocol = parse_result.IPv4Header->Protocol;
-
-                var ack = parse_result.TcpHeader->Ack;
-                var ackn = parse_result.TcpHeader->AckNum;
-                var fin = parse_result.TcpHeader->Fin;
-                var psh = parse_result.TcpHeader->Psh;
-                var rst = parse_result.TcpHeader->Rst;
-                var sn = parse_result.TcpHeader->SeqNum;
-                var syn = parse_result.TcpHeader->Syn;
-                var urg = parse_result.TcpHeader->Urg;
-                var urgp = parse_result.TcpHeader->UrgPtr;
-                var wind = parse_result.TcpHeader->Window;
-
-                Helpers.ConsolePrint("WinDivertSharp", "ver: " + ver);
-                Helpers.ConsolePrint("WinDivertSharp", "ihl: " + ihl);
-                Helpers.ConsolePrint("WinDivertSharp", "tos: " + tos);
-                Helpers.ConsolePrint("WinDivertSharp", "tl: " + Divert.SwapOrder(tl));
-                Helpers.ConsolePrint("WinDivertSharp", "id: " + Divert.SwapOrder(id));
-                Helpers.ConsolePrint("WinDivertSharp", "df: " + df);
-                Helpers.ConsolePrint("WinDivertSharp", "fo: " + fo);
-                Helpers.ConsolePrint("WinDivertSharp", "ttl: " + ttl);
-                Helpers.ConsolePrint("WinDivertSharp", "protocol: " + protocol);
-
-                Helpers.ConsolePrint("WinDivertSharp", "ack: " + ack);
-                Helpers.ConsolePrint("WinDivertSharp", "ackn: " + ackn);
-                Helpers.ConsolePrint("WinDivertSharp", "fin: " + fin);
-                Helpers.ConsolePrint("WinDivertSharp", "psh: " + psh);
-                Helpers.ConsolePrint("WinDivertSharp", "rst: " + rst);
-                Helpers.ConsolePrint("WinDivertSharp", "sn: " + sn);
-                Helpers.ConsolePrint("WinDivertSharp", "syn: " + syn);
-                Helpers.ConsolePrint("WinDivertSharp", "urg: " + urg);
-                Helpers.ConsolePrint("WinDivertSharp", "urgp: " + urgp);
-                Helpers.ConsolePrint("WinDivertSharp", "wind: " + wind);
-
-
-                var tcpPacket = new TcpPacket(Divert.SwapOrder(parse_result.TcpHeader->SrcPort), Divert.SwapOrder(parse_result.TcpHeader->DstPort));
-
-                var ipv4Packet = new IPv4Packet(parse_result.IPv4Header->SrcAddr, parse_result.IPv4Header->DstAddr);
-
-
-                if (PacketPayloadData.Length > 0)
-                {
-                    var payload = Divert.StringToByteArray(PacketPayloadData);
-                    tcpPacket.PayloadData = payload;
-                }
-                else
-                {
-                    var payload = new byte[0];
-                    tcpPacket.PayloadData = payload;
-                }
-                ipv4Packet.Id = Divert.SwapOrder(id);
-                ipv4Packet.TimeToLive = ttl;
-                ipv4Packet.Protocol = (PacketDotNet.IPProtocolType.TCP);
-                ipv4Packet.TypeOfService = tos;
-                ipv4Packet.FragmentFlags = 2;
-                ipv4Packet.FragmentOffset = 0;
-
-
-                tcpPacket.SequenceNumber = Divert.SwapByteOrder(sn);
-                tcpPacket.AcknowledgmentNumber = Divert.SwapByteOrder(ackn);
-
-                tcpPacket.Urg = urg == 0 ? false : true;
-                tcpPacket.Ack = ack == 0 ? false : true;
-                tcpPacket.Psh = psh == 0 ? false : true;
-                tcpPacket.Rst = rst == 0 ? false : true;
-                tcpPacket.Syn = syn == 0 ? false : true;
-                tcpPacket.Fin = fin == 0 ? false : true;
-
-                //            Helpers.ConsolePrint("WinDivertSharp", "TcpHeader->Checksum: " + parse_result.TcpHeader->Checksum.ToString());
-                //            Helpers.ConsolePrint("WinDivertSharp", "IPv4Header->Checksum: " + parse_result.IPv4Header->Checksum.ToString());
-
-                ipv4Packet.PayloadPacket = tcpPacket;
-                tcpPacket.ParentPacket = ipv4Packet;
-                ushort pl = (ushort)(tcpPacket.PayloadData.Length + 10);
-                //Helpers.ConsolePrint("WinDivertSharp", "tcpPacket.PayloadData.Length: " + pl.ToString());
-                tcpPacket.WindowSize = Divert.SwapOrder(pl);
-                tcpPacket.Checksum = (ushort)0;
-                Helpers.ConsolePrint("WinDivertSharp", "calc crc: " + tcpPacket.CalculateTCPChecksum());
-                tcpPacket.UpdateCalculatedValues();
-
-
-                var ip4 = ipv4Packet.Bytes;
-                packet.Dispose();
-                packet = new WinDivertBuffer(ip4);
-                readLen = packet.Length;
-                //    WinDivert.WinDivertHelperCalcChecksums(packet, readLen, ref addr, WinDivertChecksumHelperParam.NoIpChecksum);
-                return packet;
-            } catch (Exception e)
-                {
-                    Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
-                }
-            return packet;
-        }
 
         internal static Task<bool> GetDagger3GB(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
         {
@@ -706,7 +517,8 @@ namespace NiceHashMinerLegacy.Divert
 
 
 
-        public static void DivertStop(IntPtr DivertHandle, int Pid, int CurrentAlgorithmType, int SecondaryAlgorithmType, bool CertInstalled, string MinerName)
+        public static void DivertStop(IntPtr DivertHandle, int Pid, int CurrentAlgorithmType,
+            int SecondaryAlgorithmType, bool CertInstalled, string MinerName, string platform = "")
         {
             _certInstalled = CertInstalled;
             Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + ((int)DivertHandle).ToString() +

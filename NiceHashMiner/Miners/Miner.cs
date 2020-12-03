@@ -359,7 +359,8 @@ namespace NiceHashMiner
                             if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
                             {
                                 Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo,
-                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
+                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled,
+                                    MinerDeviceName, strPlatform);
                             }
                             process.Kill();
                             process.Close();

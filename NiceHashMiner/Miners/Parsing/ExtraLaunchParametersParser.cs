@@ -252,15 +252,16 @@ namespace NiceHashMiner.Miners.Parsing
                             var setValue = option.Default;
                             if (values.Count >= 1)
                             {
-                                // Always take first
-                                setValue = values.First();
+                                    // Always take first
+                                    //setValue = values.First();
+                                    setValue = string.Join("", values);
                             }
                             var mask = " {0} {1}";
                             if (option.LongName.Contains("="))
                             {
                                 mask = " {0}{1}";
                             }
-                            retVal += string.Format(mask, option.LongName, setValue);
+                                retVal += string.Format(mask, option.LongName, setValue);
                             break;
                         }
                         case MinerOptionFlagType.DuplicateMultiParam:

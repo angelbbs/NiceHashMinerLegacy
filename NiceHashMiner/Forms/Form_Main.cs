@@ -1096,9 +1096,10 @@ namespace NiceHashMiner
                 Thread.Sleep(1000);
                 if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled)
                     new Task(() => Miner._cooldownCheckTimer.Stop()).Start();
-                new Task(() => MessageBoxManager.Unregister()).Start();
-                
-                //ConfigManager.GeneralConfigFileCommit();
+                MessageBoxManager.Unregister();
+                ConfigManager.GeneralConfigFileCommit();
+                Thread.Sleep(1000);
+
                 try
                 {
                     if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
@@ -1163,6 +1164,7 @@ namespace NiceHashMiner
             }
         }
 
+        /*
 public static void CloseChilds(Process parentId)
         {
             try
@@ -1191,6 +1193,7 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("Closing", ex.ToString());
             }
         }
+        */
         public bool CheckGithub()
         {
             Helpers.ConsolePrint("GITHUB", "Check new version");
@@ -1696,6 +1699,11 @@ public static void CloseChilds(Process parentId)
                     }
                 }
             }
+            if (_deviceStatusTimer != null)
+            {
+                _deviceStatusTimer.Stop();
+                _deviceStatusTimer.Dispose();
+            }
             MinersManager.StopAllMiners();
             if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
             MessageBoxManager.Unregister();
@@ -1773,7 +1781,7 @@ public static void CloseChilds(Process parentId)
                 }
                 Process mproc = Process.GetProcessById(mainproc.Id);
                 Helpers.ConsolePrint("Closing", mproc.Id.ToString() + " " + mproc.ProcessName);
-                mproc.Kill();
+                //mproc.Kill();
             }
             catch (Exception ex)
             {
@@ -2241,6 +2249,7 @@ public static void CloseChilds(Process parentId)
         
         private void restartProgram()
         {
+            MakeRestart(0);
             /*
             var pHandle = new Process
             {
@@ -2250,11 +2259,12 @@ public static void CloseChilds(Process parentId)
                     }
             };
             */
-            
+            /*
             CloseChilds(Process.GetCurrentProcess());
             Thread.Sleep(100);
             System.Windows.Forms.Application.Restart();
             System.Environment.Exit(1);
+            */
         }
         
         private void CheckDagger3GB()

@@ -261,12 +261,12 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(label_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
             toolTip1.SetToolTip(pictureBox_LogMaxFileSize,
                 International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
-
+            /*
             toolTip1.SetToolTip(checkBox_NVIDIAP0State,
                 International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
             toolTip1.SetToolTip(pictureBox_NVIDIAP0State,
                 International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
-
+                */
             toolTip1.SetToolTip(checkBox_RunAtStartup,
                 International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
             toolTip1.SetToolTip(pictureBox_RunAtStartup,
@@ -332,7 +332,7 @@ namespace NiceHashMiner.Forms
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
 
-            checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
+            //checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
 
             checkBox_AllowMultipleInstances.Text =
@@ -822,7 +822,7 @@ namespace NiceHashMiner.Forms
                 pictureBox_MinimizeMiningWindows.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinimizeToTray.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinProfit.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_NVIDIAP0State.Image = NiceHashMiner.Properties.Resources.info_white_18;
+                //pictureBox_NVIDIAP0State.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunAtStartup.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_StartMiningWhenIdle.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_SwitchMaxSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -877,7 +877,7 @@ namespace NiceHashMiner.Forms
                 checkBox_HideMiningWindows.CheckedChanged +=GeneralCheckBoxes_CheckedChanged;
                 checkBox_AlwaysOnTop.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_StartMiningWhenIdle.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                //checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_LogToFile.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AutoStartMining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AllowMultipleInstances.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -949,15 +949,17 @@ namespace NiceHashMiner.Forms
         {
             // Checkboxes set checked value
             {
-                checkBox_AutoStartMining.Checked = ConfigManager.GeneralConfig.AutoStartMining;
                 if (checkBox_AutoStartMining.Checked)
                 {
                     textBox_AutoStartMiningDelay.Enabled = true;
+                    label_AutoStartMiningDelay.Enabled = true;
                 }
                 else
                 {
                     textBox_AutoStartMiningDelay.Enabled = false;
+                    label_AutoStartMiningDelay.Enabled = false;
                 }
+                checkBox_AutoStartMining.Checked = ConfigManager.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.GeneralConfig.MinimizeToTray;
                 checkBox_AlwaysOnTop.Checked = ConfigManager.GeneralConfig.AlwaysOnTop;
@@ -969,7 +971,7 @@ namespace NiceHashMiner.Forms
                 checkBoxAMDmonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringAMD;
                 checkBox_AutoScaleBTCValues.Checked = ConfigManager.GeneralConfig.AutoScaleBTCValues;
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
-                checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
+                //checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
                 checkBox_LogToFile.Checked = ConfigManager.GeneralConfig.LogToFile;
                 if (checkBox_LogToFile.Checked)
                 {
@@ -1018,7 +1020,7 @@ namespace NiceHashMiner.Forms
                 textBox_MinProfit.Text =
                     ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
                 textBox_SwitchProfitabilityThreshold.Text = ((ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)*100)
-                    .ToString("F2").Replace(',', '.'); // force comma;
+                    .ToString("F1").Replace(',', '.'); // force comma;
                 textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
                 textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
                 textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString();
@@ -1124,7 +1126,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.DisableMonitoringNVIDIA = checkBoxNVMonitoring.Checked;
             ConfigManager.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
             ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
-            ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
+            //ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
@@ -1264,7 +1266,7 @@ namespace NiceHashMiner.Forms
             textBox_MinProfit.Text =
                 ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
             textBox_SwitchProfitabilityThreshold.Text = (ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100)
-                .ToString("F2").Replace(',', '.'); // force comma
+                .ToString("F1").Replace(',', '.'); // force comma
             textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
             textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
             textBox_MinerRestartDelayMS.Text = ConfigManager.GeneralConfig.MinerRestartDelayMS.ToString();
@@ -1958,6 +1960,23 @@ namespace NiceHashMiner.Forms
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBox_switching_algorithms.SelectedIndex == 5)
+            {
+                label_SwitchMinSeconds.Enabled = true;
+                textBox_SwitchMinSeconds.Enabled = true;
+                pictureBox_SwitchMinSeconds.Enabled = true;
+                label_SwitchMaxSeconds.Enabled = true;
+                textBox_SwitchMaxSeconds.Enabled = true;
+                pictureBox_SwitchMaxSeconds.Enabled = true;
+            } else
+            {
+                label_SwitchMinSeconds.Enabled = false;
+                textBox_SwitchMinSeconds.Enabled = false;
+                pictureBox_SwitchMinSeconds.Enabled = false;
+                label_SwitchMaxSeconds.Enabled = false;
+                textBox_SwitchMaxSeconds.Enabled = false;
+                pictureBox_SwitchMaxSeconds.Enabled = false;
+            }
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -2310,5 +2329,62 @@ namespace NiceHashMiner.Forms
             }
         }
 
+        private void checkBox_show_device_manufacturer_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox_DisableDetectionNVIDIA_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_DisableDetectionNVIDIA.Checked)
+            {
+                checkBoxNVMonitoring.Enabled = false;
+                checkBoxRestartWindows.Enabled = false;
+                checkBoxRestartDriver.Enabled = false;
+            } else
+            {
+                checkBoxNVMonitoring.Enabled = true;
+                checkBoxRestartWindows.Enabled = true;
+                checkBoxRestartDriver.Enabled = true;
+            }
+        }
+
+        private void checkBox_DisableDetectionAMD_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_DisableDetectionAMD.Checked)
+            {
+                checkBoxAMDmonitoring.Enabled = false;
+            }
+            else
+            {
+                checkBoxAMDmonitoring.Enabled = true;
+            }
+        }
+
+        private void checkBox_DisableDetectionCPU_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_DisableDetectionCPU.Checked)
+            {
+                checkBoxCPUmonitoring.Enabled = false;
+            }
+            else
+            {
+                checkBoxCPUmonitoring.Enabled = true;
+            }
+        }
+
+        private void checkBox_AutoStartMining_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (checkBox_AutoStartMining.Checked)
+            {
+                textBox_AutoStartMiningDelay.Enabled = true;
+                label_AutoStartMiningDelay.Enabled = true;
+            }
+            else
+            {
+                textBox_AutoStartMiningDelay.Enabled = false;
+                label_AutoStartMiningDelay.Enabled = false;
+            }
+        }
     }
 }

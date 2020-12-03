@@ -700,10 +700,20 @@ namespace NiceHashMiner.Forms.Components
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                     var clearItem = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem")
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem") + " " +
+                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text + 
+                        " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
                     };
                     clearItem.Click += ToolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
+                    //this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                    //
+                    var clearItemAll = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAll")
+                    };
+                    clearItemAll.Click += ToolStripMenuItemClearAll_Click;
+                    contextMenuStrip1.Items.Add(clearItemAll);
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                 }
                 {
@@ -845,7 +855,29 @@ namespace NiceHashMiner.Forms.Components
                 }
             }
         }
+        private void ToolStripMenuItemClearAll_Click(object sender, EventArgs e)
+        {
+            if (_computeDevice != null)
+            {
+                var dialogRes = MessageBox.Show(International.GetText("Form_Settings_DelBenchmarks"), "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogRes == System.Windows.Forms.DialogResult.No)
+                {
+                    return;
+                }
 
+                foreach (ListViewItem lvi in listViewAlgorithms.Items)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        algorithm.BenchmarkSpeed = 0;
+                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                        BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
+
+                        ComunicationInterface?.ChangeSpeed(lvi);
+                    }
+                }
+            }
+        }
         private void ToolStripMenuItemTest_Click(object sender, EventArgs e)
         {
             if (_computeDevice != null)
@@ -863,23 +895,6 @@ namespace NiceHashMiner.Forms.Components
                             ComunicationInterface?.ChangeSpeed(lvi);
                         }
                     }
-                }
-            }
-        }
-
-        private void toolStripMenuItemOpenDcri_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
-            {
-                if (lvi.Tag is DualAlgorithm algo)
-                {
-                    var dcriValues = new FormDcriValues(algo);
-                    dcriValues.ShowDialog();
-                    RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                    // update benchmark status data
-                    BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
-                    // update settings
-                    ComunicationInterface?.ChangeSpeed(lvi);
                 }
             }
         }
@@ -902,18 +917,6 @@ namespace NiceHashMiner.Forms.Components
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         }
                     }
-                }
-            }
-        }
-
-        private void toolStripMenuItemTuningEnabled_Checked(object sender, EventArgs e)
-        {
-            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
-            {
-                if (lvi.Tag is DualAlgorithm algo)
-                {
-                    algo.TuningEnabled = ((ToolStripMenuItem) sender).Checked;
-                    RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                 }
             }
         }

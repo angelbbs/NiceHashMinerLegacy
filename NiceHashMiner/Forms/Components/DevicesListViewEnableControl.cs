@@ -235,6 +235,9 @@ namespace NiceHashMiner.Forms.Components
                 catch (Exception e)
                 {
                     Helpers.ConsolePrint("SetComputeDevicesStatus", e.ToString()); ;
+                } finally
+                {
+
                 }
             }
         }

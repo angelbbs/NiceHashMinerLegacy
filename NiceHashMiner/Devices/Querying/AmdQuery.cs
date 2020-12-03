@@ -24,8 +24,6 @@ namespace NiceHashMiner.Devices.Querying
         private const int AmdVendorID = 1002;
 
         private readonly List<VideoControllerData> _availableControllers;
-        private readonly Dictionary<string, bool> _driverOld = new Dictionary<string, bool>();
-        private readonly Dictionary<string, bool> _noNeoscryptLyra2 = new Dictionary<string, bool>();
         private readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
         //private readonly SortedDictionary<int, BusIdInfo> _busIdInfos = new SortedDictionary<int, BusIdInfo>();
         private readonly List<string> _amdDeviceUuid = new List<string>();
@@ -65,54 +63,7 @@ namespace NiceHashMiner.Devices.Querying
 
         private void DriverCheck()
         {
-            // check the driver version bool EnableOptimizedVersion = true;
-            var showWarningDialog = false;
-
-            foreach (var vidContrllr in _availableControllers)
-            {
-                Helpers.ConsolePrint(Tag,
-                    $"Checking AMD device (driver): {vidContrllr.Name} ({vidContrllr.DriverVersion})");
-
-                _driverOld[vidContrllr.Name] = false;
-                _noNeoscryptLyra2[vidContrllr.Name] = false;
-                var sgminerNoNeoscryptLyra2RE = new Version("21.19.164.1");
-
-                // TODO checking radeon drivers only?
-                if ((!vidContrllr.Name.Contains("AMD") && !vidContrllr.Name.Contains("Radeon")) ||
-                    showWarningDialog) continue;
-
-                var amdDriverVersion = new Version(vidContrllr.DriverVersion);
-
-                if (!ConfigManager.GeneralConfig.ForceSkipAMDNeoscryptLyraCheck)
-                {
-                    var greaterOrEqual = amdDriverVersion.CompareTo(sgminerNoNeoscryptLyra2RE) >= 0;
-                    if (greaterOrEqual)
-                    {
-                        _noNeoscryptLyra2[vidContrllr.Name] = true;
-                        /*
-                        Helpers.ConsolePrint(Tag,
-                            "Driver version seems to be " + sgminerNoNeoscryptLyra2RE +
-                            " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
-                            */
-                    }
-                }
-
-
-                if (amdDriverVersion.Major >= 15) continue;
-
-                showWarningDialog = true;
-                _driverOld[vidContrllr.Name] = true;
-                Helpers.ConsolePrint(Tag,
-                    "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
-                    "speed will not be optimal. Consider upgrading AMD GPU driver.");
-            }
-
-            if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && showWarningDialog)
-            {
-                Form warningDialog = new DriverVersionConfirmationDialog();
-                warningDialog.ShowDialog();
-                warningDialog = null;
-            }
+            
         }
 
         //private List<OpenCLDevice> ProcessDevices(IEnumerable<OpenCLJsonData> openCLData)
@@ -237,8 +188,8 @@ namespace NiceHashMiner.Devices.Querying
                         var deviceName = _busIdInfos[busID].Name;
                         var manufacturer = _busIdInfos[busID].MF;
 
-                        var newAmdDev = new AmdGpuDevice(dev, _driverOld[deviceName],
-                            _busIdInfos[busID].InfSection, _noNeoscryptLyra2[deviceName])
+                        var newAmdDev = new AmdGpuDevice(dev, false,
+                            _busIdInfos[busID].InfSection, false)
                         {
                             DeviceName = deviceName,
                             UUID = _busIdInfos[busID].Uuid,
@@ -369,9 +320,9 @@ namespace NiceHashMiner.Devices.Querying
                 var deviceName = amdVideoControllers[i].Name;
                 if (amdVideoControllers[i].InfSection == null)
                     amdVideoControllers[i].InfSection = "";
-                var newAmdDev = new AmdGpuDevice(amdDevices[i], _driverOld[deviceName],
+                var newAmdDev = new AmdGpuDevice(amdDevices[i], false,
                     amdVideoControllers[i].InfSection,
-                    _noNeoscryptLyra2[deviceName])
+                    false)
                 {
                     DeviceName = deviceName,
                     UUID = "UNUSED"

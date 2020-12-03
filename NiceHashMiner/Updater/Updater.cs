@@ -122,7 +122,7 @@ namespace NiceHashMiner.Updater
         static void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             Form_Main.ProgressBarUpd(e);
-            
+
         }
 
         private static void CreateBackup()
@@ -184,7 +184,7 @@ namespace NiceHashMiner.Updater
                     var cmdFile = "@echo off\r\n" +
                         "taskkill /F /IM \"MinerLegacyForkFixMonitor.exe\"\r\n" +
                         "taskkill /F /IM \"NiceHashMinerLegacy.exe\"\r\n" +
-                        "call AfterBenchmark.cmd\"\r\n" +
+                        "call AfterBenchmark.cmd\r\n" +
                         "timeout /T 2 /NOBREAK\r\n" +
                         "utils\\7z.exe x -r -y " + "backup\\backup_" + fname + ".zip" + "\r\n" +
                         "start NiceHashMinerLegacy.exe\r\n";
@@ -206,7 +206,7 @@ namespace NiceHashMiner.Updater
             string url = "https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest";
             //string url = "https://api.github.com/repos/angelbbs/nhmlff_update/releases/latest";
             string r1 = GetGitHubAPIData(url);
-            if (r1 == null) return Tuple.Create("", 0d); 
+            if (r1 == null) return Tuple.Create("", 0d);
             //github_version nhjson;
             string tagname = "";
             try

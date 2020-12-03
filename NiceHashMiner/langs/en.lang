@@ -166,11 +166,11 @@
         "Form_Settings_General_MinerAPIQueryInterval": "Miner API Query Interval [s]",
         "Form_Settings_General_LogMaxFileSize": "Log Max File Size [bytes]",
 
-        "Form_Settings_General_SwitchMinSecondsFixed": "Switch Minimum Fixed [s]",
+        "Form_Settings_General_SwitchMinSecondsFixed": "Algo switch Minimum Fixed [s]",
         "Form_Settings_General_SwitchMinSecondsDynamic": "Switch Minimum Dynamic [s]",
         "Form_Settings_General_SwitchMinSecondsAMD": "Switch Minimum AMD [s]",
-        "Form_Settings_General_SwitchMaxSeconds": "Switch Maximum [s]",
-        "Form_Settings_General_SwitchMinSeconds": "Switch Minimum [s]",
+        "Form_Settings_General_SwitchMaxSeconds": "Algo switch Maximum [s]",
+        "Form_Settings_General_SwitchMinSeconds": "Algo switch Minimum [s]",
 
         "Form_Settings_General_ethminerDefaultBlockHeight": "Ethminer Default Block Height",
         "Form_Settings_General_ethminerAPIPortNVIDIA": "Ethminer API Port NVIDIA",
@@ -382,6 +382,7 @@
         "AlgorithmsListView_ContextMenu_DisableAll": "Disable All Algorithms",
         "AlgorithmsListView_ContextMenu_EnableAll": "Enable All Algorithms",
         "AlgorithmsListView_ContextMenu_ClearItem": "Clear Algorithm Speed",
+	"AlgorithmsListView_ContextMenu_ClearItem": "Clear All Algorithm Speed",
         "AlgorithmsListView_ContextMenu_TestItem": "Enable Only",
         "AlgorithmsListView_ContextMenu_EnableBenched": "Enable Benchmarked Only",
         "Form_Main_No_Device_Enabled_For_Mining": "Warning no device has been enabled for mining, please enable at least 1 device to proceed mining.",
@@ -401,7 +402,7 @@
         "Form_Main_Accepted_Speed_Zero": "Warning! Algorithm {0} is reporting 0 shares accepted. Please disable this algorithm in Benchmark/Settings and report this issue to https://github.com/angelbbs/NiceHashMinerLegacy/issues!",
         "NHM_TOS": "Agreement will be written later. If you do not agree, do not install it",
 
-        "Form_Settings_General_SwitchProfitabilityThreshold": "Switch Profitability Threshold, %",
+        "Form_Settings_General_SwitchProfitabilityThreshold": "Switch Profitability, %",
         "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 100]",
         "VirtualMemorySize_BAD": "Miner Legacy  Fork Fix recommends increasing virtual memory size so that all algorithms would work fine.",
         "sgminer_precise_try": "Failed - try Precise",
@@ -486,6 +487,7 @@
 "Form_Settings_General_CPUmonitoring": "Disable CPU monitoring",
 "Form_Settings_label_AddAMD": "Additional AMD GPU power consumption (W)",
 "Form_Settings_uncompatible_options1": "Options \"Allow Multiple Instances\" and \"Enable Watchdog\" uncompatible",
+"Form_Settings_DelBenchmarks": "This will reset all speeds in algorithms",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

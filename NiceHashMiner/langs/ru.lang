@@ -160,7 +160,7 @@
 
     "Form_Settings_General_Language": "Язык",
     "Form_Settings_General_MinIdleSeconds": "Минимальный простой [с]",
-    "Form_Settings_General_MinerRestartDelayMS": "Перезапуск майнера [мс]",
+    "Form_Settings_General_MinerRestartDelayMS": "Рестарт майнера [мс]",
     "Form_Settings_General_MinerAPIGraceSeconds": "Ожидание API [с]",
     "Form_Settings_General_MinerAPIGraceSecondsAMD": "AMD ожидание API [с]",
     "Form_Settings_General_MinerAPIQueryInterval": "Интервал запросов API [с]",
@@ -169,7 +169,7 @@
     "Form_Settings_General_SwitchMinSecondsFixed": "Мин. переключение фикс. [с]",
     "Form_Settings_General_SwitchMinSecondsDynamic": "Мин. переключение дин. [с]",
     "Form_Settings_General_SwitchMinSecondsAMD": "Мин. переключение AMD [с]",
-    "Form_Settings_General_SwitchMaxSeconds": "Мак. переключение [s]",
+    "Form_Settings_General_SwitchMaxSeconds": "Макс. переключение [s]",
     "Form_Settings_General_SwitchMinSeconds": "Мин. переключение [s]",
 
     "Form_Settings_General_ethminerDefaultBlockHeight": "Высота блока ethminer",
@@ -280,7 +280,7 @@
     "Form_Settings_ToolTip_UseIFTTT": "Если включено, Miner Legacy Fork Fix будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
     "Form_Settings_DisplayCurrency": "Валюта:",
     "Form_Settings_ToolTip_DisplayCurrency": "Выберите валюту для отображения прибыльности майнинга.",
-    "Form_Settings_APIBindPortStart": "Начальный порт связи API",
+    "Form_Settings_APIBindPortStart": "Начальный порт API",
     "Form_Settings_ToolTip_APIBindPortStart": "Начальный номер порта, с которого порты связи API будут установлены для коммуникации.",
     "Form_Settings_DagGeneration": "Режим загрузки Dag",
     "Form_Settings_ToolTip_DagGeneration": "Устанавливает режим загрузки Dag для ethminer.",
@@ -300,6 +300,7 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
     "AlgorithmsListView_ContextMenu_EnableAll": "Включить все алгоритмы",
     "AlgorithmsListView_ContextMenu_ClearItem": "Сбросить скорость алгоритма",
+    "AlgorithmsListView_ContextMenu_ClearItemAll": "Сбросить скорость всех алгоритмов",
     "AlgorithmsListView_ContextMenu_TestItem": "Включить только",
     "AlgorithmsListView_ContextMenu_EnableBenched": "Включить только контрольные показатели",
     "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
@@ -392,7 +393,7 @@
     "Program_WMI_Error_Title": "Ошибка Инструментария управления Windows",
     "Form_Main_Accepted_Speed_Zero": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и сообщите о данной проблеме на support-ru@nicehash.com!",
 
-    "Form_Settings_General_SwitchProfitabilityThreshold": "Порог перекл. прибыльн., %",
+    "Form_Settings_General_SwitchProfitabilityThreshold": "Порог прибыльности,%",
     "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Майнер не будет переключаться, если разница между прибыльностью алгоритмов\nниже Порога переключения прибыльности. Значение в процентах [0 — 100]",
     "VirtualMemorySize_BAD": "Miner Legacy Fork Fix рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов.",
     "sgminer_precise_try": "Неудача — попробуйте Точный",
@@ -478,6 +479,7 @@
 "Form_Settings_ElectricityCost": "Стоим. эл.эн.(за кВт.ч)", 
 "Form_Settings_label_AddAMD": "Дополнительное потребление AMD GPU (Вт)",
 "Form_Settings_uncompatible_options1": "Параметры \"Разрешить неколько экземпляров\" и \"Включить сторожевой процесс\" несовместимы",
+"Form_Settings_DelBenchmarks": "Это приведет к сбросу всех скоростей в алгоритмах",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }
