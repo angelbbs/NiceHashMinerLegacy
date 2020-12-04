@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Configs;
 using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
@@ -37,7 +33,7 @@ namespace NiceHashMiner.Miners.Grouping
             CurrentRate = 0;
             PowerRate = 0;
             Key = key;
-            
+
             if (miningPairs.Count > 0)
             {
                 // sort pairs by device id

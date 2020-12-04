@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Grouping
@@ -16,7 +12,7 @@ namespace NiceHashMiner.Miners.Grouping
                 ((IsNotCpuGroups(a, b) && IsSameDeviceType(a, b)) ||
                  (a.Algorithm.MinerBaseType == MinerBaseType.Prospector &&
                  b.Algorithm.MinerBaseType == MinerBaseType.Prospector) ||
-                 a.Algorithm.MinerBaseType == MinerBaseType.XmrStak)) 
+                 a.Algorithm.MinerBaseType == MinerBaseType.XmrStak))
                 return true;
             return false;
         }
@@ -30,7 +26,7 @@ namespace NiceHashMiner.Miners.Grouping
         {
             return a.Algorithm.MinerBinaryPath == b.Algorithm.MinerBinaryPath;
         }
-        private static bool IsSameAlgorithmType(MiningPair a, MiningPair b) 
+        private static bool IsSameAlgorithmType(MiningPair a, MiningPair b)
         {
             return a.Algorithm.DualNiceHashID == b.Algorithm.DualNiceHashID;
         }
@@ -39,7 +35,7 @@ namespace NiceHashMiner.Miners.Grouping
         {
             return a.Device.DeviceType == b.Device.DeviceType;
         }
-        private static bool IsGroupableMinerBaseType(MiningPair a) 
+        private static bool IsGroupableMinerBaseType(MiningPair a)
         {
             return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer;
         }

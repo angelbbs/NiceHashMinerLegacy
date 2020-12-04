@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System;
@@ -32,7 +28,7 @@ namespace NiceHashMiner.Miners
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
-            return 60 * 1000 * 5; 
+            return 60 * 1000 * 5;
         }
 
         public override void Start(string url, string btcAdress, string worker)

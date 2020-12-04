@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using ManagedCuda.Nvml;
 using NVIDIA.NVAPI;
 using System;
@@ -271,7 +267,7 @@ namespace NiceHashMiner.Devices
                     return -1;
                 }
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-                { 
+                {
                     try
                     {
                         var power = 0u;

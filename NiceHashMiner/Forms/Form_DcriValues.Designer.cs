@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms
 {
     partial class FormDcriValues
@@ -50,11 +46,11 @@ namespace NiceHashMiner.Forms
             this.field_Speed = new NiceHashMiner.Forms.Components.Field();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TuningEnabled)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // listView_Intensities
-            // 
-            this.listView_Intensities.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.listView_Intensities.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView_Intensities.BackColor = System.Drawing.SystemColors.Window;
             this.listView_Intensities.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -75,37 +71,37 @@ namespace NiceHashMiner.Forms
             this.listView_Intensities.View = System.Windows.Forms.View.Details;
             this.listView_Intensities.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListView_Intensities_ItemSelectionChanged);
             this.listView_Intensities.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListView_Intensities_MouseClick);
-            // 
+            //
             // columnHeader_DcriValue
-            // 
+            //
             this.columnHeader_DcriValue.Text = "Intensity";
             this.columnHeader_DcriValue.Width = 55;
-            // 
+            //
             // columnHeader_Speed
-            // 
+            //
             this.columnHeader_Speed.Text = "Speed";
             this.columnHeader_Speed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeader_Speed.Width = 100;
-            // 
+            //
             // columnHeader_SecondarySpeed
-            // 
+            //
             this.columnHeader_SecondarySpeed.Text = "Secondary Speed";
             this.columnHeader_SecondarySpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeader_SecondarySpeed.Width = 100;
-            // 
+            //
             // columnHeader_Profit
-            // 
+            //
             this.columnHeader_Profit.Text = "BTC/Day";
             this.columnHeader_Profit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeader_Profit.Width = 75;
-            // 
+            //
             // columnHeader_Power
-            // 
+            //
             this.columnHeader_Power.Text = "Power";
             this.columnHeader_Power.Width = 76;
-            // 
+            //
             // button_Close
-            // 
+            //
             this.button_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Close.Location = new System.Drawing.Point(486, 370);
             this.button_Close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
@@ -115,9 +111,9 @@ namespace NiceHashMiner.Forms
             this.button_Close.Text = "Close";
             this.button_Close.UseVisualStyleBackColor = true;
             this.button_Close.Click += new System.EventHandler(this.Button_Close_Clicked);
-            // 
+            //
             // button_Save
-            // 
+            //
             this.button_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Save.Location = new System.Drawing.Point(486, 344);
             this.button_Save.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
@@ -127,9 +123,9 @@ namespace NiceHashMiner.Forms
             this.button_Save.Text = "Save";
             this.button_Save.UseVisualStyleBackColor = true;
             this.button_Save.Click += new System.EventHandler(this.Button_Save_Clicked);
-            // 
+            //
             // checkBox_TuningEnabled
-            // 
+            //
             this.checkBox_TuningEnabled.AutoSize = true;
             this.checkBox_TuningEnabled.Location = new System.Drawing.Point(8, 8);
             this.checkBox_TuningEnabled.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
@@ -139,15 +135,15 @@ namespace NiceHashMiner.Forms
             this.checkBox_TuningEnabled.Text = "Dcri Tuning Enabled";
             this.checkBox_TuningEnabled.UseVisualStyleBackColor = true;
             this.checkBox_TuningEnabled.CheckedChanged += new System.EventHandler(this.CheckBox_TuningEnabledCheckedChanged);
-            // 
+            //
             // contextMenuStrip1
-            // 
+            //
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
+            //
             // pictureBox_TuningEnabled
-            // 
+            //
             this.pictureBox_TuningEnabled.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
             this.pictureBox_TuningEnabled.Location = new System.Drawing.Point(131, 8);
             this.pictureBox_TuningEnabled.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -156,9 +152,9 @@ namespace NiceHashMiner.Forms
             this.pictureBox_TuningEnabled.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_TuningEnabled.TabIndex = 365;
             this.pictureBox_TuningEnabled.TabStop = false;
-            // 
+            //
             // field_Power
-            // 
+            //
             this.field_Power.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.field_Power.AutoSize = true;
             this.field_Power.BackColor = System.Drawing.Color.Transparent;
@@ -170,9 +166,9 @@ namespace NiceHashMiner.Forms
             this.field_Power.Name = "field_Power";
             this.field_Power.Size = new System.Drawing.Size(220, 47);
             this.field_Power.TabIndex = 366;
-            // 
+            //
             // field_TuningEnd
-            // 
+            //
             this.field_TuningEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.field_TuningEnd.AutoSize = true;
             this.field_TuningEnd.BackColor = System.Drawing.Color.Transparent;
@@ -183,9 +179,9 @@ namespace NiceHashMiner.Forms
             this.field_TuningEnd.Name = "field_TuningEnd";
             this.field_TuningEnd.Size = new System.Drawing.Size(220, 47);
             this.field_TuningEnd.TabIndex = 8;
-            // 
+            //
             // field_TuningInterval
-            // 
+            //
             this.field_TuningInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.field_TuningInterval.AutoSize = true;
             this.field_TuningInterval.BackColor = System.Drawing.Color.Transparent;
@@ -196,9 +192,9 @@ namespace NiceHashMiner.Forms
             this.field_TuningInterval.Name = "field_TuningInterval";
             this.field_TuningInterval.Size = new System.Drawing.Size(220, 47);
             this.field_TuningInterval.TabIndex = 7;
-            // 
+            //
             // field_TuningStart
-            // 
+            //
             this.field_TuningStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.field_TuningStart.AutoSize = true;
             this.field_TuningStart.BackColor = System.Drawing.Color.Transparent;
@@ -209,9 +205,9 @@ namespace NiceHashMiner.Forms
             this.field_TuningStart.Name = "field_TuningStart";
             this.field_TuningStart.Size = new System.Drawing.Size(220, 47);
             this.field_TuningStart.TabIndex = 6;
-            // 
+            //
             // field_SecondarySpeed
-            // 
+            //
             this.field_SecondarySpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.field_SecondarySpeed.AutoSize = true;
             this.field_SecondarySpeed.BackColor = System.Drawing.Color.Transparent;
@@ -223,9 +219,9 @@ namespace NiceHashMiner.Forms
             this.field_SecondarySpeed.Name = "field_SecondarySpeed";
             this.field_SecondarySpeed.Size = new System.Drawing.Size(220, 47);
             this.field_SecondarySpeed.TabIndex = 5;
-            // 
+            //
             // field_Speed
-            // 
+            //
             this.field_Speed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.field_Speed.AutoSize = true;
             this.field_Speed.BackColor = System.Drawing.Color.Transparent;
@@ -237,9 +233,9 @@ namespace NiceHashMiner.Forms
             this.field_Speed.Name = "field_Speed";
             this.field_Speed.Size = new System.Drawing.Size(224, 47);
             this.field_Speed.TabIndex = 4;
-            // 
+            //
             // FormDcriValues
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(632, 411);

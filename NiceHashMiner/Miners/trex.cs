@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
@@ -89,11 +85,11 @@ namespace NiceHashMiner.Miners
             if (File.Exists("miners\\t-rex\\" + GetLogFileName()))
                 File.Delete("miners\\t-rex\\" + GetLogFileName());
 
-            
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 commandLine = "--algo x16rv2" +
-                 " -o stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " + 
+                 " -o stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                  " -o " + url + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
@@ -104,7 +100,7 @@ namespace NiceHashMiner.Miners
                 //_benchmarkTimeWait = 180;
                 _benchmarkTimeWait = time;
             }
-           
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 commandLine = "--algo kawpow" +

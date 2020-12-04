@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner;
 using OpenHardwareMonitor.Hardware;
 using System;
@@ -85,7 +81,7 @@ namespace ComputeDeviceCPU
             foreach (var hardware in _mainboard.Hardware)
             {
                 //hardware.Update(); //use hardware.Name to get CPU model
-                
+
                 if (hardware.HardwareType == HardwareType.Mainboard)
                 {
                     hardware.Update();
@@ -95,7 +91,7 @@ namespace ComputeDeviceCPU
                     {
                         sensor.Update();
                       //  Helpers.ConsolePrint("all CPU:", sensor.Name + " " + HardwareType.SuperIO.ToString());
-                        
+
                         if (sensor.HardwareType == HardwareType.SuperIO)
                         {
                             foreach (var superio in hardware.SubHardware)
@@ -155,5 +151,5 @@ namespace ComputeDeviceCPU
                 }
             }
         }
-    
+
 }

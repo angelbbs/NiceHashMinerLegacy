@@ -1,15 +1,11 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms.Components {
     partial class GroupProfitControl {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +18,8 @@ namespace NiceHashMiner.Forms.Components {
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
@@ -38,10 +34,10 @@ namespace NiceHashMiner.Forms.Components {
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBoxMinerGroup.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // groupBoxMinerGroup
-            // 
-            this.groupBoxMinerGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxMinerGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMinerGroup.Controls.Add(this.button_restart);
             this.groupBoxMinerGroup.Controls.Add(this.labelSpeedIndicator);
@@ -57,9 +53,9 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxMinerGroup.TabIndex = 108;
             this.groupBoxMinerGroup.TabStop = false;
             this.groupBoxMinerGroup.Text = "Mining Devices { N/A } ";
-            // 
+            //
             // button_restart
-            // 
+            //
             this.button_restart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button_restart.FlatAppearance.BorderSize = 0;
             this.button_restart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -75,9 +71,9 @@ namespace NiceHashMiner.Forms.Components {
             this.button_restart.Click += new System.EventHandler(this.buttonBTC_restart);
             this.button_restart.MouseLeave += new System.EventHandler(this.button_restart_MouseLeave);
             this.button_restart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_restart_MouseMove);
-            // 
+            //
             // labelSpeedIndicator
-            // 
+            //
             this.labelSpeedIndicator.AutoSize = true;
             this.labelSpeedIndicator.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.labelSpeedIndicator.Location = new System.Drawing.Point(6, 16);
@@ -85,9 +81,9 @@ namespace NiceHashMiner.Forms.Components {
             this.labelSpeedIndicator.Size = new System.Drawing.Size(47, 13);
             this.labelSpeedIndicator.TabIndex = 108;
             this.labelSpeedIndicator.Text = "Speed:";
-            // 
+            //
             // labelCurentcyPerDayVaue
-            // 
+            //
             this.labelCurentcyPerDayVaue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCurentcyPerDayVaue.AutoSize = true;
             this.labelCurentcyPerDayVaue.Location = new System.Drawing.Point(445, 16);
@@ -97,9 +93,9 @@ namespace NiceHashMiner.Forms.Components {
             this.labelCurentcyPerDayVaue.TabIndex = 104;
             this.labelCurentcyPerDayVaue.Text = "0.00 $/Day";
             this.labelCurentcyPerDayVaue.Click += new System.EventHandler(this.labelCurentcyPerDayVaue_Click);
-            // 
+            //
             // labelBTCRateValue
-            // 
+            //
             this.labelBTCRateValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelBTCRateValue.AutoSize = true;
             this.labelBTCRateValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -109,9 +105,9 @@ namespace NiceHashMiner.Forms.Components {
             this.labelBTCRateValue.TabIndex = 105;
             this.labelBTCRateValue.Text = "0.00000000 BTC/Day";
             this.labelBTCRateValue.Click += new System.EventHandler(this.labelBTCRateValue_Click);
-            // 
+            //
             // labelBTCRateIndicator
-            // 
+            //
             this.labelBTCRateIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelBTCRateIndicator.AutoSize = true;
             this.labelBTCRateIndicator.Location = new System.Drawing.Point(293, 16);
@@ -120,9 +116,9 @@ namespace NiceHashMiner.Forms.Components {
             this.labelBTCRateIndicator.TabIndex = 106;
             this.labelBTCRateIndicator.Text = "Rate:";
             this.labelBTCRateIndicator.Click += new System.EventHandler(this.labelBTCRateIndicator_Click);
-            // 
+            //
             // labelSpeedValue
-            // 
+            //
             this.labelSpeedValue.AutoSize = true;
             this.labelSpeedValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.labelSpeedValue.Location = new System.Drawing.Point(73, 16);
@@ -130,9 +126,9 @@ namespace NiceHashMiner.Forms.Components {
             this.labelSpeedValue.Size = new System.Drawing.Size(30, 13);
             this.labelSpeedValue.TabIndex = 107;
             this.labelSpeedValue.Text = "N/A";
-            // 
+            //
             // GroupProfitControl
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;

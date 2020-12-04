@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
@@ -41,7 +37,7 @@ namespace NiceHashMiner
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
 
-    
+
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
@@ -126,6 +122,7 @@ namespace NiceHashMiner
         private static bool CheckVideoControllersCount = false;
         public static bool AntivirusInstalled = false;
         public static int smaCount = 0;
+        private static int ticks = 0;//костыль
 
         public Form_Main()
         {
@@ -506,7 +503,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("CheckGithubDownload", ex.ToString());
                 return false;
             }
-            
+
             return true;
         }
         static void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
@@ -544,26 +541,6 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("CheckGithub", er.ToString());
             }
         }
-        /*
-        public static void checkD()
-        {
-            if (ConfigManager.GeneralConfig.DivertRun)
-            {
-                //divert test
-                Process thisProc = Process.GetCurrentProcess();
-                int dhandle = (int)Divert.DivertStart(thisProc.Id, -100, 0, "", "", "", ConfigManager.GeneralConfig.DivertLog, false, false, false, 9999);
-                if (dhandle != -1)
-                {
-                    Thread.Sleep(500);
-                    NiceHashStats.ConnectToGoogle("Check connection");
-                    Thread.Sleep(2000);
-                    Divert.DivertStop((IntPtr)dhandle, thisProc.Id, -100, 0, true, "");
-                    //Helpers.ConsolePrint("ConnectToGoogle", GoogleAnswer); //is Running?
-                    if (GoogleAnswer.Contains("Running")) DivertAvailable = true;
-                }
-            }
-        }
-        */
 
         public static int ProgressMinimum = 0;
         public static int ProgressMaximum = 100;
@@ -630,18 +607,15 @@ namespace NiceHashMiner
             flowLayoutPanelRates.Visible = true;
 
             new Task(() => Firewall.AddToFirewall()).Start();
-
+            int ticks = 0;//костыль
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
-            _minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
+            //_minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
+            _minerStatsCheck.Interval = 1000;
 
-            //_loadingScreen.IncreaseLoadCounterAndMessage(
-            //  International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
-            // Thread.Sleep(200);
-            //_loadingScreen.IncreaseLoadCounterAndMessage(
-            //  International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
+
             _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
 
@@ -1142,7 +1116,7 @@ namespace NiceHashMiner
                     CMDconfigHandleWD.Start();
                 }
                 Thread.Sleep(500);
-                
+
                 var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
                 {
                     WindowStyle = ProcessWindowStyle.Minimized
@@ -1235,6 +1209,11 @@ public static void CloseChilds(Process parentId)
         }
         private async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
+            ticks++;
+            if (ticks > 5)//100*20=2sec
+            {
+                _minerStatsCheck.Interval = 1000 * 5;
+            }
             if (!_deviceStatusTimer.Enabled & buttonStartMining.Enabled)
             {
                 Helpers.ConsolePrint("ERROR", "_deviceStatusTimer fail");
@@ -1349,7 +1328,6 @@ public static void CloseChilds(Process parentId)
            DateTime StartMinerTime, bool isApiGetException, string processTag)
         {
             var apiGetExceptionString = isApiGetException ? " **" : "";
-
             var speedString =
                 Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
                 iApiData.AlgorithmName + apiGetExceptionString;
@@ -1454,7 +1432,7 @@ public static void CloseChilds(Process parentId)
             {
                 double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
                 var totalRate = MinersManager.GetTotalRate();
-                
+
                 var powerString = "";
                 double TotalPower = 0;
                 TotalPower = MinersManager.GetTotalPowerRate();
@@ -1720,7 +1698,6 @@ public static void CloseChilds(Process parentId)
                         file.Delete();
                     }
                 }
-                //if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
             } catch (Exception ex)
             {
 
@@ -1825,17 +1802,6 @@ public static void CloseChilds(Process parentId)
                     International.GetText("Form_Main_Restart_Required_Msg"),
                     International.GetText("Form_Main_Restart_Required_Title"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                /*
-                var pHandle = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = Application.ExecutablePath
-                    }
-                };
-                pHandle.Start();
-                Close();
-                */
                 MakeRestart(0);
             }
             else if (settings.IsChange && settings.IsChangeSaved)
@@ -2050,37 +2016,7 @@ public static void CloseChilds(Process parentId)
                     //NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
-            
-            /*
-            else
-            {
-                if (textBoxBTCAddress.Text.Equals(""))
-                {
-                    if (showWarnings)
-                    {
-                        var result = MessageBox.Show(International.GetText("Form_Main_DemoModeMsg"),
-                            International.GetText("Form_Main_DemoModeTitle"),
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                        if (result == DialogResult.Yes)
-                        {
-                            _demoMode = true;
-                            labelDemoMode.Visible = true;
-                            labelDemoMode.Text = International.GetText("Form_Main_DemoModeLabel");
-                        }
-                        else
-                        {
-                            return StartMiningReturnType.IgnoreMsg;
-                        }
-                    }
-                    else
-                    {
-                        return StartMiningReturnType.IgnoreMsg;
-                    }
-                }
-                else if (!VerifyMiningAddress(true)) return StartMiningReturnType.IgnoreMsg;
-            }
-            */
             var hasData = NHSmaData.HasData;
             if (!showWarnings)
             {
@@ -2175,10 +2111,8 @@ public static void CloseChilds(Process parentId)
             ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-
             InitFlowPanelStart();
             ClearRatesAll();
-
             bool isMining;
             var btcAdress = "";
 
@@ -2205,14 +2139,12 @@ public static void CloseChilds(Process parentId)
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
 
-            //_isSmaUpdated = true; // Always check profits on mining start
-            //_smaMinerCheck.Interval = 100;
-            //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
+
             NiceHashStats._deviceUpdateTimer.Stop();
             new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
-            //NiceHashStats.SetDeviceStatus("MINING");
+
             if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost || ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
             {
                 _computeDevicesCheckTimer = new SystemTimer();
@@ -2221,7 +2153,6 @@ public static void CloseChilds(Process parentId)
 
                 _computeDevicesCheckTimer.Start();
             }
-
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
         private void RemoteTimer_Tick(object sender, EventArgs e)
@@ -2246,7 +2177,7 @@ public static void CloseChilds(Process parentId)
             //_remoteTimer.Stop();
             //_remoteTimer= null;
         }
-        
+
         private void restartProgram()
         {
             MakeRestart(0);
@@ -2266,7 +2197,7 @@ public static void CloseChilds(Process parentId)
             System.Environment.Exit(1);
             */
         }
-        
+
         private void CheckDagger3GB()
         {
             if (ConfigManager.GeneralConfig.DivertRun)
@@ -2417,6 +2348,8 @@ public static void CloseChilds(Process parentId)
         }
         private void StopMining()
         {
+            ticks = 0;
+            _minerStatsCheck.Interval = 1000;
             Form_Main.smaCount = 0;
             AlgorithmSwitchingManager.Stop();
             NiceHashStats._deviceUpdateTimer.Stop();

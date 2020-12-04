@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using System;
@@ -512,7 +508,7 @@ namespace NiceHashMiner.Forms.Components
             if (e.Item.Tag is Algorithm algo)
             {
                 algo.Enabled = e.Item.Checked;
-                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto3GB && 
+                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto3GB &&
                     algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB && algo.Enabled)
                 {
                     algo.Enabled = false;
@@ -520,7 +516,7 @@ namespace NiceHashMiner.Forms.Components
                     MessageBox.Show("WinDivert driver error. DaggerHashimoto3GB disabled",
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto4GB && 
+                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto4GB &&
                     algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB && algo.Enabled)
                 {
                     algo.Enabled = false;
@@ -701,7 +697,7 @@ namespace NiceHashMiner.Forms.Components
                     var clearItem = new ToolStripMenuItem
                     {
                         Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem") + " " +
-                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text + 
+                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
                         " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
                     };
                     clearItem.Click += ToolStripMenuItemClear_Click;

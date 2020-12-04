@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +46,7 @@ namespace NiceHashMiner
 
                 var iMidMid = iMid / 2;
 
-                //easy split 
+                //easy split
                 if (iMid % 2 == 0)
                 {
                     fQ1 = (afVal[iMidMid - 1] + afVal[iMidMid]) / 2;

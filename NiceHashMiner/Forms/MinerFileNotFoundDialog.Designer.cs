@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner
 {
     partial class MinerFileNotFoundDialog
@@ -37,9 +33,9 @@ namespace NiceHashMiner
             this.chkBoxDisableDetection = new System.Windows.Forms.CheckBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
+            //
             // linkLabelError
-            // 
+            //
             this.linkLabelError.AutoSize = true;
             this.linkLabelError.LinkArea = new System.Windows.Forms.LinkArea(253, 4);
             this.linkLabelError.Location = new System.Drawing.Point(12, 9);
@@ -50,9 +46,9 @@ namespace NiceHashMiner
             this.linkLabelError.Text = resources.GetString("linkLabelError.Text");
             this.linkLabelError.UseCompatibleTextRendering = true;
             this.linkLabelError.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelError_LinkClicked);
-            // 
+            //
             // chkBoxDisableDetection
-            // 
+            //
             this.chkBoxDisableDetection.AutoSize = true;
             this.chkBoxDisableDetection.Location = new System.Drawing.Point(12, 102);
             this.chkBoxDisableDetection.Name = "chkBoxDisableDetection";
@@ -61,9 +57,9 @@ namespace NiceHashMiner
             this.chkBoxDisableDetection.Text = "&Disable detection of this device";
             this.chkBoxDisableDetection.UseCompatibleTextRendering = true;
             this.chkBoxDisableDetection.UseVisualStyleBackColor = true;
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Location = new System.Drawing.Point(462, 102);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
@@ -72,9 +68,9 @@ namespace NiceHashMiner
             this.buttonOK.UseCompatibleTextRendering = true;
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
-            // 
+            //
             // MinerFileNotFoundDialog
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(548, 131);

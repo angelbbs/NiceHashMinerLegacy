@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using Microsoft.Win32;
 //using NiceHashMiner.Configs;
 //using NiceHashMiner.PInvoke;
@@ -16,7 +12,7 @@ using System.Security.Principal;
 
 namespace NiceHashMinerLegacy.Divert
 {
-    internal class Helpers 
+    internal class Helpers
     //internal class Helpers : PInvokeHelpers
     {
         public static readonly bool IsElevated;
@@ -29,7 +25,7 @@ namespace NiceHashMinerLegacy.Divert
                 IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
-        
+
         public static void ConsolePrint(string grp, string text)
         {
             if (!Divert.logging) return;
@@ -123,7 +119,7 @@ namespace NiceHashMinerLegacy.Divert
             }
         }
 
-        
+
 
         // parsing helpers
         public static int ParseInt(string text)
@@ -149,7 +145,7 @@ namespace NiceHashMinerLegacy.Divert
             }
         }
 
-        
+
 
         public static void InstallVcRedist()
         {
@@ -229,6 +225,6 @@ namespace NiceHashMinerLegacy.Divert
             }
         }
 
-        
+
     }
 }

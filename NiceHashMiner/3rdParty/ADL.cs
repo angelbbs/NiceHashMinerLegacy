@@ -1,24 +1,20 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 #region Copyright
 
 /*******************************************************************************
  Copyright(c) 2008 - 2009 Advanced Micro Devices, Inc. All Rights Reserved.
  Copyright (c) 2002 - 2006  ATI Technologies Inc. All Rights Reserved.
- 
+
  THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
  ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDED BUT NOT LIMITED TO
- THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A 
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
  PARTICULAR PURPOSE.
- 
+
  File:        ADL.cs
- 
- Purpose:     Implements ADL interface 
- 
+
+ Purpose:     Implements ADL interface
+
  Description: Implements some of the methods defined in ADL interface.
-              
+
  ********************************************************************************/
 
 #endregion Copyright
@@ -75,10 +71,10 @@ namespace ATI.ADL {
     internal delegate int ADL2_Adapter_AdapterInfo_Get(IntPtr context, IntPtr lpInfo, int iInputSize);
 
     /// <summary> Function to determine if the adapter is active or not.</summary>
-    /// <remarks>The function is used to check if the adapter associated with iAdapterIndex is active</remarks>  
+    /// <remarks>The function is used to check if the adapter associated with iAdapterIndex is active</remarks>
     /// <param name="adapterIndex"> Adapter Index.</param>
     /// <param name="status"> Status of the adapter. True: Active; False: Dsiabled</param>
-    /// <returns>Non zero is successfull</returns> 
+    /// <returns>Non zero is successfull</returns>
     internal delegate int ADL_Adapter_Active_Get(int adapterIndex, ref int status);
 
     /// <summary>Get display information based on adapter index</summary>
@@ -309,7 +305,7 @@ namespace ATI.ADL {
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Display_DisplayInfo_Get(int adapterIndex, ref int numDisplays, out IntPtr displayInfoArray, int forceDetect);
-            
+
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Overdrive5_CurrentActivity_Get(int iAdapterIndex, ref ADLPMActivity activity);
 

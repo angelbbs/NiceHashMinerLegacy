@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -45,15 +41,15 @@ namespace NiceHashMiner.Miners
             IsNeverHideMiningWindow = true;
 
         }
-       
+
         protected override int GetMaxCooldownTimeInMilliseconds() {
             return 60*1000;
         }
-        
+
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
-        
+
         public override void Start(string url, string btcAdress, string worker)
         {
             if (!IsInit)
@@ -262,7 +258,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
                 CommandLine = "--coin MWC-C29D " +
-                " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x" + 
+                " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x" +
                 " --pool grincuckaroo29.usa.nicehash.com:3372 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
@@ -349,7 +345,7 @@ namespace NiceHashMiner.Miners
                 {
                     outdata = EnimerationHandle.StandardOutput.ReadLine();
                     Helpers.ConsolePrint(MinerTag(), outdata);
-                    
+
                     if (outdata.Contains("Device"))
                     {
                         string cdevice = Regex.Match(outdata, @"\d+").Value;
@@ -359,7 +355,7 @@ namespace NiceHashMiner.Miners
                         }
 
                     }
-                    
+
                     if (outdata.Contains("Address:"))
                     {
                         string cdeviceBus = Regex.Match(outdata, @"\d+").Value;
@@ -370,7 +366,7 @@ namespace NiceHashMiner.Miners
                             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.ID).ToList();
                             foreach (var mPair in sortedMinerPairs)
                             {
-                                
+
                                 Helpers.ConsolePrint(MinerTag(), " IDByBus=" + mPair.Device.IDByBus.ToString() + " ID=" + mPair.Device.ID.ToString() + " edevice=" + edevice.ToString() + " edeviceBus=" + edeviceBus.ToString());
                                 if (mPair.Device.IDByBus == edeviceBus)
                                 {
@@ -382,13 +378,13 @@ namespace NiceHashMiner.Miners
                         }
 
                     }
-                    
+
                 }
             }
             catch (Exception ex)
             {
                 //                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " error: " + ex.Message);
-                //PidData is NULL error: Ссылка на объект не указывает на экземпляр объекта. 
+                //PidData is NULL error: Ссылка на объект не указывает на экземпляр объекта.
             }
 
 
@@ -404,11 +400,11 @@ namespace NiceHashMiner.Miners
             catch { }
 
             Thread.Sleep(50);
-            
+
             // string output = benchmarkconfigHandle.StandardOutput.ReadToEnd();
 
 
-            /*               
+            /*
                         if (outdata.Contains("Setup Miner..."))
                         {
 
@@ -431,12 +427,12 @@ namespace NiceHashMiner.Miners
             {
                 // var id = mPair.Device.ID;
                 //int id = mPair.Device.IDByBus + variables.mPairDeviceIDByBus_lolBeam;
-                
+
                 Helpers.ConsolePrint("lolMinerIndexing", "ID: " + mPair.Device.ID);
                 Helpers.ConsolePrint("lolMinerIndexing", "IDbybus: " + mPair.Device.IDByBus);
                 Helpers.ConsolePrint("lolMinerIndexing", "busid: " + mPair.Device.BusID);
                 Helpers.ConsolePrint("lolMinerIndexing", "lol: " + mPair.Device.lolMinerBusID);
-                
+
                 //список карт выводить --devices 999
                 double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
 
@@ -445,13 +441,13 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint("lolMinerIndexing", "ID too low: " + id + " skipping device");
                     continue;
                 }
-                
+
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     Helpers.ConsolePrint("lolMinerIndexing", "NVIDIA found. Increasing index");
                     id ++;
                 }
-                
+
                 Helpers.ConsolePrint("lolMinerIndexing", "ID: " + id );
                 {
                     ids.Add(id.ToString());
@@ -467,10 +463,10 @@ namespace NiceHashMiner.Miners
         protected override bool BenchmarkParseLine(string outdata) {
             string hashSpeed = "";
 
-            //Average speed (30s): 25.5 sol/s 
+            //Average speed (30s): 25.5 sol/s
             //GPU 3: Share accepted (45 ms)
-            //Average speed (30s): 0.13 g/s 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2 || 
+            //Average speed (30s): 0.13 g/s
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2 ||
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 if (outdata.Contains("Average speed (30s):"))
@@ -479,7 +475,7 @@ namespace NiceHashMiner.Miners
                     int k = outdata.IndexOf("sol/s");
                     hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
                     try
-                    { 
+                    {
                         speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
                     }
                     catch
@@ -513,7 +509,7 @@ namespace NiceHashMiner.Miners
                     count++;
                 }
             }
-            //Average speed (30s): 0.13 g/s 
+            //Average speed (30s): 0.13 g/s
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 if (outdata.Contains("Average speed (30s):"))
@@ -642,7 +638,7 @@ namespace NiceHashMiner.Miners
 
         }
 
-      
+
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);

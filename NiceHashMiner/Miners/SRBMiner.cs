@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -189,12 +185,12 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], 
+                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
               // _benchmarkTimeWait = time;//SRBMiner report hashrate every 3 min
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
         }
-                
+
         protected override void BenchmarkThreadRoutine(object CommandLine)
         {
             BenchmarkThreadRoutineAlternate(CommandLine, _benchmarkTimeWait);
@@ -372,5 +368,5 @@ namespace NiceHashMiner.Miners
         }
         #endregion
     }
-    
+
 }

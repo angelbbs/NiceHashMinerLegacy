@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;
@@ -148,7 +144,7 @@ namespace NiceHashMiner.Stats
         #region Socket Callbacks
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
-            
+
             try
             {
                 if (e.IsText)
@@ -182,7 +178,7 @@ namespace NiceHashMiner.Stats
 
                                 SetAlgorithmRates(message.data);
                                 GetSmaAPI();
-                                
+
                                 if (AlgorithmSwitchingManager._smaCheckTimer != null)
                                 {
                                     AlgorithmSwitchingManager._smaCheckTimer.Stop();
@@ -190,7 +186,7 @@ namespace NiceHashMiner.Stats
                                     AlgorithmSwitchingManager._smaCheckTimer = null;
                                     AlgorithmSwitchingManager.Start();//************************
                                 }
-                                
+
                                 if (Miner.IsRunningNew)
                                 {
                                     Form_Main.smaCount++;
@@ -814,7 +810,7 @@ namespace NiceHashMiner.Stats
            // GetSmaAPICurrent();
            // OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
         }
-        
+
         #endregion
 
         #region Incoming socket calls
@@ -1141,7 +1137,7 @@ namespace NiceHashMiner.Stats
                     var loginJson = JsonConvert.SerializeObject(login);
                     //loginJson = loginJson.Replace("{", " { ");
                     _socket.SendData(loginJson);
-                
+
             }
             catch (Exception er)
             {

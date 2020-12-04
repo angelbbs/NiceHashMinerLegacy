@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -86,7 +82,6 @@ namespace NiceHashMiner.Configs.Data
         [Obsolete("Use SwitchSmaTimeChangeSeconds")]
         public int SwitchMinSecondsAMD = 60;
         public double SwitchProfitabilityThreshold = 0.05; // percent
-        public int MinerAPIQueryInterval = 5;
         public int MinerRestartDelayMS = 500;
 
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
@@ -303,10 +298,6 @@ namespace NiceHashMiner.Configs.Data
             if (SwitchMinSecondsAMD <= 0)
             {
                 SwitchMinSecondsAMD = 60;
-            }
-            if (MinerAPIQueryInterval <= 0)
-            {
-                MinerAPIQueryInterval = 5;
             }
             if (MinerRestartDelayMS <= 0)
             {

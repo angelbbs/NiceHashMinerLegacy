@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
@@ -117,7 +113,6 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.SwitchMinSecondsFixed != _generalConfigBackup.SwitchMinSecondsFixed
                    || GeneralConfig.SwitchMinSecondsAMD != _generalConfigBackup.SwitchMinSecondsAMD
                    || GeneralConfig.SwitchMinSecondsDynamic != _generalConfigBackup.SwitchMinSecondsDynamic
-                   || GeneralConfig.MinerAPIQueryInterval != _generalConfigBackup.MinerAPIQueryInterval
                    || GeneralConfig.ColorProfileIndex != _generalConfigBackup.ColorProfileIndex
                    || GeneralConfig.DevicesCountIndex != _generalConfigBackup.DevicesCountIndex
                    || GeneralConfig.ProgramMonitoring != _generalConfigBackup.ProgramMonitoring
@@ -191,7 +186,7 @@ namespace NiceHashMiner.Configs
             {
                 var keyUuid = cDev.Uuid;
                 BenchmarkConfigFiles[keyUuid] = new DeviceBenchmarkConfigFile(keyUuid);
-                // init 
+                // init
                 {
                     DeviceBenchmarkConfig currentConfig = null;
                     if (BenchmarkConfigFiles[keyUuid].IsFileExists())

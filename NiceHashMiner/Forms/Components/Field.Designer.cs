@@ -1,15 +1,11 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms.Components {
     partial class Field {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +18,8 @@ namespace NiceHashMiner.Forms.Components {
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
@@ -32,9 +28,9 @@ namespace NiceHashMiner.Forms.Components {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // labelFieldIndicator
-            // 
+            //
             this.labelFieldIndicator.AutoSize = true;
             this.labelFieldIndicator.Location = new System.Drawing.Point(3, 6);
             this.labelFieldIndicator.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
@@ -42,25 +38,25 @@ namespace NiceHashMiner.Forms.Components {
             this.labelFieldIndicator.Size = new System.Drawing.Size(98, 13);
             this.labelFieldIndicator.TabIndex = 6;
             this.labelFieldIndicator.Text = "Label field indicator";
-            // 
+            //
             // textBox
-            // 
+            //
             this.textBox.Location = new System.Drawing.Point(147, 3);
             this.textBox.Name = "textBox";
             this.textBox.Size = new System.Drawing.Size(102, 20);
             this.textBox.TabIndex = 7;
-            // 
+            //
             // pictureBox1
-            // 
+            //
             this.pictureBox1.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
             this.pictureBox1.Location = new System.Drawing.Point(255, 4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(20, 19);
             this.pictureBox1.TabIndex = 8;
             this.pictureBox1.TabStop = false;
-            // 
+            //
             // Field
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;

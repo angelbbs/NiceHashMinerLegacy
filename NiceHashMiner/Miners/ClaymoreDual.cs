@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Configs;
 using System;
 using NiceHashMiner.Algorithms;
@@ -554,7 +550,7 @@ namespace NiceHashMiner.Miners
                                         + String.Format("  -epool us-east.ethash-hub.miningpoolhub.com:20565 -ewal angelbbs.Claymore4 -esm 2 -mport 127.0.0.1:-{0} -epsw c=BTC -allcoins 1 -allpools 1 -ftime 10 -retrydelay 5", ApiPort)
                                         + dualModeParams;
             }
-            else 
+            else
             {
 
                 addParam = " "

@@ -1,8 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
-
 using System;
 using WinDivertSharp;
 using WinDivertSharp.WinAPI;
@@ -49,7 +44,7 @@ namespace NiceHashMinerLegacy.Divert
 
         private static string RemoteIP;
 
-        
+
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr TestDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
@@ -132,7 +127,7 @@ nextCycle:
 
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
-                      
+
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
                             OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
@@ -168,7 +163,7 @@ nextCycle:
                         }
 
                         //*************************************************************************************************************
-                        
+
 
                         if (addr.Direction == WinDivertDirection.Inbound &&
                             !OwnerPID.Equals("-1")
@@ -188,7 +183,7 @@ nextCycle:
                         modified = false;
                         goto sendPacket;
 
-                        
+
 changeSrcDst:
 
                         if (parse_result.TcpHeader->DstPort == TestPort &&

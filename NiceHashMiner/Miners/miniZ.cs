@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
@@ -111,7 +107,7 @@ namespace NiceHashMiner.Miners
             {
                 sColor = " --nocolor";
             }
-            
+
 
             var ret = GetDevicesCommandString()
                       + sColor + " --pers auto --par=" + algo
@@ -194,7 +190,7 @@ namespace NiceHashMiner.Miners
                       + " --url " + username + "@" + algoName + "." + myServers[4, 0] + ".nicehash.com:" + stratumPort
                       + " --url " + username + "@" + algoName + "." + myServers[5, 0] + ".nicehash.com:" + stratumPort
                       + " --pass=x" + " --telemetry=" + ApiPort;
-                _benchmarkTimeWait = time; 
+                _benchmarkTimeWait = time;
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
@@ -436,7 +432,7 @@ namespace NiceHashMiner.Miners
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds; ////PVS-Studio - stupid program! 
+            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
 
             // if (elapsedSeconds < 15 && firstStart)
             if (firstStart)
@@ -447,7 +443,7 @@ namespace NiceHashMiner.Miners
                 firstStart = false;
                 return ad;
             }
-            
+
             JsonApiResponse resp = null;
             try
             {

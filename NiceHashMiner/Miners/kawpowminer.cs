@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System;
@@ -61,7 +57,7 @@ namespace NiceHashMiner.Miners
             url = url.Replace("stratum+tcp://", "");
             var devs = string.Join(" ", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
 
-            LastCommandLine = " -U -P stratum://" + username + "@" + url + 
+            LastCommandLine = " -U -P stratum://" + username + "@" + url +
                 " -U -P stratum://" + username + "@kawpow." + myServers[1, 0] + ".nicehash.com:3385" +
                 " -U -P stratum://" + username + "@kawpow." + myServers[2, 0] + ".nicehash.com:3385" +
                 " -U -P stratum://" + username + "@kawpow." + myServers[3, 0] + ".nicehash.com:3385" +
@@ -220,7 +216,7 @@ namespace NiceHashMiner.Miners
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
-           // var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds; ////PVS-Studio - stupid program!
+           // var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
            /*
             if (elapsedSeconds < 15 && firstStart)
             {
@@ -255,7 +251,7 @@ namespace NiceHashMiner.Miners
                 var speed = resp.result[2].ToString().Split(';')[0];
                 double tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
                 ad.Speed = tmpSpeed * 1000;
-                
+
                 CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
 
                 if (ad.Speed == 0)

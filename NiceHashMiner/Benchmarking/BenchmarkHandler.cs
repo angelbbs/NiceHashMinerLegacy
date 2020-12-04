@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
@@ -90,7 +86,7 @@ namespace NiceHashMiner.Benchmarking
                     _claymoreZcashStatus.SetNext();
                     _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetTestExtraParams();
                     Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
-                    _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm)); //PVS-Studio - stupid program! not null direference!
+                    _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm));
                 }
                 //need to delete
                 if (_claymoreZcashStatus.HasTest() == false)
@@ -175,8 +171,8 @@ namespace NiceHashMiner.Benchmarking
             {
                 _currentMiner = MinerFactory.CreateMiner(Device, _currentAlgorithm);
                 /*
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight 
-                    && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) 
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight
+                    && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters)
                     && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
                     _cpuBenchmarkStatus = new CPUBenchmarkStatus(Globals.ThreadsPerCPU);
                     _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.LessTreads;

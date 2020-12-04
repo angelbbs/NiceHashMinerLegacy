@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
@@ -49,7 +45,7 @@ namespace NiceHashMiner.Miners
                     case AlgorithmType.GrinCuckaroo29:
                         return "cuckaroo";
                     case AlgorithmType.GrinCuckarood29:
-                        return "cuckarood"; 
+                        return "cuckarood";
                     case AlgorithmType.Cuckaroom:
                         return "cuckaroom";
                     case AlgorithmType.GrinCuckatoo31:
@@ -122,7 +118,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 ethnh+tcp://daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 -u1 " + user +
-                    $" -o2 ethnh+tcp://daggerhashimoto." + myServers[2, 0] + ".nicehash.com:3353 -u2 " + user  + 
+                    $" -o2 ethnh+tcp://daggerhashimoto." + myServers[2, 0] + ".nicehash.com:3353 -u2 " + user  +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
@@ -342,7 +338,7 @@ namespace NiceHashMiner.Miners
             }
             cmd += extra;
             _benchmarkTimeWait = time;
-            return cmd; 
+            return cmd;
             // return GetStartCommand(url, btc, worker);
         }
 

@@ -1,15 +1,11 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms.Components {
     partial class BenchmarkLimitControl {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +18,8 @@ namespace NiceHashMiner.Forms.Components {
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
@@ -44,9 +40,9 @@ namespace NiceHashMiner.Forms.Components {
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // groupBox1
-            // 
+            //
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -54,9 +50,9 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupName";
-            // 
+            //
             // flowLayoutPanel1
-            // 
+            //
             this.flowLayoutPanel1.Controls.Add(this.panel1);
             this.flowLayoutPanel1.Controls.Add(this.panel3);
             this.flowLayoutPanel1.Controls.Add(this.panel2);
@@ -66,9 +62,9 @@ namespace NiceHashMiner.Forms.Components {
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(167, 98);
             this.flowLayoutPanel1.TabIndex = 0;
-            // 
+            //
             // panel1
-            // 
+            //
             this.panel1.Controls.Add(this.textBoxQuick);
             this.panel1.Controls.Add(this.labelQuick);
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -76,26 +72,26 @@ namespace NiceHashMiner.Forms.Components {
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(200, 32);
             this.panel1.TabIndex = 383;
-            // 
+            //
             // textBoxQuick
-            // 
+            //
             this.textBoxQuick.Location = new System.Drawing.Point(62, 6);
             this.textBoxQuick.Name = "textBoxQuick";
             this.textBoxQuick.Size = new System.Drawing.Size(100, 20);
             this.textBoxQuick.TabIndex = 383;
             this.textBoxQuick.TextChanged += new System.EventHandler(this.TextBoxQuick_TextChanged);
-            // 
+            //
             // labelQuick
-            // 
+            //
             this.labelQuick.AutoSize = true;
             this.labelQuick.Location = new System.Drawing.Point(3, 9);
             this.labelQuick.Name = "labelQuick";
             this.labelQuick.Size = new System.Drawing.Size(35, 13);
             this.labelQuick.TabIndex = 384;
             this.labelQuick.Text = "Quick";
-            // 
+            //
             // panel3
-            // 
+            //
             this.panel3.Controls.Add(this.textBoxStandard);
             this.panel3.Controls.Add(this.labelStandard);
             this.panel3.Location = new System.Drawing.Point(0, 32);
@@ -103,26 +99,26 @@ namespace NiceHashMiner.Forms.Components {
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(200, 32);
             this.panel3.TabIndex = 385;
-            // 
+            //
             // textBoxStandard
-            // 
+            //
             this.textBoxStandard.Location = new System.Drawing.Point(62, 6);
             this.textBoxStandard.Name = "textBoxStandard";
             this.textBoxStandard.Size = new System.Drawing.Size(100, 20);
             this.textBoxStandard.TabIndex = 383;
             this.textBoxStandard.TextChanged += new System.EventHandler(this.TextBoxStandard_TextChanged);
-            // 
+            //
             // labelStandard
-            // 
+            //
             this.labelStandard.AutoSize = true;
             this.labelStandard.Location = new System.Drawing.Point(3, 9);
             this.labelStandard.Name = "labelStandard";
             this.labelStandard.Size = new System.Drawing.Size(50, 13);
             this.labelStandard.TabIndex = 384;
             this.labelStandard.Text = "Standard";
-            // 
+            //
             // panel2
-            // 
+            //
             this.panel2.Controls.Add(this.textBoxPrecise);
             this.panel2.Controls.Add(this.labelPrecise);
             this.panel2.Location = new System.Drawing.Point(0, 64);
@@ -130,26 +126,26 @@ namespace NiceHashMiner.Forms.Components {
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(200, 32);
             this.panel2.TabIndex = 384;
-            // 
+            //
             // textBoxPrecise
-            // 
+            //
             this.textBoxPrecise.Location = new System.Drawing.Point(62, 6);
             this.textBoxPrecise.Name = "textBoxPrecise";
             this.textBoxPrecise.Size = new System.Drawing.Size(100, 20);
             this.textBoxPrecise.TabIndex = 383;
             this.textBoxPrecise.TextChanged += new System.EventHandler(this.TextBoxPrecise_TextChanged);
-            // 
+            //
             // labelPrecise
-            // 
+            //
             this.labelPrecise.AutoSize = true;
             this.labelPrecise.Location = new System.Drawing.Point(3, 9);
             this.labelPrecise.Name = "labelPrecise";
             this.labelPrecise.Size = new System.Drawing.Size(42, 13);
             this.labelPrecise.TabIndex = 384;
             this.labelPrecise.Text = "Precise";
-            // 
+            //
             // BenchmarkLimitControl
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);

@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms.Components {
     partial class DevicesListViewEnableControl {
         /// <summary>
@@ -39,9 +35,9 @@ namespace NiceHashMiner.Forms.Components {
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // listViewDevices
-            // 
+            //
             this.listViewDevices.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.listViewDevices.CheckBoxes = true;
             this.listViewDevices.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -67,58 +63,58 @@ namespace NiceHashMiner.Forms.Components {
             this.listViewDevices.SelectedIndexChanged += new System.EventHandler(this.listViewDevices_SelectedIndexChanged);
             this.listViewDevices.SizeChanged += new System.EventHandler(this.listViewDevices_SizeChanged);
             this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewDevices_MouseClick);
-            // 
+            //
             // columnHeader0
-            // 
+            //
             this.columnHeader0.Text = "Enabled";
             this.columnHeader0.Width = 304;
-            // 
+            //
             // columnHeader1
-            // 
+            //
             this.columnHeader1.Text = "Temp";
             this.columnHeader1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader1.Width = 80;
-            // 
+            //
             // columnHeader2
-            // 
+            //
             this.columnHeader2.Text = "Load";
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader2.Width = 66;
-            // 
+            //
             // columnHeader3
-            // 
+            //
             this.columnHeader3.Text = "Fan";
             this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader3.Width = 56;
-            // 
+            //
             // columnHeader4
-            // 
+            //
             this.columnHeader4.Text = "Power";
             this.columnHeader4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader4.Width = 85;
-            // 
+            //
             // contextMenuStrip1
-            // 
+            //
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemEnable,
             this.toolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(197, 48);
-            // 
+            //
             // toolStripMenuItemEnable
-            // 
+            //
             this.toolStripMenuItemEnable.Name = "toolStripMenuItemEnable";
             this.toolStripMenuItemEnable.Size = new System.Drawing.Size(196, 22);
             this.toolStripMenuItemEnable.Text = "Enable Benchmark";
-            // 
+            //
             // toolStripMenuItem1
-            // 
+            //
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
             this.toolStripMenuItem1.Text = "Copy Benchmark From";
-            // 
+            //
             // DevicesListViewEnableControl
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;

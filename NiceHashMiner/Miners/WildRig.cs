@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +81,7 @@ namespace NiceHashMiner.Miners
                 + $" -o stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} -u {username}:x "
                 + $" -o stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} -u {username}:x "
                 + $" -o stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} -u {username}:x "
-                + "  --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart(); 
+                + "  --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
         }
 
         private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
@@ -158,7 +154,7 @@ namespace NiceHashMiner.Miners
         #region Benchmark
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], 
+                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
             _benchmarkTimeWait = time;
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())

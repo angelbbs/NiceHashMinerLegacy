@@ -1,8 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
-
 using System;
 using WinDivertSharp;
 using WinDivertSharp.WinAPI;
@@ -28,7 +23,7 @@ namespace NiceHashMinerLegacy.Divert
     public class DDagger3GB
     {
         private static IntPtr DivertHandle;
-       
+
         private static string filter = "";
 
         private static string PacketPayloadData;
@@ -40,7 +35,7 @@ namespace NiceHashMinerLegacy.Divert
         private static WinDivertParseResult parse_result;
         private static string job = "";
 
-        
+
 
         public static byte[] StringToByteArray(String hex)
         {
@@ -145,7 +140,7 @@ nextCycle:
                         }
 
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
-                       
+
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processIdList != null)
                         {
                             OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
@@ -215,7 +210,7 @@ nextCycle:
 
                                         }
                                     }
-                                    
+
                                 }
                             }
                             //******************************

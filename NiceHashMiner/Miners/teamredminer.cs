@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -44,11 +40,11 @@ namespace NiceHashMiner.Miners
             IsNeverHideMiningWindow = true;
 
         }
-       
+
         protected override int GetMaxCooldownTimeInMilliseconds() {
             return 60*1000;
         }
-        
+
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         //    Killteamredminer();
@@ -211,8 +207,8 @@ namespace NiceHashMiner.Miners
                  " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.teamred" + " -p x -d ";
             }
 
-            
-            CommandLine += GetDevicesCommandString() + 
+
+            CommandLine += GetDevicesCommandString() +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD)+
                 apiBind;
             TotalCount = (time / 30) * 2;
@@ -286,7 +282,7 @@ namespace NiceHashMiner.Miners
 
                     // wait a second due api request
                     Thread.Sleep(1000);
-                    
+
                     int delay_before_calc_hashrate = 90;
                     int bench_time = 30;
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
@@ -313,7 +309,7 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
-                        
+
                         repeats++;
                         if (repeats > delay_before_calc_hashrate)
                         {
@@ -324,14 +320,14 @@ namespace NiceHashMiner.Miners
                         {
                             Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
                         }
-                        
+
                         if (repeats >= bench_time + delay_before_calc_hashrate)
                         {
                             Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString() + " bench_time:" + bench_time.ToString());
                             BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (bench_time), 2);
                           break;
                         }
-                        
+
                     }
                 }
                 //BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - 5), 2);
@@ -360,7 +356,7 @@ namespace NiceHashMiner.Miners
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
             var resp = await GetApiDataAsync(ApiPort, "summary");
-            
+
             //Helpers.ConsolePrint("trm-DEBUG_resp", resp.Trim());
 
             if (resp == null)

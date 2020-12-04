@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.Diagnostics;
 using NiceHashMiner.Configs;
@@ -37,7 +33,7 @@ namespace NiceHashMiner.Devices
                 return -1;
             }
         }
-        
+
         public override float Temp
         {
             get
@@ -117,7 +113,7 @@ namespace NiceHashMiner.Devices
                 string.Format(International.GetText("ComputeDevice_Short_Name_CPU"), cpuCount),
                 0, "")
         {
-            group = ""; //PVS-Studio
+            group = "";
             Threads = threads;
             AffinityMask = affinityMask;
             Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);

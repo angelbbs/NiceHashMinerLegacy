@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms
 {
     partial class DriverVersionConfirmationDialog
@@ -37,9 +33,9 @@ namespace NiceHashMiner.Forms
             this.chkBoxDontShowAgain = new System.Windows.Forms.CheckBox();
             this.linkToDriverDownloadPage = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
-            // 
+            //
             // labelWarning
-            // 
+            //
             this.labelWarning.AutoSize = true;
             this.labelWarning.Location = new System.Drawing.Point(7, 10);
             this.labelWarning.Name = "labelWarning";
@@ -49,9 +45,9 @@ namespace NiceHashMiner.Forms
     " 15.7.1 version.\r\nWe strongly suggest you to use this driver version.";
             this.labelWarning.UseCompatibleTextRendering = true;
             this.labelWarning.UseMnemonic = false;
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Location = new System.Drawing.Point(410, 67);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
@@ -60,9 +56,9 @@ namespace NiceHashMiner.Forms
             this.buttonOK.UseCompatibleTextRendering = true;
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
-            // 
+            //
             // chkBoxDontShowAgain
-            // 
+            //
             this.chkBoxDontShowAgain.AutoSize = true;
             this.chkBoxDontShowAgain.Location = new System.Drawing.Point(7, 70);
             this.chkBoxDontShowAgain.Name = "chkBoxDontShowAgain";
@@ -71,9 +67,9 @@ namespace NiceHashMiner.Forms
             this.chkBoxDontShowAgain.Text = "&Do not show this warning again";
             this.chkBoxDontShowAgain.UseCompatibleTextRendering = true;
             this.chkBoxDontShowAgain.UseVisualStyleBackColor = true;
-            // 
+            //
             // linkToDriverDownloadPage
-            // 
+            //
             this.linkToDriverDownloadPage.AutoSize = true;
             this.linkToDriverDownloadPage.Location = new System.Drawing.Point(5, 44);
             this.linkToDriverDownloadPage.Name = "linkToDriverDownloadPage";
@@ -82,9 +78,9 @@ namespace NiceHashMiner.Forms
             this.linkToDriverDownloadPage.TabStop = true;
             this.linkToDriverDownloadPage.Text = "&Link to Driver Download Page";
             this.linkToDriverDownloadPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkToDriverDownloadPage_LinkClicked);
-            // 
+            //
             // DriverVersionConfirmationDialog
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;

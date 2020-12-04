@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Parsing;
 using System.Text.RegularExpressions;
@@ -50,7 +46,7 @@ namespace NiceHashMiner.Miners
         */
         public void FreeMem()
         {
-            
+
             EmptyWorkingSet(Process.GetCurrentProcess().Handle);
             foreach (Process process in Process.GetProcesses())
             {
@@ -63,7 +59,7 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint(MinerTag(), ex.Message);
                 }
             }
-            
+
         }
 
         protected override string GetDevicesCommandString()
@@ -386,7 +382,7 @@ namespace NiceHashMiner.Miners
         }
 
 
-        
+
         protected override void ProcessBenchLinesAlternate(string[] lines)
         {
             // Xmrig reports 2.5s and 60s averages, so prefer to use 60s values for benchmark
@@ -435,7 +431,7 @@ namespace NiceHashMiner.Miners
                 BenchmarkAlgorithm.BenchmarkSpeed = twoSecTotal / twoSecCount;
             }
         }
-        
+
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);

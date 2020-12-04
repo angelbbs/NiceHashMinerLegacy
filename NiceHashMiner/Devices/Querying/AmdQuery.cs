@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +51,7 @@ namespace NiceHashMiner.Devices.Querying
             DriverCheck();
 
             var amdDevices = openCLSuccess ? ProcessDevices(openCLData) : new List<OpenCLDevice>();
-            
+
             Helpers.ConsolePrint(Tag, "QueryAMD END");
 
             return amdDevices;
@@ -63,7 +59,7 @@ namespace NiceHashMiner.Devices.Querying
 
         private void DriverCheck()
         {
-            
+
         }
 
         //private List<OpenCLDevice> ProcessDevices(IEnumerable<OpenCLJsonData> openCLData)
@@ -84,7 +80,7 @@ namespace NiceHashMiner.Devices.Querying
                     $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {ComputeDeviceManager.Available.AmdOpenCLPlatformNum}");
                 break;
             }
-            
+
             if (!amdPlatformNumFound) return amdDevices;
 
             // get only AMD gpus
@@ -198,7 +194,7 @@ namespace NiceHashMiner.Devices.Querying
                             DeviceGlobalMemory = gpuRAM
                         };
                         //PCI_VEN_1002&DEV_67DF_18803EC9
-                        //PNPDeviceID PCI\VEN_1002&DEV_6811&SUBSYS_2015174B&REV_81\4&14486AD3&0&00E0       
+                        //PNPDeviceID PCI\VEN_1002&DEV_6811&SUBSYS_2015174B&REV_81\4&14486AD3&0&00E0
                         //UUID: PCI_VEN_1002&DEV_6811_14486AD3
                         //PCI\VEN_1002&DEV_67DF&SUBSYS_2379148C&REV_EF powercolor
 
@@ -260,7 +256,7 @@ namespace NiceHashMiner.Devices.Querying
                         var uuidHEX = UUID.GetHexUUID(infoToHashed);
                         var Newuuid = $"AMD-{uuidHEX}";
                         newAmdDev.NewUUID = Newuuid;
-                        // just in case 
+                        // just in case
                         try
                         {
                             stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
@@ -308,7 +304,7 @@ namespace NiceHashMiner.Devices.Querying
             var amdVideoControllers = _availableControllers.Where(vcd =>
                 vcd.Name.ToLower().Contains("amd") || vcd.Name.ToLower().Contains("radeon") ||
                 vcd.Name.ToLower().Contains("firepro")).ToList();
-            // sort by ram not ideal 
+            // sort by ram not ideal
             amdVideoControllers.Sort((a, b) => (int) (a.AdapterRam - b.AdapterRam));
             amdDevices.Sort((a, b) => (int) (a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
             var minCount = Math.Min(amdVideoControllers.Count, amdDevices.Count);
@@ -335,7 +331,7 @@ namespace NiceHashMiner.Devices.Querying
 
                 ComputeDeviceManager.Available.Devices.Add(
                     new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, true, -1));
-                // just in case 
+                // just in case
                 try
                 {
                     stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");

@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
@@ -89,7 +85,7 @@ namespace NiceHashMiner.Miners
         }
 
 
-        
+
         public static void StopEvent()
         {
 
@@ -108,7 +104,7 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint("MiningSession", "Process attached");
                 NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
-                
+
                 FuncAttached = true;
             }
 
@@ -415,7 +411,7 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
-       
+
         public void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
 #if (SWITCH_TESTING)
@@ -446,7 +442,7 @@ namespace NiceHashMiner.Miners
             {
                 var stringBuilderDevice = new StringBuilder();
                 stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
-                
+
                 foreach (var algo in device.Algorithms)
                 {
                     if (algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB)
@@ -586,7 +582,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
-            //bool IsMinerStatsCheckUpdate = false;
+
             {
                 // check which groupMiners should be stopped and which ones should be started and which to keep running
                 var toStopGroupMiners = new Dictionary<string, GroupMiner>();
@@ -716,10 +712,6 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            // stats quick fix code
-            //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-            //await MinerStatsCheck();
-            //}
             AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
             _mainFormRatesComunication?.ForceMinerStatsUpdate();
         }
@@ -763,20 +755,14 @@ namespace NiceHashMiner.Miners
                     }
 
                     // set rates
-                    //NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
                     if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
                         ComputeDevice.HashRate = ad.Speed;
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
                         NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
                         double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;
-                        //if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
-
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
-
-                        //Helpers.ConsolePrint(m.MinerTag(), "groupMiners.CurrentRate: " + groupMiners.CurrentRate.ToString());
                         // Deduct power costs
-                        //var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
                         double powerUsage = 0;
                         /*
                         // если групп > 1, то задваивается
@@ -796,18 +782,7 @@ namespace NiceHashMiner.Miners
                         {
                             groupMiners.CurrentRate = 0;
                         }
-                        // set empty
-                        //if (groupMiners.DualAlgorithmType != AlgorithmType.NONE || groupMiners.AlgorithmType == AlgorithmType.Eaglesong)
-                       // if (groupMiners.DualAlgorithmType == AlgorithmType.Eaglesong)
-
                             ad = new ApiData(groupMiners.DualAlgorithmType);
-
-                        /*
-                        else
-                        {
-                            ad = new ApiData(groupMiners.AlgorithmType);
-                        }
-                        */
                     }
                     currentProfit += groupMiners.CurrentRate;
                     // Update GUI
@@ -819,7 +794,6 @@ namespace NiceHashMiner.Miners
             catch (Exception e)
             {
                 Helpers.ConsolePrint("Exception: ", e.ToString());
-                //Helpers.ConsolePrint(Tag, e.Message);
             }
         }
     }

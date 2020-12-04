@@ -1,16 +1,12 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 /*
   Adapted from OpenHardwareMonitor https://github.com/openhardwaremonitor/openhardwaremonitor
- 
+
   This Source Code Form is subject to the terms of the Mozilla Public
   License, v. 2.0. If a copy of the MPL was not distributed with this
   file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+
   Copyright (C) 2009-2012 Michael M�ller <mmoeller@openhardwaremonitor.org>
-	
+
 */
 
 using System;
@@ -161,7 +157,7 @@ namespace NVIDIA.NVAPI
         internal const int MAX_PSTATES_PER_GPU = 8;
         internal const int MAX_COOLER_PER_GPU = 20;
         internal const int MAX_THERMAL_SENSORS_PER_GPU = 3;
-        
+
         public static readonly uint GPU_PSTATES_VER = (uint)Marshal.SizeOf(typeof(NvPStates)) | 0x10000;
         public static readonly uint GPU_THERMAL_SETTINGS_VER = (uint)Marshal.SizeOf(typeof(NvGPUThermalSettings)) | 0x10000;
 
@@ -187,7 +183,7 @@ namespace NVIDIA.NVAPI
 
         #endregion
 
-        private static void GetDelegate<T>(uint id, out T newDelegate) 
+        private static void GetDelegate<T>(uint id, out T newDelegate)
             where T : class {
             IntPtr ptr = nvapi_QueryInterface(id);
             if (ptr != IntPtr.Zero) {

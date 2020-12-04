@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms {
     partial class Form_ChooseLanguage {
         /// <summary>
@@ -33,18 +29,18 @@ namespace NiceHashMiner.Forms {
             this.checkBox_TOS = new System.Windows.Forms.CheckBox();
             this.textBox_TOS = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
+            //
             // label_Instruction
-            // 
+            //
             this.label_Instruction.AutoSize = true;
             this.label_Instruction.Location = new System.Drawing.Point(12, 368);
             this.label_Instruction.Name = "label_Instruction";
             this.label_Instruction.Size = new System.Drawing.Size(134, 13);
             this.label_Instruction.TabIndex = 0;
             this.label_Instruction.Text = "Choose a default language";
-            // 
+            //
             // comboBox_Languages
-            // 
+            //
             this.comboBox_Languages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Languages.Enabled = false;
             this.comboBox_Languages.FormattingEnabled = true;
@@ -53,9 +49,9 @@ namespace NiceHashMiner.Forms {
             this.comboBox_Languages.Size = new System.Drawing.Size(131, 21);
             this.comboBox_Languages.TabIndex = 1;
             this.comboBox_Languages.SelectedIndexChanged += new System.EventHandler(this.comboBox_Languages_SelectedIndexChanged);
-            // 
+            //
             // button_OK
-            // 
+            //
             this.button_OK.Enabled = false;
             this.button_OK.Location = new System.Drawing.Point(168, 382);
             this.button_OK.Name = "button_OK";
@@ -64,9 +60,9 @@ namespace NiceHashMiner.Forms {
             this.button_OK.Text = "OK";
             this.button_OK.UseVisualStyleBackColor = true;
             this.button_OK.Click += new System.EventHandler(this.Button_OK_Click);
-            // 
+            //
             // checkBox_TOS
-            // 
+            //
             this.checkBox_TOS.AutoSize = true;
             this.checkBox_TOS.Location = new System.Drawing.Point(15, 330);
             this.checkBox_TOS.Name = "checkBox_TOS";
@@ -75,9 +71,9 @@ namespace NiceHashMiner.Forms {
             this.checkBox_TOS.Text = "I accept license condition";
             this.checkBox_TOS.UseVisualStyleBackColor = true;
             this.checkBox_TOS.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
-            // 
+            //
             // textBox_TOS
-            // 
+            //
             this.textBox_TOS.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_TOS.Location = new System.Drawing.Point(13, 13);
             this.textBox_TOS.Multiline = true;
@@ -86,9 +82,9 @@ namespace NiceHashMiner.Forms {
             this.textBox_TOS.Size = new System.Drawing.Size(418, 311);
             this.textBox_TOS.TabIndex = 4;
             this.textBox_TOS.TabStop = false;
-            // 
+            //
             // Form_ChooseLanguage
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(443, 421);

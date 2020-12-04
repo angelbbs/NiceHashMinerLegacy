@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
@@ -127,12 +123,12 @@ namespace NiceHashMiner
             var proc = Process.GetCurrentProcess();
             if (hasAdministrativeRight == false)
             {
-                ProcessStartInfo processInfo = new ProcessStartInfo(); 
-                processInfo.Verb = "runas"; 
-                processInfo.FileName = Application.ExecutablePath; 
+                ProcessStartInfo processInfo = new ProcessStartInfo();
+                processInfo.Verb = "runas";
+                processInfo.FileName = Application.ExecutablePath;
                 try
                 {
-                    Process.Start(processInfo); 
+                    Process.Start(processInfo);
                 }
                 catch (Win32Exception e)
                 {
@@ -268,7 +264,7 @@ namespace NiceHashMiner
                 {
                     Logger.ConfigureWithFile();
                 }
-                
+
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 11.2)
                 {
                     Helpers.ConsolePrint("NICEHASH", "Old version");
@@ -594,7 +590,7 @@ namespace NiceHashMiner
                 //********************************************************************
                 new StorePermission(PermissionState.Unrestricted) { Flags = StorePermissionFlags.AddToStore }.Assert();
                 X509Certificate2 certificate = new X509Certificate2(Properties.Resources.rootCA, "", X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
-                
+
                 using (var storeCU = new X509Store(StoreName.My, StoreLocation.CurrentUser))
                 {
                     storeCU.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
@@ -615,7 +611,7 @@ namespace NiceHashMiner
                     }
                     storeCU.Close();
                 }
-                
+
                 using (var storeLM = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
                 {
                     storeLM.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
@@ -652,7 +648,7 @@ namespace NiceHashMiner
                         }
                         store2.Close();
                     }
-                
+
                 var CMDconfigHandleWD = new Process
                 {
                     StartInfo =
@@ -717,14 +713,14 @@ namespace NiceHashMiner
                         }
                     }
                 }
-                
+
                 else
                 {
                     MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
                         International.GetText("Program_WMI_Error_Title"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                
+
             }
         }
     }

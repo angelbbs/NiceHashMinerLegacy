@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Configs;
@@ -446,34 +442,7 @@ namespace NiceHashMiner
             {
                 KillAllUsedMinerProcesses();
             }
-            /*
-            try
-            {
-                //проблемы с перезапуском майнеров
-                int k = ProcessTag().IndexOf("pid(");
-                int i = ProcessTag().IndexOf(")|bin");
-                var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
-                pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                Thread.Sleep(500);
-                if (pid > 0) //процесс может быть уже убит?
-                {
-                    try
-                    {
-                        Process proc = Process.GetProcessById(pid);
-                        //proc.Kill();
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Killing miner with pid: " + pid.ToString());
-                    }
-                    catch {
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " ERROR killing miner with pid: " + pid.ToString());
-                    }
-                }
 
-            }
-            catch (ArgumentException)
-            {
-                // Process already exited.
-            }
-            */
         }
         protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
         {
@@ -539,7 +508,7 @@ namespace NiceHashMiner
                 if (MinerTag().Contains("Phoenix"))
                 {
                     try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                 }
                 KillProcessAndChildren(pid);
 
@@ -1215,11 +1184,11 @@ namespace NiceHashMiner
                 {
                     if (serv.Contains("daggerhashimoto"))
                     {
-                        server = "daggerhashimoto." + Globals.MiningLocation[i] + ".nicehash.com";
+                        server = "stratum." + Globals.MiningLocation[i] + ".nicehash.com";
                     }
                     else
                     {
-                        server = "speedtest." + Globals.MiningLocation[i] + ".nicehash.com";
+                        server = "stratum." + Globals.MiningLocation[i] + ".nicehash.com";
                     }
                     var pingReply = ping.Send(server, 1000);
                     if (pingReply.Status != IPStatus.TimedOut)
@@ -1241,8 +1210,8 @@ namespace NiceHashMiner
                 } catch (PingException)
                 {
                     Helpers.ConsolePrint("PingServers", server + " offline "  + i.ToString());
-                    myServers[i, 1] = "-1";
-                    bestServerId = -1;
+                    myServers[i, 1] = "1";
+                    bestServerId = 1;
                 }
                 serverId++;
             }
@@ -1272,7 +1241,7 @@ namespace NiceHashMiner
             Form_Main.myServers = tmpServers;
             for (int i = 0; i < 5; i++)
             {
-                server = "speedtest." + Form_Main.myServers[i, 0] + ".nicehash.com";
+                server = "stratum." + Form_Main.myServers[i, 0] + ".nicehash.com";
                 //Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
             }
             //Helpers.ConsolePrint("PingServers", "BestServer: " + Globals.MiningLocation[bestServerId]);
@@ -1969,14 +1938,12 @@ namespace NiceHashMiner
                 }
             }
 
-            Thread.Sleep(200);
-
             CMDconfigHandle.StartInfo.Arguments = " " + strPlatform + " " + strDual + " " + strAlgo + " \"" + gpus +"\"" + " " + minername;
             CMDconfigHandle.StartInfo.UseShellExecute = false;
             // CMDconfigHandle.StartInfo.RedirectStandardError = true;
             // CMDconfigHandle.StartInfo.RedirectStandardOutput = true;
             CMDconfigHandle.StartInfo.CreateNoWindow = CreateNoWindow;
-            Thread.Sleep(250);
+
             Helpers.ConsolePrint(MinerTag(), "Start CMD: " + CMDconfigHandle.StartInfo.FileName + CMDconfigHandle.StartInfo.Arguments);
             CMDconfigHandle.Start();
 
@@ -1993,8 +1960,6 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("KillCMDBeforeOrAfterMining", e.ToString());
             }
-
-            Thread.Sleep(50);
             return CMDconfigHandle;
         }
 
@@ -2012,32 +1977,9 @@ namespace NiceHashMiner
                 }
             };
 
-            // string BeforeMiningString = "pause\n\r"; //pause работает, а нормальная строка нет!!
-
             string MinerDir = MiningSetup.MinerPath.Substring(0, MiningSetup.MinerPath.LastIndexOf("\\"));
             CMDconfigHandle.StartInfo.FileName = "GPU-Reset.cmd";
 
-            //            Helpers.ConsolePrint("BeforeMiningString:", BeforeMiningString);
-            /*
-            if (!File.Exists(CMDconfigHandle.StartInfo.FileName))
-            {
-                try
-                {
-                    FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Create, FileAccess.Write);
-                    StreamWriter w = new StreamWriter(fs);
-                    w.Write(BeforeOrAfterMiningString);
-                    w.Flush();
-                    w.Close();
-                    return;
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("RunCMDBeforeOrAfterMining", e.ToString());
-                }
-
-            }
-            else
-            */
             {
                 var cmd = "";
                 FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Open, FileAccess.Read);
@@ -2068,14 +2010,12 @@ namespace NiceHashMiner
                 }
             }
 
-            Thread.Sleep(200);
-
             CMDconfigHandle.StartInfo.Arguments = CMDparam;
             CMDconfigHandle.StartInfo.UseShellExecute = false;
             // CMDconfigHandle.StartInfo.RedirectStandardError = true;
             // CMDconfigHandle.StartInfo.RedirectStandardOutput = true;
             CMDconfigHandle.StartInfo.CreateNoWindow = CreateNoWindow;
-            Thread.Sleep(250);
+
             Helpers.ConsolePrint(MinerTag(), "Start CMD: " + CMDconfigHandle.StartInfo.FileName + CMDconfigHandle.StartInfo.Arguments);
             CMDconfigHandle.Start();
 
@@ -2093,23 +2033,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("KillCMDBeforeOrAfterMining", e.ToString());
             }
 
-            Thread.Sleep(50);
             return;
         }
-        /*
-        protected void KillCMDBeforeMining(Process CMDconfigHandle)
-        {
-            try
-            {
-                    CMDconfigHandle.Kill();
-                    CMDconfigHandle.WaitForExit(1 * 1000);
-                    CMDconfigHandle.Close();
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("KillCMDBeforeMining", e.ToString());
-            }
-        }
-        */
     }
 }

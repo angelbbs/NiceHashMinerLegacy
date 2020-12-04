@@ -1,15 +1,11 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms.Components {
     partial class AlgorithmSettingsControl {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +18,8 @@ namespace NiceHashMiner.Forms.Components {
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
@@ -38,9 +34,9 @@ namespace NiceHashMiner.Forms.Components {
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // groupBoxSelectedAlgorithmSettings
-            // 
+            //
             this.groupBoxSelectedAlgorithmSettings.Controls.Add(this.flowLayoutPanel1);
             this.groupBoxSelectedAlgorithmSettings.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.groupBoxSelectedAlgorithmSettings.Location = new System.Drawing.Point(3, 3);
@@ -50,9 +46,9 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxSelectedAlgorithmSettings.TabStop = false;
             this.groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm Settings:";
             this.groupBoxSelectedAlgorithmSettings.UseCompatibleTextRendering = true;
-            // 
+            //
             // flowLayoutPanel1
-            // 
+            //
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.secondaryFieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.field_PowerUsage);
@@ -63,9 +59,9 @@ namespace NiceHashMiner.Forms.Components {
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(276, 198);
             this.flowLayoutPanel1.TabIndex = 12;
-            // 
+            //
             // secondaryFieldBoxBenchmarkSpeed
-            // 
+            //
             this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
             this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
             this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
@@ -74,9 +70,9 @@ namespace NiceHashMiner.Forms.Components {
             this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
             this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
             this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
-            // 
+            //
             // fieldBoxBenchmarkSpeed
-            // 
+            //
             this.fieldBoxBenchmarkSpeed.AutoSize = true;
             this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
             this.fieldBoxBenchmarkSpeed.EntryText = "";
@@ -85,9 +81,9 @@ namespace NiceHashMiner.Forms.Components {
             this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
             this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
             this.fieldBoxBenchmarkSpeed.TabIndex = 1;
-            // 
+            //
             // field_PowerUsage
-            // 
+            //
             this.field_PowerUsage.AutoSize = true;
             this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
             this.field_PowerUsage.EntryText = "";
@@ -96,9 +92,9 @@ namespace NiceHashMiner.Forms.Components {
             this.field_PowerUsage.Name = "field_PowerUsage";
             this.field_PowerUsage.Size = new System.Drawing.Size(278, 26);
             this.field_PowerUsage.TabIndex = 15;
-            // 
+            //
             // groupBoxExtraLaunchParameters
-            // 
+            //
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
             this.groupBoxExtraLaunchParameters.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 99);
@@ -108,9 +104,9 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxExtraLaunchParameters.TabStop = false;
             this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
             this.groupBoxExtraLaunchParameters.UseCompatibleTextRendering = true;
-            // 
+            //
             // richTextBoxExtraLaunchParameters
-            // 
+            //
             this.richTextBoxExtraLaunchParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
@@ -118,9 +114,9 @@ namespace NiceHashMiner.Forms.Components {
             this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
             this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(264, 65);
             this.richTextBoxExtraLaunchParameters.TabIndex = 17;
-            // 
+            //
             // AlgorithmSettingsControl
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBoxSelectedAlgorithmSettings);

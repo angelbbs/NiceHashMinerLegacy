@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System;
@@ -25,7 +21,7 @@ namespace NiceHashMiner.Miners
         double speed = 0;
         private int _benchmarkTimeWait = 240;
         bool benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.hsrneoscrypt;
-                                           
+
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {

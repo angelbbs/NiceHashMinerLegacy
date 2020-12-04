@@ -1,15 +1,11 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms.Components {
     partial class AlgorithmsListView {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +18,8 @@ namespace NiceHashMiner.Forms.Components {
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
@@ -38,9 +34,9 @@ namespace NiceHashMiner.Forms.Components {
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
-            // 
+            //
             // listViewAlgorithms
-            // 
+            //
             this.listViewAlgorithms.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.listViewAlgorithms.CheckBoxes = true;
             this.listViewAlgorithms.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -72,52 +68,52 @@ namespace NiceHashMiner.Forms.Components {
             this.listViewAlgorithms.Click += new System.EventHandler(this.listViewAlgorithms_Click);
             this.listViewAlgorithms.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewAlgorithms_MouseClick);
             this.listViewAlgorithms.Resize += new System.EventHandler(this.listViewAlgorithms_Resize);
-            // 
+            //
             // columnHeader0
-            // 
+            //
             this.columnHeader0.Text = "On";
             this.columnHeader0.Width = 28;
-            // 
+            //
             // columnHeader1
-            // 
+            //
             this.columnHeader1.Text = "Algorithm";
             this.columnHeader1.Width = 110;
-            // 
+            //
             // columnHeader2
-            // 
+            //
             this.columnHeader2.Text = "Miner";
             this.columnHeader2.Width = 82;
-            // 
+            //
             // columnHeader3
-            // 
+            //
             this.columnHeader3.Text = "Speed";
             this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeader3.Width = 152;
-            // 
+            //
             // columnHeader4
-            // 
+            //
             this.columnHeader4.Text = "Power";
             this.columnHeader4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader4.Width = 88;
-            // 
+            //
             // columnHeader5
-            // 
+            //
             this.columnHeader5.Text = "Ratio BTC/GH/Day";
             this.columnHeader5.Width = 90;
-            // 
+            //
             // columnHeader6
-            // 
+            //
             this.columnHeader6.Text = "BTC/Day";
             this.columnHeader6.Width = 148;
-            // 
+            //
             // contextMenuStrip1
-            // 
+            //
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
+            //
             // AlgorithmsListView
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;

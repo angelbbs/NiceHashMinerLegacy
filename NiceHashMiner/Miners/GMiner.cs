@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
@@ -396,7 +392,7 @@ namespace NiceHashMiner.Miners
                 " --server zhash.hk" + ".nicehash.com --user " + username + " --pass x --port 3369" +
                 GetDevicesCommandString();
             }
-            
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
             {
                 //_benchmarkTimeWait = 180;
@@ -696,7 +692,7 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-               
+
                 BenchmarkThreadRoutineFinish();
             }
         }

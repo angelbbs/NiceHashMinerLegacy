@@ -1,7 +1,3 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Utils;
 using System;
@@ -32,7 +28,7 @@ namespace NiceHashMiner
             int R = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).R - 10);
             int G = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).G - 10);
             int B = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).B - 10);
-            
+
             //Helpers.ConsolePrint("RGB", "R: " + R.ToString() + " G: " + G.ToString() + " B:" + B.ToString());
             this.BackColor = Color.FromArgb(255, R, G, B);
             if (R * 256 * 256 + G * 256 + B > 12000000)

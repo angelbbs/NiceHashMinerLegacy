@@ -1,15 +1,11 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
 namespace NiceHashMiner.Forms.Components {
     partial class BenchmarkOptions {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +18,8 @@ namespace NiceHashMiner.Forms.Components {
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
@@ -33,9 +29,9 @@ namespace NiceHashMiner.Forms.Components {
             this.radioButton_QuickBenchmark = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // groupBox1
-            // 
+            //
             this.groupBox1.Controls.Add(this.radioButton_PreciseBenchmark);
             this.groupBox1.Controls.Add(this.radioButton_StandardBenchmark);
             this.groupBox1.Controls.Add(this.radioButton_QuickBenchmark);
@@ -45,9 +41,9 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Benchmark Type";
-            // 
+            //
             // radioButton_PreciseBenchmark
-            // 
+            //
             this.radioButton_PreciseBenchmark.AutoSize = true;
             this.radioButton_PreciseBenchmark.Location = new System.Drawing.Point(6, 77);
             this.radioButton_PreciseBenchmark.Name = "radioButton_PreciseBenchmark";
@@ -56,9 +52,9 @@ namespace NiceHashMiner.Forms.Components {
             this.radioButton_PreciseBenchmark.Text = "&Precise (will take longer)";
             this.radioButton_PreciseBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_PreciseBenchmark.CheckedChanged += new System.EventHandler(this.RadioButton_PreciseBenchmark_CheckedChanged);
-            // 
+            //
             // radioButton_StandardBenchmark
-            // 
+            //
             this.radioButton_StandardBenchmark.AutoSize = true;
             this.radioButton_StandardBenchmark.Checked = true;
             this.radioButton_StandardBenchmark.Location = new System.Drawing.Point(6, 48);
@@ -69,9 +65,9 @@ namespace NiceHashMiner.Forms.Components {
             this.radioButton_StandardBenchmark.Text = "&Standard";
             this.radioButton_StandardBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_StandardBenchmark.CheckedChanged += new System.EventHandler(this.RadioButton_StandardBenchmark_CheckedChanged);
-            // 
+            //
             // radioButton_QuickBenchmark
-            // 
+            //
             this.radioButton_QuickBenchmark.AutoSize = true;
             this.radioButton_QuickBenchmark.Location = new System.Drawing.Point(6, 19);
             this.radioButton_QuickBenchmark.Name = "radioButton_QuickBenchmark";
@@ -80,9 +76,9 @@ namespace NiceHashMiner.Forms.Components {
             this.radioButton_QuickBenchmark.Text = "&Quick (can be inaccurate)";
             this.radioButton_QuickBenchmark.UseVisualStyleBackColor = true;
             this.radioButton_QuickBenchmark.CheckedChanged += new System.EventHandler(this.RadioButton_QuickBenchmark_CheckedChanged);
-            // 
+            //
             // BenchmarkOptions
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
