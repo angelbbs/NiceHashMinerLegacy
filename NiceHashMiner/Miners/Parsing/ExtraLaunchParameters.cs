@@ -159,7 +159,13 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     // SingleParam
                     new MinerOption("Platform", "", "--platform=", null, MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("TRMintensity", "", "--cn_config=", "-1", MinerOptionFlagType.MultiParam, ",")
+                    new MinerOption("TRMintensity", "", "--cn_config=", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMtemp_limit", "", "--temp_limit=", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMtemp_resume", "", "--temp_resume=", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMeth_4g_max_alloc", "", "--eth_4g_max_alloc=", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMeth_4g_alloc_adjust", "", "--eth_4g_alloc_adjust=", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMeth_alloc_epoch", "", "--eth_alloc_epoch=", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, "")
                 },
                 // TemperatureOptions
                 new List<MinerOption>() {
@@ -518,7 +524,7 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.Nanominer,
                 new List<MinerOption>
                 {
-                    new MinerOption("Nanominer_memTweak", "memTweak = ", "1", MinerOptionFlagType.SingleParam),
+                    new MinerOption("Nanominer_memTweak", "memTweak=", "1", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>()
             ),

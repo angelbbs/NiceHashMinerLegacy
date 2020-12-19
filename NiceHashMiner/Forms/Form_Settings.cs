@@ -198,7 +198,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(label_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(pictureBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(textBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
-
+            /*
             toolTip1.SetToolTip(textBox_SwitchMaxSeconds,
                 International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
             toolTip1.SetToolTip(label_SwitchMaxSeconds,
@@ -226,7 +226,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
             toolTip1.SetToolTip(pictureBox_APIBindPortStart,
                 International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
-
+                */
             toolTip1.SetToolTip(checkBox_DisableDetectionNVIDIA,
                 string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
             toolTip1.SetToolTip(checkBox_DisableDetectionAMD,
@@ -516,12 +516,12 @@ namespace NiceHashMiner.Forms
             radioButtonMOPA5.Checked = ConfigManager.GeneralConfig.MOPA5;
 
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
-            label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
+            //label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
-            label_SwitchMaxSeconds.Text =
-                International.GetText("Form_Settings_General_SwitchMaxSeconds") + ":";
-            label_SwitchMinSeconds.Text = International.GetText("Form_Settings_General_SwitchMinSeconds") + ":";
-            label_APIBindPortStart.Text = International.GetText("Form_Settings_APIBindPortStart") + ":";
+            //label_SwitchMaxSeconds.Text =
+              //  International.GetText("Form_Settings_General_SwitchMaxSeconds") + ":";
+            //label_SwitchMinSeconds.Text = International.GetText("Form_Settings_General_SwitchMinSeconds") + ":";
+            //label_APIBindPortStart.Text = International.GetText("Form_Settings_APIBindPortStart") + ":";
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
             label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
@@ -743,10 +743,6 @@ namespace NiceHashMiner.Forms
                     label_RunEthlargement.ForeColor = Form_Main._foreColor;
                 }
 
-                textBox_APIBindPortStart.BackColor = Form_Main._backColor;
-                textBox_APIBindPortStart.ForeColor = Form_Main._foreColor;
-                textBox_APIBindPortStart.BorderStyle = BorderStyle.FixedSingle;
-
                 textBox_AutoStartMiningDelay.BackColor = Form_Main._backColor;
                 textBox_AutoStartMiningDelay.ForeColor = Form_Main._foreColor;
                 textBox_AutoStartMiningDelay.BorderStyle = BorderStyle.FixedSingle;
@@ -771,10 +767,6 @@ namespace NiceHashMiner.Forms
                 textBox_LogMaxFileSize.ForeColor = Form_Main._foreColor;
                 textBox_LogMaxFileSize.BorderStyle = BorderStyle.FixedSingle;
 
-                textBox_MinerRestartDelayMS.BackColor = Form_Main._backColor;
-                textBox_MinerRestartDelayMS.ForeColor = Form_Main._foreColor;
-                textBox_MinerRestartDelayMS.BorderStyle = BorderStyle.FixedSingle;
-
                 textBox_MinIdleSeconds.BackColor = Form_Main._backColor;
                 textBox_MinIdleSeconds.ForeColor = Form_Main._foreColor;
                 textBox_MinIdleSeconds.BorderStyle = BorderStyle.FixedSingle;
@@ -782,14 +774,6 @@ namespace NiceHashMiner.Forms
                 textBox_MinProfit.BackColor = Form_Main._backColor;
                 textBox_MinProfit.ForeColor = Form_Main._foreColor;
                 textBox_MinProfit.BorderStyle = BorderStyle.FixedSingle;
-
-                textBox_SwitchMaxSeconds.BackColor = Form_Main._backColor;
-                textBox_SwitchMaxSeconds.ForeColor = Form_Main._foreColor;
-                textBox_SwitchMaxSeconds.BorderStyle = BorderStyle.FixedSingle;
-
-                textBox_SwitchMinSeconds.BackColor = Form_Main._backColor;
-                textBox_SwitchMinSeconds.ForeColor = Form_Main._foreColor;
-                textBox_SwitchMinSeconds.BorderStyle = BorderStyle.FixedSingle;
 
                 textBox_SwitchProfitabilityThreshold.BackColor = Form_Main._backColor;
                 textBox_SwitchProfitabilityThreshold.ForeColor = Form_Main._foreColor;
@@ -803,7 +787,6 @@ namespace NiceHashMiner.Forms
                 labelRestartProgram.ForeColor = Form_Main._foreColor;
 
                 pictureBox_AllowMultipleInstances.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_APIBindPortStart.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_AutoScaleBTCValues.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_AutoStartMining.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_DisableDetectionAMD.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -813,7 +796,6 @@ namespace NiceHashMiner.Forms
                 pictureBox_HideMiningWindows.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_Language.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_LogMaxFileSize.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_MinerRestartDelayMS.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinIdleSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinimizeMiningWindows.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_MinimizeToTray.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -821,8 +803,6 @@ namespace NiceHashMiner.Forms
                 //pictureBox_NVIDIAP0State.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_RunAtStartup.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_StartMiningWhenIdle.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_SwitchMaxSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
-                pictureBox_SwitchMinSeconds.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_SwitchProfitabilityThreshold.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_TimeUnit.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox1.Image = NiceHashMiner.Properties.Resources.info_white_18;
@@ -902,13 +882,9 @@ namespace NiceHashMiner.Forms
             }
             // Add EventHandler for all the general tab's textboxes
             {
-                textBox_SwitchMaxSeconds.Leave += GeneralTextBoxes_Leave;
-                textBox_SwitchMinSeconds.Leave += GeneralTextBoxes_Leave;
-                textBox_MinerRestartDelayMS.Leave += GeneralTextBoxes_Leave;
                 textBox_AutoStartMiningDelay.Leave += GeneralTextBoxes_Leave;
                 textBox_MinIdleSeconds.Leave += GeneralTextBoxes_Leave;
                 textBox_LogMaxFileSize.Leave += GeneralTextBoxes_Leave;
-                textBox_APIBindPortStart.Leave += GeneralTextBoxes_Leave;
                 textBox_MinProfit.Leave += GeneralTextBoxes_Leave;
                 textBox_ElectricityCost.Leave += GeneralTextBoxes_Leave;
                 textBox_psu.Leave += GeneralTextBoxes_Leave;
@@ -917,11 +893,7 @@ namespace NiceHashMiner.Forms
                 textBox_SwitchProfitabilityThreshold.Leave += GeneralTextBoxes_Leave;
                 textBoxMaxEpoch.Leave += GeneralTextBoxes_Leave;
                 // set int only keypress
-                textBox_SwitchMaxSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
-                textBox_SwitchMinSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
-                textBox_MinerRestartDelayMS.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 textBox_MinIdleSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
-                textBox_APIBindPortStart.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 // set double only keypress
                 textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBox_ElectricityCost.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
@@ -1006,15 +978,9 @@ namespace NiceHashMiner.Forms
 
             // Textboxes
             {
-                textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
-                textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
-                textBox_MinerRestartDelayMS.Text = ConfigManager.GeneralConfig.MinerRestartDelayMS.ToString();
                 textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
                 textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
                 textBox_AutoStartMiningDelay.Text = ConfigManager.GeneralConfig.AutoStartMiningDelay.ToString();
-                textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
-                textBox_MinProfit.Text =
-                    ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
                 textBox_SwitchProfitabilityThreshold.Text = ((ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)*100)
                     .ToString("F1").Replace(',', '.'); // force comma;
                 textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
@@ -1223,16 +1189,9 @@ namespace NiceHashMiner.Forms
         {
             if (!_isInitFinished) return;
             IsChange = true;
-
-            ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper =
-                Helpers.ParseInt(textBox_SwitchMaxSeconds.Text);
-            ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower = Helpers.ParseInt(textBox_SwitchMinSeconds.Text);
-            ConfigManager.GeneralConfig.MinerRestartDelayMS = Helpers.ParseInt(textBox_MinerRestartDelayMS.Text);
             ConfigManager.GeneralConfig.MinIdleSeconds = Helpers.ParseInt(textBox_MinIdleSeconds.Text);
             ConfigManager.GeneralConfig.LogMaxFileSize = Helpers.ParseLong(textBox_LogMaxFileSize.Text);
             ConfigManager.GeneralConfig.AutoStartMiningDelay = Helpers.ParseInt(textBox_AutoStartMiningDelay.Text);
-
-            ConfigManager.GeneralConfig.ApiBindPortPoolStart = Helpers.ParseInt(textBox_APIBindPortStart.Text);
             // min profit
             ConfigManager.GeneralConfig.MinimumProfit = Helpers.ParseDouble(textBox_MinProfit.Text);
             ConfigManager.GeneralConfig.SwitchProfitabilityThreshold =
@@ -1262,13 +1221,9 @@ namespace NiceHashMiner.Forms
                 ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
             textBox_SwitchProfitabilityThreshold.Text = (ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100)
                 .ToString("F1").Replace(',', '.'); // force comma
-            textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
-            textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
-            textBox_MinerRestartDelayMS.Text = ConfigManager.GeneralConfig.MinerRestartDelayMS.ToString();
             textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
             textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
             textBox_AutoStartMiningDelay.Text = ConfigManager.GeneralConfig.AutoStartMiningDelay.ToString();
-            textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
             textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
             textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString("");
             textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString("");
@@ -1955,23 +1910,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox_switching_algorithms.SelectedIndex == 5)
-            {
-                label_SwitchMinSeconds.Enabled = true;
-                textBox_SwitchMinSeconds.Enabled = true;
-                pictureBox_SwitchMinSeconds.Enabled = true;
-                label_SwitchMaxSeconds.Enabled = true;
-                textBox_SwitchMaxSeconds.Enabled = true;
-                pictureBox_SwitchMaxSeconds.Enabled = true;
-            } else
-            {
-                label_SwitchMinSeconds.Enabled = false;
-                textBox_SwitchMinSeconds.Enabled = false;
-                pictureBox_SwitchMinSeconds.Enabled = false;
-                label_SwitchMaxSeconds.Enabled = false;
-                textBox_SwitchMaxSeconds.Enabled = false;
-                pictureBox_SwitchMaxSeconds.Enabled = false;
-            }
+
         }
 
         private void label2_Click(object sender, EventArgs e)

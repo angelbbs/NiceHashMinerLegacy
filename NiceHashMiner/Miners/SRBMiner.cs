@@ -155,20 +155,27 @@ namespace NiceHashMiner.Miners
 
             dynamic resp = JsonConvert.DeserializeObject(ResponseFromSRBMiner);
 
-            if (resp != null)
+            try
             {
-                int totals = resp.hashrate_total_now;
-                //Helpers.ConsolePrint("API hashrate...........", totals.ToString());
+                if (resp != null)
+                {
+                    int totals = resp.algorithms[0].hashrate.cpu.total;
+                    //Helpers.ConsolePrint("API hashrate...........", totals.ToString());
 
-                ad.Speed = totals;
-                if (ad.Speed == 0)
-                {
-                    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                    ad.Speed = totals;
+                    if (ad.Speed == 0)
+                    {
+                        CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                    }
+                    else
+                    {
+                        CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                    }
                 }
-                else
-                {
-                    CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("API", ex.Message);
+                return ad;
             }
 
             Thread.Sleep(1000);

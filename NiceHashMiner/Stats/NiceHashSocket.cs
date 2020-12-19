@@ -40,6 +40,8 @@ namespace NiceHashMiner.Stats
         public  static bool _connectionEstablished;
         private readonly Random _random = new Random();
         private readonly string _address;
+        private readonly string _addressFailover;
+        bool isFailover = false;
 
         public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
@@ -70,8 +72,16 @@ namespace NiceHashMiner.Stats
             {
                 if (_webSocket == null)
                 {
-                    _webSocket = new WebSocket(_address);
+                    if (!isFailover)
+                    {
+                        _webSocket = new WebSocket(Links.NhmSocketAddress);
                     }
+                    else
+                    {
+                        _webSocket = new WebSocket(Links.NhmSocketAddressFailover);
+                    }
+                    isFailover = !isFailover;
+                }
                 else
                 {
                     Helpers.ConsolePrint("SOCKET", $"Credentials change reconnecting nhmws");
@@ -299,7 +309,7 @@ namespace NiceHashMiner.Stats
                 var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
 
                 protocol = 3;
-                version = "NHML/3.0.4.2"; //
+                version = "NHML/3.0.5.5"; //
                 if (ConfigManager.GeneralConfig.Send_actual_version_info)
                 {
                     version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");

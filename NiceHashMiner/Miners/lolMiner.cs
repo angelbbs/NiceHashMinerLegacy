@@ -172,7 +172,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
-                LastCommandLine = "--algo ETHASH --pool " + url + " --user " + username + " --pass x" +
+                LastCommandLine = "--algo ETHASH --ethstratum=ETHV1 --pool " + url + " --user " + username + " --pass x" +
                 " --pool daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 " --pool daggerhashimoto." + myServers[2, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 " --pool daggerhashimoto." + myServers[3, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
@@ -186,7 +186,22 @@ namespace NiceHashMiner.Miners
             }
             LastCommandLine += GetDevicesCommandString() + " ";//
             LastCommandLine = LastCommandLine.Replace("--asm 1", "");
+            string sColor = "";
+            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            {
+                sColor = " --nocolor";
+            }
+            LastCommandLine += sColor;
             ProcessHandle = _Start();
+        }
+        static int GetWinVer(Version ver)
+        {
+            if (ver.Major == 6 & ver.Minor == 1)
+                return 7;
+            else if (ver.Major == 6 & ver.Minor == 2)
+                return 8;
+            else
+                return 10;
         }
 
         // new decoupled benchmarking routines
@@ -288,6 +303,12 @@ namespace NiceHashMiner.Miners
             CommandLine += GetDevicesCommandString(); //amd карты перечисляются первыми
             _benchmarkTimeWait = time;
             CommandLine = CommandLine.Replace("--asm 1", "");
+            string sColor = "";
+            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            {
+                sColor = " --nocolor";
+            }
+            CommandLine += sColor;
             return CommandLine;
 
         }

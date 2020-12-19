@@ -1462,6 +1462,7 @@ namespace NiceHashMiner
 
         protected void ScheduleRestart(int ms)
         {
+
             if (!ProcessHandle._bRunning) return;
             var restartInMs = ConfigManager.GeneralConfig.MinerRestartDelayMS > ms
                 ? ConfigManager.GeneralConfig.MinerRestartDelayMS
@@ -1489,7 +1490,7 @@ namespace NiceHashMiner
             }
             if (ProcessHandle != null)
             {
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
+                if (algo != -9 || algo != -12)
                 {
                     try
                     {
@@ -1510,16 +1511,23 @@ namespace NiceHashMiner
                     }
                 }
             }
-            // if (ConfigManager.GeneralConfig.CoolDownCheckEnabled)
-            //{
-            //   CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-            //  _needsRestart = true;
-            // _currentCooldownTimeInSecondsLeft = restartInMs;
-            //}
-            // else
-            // directly restart since cooldown checker not running
             Thread.Sleep(restartInMs);
-                Restart();
+            Restart(); //Всё тут правильно у меня! 
+            //If a person updated miner with their hands and it doesn't work, then this is their problem.
+
+            /*
+            // directly restart since cooldown checker not running
+            if (!AlgorithmSwitchingManager.newProfit)//профит майнеров не изменился - рестарт
+            {
+                Thread.Sleep(restartInMs);
+                Restart();//???????????
+                
+            } else
+
+            {
+               // Stop();// не уверен
+            }
+            */
         }
 
         protected void Restart()

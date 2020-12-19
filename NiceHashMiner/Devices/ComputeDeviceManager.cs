@@ -492,6 +492,9 @@ namespace NiceHashMiner.Devices
                         case "17AF":
                             man = "HIS";
                             break;
+                        case "1787":
+                            man = "HIS";
+                            break;
                         case "16F3":
                             man = "Jetway";
                             break;

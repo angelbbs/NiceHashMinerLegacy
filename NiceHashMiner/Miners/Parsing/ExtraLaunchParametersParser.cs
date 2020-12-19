@@ -82,7 +82,7 @@ namespace NiceHashMiner.Miners.Parsing
             ++_logCount;
         }
 
-        private static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool useIfDefaults = true,
+        private static string Parse(List<MiningPair> miningPairsUnsorted, List<MinerOption> options, bool useIfDefaults = true,
             List<MinerOption> ignoreLogOpions = null, bool ignoreDcri = false)
         {
             const string ignoreParam = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
@@ -91,6 +91,7 @@ namespace NiceHashMiner.Miners.Parsing
             var isOptionDefaults = new Dictionary<string, bool>();
             var isOptionExist = new Dictionary<string, bool>();
             var retVal = "";
+            var miningPairs = miningPairsUnsorted.OrderBy(pair => pair.Device.BusID).ToList();
 
             foreach (var pair in miningPairs)
             {

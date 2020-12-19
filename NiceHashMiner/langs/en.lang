@@ -382,7 +382,7 @@
         "AlgorithmsListView_ContextMenu_DisableAll": "Disable All Algorithms",
         "AlgorithmsListView_ContextMenu_EnableAll": "Enable All Algorithms",
         "AlgorithmsListView_ContextMenu_ClearItem": "Clear Algorithm Speed",
-	"AlgorithmsListView_ContextMenu_ClearItem": "Clear All Algorithm Speed",
+	"AlgorithmsListView_ContextMenu_ClearItemAll": "Clear All Algorithm Speed",
         "AlgorithmsListView_ContextMenu_TestItem": "Enable Only",
         "AlgorithmsListView_ContextMenu_EnableBenched": "Enable Benchmarked Only",
         "Form_Main_No_Device_Enabled_For_Mining": "Warning no device has been enabled for mining, please enable at least 1 device to proceed mining.",

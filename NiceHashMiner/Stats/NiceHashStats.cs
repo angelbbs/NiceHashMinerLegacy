@@ -156,6 +156,8 @@ namespace NiceHashMiner.Stats
                     {
                         case "sma":
                             {
+                                if (Form_Main.SMAdelayTick < 30) break;
+                                Form_Main.SMAdelayTick = 0;
                                 //***************************
                                 FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                                 StreamWriter w = new StreamWriter(fs);

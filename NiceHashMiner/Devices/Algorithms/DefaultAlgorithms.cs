@@ -309,11 +309,11 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.trex, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.trex, AlgorithmType.KAWPOW, "KAWPOW")
                             {
-                                ExtraLaunchParameters = "--mt 1 "
+                                ExtraLaunchParameters = ""
                             },
                             new Algorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
-                                ExtraLaunchParameters = "--mt 1 "
+                                ExtraLaunchParameters = ""
                             },
                         }
             },

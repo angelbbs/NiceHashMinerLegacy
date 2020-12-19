@@ -448,7 +448,7 @@ namespace NiceHashMiner.Devices
                         setAlgo.BenchmarkSpeed = conf.BenchmarkSpeed;
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
                         setAlgo.Enabled = conf.Enabled;
-                        setAlgo.Hidden = conf.Hidden;
+                        //setAlgo.Hidden = conf.Hidden;
                         if (conf.Hidden)
                         {
                            // setAlgo.Enabled = false;
@@ -715,6 +715,9 @@ namespace NiceHashMiner.Devices
                     man = "Gigabyte";
                     break;
                 case "17AF":
+                    man = "HIS";
+                    break;
+                case "1787":
                     man = "HIS";
                     break;
                 case "16F3":

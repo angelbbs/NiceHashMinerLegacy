@@ -19,12 +19,33 @@ namespace MinerLegacyForkFixMonitor
         [STAThread]
         static void Main(string[] argv)
         {
+            try
+            {
+                var current = Process.GetCurrentProcess();
+                foreach (var process in Process.GetProcessesByName(current.ProcessName))
+                {
+                    if (process.Id != current.Id)
+                    {
+                        return;
+                    }
+                }
+            }
+            catch { }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Logger.ConfigureWithFile();
             var mainproc = Process.GetCurrentProcess();
             Helpers.ConsolePrint("Monitor", "Start monitoring process ID: " + argv[0]);
-            //Application.Run(new MainForm());
+            
+            foreach (var process in Process.GetProcessesByName("device_detection"))
+            {
+                try { process.Kill(); }
+                catch (Exception e)
+                {
+                }
+            }
+            
             while (true)
             {
                 try
@@ -35,7 +56,7 @@ namespace MinerLegacyForkFixMonitor
                 catch
                 {
                     Helpers.ConsolePrint("Monitor", "Process not exist");
-                    foreach (var process in Process.GetProcessesByName("miner"))
+                    foreach (var process in Process.GetProcessesByName("miner"))//gmimer
                     {
                         try { process.Kill(); }
                         catch (Exception e)

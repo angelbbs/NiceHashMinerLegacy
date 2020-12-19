@@ -59,7 +59,10 @@ namespace NiceHashMiner.Miners
      apiBind +
      " -d " + GetDevicesCommandString() + " --no-watchdog " +
      ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+            {
+                LastCommandLine = LastCommandLine.Replace("stratum2", "stratum");
+            }
             ProcessHandle = _Start();
         }
 

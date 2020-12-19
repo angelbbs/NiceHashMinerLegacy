@@ -642,98 +642,104 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_MouseClick(object sender, MouseEventArgs e)
         {
-            if (!isListViewEnabled)
+            try
             {
-                listViewAlgorithms.SelectedItems.Clear();
-                return;
-            }
-            if (IsInBenchmark) return;
-            if (e.Button == MouseButtons.Right)
-            {
-                contextMenuStrip1.Items.Clear();
-                // enable all
+                if (!isListViewEnabled)
                 {
-                    var enableAllItems = new ToolStripMenuItem
-                    {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_EnableAll")
-                    };
-                    enableAllItems.Click += ToolStripMenuItemEnableAll_Click;
-                    contextMenuStrip1.Items.Add(enableAllItems);
+                    listViewAlgorithms.SelectedItems.Clear();
+                    return;
                 }
-                // disable all
+                if (IsInBenchmark) return;
+                if (e.Button == MouseButtons.Right)
                 {
-                    var disableAllItems = new ToolStripMenuItem
+                    contextMenuStrip1.Items.Clear();
+                    // enable all
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll")
-                    };
-                    disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
-                    contextMenuStrip1.Items.Add(disableAllItems);
-                }
-                // test this
-                this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                {
-                    var testItem = new ToolStripMenuItem
+                        var enableAllItems = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_EnableAll")
+                        };
+                        enableAllItems.Click += ToolStripMenuItemEnableAll_Click;
+                        contextMenuStrip1.Items.Add(enableAllItems);
+                    }
+                    // disable all
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem") + " " +
-                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                        listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
-                    };
-                    testItem.Click += ToolStripMenuItemTest_Click;
-                    contextMenuStrip1.Items.Add(testItem);
-                }
-                this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                // enable benchmarked only
-                {
-                    var enableBenchedItem = new ToolStripMenuItem
-                    {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_EnableBenched")
-                    };
-                    enableBenchedItem.Click += ToolStripMenuItemEnableBenched_Click;
-                    contextMenuStrip1.Items.Add(enableBenchedItem);
-                }
-                // clear item
-                {
+                        var disableAllItems = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll")
+                        };
+                        disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
+                        contextMenuStrip1.Items.Add(disableAllItems);
+                    }
+                    // test this
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                    var clearItem = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem") + " " +
-                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
-                        " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
-                    };
-                    clearItem.Click += ToolStripMenuItemClear_Click;
-                    contextMenuStrip1.Items.Add(clearItem);
-                    //this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                    //
-                    var clearItemAll = new ToolStripMenuItem
-                    {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAll")
-                    };
-                    clearItemAll.Click += ToolStripMenuItemClearAll_Click;
-                    contextMenuStrip1.Items.Add(clearItemAll);
+                        var testItem = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem") + " " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                        };
+                        testItem.Click += ToolStripMenuItemTest_Click;
+                        contextMenuStrip1.Items.Add(testItem);
+                    }
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                }
-                {
-                    var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                        listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
-                    var Enablealgo = new ToolStripMenuItem
+                    // enable benchmarked only
                     {
-                        Text = International.GetText("Form_Settings_EnableAlgos").Replace("*", al)
-                    };
-                    Enablealgo.Click += ToolStripMenuEnablealgo_Click;
-                    contextMenuStrip1.Items.Add(Enablealgo);
-                }
-                {
-                    var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                        listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
-                    var Enablealgo = new ToolStripMenuItem
+                        var enableBenchedItem = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_EnableBenched")
+                        };
+                        enableBenchedItem.Click += ToolStripMenuItemEnableBenched_Click;
+                        contextMenuStrip1.Items.Add(enableBenchedItem);
+                    }
+                    // clear item
                     {
-                        Text = International.GetText("Form_Settings_DisableAlgos").Replace("*", al)
-                    };
-                    Enablealgo.Click += ToolStripMenuDisablealgo_Click;
-                    contextMenuStrip1.Items.Add(Enablealgo);
-                }
+                        this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                        var clearItem = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem") + " " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
+                            " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                        };
+                        clearItem.Click += ToolStripMenuItemClear_Click;
+                        contextMenuStrip1.Items.Add(clearItem);
+                        //this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                        //
+                        var clearItemAll = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAll")
+                        };
+                        clearItemAll.Click += ToolStripMenuItemClearAll_Click;
+                        contextMenuStrip1.Items.Add(clearItemAll);
+                        this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                    }
+                    {
+                        var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        var Enablealgo = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("Form_Settings_EnableAlgos").Replace("*", al)
+                        };
+                        Enablealgo.Click += ToolStripMenuEnablealgo_Click;
+                        contextMenuStrip1.Items.Add(Enablealgo);
+                    }
+                    {
+                        var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        var Enablealgo = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("Form_Settings_DisableAlgos").Replace("*", al)
+                        };
+                        Enablealgo.Click += ToolStripMenuDisablealgo_Click;
+                        contextMenuStrip1.Items.Add(Enablealgo);
+                    }
 
-                contextMenuStrip1.Show(Cursor.Position);
+                    contextMenuStrip1.Show(Cursor.Position);
+                }
+            } catch (Exception ex)
+            {
+
             }
         }
 
@@ -886,7 +892,7 @@ namespace NiceHashMiner.Forms.Components
                         if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
                         {
                             // If it has zero speed, set to 1 so it can be tested
-                            algorithm.BenchmarkSpeed = 1;
+                            //algorithm.BenchmarkSpeed = 1;
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                             ComunicationInterface?.ChangeSpeed(lvi);
                         }

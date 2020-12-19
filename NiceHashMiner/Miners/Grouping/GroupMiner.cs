@@ -2,6 +2,7 @@ using NiceHashMiner.Configs;
 using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Linq;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -42,7 +43,7 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     var deviceNames = new List<string>();
                     DevIndexes = new List<int>();
-                    foreach (var pair in miningPairs)
+                    foreach (var pair in miningPairs.OrderBy(pair => pair.Device.IDByBus))
                     {
                         deviceNames.Add(pair.Device.NameCount);
                         DevIndexes.Add(pair.Device.Index);

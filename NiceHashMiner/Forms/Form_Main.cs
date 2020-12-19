@@ -54,6 +54,7 @@ namespace NiceHashMiner
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
         public static bool needRestart = false;
+        public static int SMAdelayTick = 30;
 
         private bool _demoMode;
 
@@ -2301,6 +2302,7 @@ public static void CloseChilds(Process parentId)
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            SMAdelayTick++;
             try
             {
                 if (ConfigManager.GeneralConfig.ShowUptime)

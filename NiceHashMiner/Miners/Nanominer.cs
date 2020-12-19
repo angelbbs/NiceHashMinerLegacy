@@ -17,6 +17,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using System.Windows.Forms;
 using System.Net;
 using System.Management;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -26,6 +27,7 @@ namespace NiceHashMiner.Miners
         private double _benchmarkSum = 0d;
         private string[,] myServers = Form_Main.myServers;
         string ResponseFromNanominer;
+        public string platform = "";
 
         public Nanominer() : base("Nanominer")
         {
@@ -41,7 +43,6 @@ namespace NiceHashMiner.Miners
 
         private string GetStartCommand(string url, string btcAdress, string worker)
         {
-            var platform = "";
             var param = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -71,7 +72,7 @@ namespace NiceHashMiner.Miners
                + String.Format("[Ethash]\n")
                + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                + String.Format("wallet = {0}", btcAdress) + "\n"
-               + String.Format("rigName = {0}", rigName) + "\n"
+               + String.Format("rigName = \"{0}\"", rigName) + "\n"
                + String.Format("pool1 = {0}", url) + "\n"
                + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", myServers[0, 0]) + "\n"
                + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", myServers[1, 0]) + "\n"
@@ -105,9 +106,49 @@ namespace NiceHashMiner.Miners
         protected override string GetDevicesCommandString()
         {
             var deviceStringCommand = " ";
+            var ids = new List<string>();
+            var amdDeviceCount = ComputeDeviceManager.Query.AmdDevices.Count;
+            var allDeviceCount = ComputeDeviceManager.Query.GpuCount;
+            if (platform.Contains("amd"))
+            {
+                Helpers.ConsolePrint("lolMinerIndexing", $"Found {allDeviceCount} Total GPU devices");
+                Helpers.ConsolePrint("lolMinerIndexing", $"Found {amdDeviceCount} AMD devices");
+                var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+                foreach (var mPair in sortedMinerPairs)
+                {
+                    double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
+
+                    if (id < 0)
+                    {
+                        Helpers.ConsolePrint("NanominerIndexing", "ID too low: " + id + " skipping device");
+                        continue;
+                    }
+
+                    if (mPair.Device.DeviceType == DeviceType.NVIDIA)
+                    {
+                        Helpers.ConsolePrint("NanominerIndexing", "NVIDIA found. Increasing index");
+                        id++;
+                    }
+
+                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + id);
+                    {
+                        ids.Add(id.ToString());
+                    }
+
+                }
+                deviceStringCommand += string.Join(",", ids);
+            } else
+            {
+                var ids2 = MiningSetup.MiningPairs.Select(mPair => (mPair.Device.lolMinerBusID).ToString()).ToList();
+                deviceStringCommand += string.Join(",", ids2);
+            }
+            return deviceStringCommand;
+            /*
+            var deviceStringCommand = " ";
             var ids = MiningSetup.MiningPairs.Select(mPair => (mPair.Device.lolMinerBusID).ToString()).ToList();
             deviceStringCommand += string.Join(",", ids);
             return deviceStringCommand;
+            */
         }
 
 
@@ -275,6 +316,8 @@ namespace NiceHashMiner.Miners
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
+            double repeats = 0.0d;
+            double summspeed = 0.0d;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
@@ -331,7 +374,44 @@ namespace NiceHashMiner.Miners
 
                         break;
                     }
-                    Thread.Sleep(200);
+                    // wait a second due api request
+                    Thread.Sleep(1000);
+
+                    int delay_before_calc_hashrate = 90;
+                    int bench_time = 30;
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        delay_before_calc_hashrate = 15;
+                        bench_time = 20;
+                    }
+
+                   
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        if (repeats > delay_before_calc_hashrate)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            //Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString());
+                            summspeed += ad.Result.Speed;
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        if (repeats >= bench_time + delay_before_calc_hashrate)
+                        {
+                            //Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString() + " bench_time:" + bench_time.ToString());
+                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (bench_time), 2);
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+                            BenchmarkHandle.Dispose();
+                            EndBenchmarkProcces();
+                            break;
+                        }
+                        repeats++;
+                    }
                 }
             }
             catch (Exception ex)

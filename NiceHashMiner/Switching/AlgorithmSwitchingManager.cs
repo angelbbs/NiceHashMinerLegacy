@@ -39,7 +39,7 @@ namespace NiceHashMiner.Switching
         private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
 
         private static bool _hasStarted;
-
+        public static bool newProfit = false;
         /// <summary>
         /// Currently used normalized profits
         /// </summary>
@@ -100,7 +100,12 @@ namespace NiceHashMiner.Switching
         /// </summary>
         public static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
-            if (SmaCheckTimerOnElapsedRun) return;
+            if (SmaCheckTimerOnElapsedRun)
+            {
+                Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed already running");
+                return;
+            }
+
             SmaCheckTimerOnElapsedRun = true;
             Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed");
             //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
@@ -140,9 +145,9 @@ namespace NiceHashMiner.Switching
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
             SmaCheckTimerOnElapsedRun = false;
             new Task(() => SmaCheck(sender, args)).Start();
-//            SmaCheck?.Invoke(sender, args);
+            //            SmaCheck?.Invoke(sender, args);
 
-            //new MiningSession().SwichMostProfitableGroupUpMethod();
+            SmaCheckTimerOnElapsedRun = false;
         }
 
         /// <summary>
@@ -170,6 +175,7 @@ namespace NiceHashMiner.Switching
                         {
                             _lastLegitPaying[algo] = paying;
                             sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i} {cTicks} for {algo}");
+                            newProfit = true;
                         }
                         else
                         {
@@ -177,6 +183,7 @@ namespace NiceHashMiner.Switching
                                 $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5})," +
                                 $" higher for {i}/{ticks} {cTicks} for {algo}"
                             );
+                            newProfit = false;
                         }
                     }
                     else
@@ -243,14 +250,7 @@ namespace NiceHashMiner.Switching
             }
         }
 
-        #region Test methods
-
-        internal double LastPayingForAlgo(AlgorithmType algo)
-        {
-            return _lastLegitPaying[algo];
-        }
-
-        #endregion
+        
     }
 
     /// <inheritdoc />
