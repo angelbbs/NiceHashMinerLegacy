@@ -242,7 +242,7 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
-                CommandLine = "-a EQUI144_5 --pers BgoldPoW" +
+                CommandLine = "--algo EQUI144_5 --pers BgoldPoW" +
                 " --pool europe.equihash-hub.miningpoolhub.com:20595 --user angelbbs.lol --pass x" +
                                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,

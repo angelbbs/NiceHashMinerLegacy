@@ -352,6 +352,9 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
                     Restart();
                 }
+            } else
+            {
+                Thread.Sleep(100);
             }
 
             return ad;

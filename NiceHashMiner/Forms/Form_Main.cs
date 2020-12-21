@@ -55,6 +55,7 @@ namespace NiceHashMiner
         private SystemTimer _computeDevicesCheckTimer;
         public static bool needRestart = false;
         public static int SMAdelayTick = 30;
+        public static bool ShouldRunEthlargement = false;
 
         private bool _demoMode;
 

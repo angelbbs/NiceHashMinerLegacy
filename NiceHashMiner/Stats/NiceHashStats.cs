@@ -1222,6 +1222,18 @@ namespace NiceHashMiner.Stats
                             Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
                         }
                     }
+                    string GpuRam = "";
+                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
+                    {
+                        GpuRam = " " +(device.GpuRam / 1073741824).ToString() + "GB";
+                        if (device.Name.Contains(GpuRam))
+                        {
+                            GpuRam = "";
+                        } else
+                        {
+                            deviceName = deviceName + GpuRam;
+                        }
+                    }
 
                     if (!devName)
                     {

@@ -438,7 +438,11 @@ namespace NiceHashMiner.Forms
             checkBox_Allow_remote_management.Text = International.GetText("Form_Settings_checkBox_Allow_remote_management");
             checkBox_Send_actual_version_info.Text = International.GetText("Form_Settings_checkBox_Send_actual_version_info");
             checkBox_Additional_info_about_device.Text = International.GetText("Form_Settings_checkBox_Additional_info_about_device");
+
             checkBox_show_device_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_device_manufacturer");
+            checkBox_ShowDeviceMemSize.Text = International.GetText("Form_Settings_checkBox_show_device_memsize");
+            //checkBox_ShowDeviceBusId.Text = International.GetText("Form_Settings_checkBox_show_device_busId");
+
             checkbox_Use_OpenHardwareMonitor.Text = International.GetText("Form_Settings_checkbox_Use_OpenHardwareMonitor");
             Checkbox_Save_windows_size_and_position.Text = International.GetText("Form_Settings_Checkbox_Save_windows_size_and_position");
             checkBox_sorting_list_of_algorithms.Text = International.GetText("Form_Settings_checkBox_sorting_list_of_algorithms");
@@ -507,7 +511,8 @@ namespace NiceHashMiner.Forms
             comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram3"));
             comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram4"));
 
-            checkBox_RunEthlargement.Enabled = Helpers.IsElevated;
+            checkBox_RunEthlargement.Enabled = Form_Main.ShouldRunEthlargement;
+            checkBox_RunEthlargement.Visible = Form_Main.ShouldRunEthlargement;
 
             radioButtonMOPA1.Checked = ConfigManager.GeneralConfig.MOPA1;
             radioButtonMOPA2.Checked = ConfigManager.GeneralConfig.MOPA2;
@@ -708,6 +713,12 @@ namespace NiceHashMiner.Forms
                 checkBox_show_device_manufacturer.BackColor = Form_Main._backColor;
                 checkBox_show_device_manufacturer.ForeColor = Form_Main._textColor;
 
+                checkBox_ShowDeviceMemSize.BackColor = Form_Main._backColor;
+                checkBox_ShowDeviceMemSize.ForeColor = Form_Main._textColor;
+                /*
+                checkBox_ShowDeviceBusId.BackColor = Form_Main._backColor;
+                checkBox_ShowDeviceBusId.ForeColor = Form_Main._textColor;
+                */
                 checkbox_Use_OpenHardwareMonitor.BackColor = Form_Main._backColor;
                 checkbox_Use_OpenHardwareMonitor.ForeColor = Form_Main._textColor;
 
@@ -734,14 +745,6 @@ namespace NiceHashMiner.Forms
 
                 checkBox_RunEthlargement.BackColor = Form_Main._backColor;
                 checkBox_RunEthlargement.ForeColor = Form_Main._textColor;
-                if (checkBox_RunEthlargement.Enabled == false)
-                {
-                    label_RunEthlargement.ForeColor = Color.Gray;
-                }
-                else
-                {
-                    label_RunEthlargement.ForeColor = Form_Main._foreColor;
-                }
 
                 textBox_AutoStartMiningDelay.BackColor = Form_Main._backColor;
                 textBox_AutoStartMiningDelay.ForeColor = Form_Main._foreColor;
@@ -867,6 +870,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_device_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ShowDeviceMemSize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                //checkBox_ShowDeviceBusId.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Use_OpenHardwareMonitor.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_sorting_list_of_algorithms.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -963,6 +968,8 @@ namespace NiceHashMiner.Forms
                 checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 checkBox_show_device_manufacturer.Checked = ConfigManager.GeneralConfig.Show_device_manufacturer;
+                checkBox_ShowDeviceMemSize.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceMemSize;
+                //checkBox_ShowDeviceBusId.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceBusId;
                 checkbox_Use_OpenHardwareMonitor.Checked = ConfigManager.GeneralConfig.Use_OpenHardwareMonitor;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
                 checkBox_ShowUptime.Checked = ConfigManager.GeneralConfig.ShowUptime;
@@ -1102,6 +1109,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
             ConfigManager.GeneralConfig.Show_device_manufacturer = checkBox_show_device_manufacturer.Checked;
+            ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;
+            //ConfigManager.GeneralConfig.Show_ShowDeviceBusId = checkBox_ShowDeviceBusId.Checked;
             ConfigManager.GeneralConfig.Use_OpenHardwareMonitor = checkbox_Use_OpenHardwareMonitor.Checked;
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
@@ -1870,13 +1879,6 @@ namespace NiceHashMiner.Forms
 
         private void checkBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
         {
-            if (Enabled == false)
-            {
-                label_RunEthlargement.ForeColor = Color.Gray;
-            } else
-            {
-                label_RunEthlargement.ForeColor = Form_Main._foreColor;
-            }
         }
 
         private void buttonGPUtuning_Click_1(object sender, EventArgs e)
@@ -2319,6 +2321,11 @@ namespace NiceHashMiner.Forms
                 textBox_AutoStartMiningDelay.Enabled = false;
                 label_AutoStartMiningDelay.Enabled = false;
             }
+        }
+
+        private void pictureBox_SwitchProfitabilityThreshold_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

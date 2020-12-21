@@ -402,7 +402,7 @@
         "Form_Main_Accepted_Speed_Zero": "Warning! Algorithm {0} is reporting 0 shares accepted. Please disable this algorithm in Benchmark/Settings and report this issue to https://github.com/angelbbs/NiceHashMinerLegacy/issues!",
         "NHM_TOS": "Agreement will be written later. If you do not agree, do not install it",
 
-        "Form_Settings_General_SwitchProfitabilityThreshold": "Switch Profitability, %",
+        "Form_Settings_General_SwitchProfitabilityThreshold": "Switch Profitability treshold, %",
         "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 100]",
         "VirtualMemorySize_BAD": "Miner Legacy  Fork Fix recommends increasing virtual memory size so that all algorithms would work fine.",
         "sgminer_precise_try": "Failed - try Precise",
@@ -410,7 +410,8 @@
                 "Form_Settings_checkBox_Allow_remote_management": "Allow remote management",
                 "Form_Settings_checkBox_Send_actual_version_info": "Send actual version info",
                 "Form_Settings_checkBox_Additional_info_about_device": "Additional info about device",
-                "Form_Settings_checkBox_show_device_manufacturer": "Show devices manufacturer",
+                "Form_Settings_checkBox_show_device_manufacturer": "Show the device manufacturer",
+               "Form_Settings_checkBox_show_device_memsize": "Show amount of device memory",
                 "Form_Settings_Checkbox_Save_windows_size_and_position": "Save windows size and position",
                 "Form_Settings_checkBox_sorting_list_of_algorithms": "Sorting list of algorithms",
                 "Form_Settings_checkBox_ShowFanAsPercent": "Show fan rpm as percent",

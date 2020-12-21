@@ -420,14 +420,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\root.crt" />
-    <None Include="Resources\rootCA.crt" />
-    <None Include="Resources\WinDivert.cer" />
-    <None Include="Resources\WinDivert2.cer" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />
-    <None Include="Resources\rootCA.bmp" />
     <None Include="Resources\Refresh-hot_bw.png" />
     <None Include="Resources\Refresh-disabled.png" />
     <None Include="Resources\Refresh-hot.png" />
@@ -512,7 +507,8 @@ del cpuid.lib /Q
 del cpuid.ilk /Q
 del cpuid.exp /Q
 del *.config /Q
-7za a -tzip -mx0 ../LatestBuild/nhmlffLatest *.*</PostBuildEvent>
+7za a -tzip -mx0 ../LatestBuild/nhmlffLatest *.*
+7za u -tzip -mx0 ../LatestBuild/nhmlffLatest langs\*.* -r</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Fody.6.1.1\build\Fody.targets" Condition="Exists('..\packages\Fody.6.1.1\build\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

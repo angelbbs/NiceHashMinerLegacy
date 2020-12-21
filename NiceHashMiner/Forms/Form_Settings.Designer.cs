@@ -107,12 +107,12 @@ namespace NiceHashMiner.Forms
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
             this.label_switching_algorithms = new System.Windows.Forms.Label();
             this.comboBox_switching_algorithms = new System.Windows.Forms.ComboBox();
-            this.label_RunEthlargement = new System.Windows.Forms.Label();
             this.checkBox_RunEthlargement = new System.Windows.Forms.CheckBox();
             this.pictureBox_SwitchProfitabilityThreshold = new System.Windows.Forms.PictureBox();
             this.textBox_SwitchProfitabilityThreshold = new System.Windows.Forms.TextBox();
             this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_ShowDeviceMemSize = new System.Windows.Forms.CheckBox();
             this.checkBox_show_device_manufacturer = new System.Windows.Forms.CheckBox();
             this.checkBoxDriverWarning = new System.Windows.Forms.CheckBox();
             this.checkBoxCPUmonitoring = new System.Windows.Forms.CheckBox();
@@ -165,8 +165,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -1217,11 +1215,10 @@ namespace NiceHashMiner.Forms
             // 
             this.groupBox_Miners.Controls.Add(this.label_switching_algorithms);
             this.groupBox_Miners.Controls.Add(this.comboBox_switching_algorithms);
-            this.groupBox_Miners.Controls.Add(this.label_RunEthlargement);
-            this.groupBox_Miners.Controls.Add(this.checkBox_RunEthlargement);
             this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.textBox_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.label_SwitchProfitabilityThreshold);
+            this.groupBox_Miners.Controls.Add(this.checkbox_Group_same_devices);
             this.groupBox_Miners.Location = new System.Drawing.Point(6, 6);
             this.groupBox_Miners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Miners.Name = "groupBox_Miners";
@@ -1254,42 +1251,34 @@ namespace NiceHashMiner.Forms
             this.comboBox_switching_algorithms.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBox_switching_algorithms_DrawItem);
             this.comboBox_switching_algorithms.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // label_RunEthlargement
-            // 
-            this.label_RunEthlargement.AutoSize = true;
-            this.label_RunEthlargement.Location = new System.Drawing.Point(29, 66);
-            this.label_RunEthlargement.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_RunEthlargement.Name = "label_RunEthlargement";
-            this.label_RunEthlargement.Size = new System.Drawing.Size(92, 13);
-            this.label_RunEthlargement.TabIndex = 402;
-            this.label_RunEthlargement.Text = "Run Ethlargement";
-            // 
             // checkBox_RunEthlargement
             // 
             this.checkBox_RunEthlargement.AutoSize = true;
             this.checkBox_RunEthlargement.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_RunEthlargement.Location = new System.Drawing.Point(11, 66);
+            this.checkBox_RunEthlargement.Location = new System.Drawing.Point(470, 19);
             this.checkBox_RunEthlargement.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_RunEthlargement.Name = "checkBox_RunEthlargement";
-            this.checkBox_RunEthlargement.Size = new System.Drawing.Size(15, 14);
+            this.checkBox_RunEthlargement.Size = new System.Drawing.Size(111, 17);
             this.checkBox_RunEthlargement.TabIndex = 401;
+            this.checkBox_RunEthlargement.Text = "Run Ethlargement";
             this.checkBox_RunEthlargement.UseVisualStyleBackColor = true;
             this.checkBox_RunEthlargement.CheckedChanged += new System.EventHandler(this.checkBox_RunEthlargement_CheckedChanged);
             // 
             // pictureBox_SwitchProfitabilityThreshold
             // 
             this.pictureBox_SwitchProfitabilityThreshold.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(349, 34);
+            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(430, 34);
             this.pictureBox_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_SwitchProfitabilityThreshold.Name = "pictureBox_SwitchProfitabilityThreshold";
             this.pictureBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(18, 18);
             this.pictureBox_SwitchProfitabilityThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox_SwitchProfitabilityThreshold.TabIndex = 385;
             this.pictureBox_SwitchProfitabilityThreshold.TabStop = false;
+            this.pictureBox_SwitchProfitabilityThreshold.Click += new System.EventHandler(this.pictureBox_SwitchProfitabilityThreshold_Click);
             // 
             // textBox_SwitchProfitabilityThreshold
             // 
-            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(321, 34);
+            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(402, 34);
             this.textBox_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_SwitchProfitabilityThreshold.Name = "textBox_SwitchProfitabilityThreshold";
             this.textBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(24, 20);
@@ -1302,14 +1291,14 @@ namespace NiceHashMiner.Forms
             this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(197, 37);
             this.label_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_SwitchProfitabilityThreshold.Name = "label_SwitchProfitabilityThreshold";
-            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(89, 13);
+            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(129, 13);
             this.label_SwitchProfitabilityThreshold.TabIndex = 361;
-            this.label_SwitchProfitabilityThreshold.Text = "SwitchProfitability";
+            this.label_SwitchProfitabilityThreshold.Text = "SwitchProfitability treshold";
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.checkBox2);
-            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Controls.Add(this.checkBox_ShowDeviceMemSize);
+            this.groupBox1.Controls.Add(this.checkBox_RunEthlargement);
             this.groupBox1.Controls.Add(this.checkBox_show_device_manufacturer);
             this.groupBox1.Controls.Add(this.checkBoxDriverWarning);
             this.groupBox1.Controls.Add(this.checkBoxCPUmonitoring);
@@ -1320,7 +1309,6 @@ namespace NiceHashMiner.Forms
             this.groupBox1.Controls.Add(this.checkbox_Use_OpenHardwareMonitor);
             this.groupBox1.Controls.Add(this.label_devices_count);
             this.groupBox1.Controls.Add(this.comboBox_devices_count);
-            this.groupBox1.Controls.Add(this.checkbox_Group_same_devices);
             this.groupBox1.Controls.Add(this.checkBox_ShowFanAsPercent);
             this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionCPU);
@@ -1337,6 +1325,18 @@ namespace NiceHashMiner.Forms
             this.groupBox1.TabIndex = 394;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
+            // 
+            // checkBox_ShowDeviceMemSize
+            // 
+            this.checkBox_ShowDeviceMemSize.AutoSize = true;
+            this.checkBox_ShowDeviceMemSize.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_ShowDeviceMemSize.Location = new System.Drawing.Point(240, 41);
+            this.checkBox_ShowDeviceMemSize.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ShowDeviceMemSize.Name = "checkBox_ShowDeviceMemSize";
+            this.checkBox_ShowDeviceMemSize.Size = new System.Drawing.Size(148, 17);
+            this.checkBox_ShowDeviceMemSize.TabIndex = 414;
+            this.checkBox_ShowDeviceMemSize.Text = "Show device memory size";
+            this.checkBox_ShowDeviceMemSize.UseVisualStyleBackColor = true;
             // 
             // checkBox_show_device_manufacturer
             // 
@@ -1398,7 +1398,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartDriver
             // 
             this.checkBoxRestartDriver.AutoSize = true;
-            this.checkBoxRestartDriver.Location = new System.Drawing.Point(240, 226);
+            this.checkBoxRestartDriver.Location = new System.Drawing.Point(240, 175);
             this.checkBoxRestartDriver.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartDriver.Name = "checkBoxRestartDriver";
             this.checkBoxRestartDriver.Size = new System.Drawing.Size(206, 17);
@@ -1410,7 +1410,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartWindows
             // 
             this.checkBoxRestartWindows.AutoSize = true;
-            this.checkBoxRestartWindows.Location = new System.Drawing.Point(240, 203);
+            this.checkBoxRestartWindows.Location = new System.Drawing.Point(240, 152);
             this.checkBoxRestartWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartWindows.Name = "checkBoxRestartWindows";
             this.checkBoxRestartWindows.Size = new System.Drawing.Size(224, 17);
@@ -1434,7 +1434,7 @@ namespace NiceHashMiner.Forms
             // label_devices_count
             // 
             this.label_devices_count.AutoSize = true;
-            this.label_devices_count.Location = new System.Drawing.Point(237, 161);
+            this.label_devices_count.Location = new System.Drawing.Point(237, 110);
             this.label_devices_count.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_devices_count.Name = "label_devices_count";
             this.label_devices_count.Size = new System.Drawing.Size(107, 13);
@@ -1445,7 +1445,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBox_devices_count.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_devices_count.FormattingEnabled = true;
-            this.comboBox_devices_count.Location = new System.Drawing.Point(382, 158);
+            this.comboBox_devices_count.Location = new System.Drawing.Point(382, 107);
             this.comboBox_devices_count.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_devices_count.Name = "comboBox_devices_count";
             this.comboBox_devices_count.Size = new System.Drawing.Size(41, 21);
@@ -1456,7 +1456,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkbox_Group_same_devices.AutoSize = true;
             this.checkbox_Group_same_devices.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkbox_Group_same_devices.Location = new System.Drawing.Point(240, 136);
+            this.checkbox_Group_same_devices.Location = new System.Drawing.Point(11, 61);
             this.checkbox_Group_same_devices.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkbox_Group_same_devices.Name = "checkbox_Group_same_devices";
             this.checkbox_Group_same_devices.Size = new System.Drawing.Size(123, 17);
@@ -1468,7 +1468,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_ShowFanAsPercent.AutoSize = true;
             this.checkBox_ShowFanAsPercent.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ShowFanAsPercent.Location = new System.Drawing.Point(240, 111);
+            this.checkBox_ShowFanAsPercent.Location = new System.Drawing.Point(240, 87);
             this.checkBox_ShowFanAsPercent.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ShowFanAsPercent.Name = "checkBox_ShowFanAsPercent";
             this.checkBox_ShowFanAsPercent.Size = new System.Drawing.Size(144, 17);
@@ -1503,7 +1503,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_Additional_info_about_device.AutoSize = true;
             this.checkBox_Additional_info_about_device.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Additional_info_about_device.Location = new System.Drawing.Point(240, 88);
+            this.checkBox_Additional_info_about_device.Location = new System.Drawing.Point(240, 64);
             this.checkBox_Additional_info_about_device.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Additional_info_about_device.Name = "checkBox_Additional_info_about_device";
             this.checkBox_Additional_info_about_device.Size = new System.Drawing.Size(157, 17);
@@ -1970,30 +1970,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox1.Location = new System.Drawing.Point(240, 41);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(148, 17);
-            this.checkBox1.TabIndex = 414;
-            this.checkBox1.Text = "Show device memory size";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox2.Location = new System.Drawing.Point(240, 64);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(120, 17);
-            this.checkBox2.TabIndex = 415;
-            this.checkBox2.Text = "Show device bus Id";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2210,7 +2186,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonGPUtuning;
         private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.CheckBox checkBox_RunEthlargement;
-        private System.Windows.Forms.Label label_RunEthlargement;
         private System.Windows.Forms.CheckBox checkBox_ShowFanAsPercent;
         private System.Windows.Forms.CheckBox Checkbox_Save_windows_size_and_position;
         private System.Windows.Forms.CheckBox checkbox_Group_same_devices;
@@ -2272,7 +2247,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonNVIDIAinspector;
         private System.Windows.Forms.RichTextBox richTextBoxCheckNiceHashservers;
         private System.Windows.Forms.CheckBox checkBox_show_device_manufacturer;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox_ShowDeviceMemSize;
     }
 }

@@ -121,6 +121,8 @@ namespace NiceHashMiner.Configs.Data
         public bool Force_mining_if_nonprofitable = true;
         public bool Additional_info_about_device = false;
         public bool Show_device_manufacturer = false;
+        public bool Show_ShowDeviceMemSize = false;
+        public bool Show_ShowDeviceBusId = false;
         public bool Use_OpenHardwareMonitor = true;
         public bool Disable_extra_launch_parameter_checking = false;
         public bool Save_windows_size_and_position = true;
