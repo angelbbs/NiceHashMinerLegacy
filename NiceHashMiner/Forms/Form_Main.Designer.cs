@@ -70,9 +70,9 @@ namespace NiceHashMiner
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // buttonStartMining
-            //
+            // 
             this.buttonStartMining.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStartMining.Location = new System.Drawing.Point(612, 167);
             this.buttonStartMining.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -84,18 +84,18 @@ namespace NiceHashMiner
             this.buttonStartMining.EnabledChanged += new System.EventHandler(this.buttonStartMining_EnabledChanged);
             this.buttonStartMining.Click += new System.EventHandler(this.ButtonStartMining_Click);
             this.buttonStartMining.Paint += new System.Windows.Forms.PaintEventHandler(this.buttonStartMining_Paint);
-            //
+            // 
             // labelServiceLocation
-            //
+            // 
             this.labelServiceLocation.AutoSize = true;
             this.labelServiceLocation.Location = new System.Drawing.Point(7, 9);
             this.labelServiceLocation.Name = "labelServiceLocation";
             this.labelServiceLocation.Size = new System.Drawing.Size(86, 13);
             this.labelServiceLocation.TabIndex = 99;
             this.labelServiceLocation.Text = "Service location:";
-            //
+            // 
             // comboBoxLocation
-            //
+            // 
             this.comboBoxLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLocation.FormattingEnabled = true;
             this.comboBoxLocation.Items.AddRange(new object[] {
@@ -112,9 +112,9 @@ namespace NiceHashMiner
             this.comboBoxLocation.TabIndex = 0;
             this.comboBoxLocation.SelectedIndexChanged += new System.EventHandler(this.comboBoxLocation_SelectedIndexChanged);
             this.comboBoxLocation.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
-            //
+            // 
             // statusStrip1
-            //
+            // 
             this.statusStrip1.AllowMerge = false;
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -136,88 +136,88 @@ namespace NiceHashMiner
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip1_ItemClicked);
-            //
+            // 
             // toolStripStatusLabelGlobalRateText
-            //
+            // 
             this.toolStripStatusLabelGlobalRateText.Margin = new System.Windows.Forms.Padding(6, 3, 0, 2);
             this.toolStripStatusLabelGlobalRateText.Name = "toolStripStatusLabelGlobalRateText";
             this.toolStripStatusLabelGlobalRateText.Size = new System.Drawing.Size(67, 17);
             this.toolStripStatusLabelGlobalRateText.Text = "Global rate:";
-            //
+            // 
             // toolStripStatusLabelGlobalRateValue
-            //
+            // 
             this.toolStripStatusLabelGlobalRateValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelGlobalRateValue.Name = "toolStripStatusLabelGlobalRateValue";
             this.toolStripStatusLabelGlobalRateValue.Size = new System.Drawing.Size(73, 17);
             this.toolStripStatusLabelGlobalRateValue.Text = "0.00000000";
-            //
+            // 
             // toolStripStatusLabelBTCDayText
-            //
+            // 
             this.toolStripStatusLabelBTCDayText.Name = "toolStripStatusLabelBTCDayText";
             this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(51, 17);
             this.toolStripStatusLabelBTCDayText.Text = "BTC/Day";
-            //
+            // 
             // toolStripStatusLabelBTCDayValue
-            //
+            // 
             this.toolStripStatusLabelBTCDayValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelBTCDayValue.Margin = new System.Windows.Forms.Padding(6, 3, 0, 2);
             this.toolStripStatusLabelBTCDayValue.Name = "toolStripStatusLabelBTCDayValue";
             this.toolStripStatusLabelBTCDayValue.Size = new System.Drawing.Size(31, 17);
             this.toolStripStatusLabelBTCDayValue.Text = "0.00";
-            //
+            // 
             // toolStripStatusLabelBalanceText
-            //
+            // 
             this.toolStripStatusLabelBalanceText.Name = "toolStripStatusLabelBalanceText";
             this.toolStripStatusLabelBalanceText.Size = new System.Drawing.Size(97, 17);
             this.toolStripStatusLabelBalanceText.Text = "$/Day     Balance:";
-            //
+            // 
             // toolStripStatusLabelBalanceBTCValue
-            //
+            // 
             this.toolStripStatusLabelBalanceBTCValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelBalanceBTCValue.Name = "toolStripStatusLabelBalanceBTCValue";
             this.toolStripStatusLabelBalanceBTCValue.Size = new System.Drawing.Size(73, 17);
             this.toolStripStatusLabelBalanceBTCValue.Text = "0.00000000";
-            //
+            // 
             // toolStripStatusLabelBalanceBTCCode
-            //
+            // 
             this.toolStripStatusLabelBalanceBTCCode.Name = "toolStripStatusLabelBalanceBTCCode";
             this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(26, 17);
             this.toolStripStatusLabelBalanceBTCCode.Text = "BTC";
-            //
+            // 
             // toolStripStatusLabelBalanceDollarText
-            //
+            // 
             this.toolStripStatusLabelBalanceDollarText.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelBalanceDollarText.Name = "toolStripStatusLabelBalanceDollarText";
             this.toolStripStatusLabelBalanceDollarText.Size = new System.Drawing.Size(31, 17);
             this.toolStripStatusLabelBalanceDollarText.Text = "0.00";
-            //
+            // 
             // toolStripStatusLabelBalanceDollarValue
-            //
+            // 
             this.toolStripStatusLabelBalanceDollarValue.Name = "toolStripStatusLabelBalanceDollarValue";
             this.toolStripStatusLabelBalanceDollarValue.Size = new System.Drawing.Size(16, 17);
             this.toolStripStatusLabelBalanceDollarValue.Text = "...";
-            //
+            // 
             // toolStripStatusLabel_power1
-            //
+            // 
             this.toolStripStatusLabel_power1.Name = "toolStripStatusLabel_power1";
             this.toolStripStatusLabel_power1.Size = new System.Drawing.Size(43, 17);
             this.toolStripStatusLabel_power1.Text = "Power:";
-            //
+            // 
             // toolStripStatusLabel_power2
-            //
+            // 
             this.toolStripStatusLabel_power2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabel_power2.Name = "toolStripStatusLabel_power2";
             this.toolStripStatusLabel_power2.Size = new System.Drawing.Size(14, 17);
             this.toolStripStatusLabel_power2.Text = "0";
-            //
+            // 
             // toolStripStatusLabel_power3
-            //
+            // 
             this.toolStripStatusLabel_power3.Name = "toolStripStatusLabel_power3";
             this.toolStripStatusLabel_power3.Size = new System.Drawing.Size(18, 17);
             this.toolStripStatusLabel_power3.Text = "W";
-            //
+            // 
             // linkLabelCheckStats
-            //
+            // 
             this.linkLabelCheckStats.AutoSize = true;
             this.linkLabelCheckStats.Location = new System.Drawing.Point(174, 93);
             this.linkLabelCheckStats.Name = "linkLabelCheckStats";
@@ -226,26 +226,26 @@ namespace NiceHashMiner
             this.linkLabelCheckStats.TabStop = true;
             this.linkLabelCheckStats.Text = "Check my stats online!";
             this.linkLabelCheckStats.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelCheckStats_LinkClicked);
-            //
+            // 
             // labelWorkerName
-            //
+            // 
             this.labelWorkerName.AutoSize = true;
             this.labelWorkerName.Location = new System.Drawing.Point(7, 62);
             this.labelWorkerName.Name = "labelWorkerName";
             this.labelWorkerName.Size = new System.Drawing.Size(74, 13);
             this.labelWorkerName.TabIndex = 99;
             this.labelWorkerName.Text = "Worker name:";
-            //
+            // 
             // textBoxWorkerName
-            //
+            // 
             this.textBoxWorkerName.Location = new System.Drawing.Point(110, 59);
             this.textBoxWorkerName.Name = "textBoxWorkerName";
             this.textBoxWorkerName.Size = new System.Drawing.Size(105, 20);
             this.textBoxWorkerName.TabIndex = 2;
             this.textBoxWorkerName.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
-            //
+            // 
             // buttonStopMining
-            //
+            // 
             this.buttonStopMining.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStopMining.BackColor = System.Drawing.SystemColors.Control;
             this.buttonStopMining.Location = new System.Drawing.Point(612, 193);
@@ -258,9 +258,9 @@ namespace NiceHashMiner
             this.buttonStopMining.EnabledChanged += new System.EventHandler(this.buttonStopMining_EnabledChanged);
             this.buttonStopMining.Click += new System.EventHandler(this.ButtonStopMining_Click);
             this.buttonStopMining.Paint += new System.Windows.Forms.PaintEventHandler(this.buttonStopMining_Paint);
-            //
+            // 
             // buttonBenchmark
-            //
+            // 
             this.buttonBenchmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonBenchmark.Location = new System.Drawing.Point(612, 114);
             this.buttonBenchmark.Margin = new System.Windows.Forms.Padding(3, 3, 3, 2);
@@ -270,9 +270,9 @@ namespace NiceHashMiner
             this.buttonBenchmark.Text = "&Benchmark";
             this.buttonBenchmark.UseVisualStyleBackColor = true;
             this.buttonBenchmark.Click += new System.EventHandler(this.ButtonBenchmark_Click);
-            //
+            // 
             // buttonSettings
-            //
+            // 
             this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSettings.Location = new System.Drawing.Point(612, 140);
             this.buttonSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -282,9 +282,9 @@ namespace NiceHashMiner
             this.buttonSettings.Text = "S&ettings";
             this.buttonSettings.UseVisualStyleBackColor = true;
             this.buttonSettings.Click += new System.EventHandler(this.ButtonSettings_Click);
-            //
+            // 
             // buttonLogo
-            //
+            // 
             this.buttonLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonLogo.AutoSize = true;
             this.buttonLogo.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -299,9 +299,9 @@ namespace NiceHashMiner
             this.buttonLogo.UseMnemonic = false;
             this.buttonLogo.UseVisualStyleBackColor = true;
             this.buttonLogo.Click += new System.EventHandler(this.ButtonLogo_Click);
-            //
+            // 
             // linkLabelChooseBTCWallet
-            //
+            // 
             this.linkLabelChooseBTCWallet.AutoSize = true;
             this.linkLabelChooseBTCWallet.Location = new System.Drawing.Point(6, 93);
             this.linkLabelChooseBTCWallet.Name = "linkLabelChooseBTCWallet";
@@ -310,13 +310,13 @@ namespace NiceHashMiner
             this.linkLabelChooseBTCWallet.TabStop = true;
             this.linkLabelChooseBTCWallet.Text = "Help me choose my Bitcoin wallet";
             this.linkLabelChooseBTCWallet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelChooseBTCWallet_LinkClicked);
-            //
+            // 
             // notifyIcon1
-            //
+            // 
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.NotifyIcon1_DoubleClick);
-            //
+            // 
             // labelDemoMode
-            //
+            // 
             this.labelDemoMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelDemoMode.AutoSize = true;
             this.labelDemoMode.BackColor = System.Drawing.Color.Transparent;
@@ -328,9 +328,9 @@ namespace NiceHashMiner
             this.labelDemoMode.TabIndex = 100;
             this.labelDemoMode.Text = "Miner Legacy Fork Fix is running in DEMO mode!";
             this.labelDemoMode.Visible = false;
-            //
+            // 
             // flowLayoutPanelRates
-            //
+            // 
             this.flowLayoutPanelRates.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelRates.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelRates.Location = new System.Drawing.Point(3, 16);
@@ -338,10 +338,10 @@ namespace NiceHashMiner
             this.flowLayoutPanelRates.Size = new System.Drawing.Size(702, 40);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
-            //
+            // 
             // groupBox1
-            //
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.label_NotProfitable);
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
@@ -351,9 +351,9 @@ namespace NiceHashMiner
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";
-            //
+            // 
             // label_NotProfitable
-            //
+            // 
             this.label_NotProfitable.AutoSize = true;
             this.label_NotProfitable.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label_NotProfitable.ForeColor = System.Drawing.Color.Red;
@@ -362,9 +362,9 @@ namespace NiceHashMiner
             this.label_NotProfitable.Size = new System.Drawing.Size(366, 24);
             this.label_NotProfitable.TabIndex = 110;
             this.label_NotProfitable.Text = "CURRENTLY MINING NOT PROFITABLE.";
-            //
+            // 
             // buttonHelp
-            //
+            // 
             this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonHelp.FlatAppearance.BorderSize = 0;
             this.buttonHelp.Location = new System.Drawing.Point(612, 220);
@@ -375,18 +375,18 @@ namespace NiceHashMiner
             this.buttonHelp.Text = "&Help";
             this.buttonHelp.UseVisualStyleBackColor = true;
             this.buttonHelp.Click += new System.EventHandler(this.ButtonHelp_Click);
-            //
+            // 
             // linkLabelNewVersion
-            //
+            // 
             this.linkLabelNewVersion.AutoSize = true;
             this.linkLabelNewVersion.Location = new System.Drawing.Point(386, 76);
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
             this.linkLabelNewVersion.Size = new System.Drawing.Size(0, 13);
             this.linkLabelNewVersion.TabIndex = 110;
             this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelNewVersion_LinkClicked);
-            //
+            // 
             // buttonBTC_Save
-            //
+            // 
             this.buttonBTC_Save.FlatAppearance.BorderSize = 0;
             this.buttonBTC_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonBTC_Save.Image = global::NiceHashMiner.Properties.Resources.Ok_normal;
@@ -401,26 +401,26 @@ namespace NiceHashMiner
             this.buttonBTC_Save.Paint += new System.Windows.Forms.PaintEventHandler(this.buttonBTC_Save_Paint);
             this.buttonBTC_Save.MouseLeave += new System.EventHandler(this.buttonBTC_Save_MouseLeave);
             this.buttonBTC_Save.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Save_MouseMove);
-            //
+            // 
             // labelBitcoinAddressNew
-            //
+            // 
             this.labelBitcoinAddressNew.AutoSize = true;
             this.labelBitcoinAddressNew.Location = new System.Drawing.Point(7, 36);
             this.labelBitcoinAddressNew.Name = "labelBitcoinAddressNew";
             this.labelBitcoinAddressNew.Size = new System.Drawing.Size(82, 13);
             this.labelBitcoinAddressNew.TabIndex = 112;
             this.labelBitcoinAddressNew.Text = "Bitcoin address:";
-            //
+            // 
             // textBoxBTCAddress_new
-            //
+            // 
             this.textBoxBTCAddress_new.Location = new System.Drawing.Point(110, 33);
             this.textBoxBTCAddress_new.Name = "textBoxBTCAddress_new";
             this.textBoxBTCAddress_new.Size = new System.Drawing.Size(230, 20);
             this.textBoxBTCAddress_new.TabIndex = 111;
             this.textBoxBTCAddress_new.TextChanged += new System.EventHandler(this.textBoxBTCAddress_new_TextChanged);
-            //
+            // 
             // buttonBTC_Clear
-            //
+            // 
             this.buttonBTC_Clear.Enabled = false;
             this.buttonBTC_Clear.FlatAppearance.BorderSize = 0;
             this.buttonBTC_Clear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -436,19 +436,19 @@ namespace NiceHashMiner
             this.buttonBTC_Clear.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Clear_MouseDown);
             this.buttonBTC_Clear.MouseLeave += new System.EventHandler(this.buttonBTC_Clear_MouseLeave);
             this.buttonBTC_Clear.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Clear_MouseMove);
-            //
+            // 
             // label_Uptime
-            //
+            // 
             this.label_Uptime.AutoSize = true;
             this.label_Uptime.Location = new System.Drawing.Point(223, 62);
             this.label_Uptime.Name = "label_Uptime";
             this.label_Uptime.Size = new System.Drawing.Size(43, 13);
             this.label_Uptime.TabIndex = 115;
             this.label_Uptime.Text = "Uptime:";
-            //
+            // 
             // devicesListViewEnableControl1
-            //
-            this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
             this.devicesListViewEnableControl1.BenchmarkCalculation = null;
@@ -462,9 +462,9 @@ namespace NiceHashMiner
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(595, 129);
             this.devicesListViewEnableControl1.TabIndex = 109;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
-            //
+            // 
             // Form_Main
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 333);
@@ -525,7 +525,6 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBTCDayValue;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceDollarText;
         private System.Windows.Forms.Button buttonSettings;
-        private System.Windows.Forms.Button buttonLogo;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ComboBox comboBoxLocation;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
@@ -548,6 +547,7 @@ namespace NiceHashMiner
         public System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         public System.Windows.Forms.TextBox textBoxWorkerName;
         private System.Windows.Forms.Label label_Uptime;
+        public System.Windows.Forms.Button buttonLogo;
     }
 }
 

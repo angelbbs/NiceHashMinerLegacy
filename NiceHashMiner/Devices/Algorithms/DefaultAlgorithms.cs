@@ -35,6 +35,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
         private static Dictionary<MinerBaseType, List<Algorithm>> Gpu => new Dictionary<MinerBaseType, List<Algorithm>>
         {
+            /*
             {
                 MinerBaseType.Claymore,
                 new List<Algorithm>()
@@ -49,6 +50,7 @@ namespace NiceHashMiner.Devices.Algorithms
                //     new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak)
                 }
             },
+            */
             {
                 MinerBaseType.Nanominer,
                 new List<Algorithm>()
@@ -179,9 +181,11 @@ namespace NiceHashMiner.Devices.Algorithms
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.CuckooCycle, "")
                         {
                         },
+                        /*
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroo29BFC, "")
                         {
                         },
+                        */
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, "")
                         {
                         }
@@ -426,11 +430,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "")
                     {
                     },
-
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroo29BFC, "")
                     {
                     },
-
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

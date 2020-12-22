@@ -9,8 +9,6 @@ namespace NiceHashMiner.Devices
         public List<CudaDevices2> CudaDevices = new List<CudaDevices2>();
         public string DriverVersion = "NONE";
         public string ErrorString = "NONE";
-        public int NvmlInitialized = -1;
-        public int NvmlLoaded = -1;
     }
 
     [Serializable]

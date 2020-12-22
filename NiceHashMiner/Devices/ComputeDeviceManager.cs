@@ -217,30 +217,48 @@ namespace NiceHashMiner.Devices
 
             public static void QueryDevices(IMessageNotifier messageNotifier)
             {
+                // #0 get video controllers, used for cross checking
+                WindowsDisplayAdapters.QueryVideoControllers();
+                Helpers.ConsolePrint(Tag, "HasNvidiaVideoController: " + WindowsDisplayAdapters.HasNvidiaVideoController());
+                
                 // check NVIDIA nvml.dll and copy over scope
+                try
                 {
-                    var nvmlPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                   "\\NVIDIA Corporation\\NVSMI\\nvml.dll";
-                    if (nvmlPath.Contains(" (x86)")) nvmlPath = nvmlPath.Replace(" (x86)", "");
-                    if (File.Exists(nvmlPath))
+                    nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
+                } catch (Exception ex)
+                {
+                    if (WindowsDisplayAdapters.HasNvidiaVideoController())
                     {
-                        var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                        try
+                        string NVPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                                       "\\NVIDIA Corporation";
+                        string NVCommon = "Common\\NVSMI";
+                        Helpers.ConsolePrint(Tag, "nvml.dll exception. NVIDIA GPUs present but driver not installed or broken NVIDIA driver like 460.xx?");
+                        if (Directory.Exists(NVPath))
                         {
-                            File.Copy(nvmlPath, copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlPath} to {copyToPath} done");
+                            Directory.CreateDirectory(NVPath + "\\NVSMI");
+                            foreach (string newPath in Directory.GetFiles(NVCommon, "*.*", SearchOption.AllDirectories))
+                                File.Copy(newPath, newPath.Replace(NVCommon, NVPath + "\\NVSMI"), true);
+
+                            var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
+                            try
+                            {
+                                File.Copy(NVCommon + "\\nvml.dll", copyToPath, true);
+                                Helpers.ConsolePrint(Tag, $"Copy from {NVCommon} to {copyToPath} done");
+                            }
+                            catch (Exception e)
+                            {
+                                Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
+                            }
                         }
-                        catch (Exception e)
+                        else
                         {
-                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
+                            Helpers.ConsolePrint(Tag, "Stop! NVIDIA driver NOT installed!");
                         }
                     }
                 }
 
-
                 MessageNotifier = messageNotifier;
-                // #0 get video controllers, used for cross checking
-                WindowsDisplayAdapters.QueryVideoControllers();
+
                 // Order important CPU Query must be first
                 // #1 CPU
                 if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU)
@@ -575,14 +593,7 @@ namespace NiceHashMiner.Devices
                             InfSection = SafeGetProperty(manObj, "InfSection"),
                             AdapterRam = memTmp
                         };
-                        //ComputeDevice.Manufactur o = new ComputeDevice.Manufactur();
-                        //o.Manufacturer
-                        //ComputeDevice.Manufactur().
 
-                        //o.Manufacturer = GetManufacturer(vidController.Manufacturer);
-                        //MessageBox.Show(o.Manufacturer, "!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        //ComputeDevice.Manufacturer = GetManufacturer(vidController.Manufacturer);
-                        //ComputeDevice.m
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
                         stringBuilder.AppendLine($"\t\tName {vidController.Name}");
                         stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");

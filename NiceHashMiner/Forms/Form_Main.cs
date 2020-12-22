@@ -844,7 +844,7 @@ namespace NiceHashMiner
                     this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
                 } else
                 {
-                   // this.Width = 660; // min width
+                    // this.Width = 660; // min width
                 }
             }
             if (!Configs.ConfigManager.GeneralConfig.MinimizeToTray)
@@ -858,7 +858,13 @@ namespace NiceHashMiner
                 lbl.FlatAppearance.BorderColor = _textColor;
                 lbl.FlatAppearance.BorderSize = 1;
             }
-
+            /*
+            var dt = DateTime.Now;
+            if (dt.Date >= new DateTime(2020, 12, 22) && dt.Date <= new DateTime(2021, 01, 14))
+            {
+                buttonLogo.Image = Properties.Resources.Delete_hot;
+            }
+            */
             buttonLogo.FlatAppearance.BorderSize = 0;
             devicesListViewEnableControl1.BackColor = SystemColors.ControlLightLight;
 
