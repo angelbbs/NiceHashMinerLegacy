@@ -18,6 +18,7 @@ using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Forms
 {
@@ -439,7 +440,8 @@ namespace NiceHashMiner.Forms
             checkBox_Send_actual_version_info.Text = International.GetText("Form_Settings_checkBox_Send_actual_version_info");
             checkBox_Additional_info_about_device.Text = International.GetText("Form_Settings_checkBox_Additional_info_about_device");
 
-            checkBox_show_device_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_device_manufacturer");
+            checkBox_show_NVdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_NVdevice_manufacturer");
+            checkBox_show_AMDdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_AMDdevice_manufacturer");
             checkBox_ShowDeviceMemSize.Text = International.GetText("Form_Settings_checkBox_show_device_memsize");
             //checkBox_ShowDeviceBusId.Text = International.GetText("Form_Settings_checkBox_show_device_busId");
 
@@ -710,8 +712,10 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.BackColor = Form_Main._backColor;
                 checkBox_Additional_info_about_device.ForeColor = Form_Main._textColor;
 
-                checkBox_show_device_manufacturer.BackColor = Form_Main._backColor;
-                checkBox_show_device_manufacturer.ForeColor = Form_Main._textColor;
+                checkBox_show_NVdevice_manufacturer.BackColor = Form_Main._backColor;
+                checkBox_show_NVdevice_manufacturer.ForeColor = Form_Main._textColor; 
+                checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
+                checkBox_show_AMDdevice_manufacturer.ForeColor = Form_Main._textColor;
 
                 checkBox_ShowDeviceMemSize.BackColor = Form_Main._backColor;
                 checkBox_ShowDeviceMemSize.ForeColor = Form_Main._textColor;
@@ -869,7 +873,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_show_device_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_show_AMDdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowDeviceMemSize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 //checkBox_ShowDeviceBusId.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Use_OpenHardwareMonitor.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -967,7 +972,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Show_profit_with_power_consumption.Checked = ConfigManager.GeneralConfig.DecreasePowerCost;
                 checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
-                checkBox_show_device_manufacturer.Checked = ConfigManager.GeneralConfig.Show_device_manufacturer;
+                checkBox_show_NVdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_NVdevice_manufacturer;
+                checkBox_show_AMDdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer;
                 checkBox_ShowDeviceMemSize.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceMemSize;
                 //checkBox_ShowDeviceBusId.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceBusId;
                 checkbox_Use_OpenHardwareMonitor.Checked = ConfigManager.GeneralConfig.Use_OpenHardwareMonitor;
@@ -1108,7 +1114,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
-            ConfigManager.GeneralConfig.Show_device_manufacturer = checkBox_show_device_manufacturer.Checked;
+            ConfigManager.GeneralConfig.Show_NVdevice_manufacturer = checkBox_show_NVdevice_manufacturer.Checked;
+            ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer = checkBox_show_AMDdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;
             //ConfigManager.GeneralConfig.Show_ShowDeviceBusId = checkBox_ShowDeviceBusId.Checked;
             ConfigManager.GeneralConfig.Use_OpenHardwareMonitor = checkbox_Use_OpenHardwareMonitor.Checked;
@@ -1353,6 +1360,7 @@ namespace NiceHashMiner.Forms
             {
                 Form_Settings.ActiveForm.Close();
             }
+            new Task(() => NiceHashStats.SetDeviceStatus(null, true)).Start();
         }
 
         private void ButtonCloseNoSave_Click(object sender, EventArgs e)
@@ -2277,11 +2285,13 @@ namespace NiceHashMiner.Forms
                 checkBoxNVMonitoring.Enabled = false;
                 checkBoxRestartWindows.Enabled = false;
                 checkBoxRestartDriver.Enabled = false;
+                checkBox_show_NVdevice_manufacturer.Enabled = false;
             } else
             {
                 checkBoxNVMonitoring.Enabled = true;
                 checkBoxRestartWindows.Enabled = true;
                 checkBoxRestartDriver.Enabled = true;
+                checkBox_show_NVdevice_manufacturer.Enabled = true;
             }
         }
 
@@ -2290,10 +2300,12 @@ namespace NiceHashMiner.Forms
             if (checkBox_DisableDetectionAMD.Checked)
             {
                 checkBoxAMDmonitoring.Enabled = false;
+                checkBox_show_AMDdevice_manufacturer.Enabled = false;
             }
             else
             {
                 checkBoxAMDmonitoring.Enabled = true;
+                checkBox_show_AMDdevice_manufacturer.Enabled = true;
             }
         }
 

@@ -479,7 +479,8 @@
 "Form_Settings_uncompatible_options1": "Параметры \"Разрешить неколько экземпляров\" и \"Включить сторожевой процесс\" несовместимы",
 "Form_Settings_DelBenchmarks": "Это приведет к сбросу всех скоростей в алгоритмах",
                 "Form_Settings_checkBox_Additional_info_about_device": "Дополнительная информация об устройстве",
-                "Form_Settings_checkBox_show_device_manufacturer": "Показывать производителей устройств",
+                "Form_Settings_checkBox_show_NVdevice_manufacturer": "Показывать производителей устройств NVIDIA",
+                "Form_Settings_checkBox_show_AMDdevice_manufacturer": "Показывать производителей устройств AMD",
                 "Form_Settings_checkBox_show_device_memsize": "Показывать объем памяти устройств",
              "Form_Settings_checkBox_show_device_busId": "Показывать номер шины(busID) устройств",
 "Form_Settings_buttonLicence": "Просмотр лицензии"

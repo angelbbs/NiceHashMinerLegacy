@@ -120,8 +120,9 @@ namespace NiceHashMiner.Configs.Data
         public bool Send_actual_version_info = false;
         public bool Force_mining_if_nonprofitable = true;
         public bool Additional_info_about_device = false;
-        public bool Show_device_manufacturer = false;
-        public bool Show_ShowDeviceMemSize = false;
+        public bool Show_NVdevice_manufacturer = true;
+        public bool Show_AMDdevice_manufacturer = true;
+        public bool Show_ShowDeviceMemSize = true;
         public bool Show_ShowDeviceBusId = false;
         public bool Use_OpenHardwareMonitor = true;
         public bool Disable_extra_launch_parameter_checking = false;

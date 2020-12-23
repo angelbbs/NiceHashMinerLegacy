@@ -220,11 +220,16 @@ namespace NiceHashMiner.Devices
                 // #0 get video controllers, used for cross checking
                 WindowsDisplayAdapters.QueryVideoControllers();
                 Helpers.ConsolePrint(Tag, "HasNvidiaVideoController: " + WindowsDisplayAdapters.HasNvidiaVideoController());
-                
+
                 // check NVIDIA nvml.dll and copy over scope
                 try
                 {
                     nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
+                    Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
+                    if (nvmlLoaded != nvmlReturn.Success)
+                    {
+                        throw new Exception("!nvmlReturn.Success");
+                    }
                 } catch (Exception ex)
                 {
                     if (WindowsDisplayAdapters.HasNvidiaVideoController())
@@ -244,6 +249,7 @@ namespace NiceHashMiner.Devices
                             {
                                 File.Copy(NVCommon + "\\nvml.dll", copyToPath, true);
                                 Helpers.ConsolePrint(Tag, $"Copy from {NVCommon} to {copyToPath} done");
+                                //NvmlNativeMethods.nvmlInit(); //uninitialized until restart program
                             }
                             catch (Exception e)
                             {

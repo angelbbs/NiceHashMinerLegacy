@@ -1154,7 +1154,6 @@ namespace NiceHashMiner.Stats
         }
         public static async void SetDeviceStatus(object state, bool devName = false)
         {
-            //new Task(() => ConnectToGoogle()).Start();
             var devices = ComputeDeviceManager.Available.Devices;
             var rigStatus = CalcRigStatusString();
             var activeIDs = MinersManager.GetActiveMinersIndexes();
@@ -1215,31 +1214,72 @@ namespace NiceHashMiner.Stats
                     }
                     var deviceName = device.Name;
                     string Manufacturer = "";
-                    if (ConfigManager.GeneralConfig.Show_device_manufacturer && device.DeviceType != DeviceType.CPU)
-                    {
-                        if (!device.Name.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
-                        {
-                            Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
-                        }
-                    }
                     string GpuRam = "";
-                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
+
+                    if (device.DeviceType == DeviceType.NVIDIA)
                     {
-                        GpuRam = " " +(device.GpuRam / 1073741824).ToString() + "GB";
-                        if (device.Name.Contains(GpuRam))
+                        if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                         {
+                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            {
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer);
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                        }
+
+                        GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
+                        if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                        {
+                            if (deviceName.Contains(GpuRam))
+                            {
+                                GpuRam = "";
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(GpuRam, "");
                             GpuRam = "";
-                        } else
-                        {
-                            deviceName = deviceName + GpuRam;
                         }
                     }
 
+                    if (device.DeviceType == DeviceType.AMD)
+                    {
+                        if (ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer)
+                        {
+                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            {
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer);
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                        }
+
+                        GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
+                        if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                        {
+                            if (deviceName.Contains(GpuRam))
+                            {
+                                GpuRam = "";
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(GpuRam, "");
+                            GpuRam = "";
+                        }
+                    }
+                    
                     if (!devName)
                     {
                         deviceName = "";
                         Manufacturer = "";
                     }
+                    
                     /*
                     if (rigStatus != "PENDING")
                     {

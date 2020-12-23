@@ -216,9 +216,9 @@ namespace NiceHashMiner.Devices.Querying
 
                         if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
                         {
-                            Helpers.ConsolePrint("AMDQUERY", "PnpDeviceID.Split('&')[4]=" + PnpDeviceID.Split('&')[4].ToString() +
-                                " newAmdDev.UUID.Split('_')[4]" + newAmdDev.UUID.Split('_')[4].ToString() +
-                                " " + dev._CL_DEVICE_NAME);
+//                            Helpers.ConsolePrint("AMDQUERY", "PnpDeviceID.Split('&')[4]=" + PnpDeviceID.Split('&')[4].ToString() +
+  //                              " newAmdDev.UUID.Split('_')[4]" + newAmdDev.UUID.Split('_')[4].ToString() +
+    //                            " " + dev._CL_DEVICE_NAME);
                             if (newAmdDev.DeviceGlobalMemory < gpumem)
                             {
                                 Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());

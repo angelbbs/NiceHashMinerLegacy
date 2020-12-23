@@ -1955,6 +1955,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint(MinerTag(), "Start CMD: " + CMDconfigHandle.StartInfo.FileName + CMDconfigHandle.StartInfo.Arguments);
             CMDconfigHandle.Start();
 
+
             try
             {
                 if (!CMDconfigHandle.WaitForExit(60 * 1000))
