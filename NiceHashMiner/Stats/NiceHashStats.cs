@@ -1222,7 +1222,7 @@ namespace NiceHashMiner.Stats
                         {
                             if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
                             {
-                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer);
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
                             }
                         }
                         else
@@ -1236,6 +1236,9 @@ namespace NiceHashMiner.Stats
                             if (deviceName.Contains(GpuRam))
                             {
                                 GpuRam = "";
+                            } else
+                            {
+                                deviceName = deviceName + " " + GpuRam;
                             }
                         }
                         else
@@ -1251,7 +1254,7 @@ namespace NiceHashMiner.Stats
                         {
                             if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
                             {
-                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer);
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
                             }
                         }
                         else
@@ -1265,6 +1268,10 @@ namespace NiceHashMiner.Stats
                             if (deviceName.Contains(GpuRam))
                             {
                                 GpuRam = "";
+                            }
+                            else
+                            {
+                                deviceName = deviceName + " " + GpuRam;
                             }
                         }
                         else
