@@ -217,37 +217,66 @@ namespace NiceHashMiner.Devices
 
             public static void QueryDevices(IMessageNotifier messageNotifier)
             {
-                // #0 get video controllers, used for cross checking
                 WindowsDisplayAdapters.QueryVideoControllers();
                 Helpers.ConsolePrint(Tag, "HasNvidiaVideoController: " + WindowsDisplayAdapters.HasNvidiaVideoController());
-
-                // check NVIDIA nvml.dll and copy over scope
-                try
+                if (WindowsDisplayAdapters.HasNvidiaVideoController())
                 {
-                    if (File.Exists("nvml.dll"))
-                    {
-                        File.Delete("nvml.dll");
+                    string NVPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                                       "\\NVIDIA Corporation";
+                    string NVCommon = "Common\\NVSMI";
 
+                    try
+                    {
+                        if (File.Exists("nvml.dll"))
+                        {
+                            File.Delete("nvml.dll");
+
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint(Tag, "Del nvml.dll failed: " + e.Message);
-                }
-
-                try
-                {
-                    nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
-                    Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
-                    if (nvmlLoaded != nvmlReturn.Success)
+                    catch (Exception e)
                     {
-                        throw new Exception("!nvmlReturn.Success");
+                        Helpers.ConsolePrint(Tag, "Del nvml.dll failed: " + e.Message);
+                    }
+
+                    if (!Directory.Exists(NVPath + "\\NVSMI"))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(NVPath + "\\NVSMI");
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
+                        }
+                    }
+
+                    if (File.Exists(NVPath + "\\NVSMI\\nvml.dll"))
+                    {
+                        try
+                        {
+                            var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
+                            File.Copy(NVPath + "\\NVSMI\\nvml.dll", copyToPath, true);
+                            Helpers.ConsolePrint(Tag, $"Copy from {NVPath + "\\NVSMI\\nvml.dll"} to {copyToPath} done");
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
+                        }
                     } else
                     {
                         try
                         {
-                            string NVPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                       "\\NVIDIA Corporation";
+                            foreach (string newPath in Directory.GetFiles(NVCommon, "*.*", SearchOption.AllDirectories))
+                                File.Copy(newPath, newPath.Replace(NVCommon, NVPath + "\\NVSMI"), true);
+                            Helpers.ConsolePrint(Tag, $"Copy from {NVCommon} to {NVPath + "\\NVSMI"} done");
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "Copy files failed: " + e.Message);
+                        }
+
+                        try
+                        {
                             var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
                             File.Copy(NVPath + "\\NVSMI\\nvml.dll", copyToPath, true);
                             Helpers.ConsolePrint(Tag, $"Copy from {NVPath + "\\NVSMI\\nvml.dll"} to {copyToPath} done");
@@ -257,53 +286,14 @@ namespace NiceHashMiner.Devices
                             Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
                         }
                     }
-                } catch (Exception ex)
-                {
-                    if (WindowsDisplayAdapters.HasNvidiaVideoController())
-                    {
-                        string NVPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                       "\\NVIDIA Corporation";
-                        string NVCommon = "Common\\NVSMI";
-                        Helpers.ConsolePrint(Tag, "nvml.dll exception: " + ex.Message);
-                        if (Directory.Exists(NVPath))
-                        {
-                            if (!Directory.Exists(NVPath + "\\NVSMI"))
-                            {
-                                Directory.CreateDirectory(NVPath + "\\NVSMI");
-                                foreach (string newPath in Directory.GetFiles(NVCommon, "*.*", SearchOption.AllDirectories))
-                                    File.Copy(newPath, newPath.Replace(NVCommon, NVPath + "\\NVSMI"), true);
 
-                                var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                                try
-                                {
-                                    File.Copy(NVCommon + "\\nvml.dll", copyToPath, true);
-                                    Helpers.ConsolePrint(Tag, $"Copy from {NVCommon} to {copyToPath} done");
-                                    //NvmlNativeMethods.nvmlInit(); //uninitialized until restart program
-                                }
-                                catch (Exception e)
-                                {
-                                    Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                                }
-                            } else
-                            {
-                                try
-                                {
-                                    var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                                    File.Copy(NVPath + "\\NVSMI\\nvml.dll", copyToPath, true);
-                                    Helpers.ConsolePrint(Tag, $"Copy from {NVPath + "\\NVSMI\\nvml.dll"} to {copyToPath} done");
-                                    //NvmlNativeMethods.nvmlInit(); //uninitialized until restart program
-                                }
-                                catch (Exception e)
-                                {
-                                    Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint(Tag, "Stop! NVIDIA driver NOT installed!");
-                        }
+                    nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
+                    //Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
+                    if (nvmlLoaded != nvmlReturn.Success)
+                    {
+                        Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
                     }
+
                 }
 
                 MessageNotifier = messageNotifier;

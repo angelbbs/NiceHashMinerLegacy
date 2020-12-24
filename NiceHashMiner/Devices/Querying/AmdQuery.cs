@@ -209,7 +209,7 @@ namespace NiceHashMiner.Devices.Querying
                         {
                             ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
                             PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
-                            Helpers.ConsolePrint("AMDQUERY", "DeviceID: " + SafeGetProperty(manObj, "DeviceID"));
+//                            Helpers.ConsolePrint("AMDQUERY", "DeviceID: " + SafeGetProperty(manObj, "DeviceID"));
                             gpumem = memTmp + gpumemadd‬;
 
                         }
