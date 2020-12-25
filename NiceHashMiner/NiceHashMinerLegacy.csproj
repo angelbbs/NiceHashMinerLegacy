@@ -440,6 +440,7 @@
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent_white.png" />
     <Content Include="Resources\NHM_logo_big_light.png" />
     <Content Include="Resources\NHM_logo_med_light.png" />
+    <None Include="Resources\NHM_logo_small_2021.png" />
     <Content Include="Resources\NHM_logo_small_light.png" />
     <Content Include="Resources\NHM_logo_xsmall_light.png" />
     <None Include="Resources\NHM_logo_xsmall_light2020.png" />

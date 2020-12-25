@@ -291,9 +291,9 @@ namespace NiceHashMiner
             this.buttonLogo.FlatAppearance.BorderSize = 0;
             this.buttonLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xsmall_light;
-            this.buttonLogo.Location = new System.Drawing.Point(536, 3);
+            this.buttonLogo.Location = new System.Drawing.Point(446, 3);
             this.buttonLogo.Name = "buttonLogo";
-            this.buttonLogo.Size = new System.Drawing.Size(181, 52);
+            this.buttonLogo.Size = new System.Drawing.Size(271, 75);
             this.buttonLogo.TabIndex = 11;
             this.buttonLogo.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.buttonLogo.UseMnemonic = false;

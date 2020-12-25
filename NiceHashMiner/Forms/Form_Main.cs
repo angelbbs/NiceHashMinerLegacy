@@ -233,6 +233,12 @@ namespace NiceHashMiner
             Icon = Properties.Resources.logo;
             Helpers.ConsolePrint("NICEHASH", "Start InitLocalization");
 
+            var start = DateTime.Now;
+            if (start >= new DateTime(2020, 12, 30) && start <= new DateTime(2021, 01, 02))
+            {
+                this.buttonLogo.Image = Properties.Resources.NHM_logo_small_2021; //dgdesign.ru
+            }
+
             InitLocalization();
             devicesListViewEnableControl1.Visible = false;
             ComputeDeviceManager.SystemSpecs.QueryAndLog();
