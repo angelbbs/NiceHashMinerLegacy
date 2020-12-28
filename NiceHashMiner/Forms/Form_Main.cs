@@ -125,6 +125,7 @@ namespace NiceHashMiner
         public static bool AntivirusInstalled = false;
         public static int smaCount = 0;
         private static int ticks = 0;//костыль
+        public static double CAP = 0.0d;
 
         public Form_Main()
         {
@@ -232,13 +233,13 @@ namespace NiceHashMiner
 
             Icon = Properties.Resources.logo;
             Helpers.ConsolePrint("NICEHASH", "Start InitLocalization");
-
+            /*
             var start = DateTime.Now;
-            if (start >= new DateTime(2020, 12, 30) && start <= new DateTime(2021, 01, 02))
+            if (start >= new DateTime(2020, 12, 26) && start <= new DateTime(2021, 01, 02))
             {
                 this.buttonLogo.Image = Properties.Resources.NHM_logo_small_2021; //dgdesign.ru
             }
-
+            */
             InitLocalization();
             devicesListViewEnableControl1.Visible = false;
             ComputeDeviceManager.SystemSpecs.QueryAndLog();
@@ -353,7 +354,7 @@ namespace NiceHashMiner
             }
 
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
-            linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
+            //linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
 
            // toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate").Substring(0, 2) + ":";
             toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate");
@@ -864,13 +865,7 @@ namespace NiceHashMiner
                 lbl.FlatAppearance.BorderColor = _textColor;
                 lbl.FlatAppearance.BorderSize = 1;
             }
-            /*
-            var dt = DateTime.Now;
-            if (dt.Date >= new DateTime(2020, 12, 22) && dt.Date <= new DateTime(2021, 01, 14))
-            {
-                buttonLogo.Image = Properties.Resources.Delete_hot;
-            }
-            */
+
             buttonLogo.FlatAppearance.BorderSize = 0;
             devicesListViewEnableControl1.BackColor = SystemColors.ControlLightLight;
 
@@ -2315,6 +2310,32 @@ public static void CloseChilds(Process parentId)
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            string capstring;
+            if (ConfigManager.GeneralConfig.AutoScaleBTCValues)
+            {
+                capstring = ((CAP) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) +
+                    " mBTC/" +
+                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+            }
+            else
+            {
+                capstring = ((CAP) * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) +
+                    " BTC/" +
+                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+
+            }
+
+            //"Form_Main_CAP": "Текущая фактическая прибыльность",
+            var rateCurrencyString = ExchangeRateApi
+                             .ConvertToActiveCurrency((CAP) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
+                             .ToString("F2", CultureInfo.InvariantCulture)
+                         + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
+                         International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+
+
+
+            labelCAP.Text = International.GetText("Form_Main_CAP") + ": " + capstring + "  " + rateCurrencyString;
+
             SMAdelayTick++;
             try
             {
@@ -2605,6 +2626,16 @@ public static void CloseChilds(Process parentId)
         }
 
         private void buttonBTC_Clear_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void flowLayoutPanelRates_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void labelCAP_Click(object sender, EventArgs e)
         {
 
         }

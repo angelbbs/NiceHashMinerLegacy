@@ -112,6 +112,7 @@ namespace NiceHashMiner.Forms
             this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.checkbox_Group_same_devices = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_show_AMDdevice_manufacturer = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowDeviceMemSize = new System.Windows.Forms.CheckBox();
             this.checkBox_RunEthlargement = new System.Windows.Forms.CheckBox();
             this.checkBox_show_NVdevice_manufacturer = new System.Windows.Forms.CheckBox();
@@ -169,7 +170,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBox_show_AMDdevice_manufacturer = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1279,9 +1279,9 @@ namespace NiceHashMiner.Forms
             this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(197, 37);
             this.label_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_SwitchProfitabilityThreshold.Name = "label_SwitchProfitabilityThreshold";
-            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(129, 13);
+            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(170, 13);
             this.label_SwitchProfitabilityThreshold.TabIndex = 361;
-            this.label_SwitchProfitabilityThreshold.Text = "SwitchProfitability treshold";
+            this.label_SwitchProfitabilityThreshold.Text = "switching_threshold_of_profitability";
             // 
             // checkbox_Group_same_devices
             // 
@@ -1326,6 +1326,18 @@ namespace NiceHashMiner.Forms
             this.groupBox1.TabIndex = 394;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
+            // 
+            // checkBox_show_AMDdevice_manufacturer
+            // 
+            this.checkBox_show_AMDdevice_manufacturer.AutoSize = true;
+            this.checkBox_show_AMDdevice_manufacturer.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_show_AMDdevice_manufacturer.Location = new System.Drawing.Point(240, 42);
+            this.checkBox_show_AMDdevice_manufacturer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_show_AMDdevice_manufacturer.Name = "checkBox_show_AMDdevice_manufacturer";
+            this.checkBox_show_AMDdevice_manufacturer.Size = new System.Drawing.Size(180, 17);
+            this.checkBox_show_AMDdevice_manufacturer.TabIndex = 415;
+            this.checkBox_show_AMDdevice_manufacturer.Text = "Show AMD device manufacturer";
+            this.checkBox_show_AMDdevice_manufacturer.UseVisualStyleBackColor = true;
             // 
             // checkBox_ShowDeviceMemSize
             // 
@@ -2026,18 +2038,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.Text = "View licence";
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
-            // 
-            // checkBox_show_AMDdevice_manufacturer
-            // 
-            this.checkBox_show_AMDdevice_manufacturer.AutoSize = true;
-            this.checkBox_show_AMDdevice_manufacturer.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_show_AMDdevice_manufacturer.Location = new System.Drawing.Point(240, 42);
-            this.checkBox_show_AMDdevice_manufacturer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_show_AMDdevice_manufacturer.Name = "checkBox_show_AMDdevice_manufacturer";
-            this.checkBox_show_AMDdevice_manufacturer.Size = new System.Drawing.Size(180, 17);
-            this.checkBox_show_AMDdevice_manufacturer.TabIndex = 415;
-            this.checkBox_show_AMDdevice_manufacturer.Text = "Show AMD device manufacturer";
-            this.checkBox_show_AMDdevice_manufacturer.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 

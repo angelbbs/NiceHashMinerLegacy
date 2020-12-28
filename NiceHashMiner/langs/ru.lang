@@ -403,7 +403,7 @@
                 "Form_Settings_Checkbox_Save_windows_size_and_position": "Сохранять позицию и размер окон",
                 "Form_Settings_checkBox_sorting_list_of_algorithms": "Сортировать список алгоритмов",
                 "Form_Settings_checkBox_ShowFanAsPercent": "Показать обороты вентилятора в процентах",
-                "Form_Settings_checkbox_Group_same_devices": "Группировать одинаковые устройства",
+                "Form_Settings_checkbox_Group_same_devices": "Объединять одинаковые устройства",
                 "Form_Settings_checkBox_Force_mining_if_nonprofitable": "Принудительный майнинг, если не прибыльно",
                 "Form_Settings_checkBox_Show_profit_with_power_consumption": "Показывать прибыльность с учетом рахода на эл.энергию",
                 "Form_Settings_checkBox_fiat": "Показывать прибыльность алгоритмов в фиатной валюте",
@@ -483,6 +483,7 @@
                 "Form_Settings_checkBox_show_AMDdevice_manufacturer": "Показывать производителей устройств AMD",
                 "Form_Settings_checkBox_show_device_memsize": "Показывать объем памяти устройств",
              "Form_Settings_checkBox_show_device_busId": "Показывать номер шины(busID) устройств",
+"Form_Main_CAP": "Текущая фактическая прибыльность",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

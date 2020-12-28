@@ -52,7 +52,6 @@ namespace NiceHashMiner
             this.buttonBenchmark = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonLogo = new System.Windows.Forms.Button();
-            this.linkLabelChooseBTCWallet = new System.Windows.Forms.LinkLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.labelDemoMode = new System.Windows.Forms.Label();
             this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
@@ -67,6 +66,7 @@ namespace NiceHashMiner
             this.buttonBTC_Clear = new System.Windows.Forms.Button();
             this.label_Uptime = new System.Windows.Forms.Label();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.labelCAP = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -219,7 +219,7 @@ namespace NiceHashMiner
             // linkLabelCheckStats
             // 
             this.linkLabelCheckStats.AutoSize = true;
-            this.linkLabelCheckStats.Location = new System.Drawing.Point(174, 93);
+            this.linkLabelCheckStats.Location = new System.Drawing.Point(492, 89);
             this.linkLabelCheckStats.Name = "linkLabelCheckStats";
             this.linkLabelCheckStats.Size = new System.Drawing.Size(113, 13);
             this.linkLabelCheckStats.TabIndex = 9;
@@ -291,25 +291,14 @@ namespace NiceHashMiner
             this.buttonLogo.FlatAppearance.BorderSize = 0;
             this.buttonLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xsmall_light;
-            this.buttonLogo.Location = new System.Drawing.Point(446, 3);
+            this.buttonLogo.Location = new System.Drawing.Point(534, 3);
             this.buttonLogo.Name = "buttonLogo";
-            this.buttonLogo.Size = new System.Drawing.Size(271, 75);
+            this.buttonLogo.Size = new System.Drawing.Size(181, 52);
             this.buttonLogo.TabIndex = 11;
             this.buttonLogo.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.buttonLogo.UseMnemonic = false;
             this.buttonLogo.UseVisualStyleBackColor = true;
             this.buttonLogo.Click += new System.EventHandler(this.ButtonLogo_Click);
-            // 
-            // linkLabelChooseBTCWallet
-            // 
-            this.linkLabelChooseBTCWallet.AutoSize = true;
-            this.linkLabelChooseBTCWallet.Location = new System.Drawing.Point(6, 93);
-            this.linkLabelChooseBTCWallet.Name = "linkLabelChooseBTCWallet";
-            this.linkLabelChooseBTCWallet.Size = new System.Drawing.Size(165, 13);
-            this.linkLabelChooseBTCWallet.TabIndex = 10;
-            this.linkLabelChooseBTCWallet.TabStop = true;
-            this.linkLabelChooseBTCWallet.Text = "Help me choose my Bitcoin wallet";
-            this.linkLabelChooseBTCWallet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelChooseBTCWallet_LinkClicked);
             // 
             // notifyIcon1
             // 
@@ -338,6 +327,7 @@ namespace NiceHashMiner
             this.flowLayoutPanelRates.Size = new System.Drawing.Size(702, 40);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
+            this.flowLayoutPanelRates.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanelRates_Paint);
             // 
             // groupBox1
             // 
@@ -463,11 +453,22 @@ namespace NiceHashMiner
             this.devicesListViewEnableControl1.TabIndex = 109;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
             // 
+            // labelCAP
+            // 
+            this.labelCAP.AutoSize = true;
+            this.labelCAP.Location = new System.Drawing.Point(7, 89);
+            this.labelCAP.Name = "labelCAP";
+            this.labelCAP.Size = new System.Drawing.Size(125, 13);
+            this.labelCAP.TabIndex = 116;
+            this.labelCAP.Text = "Current actual profitability";
+            this.labelCAP.Click += new System.EventHandler(this.labelCAP_Click);
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 333);
+            this.Controls.Add(this.labelCAP);
             this.Controls.Add(this.label_Uptime);
             this.Controls.Add(this.buttonBTC_Clear);
             this.Controls.Add(this.buttonBTC_Save);
@@ -478,7 +479,6 @@ namespace NiceHashMiner
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
-            this.Controls.Add(this.linkLabelChooseBTCWallet);
             this.Controls.Add(this.buttonLogo);
             this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.buttonBenchmark);
@@ -527,7 +527,6 @@ namespace NiceHashMiner
         private System.Windows.Forms.Button buttonSettings;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ComboBox comboBoxLocation;
-        private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label_NotProfitable;
@@ -548,6 +547,7 @@ namespace NiceHashMiner
         public System.Windows.Forms.TextBox textBoxWorkerName;
         private System.Windows.Forms.Label label_Uptime;
         public System.Windows.Forms.Button buttonLogo;
+        private System.Windows.Forms.Label labelCAP;
     }
 }
 

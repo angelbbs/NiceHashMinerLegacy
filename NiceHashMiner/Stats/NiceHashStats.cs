@@ -218,13 +218,8 @@ namespace NiceHashMiner.Stats
 
                         case "balance":
                             SetBalance(message.value.Value);
+                            SetProf(message.prof.Value); //надо переводить на c#8, иначе исключение не обработать
                             break;
-                        //case "versions":
-                        //    SetVersion(message.legacy.Value);
-                        //    break;
-                        //case "burn":
-                        //    OnVersionBurn?.Invoke(null, new SocketEventArgs(message.message.Value));
-                        //    break;
                         case "mining.start":
                              RemoteMiningStart(message.id.Value.ToString(), message.device.Value);
                             break;
@@ -953,6 +948,22 @@ namespace NiceHashMiner.Stats
             */
         }
 
+        private static void SetProf(string prof)
+        {
+            Helpers.ConsolePrint("SOCKET", "Received5: " + prof);
+            try
+            {
+                if (double.TryParse(prof, NumberStyles.Float, CultureInfo.InvariantCulture, out var cap))
+                {
+                    Form_Main.CAP = cap;
+                }
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+            //  Helpers.ConsolePrint("SOCKET", "Received7: " + balance);
+        }
         private static void SetBalance(string balance)
         {
            // Helpers.ConsolePrint("SOCKET", "Received5: " + balance);
