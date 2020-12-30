@@ -34,6 +34,7 @@ namespace NiceHashMiner.Forms
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chartRigProfit = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label_totalEfficiency = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chartRigProfit)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,11 +62,21 @@ namespace NiceHashMiner.Forms
             this.chartRigProfit.Customize += new System.EventHandler(this.chartRigProfit_Customize);
             this.chartRigProfit.Click += new System.EventHandler(this.chartRigProfit_Click);
             // 
+            // label_totalEfficiency
+            // 
+            this.label_totalEfficiency.AutoSize = true;
+            this.label_totalEfficiency.Location = new System.Drawing.Point(12, 325);
+            this.label_totalEfficiency.Name = "label_totalEfficiency";
+            this.label_totalEfficiency.Size = new System.Drawing.Size(56, 13);
+            this.label_totalEfficiency.TabIndex = 1;
+            this.label_totalEfficiency.Text = "Efficiency:";
+            // 
             // Form_RigProfitChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label_totalEfficiency);
             this.Controls.Add(this.chartRigProfit);
             this.Name = "Form_RigProfitChart";
             this.Text = "Form_RigProfitChart";
@@ -73,11 +84,13 @@ namespace NiceHashMiner.Forms
             this.Shown += new System.EventHandler(this.Form_RigProfitChart_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.chartRigProfit)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chartRigProfit;
+        private System.Windows.Forms.Label label_totalEfficiency;
     }
 }

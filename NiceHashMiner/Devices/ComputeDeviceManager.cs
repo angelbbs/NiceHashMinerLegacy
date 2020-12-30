@@ -237,7 +237,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint(Tag, "Del nvml.dll failed: " + e.Message);
                     }
-
+                    
                     if (!Directory.Exists(NVPath + "\\NVSMI"))
                     {
                         try
@@ -264,6 +264,7 @@ namespace NiceHashMiner.Devices
                         }
                     } else
                     {
+                        
                         try
                         {
                             foreach (string newPath in Directory.GetFiles(NVCommon, "*.*", SearchOption.AllDirectories))
@@ -274,26 +275,30 @@ namespace NiceHashMiner.Devices
                         {
                             Helpers.ConsolePrint(Tag, "Copy files failed: " + e.Message);
                         }
-
+                        
                         try
                         {
+                            
                             var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
                             File.Copy(NVPath + "\\NVSMI\\nvml.dll", copyToPath, true);
                             Helpers.ConsolePrint(Tag, $"Copy from {NVPath + "\\NVSMI\\nvml.dll"} to {copyToPath} done");
+                            
                         }
                         catch (Exception e)
                         {
                             Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
                         }
                     }
-
-                    nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
-                    //Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
-                    if (nvmlLoaded != nvmlReturn.Success)
+                    if (File.Exists(NVPath + "\\NVSMI\\nvml.dll"))
                     {
-                        Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
+                        nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
+                        //Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
+                        if (nvmlLoaded != nvmlReturn.Success)
+                        {
+                            Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
+                        }
                     }
-
+                    
                 }
 
                 MessageNotifier = messageNotifier;
@@ -650,6 +655,15 @@ namespace NiceHashMiner.Devices
                         }
 
                         avaliableVideoControllers.Add(vidController);
+                        
+                        if (vidController.DriverVersion.Contains("4.6079"))
+                        {
+                            MessageBox.Show("Unsupported NVIDIA driver version 460.79\r " +
+                                "Please revert to previous drivers or install newest" ,
+    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        
                     }
                     Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
@@ -673,6 +687,7 @@ namespace NiceHashMiner.Devices
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
+                    
                 }
 
                 public static bool HasNvidiaVideoController()
@@ -826,7 +841,18 @@ namespace NiceHashMiner.Devices
                         {
                             var ret = NvmlNativeMethods.nvmlInit();
                             if (ret != nvmlReturn.Success)
+                            {
+
+                                if (ret == nvmlReturn.Uninitialized)
+                                {
+                                    Helpers.ConsolePrint("NVML", "Uninitialized twice!");
+                                    MessageBox.Show("Invalid NVIDIA driver installation!\r Update or reinstall drivers",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return;
+                                }
+
                                 throw new Exception($"NVML init failed with code {ret}");
+                            }
                             nvmlInit = true;
                         }
                         catch (Exception e)

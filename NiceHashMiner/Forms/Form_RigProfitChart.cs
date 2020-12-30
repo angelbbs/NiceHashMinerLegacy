@@ -19,6 +19,8 @@ namespace NiceHashMiner.Forms
     {
         public System.Windows.Forms.Timer _RigProfitChartTimer;
         public int ProfitsCount = 0;
+        public double totalRateAll = 0d;
+        public double currentProfitAll = 0d;
 
         public Form_RigProfitChart()
         {
@@ -33,6 +35,11 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, totalRate * 1000);
             chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, rpl.currentProfit * 1000);
             ProfitsCount++;
+            //потом переделаю проценты, как надо
+            totalRateAll = totalRateAll + totalRate;
+            currentProfitAll = currentProfitAll + rpl.currentProfit;
+            var cp =(currentProfitAll / totalRate) / ProfitsCount;
+            label_totalEfficiency.Text = "Total rig efficiency: " + Math.Round((cp * 100), 1).ToString() + "%";
 
         }
 
