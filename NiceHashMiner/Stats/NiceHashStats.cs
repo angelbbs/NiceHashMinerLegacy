@@ -218,7 +218,24 @@ namespace NiceHashMiner.Stats
 
                         case "balance":
                             SetBalance(message.value.Value);
-                            SetProf(message.prof.Value); //надо переводить на c#8, иначе исключение не обработать
+                            if (message.prof != null)
+                            {
+                                SetProf(message.prof.Value); //надо переводить на c#8, иначе исключение не обработать
+                            } else
+                            {
+                                break;
+                            }
+                            double totalRate = MinersManager.GetTotalRate();
+                            double.TryParse(message.prof.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double profitabilityFromNH);
+                            //var RigProfits = new List<Form_Main.RigProfitList>();
+                            /*
+                            var l = new Form_Main.RigProfitList();
+                            l.currentProfit = profitabilityFromNH;
+                            l.totalRate = totalRate;
+                            Form_Main.RigProfits.Add(l);
+                            */
+                            Form_Main.lastRigProfit.currentProfit = profitabilityFromNH;
+
                             break;
                         case "mining.start":
                              RemoteMiningStart(message.id.Value.ToString(), message.device.Value);
@@ -950,12 +967,11 @@ namespace NiceHashMiner.Stats
 
         private static void SetProf(string prof)
         {
-            Helpers.ConsolePrint("SOCKET", "Received5: " + prof);
             try
             {
-                if (double.TryParse(prof, NumberStyles.Float, CultureInfo.InvariantCulture, out var cap))
+                if (double.TryParse(prof, NumberStyles.Float, CultureInfo.InvariantCulture, out var profitabilityFromNH))
                 {
-                    Form_Main.CAP = cap;
+                    Form_Main.profitabilityFromNH = profitabilityFromNH;
                 }
             }
             catch (Exception e)

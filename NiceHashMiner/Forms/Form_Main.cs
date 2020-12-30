@@ -125,7 +125,14 @@ namespace NiceHashMiner
         public static bool AntivirusInstalled = false;
         public static int smaCount = 0;
         private static int ticks = 0;//костыль
-        public static double CAP = 0.0d;
+        public static double profitabilityFromNH = 0.0d;
+        public static List<RigProfitList> RigProfits = new List<Form_Main.RigProfitList>();
+        public static RigProfitList lastRigProfit = new Form_Main.RigProfitList();
+        public struct RigProfitList
+        {
+            public double totalRate;
+            public double currentProfit;
+        }
 
         public Form_Main()
         {
@@ -372,7 +379,8 @@ namespace NiceHashMiner
             buttonSettings.Text = International.GetText("Form_Main_settings");
             buttonStartMining.Text = International.GetText("Form_Main_start");
             buttonStopMining.Text = International.GetText("Form_Main_stop");
-            buttonHelp.Text = International.GetText("Form_Main_help");
+            //buttonChart.Text = International.GetText("Form_Main_help");
+            buttonChart.Text = International.GetText("Form_Main_chart");
 
             label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
             groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
@@ -640,7 +648,8 @@ namespace NiceHashMiner
 
             //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            new Task(() => CheckUpdates()).Start();
+            //new Task(() => CheckUpdates()).Start();
+            CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
             new Task(() => FlushCache()).Start();
             if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
@@ -1634,7 +1643,9 @@ public static void CloseChilds(Process parentId)
             if (!VerifyMiningAddress(true)) return;
             if (true)
             {
-                Process.Start(Links.CheckStatsNew + textBoxBTCAddress_new.Text.Trim());
+                //я не знаю, как отличить нормальный btc адрес от внутреннего адреса nh
+                Process.Start("https://www.nicehash.com/my/mining/stats");//internal wallet
+                //Process.Start(Links.CheckStatsNew + textBoxBTCAddress_new.Text.Trim()); //external wallet
             }
         }
 
@@ -1869,11 +1880,22 @@ public static void CloseChilds(Process parentId)
             Process.Start(Links.VisitUrl);
         }
 
-        private void ButtonHelp_Click(object sender, EventArgs e)
+        //public delegate void InvokeDelegate();
+        private void ButtonChart_Click(object sender, EventArgs e)
         {
-            Process.Start(Links.NhmHelp);
-        }
+            var chart = new Form_RigProfitChart();
+            try
+            {
+                //   SetChildFormCenter(settings);
 
+                chart.Show();
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("chart", er.ToString());
+            }
+            //BeginInvoke(new InvokeDelegate(Form_RigProfitChart.ChartData));
+        }
         private void ToolStripStatusLabel10_Click(object sender, EventArgs e)
         {
                 Process.Start(Links.NhmPayingFaqNew);
@@ -2310,32 +2332,41 @@ public static void CloseChilds(Process parentId)
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
-            string capstring;
+            string CurrentActualProfitability;
             if (ConfigManager.GeneralConfig.AutoScaleBTCValues)
             {
-                capstring = ((CAP) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) +
+                CurrentActualProfitability = ((profitabilityFromNH) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) +
                     " mBTC/" +
                       International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
             }
             else
             {
-                capstring = ((CAP) * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) +
+                CurrentActualProfitability = ((profitabilityFromNH) * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) +
                     " BTC/" +
                       International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
             }
 
-            //"Form_Main_CAP": "Текущая фактическая прибыльность",
             var rateCurrencyString = ExchangeRateApi
-                             .ConvertToActiveCurrency((CAP) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
+                             .ConvertToActiveCurrency((profitabilityFromNH) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                              .ToString("F2", CultureInfo.InvariantCulture)
                          + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                          International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
-
-
-            labelCAP.Text = International.GetText("Form_Main_CAP") + ": " + capstring + "  " + rateCurrencyString;
-
+            if (ConfigManager.GeneralConfig.Show_current_actual_profitability)
+            {
+                if (Miner.IsRunningNew)
+                {
+                    labelCAP.Text = International.GetText("Form_Main_current_actual_profitabilities") + ": " + CurrentActualProfitability + "  " + rateCurrencyString;
+                }
+                else
+                {
+                    labelCAP.Text = "";
+                }
+            } else
+            {
+                labelCAP.Text = "";
+            }
             SMAdelayTick++;
             try
             {

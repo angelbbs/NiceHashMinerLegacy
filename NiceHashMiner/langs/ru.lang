@@ -37,7 +37,7 @@
 
 
     "Form_Main_visit_us": "Посетите нас @ www.nicehash.com",
-    "Form_Main_check_stats": "Проверить статистику!",
+    "Form_Main_check_stats": "Смотреть кошелек",
     "Form_Main_choose_bitcoin_wallet": "Как выбрать Биткоин-кошелёк",
     "Form_Main_global_rate": "Ставка:",
     "Form_Main_balance": "Баланс",
@@ -483,7 +483,10 @@
                 "Form_Settings_checkBox_show_AMDdevice_manufacturer": "Показывать производителей устройств AMD",
                 "Form_Settings_checkBox_show_device_memsize": "Показывать объем памяти устройств",
              "Form_Settings_checkBox_show_device_busId": "Показывать номер шины(busID) устройств",
-"Form_Main_CAP": "Текущая фактическая прибыльность",
+"Form_Main_Checkbox_current_actual_profitabilities": "Показать текущую фактическую прибыльность",
+"Form_Main_current_actual_profitabilities": "Текущая фактическая прибыльность",
+"Form_Main_current_local_profitabilities": "Текущая локальная прибыльность",
+"Form_Main_chart": "Прибыльность",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

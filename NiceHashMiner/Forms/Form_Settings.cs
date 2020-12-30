@@ -360,53 +360,53 @@ namespace NiceHashMiner.Forms
                 ver + International.GetText("Form_Settings_Currentbuild") +
                 Form_Main.currentBuild.ToString("00000000.00");
 
-            linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
+            linkLabelNewVersion2.LinkBehavior = LinkBehavior.NeverUnderline;
 
             buttonCreateBackup.Text = International.GetText("Form_Settings_Createbackup");
             buttonRestoreBackup.Text = International.GetText("Form_Settings_Restorebackup");
 
-            linkLabelNewVersion.Text = International.GetText("Form_Settings_Nonewversionorbuild");
+            linkLabelNewVersion2.Text = International.GetText("Form_Settings_Nonewversionorbuild");
             buttonUpdate.Visible = false;
             if (Form_Main.NewVersionExist)
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Nonewversionorbuild");
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Nonewversionorbuild");
                 if (Form_Main.currentBuild < Form_Main.githubBuild)//testing
                 {
-                    linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") + Form_Main.githubBuild.ToString("00000000.00");
+                    linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newbuild") + Form_Main.githubBuild.ToString("00000000.00");
                     buttonUpdate.Visible = true;
                 }
 
                 if (Form_Main.currentVersion < Form_Main.githubVersion)
                 {
-                    linkLabelNewVersion.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
+                    linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
                     buttonUpdate.Visible = true;
                 }
                 if (Form_Main.githubVersion <= 0)
                 {
-                    linkLabelNewVersion.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
+                    linkLabelNewVersion2.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
                     buttonUpdate.Visible = false;
                 }
-                linkLabelNewVersion.Update();
+                linkLabelNewVersion2.Update();
             }
             progressBarUpdate.Visible = false;
 
             if (Form_Main.currentBuild < Form_Main.githubBuild)
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") +
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newbuild") +
                     Form_Main.githubBuild.ToString("{0:00000000.00}");
                 buttonUpdate.Visible = true;
-                linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
+                linkLabelNewVersion2.LinkBehavior = LinkBehavior.SystemDefault;
             }
             var programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
             if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
                 buttonUpdate.Visible = true;
-                linkLabelNewVersion.LinkBehavior = LinkBehavior.SystemDefault;
+                linkLabelNewVersion2.LinkBehavior = LinkBehavior.SystemDefault;
             }
             if (Form_Main.githubVersion <= 0)
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
                 buttonUpdate.Visible = false;
             }
 
@@ -453,6 +453,7 @@ namespace NiceHashMiner.Forms
             checkBox_ShowFanAsPercent.Text = International.GetText("Form_Settings_checkBox_ShowFanAsPercent");
             checkbox_Group_same_devices.Text = International.GetText("Form_Settings_checkbox_Group_same_devices");
             checkBox_Force_mining_if_nonprofitable.Text = International.GetText("Form_Settings_checkBox_Force_mining_if_nonprofitable");
+            checkbox_current_actual_profitabilities.Text = International.GetText("Form_Main_Checkbox_current_actual_profitabilities");
             checkBox_Show_profit_with_power_consumption.Text = International.GetText("Form_Settings_checkBox_Show_profit_with_power_consumption");
             checkBox_fiat.Text = International.GetText("Form_Settings_checkBox_fiat");
             checkBox_AlwaysOnTop.Text = International.GetText("Form_Settings_checkBox_AlwaysOnTop");
@@ -629,12 +630,12 @@ namespace NiceHashMiner.Forms
                 linkLabelCurrentVersion.ActiveLinkColor = Form_Main._textColor;
                 linkLabelCurrentVersion.MouseLeave += (s, e) => linkLabelCurrentVersion.LinkBehavior = LinkBehavior.NeverUnderline;
                 linkLabelCurrentVersion.MouseEnter += (s, e) => linkLabelCurrentVersion.LinkBehavior =LinkBehavior.AlwaysUnderline;
-                linkLabelNewVersion.MouseLeave += (s, e) => linkLabelNewVersion.LinkBehavior = LinkBehavior.NeverUnderline;
-                linkLabelNewVersion.MouseEnter += (s, e) => linkLabelNewVersion.LinkBehavior = LinkBehavior.AlwaysUnderline;
+                linkLabelNewVersion2.MouseLeave += (s, e) => linkLabelNewVersion2.LinkBehavior = LinkBehavior.NeverUnderline;
+                linkLabelNewVersion2.MouseEnter += (s, e) => linkLabelNewVersion2.LinkBehavior = LinkBehavior.AlwaysUnderline;
 
-                linkLabelNewVersion.BackColor = Form_Main._backColor;
-                linkLabelNewVersion.ForeColor = Form_Main._textColor;
-                linkLabelNewVersion.LinkColor = Form_Main._textColor;
+                linkLabelNewVersion2.BackColor = Form_Main._backColor;
+                linkLabelNewVersion2.ForeColor = Form_Main._textColor;
+                linkLabelNewVersion2.LinkColor = Form_Main._textColor;
 
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
                 {
@@ -699,6 +700,9 @@ namespace NiceHashMiner.Forms
                 }
                 checkBox_Force_mining_if_nonprofitable.BackColor = Form_Main._backColor;
                 checkBox_Force_mining_if_nonprofitable.ForeColor = Form_Main._textColor;
+
+                checkbox_current_actual_profitabilities.BackColor = Form_Main._backColor;
+                checkbox_current_actual_profitabilities.ForeColor = Form_Main._textColor;
 
                 checkBox_Show_profit_with_power_consumption.BackColor = Form_Main._backColor;
                 checkBox_Show_profit_with_power_consumption.ForeColor = Form_Main._textColor;
@@ -871,6 +875,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkbox_current_actual_profitabilities.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -969,6 +974,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
+                checkbox_current_actual_profitabilities.Checked = ConfigManager.GeneralConfig.Show_current_actual_profitability;
                 checkBox_Show_profit_with_power_consumption.Checked = ConfigManager.GeneralConfig.DecreasePowerCost;
                 checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
@@ -1111,6 +1117,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
+            ConfigManager.GeneralConfig.Show_current_actual_profitability = checkbox_current_actual_profitabilities.Checked;
             ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
@@ -1994,24 +2001,24 @@ namespace NiceHashMiner.Forms
             Double.TryParse(githubVersion.ToString(), out Form_Main.githubVersion);
             Form_Main.githubBuild = Updater.Updater.GetVersion().Item2;
 
-            linkLabelNewVersion.Text = International.GetText("Form_Settings_Nonewversionorbuild");
+            linkLabelNewVersion2.Text = International.GetText("Form_Settings_Nonewversionorbuild");
             if (Form_Main.currentBuild < Form_Main.githubBuild)//testing
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newbuild") + Form_Main.githubBuild.ToString("00000000.00");
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newbuild") + Form_Main.githubBuild.ToString("00000000.00");
                 buttonUpdate.Visible = true;
             }
 
             if (Form_Main.currentVersion < Form_Main.githubVersion)
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
                 buttonUpdate.Visible = true;
             }
             if (Form_Main.githubVersion <= 0)
             {
-                linkLabelNewVersion.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
                 buttonUpdate.Visible = false;
             }
-            linkLabelNewVersion.Update();
+            linkLabelNewVersion2.Update();
         }
 
         private void linkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

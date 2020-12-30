@@ -22,6 +22,7 @@ namespace NiceHashMiner.Configs.Data
         public int DaggerHashimoto1070MaxEpoch = 371;
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";
+        public bool Show_current_actual_profitability = true;
         public bool DivertRun = true;
         public bool ShowUptime = true;
         public bool ProgramMonitoring = true;

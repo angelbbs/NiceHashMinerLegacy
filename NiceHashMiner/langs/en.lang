@@ -490,7 +490,10 @@
 "Form_Settings_label_AddAMD": "Additional AMD GPU power consumption (W)",
 "Form_Settings_uncompatible_options1": "Options \"Allow Multiple Instances\" and \"Enable Watchdog\" uncompatible",
 "Form_Settings_DelBenchmarks": "This will reset all speeds in algorithms",
-"Form_Main_CAP": "Current actual profitabilitys",
+"Form_Main_Checkbox_current_actual_profitabilities": "Show current actual profitabilities",
+"Form_Main_current_actual_profitabilities": "Current actual profitabilities",
+"Form_Main_current_local_profitabilities": "Current local profitabilities",
+"Form_Main_chart": "Profitabilities",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

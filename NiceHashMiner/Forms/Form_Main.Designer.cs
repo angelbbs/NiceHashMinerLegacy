@@ -57,7 +57,7 @@ namespace NiceHashMiner
             this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label_NotProfitable = new System.Windows.Forms.Label();
-            this.buttonHelp = new System.Windows.Forms.Button();
+            this.buttonChart = new System.Windows.Forms.Button();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.buttonBTC_Save = new System.Windows.Forms.Button();
@@ -65,8 +65,8 @@ namespace NiceHashMiner
             this.textBoxBTCAddress_new = new System.Windows.Forms.TextBox();
             this.buttonBTC_Clear = new System.Windows.Forms.Button();
             this.label_Uptime = new System.Windows.Forms.Label();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.labelCAP = new System.Windows.Forms.Label();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -219,7 +219,7 @@ namespace NiceHashMiner
             // linkLabelCheckStats
             // 
             this.linkLabelCheckStats.AutoSize = true;
-            this.linkLabelCheckStats.Location = new System.Drawing.Point(492, 89);
+            this.linkLabelCheckStats.Location = new System.Drawing.Point(398, 36);
             this.linkLabelCheckStats.Name = "linkLabelCheckStats";
             this.linkLabelCheckStats.Size = new System.Drawing.Size(113, 13);
             this.linkLabelCheckStats.TabIndex = 9;
@@ -353,18 +353,18 @@ namespace NiceHashMiner
             this.label_NotProfitable.TabIndex = 110;
             this.label_NotProfitable.Text = "CURRENTLY MINING NOT PROFITABLE.";
             // 
-            // buttonHelp
+            // buttonChart
             // 
-            this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonHelp.FlatAppearance.BorderSize = 0;
-            this.buttonHelp.Location = new System.Drawing.Point(612, 220);
-            this.buttonHelp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonHelp.Name = "buttonHelp";
-            this.buttonHelp.Size = new System.Drawing.Size(105, 23);
-            this.buttonHelp.TabIndex = 8;
-            this.buttonHelp.Text = "&Help";
-            this.buttonHelp.UseVisualStyleBackColor = true;
-            this.buttonHelp.Click += new System.EventHandler(this.ButtonHelp_Click);
+            this.buttonChart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonChart.FlatAppearance.BorderSize = 0;
+            this.buttonChart.Location = new System.Drawing.Point(612, 220);
+            this.buttonChart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonChart.Name = "buttonChart";
+            this.buttonChart.Size = new System.Drawing.Size(105, 23);
+            this.buttonChart.TabIndex = 8;
+            this.buttonChart.Text = "Profit chart";
+            this.buttonChart.UseVisualStyleBackColor = true;
+            this.buttonChart.Click += new System.EventHandler(this.ButtonChart_Click);
             // 
             // linkLabelNewVersion
             // 
@@ -436,6 +436,15 @@ namespace NiceHashMiner
             this.label_Uptime.TabIndex = 115;
             this.label_Uptime.Text = "Uptime:";
             // 
+            // labelCAP
+            // 
+            this.labelCAP.AutoSize = true;
+            this.labelCAP.Location = new System.Drawing.Point(7, 89);
+            this.labelCAP.Name = "labelCAP";
+            this.labelCAP.Size = new System.Drawing.Size(0, 13);
+            this.labelCAP.TabIndex = 116;
+            this.labelCAP.Click += new System.EventHandler(this.labelCAP_Click);
+            // 
             // devicesListViewEnableControl1
             // 
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -453,16 +462,6 @@ namespace NiceHashMiner
             this.devicesListViewEnableControl1.TabIndex = 109;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
             // 
-            // labelCAP
-            // 
-            this.labelCAP.AutoSize = true;
-            this.labelCAP.Location = new System.Drawing.Point(7, 89);
-            this.labelCAP.Name = "labelCAP";
-            this.labelCAP.Size = new System.Drawing.Size(125, 13);
-            this.labelCAP.TabIndex = 116;
-            this.labelCAP.Text = "Current actual profitability";
-            this.labelCAP.Click += new System.EventHandler(this.labelCAP_Click);
-            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -475,7 +474,7 @@ namespace NiceHashMiner
             this.Controls.Add(this.labelBitcoinAddressNew);
             this.Controls.Add(this.textBoxBTCAddress_new);
             this.Controls.Add(this.linkLabelNewVersion);
-            this.Controls.Add(this.buttonHelp);
+            this.Controls.Add(this.buttonChart);
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
@@ -530,7 +529,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.Label labelDemoMode;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label_NotProfitable;
-        private System.Windows.Forms.Button buttonHelp;
+        private System.Windows.Forms.Button buttonChart;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label labelBitcoinAddressNew;

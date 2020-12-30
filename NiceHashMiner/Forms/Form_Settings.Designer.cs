@@ -38,6 +38,7 @@ namespace NiceHashMiner.Forms
             this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.checkbox_current_actual_profitabilities = new System.Windows.Forms.CheckBox();
             this.textBoxAddAMD = new System.Windows.Forms.TextBox();
             this.labelAddAMD = new System.Windows.Forms.Label();
             this.checkBox_fiat = new System.Windows.Forms.CheckBox();
@@ -163,7 +164,7 @@ namespace NiceHashMiner.Forms
             this.labelCheckforprogramupdatesevery = new System.Windows.Forms.Label();
             this.comboBoxCheckforprogramupdatesevery = new System.Windows.Forms.ComboBox();
             this.linkLabelCurrentVersion = new System.Windows.Forms.LinkLabel();
-            this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
+            this.linkLabelNewVersion2 = new System.Windows.Forms.LinkLabel();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonCheckNewVersion = new System.Windows.Forms.Button();
             this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
@@ -377,6 +378,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.checkbox_current_actual_profitabilities);
             this.groupBox_Main.Controls.Add(this.textBoxAddAMD);
             this.groupBox_Main.Controls.Add(this.labelAddAMD);
             this.groupBox_Main.Controls.Add(this.checkBox_fiat);
@@ -404,6 +406,17 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
             this.groupBox_Main.Enter += new System.EventHandler(this.groupBox_Main_Enter);
+            // 
+            // checkbox_current_actual_profitabilities
+            // 
+            this.checkbox_current_actual_profitabilities.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkbox_current_actual_profitabilities.Location = new System.Drawing.Point(6, 192);
+            this.checkbox_current_actual_profitabilities.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkbox_current_actual_profitabilities.Name = "checkbox_current_actual_profitabilities";
+            this.checkbox_current_actual_profitabilities.Size = new System.Drawing.Size(318, 18);
+            this.checkbox_current_actual_profitabilities.TabIndex = 385;
+            this.checkbox_current_actual_profitabilities.Text = "Show current actual profitability";
+            this.checkbox_current_actual_profitabilities.UseVisualStyleBackColor = true;
             // 
             // textBoxAddAMD
             // 
@@ -1894,7 +1907,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.Controls.Add(this.labelCheckforprogramupdatesevery);
             this.groupBoxUpdates.Controls.Add(this.comboBoxCheckforprogramupdatesevery);
             this.groupBoxUpdates.Controls.Add(this.linkLabelCurrentVersion);
-            this.groupBoxUpdates.Controls.Add(this.linkLabelNewVersion);
+            this.groupBoxUpdates.Controls.Add(this.linkLabelNewVersion2);
             this.groupBoxUpdates.Controls.Add(this.buttonUpdate);
             this.groupBoxUpdates.Controls.Add(this.buttonCheckNewVersion);
             this.groupBoxUpdates.Controls.Add(this.progressBarUpdate);
@@ -1952,17 +1965,17 @@ namespace NiceHashMiner.Forms
             this.linkLabelCurrentVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCurrentVersion_LinkClicked);
             this.linkLabelCurrentVersion.MouseEnter += new System.EventHandler(this.linkLabelCurrentVersion_MouseEnter);
             // 
-            // linkLabelNewVersion
+            // linkLabelNewVersion2
             // 
-            this.linkLabelNewVersion.AutoSize = true;
-            this.linkLabelNewVersion.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.linkLabelNewVersion.Location = new System.Drawing.Point(384, 19);
-            this.linkLabelNewVersion.Name = "linkLabelNewVersion";
-            this.linkLabelNewVersion.Size = new System.Drawing.Size(55, 13);
-            this.linkLabelNewVersion.TabIndex = 362;
-            this.linkLabelNewVersion.TabStop = true;
-            this.linkLabelNewVersion.Text = "linkLabel2";
-            this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNewVersion_LinkClicked);
+            this.linkLabelNewVersion2.AutoSize = true;
+            this.linkLabelNewVersion2.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.linkLabelNewVersion2.Location = new System.Drawing.Point(384, 19);
+            this.linkLabelNewVersion2.Name = "linkLabelNewVersion2";
+            this.linkLabelNewVersion2.Size = new System.Drawing.Size(55, 13);
+            this.linkLabelNewVersion2.TabIndex = 362;
+            this.linkLabelNewVersion2.TabStop = true;
+            this.linkLabelNewVersion2.Text = "linkLabel2";
+            this.linkLabelNewVersion2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNewVersion_LinkClicked);
             // 
             // buttonUpdate
             // 
@@ -2232,7 +2245,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label labelCheckforprogramupdatesevery;
         private System.Windows.Forms.ComboBox comboBoxCheckforprogramupdatesevery;
         public System.Windows.Forms.Button buttonUpdate;
-        public System.Windows.Forms.LinkLabel linkLabelNewVersion;
+        public System.Windows.Forms.LinkLabel linkLabelNewVersion2;
         public System.Windows.Forms.CustomTabControl tabControlGeneral;
         private System.Windows.Forms.CheckBox checkbox_Use_OpenHardwareMonitor;
         private System.Windows.Forms.CheckBox checkBox_ShowUptime;
@@ -2263,5 +2276,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_show_NVdevice_manufacturer;
         private System.Windows.Forms.CheckBox checkBox_ShowDeviceMemSize;
         private System.Windows.Forms.CheckBox checkBox_show_AMDdevice_manufacturer;
+        private System.Windows.Forms.CheckBox checkbox_current_actual_profitabilities;
     }
 }
