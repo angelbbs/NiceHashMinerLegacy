@@ -72,6 +72,8 @@ namespace NiceHashMiner.Stats
             {
                 if (_webSocket == null)
                 {
+                    _webSocket = new WebSocket(Links.NhmSocketAddress);
+                    /*
                     if (!isFailover)
                     {
                         _webSocket = new WebSocket(Links.NhmSocketAddress);
@@ -81,6 +83,7 @@ namespace NiceHashMiner.Stats
                         _webSocket = new WebSocket(Links.NhmSocketAddressFailover);
                     }
                     isFailover = !isFailover;
+                    */
                 }
                 else
                 {

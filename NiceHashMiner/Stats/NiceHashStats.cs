@@ -80,6 +80,8 @@ namespace NiceHashMiner.Stats
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 45 * 1000;
 
+        private static bool RigProfitsFirstRun = false;
+
         public static double Balance { get; private set; }
         public static string Version = "";
 
@@ -104,7 +106,7 @@ namespace NiceHashMiner.Stats
                 try
                 {
                     dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
-                    //Helpers.ConsolePrint("SOCKET", "Using previous SMA");
+                    Helpers.ConsolePrint("SOCKET", "Using previous SMA");
                     JArray smadata = (JArray.Parse(jsonData));
                     SetAlgorithmRates(smadata);
                 } catch (Exception er)
@@ -180,7 +182,7 @@ namespace NiceHashMiner.Stats
 
                                 SetAlgorithmRates(message.data);
                                 GetSmaAPI();
-
+                                
                                 if (AlgorithmSwitchingManager._smaCheckTimer != null)
                                 {
                                     AlgorithmSwitchingManager._smaCheckTimer.Stop();
@@ -218,24 +220,32 @@ namespace NiceHashMiner.Stats
 
                         case "balance":
                             SetBalance(message.value.Value);
+
                             if (message.prof != null)
                             {
-                                SetProf(message.prof.Value); //надо переводить на c#8, иначе исключение не обработать
+                                Form_Main.profitabilityFromNH = SetProf(message.prof.Value);
+                                double totalRate = MinersManager.GetTotalRate();
+                                Form_Main.lastRigProfit.DateTime = DateTime.Now;
+                                Form_Main.lastRigProfit.currentProfit = Math.Round(Form_Main.profitabilityFromNH, 9);
+                                Form_Main.lastRigProfit.totalRate = Math.Round(totalRate, 9);
+                                Form_Main.lastRigProfit.unpaidAmount = 0;
+                                //Helpers.ConsolePrint("profWSS", (Form_Main.profitabilityFromNH * 1000).ToString());
+                                //***********************
+                                //GetRigProfit();
+                                //Form_Main.profitabilityFromNH = Form_Main.lastRigProfit.currentProfit;
+                                //Helpers.ConsolePrint("profAPI", (Form_Main.profitabilityFromNH * 1000).ToString());
                             } else
                             {
                                 break;
                             }
-                            double totalRate = MinersManager.GetTotalRate();
-                            double.TryParse(message.prof.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double profitabilityFromNH);
-                            //var RigProfits = new List<Form_Main.RigProfitList>();
                             /*
-                            var l = new Form_Main.RigProfitList();
-                            l.currentProfit = profitabilityFromNH;
-                            l.totalRate = totalRate;
-                            Form_Main.RigProfits.Add(l);
+                            if (!CalcRigStatusString().Equals("MINING"))
+                            {
+                                Form_Main.profitabilityFromNH = 0;
+                            }
                             */
-                            Form_Main.lastRigProfit.currentProfit = profitabilityFromNH;
 
+                            
                             break;
                         case "mining.start":
                              RemoteMiningStart(message.id.Value.ToString(), message.device.Value);
@@ -422,77 +432,7 @@ namespace NiceHashMiner.Stats
             //await _socket.SendData(cExecuted);
         }
 
-        public static bool GetSmaAPICurrentOld()
-        {
-            Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPICurrentOld");
-
-            try
-            {
-                string resp;
-                    resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info/", "x");
-
-                if (resp != null)
-                {
-                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                    {
-                     //   Helpers.ConsolePrint("NHM_API_info", resp);
-                    }
-
-                    dynamic list;
-
-                    {
-                        list = JsonConvert.DeserializeObject<Rootobject>(resp);
-                    }
-                    ProfitsSMA profdata = new ProfitsSMA();
-
-                    List<ProfitsSMA> profdata2 = new List<ProfitsSMA>();
-
-                    string outProf = "[\n";
-
-                    foreach (var result in list.result.simplemultialgo)
-                    {
-                        if (!result.algo.ToString().Contains("UNUSED"))
-                        {
-                            if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                            {
-                                Helpers.ConsolePrint("SMA-DATA-APICurrentOld: ", Enum.GetName(typeof(AlgorithmType), result.algo) + " - " + result.paying);
-                            }
-                        }
-                        outProf = outProf + "  [\n" + "    " + result.algo + ",\n" + "    " + result.paying + "\n" + "  ],\n";
-
-                    }
-                    outProf = outProf.Remove(outProf.Length - 2) + "]";
-
-                  // Helpers.ConsolePrint("SMA-DATA-APICurrentOld: ", outProf);
-                    JArray smadata = (JArray.Parse(outProf));
-
-                    NiceHashStats.SetAlgorithmRates(smadata);
-
-                    FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
-                    StreamWriter w = new StreamWriter(fs);
-                    w.Write(smadata);
-                    //w.Write(JsonConvert.SerializeObject(message));
-                    w.Flush();
-                    w.Close();
-                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                    {
-                        Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrentOld OK");
-                    }
-                    return true;
-                }
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrentOld ERROR");
-                return false;
-
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NHM_API_info", ex.Message);
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrentOld fatal ERROR");
-                return false;
-            }
-            return false;
-
-        }
+        
 
         public static bool GetSmaAPICurrent()
         {
@@ -534,6 +474,8 @@ namespace NiceHashMiner.Stats
                                     {
                                         Helpers.ConsolePrint("SMA-DATA-APICurrent: ", miningAlgorithms.title + " - " + Algo + " - " + miningAlgorithms.paying);
                                     }
+
+                                    //miningAlgorithms.paying = "0.00016";
                                     outProf = outProf + "  [\n" + "    " + Algo + ",\n" + "    " + miningAlgorithms.paying + "\n" + "  ],\n";
                                     break;
                                 }
@@ -545,7 +487,7 @@ namespace NiceHashMiner.Stats
                    // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 10);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 3);
                     /*
                     FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                     StreamWriter w = new StreamWriter(fs);
@@ -682,7 +624,7 @@ namespace NiceHashMiner.Stats
                  //   Helpers.ConsolePrint("SMA-DATA-API24h: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 1.1);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 1.5);
 
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
@@ -698,6 +640,45 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("NHM_API_info", ex.Message);
                 Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h fatal ERROR");
+                return false;
+            }
+            return false;
+
+        }
+        public static bool GetRigProfit()//big traffic
+        {
+            Helpers.ConsolePrint("NHM_API_info", "Trying GetRigProfit");
+
+            try
+            {
+                string resp;
+                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ/rigs2?sort=NAME&page=0", "x");
+                //                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ/rigs/activeWorkers?sortDirection=ASC", "x");
+                if (resp != null)
+                {
+                    //Helpers.ConsolePrint("NHM_API_info", resp);
+                    dynamic respJson = JsonConvert.DeserializeObject(resp);
+                    var Rigs = respJson.miningRigs;
+                    
+                    foreach (var rig in Rigs)
+                    {
+                        if (rig.rigId.ToString() == NiceHashSocket.RigID)
+                        {
+                            Helpers.ConsolePrint("NHM_API_info", rig.rigId.ToString());
+                            Helpers.ConsolePrint("NHM_API_info", rig.name.ToString());
+                            Helpers.ConsolePrint("NHM_API_info", rig.profitability.ToString());
+                            Helpers.ConsolePrint("NHM_API_info", rig.unpaidAmount.ToString());
+                            Form_Main.lastRigProfit.currentProfit = rig.profitability;
+                            Form_Main.lastRigProfit.unpaidAmount = rig.unpaidAmount;
+                        }
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("NHM_API_info", ex.Message);
+                Helpers.ConsolePrint("NHM_API_info", "GetRigProfit fatal ERROR");
                 return false;
             }
             return false;
@@ -861,7 +842,7 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", e.Message);
             }
         }
-        private static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 1)
+        public static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 12.0)
         {
             bool bug = false;
             bool alg_zero = false;
@@ -878,72 +859,57 @@ namespace NiceHashMiner.Stats
                         var algoKey = (AlgorithmType)algo[0].Value<int>();
                         if (!NHSmaData.TryGetPaying(algoKey, out double paying))
                         {
-                            Helpers.ConsolePrint("SMA API", "ERROR !NHSmaData.TryGetPaying: Unknown algo: "+ algoKey.ToString());
-
-                            payingDict[algoKey] = algo[1].Value<double>() * mult;
+                            Helpers.ConsolePrint("SMA API", "ERROR! Unknown algo: "+ algoKey.ToString());
+                            //payingDict[algoKey] = algo[1].Value<double>();
                         }
-                        //else
+
+                        if (paying == 0)
                         {
-                            /*
-                            double treshold = 1;
-                            if (ConfigManager.GeneralConfig.MOPA2)
+                            payingDict[algoKey] = Math.Abs(algo[1].Value<double>());
+                        }
+
+                        if (Math.Abs(algo[1].Value<double>()) != 0 && paying != 0 && !algoKey.ToString().Contains("UNUSED"))
+                        {
+                            if (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ||
+                               paying / treshold > Math.Abs(algo[1].Value<double>()) * mult)
                             {
-                                treshold = 10; //текущая больше стандартной в 10 раз
-                            }
-                            if (ConfigManager.GeneralConfig.MOPA3)
-                            {
-                                treshold = 5; //5м больше стандартной в 5 раз
-                            }
-                            if (ConfigManager.GeneralConfig.MOPA4)
-                            {
-                                treshold = 1.1; //24ч больше стандартной в 1.1 раза
-                            }
-                            if (ConfigManager.GeneralConfig.MOPA5)
-                            {
-                                treshold = 1.1; //наибольшая больше стандартной в 1.1 раза
-                            }
-                            */
-                            //если старая прибыльность (24ч) больше новой (30м), то игнорировать
-                            //if (paying != 0 && (paying * 5 < Math.Abs(algo[1].Value<double>()) * mult || (paying / 5 > Math.Abs(algo[1].Value<double>() * mult))))
-                            if ((ConfigManager.GeneralConfig.MOPA4 || ConfigManager.GeneralConfig.MOPA5) && treshold != 1 && paying != 0 && (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ))
-                            {
-                                Helpers.ConsolePrint("SMA API", "Bug found in: " + algoKey.ToString() + " " + paying.ToString() + " < " + Math.Abs(algo[1].Value<double>()) * mult + " 24h profitability is bigger than newer on " + (treshold*100-100).ToString() + "%. Ignoring");
-                                if (Math.Abs(algo[1].Value<double>()) * mult == 0 || Math.Abs(algo[1].Value<double>()) * mult * 102 < paying)
-                                {
-                                    Helpers.ConsolePrint("SMA API", algoKey.ToString() + " paying sets to zero");
-                                    bug = false;
-                                    alg_zero = true;
-                                } else bug = true;
-                            }
-                            else if (ConfigManager.GeneralConfig.UseNegativeProfit)
-                            {
-                                if (ConfigManager.GeneralConfig.MOPA5)
-                                {
-                                    if (bug == false & alg_zero == false) payingDict[algoKey] = Math.Max(Math.Abs(algo[1].Value<double>()) * mult, paying);
-                                }
-                                else
-                                {
-                                    if (bug == false) payingDict[algoKey] = Math.Abs(algo[1].Value<double>()) * mult;
-                                }
+                                //Helpers.ConsolePrint("SMA API", algoKey.ToString() + " - " +
+                                //(paying * treshold).ToString() + " : " + (Math.Abs(algo[1].Value<double>()) * mult).ToString());
+                                Helpers.ConsolePrint("SMA API", "Bug found in " + algoKey.ToString() +
+                                    ". Old: " + paying.ToString() +
+                                    " New: " + Math.Abs(algo[1].Value<double>()) * mult +
+                                    " Change in profitability more than " + (treshold * 100).ToString() + "%. Ignoring");
                             }
                             else
                             {
-                                if (ConfigManager.GeneralConfig.MOPA5)
+                                if (ConfigManager.GeneralConfig.MOPA5 && paying < Math.Abs(algo[1].Value<double>() * mult))
                                 {
-                                    if (bug == false & alg_zero == false) payingDict[algoKey] = Math.Max(algo[1].Value<double>() * mult, paying);
+                                    //Helpers.ConsolePrint("SMA API", algoKey.ToString() + " BIGGER - " +
+                                    //(paying).ToString() + " : " + (Math.Abs(algo[1].Value<double>()) * mult).ToString());
+                                    payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
                                 }
-                                else
+                                if (!ConfigManager.GeneralConfig.MOPA5)
                                 {
-                                    if (bug == false) payingDict[algoKey] = algo[1].Value<double>() * mult;
+                                    payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
+                                    //Helpers.ConsolePrint("SMA API", algoKey.ToString() + " - " +
+                                    //(paying).ToString() + " : " + (Math.Abs(algo[1].Value<double>()) * mult).ToString());
                                 }
                             }
                         }
-
+                        if (Math.Abs(algo[1].Value<double>()) == 0)
+                        {
+                            Helpers.ConsolePrint("SMA API", "Bug found in " + algoKey.ToString() +
+                                                                ". Old: " + paying.ToString() +
+                                                                " New: " + Math.Abs(algo[1].Value<double>()) * mult +
+                                                                " Zero ignoring");
+                        }
+                        /*
                         if (ConfigManager.GeneralConfig.DaggerOrderMaxPay > 0 && algoKey == AlgorithmType.DaggerHashimoto && Math.Abs(algo[1].Value<double>()) > ConfigManager.GeneralConfig.DaggerOrderMaxPay)
                         {
                             Helpers.ConsolePrint("SMA", "Sets DaggerHashimoto to 0");
                             payingDict[algoKey] = 0;
                         }
+                        */
                     }
                 }
 
@@ -965,11 +931,12 @@ namespace NiceHashMiner.Stats
             */
         }
 
-        private static void SetProf(string prof)
+        private static double SetProf(string prof)
         {
+            double profitabilityFromNH = 0d;
             try
             {
-                if (double.TryParse(prof, NumberStyles.Float, CultureInfo.InvariantCulture, out var profitabilityFromNH))
+                if (double.TryParse(prof, NumberStyles.Float, CultureInfo.InvariantCulture, out profitabilityFromNH))
                 {
                     Form_Main.profitabilityFromNH = profitabilityFromNH;
                 }
@@ -977,8 +944,9 @@ namespace NiceHashMiner.Stats
             catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
+                return 0d;
             }
-            //  Helpers.ConsolePrint("SOCKET", "Received7: " + balance);
+            return profitabilityFromNH;
         }
         private static void SetBalance(string balance)
         {

@@ -138,8 +138,7 @@ namespace NiceHashMiner
         protected MinerApiReadStatus CurrentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = MinCooldownTimeInMilliseconds;
         private int _currentCooldownTimeInSecondsLeft = MinCooldownTimeInMilliseconds;
-        private const int IsCooldownCheckTimerAliveCap = 15;
-        private bool _needsRestart;
+        private int CooldownCheck = 0;
 
         private bool _isEnded;
 
@@ -150,6 +149,7 @@ namespace NiceHashMiner
         protected bool IsMultiType;
         public static string BenchmarkStringAdd = "";
         public static string InBenchmark = "";
+        
 
 
         protected virtual int GetMaxCooldownTimeInMilliseconds()
@@ -483,20 +483,16 @@ namespace NiceHashMiner
                 {
                     try
                     {
-                       // if (!DHClient.checkConnection)//
+                        if (Form_Main.DaggerHashimoto3GB && Form_Main.DaggerHashimoto3GBEnabled)
                         {
-                            if (Form_Main.DaggerHashimoto3GB && Form_Main.DaggerHashimoto3GBEnabled)
-                            {
-                                new Task(() => DHClient.StopConnection()).Start();
-                            }
+                            new Task(() => DHClient.StopConnection()).Start();
                         }
-                       // if (!DHClient4gb.checkConnection)//
+
+                        if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
                         {
-                            if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
-                            {
-                                new Task(() => DHClient4gb.StopConnection()).Start();
-                            }
+                            new Task(() => DHClient4gb.StopConnection()).Start();
                         }
+
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
                             (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
                     }
@@ -637,11 +633,6 @@ namespace NiceHashMiner
         {
             if (TimeoutStandard) return timeInSeconds;
             if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
-            {
-                return 5 * 60 + 120; // 5 minutes plus two minutes
-            }
-
-            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight)
             {
                 return 5 * 60 + 120; // 5 minutes plus two minutes
             }
@@ -1766,36 +1757,6 @@ namespace NiceHashMiner
 
         #region Cooldown/retry logic
 
-        /// <summary>
-        /// decrement time for half current half time, if less then min ammend
-        /// </summary>
-        private void CoolDown()
-        {
-            if (_currentCooldownTimeInSeconds > MinCooldownTimeInMilliseconds)
-            {
-                _currentCooldownTimeInSeconds = MinCooldownTimeInMilliseconds;
-                Helpers.ConsolePrint(MinerTag(),
-                    $"{ProcessTag()} Reseting cool time = {MinCooldownTimeInMilliseconds} ms");
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            }
-        }
-
-        /// <summary>
-        /// increment time for half current half time, if more then max set restart
-        /// </summary>
-        private void CoolUp()
-        {
-            _currentCooldownTimeInSeconds += 30 * 1000;
-            Helpers.ConsolePrint(MinerTag(),
-                $"{ProcessTag()} Cooling UP, cool time is {_currentCooldownTimeInSeconds} ms");
-            if (_currentCooldownTimeInSeconds > _maxCooldownTimeInMilliseconds)
-            {
-                CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " MAX cool time exceeded. RESTARTING");
-                Restart();
-            }
-        }
-
         private void MinerCoolingCheck_Tick(object sender, ElapsedEventArgs e)
         {
             if (_isEnded)
@@ -1804,38 +1765,33 @@ namespace NiceHashMiner
                 return;
             }
 
-            _currentCooldownTimeInSecondsLeft -= (int)_cooldownCheckTimer.Interval;
-            // if times up
-            if (_currentCooldownTimeInSecondsLeft > 0) return;
-            if (_needsRestart)
+            switch (CurrentMinerReadStatus)
             {
-                _needsRestart = false;
-                Restart();
-                return;
-            }
-
-                switch (CurrentMinerReadStatus)
-                {
-                    case MinerApiReadStatus.GOT_READ:
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.GOT_READ");
-                        CoolDown();
-                        break;
-                    case MinerApiReadStatus.READ_SPEED_ZERO:
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " READ SPEED ZERO, will cool up");
-                        CoolUp();
-                        break;
-                    case MinerApiReadStatus.RESTART:
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.RESTART");
-                        Restart();
-                        break;
-                    default:
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.UNKNOWN");
-                    //CoolDown();
+                case MinerApiReadStatus.GOT_READ:
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.GOT_READ");
+                    CooldownCheck = 0;
+                    break;
+                case MinerApiReadStatus.READ_SPEED_ZERO:
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + " READ SPEED ZERO, will cool up");
+                    CooldownCheck++;
+                    break;
+                case MinerApiReadStatus.RESTART:
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.RESTART");
+                    CooldownCheck = 100;
+                    break;
+                default:
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.UNKNOWN");
+                    CooldownCheck++;
                     break;
             }
 
             // set new times left from the CoolUp/Down change
-            _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            //_currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            if (CooldownCheck > 10)
+            {
+                CooldownCheck = 0;
+                Restart();
+            }
         }
 
         #endregion //Cooldown/retry logic
@@ -1854,15 +1810,7 @@ namespace NiceHashMiner
             var strPlatform = "";
             var strDual = "SINGLE";
             var strAlgo = AlgorithmNiceHashNames.GetName(MiningSetup.CurrentAlgorithmType);
-            if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Eaglesong)
-            {
-                strAlgo = AlgorithmType.DaggerEaglesong.ToString();
-            }
-            if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Handshake)
-            {
-                strAlgo = AlgorithmType.DaggerHandshake.ToString();
-            }
-
+            
             var minername = MinerDeviceName;
             int subStr;
             subStr = MinerDeviceName.IndexOf("_");

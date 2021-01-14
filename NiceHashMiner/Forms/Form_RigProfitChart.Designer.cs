@@ -33,18 +33,31 @@ namespace NiceHashMiner.Forms
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_RigProfitChart));
             this.chartRigProfit = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label_totalEfficiency = new System.Windows.Forms.Label();
+            this.checkBox_StartChartWithProgram = new System.Windows.Forms.CheckBox();
+            this.label_Total_actual_profitabilities = new System.Windows.Forms.Label();
+            this.checkBox_Chart_Fiat = new System.Windows.Forms.CheckBox();
+            this.buttonSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chartRigProfit)).BeginInit();
             this.SuspendLayout();
             // 
             // chartRigProfit
             // 
+            this.chartRigProfit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chartRigProfit.BackColor = System.Drawing.SystemColors.Control;
+            chartArea1.BackColor = System.Drawing.SystemColors.Control;
             chartArea1.Name = "ChartArea1";
             this.chartRigProfit.ChartAreas.Add(chartArea1);
+            legend1.Alignment = System.Drawing.StringAlignment.Center;
+            legend1.BackColor = System.Drawing.SystemColors.Control;
+            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
             legend1.Name = "Legend1";
             this.chartRigProfit.Legends.Add(legend1);
-            this.chartRigProfit.Location = new System.Drawing.Point(12, 12);
+            this.chartRigProfit.Location = new System.Drawing.Point(-1, 0);
+            this.chartRigProfit.Margin = new System.Windows.Forms.Padding(0);
             this.chartRigProfit.Name = "chartRigProfit";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
@@ -56,32 +69,92 @@ namespace NiceHashMiner.Forms
             series2.Name = "Series2";
             this.chartRigProfit.Series.Add(series1);
             this.chartRigProfit.Series.Add(series2);
-            this.chartRigProfit.Size = new System.Drawing.Size(776, 300);
+            this.chartRigProfit.Size = new System.Drawing.Size(756, 263);
             this.chartRigProfit.TabIndex = 0;
             this.chartRigProfit.Text = "chart1";
-            this.chartRigProfit.Customize += new System.EventHandler(this.chartRigProfit_Customize);
             this.chartRigProfit.Click += new System.EventHandler(this.chartRigProfit_Click);
+            this.chartRigProfit.MouseDown += new System.Windows.Forms.MouseEventHandler(this.chartRigProfit_MouseDown);
+            this.chartRigProfit.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chartRigProfit_MouseMove);
+            this.chartRigProfit.MouseUp += new System.Windows.Forms.MouseEventHandler(this.chartRigProfit_MouseUp);
             // 
             // label_totalEfficiency
             // 
             this.label_totalEfficiency.AutoSize = true;
-            this.label_totalEfficiency.Location = new System.Drawing.Point(12, 325);
+            this.label_totalEfficiency.Location = new System.Drawing.Point(12, 277);
             this.label_totalEfficiency.Name = "label_totalEfficiency";
-            this.label_totalEfficiency.Size = new System.Drawing.Size(56, 13);
+            this.label_totalEfficiency.Size = new System.Drawing.Size(115, 13);
             this.label_totalEfficiency.TabIndex = 1;
-            this.label_totalEfficiency.Text = "Efficiency:";
+            this.label_totalEfficiency.Text = "Total mining efficiency:";
+            // 
+            // checkBox_StartChartWithProgram
+            // 
+            this.checkBox_StartChartWithProgram.AutoSize = true;
+            this.checkBox_StartChartWithProgram.Location = new System.Drawing.Point(323, 276);
+            this.checkBox_StartChartWithProgram.Name = "checkBox_StartChartWithProgram";
+            this.checkBox_StartChartWithProgram.Size = new System.Drawing.Size(134, 17);
+            this.checkBox_StartChartWithProgram.TabIndex = 5;
+            this.checkBox_StartChartWithProgram.Text = "StartChartWithProgram";
+            this.checkBox_StartChartWithProgram.UseVisualStyleBackColor = true;
+            this.checkBox_StartChartWithProgram.CheckedChanged += new System.EventHandler(this.checkBox_StartChartWithProgram_CheckedChanged);
+            // 
+            // label_Total_actual_profitabilities
+            // 
+            this.label_Total_actual_profitabilities.AutoSize = true;
+            this.label_Total_actual_profitabilities.Location = new System.Drawing.Point(12, 300);
+            this.label_Total_actual_profitabilities.Name = "label_Total_actual_profitabilities";
+            this.label_Total_actual_profitabilities.Size = new System.Drawing.Size(126, 13);
+            this.label_Total_actual_profitabilities.TabIndex = 6;
+            this.label_Total_actual_profitabilities.Text = "Total actual profitabilities:";
+            // 
+            // checkBox_Chart_Fiat
+            // 
+            this.checkBox_Chart_Fiat.AutoSize = true;
+            this.checkBox_Chart_Fiat.Location = new System.Drawing.Point(323, 299);
+            this.checkBox_Chart_Fiat.Name = "checkBox_Chart_Fiat";
+            this.checkBox_Chart_Fiat.Size = new System.Drawing.Size(177, 17);
+            this.checkBox_Chart_Fiat.TabIndex = 7;
+            this.checkBox_Chart_Fiat.Text = "Show profitability in fiat currency";
+            this.checkBox_Chart_Fiat.UseVisualStyleBackColor = true;
+            this.checkBox_Chart_Fiat.CheckedChanged += new System.EventHandler(this.checkBox_Chart_Fiat_CheckedChanged);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.FlatAppearance.BorderSize = 0;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.Image = global::NiceHashMiner.Properties.Resources.floppy2;
+            this.buttonSave.Location = new System.Drawing.Point(12, 12);
+            this.buttonSave.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(32, 32);
+            this.buttonSave.TabIndex = 8;
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // Form_RigProfitChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(754, 333);
+            this.Controls.Add(this.buttonSave);
+            this.Controls.Add(this.checkBox_Chart_Fiat);
+            this.Controls.Add(this.label_Total_actual_profitabilities);
+            this.Controls.Add(this.checkBox_StartChartWithProgram);
             this.Controls.Add(this.label_totalEfficiency);
             this.Controls.Add(this.chartRigProfit);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(1280, 372);
+            this.MinimumSize = new System.Drawing.Size(720, 372);
             this.Name = "Form_RigProfitChart";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form_RigProfitChart";
+            this.Deactivate += new System.EventHandler(this.Form_RigProfitChart_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_RigProfitChart_FormClosing);
             this.Shown += new System.EventHandler(this.Form_RigProfitChart_Shown);
+            this.ResizeBegin += new System.EventHandler(this.Form_RigProfitChart_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.Form_RigProfitChart_ResizeEnd);
+            this.SizeChanged += new System.EventHandler(this.Form_RigProfitChart_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.chartRigProfit)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -92,5 +165,9 @@ namespace NiceHashMiner.Forms
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chartRigProfit;
         private System.Windows.Forms.Label label_totalEfficiency;
+        private System.Windows.Forms.CheckBox checkBox_StartChartWithProgram;
+        private System.Windows.Forms.Label label_Total_actual_profitabilities;
+        private System.Windows.Forms.CheckBox checkBox_Chart_Fiat;
+        private System.Windows.Forms.Button buttonSave;
     }
 }

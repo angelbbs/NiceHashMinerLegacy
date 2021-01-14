@@ -47,7 +47,7 @@ namespace NiceHashMiner.Forms
 
         private bool _isStartupChanged = false;
         private static Timer UpdateListView_timer;
-
+        public static bool FormSettingsMoved = false;
         public Form_Settings()
         {
             Process thisProc = Process.GetCurrentProcess();
@@ -698,6 +698,16 @@ namespace NiceHashMiner.Forms
                     lbl.BackColor = Form_Main._backColor;
                     lbl.ForeColor = Form_Main._foreColor;
                 }
+                foreach (var lbl in this.tabPageAbout.Controls.OfType<CheckBox>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+                checkBox_BackupBeforeUpdate.BackColor = Form_Main._backColor;
+                checkBox_BackupBeforeUpdate.ForeColor = Form_Main._textColor;
+                checkBoxAutoupdate.BackColor = Form_Main._backColor;
+                checkBoxAutoupdate.ForeColor = Form_Main._textColor;
+
                 checkBox_Force_mining_if_nonprofitable.BackColor = Form_Main._backColor;
                 checkBox_Force_mining_if_nonprofitable.ForeColor = Form_Main._textColor;
 
@@ -2345,6 +2355,16 @@ namespace NiceHashMiner.Forms
         private void pictureBox_SwitchProfitabilityThreshold_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form_Settings_ResizeBegin(object sender, EventArgs e)
+        {
+            FormSettingsMoved = true;
+        }
+
+        private void Form_Settings_ResizeEnd(object sender, EventArgs e)
+        {
+            FormSettingsMoved = false;
         }
     }
 }

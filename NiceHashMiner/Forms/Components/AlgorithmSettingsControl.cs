@@ -206,6 +206,7 @@ namespace NiceHashMiner.Forms.Components
             var secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryBenchmarkSpeed : 0;
             var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, secondarySpeed, _currentlySelectedAlgorithm.NiceHashID);
             AlgorithmType algo = AlgorithmType.NONE;
+            /*
             if (_currentlySelectedAlgorithm.DualNiceHashID == AlgorithmType.DaggerEaglesong)
             {
                 algo = AlgorithmType.Eaglesong;
@@ -214,7 +215,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 algo = AlgorithmType.Handshake;
             }
-
+            */
             NHSmaData.TryGetPaying(algo, out var payingSec);
             NHSmaData.TryGetPaying(_currentlySelectedAlgorithm.NiceHashID, out var paying);
 

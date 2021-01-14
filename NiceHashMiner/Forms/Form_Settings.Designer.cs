@@ -1368,7 +1368,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_RunEthlargement.AutoSize = true;
             this.checkBox_RunEthlargement.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_RunEthlargement.Location = new System.Drawing.Point(470, 19);
+            this.checkBox_RunEthlargement.Location = new System.Drawing.Point(543, 19);
             this.checkBox_RunEthlargement.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_RunEthlargement.Name = "checkBox_RunEthlargement";
             this.checkBox_RunEthlargement.Size = new System.Drawing.Size(111, 17);
@@ -1949,7 +1949,7 @@ namespace NiceHashMiner.Forms
             this.comboBoxCheckforprogramupdatesevery.Location = new System.Drawing.Point(188, 43);
             this.comboBoxCheckforprogramupdatesevery.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBoxCheckforprogramupdatesevery.Name = "comboBoxCheckforprogramupdatesevery";
-            this.comboBoxCheckforprogramupdatesevery.Size = new System.Drawing.Size(58, 21);
+            this.comboBoxCheckforprogramupdatesevery.Size = new System.Drawing.Size(75, 21);
             this.comboBoxCheckforprogramupdatesevery.TabIndex = 404;
             this.comboBoxCheckforprogramupdatesevery.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxCheckforprogramupdatesevery_DrawItem);
             // 
@@ -2071,6 +2071,8 @@ namespace NiceHashMiner.Forms
             this.Text = "Settings";
             this.Deactivate += new System.EventHandler(this.Form_Settings_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
+            this.ResizeBegin += new System.EventHandler(this.Form_Settings_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.Form_Settings_ResizeEnd);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form_Settings_Paint);
             this.tabControlGeneral.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);

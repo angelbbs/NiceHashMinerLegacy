@@ -204,9 +204,7 @@ namespace NiceHashMiner
             string unit;
             switch (algo)
             {
-                case AlgorithmType.Equihash:
                 case AlgorithmType.ZHash:
-                case AlgorithmType.Beam:
                 case AlgorithmType.BeamV2:
                 case AlgorithmType.BeamV3:
                     unit = "Sol/s ";
@@ -452,20 +450,10 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.Decred:
                         return AlgorithmType.DaggerDecred;
-                    case AlgorithmType.Lbry:
-                        return AlgorithmType.DaggerLbry;
-                    case AlgorithmType.Pascal:
-                        return AlgorithmType.DaggerPascal;
-                    case AlgorithmType.Sia:
-                        return AlgorithmType.DaggerSia;
                     case AlgorithmType.Blake2s:
                         return AlgorithmType.DaggerBlake2s;
                     case AlgorithmType.Keccak:
                         return AlgorithmType.DaggerKeccak;
-                    case AlgorithmType.Eaglesong:
-                        return AlgorithmType.DaggerEaglesong;
-                    case AlgorithmType.Handshake:
-                        return AlgorithmType.DaggerHandshake;
                 }
             }
 

@@ -30,7 +30,7 @@ namespace NiceHashMiner.Benchmarking
         // CPU sweet spots
         private readonly List<AlgorithmType> _cpuAlgos = new List<AlgorithmType>
         {
-            AlgorithmType.CryptoNight
+            AlgorithmType.RandomX
         };
 
         public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,
@@ -71,30 +71,6 @@ namespace NiceHashMiner.Benchmarking
                     _cpuBenchmarkStatus.FindFastest();
                     _currentAlgorithm.BenchmarkSpeed = _cpuBenchmarkStatus.GetBestSpeed();
                     _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.GetLessThreads();
-                }
-            }
-
-            if (_claymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-                _currentAlgorithm.NiceHashID == AlgorithmType.Equihash)
-            {
-                if (_claymoreZcashStatus.HasTest())
-                {
-                    _currentMiner = MinerFactory.CreateMiner(Device, _currentAlgorithm);
-                    rebenchSame = true;
-                    //System.Threading.Thread.Sleep(1000*60*5);
-                    _claymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
-                    _claymoreZcashStatus.SetNext();
-                    _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetTestExtraParams();
-                    Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
-                    _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm));
-                }
-                //need to delete
-                if (_claymoreZcashStatus.HasTest() == false)
-                {
-                    rebenchSame = false;
-                    // set fastest mode
-                    _currentAlgorithm.BenchmarkSpeed = _claymoreZcashStatus.GetFastestTime();
-                    _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetFastestExtraParams();
                 }
             }
 
@@ -183,7 +159,6 @@ namespace NiceHashMiner.Benchmarking
                 _cpuBenchmarkStatus = null;
 
                 if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-                    _currentAlgorithm.NiceHashID == AlgorithmType.Equihash &&
                     _currentAlgorithm.ExtraLaunchParameters != null &&
                     !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm"))
                 {

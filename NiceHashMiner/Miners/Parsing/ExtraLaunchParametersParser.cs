@@ -347,12 +347,6 @@ namespace NiceHashMiner.Miners.Parsing
                 case MinerBaseType.Claymore:
                     switch (algorithmType)
                     {
-                        case AlgorithmType.CryptoNight:
-                            return MinerType.ClaymoreCryptoNight;
-                        case AlgorithmType.CryptoNightV7:
-                            return MinerType.ClaymoreCryptoNight;
-                        case AlgorithmType.Equihash:
-                            return MinerType.ClaymoreZcash;
                         case AlgorithmType.DaggerHashimoto:
                             return MinerType.ClaymoreDual;
                         case AlgorithmType.DaggerHashimoto3GB:

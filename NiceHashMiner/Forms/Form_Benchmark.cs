@@ -54,7 +54,7 @@ namespace NiceHashMiner.Forms
 
         public string benchmarkfail = "";
         private static Timer UpdateListView_timer;
-
+        public static bool FormBenchmarkMoved = false;
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
         {
@@ -822,6 +822,16 @@ namespace NiceHashMiner.Forms
 
         private void devicesListViewEnableControl1_Load(object sender, EventArgs e)
         {
+        }
+
+        private void Form_Benchmark_ResizeBegin(object sender, EventArgs e)
+        {
+            FormBenchmarkMoved = true;
+        }
+
+        private void Form_Benchmark_ResizeEnd(object sender, EventArgs e)
+        {
+            FormBenchmarkMoved = false;
         }
     }
 }

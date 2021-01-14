@@ -56,14 +56,13 @@ namespace NiceHashMiner.Miners
                         return "cuckoo_ae";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
-                    case AlgorithmType.Eaglesong:
-                        return "eaglesong";
-                    case AlgorithmType.Handshake:
-                        return "hns";
+                    
                     case AlgorithmType.KAWPOW:
                         return "kawpow";
+                        /*
                     case AlgorithmType.Cuckaroo29BFC:
                         return "bfc";
+                        */
                     case AlgorithmType.BeamV3:
                         return "beamv3";
                     case AlgorithmType.Octopus:
@@ -151,42 +150,15 @@ namespace NiceHashMiner.Miners
                     $" -o2 stratum+tcp://cuckoocycle." + myServers[2, 0] + ".nicehash.com:3376 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Eaglesong))
-            {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://eaglesong." + myServers[1, 0] + ".nicehash.com:3381 -u1 " + user +
-                    $" -o2 stratum+tcp://eaglesong." + myServers[2, 0] + ".nicehash.com:3381 -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Handshake))
-            {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u1 " + user +
-                    $" -o2 stratum+tcp://handshake." + myServers[2, 0] + ".nicehash.com:3384 -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
+            /*
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://cuckaroo29bfc." + myServers[1, 0] + ".nicehash.com:3386 -u1 " + user +
                     $" -o2 stratum+tcp://cuckaroo29bfc." + myServers[2, 0] + ".nicehash.com:3386 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-
-            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong) //dual
-            {
-                cmd = $"-a eaglesong_ethash -o stratum+tcp://eaglesong." + myServers[0, 0] + ".nicehash.com:3381 -u " + user +
-                    $" -o1 stratum+tcp://eaglesong." + myServers[1, 0] + ".nicehash.com:3381 -u1 " + user +
-                    $" -do nicehash+tcp://daggerhashimoto." + myServers[0, 0] + ".nicehash.com:3353 -du " + user +
-                    $" -do1 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 -du1 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (SecondaryAlgorithmType == AlgorithmType.Handshake) //dual
-            {
-                cmd = $"-a hns_ethash -o stratum+tcp://handshake." + myServers[0, 0] + ".nicehash.com:3384 -u " + user +
-               // cmd = $"-a hns_ethash -o stratum+tcp://hns.pool.blackminer.com:9052 -u hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j " +
-                    $" -o1 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u1 " + user +
-                    $" -do nicehash+tcp://daggerhashimoto." + myServers[0, 0] + ".nicehash.com:3353 -du " + user +
-                    $" -do1 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 -du1 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
+            */
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://kawpow." + myServers[1, 0] + ".nicehash.com:3385 -u1 " + user +
@@ -286,41 +258,15 @@ namespace NiceHashMiner.Miners
                     $" -o2 stratum+tcp://cuckoocycle." + myServers[1, 0] + ".nicehash.com:3376 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Eaglesong))
-            {
-                cmd = $"-a {AlgoName} -o stratum+tcp://ckb.2miners.com:6464 -u ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv -o1 stratum+tcp://eaglesong." + myServers[0, 0] + ".nicehash.com:3381 -u1 " + username +
-                    $" -o2 stratum+tcp://eaglesong." + myServers[1, 0] + ".nicehash.com:3381 -u2 " + username +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Handshake))
-            {
-                cmd = $"-a {AlgoName} -o stratum+tcp://hns.f2pool.com:6000 -u hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j.nbminer -o1 stratum+tcp://handshake." + myServers[0, 0] + ".nicehash.com:3384 -u1 " + username +
-                    $" -o2 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u2 " + username +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
+            /*
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
             {
                 cmd = $"-a {AlgoName} -o stratum+tcp://bfc.f2pool.com:4900 -u angelbbs.nbminer -o1 stratum+tcp://cuckaroo29bfc." + myServers[0, 0] + ".nicehash.com:3386 -u1 " + username +
                     $" -o2 stratum+tcp://cuckaroo29bfc." + myServers[1, 0] + ".nicehash.com:3386 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-
-            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong) //dual
-            {
-                cmd = $"-a eaglesong_ethash -o stratum+tcp://ckb.2miners.com:6464 -u ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv -o1 stratum+tcp://eaglesong." + myServers[0, 0] + ".nicehash.com:3381 -u1 " + username +
-                    $" -o2 stratum+tcp://eaglesong." + myServers[1, 0] + ".nicehash.com:3381 -u2 " + username +
-                    $" -do ethproxy+tcp://eu1.ethermine.org:4444 -du 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner -do1 nicehash+tcp://daggerhashimoto." + myServers[0, 0] + ".nicehash.com:3353 -du1 " + username +
-                    $" -do2 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 -du2 " + username +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (SecondaryAlgorithmType == AlgorithmType.Handshake) //dual
-            {
-                cmd = $"-a hns_ethash -o stratum+tcp://hns.f2pool.com:6000 -u hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j.nbminer -o1 stratum+tcp://handshake." + myServers[0, 0] + ".nicehash.com:3384 -u1 " + username +
-                    $" -o2 stratum+tcp://handshake." + myServers[1, 0] + ".nicehash.com:3384 -u2 " + username +
-                    $" -do ethproxy+tcp://eu1.ethermine.org:4444 -du 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner -do1 nicehash+tcp://daggerhashimoto." + myServers[0, 0] + ".nicehash.com:3353 -du1 " + username +
-                    $" -do2 nicehash+tcp://daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 -du2 " + username +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
+            */
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 cmd = $"-a {AlgoName} -o stratum+tcp://rvn.2miners.com:6060 -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.nbminer " +
@@ -439,21 +385,9 @@ namespace NiceHashMiner.Miners
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             ApiData ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
-            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
-            {
-                ad = new ApiData(AlgorithmType.DaggerEaglesong);
-                ad.AlgorithmID = AlgorithmType.DaggerHashimoto;
-                ad.SecondaryAlgorithmID = AlgorithmType.Eaglesong;
-            }
-            else if (SecondaryAlgorithmType == AlgorithmType.Handshake)
-            {
-                ad = new ApiData(AlgorithmType.DaggerHandshake);
-                ad.AlgorithmID = AlgorithmType.DaggerHashimoto;
-                ad.SecondaryAlgorithmID = AlgorithmType.Handshake;
-            } else
-            {
-                ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-            }
+
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            
             string ResponseFromNBMiner;
             double total = 0;
             try
@@ -482,18 +416,9 @@ namespace NiceHashMiner.Miners
 
             if (resp != null)
             {
-                if (SecondaryAlgorithmType == AlgorithmType.Handshake) //dual
-                {
-                    ad.Speed = resp.TotalHashrate2 ?? 0;
-                    ad.SecondarySpeed = resp.TotalHashrate ?? 0;
-                } else if (SecondaryAlgorithmType == AlgorithmType.Eaglesong) //dual
-                {
-                    ad.Speed = resp.TotalHashrate2 ?? 0;
-                    ad.SecondarySpeed = resp.TotalHashrate ?? 0;
-                } else
-                {
-                    ad.Speed = resp.TotalHashrate ?? 0;
-                }
+
+                ad.Speed = resp.TotalHashrate ?? 0;
+                
                 CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             }
             else

@@ -127,12 +127,6 @@
   <data name="Ok-hot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Ok-hot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NHM_help_50px" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NHM_help_50px.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Refresh-hot_bw" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Refresh-hot_bw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="info_white_18" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info_white_18.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -145,6 +139,9 @@
   <data name="NHM_Cash_Register_Bitcoin_transparent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NHM_Cash_Register_Bitcoin_transparent.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Refresh-hot_bw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Refresh-hot_bw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Refresh-disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Refresh-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -153,6 +150,9 @@
   </data>
   <data name="Ok-normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Ok-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NHM_logo_small_2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NHM_logo_small_2021.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Refresh-normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Refresh-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -163,8 +163,11 @@
   <data name="info_black_18" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info_black_18.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NHM_Cash_Register_Bitcoin_transparent_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NHM_Cash_Register_Bitcoin_transparent_white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="floppy2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\floppy2.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NHM_help_50px" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NHM_help_50px.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="info_black_36" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info_black_36.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -172,13 +175,16 @@
   <data name="Close-normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Close-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NHM_Cash_Register_Bitcoin_transparent_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NHM_Cash_Register_Bitcoin_transparent_white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NHM_logo_xsmall_light2020" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NHM_logo_xsmall_light2020.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Delete-normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Delete-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NHM_logo_small_2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NHM_logo_small_2021.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="floppy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\floppy.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

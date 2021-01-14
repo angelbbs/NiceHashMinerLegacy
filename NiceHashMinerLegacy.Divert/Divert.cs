@@ -352,7 +352,7 @@ namespace NiceHashMinerLegacy.Divert
         }
 
 
-        internal static Task<bool> GetDagger3GB(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        internal static Task<bool> GetDagger3GB(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
         {
             return Task.Run(() =>
             {
@@ -361,7 +361,7 @@ namespace NiceHashMinerLegacy.Divert
                 int childPID = -1;
 
                 processIdListDagger3GB.Add(MinerName.ToLower() + ": " + processId.ToString());
-                DDagger3GBHandle = DDagger3GB.Dagger3GBDivertStart(processIdListDagger3GB, CurrentAlgorithmType, MinerName, strPlatform);
+                DDagger3GBHandle = DDagger3GB.Dagger3GBDivertStart(processIdListDagger3GB, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
                 Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DDagger3GBHandle.ToString() + ". Initiated by " + processId.ToString() + " (Dagger3GB) to divert process list: " + " " + String.Join(",", processIdListDagger3GB));
 
                 do
@@ -464,7 +464,7 @@ namespace NiceHashMinerLegacy.Divert
                         Helpers.ConsolePrint("WinDivertSharp", MinerName + " divert handle: " + DDagger3GBHandle.ToString() + ". Added " + processId.ToString() + " (Dagger3GB) to divert process list: " + " " + String.Join(",", processIdListDagger3GB));
                         return DDagger3GBHandle;
                     }
-                    DDagger3GBHandle = DDagger3GB.Dagger3GBDivertStart(processIdListDagger3GB, CurrentAlgorithmType, MinerName, strPlatform);
+                    DDagger3GBHandle = DDagger3GB.Dagger3GBDivertStart(processIdListDagger3GB, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
                     Helpers.ConsolePrint("WinDivertSharp", MinerName + " new Divert handle: " + DDagger3GBHandle.ToString() + ". Initiated by " + processId.ToString() + " (Dagger3GB) to divert process list: " + " " + String.Join(",", processIdListDagger3GB));
                     return DDagger3GBHandle;
 

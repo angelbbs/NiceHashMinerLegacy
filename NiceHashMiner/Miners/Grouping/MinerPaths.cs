@@ -225,11 +225,6 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     return Data.hsrneoscrypt;
                 }
-                // CN exception
-                if (nvidiaGroup == DeviceGroupType.NVIDIA_6_x && algorithmType == AlgorithmType.CryptoNight)
-                {
-                    return Data.hsrneoscrypt;
-                }
                 // sm5x and sm6x have same settings otherwise
                 if (nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x)
                 {
@@ -377,10 +372,12 @@ namespace NiceHashMiner.Miners.Grouping
             }
             public static string CastXMR(AlgorithmType algorithmType)
             {
+                /*
                 if (AlgorithmType.CryptoNightV7 == algorithmType || AlgorithmType.CryptoNightHeavy == algorithmType || AlgorithmType.CryptoNightV8 == algorithmType )
                 {
                     return Data.CastXMR;
                 }
+                */
                 return Data.CastXMR;
             }
             public static string lyclMiner(AlgorithmType algorithmType)
@@ -397,10 +394,7 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     return Data.teamredminer;
                 }
-                if (AlgorithmType.CryptoNightV8 == algorithmType)
-                {
-                    return Data.teamredminer;
-                }
+
                 if (AlgorithmType.Lyra2REv3 == algorithmType)
                 {
                     return Data.teamredminer;

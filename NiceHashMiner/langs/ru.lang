@@ -486,7 +486,16 @@
 "Form_Main_Checkbox_current_actual_profitabilities": "Показать текущую фактическую прибыльность",
 "Form_Main_current_actual_profitabilities": "Текущая фактическая прибыльность",
 "Form_Main_current_local_profitabilities": "Текущая локальная прибыльность",
+"Form_Main_unpaidAmount": "Невыплаченный баланс",
 "Form_Main_chart": "Прибыльность",
+"Form_Profit_Total_efficiency": "Общая эффективность майнинга:",
+"Form_Profit_3h_efficiency": "Эффективность майнинга (3ч.):",
+"Form_Profit_12h_efficiency": "Эффективность майнинга (12ч.):",
+"Form_Profit_24h_efficiency": "Эффективность майнинга (24ч.):",
+"Form_Profit_Total_actual_profitabilities": "Общая фактическая прибыльность:",
+"Form_Profit_StartChartWithProgram": "Показать при запуске программы",
+"Form_Profit_Chart_Fiat": "Показывать прибыльность в фиатной валюте",
+"Form_Profit_Chart_Filename": "График успешно сохранен в файл:",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

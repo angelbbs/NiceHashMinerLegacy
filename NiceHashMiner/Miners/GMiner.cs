@@ -81,16 +81,12 @@ namespace NiceHashMiner.Miners
             var ssl = "";
             string username = GetUsername(btcAddress, worker);
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
-                    {
-                        algo = "144_5";
-                        algoName = "zhash";
-                pers = " --pers auto ";
-                    }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
             {
-                        algo = "BeamHashI";
-                        algoName = "beam";
+                algo = "144_5";
+                algoName = "zhash";
+                pers = " --pers auto ";
             }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 algo = "BeamHashII";
@@ -146,66 +142,22 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
                 nicehashstratum = " --proto stratum";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
-            {
-                algo = "eaglesong";
-                algoName = "eaglesong";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Handshake)
-            {
-                algo = "Handshake";
-                algoName = "handshake";
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
                 algo = "kawpow";
                 algoName = "kawpow";
                 ssl = " --ssl 0";
             }
+            /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC)
             {
                 algo = "bfc";
                 algoName = "cuckaroo29bfc";
                 ssl = " --ssl 0";
             }
-
-            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
-            {
-                var durl = url.Replace("daggerhashimoto", "eaglesong");
-                return GetDevicesCommandString()
-                      + " --algo eth+ckb --server " + url + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver " + durl.Split(':')[0] + ":3381 --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[1, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver eaglesong." + myServers[1, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[2, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver eaglesong." + myServers[2, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[3, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver eaglesong." + myServers[3, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[4, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver eaglesong." + myServers[4, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[5, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver eaglesong." + myServers[5, 0] + ".nicehash.com:3381" + " --duser " + username + " --ssl 0"
-                      + " --api " + ApiPort;
-            }
-            if (SecondaryAlgorithmType == AlgorithmType.Handshake)
-            {
-                var durl = url.Replace("daggerhashimoto", "handshake");
-                return GetDevicesCommandString()
-                      + " --algo eth+hns --server " + url + " --user " + username + " --ssl 0 --proto stratum"
-                      //+ " --dserver hns.pool.blackminer.com:9052 --duser hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j --ssl 0"
-                      + " --dserver " + durl.Split(':')[0] + ":3384 --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[1, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver handshake." + myServers[1, 0] + ".nicehash.com:3384" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[2, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver handshake." + myServers[2, 0] + ".nicehash.com:3384" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[3, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver handshake." + myServers[3, 0] + ".nicehash.com:3384" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[4, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver handshake." + myServers[4, 0] + ".nicehash.com:3384" + " --duser " + username + " --ssl 0"
-                      + " --server daggerhashimoto." + myServers[5, 0] + ".nicehash.com:" + url.Split(':')[1] + " --user " + username + " --ssl 0 --proto stratum"
-                      + " --dserver handshake." + myServers[5, 0] + ".nicehash.com:3384" + " --duser " + username + " --ssl 0"
-                      + " --api " + ApiPort;
-            }
+            */
+            
 
             var ret = GetDevicesCommandString()
                       + " --algo " + algo + pers + " --server " + url.Split(':')[0]
@@ -393,16 +345,7 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
-            {
-                //_benchmarkTimeWait = 180;
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo BeamHashI" +
-              //  " --server beam-eu.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 2222 --ssl 1 " +
-              //  " --server beam-asia.sparkpool.com --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + " --pass x --port 12222 --ssl 1 " +
-                " --server beam.eu" + ".nicehash.com --user " + username + " --pass x --port 3370 --ssl 0" +
-                " --server beam.hk" + ".nicehash.com --user " + username + " --pass x --port 3370 --ssl 0" +
-                GetDevicesCommandString();
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 //_benchmarkTimeWait = 180;
@@ -488,6 +431,7 @@ namespace NiceHashMiner.Miners
                 " --server kawpow.eu.nicehash.com:3385 --user " + username + " --pass x --proto stratum" +
                 GetDevicesCommandString();
             }
+            /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC)
             {
                 ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo bfc" +
@@ -495,40 +439,8 @@ namespace NiceHashMiner.Miners
                 " --server cuckaroo29bfc.eu.nicehash.com:3386 --user " + username + " --pass x --proto stratum" +
                 GetDevicesCommandString();
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong)
-            {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo eaglesong" +
-                " --server ckb.2miners.com:6464 --user ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv.gminer --ssl 0" +
-                " --server eaglesong.eu" + ".nicehash.com:3381 --user " + username + " --ssl 0" +
-                " --server eaglesong.hk" + ".nicehash.com:3381 --user " + username + " --ssl 0" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Handshake)
-            {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo handshake" +
-                " --server hns.f2pool.com:6000 --user hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j.gminer --ssl 0" +
-                " --server handshake.eu" + ".nicehash.com:3384 --user " + username + " --ssl 0" +
-                " --server handshake.hk" + ".nicehash.com:3384 --user " + username + " --ssl 0" +
-                GetDevicesCommandString();
-            }
-
-            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
-            {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo eth+ckb" +
-                " --server eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.GMiner --ssl 0 --proto proxy --dserver ckb.2miners.com:6464 --duser ckb1qyqxhhuuldj8kkxfvef5cj2f02065f25uq3qc3n7sv.gminer" +
-                " --server daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.eu.nicehash.com:3381 --duser " + username + " --ssl 0" +
-                " --server daggerhashimoto.hk.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.hk.nicehash.com:3381 --duser " + username + " --ssl 0" +
-                GetDevicesCommandString();
-            }
-
-            if (SecondaryAlgorithmType == AlgorithmType.Handshake)
-            {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo eth+hns" +
-                " --server eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.GMiner --ssl 0 --proto proxy --dserver hns.f2pool.com:6000 --duser hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j.gminer" +
-                " --server daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver handshake.eu.nicehash.com:3384 --duser " + username + " --ssl 0" +
-                " --server daggerhashimoto.hk.nicehash.com:3353 --user " + username + " --ssl 0 --proto stratum --dserver eaglesong.hk.nicehash.com:3381 --duser " + username + " --ssl 0" +
-                GetDevicesCommandString();
-            }
+            */
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckaRooz29)
             {
                 ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo cuckarooz29" +
@@ -647,11 +559,13 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 20;
                         bench_time = 20;
                     }
+                    /*
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
                     {
                         delay_before_calc_hashrate = 20;
                         bench_time = 20;
                     }
+                    */
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckaRooz29))
                     {
                         delay_before_calc_hashrate = 30;
@@ -721,10 +635,9 @@ namespace NiceHashMiner.Miners
             {
                 return GetNumber(outdata, LookForStart, "g/s");
             } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.Eaglesong ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.Handshake)
+                MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW
+                //MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
+                )
             {
                 return GetNumber(outdata, LookForStart, "h/s");
             } else
@@ -812,21 +725,9 @@ namespace NiceHashMiner.Miners
             //Helpers.ConsolePrint("try API...........", "");
             ApiData ad;
 
-            if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
-            {
-                ad = new ApiData(AlgorithmType.DaggerEaglesong);
-                ad.AlgorithmID = AlgorithmType.DaggerHashimoto;
-                ad.SecondaryAlgorithmID = AlgorithmType.Eaglesong;
-            } else if (SecondaryAlgorithmType == AlgorithmType.Handshake)
-            {
-                ad = new ApiData(AlgorithmType.DaggerHandshake);
-                ad.AlgorithmID = AlgorithmType.DaggerHashimoto;
-                ad.SecondaryAlgorithmID = AlgorithmType.Handshake;
-            }
-            else
-            {
-                ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-            }
+
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            
             //Helpers.ConsolePrint("GMINER API", "SecondaryAlgorithmType: " + SecondaryAlgorithmType.ToString() + " ad.AlgorithmID: " + ad.AlgorithmID.ToString() + " ad.SecondaryAlgorithmID: " + ad.SecondaryAlgorithmID.ToString());
             string ResponseFromGMiner;
             double total = 0;
@@ -861,26 +762,11 @@ namespace NiceHashMiner.Miners
                 for (var i = 0; i < resp.devices.Length; i++)
                 {
                     total = total + resp.devices[i].speed;
-                    if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
-                    {
-                        totalSec = totalSec + resp.devices[i].speed2;
-                    }
-                    if (SecondaryAlgorithmType == AlgorithmType.Handshake)
-                    {
-                        totalSec = totalSec + resp.devices[i].speed2;
-                    }
+                    
                 }
 
                 ad.Speed = total;
-                if (SecondaryAlgorithmType == AlgorithmType.Eaglesong)
-                {
-                    ad.SecondarySpeed = totalSec;
-                }
-                if (SecondaryAlgorithmType == AlgorithmType.Handshake)
-                {
-                    ad.SecondarySpeed = totalSec;
-                }
-
+                
                 if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;

@@ -27,6 +27,7 @@ namespace NiceHashMiner.Miners
         // the short form the miner uses for secondary algo in cmd line and log
         public string SecondaryShortName()
         {
+            /*
             switch (SecondaryAlgorithmType)
             {
                 case AlgorithmType.Decred:
@@ -42,7 +43,7 @@ namespace NiceHashMiner.Miners
                 case AlgorithmType.Keccak:
                     return "kc";
             }
-
+            */
             return "";
         }
 
@@ -121,6 +122,7 @@ namespace NiceHashMiner.Miners
             }
 
                 Thread.Sleep(200);
+            /*
             if (SecondaryAlgorithmType == AlgorithmType.Decred)
             {
                 poolport = "3354";
@@ -147,6 +149,7 @@ namespace NiceHashMiner.Miners
             {
                 poolport = "3360";
             }
+            */
             if (!IsDual())
             {
                 // leave convenience param for non-dual entry
@@ -155,6 +158,7 @@ namespace NiceHashMiner.Miners
                     if (!pair.CurrentExtraLaunchParameters.Contains("-dual=")) continue;
                     dual = AlgorithmType.NONE;
                     var coinP = "";
+                    /*
                     if (pair.CurrentExtraLaunchParameters.Contains("Decred"))
                     {
                         dual = AlgorithmType.Decred;
@@ -178,7 +182,7 @@ namespace NiceHashMiner.Miners
                         dual = AlgorithmType.Pascal;
                         coinP = " -dcoin pasc ";
                     }
-
+                    */
                     if (dual != AlgorithmType.NONE)
                     {
                         var urlSecond = Globals.GetLocationUrl(dual,
@@ -395,13 +399,6 @@ namespace NiceHashMiner.Miners
                     dpsw = "c=BTC";
                     poolport = "3354";
                 }
-                if (SecondaryAlgorithmType == AlgorithmType.Lbry)
-                {
-                    urlSecond = "stratum+tcp://lbry.eu.mine.zpool.ca:3334";
-                    username = "1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2";
-                    dpsw = "c=BTC";
-                    poolport = "3356";
-                }
 
                 if (SecondaryAlgorithmType == AlgorithmType.Blake2s)
                 {
@@ -418,22 +415,6 @@ namespace NiceHashMiner.Miners
                     dpsw = "x";
                 }
 
-                if (SecondaryAlgorithmType == AlgorithmType.Pascal)
-                {
-                    poolport = "3358";
-                    urlSecond = "stratum+tcp://pascal." + myServers[0, 0] + ".nicehash.com:" + poolport;
-                    username = Globals.GetBitcoinUser();
-                    dpsw = "x";
-                    //esm = "-esm 3";
-                }
-                if (SecondaryAlgorithmType == AlgorithmType.Sia)
-                {
-                    poolport = "3360";
-                    urlSecond = "stratum+tcp://sia." + myServers[0, 0] + ".nicehash.com:" + poolport;
-                    username = Globals.GetBitcoinUser();
-                    dpsw = "x";
-                    //esm = "-esm 3";
-                }
                 String dpools = "POOL: stratum+tcp://" + SecondaryAlgorithmType.ToString().ToLower() + "." + myServers[0, 0] + ".nicehash.com:" + poolport + String.Format(", WALLET: {0}, PSW: x, ESM: 3, ALLPOOLS: 1", username) + "\n"
                  + "POOL: stratum+tcp://" + SecondaryAlgorithmType.ToString().ToLower() + "." + myServers[1, 0] + ".nicehash.com:" + poolport + String.Format(", WALLET: {0}, PSW: x, ESM: 3, ALLPOOLS: 1", username) + "\n"
                  + "POOL: stratum+tcp://" + SecondaryAlgorithmType.ToString().ToLower() + "." + myServers[2, 0] + ".nicehash.com:" + poolport + String.Format(", WALLET: {0}, PSW: x, ESM: 3, ALLPOOLS: 1", username) + "\n"
@@ -526,6 +507,7 @@ namespace NiceHashMiner.Miners
                                     + String.Format("  -epool stratum+tcp://eu1.ethermine.org:4444 -ewal 9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Claymore -mport 127.0.0.1:-{0} -epsw x -allpools 1 -ftime 10 -retrydelay 5 " + dcri + " ", ApiPort)
                                     + dualModeParams;
             }
+            /*
             else if (SecondaryAlgorithmType == AlgorithmType.Pascal || SecondaryAlgorithmType == AlgorithmType.Sia)
             {
 
@@ -534,6 +516,7 @@ namespace NiceHashMiner.Miners
                                         + String.Format("  -epool daggerhashimoto.usa" + ".nicehash.com:3353 -ewal {0}/{1} -mport 127.0.0.1:-{2} -epsw x -esm 3 -allpools 1 -ftime 10 -retrydelay 5", username, worker, ApiPort)
                                         + dualModeParams;
             }
+            */
             else if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB))
             {
 

@@ -21,6 +21,8 @@ using System.Diagnostics;
 using System.Reflection;
 using NiceHashMinerLegacy.Divert;
 using System.Data;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace NiceHashMiner.Miners
 {
@@ -478,9 +480,28 @@ namespace NiceHashMiner.Miners
             Form_Main.smaCount = 0;
             if (smaTmp == 0)
             {
-                Helpers.ConsolePrint(Tag, "SMA Error. Restart program");
-                Form_Main.MakeRestart(0);
-                return;
+                if (Miner.IsRunningNew)
+                {
+                    Form_Main.smaCount++;
+                }
+                else
+                {
+                    Form_Main.smaCount = 0;
+                }
+                if (Form_Main.smaCount > 3)
+                {
+                    dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
+                    Helpers.ConsolePrint("SOCKET", "Using previous SMA");
+                    JArray smadata = (JArray.Parse(jsonData));
+                    NiceHashStats.SetAlgorithmRates(smadata);
+                }
+
+                if (Form_Main.smaCount > 5)
+                {
+                    Helpers.ConsolePrint(Tag, "SMA Error. Restart program");
+                    Form_Main.MakeRestart(0);
+                    return;
+                }
             }
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable

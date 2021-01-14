@@ -25,7 +25,7 @@ namespace NiceHashMiner
             { AlgorithmType.X15_UNUSED ,                    MHs },
             { AlgorithmType.Nist5 ,                         MHs },
             { AlgorithmType.NeoScrypt ,                     MHs },
-            { AlgorithmType.Lyra2RE ,                       MHs },
+           // { AlgorithmType.Lyra2RE ,                       MHs },
             { AlgorithmType.WhirlpoolX_UNUSED ,             MHs },
             { AlgorithmType.Qubit_UNUSED ,                  MHs },
             { AlgorithmType.Quark_UNUSED ,                  MHs },
@@ -35,17 +35,17 @@ namespace NiceHashMiner
             { AlgorithmType.Blake256r8_UNUSED ,             GHs },
             { AlgorithmType.Blake256r14_UNUSED ,            GHs },
             { AlgorithmType.Blake256r8vnl_UNUSED ,          GHs },
-            { AlgorithmType.Hodl ,                          kHs },
+            //{ AlgorithmType.Hodl ,                          kHs },
             { AlgorithmType.DaggerHashimoto ,               MHs },
-            { AlgorithmType.Decred ,                        GHs },
-            { AlgorithmType.CryptoNight ,                   kHs },
-            { AlgorithmType.Lbry ,                          GHs },
-            { AlgorithmType.Equihash ,                      1 }, // Sols /s
-            { AlgorithmType.Pascal ,                        GHs },
-            { AlgorithmType.X11Gost ,                       MHs },
-            { AlgorithmType.Sia ,                           GHs },
-            { AlgorithmType.Blake2s ,                       GHs },
-            { AlgorithmType.Skunk ,                         MHs }
+            //{ AlgorithmType.Decred ,                        GHs },
+            //{ AlgorithmType.CryptoNight ,                   kHs },
+            //{ AlgorithmType.Lbry ,                          GHs },
+            //{ AlgorithmType.Equihash ,                      1 }, // Sols /s
+            //{ AlgorithmType.Pascal ,                        GHs },
+            //{ AlgorithmType.X11Gost ,                       MHs },
+            //{ AlgorithmType.Sia ,                           GHs },
+            //{ AlgorithmType.Blake2s ,                       GHs },
+            //{ AlgorithmType.Skunk ,                         MHs }
         };
 
         public static double GetFormatedSpeed(double speed, AlgorithmType type)

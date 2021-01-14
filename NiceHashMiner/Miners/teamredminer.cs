@@ -77,14 +77,7 @@ namespace NiceHashMiner.Miners
             var algo = "";
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
-            {
-                algo = " -a cnv8";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightR))
-            {
-                algo = " -a cnr";
-            }
+           
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
             {
                 algo = " -a lyra2z";
@@ -92,10 +85,6 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
             {
                 algo = " -a lyra2rev3";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
-            {
-                algo = " -a x16r";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {

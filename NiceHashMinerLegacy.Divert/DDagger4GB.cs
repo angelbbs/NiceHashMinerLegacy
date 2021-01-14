@@ -66,7 +66,7 @@ namespace NiceHashMinerLegacy.Divert
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr Dagger4GBDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
-            {
+        {
             Divert.Dagger4GBdivert_running = true;
 
             filter = "(!loopback && outbound ? (tcp.DstPort == 3353)" +
@@ -107,7 +107,7 @@ namespace NiceHashMinerLegacy.Divert
             uint readLen = 0;
             List<string> InboundPorts = new List<string>();
 
-        //Span<byte> packetData = null;
+            //Span<byte> packetData = null;
 
             IntPtr recvEvent = IntPtr.Zero;
             bool modified = false;
@@ -117,7 +117,7 @@ namespace NiceHashMinerLegacy.Divert
             {
                 try
                 {
-nextCycle:
+                    nextCycle:
                     if (Divert.Dagger4GBdivert_running)
                     {
                         readLen = 0;
@@ -157,10 +157,10 @@ nextCycle:
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             //******************************
                             if (parse_result.PacketPayloadLength > 20)
-                                {
+                            {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 PacketPayloadData = PacketPayloadData.Replace("}{", "}" + (char)10 + "{");
-                               // Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
+                                //Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
 
                                 if (PacketPayloadData.Contains("mining.notify") && PacketPayloadData.Contains("method"))//job
                                 {
@@ -179,7 +179,7 @@ nextCycle:
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch <= MaxEpoch) //win 10 352
+                                            if (epoch <= MaxEpoch) //win 7
                                             {
                                                 Divert.Dagger4GBEpochCount = 0;
                                             }
@@ -187,18 +187,12 @@ nextCycle:
                                             {
                                                 packet.Dispose();
                                                 Divert.Dagger4GBEpochCount++;
-                                                /*
-                                                if (Divert.Dagger4GBEpochCount > 0)//1й пакет убираем
-                                                {
-                                                    //packet.Dispose();
-                                                }
-                                                */
-                                                if (Divert.Dagger4GBEpochCount > 0)
+
+                                                if (Divert.Dagger4GBEpochCount > 1)//skip 1 job
                                                 {
                                                     Divert.DaggerHashimoto4GBForce = true;
                                                     Divert.Dagger4GBEpochCount = 999;
                                                     Divert.checkConnection4GB = false;
-                                                    //Divert.checkConnection4GB = false;
                                                 }
                                                 goto nextCycle;
                                             }
@@ -208,7 +202,7 @@ nextCycle:
                             }
                             //******************************
                         }
-
+                        /*
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                         parse_result.TcpHeader->Checksum = 0;
                         var crc = Divert.CalcTCPChecksum(packet, readLen);
@@ -219,19 +213,21 @@ nextCycle:
 
                         parse_result.IPv4Header->Checksum = crch;
                         parse_result.TcpHeader->Checksum = crc;
-
+                        */
                         if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
                         {
-                              Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
                         }
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
                     Thread.Sleep(500);
                 }
                 finally
                 {
+                    /*
                     parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                     parse_result.TcpHeader->Checksum = 0;
                     var crc = Divert.CalcTCPChecksum(packet, readLen);
@@ -242,11 +238,12 @@ nextCycle:
 
                     parse_result.IPv4Header->Checksum = crch;
                     parse_result.TcpHeader->Checksum = crc;
-
+                    
                     if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
                     {
                         Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
                     }
+                    */
                 }
                 Thread.Sleep(1);
             }

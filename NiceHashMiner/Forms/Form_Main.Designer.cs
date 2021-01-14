@@ -74,7 +74,7 @@ namespace NiceHashMiner
             // buttonStartMining
             // 
             this.buttonStartMining.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonStartMining.Location = new System.Drawing.Point(612, 167);
+            this.buttonStartMining.Location = new System.Drawing.Point(637, 167);
             this.buttonStartMining.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonStartMining.Name = "buttonStartMining";
             this.buttonStartMining.Size = new System.Drawing.Size(105, 23);
@@ -130,9 +130,9 @@ namespace NiceHashMiner
             this.toolStripStatusLabel_power1,
             this.toolStripStatusLabel_power2,
             this.toolStripStatusLabel_power3});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 311);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 345);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(729, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(754, 22);
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip1_ItemClicked);
@@ -248,7 +248,7 @@ namespace NiceHashMiner
             // 
             this.buttonStopMining.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStopMining.BackColor = System.Drawing.SystemColors.Control;
-            this.buttonStopMining.Location = new System.Drawing.Point(612, 193);
+            this.buttonStopMining.Location = new System.Drawing.Point(637, 193);
             this.buttonStopMining.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonStopMining.Name = "buttonStopMining";
             this.buttonStopMining.Size = new System.Drawing.Size(105, 23);
@@ -262,7 +262,7 @@ namespace NiceHashMiner
             // buttonBenchmark
             // 
             this.buttonBenchmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonBenchmark.Location = new System.Drawing.Point(612, 114);
+            this.buttonBenchmark.Location = new System.Drawing.Point(637, 114);
             this.buttonBenchmark.Margin = new System.Windows.Forms.Padding(3, 3, 3, 2);
             this.buttonBenchmark.Name = "buttonBenchmark";
             this.buttonBenchmark.Size = new System.Drawing.Size(105, 23);
@@ -274,7 +274,7 @@ namespace NiceHashMiner
             // buttonSettings
             // 
             this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSettings.Location = new System.Drawing.Point(612, 140);
+            this.buttonSettings.Location = new System.Drawing.Point(637, 140);
             this.buttonSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(105, 23);
@@ -291,7 +291,7 @@ namespace NiceHashMiner
             this.buttonLogo.FlatAppearance.BorderSize = 0;
             this.buttonLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xsmall_light;
-            this.buttonLogo.Location = new System.Drawing.Point(534, 3);
+            this.buttonLogo.Location = new System.Drawing.Point(559, 3);
             this.buttonLogo.Name = "buttonLogo";
             this.buttonLogo.Size = new System.Drawing.Size(181, 52);
             this.buttonLogo.TabIndex = 11;
@@ -311,7 +311,7 @@ namespace NiceHashMiner
             this.labelDemoMode.BackColor = System.Drawing.Color.Transparent;
             this.labelDemoMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDemoMode.ForeColor = System.Drawing.Color.Red;
-            this.labelDemoMode.Location = new System.Drawing.Point(386, 58);
+            this.labelDemoMode.Location = new System.Drawing.Point(411, 58);
             this.labelDemoMode.Name = "labelDemoMode";
             this.labelDemoMode.Size = new System.Drawing.Size(331, 18);
             this.labelDemoMode.TabIndex = 100;
@@ -324,7 +324,7 @@ namespace NiceHashMiner
             this.flowLayoutPanelRates.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelRates.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelRates.Name = "flowLayoutPanelRates";
-            this.flowLayoutPanelRates.Size = new System.Drawing.Size(702, 40);
+            this.flowLayoutPanelRates.Size = new System.Drawing.Size(727, 40);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
             this.flowLayoutPanelRates.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanelRates_Paint);
@@ -337,7 +337,7 @@ namespace NiceHashMiner
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
             this.groupBox1.Location = new System.Drawing.Point(10, 251);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(708, 59);
+            this.groupBox1.Size = new System.Drawing.Size(733, 59);
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";
@@ -357,7 +357,7 @@ namespace NiceHashMiner
             // 
             this.buttonChart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonChart.FlatAppearance.BorderSize = 0;
-            this.buttonChart.Location = new System.Drawing.Point(612, 220);
+            this.buttonChart.Location = new System.Drawing.Point(637, 220);
             this.buttonChart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonChart.Name = "buttonChart";
             this.buttonChart.Size = new System.Drawing.Size(105, 23);
@@ -458,7 +458,7 @@ namespace NiceHashMiner
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(595, 129);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(620, 129);
             this.devicesListViewEnableControl1.TabIndex = 109;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
             // 
@@ -466,7 +466,7 @@ namespace NiceHashMiner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(729, 333);
+            this.ClientSize = new System.Drawing.Size(754, 367);
             this.Controls.Add(this.labelCAP);
             this.Controls.Add(this.label_Uptime);
             this.Controls.Add(this.buttonBTC_Clear);
@@ -498,6 +498,8 @@ namespace NiceHashMiner
             this.Text = "NiceHash Miner Legacy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Main_Shown);
+            this.ResizeBegin += new System.EventHandler(this.Form_Main_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.Form_Main_ResizeEnd);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

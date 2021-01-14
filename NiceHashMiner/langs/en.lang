@@ -493,7 +493,16 @@
 "Form_Main_Checkbox_current_actual_profitabilities": "Show current actual profitabilities",
 "Form_Main_current_actual_profitabilities": "Current actual profitabilities",
 "Form_Main_current_local_profitabilities": "Current local profitabilities",
+"Form_Main_unpaidAmount": "Unpaid balance",
 "Form_Main_chart": "Profitabilities",
+"Form_Profit_Total_efficiency": "Total mining efficiency:",
+"Form_Profit_3h_efficiency": "Mining efficiency (3h.):",
+"Form_Profit_12h_efficiency": "Mining efficiency (12h.):",
+"Form_Profit_24h_efficiency": "Mining efficiency (24h.):",
+"Form_Profit_Total_actual_profitabilities": "Total actual profitabilities:",
+"Form_Profit_StartChartWithProgram": "Show at program startup",
+"Form_Profit_Chart_Fiat": "Show profitability in fiat currency",
+"Form_Profit_Chart_Filename": "Graph was successfully saved to file:",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

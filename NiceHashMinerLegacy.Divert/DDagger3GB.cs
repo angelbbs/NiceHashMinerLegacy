@@ -65,7 +65,7 @@ namespace NiceHashMinerLegacy.Divert
 
 
         [HandleProcessCorruptedStateExceptions]
-        public static IntPtr Dagger3GBDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        public static IntPtr Dagger3GBDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
             {
             Divert.Dagger3GBdivert_running = true;
 
@@ -80,26 +80,26 @@ namespace NiceHashMinerLegacy.Divert
                 return new IntPtr(-1);
             }
 
-            RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
+            RunDivert(DivertHandle, processIdList, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
 
             return DivertHandle;
         }
 
         [HandleProcessCorruptedStateExceptions]
-        internal static Task<bool> RunDivert(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        internal static Task<bool> RunDivert(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
         {
 
             return Task.Run(() =>
             {
                 var t = new TaskCompletionSource<bool>();
-                RunDivert1(handle, processIdList, CurrentAlgorithmType, MinerName, strPlatform);
+                RunDivert1(handle, processIdList, CurrentAlgorithmType, MinerName, strPlatform, MaxEpoch);
                 return t.Task;
             });
         }
 
         // [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [HandleProcessCorruptedStateExceptions]
-        internal unsafe static async Task RunDivert1(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform)
+        internal unsafe static async Task RunDivert1(IntPtr handle, List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
         {
             var packet = new WinDivertBuffer();
             var addr = new WinDivertAddress();
@@ -112,6 +112,7 @@ namespace NiceHashMinerLegacy.Divert
             IntPtr recvEvent = IntPtr.Zero;
             bool modified = false;
             bool result;
+           
             do
             {
                 try
@@ -178,7 +179,7 @@ nextCycle:
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch < 235) //win 7
+                                            if (epoch <= MaxEpoch) //win 7
                                             {
                                                 Divert.Dagger3GBEpochCount = 0;
                                             }
@@ -186,36 +187,22 @@ nextCycle:
                                             {
                                                 packet.Dispose();
                                                 Divert.Dagger3GBEpochCount++;
-                                                /*
-                                                if (Divert.Dagger3GBEpochCount > 0 && Divert.firstRun3GB == false)//1й пакет убираем
-                                                {
-                                                    Divert.DaggerHashimoto3GBForce = true;
-                                                    Divert.DaggerHashimoto3GBProfit = false;
-                                                    Divert.Dagger3GBEpochCount = 999;
-                                                    Divert.firstRun3GB = true;
-                                                }
-                                                */
+
                                                 if (Divert.Dagger3GBEpochCount > 0)
                                                 {
                                                     Divert.DaggerHashimoto3GBForce = true;
                                                     Divert.Dagger3GBEpochCount = 999;
                                                     Divert.checkConnection3GB = false;
-
-                                                    //Divert.checkConnection3GB = false;
                                                 }
-                                                //Divert.Dagger3GBEpochCount = 999;
                                                 goto nextCycle;
-
                                             }
-
                                         }
                                     }
-
                                 }
                             }
                             //******************************
                         }
-
+                        /*
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                         parse_result.TcpHeader->Checksum = 0;
                         var crc = Divert.CalcTCPChecksum(packet, readLen);
@@ -226,7 +213,7 @@ nextCycle:
 
                         parse_result.IPv4Header->Checksum = crch;
                         parse_result.TcpHeader->Checksum = crc;
-
+                        */
                         if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
                         {
                               Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
@@ -239,6 +226,7 @@ nextCycle:
                 }
                 finally
                 {
+                    /*
                     parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                     parse_result.TcpHeader->Checksum = 0;
                     var crc = Divert.CalcTCPChecksum(packet, readLen);
@@ -254,6 +242,7 @@ nextCycle:
                     {
                         Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
                     }
+                    */
                 }
                 Thread.Sleep(1);
             }

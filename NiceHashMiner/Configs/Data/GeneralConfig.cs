@@ -70,6 +70,12 @@ namespace NiceHashMiner.Configs.Data
         public int SettingsFormHeight = 616;
         public int SettingsFormTop = 0;
         public int SettingsFormLeft = 0;
+        public int ProfitFormWidth = 700;
+        public int ProfitFormHeight = 400;
+        public int ProfitFormTop = 0;
+        public int ProfitFormLeft = 0;
+        public bool StartChartWithProgram = false;
+        public bool ChartFiat = false;
 
         public bool MinimizeMiningWindows = false;
 
@@ -281,6 +287,10 @@ namespace NiceHashMiner.Configs.Data
             SettingsFormHeight = 616;
             SettingsFormTop = 0;
             SettingsFormLeft = 0;
+            ProfitFormWidth = 700;
+            ProfitFormHeight = 400;
+            ProfitFormTop = 0;
+            ProfitFormLeft = 0;
     }
 
         public void FixSettingBounds()

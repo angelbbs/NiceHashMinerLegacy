@@ -266,7 +266,7 @@ namespace NiceHashMiner.Miners
 
             var totalSpeed = MiningSetup.MiningPairs
                 .Select(miningPair =>
-                    miningPair.Device.GetAlgorithm(MinerBaseType.ZEnemy, AlgorithmType.X16R, AlgorithmType.NONE))
+                    miningPair.Device.GetAlgorithm(MinerBaseType.ZEnemy, AlgorithmType.KAWPOW, AlgorithmType.NONE))
                 .Where(algo => algo != null).Sum(algo => algo.BenchmarkSpeed);
 
             var zenemyData = new ApiData(MiningSetup.CurrentAlgorithmType)

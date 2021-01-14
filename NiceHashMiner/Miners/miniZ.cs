@@ -87,11 +87,7 @@ namespace NiceHashMiner.Miners
                 algo = "144,5";
                 algoName = "zhash";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
-            {
-                algo = "150,5";
-                algoName = "beam";
-            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 algo = "150,5,3";
@@ -173,25 +169,7 @@ namespace NiceHashMiner.Miners
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Beam)
-            {
-                algo = "150,5";
-                algoName = "beam";
-                stratumPort = "3370";
-                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
-                      + "  --log-file=" + GetLogFileName()
-                      + " --pers auto --par=" + algo
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniZ@beam.2miners.com:5252"
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniZ@beam.f2pool.com:5000"
-                      + " --url " + username + "@" + algoName + "." + myServers[0, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[1, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[2, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[3, 0] +  ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[4, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[5, 0] + ".nicehash.com:" + stratumPort
-                      + " --pass=x" + " --telemetry=" + ApiPort;
-                _benchmarkTimeWait = time;
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 algo = "150,5,3";

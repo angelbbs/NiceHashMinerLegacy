@@ -59,18 +59,7 @@ namespace NiceHashMiner.Miners
                + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} "
                + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} ";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Handshake))
-            {
-                var algo = "handshake";
-                var port = "3384";
-                //url = url.Replace("randomx", "randomxmonero");
-                return $" --gpu-id {GetDevicesCommandString()} --disable-cpu --algorithm bl2bsha3 --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
-               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} ";
-            }
+            
             return "unsupported algo";
 
         }
@@ -105,15 +94,7 @@ namespace NiceHashMiner.Miners
                 return $" --algorithm randomx --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username}"
                 + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()} {extras}";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Handshake))
-            {
-                algo = "handshake";
-                port = "3384";
-
-                return $" --gpu-id {GetDevicesCommandString()} --disable-cpu --algorithm bl2bsha3 --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username}"
-                + $" --pool stratum+tcp://hns.f2pool.com:6000 --wallet hs1qjq6nglhcmx2xnd30kt3s2rq3fphft459va796j.srbminer --nicehash false --log-file {GetLogFileName()} {extras}";
-            }
-
+            
             return "unknown";
         }
 

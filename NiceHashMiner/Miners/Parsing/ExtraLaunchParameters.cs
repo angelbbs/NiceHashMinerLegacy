@@ -177,8 +177,11 @@ namespace NiceHashMiner.Miners.Parsing
                     // SingleParam
                     new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("lolMiner_enablezilcache", "--enablezilcache", "--enablezilcache", "0", MinerOptionFlagType.MultiParam, ""),
-                    new MinerOption("lolMiner_win4galloc", "", "--win4galloc", "0", MinerOptionFlagType.MultiParam, ""),
+                    new MinerOption("lolMiner_enablezilcache", "--enablezilcache=", "--enablezilcache=", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_win4galloc", "", "--win4galloc", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_4gallocsize", "", "--4g-alloc-size", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_keepfree", "", "--keepfree", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_zombie-tune", "", "--zombie-tune", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, "")
                 },
                 // TemperatureOptions

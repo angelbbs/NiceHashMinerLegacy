@@ -57,14 +57,7 @@ namespace NiceHashMiner.Miners
             algo = "--algo " + MiningSetup.MinerName;
             apiBind = " --api-bind 127.0.0.1:" + ApiPort;
             IsApiReadException = false;
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
-            {
-                algo = "--algo cnv8";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightHeavy))
-            {
-                algo = "--algo cnheavy";
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
             {
                 algo = "--algo lyra2v3";
@@ -147,19 +140,7 @@ namespace NiceHashMiner.Miners
                 Total = 0.0d;
                 return commandLine;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
-            {
-                commandLine = "--algo x16r" +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://x16r.eu.mine.zpool.ca:3636" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --log " + GetLogFileName() +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 3;
-                Total = 0.0d;
-                return commandLine;
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 commandLine = "--algo x16rv2" +
@@ -228,55 +209,7 @@ namespace NiceHashMiner.Miners
                 Total = 0.0d;
                 return commandLine;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Skunk))
-            {
-                commandLine = "--algo skunk" +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-               // " -o stratum+tcp://hdac.moricpool.com:3333" + " -u HGr2JYPDMgYr9GzS9TcadBxxkyxo4v9XAJ" + " -p x " +
-               "-o stratum+tcp://skunk.eu.mine.zpool.ca:8433 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC" +
-                " --log " + GetLogFileName() +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-              //  TotalCount = 2;
-                Total = 0.0d;
-                return commandLine;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightHeavy))
-            {
-                commandLine = "--algo cnheavy" +
-                " --url=stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " --url=stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " --log " + GetLogFileName() +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 2;
-                Total = 0.0d;
-                return commandLine;
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CryptoNightV8))
-            {
-                /*
-                if (File.Exists("miners\\CryptoDredgeV8\\"+ GetLogFileName()))
-                    File.Delete("miners\\CryptoDredgeV8\\" + GetLogFileName());
-                    */
-                algo = "--algo cnv8";
-                commandLine = algo +
-                " --url=stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " --url=stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " --log " + GetLogFileName() +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 3;
-                Total = 0.0d;
-                return commandLine;
-            }
-
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.MTP))
             {
                 algo = "--algo mtp";

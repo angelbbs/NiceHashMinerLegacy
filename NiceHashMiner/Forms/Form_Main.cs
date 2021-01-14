@@ -26,6 +26,7 @@ namespace NiceHashMiner
     using OpenHardwareMonitor.Hardware;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data;
     using System.Drawing.Drawing2D;
     using System.Drawing.Text;
     using System.IO;
@@ -128,12 +129,15 @@ namespace NiceHashMiner
         public static double profitabilityFromNH = 0.0d;
         public static List<RigProfitList> RigProfits = new List<Form_Main.RigProfitList>();
         public static RigProfitList lastRigProfit = new Form_Main.RigProfitList();
+        public static bool Form_RigProfitChartRunning = false;
+        public static bool FormMainMoved = false;
         public struct RigProfitList
         {
+            public DateTime DateTime;
             public double totalRate;
             public double currentProfit;
+            public double unpaidAmount;
         }
-
         public Form_Main()
         {
             WindowState = FormWindowState.Minimized;
@@ -451,11 +455,46 @@ namespace NiceHashMiner
             _idleCheck.Interval = 500;
             _idleCheck.Start();
             devicesListViewEnableControl1.Visible = true;
+            if (ConfigManager.GeneralConfig.StartChartWithProgram == true)
+            {
+                Form_RigProfitChartRunning = true;
+                var chart = new Form_RigProfitChart();
+                try
+                {
+                    if (chart != null)
+                    {
+                        Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
+                        if (ConfigManager.GeneralConfig.ProfitFormLeft + ConfigManager.GeneralConfig.ProfitFormWidth <= screenSize.Size.Width)
+                        {
+                            if (ConfigManager.GeneralConfig.ProfitFormTop + ConfigManager.GeneralConfig.ProfitFormLeft >= 1)
+                            {
+                                chart.Top = ConfigManager.GeneralConfig.ProfitFormTop;
+                                chart.Left = ConfigManager.GeneralConfig.ProfitFormLeft;
+                            }
+
+                            chart.Width = ConfigManager.GeneralConfig.ProfitFormWidth;
+                            chart.Height = ConfigManager.GeneralConfig.ProfitFormHeight;
+                        }
+                        else
+                        {
+                            // chart.Width = 660; // min width
+                        }
+                    }
+                    if (chart != null) chart.Show();
+                }
+                catch (Exception er)
+                {
+                    Helpers.ConsolePrint("chart", er.ToString());
+                }
+            }
         }
 
 
         private void IdleCheck_Tick(object sender, EventArgs e)
         {
+            //вместо делегирования будем через таймер на другую форму влиять!
+            buttonChart.Enabled = !Form_RigProfitChartRunning;
+
             if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
 
             var msIdle = Helpers.GetIdleTime();
@@ -635,7 +674,6 @@ namespace NiceHashMiner
 
             _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 
-
             Thread.Sleep(10);
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
@@ -690,11 +728,12 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfig.DownloadInit = true;
                 ConfigManager.GeneralConfigFileCommit();
             }
-
             //_loadingScreen.IncreaseLoadCounterAndMessage("Check VC redistributable");
             _loadingScreen.SetValueAndMsg(11, International.GetText("Check VC redistributable"));
             InstallVcRedist();
             _loadingScreen.FinishLoad();
+
+            
 
             _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
             _autostartTimerDelay = new Timer();
@@ -991,12 +1030,26 @@ namespace NiceHashMiner
             _updateTimer.Interval = 1000 * 60;//1 min
             _updateTimerCount = 0;
             _updateTimer.Start();
-
-
+            
+            Form_Main.lastRigProfit.DateTime = DateTime.Now;
+            //Form_Main.lastRigProfit.totalRate = 0;
+            //Form_Main.lastRigProfit.currentProfit = 0;
+            //Form_Main.lastRigProfit.unpaidAmount = 0;
+            Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
+            Form_Main.lastRigProfit.DateTime = DateTime.Now;
+            Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
+            /*
+            foreach (var RigProfit in Form_Main.RigProfits)
+            {
+                Helpers.ConsolePrint("DateTime", RigProfit.DateTime.ToString("G"));
+                Helpers.ConsolePrint("currentProfit", (RigProfit.currentProfit).ToString());
+                Helpers.ConsolePrint("totalRate", (RigProfit.totalRate).ToString());
+            }
+            */
             _updateTimerCount++;
             int period = 0;
             switch (ConfigManager.GeneralConfig.ProgramUpdateIndex)
@@ -1601,11 +1654,14 @@ public static void CloseChilds(Process parentId)
             {
                 currencyRate = ExchangeRateApi.ConvertToActiveCurrency(br).ToString("F2");
             }
-
-            toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
-
-          //  Helpers.ConsolePrint("NICEHASH",
-            //    "Current Bitcoin rate: " + br.ToString("F2", CultureInfo.InvariantCulture));
+            try
+            {
+                toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("UpdateExchange", ex.ToString());
+            }
         }
 
 
@@ -1696,7 +1752,9 @@ public static void CloseChilds(Process parentId)
                         ConfigManager.GeneralConfig.FormLeft = this.Left;
                     }
                 }
+
             }
+
             if (_deviceStatusTimer != null)
             {
                 _deviceStatusTimer.Stop();
@@ -1886,15 +1944,14 @@ public static void CloseChilds(Process parentId)
             var chart = new Form_RigProfitChart();
             try
             {
-                //   SetChildFormCenter(settings);
-
+                Form_RigProfitChartRunning = true;
+                buttonChart.Enabled = false;
                 chart.Show();
             }
             catch (Exception er)
             {
                 Helpers.ConsolePrint("chart", er.ToString());
             }
-            //BeginInvoke(new InvokeDelegate(Form_RigProfitChart.ChartData));
         }
         private void ToolStripStatusLabel10_Click(object sender, EventArgs e)
         {
@@ -2285,8 +2342,6 @@ public static void CloseChilds(Process parentId)
                         Divert.Dagger4GBEpochCount = 0;
                         Divert.DaggerHashimoto4GBForce = false;
                         Divert.checkConnection4GB = false;
-                        //DHClient.needStart = false;
-                        //new Task(() => DHClient.StopConnection()).Start();
                     }
                     if (Divert.Dagger4GBEpochCount > 1 && !Divert.checkConnection4GB)
                     {
@@ -2368,6 +2423,7 @@ public static void CloseChilds(Process parentId)
                 labelCAP.Text = "";
             }
             SMAdelayTick++;
+
             try
             {
                 if (ConfigManager.GeneralConfig.ShowUptime)
@@ -2396,9 +2452,9 @@ public static void CloseChilds(Process parentId)
                     CheckDagger4GB();
                 }
                 DeviceStatusTimer_FirstTick = true;
-                ExchangeCallback();
-                BalanceCallback();
-                UpdateGlobalRate();
+                new Task(() => ExchangeCallback()).Start();
+                new Task(() => BalanceCallback()).Start();
+                new Task(() => UpdateGlobalRate()).Start();
 
                 if (needRestart)
                 {
@@ -2406,7 +2462,9 @@ public static void CloseChilds(Process parentId)
                     restartProgram();
                 }
                 devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices);
+                //new Task(() => devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices)).Start();
             }
+
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("DeviceStatusTimer_Tick error: ", ex.ToString());
@@ -2560,12 +2618,6 @@ public static void CloseChilds(Process parentId)
 
         }
 
-        private void Form_Main_ResizeEnd(object sender, EventArgs e)
-        {
-           // _mainFormHeight = Size.Height;
-            //_mainFormHeight = Size.Height - _emtpyGroupPanelHeight;
-        }
-
         private void buttonBTC_Clear_Click(object sender, EventArgs e)
         {
             //Form_Main.ActiveForm.Focus();
@@ -2669,6 +2721,16 @@ public static void CloseChilds(Process parentId)
         private void labelCAP_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form_Main_ResizeBegin(object sender, EventArgs e)
+        {
+            FormMainMoved = true;
+        }
+
+        private void Form_Main_ResizeEnd(object sender, EventArgs e)
+        {
+            FormMainMoved = false;
         }
     }
 }
