@@ -149,11 +149,12 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
-                            /*
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Handshake, "Handshake")
+                            
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
+                                ExtraLaunchParameters = "--gpu-boost 3"
                             }
-                            */
+                            
                             /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Eaglesong, "Eaglesong")
                             {

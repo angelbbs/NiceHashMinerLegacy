@@ -59,7 +59,18 @@ namespace NiceHashMiner.Miners
                + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} "
                + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} ";
             }
-            
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                var algo = "ethash";
+                var port = "3353";
+                return $" --disable-cpu --algorithm ethash --pool {url} --wallet {username} --api-enable --api-port {ApiPort} {extras} "
+               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} " +
+               "--gpu-id " + GetDevicesCommandString().Trim();
+            }
             return "unsupported algo";
 
         }
@@ -69,7 +80,7 @@ namespace NiceHashMiner.Miners
             var deviceStringCommand = " ";
 
             var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
-            deviceStringCommand += string.Join(",", ids);
+            deviceStringCommand += string.Join("!", ids);
 
             return deviceStringCommand;
         }
@@ -77,8 +88,8 @@ namespace NiceHashMiner.Miners
         {
             var LastCommandLine = GetStartCommand(url, btcAddress, worker);
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            var algo = "cryptonightv8";
-            var port = "3367";
+            string algo;
+            string port;
             string username = GetUsername(btcAddress, worker);
             url = url.Replace("stratum+tcp://", "");
 
@@ -94,7 +105,18 @@ namespace NiceHashMiner.Miners
                 return $" --algorithm randomx --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username}"
                 + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()} {extras}";
             }
-            
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                algo = "ethash";
+                port = "3353";
+
+                return $" --disable-cpu --algorithm ethash" + 
+                    $" --pool stratum+tcp://eu1.ethermine.org:4444" +
+                    $" --wallet 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()} {extras}" +
+                " --gpu-id " + GetDevicesCommandString().Trim();
+            }
+
             return "unknown";
         }
 
@@ -138,9 +160,17 @@ namespace NiceHashMiner.Miners
 
             try
             {
+                int totals = 0;
                 if (resp != null)
                 {
-                    int totals = resp.algorithms[0].hashrate.cpu.total;
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        totals = resp.algorithms[0].hashrate.gpu.total;
+                    } else
+                    {
+                        totals = resp.algorithms[0].hashrate.cpu.total;
+                    }
+                         
                     //Helpers.ConsolePrint("API hashrate...........", totals.ToString());
 
                     ad.Speed = totals;
@@ -259,13 +289,13 @@ namespace NiceHashMiner.Miners
                     {
                         Helpers.ConsolePrint(MinerTag(), ad.Result.Speed.ToString());
                         repeats++;
-                        if (repeats > 5)//skip first 5s
+                        if (repeats > 20)//skip first 20s
                         {
                             summspeed += ad.Result.Speed;
                         }
-                        if (repeats >= 20)
+                        if (repeats >= 40)
                         {
-                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 1);//15s speed
+                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 20, 1);//20s speed
                             break;
                         }
                     }
