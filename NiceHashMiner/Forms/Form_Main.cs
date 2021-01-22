@@ -365,9 +365,7 @@ namespace NiceHashMiner
             }
 
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
-            //linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
 
-           // toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate").Substring(0, 2) + ":";
             toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate");
             toolStripStatusLabelBTCDayText.Text =
                 "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -375,22 +373,28 @@ namespace NiceHashMiner
                                                    International.GetText(
                                                        ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    International.GetText("Form_Main_balance") + ":";
+            toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
+            toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
+                                                   International.GetText(
+                                                       ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
+                                                   International.GetText("Form_Main_balance") + ":";
+
+            toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
+            toolStripStatusLabel_power2.Text = "-";
+            toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
+
 
             devicesListViewEnableControl1.InitLocaleMain();
-          //  devicesListViewEnableControl1.Focus();
 
             buttonBenchmark.Text = International.GetText("Form_Main_benchmark");
             buttonSettings.Text = International.GetText("Form_Main_settings");
             buttonStartMining.Text = International.GetText("Form_Main_start");
             buttonStopMining.Text = International.GetText("Form_Main_stop");
-            //buttonChart.Text = International.GetText("Form_Main_help");
             buttonChart.Text = International.GetText("Form_Main_chart");
 
             label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
             groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
-            toolStripStatusLabel_power1.Text = "";
-            toolStripStatusLabel_power2.Text = "";
-            toolStripStatusLabel_power3.Text = "";
+
         }
 
         public void InitMainConfigGuiData()
@@ -430,13 +434,7 @@ namespace NiceHashMiner
                     _factorTimeUnit = 365;
                     break;
             }
-
-            toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
-            toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
-                                                   International.GetText(
-                                                       ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
-                                                   International.GetText("Form_Main_balance") + ":";
-            //BalanceCallback(null, null); // update currency changes
+           
 
             if (_isDeviceDetectionInitialized)
             {
@@ -963,15 +961,21 @@ namespace NiceHashMiner
                     lbl.ForeColor = _foreColor;
                     lbl.BorderStyle = BorderStyle.FixedSingle;
                 }
-                foreach (var lbl in this.Controls.OfType<StatusStrip>()) lbl.BackColor = _backColor;
-                foreach (var lbl in this.Controls.OfType<StatusStrip>()) lbl.ForeColor = _foreColor;
-                foreach (var lbl in this.Controls.OfType<ToolStripStatusLabel>()) lbl.BackColor = _backColor;
-                foreach (var lbl in this.Controls.OfType<ToolStripStatusLabel>()) lbl.ForeColor = _foreColor;
+               
+                try
+                {
+                    foreach (var lbl in this.Controls.OfType<StatusStrip>()) lbl.BackColor = _backColor;
+                    foreach (var lbl in this.Controls.OfType<StatusStrip>()) lbl.ForeColor = _foreColor;
+                    foreach (var lbl in this.Controls.OfType<ToolStripStatusLabel>()) lbl.BackColor = _backColor;
+                    foreach (var lbl in this.Controls.OfType<ToolStripStatusLabel>()) lbl.ForeColor = _foreColor;
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("ToolStripStatusLabel", ex.ToString());
+                }
+                
 
-                //toolStripStatusLabel10.Image = NiceHashMiner.Properties.Resources.NHM_Cash_Register_Bitcoin_transparent_white;
-
-
-                foreach (var lbl in this.Controls.OfType<Button>()) lbl.BackColor = _backColor;
+                    foreach (var lbl in this.Controls.OfType<Button>()) lbl.BackColor = _backColor;
                 foreach (var lbl in this.Controls.OfType<Button>())
                 {
                     lbl.ForeColor = _textColor;
@@ -1042,6 +1046,14 @@ namespace NiceHashMiner
         {
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
+            if (Form_Main.RigProfits.Count == 2)
+            {
+                RigProfits.Clear();
+                Form_Main.lastRigProfit.DateTime = DateTime.Now.AddMinutes(-1);
+                Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
+                Form_Main.lastRigProfit.DateTime = DateTime.Now;
+                Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
+            }
             /*
             foreach (var RigProfit in Form_Main.RigProfits)
             {
@@ -1421,7 +1433,10 @@ public static void CloseChilds(Process parentId)
                 ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
                     .UpdateProfitStats(groupName, deviceStringInfo, speedString, StartMinerTime, rateBtcString, rateCurrencyString, processTag);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("AddRateInfo", ex.ToString());
+            }
 
             UpdateGlobalRate();
         }
@@ -1536,6 +1551,7 @@ public static void CloseChilds(Process parentId)
                     {
                         powerString = "";
                     }
+
                     toolStripStatusLabelBTCDayText.Text = powerString + " " +
                     "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                     toolStripStatusLabelGlobalRateValue.Text =
@@ -1564,26 +1580,27 @@ public static void CloseChilds(Process parentId)
                     .ToString("F2", CultureInfo.InvariantCulture) + ") ";
                     if (ConfigManager.GeneralConfig.DecreasePowerCost)
                     {
-                        powerString = "";//!!!!!
+                        powerString = "";
                     }
                 }
                 else
                 {
                     powerString = "";
                 }
-                toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
-                toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
-                toolStripStatusLabel_power2.Text = totalPower.ToString();
-
-                toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                    .ConvertToActiveCurrency(((totalRate - totalPowerRateDec) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                //toolStrip7
+                toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi.ConvertToActiveCurrency(
+                    (totalRate - totalPowerRateDec) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate())
                     .ToString("F2", CultureInfo.InvariantCulture);
                 toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
-                                                       International.GetText(
-                                                           ConfigManager.GeneralConfig.TimeUnit.ToString()) + "   " +
-                                                       International.GetText("Form_Main_balance") + ":";
+                    International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString()) + "   " +
+                     International.GetText("Form_Main_balance") + ":";
+                BalanceCallback();
+                toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
+                toolStripStatusLabel_power2.Text = totalPower.ToString();
+                toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
+
             }
-            catch (Exception e)
+            catch (ArgumentOutOfRangeException e)
             {
                 Helpers.ConsolePrint("UpdateGlobalRate error: ", e.ToString());
             }
@@ -1598,24 +1615,25 @@ public static void CloseChilds(Process parentId)
                 var balance = NiceHashStats.Balance;
                 //if (balance > 0)
 
-                    if (ConfigManager.GeneralConfig.AutoScaleBTCValues && balance < 0.1)
-                    {
-                        toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
-                        toolStripStatusLabelBalanceBTCValue.Text =
-                            (balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
-                    }
-                    else
-                    {
-                        toolStripStatusLabelBalanceBTCCode.Text = "BTC";
-                        toolStripStatusLabelBalanceBTCValue.Text = balance.ToString("F6", CultureInfo.InvariantCulture);
-                    }
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && balance < 0.1)
+                {
+                    toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
+                    toolStripStatusLabelBalanceBTCValue.Text =
+                        (balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    toolStripStatusLabelBalanceBTCCode.Text = "BTC";
+                    toolStripStatusLabelBalanceBTCValue.Text = balance.ToString("F6", CultureInfo.InvariantCulture);
+                }
+                
 
-                    //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
                     var amountUsd = (balance * ExchangeRateApi.GetUsdExchangeRate());
                     var amount = ExchangeRateApi.ConvertToActiveCurrency(amountUsd);
-                    toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
+                
+                toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
                     toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
-
+                
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("Balance update", ex.ToString());
@@ -1953,21 +1971,7 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("chart", er.ToString());
             }
         }
-        private void ToolStripStatusLabel10_Click(object sender, EventArgs e)
-        {
-                Process.Start(Links.NhmPayingFaqNew);
-        }
-
-        private void ToolStripStatusLabel10_MouseHover(object sender, EventArgs e)
-        {
-            statusStrip1.Cursor = Cursors.Hand;
-        }
-
-        private void ToolStripStatusLabel10_MouseLeave(object sender, EventArgs e)
-        {
-            statusStrip1.Cursor = Cursors.Default;
-        }
-
+       
         private void TextBoxCheckBoxMain_Leave(object sender, EventArgs e)
         {
             if (true)
@@ -2452,9 +2456,17 @@ public static void CloseChilds(Process parentId)
                     CheckDagger4GB();
                 }
                 DeviceStatusTimer_FirstTick = true;
+                /*
                 new Task(() => ExchangeCallback()).Start();
-                new Task(() => BalanceCallback()).Start();
+                Thread.Sleep(10);
                 new Task(() => UpdateGlobalRate()).Start();
+                Thread.Sleep(10);
+                */
+                ExchangeCallback();
+                Thread.Sleep(10);
+                UpdateGlobalRate();
+                Thread.Sleep(10);
+                //new Task(() => BalanceCallback()).Start();
 
                 if (needRestart)
                 {
@@ -2543,11 +2555,6 @@ public static void CloseChilds(Process parentId)
                 e.Graphics.DrawString(cmb.Items[e.Index].ToString(), cmb.Font, brush, e.Bounds);
                 e.DrawFocusRectangle();
             }
-
-        }
-
-        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
 
         }
 

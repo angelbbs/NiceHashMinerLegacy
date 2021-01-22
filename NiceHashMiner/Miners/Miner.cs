@@ -693,8 +693,13 @@ namespace NiceHashMiner
                     FileName = MiningSetup.MinerPath
                 }
             };
-
-                BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
+            
+            if (benchmarkHandle.StartInfo.FileName.Contains("CryptoDredge") && commandLine.Contains("neoscrypt"))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
+            }
+            
+            BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
 
@@ -1291,7 +1296,12 @@ namespace NiceHashMiner
                 }
             }
 
+            if (MiningSetup.MinerPath.Contains("CryptoDredge") && LastCommandLine.Contains("NeoScrypt"))
+            {
+                Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
+            } 
             P.StartInfo.FileName = Path;
+
             P.ExitEvent = Miner_Exited;
             LastCommandLine = System.Text.RegularExpressions.Regex.Replace(LastCommandLine, @"\s+", " ");
             P.StartInfo.Arguments = LastCommandLine;

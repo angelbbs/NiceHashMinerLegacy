@@ -883,9 +883,14 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine($"\t\tMANUFACTURER: {cudaDev.CUDAManufacturer} ({Manufacturer})");
                             stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
                             stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
-                            stringBuilder.AppendLine($"\t\tMonitor?: {cudaDev.HasMonitorConnected}");
+                            stringBuilder.AppendLine($"\t\tMonitor: {cudaDev.HasMonitorConnected}");
                             stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
                             stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
+                            //force 1080 detection
+                            if (cudaDev.GetName().Contains("1080") || cudaDev.GetName().Contains("Titan Xp"))
+                            {
+                                Form_Main.ShouldRunEthlargement = true;
+                            }
 
                             if (!skip)
                             {

@@ -179,7 +179,7 @@ nextCycle:
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch <= MaxEpoch) //win 7
+                                            if (epoch <= MaxEpoch) 
                                             {
                                                 Divert.Dagger3GBEpochCount = 0;
                                             }
@@ -188,7 +188,7 @@ nextCycle:
                                                 packet.Dispose();
                                                 Divert.Dagger3GBEpochCount++;
 
-                                                if (Divert.Dagger3GBEpochCount > 0)
+                                                if (Divert.Dagger3GBEpochCount > 2)
                                                 {
                                                     Divert.DaggerHashimoto3GBForce = true;
                                                     Divert.Dagger3GBEpochCount = 999;

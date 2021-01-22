@@ -653,7 +653,7 @@ namespace NiceHashMiner.Stats
             {
                 string resp;
                 resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ/rigs2?sort=NAME&page=0", "x");
-                //                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ/rigs/activeWorkers?sortDirection=ASC", "x");
+                //resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ/rigs/activeWorkers?sortDirection=ASC", "x");
                 if (resp != null)
                 {
                     //Helpers.ConsolePrint("NHM_API_info", resp);
@@ -664,10 +664,12 @@ namespace NiceHashMiner.Stats
                     {
                         if (rig.rigId.ToString() == NiceHashSocket.RigID)
                         {
+                            /*
                             Helpers.ConsolePrint("NHM_API_info", rig.rigId.ToString());
                             Helpers.ConsolePrint("NHM_API_info", rig.name.ToString());
                             Helpers.ConsolePrint("NHM_API_info", rig.profitability.ToString());
                             Helpers.ConsolePrint("NHM_API_info", rig.unpaidAmount.ToString());
+                            */
                             Form_Main.lastRigProfit.currentProfit = rig.profitability;
                             Form_Main.lastRigProfit.unpaidAmount = rig.unpaidAmount;
                         }
@@ -868,7 +870,8 @@ namespace NiceHashMiner.Stats
                             payingDict[algoKey] = Math.Abs(algo[1].Value<double>());
                         }
 
-                        if (Math.Abs(algo[1].Value<double>()) != 0 && paying != 0 && !algoKey.ToString().Contains("UNUSED"))
+                        //if (Math.Abs(algo[1].Value<double>()) != 0 && paying != 0 && !algoKey.ToString().Contains("UNUSED"))
+                        if (paying != 0 && !algoKey.ToString().Contains("UNUSED"))
                         {
                             if (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ||
                                paying / treshold > Math.Abs(algo[1].Value<double>()) * mult)
@@ -896,6 +899,7 @@ namespace NiceHashMiner.Stats
                                 }
                             }
                         }
+                        /*
                         if (Math.Abs(algo[1].Value<double>()) == 0)
                         {
                             Helpers.ConsolePrint("SMA API", "Bug found in " + algoKey.ToString() +
@@ -903,6 +907,7 @@ namespace NiceHashMiner.Stats
                                                                 " New: " + Math.Abs(algo[1].Value<double>()) * mult +
                                                                 " Zero ignoring");
                         }
+                        */
                         /*
                         if (ConfigManager.GeneralConfig.DaggerOrderMaxPay > 0 && algoKey == AlgorithmType.DaggerHashimoto && Math.Abs(algo[1].Value<double>()) > ConfigManager.GeneralConfig.DaggerOrderMaxPay)
                         {

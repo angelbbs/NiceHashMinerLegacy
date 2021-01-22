@@ -160,7 +160,8 @@ namespace NiceHashMiner.Forms.Components
                 devNum = computeDevice.NameCount; ;
                 devInfo = computeDevice.Name;
 
-                if (ConfigManager.GeneralConfig.Additional_info_about_device && computeDevice.DeviceType != DeviceType.CPU)
+                if (ConfigManager.GeneralConfig.Additional_info_about_device && computeDevice.DeviceType != DeviceType.CPU &&
+                    computeDevice.Uuid.Length >= 8)
                 {
                     addInfo = " (" + computeDevice.Uuid.Substring(computeDevice.Uuid.Length - 4, 4).ToUpper() + ")" +
                     " (BusID: " + computeDevice.BusID.ToString() + ")";
@@ -286,7 +287,7 @@ namespace NiceHashMiner.Forms.Components
                 }
                 catch (Exception e)
                 {
-                    Helpers.ConsolePrint("SetComputeDevicesStatus", e.ToString()); ;
+                    Helpers.ConsolePrint("SetComputeDevicesStatus", e.ToString()); 
                 } finally
                 {
 

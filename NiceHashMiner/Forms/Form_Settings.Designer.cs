@@ -1368,7 +1368,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_RunEthlargement.AutoSize = true;
             this.checkBox_RunEthlargement.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_RunEthlargement.Location = new System.Drawing.Point(543, 19);
+            this.checkBox_RunEthlargement.Location = new System.Drawing.Point(32, 233);
             this.checkBox_RunEthlargement.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_RunEthlargement.Name = "checkBox_RunEthlargement";
             this.checkBox_RunEthlargement.Size = new System.Drawing.Size(111, 17);

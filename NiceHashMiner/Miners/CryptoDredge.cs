@@ -21,7 +21,7 @@ namespace NiceHashMiner.Miners
 {
     public class CryptoDredge : Miner
     {
-        public CryptoDredge() : base("CryptoDredge_NVIDIA")
+        public CryptoDredge() : base("CryptoDredge")
         { }
 
         private int TotalCount = 0;
@@ -58,9 +58,9 @@ namespace NiceHashMiner.Miners
             apiBind = " --api-bind 127.0.0.1:" + ApiPort;
             IsApiReadException = false;
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                algo = "--algo lyra2v3";
+                algo = "--algo kawpow";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
             {
@@ -127,20 +127,6 @@ namespace NiceHashMiner.Miners
             if (File.Exists("miners\\CryptoDredge\\" + GetLogFileName()))
                 File.Delete("miners\\CryptoDredge\\" + GetLogFileName());
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Blake2s))
-            {
-                commandLine = "--algo blake2s" +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://blake2s.eu.mine.zpool.ca:5766" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --log " + GetLogFileName() +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-              //  TotalCount = 3;
-                Total = 0.0d;
-                return commandLine;
-            }
-
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 commandLine = "--algo x16rv2" +
@@ -154,11 +140,11 @@ namespace NiceHashMiner.Miners
                 Total = 0.0d;
                 return commandLine;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                commandLine = "--algo lyra2z" +
+                commandLine = "--algo kawpow" +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://lyra2z.eu.mine.zpool.ca:4553" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
+                " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.CryptoDredge" + " -p x" +
                 " --log " + GetLogFileName() +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
@@ -167,19 +153,7 @@ namespace NiceHashMiner.Miners
                 Total = 0.0d;
                 return commandLine;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv2))
-            {
-                commandLine = "--algo lyra2v2" +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://lyra2v2.eu.mine.zpool.ca:4533" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --log " + GetLogFileName() +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 2;
-                Total = 0.0d;
-                return commandLine;
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
             {
                 commandLine = "--algo lyra2v3" +
@@ -224,21 +198,7 @@ namespace NiceHashMiner.Miners
                 Total = 0.0d;
                 return commandLine;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
-            {
-                algo = "--algo cuckaroo29";
-                commandLine = algo +
-                " --url=stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                //" -o stratum+tcp://grin.sparkpool.com:6666" + " -u angelbbs@mail.ru/" + ConfigManager.GeneralConfig.WorkerName.Trim() + " -p x " +
-                " --log " + GetLogFileName() +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 3;
-                Total = 0.0d;
-                return commandLine;
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
                 algo = "--algo aeternity";

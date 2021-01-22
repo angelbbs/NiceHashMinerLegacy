@@ -179,7 +179,7 @@ namespace NiceHashMinerLegacy.Divert
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch <= MaxEpoch) //win 7
+                                            if (epoch <= MaxEpoch) 
                                             {
                                                 Divert.Dagger4GBEpochCount = 0;
                                             }
@@ -188,7 +188,7 @@ namespace NiceHashMinerLegacy.Divert
                                                 packet.Dispose();
                                                 Divert.Dagger4GBEpochCount++;
 
-                                                if (Divert.Dagger4GBEpochCount > 1)//skip 1 job
+                                                if (Divert.Dagger4GBEpochCount > 2)//skip 1 job
                                                 {
                                                     Divert.DaggerHashimoto4GBForce = true;
                                                     Divert.Dagger4GBEpochCount = 999;

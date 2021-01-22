@@ -303,7 +303,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.X16RV2, "X16Rv2"),
-                           //new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.Lyra2REv3, "Lyra2REv3"),
+                            new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.KAWPOW, "KAWPOW"),
                           // new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.CuckooCycle, "CuckooCycle"),
                         }
             },
@@ -418,10 +418,12 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                     },
                     */
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.CuckaRooz29, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.CuckooCycle, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "

@@ -41,19 +41,38 @@ namespace NiceHashMiner.Miners.Grouping
                 miningPairs.Sort((a, b) => a.Device.ID - b.Device.ID);
                 // init name scope and IDs
                 {
+                    DeviceType deviceType = new DeviceType();
                     var deviceNames = new List<string>();
+                    int MaxDevices = 0;
                     DevIndexes = new List<int>();
                     foreach (var pair in miningPairs.OrderBy(pair => pair.Device.IDByBus))
                     {
+                        deviceType = pair.Device.DeviceType;
                         deviceNames.Add(pair.Device.NameCount);
                         DevIndexes.Add(pair.Device.Index);
+                        MaxDevices = Math.Max(MaxDevices, deviceNames.Count);
                         //TotalPower += pair.Device.PowerUsage;
                         TotalPower += pair.Algorithm.PowerUsage;
-                        //Helpers.ConsolePrint("pair.Device.PowerUsage: ", pair.Device.PowerUsage.ToString());
-                        //Helpers.ConsolePrint("pair.Algorithm.PowerUsage: ", pair.Algorithm.PowerUsage.ToString());
-                        //Helpers.ConsolePrint("TotalPower: ", TotalPower.ToString());
                     }
-                    DevicesInfoString = "{ " + string.Join(", ", deviceNames) + " }";
+
+                    if (MaxDevices >= 6)
+                    {
+                        if (deviceType == DeviceType.AMD)
+                        {
+                            DevicesInfoString = "AMD GPU " + ("{ " + string.Join(", ", deviceNames) + " }").Replace("GPU", "");
+                        }
+                        if (deviceType == DeviceType.NVIDIA)
+                        {
+                            DevicesInfoString = "NVIDIA GPU " + ("{ " + string.Join(", ", deviceNames) + " }").Replace("GPU", "");
+                        }
+                        if (deviceType == DeviceType.CPU)
+                        {
+                            DevicesInfoString = "CPU " + ("{ " + string.Join(", ", deviceNames) + " }").Replace("CPU", "");
+                        }
+                    } else
+                    {
+                        DevicesInfoString = ("{ " + string.Join(", ", deviceNames) + " }");
+                    }
                 }
                 // init miner
                 {
