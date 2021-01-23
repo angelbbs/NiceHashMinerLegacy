@@ -144,14 +144,20 @@ namespace NiceHashMiner.Forms
             {
                 CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 ces = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(ce * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
+                chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
+                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.currentProfit * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
+                chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
+                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
             }
             else
             {
                 CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 ces = Math.Round((ce), 5).ToString();
+                chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
+                    ": " + Form_Main.lastRigProfit.currentProfit * 1000 + " " + CurrencyName;
+                chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
+                    ": " + Form_Main.lastRigProfit.totalRate * 1000 + " " + CurrencyName;
             }
-            
-
 
             if (currentProfitAll == 0 || totalRateAll == 0)
             {
@@ -173,8 +179,10 @@ namespace NiceHashMiner.Forms
 
         private void chartRigProfit_Click(object sender, EventArgs e)
         {
-
-
+            /*
+            chartRigProfit.ChartAreas[0].InnerPlotPosition.Width = chartRigProfit.ChartAreas[0].InnerPlotPosition.Width * ((float)2.0);
+            chartRigProfit.Invalidate();
+            */
         }
 
         private Timer _updateTimer;
@@ -219,6 +227,7 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Legends["Legend1"].Alignment = StringAlignment.Center;
             //chartRigProfit.Legends["Legend2"].DockedToChartArea = "ChartArea1";
             chartRigProfit.Legends["Legend1"].LegendStyle = LegendStyle.Row;
+            chartRigProfit.Legends["Legend1"].TextWrapThreshold = 100;
 
             chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities");
             chartRigProfit.Series["Series1"].BorderWidth = 2;

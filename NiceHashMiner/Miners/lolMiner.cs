@@ -263,7 +263,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 CommandLine = "--coin GRIN-C32" +
-                " --pool grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner --pass x" +
+                " --pool grin.2miners.com:3030 --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.lolMiner --pass x" +
                 " --pool grincuckatoo32.usa.nicehash.com:3383 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,

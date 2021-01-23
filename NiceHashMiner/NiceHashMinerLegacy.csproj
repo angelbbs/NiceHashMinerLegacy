@@ -455,6 +455,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />
+    <None Include="Resources\NHM_logo_xxsmall_light92.png" />
     <None Include="Resources\Refresh-hot_bw.png" />
     <None Include="Resources\Refresh-disabled.png" />
     <None Include="Resources\Refresh-hot.png" />
@@ -478,6 +479,7 @@
     <Content Include="Resources\NHM_logo_small_light.png" />
     <Content Include="Resources\NHM_logo_xsmall_light.png" />
     <None Include="Resources\NHM_logo_xsmall_light2020.png" />
+    <None Include="Resources\NHM_logo_xxsmall92.png" />
     <Content Include="Resources\NHM_logo_xxsmall_light.png" />
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
     <Content Include="Resources\NHM_help_50px.png" />

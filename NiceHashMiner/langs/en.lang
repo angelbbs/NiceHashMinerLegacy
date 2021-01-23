@@ -445,7 +445,7 @@
                 "Form_Settings_groupBoxInfo": "Info",
                 "Form_Settings_groupBoxUpdates": "Program updates",
                 "Form_Settings_groupBoxBackup": "Backup",
-		"Form_Settings_richTextBoxInfo": " (for NiceHash) this is an unofficial branch of the program created by https://github.com/angelbbs with community support https://bitcointalk.org/index.php?topic=5132119.0 https://github.com/angelbbs/NiceHashMinerLegacy/issues",
+		"Form_Settings_richTextBoxInfo": " (for NiceHash) this is an unofficial branch of the program created by https://github.com/angelbbs with community support https://bitcointalk.org/index.php?topic=5132119.0  https://github.com/angelbbs/NiceHashMinerLegacy/issues",
 "Form_Settings_Currentversion": "Current version: ",
 "Form_Settings_Errorwhencheckingnewversion": "Error when checking new version",
 "Form_Settings_Currentbuild": ". Build: ",

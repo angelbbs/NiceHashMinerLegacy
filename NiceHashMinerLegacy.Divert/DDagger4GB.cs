@@ -188,7 +188,7 @@ namespace NiceHashMinerLegacy.Divert
                                                 packet.Dispose();
                                                 Divert.Dagger4GBEpochCount++;
 
-                                                if (Divert.Dagger4GBEpochCount > 2)//skip 1 job
+                                                if (Divert.Dagger4GBEpochCount > 3)//skip 3 job
                                                 {
                                                     Divert.DaggerHashimoto4GBForce = true;
                                                     Divert.Dagger4GBEpochCount = 999;

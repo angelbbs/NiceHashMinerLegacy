@@ -122,7 +122,7 @@ namespace NiceHashMiner.Forms
             this.buttonSave.FlatAppearance.BorderSize = 0;
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSave.Image = global::NiceHashMiner.Properties.Resources.floppy2;
-            this.buttonSave.Location = new System.Drawing.Point(12, 12);
+            this.buttonSave.Location = new System.Drawing.Point(9, 9);
             this.buttonSave.Margin = new System.Windows.Forms.Padding(0);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(32, 32);

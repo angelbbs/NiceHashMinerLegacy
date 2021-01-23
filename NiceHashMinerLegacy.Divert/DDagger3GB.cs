@@ -188,7 +188,7 @@ nextCycle:
                                                 packet.Dispose();
                                                 Divert.Dagger3GBEpochCount++;
 
-                                                if (Divert.Dagger3GBEpochCount > 2)
+                                                if (Divert.Dagger3GBEpochCount > 3)
                                                 {
                                                     Divert.DaggerHashimoto3GBForce = true;
                                                     Divert.Dagger3GBEpochCount = 999;

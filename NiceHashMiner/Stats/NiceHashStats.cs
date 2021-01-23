@@ -487,7 +487,7 @@ namespace NiceHashMiner.Stats
                    // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 3);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
                     /*
                     FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                     StreamWriter w = new StreamWriter(fs);
@@ -555,7 +555,7 @@ namespace NiceHashMiner.Stats
                    //  Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 5);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
                     /*
                     FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                     StreamWriter w = new StreamWriter(fs);
@@ -624,7 +624,7 @@ namespace NiceHashMiner.Stats
                  //   Helpers.ConsolePrint("SMA-DATA-API24h: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 1.5);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 5);
 
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {

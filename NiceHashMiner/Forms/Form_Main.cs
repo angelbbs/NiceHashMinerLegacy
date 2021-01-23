@@ -282,8 +282,8 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "34.1";
-
+            Text += "35";
+            Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
             var buildDate = new DateTime(2000, 1, 1).AddDays(internalversion.Build).AddSeconds(internalversion.Revision * 2);
@@ -1717,9 +1717,14 @@ public static void CloseChilds(Process parentId)
             if (!VerifyMiningAddress(true)) return;
             if (true)
             {
-                //я не знаю, как отличить нормальный btc адрес от внутреннего адреса nh
-                Process.Start("https://www.nicehash.com/my/mining/stats");//internal wallet
-                //Process.Start(Links.CheckStatsNew + textBoxBTCAddress_new.Text.Trim()); //external wallet
+                if (textBoxBTCAddress_new.Text.Trim().Substring(0, 1) == "3")
+                {
+                    Process.Start("https://www.nicehash.com/my/mining/stats");//internal wallet
+                }
+                else
+                {
+                    Process.Start(Links.CheckStatsNew + textBoxBTCAddress_new.Text.Trim()); //external wallet
+                }
             }
         }
 
@@ -1991,25 +1996,6 @@ public static void CloseChilds(Process parentId)
                    // ConfigManager.GeneralConfigFileCommit();
                 }
             }
-            /*
-            else
-            {
-                if (VerifyMiningAddress(false))
-                {
-                    if (ConfigManager.GeneralConfig.BitcoinAddress != textBoxBTCAddress.Text.Trim()
-                        || ConfigManager.GeneralConfig.WorkerName != textBoxWorkerName.Text.Trim())
-                    {
-                        // Reset credentials
-                        NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
-                    }
-                    // Commit to config.json
-                    ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
-                    ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-                    ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-                   // ConfigManager.GeneralConfigFileCommit();
-                }
-            }
-            */
             ConfigManager.GeneralConfigFileCommit();
         }
 
@@ -2411,7 +2397,7 @@ public static void CloseChilds(Process parentId)
                              .ToString("F2", CultureInfo.InvariantCulture)
                          + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                          International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-
+            /*
             if (ConfigManager.GeneralConfig.Show_current_actual_profitability)
             {
                 if (Miner.IsRunningNew)
@@ -2426,6 +2412,7 @@ public static void CloseChilds(Process parentId)
             {
                 labelCAP.Text = "";
             }
+            */
             SMAdelayTick++;
 
             try
@@ -2738,6 +2725,16 @@ public static void CloseChilds(Process parentId)
         private void Form_Main_ResizeEnd(object sender, EventArgs e)
         {
             FormMainMoved = false;
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

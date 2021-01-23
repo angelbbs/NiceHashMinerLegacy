@@ -63,12 +63,12 @@ namespace NiceHashMiner.Miners
             {
                 var algo = "ethash";
                 var port = "3353";
-                return $" --disable-cpu --algorithm ethash --pool {url} --wallet {username} --api-enable --api-port {ApiPort} {extras} "
-               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} " +
+                return $" --main-pool-reconnect 2 --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
+               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
                "--gpu-id " + GetDevicesCommandString().Trim();
             }
             return "unsupported algo";
@@ -186,6 +186,7 @@ namespace NiceHashMiner.Miners
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("API", ex.Message);
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return ad;
             }
 

@@ -402,7 +402,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo grin32" +
-                " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
+                " --server grin.2miners.com:3030 --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.gminer --pass x  --ssl 0" +
                 " --server grincuckatoo32.eu.nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
                 " --server grincuckatoo32.hk.nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
                 GetDevicesCommandString();

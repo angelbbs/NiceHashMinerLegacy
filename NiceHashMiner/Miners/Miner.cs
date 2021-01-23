@@ -1774,7 +1774,6 @@ namespace NiceHashMiner
                 End();
                 return;
             }
-
             switch (CurrentMinerReadStatus)
             {
                 case MinerApiReadStatus.GOT_READ:
@@ -1782,7 +1781,7 @@ namespace NiceHashMiner
                     CooldownCheck = 0;
                     break;
                 case MinerApiReadStatus.READ_SPEED_ZERO:
-                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + " READ SPEED ZERO, will cool up");
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + " READ SPEED ZERO, will cool up " + CooldownCheck.ToString());
                     CooldownCheck++;
                     break;
                 case MinerApiReadStatus.RESTART:

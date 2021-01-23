@@ -37,7 +37,7 @@
 
 
     "Form_Main_visit_us": "Посетите нас @ www.nicehash.com",
-    "Form_Main_check_stats": "Смотреть кошелек",
+    "Form_Main_check_stats": "Статистика онлайн",
     "Form_Main_choose_bitcoin_wallet": "Как выбрать Биткоин-кошелёк",
     "Form_Main_global_rate": "Ставка:",
     "Form_Main_balance": "Баланс",
@@ -432,7 +432,7 @@
                 "Form_Settings_groupBoxInfo": "Информация",
                 "Form_Settings_groupBoxUpdates": "Обновление программы",
 		"Form_Settings_groupBoxBackup": "Резервное копирование",
-		"Form_Settings_richTextBoxInfo": " (для NiceHash) это неофициальная ветка программы, созданная https://github.com/angelbbs при поддержке сообществ https://bitcointalk.org/index.php?topic=5132119.0 https://github.com/angelbbs/NiceHashMinerLegacy/issues",
+		"Form_Settings_richTextBoxInfo": " (для NiceHash) это неофициальная ветка программы, созданная https://github.com/angelbbs при поддержке сообществ https://bitcointalk.org/index.php?topic=5132119.0  https://github.com/angelbbs/NiceHashMinerLegacy/issues",
 "Form_Settings_Currentversion": "Текущая версия: ",
 "Form_Settings_Errorwhencheckingnewversion": "Ошибка при проверке новой версии",
 "Form_Settings_Currentbuild": ". Сборка: ",
