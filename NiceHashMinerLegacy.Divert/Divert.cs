@@ -443,9 +443,9 @@ namespace NiceHashMinerLegacy.Divert
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, int SecondaryAlgorithmType, string MinerName, string strPlatform,
-            string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig, bool CertInstalled, int MaxEpoch)
+            string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig, bool DivertEnabled, int MaxEpoch)
         {
-            _certInstalled = CertInstalled;
+            if (!DivertEnabled) return new IntPtr(0); 
             logging = log;
             logging = false;
             _SaveDivertPackets = SaveDiverPackets;
@@ -518,9 +518,9 @@ namespace NiceHashMinerLegacy.Divert
 
 
         public static void DivertStop(IntPtr DivertHandle, int Pid, int CurrentAlgorithmType,
-            int SecondaryAlgorithmType, bool CertInstalled, string MinerName, string platform = "")
+            int SecondaryAlgorithmType, bool DivertEnabled, string MinerName, string platform = "")
         {
-            _certInstalled = CertInstalled;
+            if (!DivertEnabled) return;
             Helpers.ConsolePrint("WinDivertSharp", "Divert STOP for handle: " + ((int)DivertHandle).ToString() +
                 " Pid: " + Pid.ToString() +
                 " CurrentAlgorithmType: " + CurrentAlgorithmType.ToString() +

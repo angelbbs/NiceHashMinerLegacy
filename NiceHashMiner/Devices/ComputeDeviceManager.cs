@@ -224,7 +224,7 @@ namespace NiceHashMiner.Devices
                     string NVPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                        "\\NVIDIA Corporation";
                     string NVCommon = "Common\\NVSMI";
-
+                    /*
                     try
                     {
                         if (File.Exists("nvml.dll"))
@@ -237,7 +237,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint(Tag, "Del nvml.dll failed: " + e.Message);
                     }
-                    
+                    */
                     if (!Directory.Exists(NVPath + "\\NVSMI"))
                     {
                         try

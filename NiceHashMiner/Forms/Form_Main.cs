@@ -97,6 +97,7 @@ namespace NiceHashMiner
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
+        public static bool DaggerHashimoto3GB4GB = false;
         public static bool DaggerHashimoto3GB = false;
         public static bool DaggerHashimoto3GBVisible = false;
         public static bool DaggerHashimoto3GBEnabled = false;
@@ -106,6 +107,7 @@ namespace NiceHashMiner
         public static bool DaggerHashimoto1070 = false;
         public static bool DaggerHashimoto1070Visible = false;
         public static bool DaggerHashimoto1070Enabled = false;
+        public static bool SomeAlgoEnabled = false;
         public static bool DaggerHashimotoMaxEpochUpdated = false;
         public static string GoogleIP = "";
         public static string GoogleAnswer = "";
@@ -282,7 +284,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "35";
+            Text += "35.1";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;

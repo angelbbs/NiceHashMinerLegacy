@@ -496,6 +496,7 @@
 "Form_Profit_StartChartWithProgram": "Показать при запуске программы",
 "Form_Profit_Chart_Fiat": "Показывать прибыльность в фиатной валюте",
 "Form_Profit_Chart_Filename": "График успешно сохранен в файл:",
+"Form_Settings_DH3GB_Warning": "С алгоритмом DaggerHashimoto3GB или DaggerHashimoto4GB должен быть включен минимум еще один алгоритм",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

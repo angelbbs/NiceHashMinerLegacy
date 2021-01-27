@@ -63,13 +63,13 @@ namespace NiceHashMiner.Miners
             {
                 var algo = "ethash";
                 var port = "3353";
-                return $" --main-pool-reconnect 2 --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
+                return $" --main-pool-reconnect 2 --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
                + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
                + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
                + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
                + $" --pool stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
                + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
-               "--gpu-id " + GetDevicesCommandString().Trim();
+               "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
             return "unsupported algo";
 
@@ -80,6 +80,7 @@ namespace NiceHashMiner.Miners
             var deviceStringCommand = " ";
 
             var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
+            ids.Sort();
             deviceStringCommand += string.Join("!", ids);
 
             return deviceStringCommand;
@@ -113,8 +114,8 @@ namespace NiceHashMiner.Miners
                 return $" --disable-cpu --algorithm ethash" + 
                     $" --pool stratum+tcp://eu1.ethermine.org:4444" +
                     $" --wallet 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.SRBMiner" +
-                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()} {extras}" +
-                " --gpu-id " + GetDevicesCommandString().Trim();
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
 
             return "unknown";

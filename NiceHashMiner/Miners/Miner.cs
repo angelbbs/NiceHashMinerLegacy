@@ -352,10 +352,10 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         try
                         {
-                            if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
+                            if (Form_Main.DivertAvailable)
                             {
                                 Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo,
-                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled,
+                                    (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun,
                                     MinerDeviceName, strPlatform);
                             }
                             process.Kill();
@@ -479,7 +479,7 @@ namespace NiceHashMiner
                 int i = ProcessTag().IndexOf(")|bin");
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
+                if (Form_Main.DivertAvailable && (algo != -9 || algo != -12))
                 {
                     try
                     {
@@ -494,7 +494,7 @@ namespace NiceHashMiner
                         }
 
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
                     {
@@ -1350,7 +1350,7 @@ namespace NiceHashMiner
                             strPlatform = "CPU";
                         }
                     }
-                    if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable)
+                    if (Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
 
@@ -1396,7 +1396,7 @@ namespace NiceHashMiner
                         P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2,  MinerDeviceName,
                             strPlatform, w, false,
                             false,
-                            false, true,
+                            false, ConfigManager.GeneralConfig.DivertRun,
                             ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch);
 
                         _currentPidData = new MinerPidData
@@ -1504,7 +1504,7 @@ namespace NiceHashMiner
                             new Task(() => DHClient4gb.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
                     {
@@ -1556,7 +1556,7 @@ namespace NiceHashMiner
             }
             if (ProcessHandle != null)
             {
-                if (ConfigManager.GeneralConfig.DivertRun && Form_Main.DivertAvailable && (algo != -9 || algo != -12))
+                if (Form_Main.DivertAvailable && (algo != -9 || algo != -12))
                 {
                     try
                     {
@@ -1569,7 +1569,7 @@ namespace NiceHashMiner
                             new Task(() => DHClient4gb.StopConnection()).Start();
                         }
                         Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
-                            (int)MiningSetup.CurrentSecondaryAlgorithmType, Form_Main.CertInstalled, MinerDeviceName, strPlatform);
+                            (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
                     {

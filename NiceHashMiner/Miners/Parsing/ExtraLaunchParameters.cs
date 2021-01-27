@@ -165,6 +165,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("TRMeth_4g_max_alloc", "", "--eth_4g_max_alloc=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMeth_4g_alloc_adjust", "", "--eth_4g_alloc_adjust=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMeth_alloc_epoch", "", "--eth_alloc_epoch=", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMeth_aggr_mode", "", "--eth_aggr_mode", "", MinerOptionFlagType.Uni, ""),
+                    new MinerOption("TRMeth_eth_config", "", "----eth_config", "B1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, "")
                 },
                 // TemperatureOptions
@@ -369,12 +371,12 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("SRBMiner-ramp-up", "--enable-workers-ramp-up", "--enable-workers-ramp-up", null, MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("SRBMiner-randomx-use-tweaks", "--randomx-use-tweaks", "--randomx-use-tweaks", null, MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("SRBMiner-randomx-use-1gb-pages", "--randomx-use-1gb-pages", "--randomx-use-1gb-pages", null, MinerOptionFlagType.Uni, " "),
-                    new MinerOption("SRBMiner-intensity", "--gpu-intensity","--gpu-intensity" , "0", MinerOptionFlagType.MultiParam, "!"),
+                    new MinerOption("SRBMiner-intensity", "--gpu-intensity","--gpu-intensity" , "23", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-gpu-raw-intensity", "--gpu-raw-intensity","--gpu-raw-intensity" , "-1", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-threads", "--gpu-threads", "--gpu-threads", "-1", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-worksize", "--gpu-worksize", "--gpu-worksize", "0", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-auto-intensity", "--gpu-auto-intensity", "--gpu-auto-intensity", "0", MinerOptionFlagType.MultiParam, "!"),
-                    new MinerOption("SRBMiner-gpu-boost", "--gpu-boost", "--gpu-boost", "0", MinerOptionFlagType.MultiParam, "!")
+                    new MinerOption("SRBMiner-gpu-boost", "--gpu-boost", "--gpu-boost", "3", MinerOptionFlagType.MultiParam, "!")
                 },
                 new List<MinerOption>(){ }
              ),

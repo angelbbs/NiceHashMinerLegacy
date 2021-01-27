@@ -262,7 +262,6 @@ namespace NiceHashMiner.Forms.Components
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
-
                     var name = "";
                     var miner = "";
                     var secondarySpeed = "";
@@ -370,11 +369,11 @@ namespace NiceHashMiner.Forms.Components
         {
             try
             {
-                if (_computeDevice != null)
+                if (_computeDevice != null && listViewAlgorithms.Items != null)
                 {
                     foreach (ListViewItem lvi in listViewAlgorithms.Items)
                     {
-                        if (lvi.Tag is Algorithm algorithm)
+                        if (lvi != null && lvi.Tag is Algorithm algorithm)
                         {
                             var algo = lvi.Tag as Algorithm;
                             if (algo != null)
@@ -497,14 +496,13 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            Form_Main.DaggerHashimoto4GBEnabled = false;
             if (IsInBenchmark)
             {
                 //listViewAlgorithms.CheckBoxes = false;
                  // e.Item.Checked = !e.Item.Checked;
                 //return;
             }
-
+            
             if (e.Item.Tag is Algorithm algo)
             {
                 algo.Enabled = e.Item.Checked;
@@ -532,31 +530,11 @@ namespace NiceHashMiner.Forms.Components
                 {
                     Form_Main.DaggerHashimoto4GBEnabled = true;
                 }
-                /*
-                if (ConfigManager.GeneralConfig.DivertRun)
+
+                if (!IsInBenchmark)
                 {
-                    if ((Form_Main.DaggerHashimoto3GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB &&
-                        algo.Enabled && !Form_Main.DivertAvailable) ||
-                        !ConfigManager.GeneralConfig.DivertRun)
-                    {
-                        algo.Enabled = false;
-                        e.Item.Checked = false;
-                        MessageBox.Show("WinDivert driver error. DaggerHashimoto3GB disabled",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    }
-                    if ((Form_Main.DaggerHashimoto4GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB &&
-                        algo.Enabled && !Form_Main.DivertAvailable) ||
-                        !ConfigManager.GeneralConfig.DivertRun)
-                    {
-                        algo.Enabled = false;
-                        e.Item.Checked = false;
-                        MessageBox.Show("WinDivert driver error. DaggerHashimoto4GB disabled",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    }
                 }
-                */
             }
 
             ComunicationInterface?.HandleCheck(e.Item);
@@ -739,6 +717,39 @@ namespace NiceHashMiner.Forms.Components
                 }
             } catch (Exception ex)
             {
+
+            }
+            if (!IsInBenchmark)
+            {
+                Form_Main.SomeAlgoEnabled = false;
+                foreach (ListViewItem lvi in listViewAlgorithms.Items)
+                {
+                    if (lvi != null && lvi.Tag is Algorithm algorithm)
+                    {
+                        if (!lvi.SubItems[1].Text.Contains("3GB") && !lvi.SubItems[1].Text.Contains("4GB"))
+                        {
+                            if (lvi.Checked == true)
+                            {
+                                Form_Main.SomeAlgoEnabled = true;
+                            }
+                        }
+                        if (lvi.SubItems[1].Text.Contains("3GB") && lvi.Checked == true)
+                        {
+                            Form_Main.DaggerHashimoto3GB4GB = true;
+                        }
+                        if (lvi.SubItems[1].Text.Contains("4GB") && lvi.Checked == true)
+                        {
+                            Form_Main.DaggerHashimoto3GB4GB = true;
+                        }
+                    }
+                }
+
+                if (!Form_Main.SomeAlgoEnabled && Form_Main.DaggerHashimoto3GB4GB)
+                {
+                    MessageBox.Show(International.GetText("Form_Settings_DH3GB_Warning"),
+International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
 
             }
         }

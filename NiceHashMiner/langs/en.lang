@@ -503,6 +503,7 @@
 "Form_Profit_StartChartWithProgram": "Show at program startup",
 "Form_Profit_Chart_Fiat": "Show profitability in fiat currency",
 "Form_Profit_Chart_Filename": "Graph was successfully saved to file:",
+"Form_Settings_DH3GB_Warning": "With DaggerHashimoto3GB or DaggerHashimoto4GB algorithm, at least one more algorithm must be enabled",
 "Form_Settings_buttonLicence": "View licence"
     }
 }
