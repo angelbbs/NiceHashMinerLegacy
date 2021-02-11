@@ -500,9 +500,14 @@
 "Form_Profit_12h_efficiency": "Mining efficiency (12h.):",
 "Form_Profit_24h_efficiency": "Mining efficiency (24h.):",
 "Form_Profit_Total_actual_profitabilities": "Total actual profitabilities:",
+"Form_Profit_Total_local_profitabilities": "Total local profitabilities:",
 "Form_Profit_StartChartWithProgram": "Show at program startup",
 "Form_Profit_Chart_Fiat": "Show profitability in fiat currency",
+"Form_Profit_Chart_Enable": "Enable profitability chart",
 "Form_Profit_Chart_Filename": "Graph was successfully saved to file:",
+"Form_Profit_Chart_Warning1": "Inclusion of a profitability chart will cause increased consumption of internet traffic",
+"Form_Profit_Chart_Delete": "Delete chart data?",
+"Form_Profit_Chart_Disabled": "Profitability chart disabled",
 "Form_Settings_DH3GB_Warning": "With DaggerHashimoto3GB or DaggerHashimoto4GB algorithm, at least one more algorithm must be enabled",
 "Form_Settings_buttonLicence": "View licence"
     }

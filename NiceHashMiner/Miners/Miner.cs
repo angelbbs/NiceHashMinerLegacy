@@ -385,7 +385,8 @@ namespace NiceHashMiner
         {
             if (worker.Length > 0)
             {
-                    return btcAdress + "." + worker + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
+                    //return btcAdress + "." + worker + "$" + NiceHashSocket.RigID;
+                    return btcAdress + "." + worker + "$" + ConfigManager.GeneralConfig.MachineGuid;
             } else
             {
 
@@ -1794,9 +1795,8 @@ namespace NiceHashMiner
                     break;
             }
 
-            // set new times left from the CoolUp/Down change
             //_currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
-            if (CooldownCheck > 10)
+            if (CooldownCheck > 5)//150 sec
             {
                 CooldownCheck = 0;
                 Restart();

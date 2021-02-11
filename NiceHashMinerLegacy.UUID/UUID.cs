@@ -69,7 +69,7 @@ namespace NiceHashMinerLegacy.UUID
                     return ConfigManager.GeneralConfig.MachineGuid;
                 }
 
-            } else 
+            } else
             {
                 ConfigManager.GeneralConfig.MachineGuid = reg;
                 return reg;
@@ -90,7 +90,7 @@ namespace NiceHashMinerLegacy.UUID
             try
             {
                 var readValue = Registry.GetValue(keyPath, value, new object());
-                Console.WriteLine("MachineGuid: " + (string)readValue);
+                //Console.WriteLine("MachineGuid: " + (string)readValue);
                 //return (string)readValue;
                 return (string)readValue;
             }

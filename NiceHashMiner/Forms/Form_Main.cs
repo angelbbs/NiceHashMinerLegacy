@@ -138,8 +138,10 @@ namespace NiceHashMiner
             public DateTime DateTime;
             public double totalRate;
             public double currentProfit;
+            public double currentProfitAPI;
             public double unpaidAmount;
         }
+        public static double ChartDataAvail = 0;
         public Form_Main()
         {
             WindowState = FormWindowState.Minimized;
@@ -649,9 +651,8 @@ namespace NiceHashMiner
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
-            _loadingScreen.SetValueAndMsg(4, International.GetText("Form_Main_loadtext_SaveConfig"));
-            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
-            //Thread.Sleep(200);
+            _loadingScreen.SetValueAndMsg(3, International.GetText("Form_Main_loadtext_SaveConfig"));
+
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
@@ -882,7 +883,19 @@ namespace NiceHashMiner
 
         private void Form_Main_Shown(object sender, EventArgs e)
         {
+            try
+            {
+                DirectoryInfo dirInfo = new DirectoryInfo("temp/");
 
+                foreach (FileInfo file in dirInfo.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Temp Dir", ex.ToString());
+            }
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
@@ -1038,32 +1051,51 @@ namespace NiceHashMiner
             _updateTimer.Start();
             
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
-            //Form_Main.lastRigProfit.totalRate = 0;
-            //Form_Main.lastRigProfit.currentProfit = 0;
-            //Form_Main.lastRigProfit.unpaidAmount = 0;
+            if (!ConfigManager.GeneralConfig.ChartEnable)
+            {
+                Form_Main.lastRigProfit.totalRate = 0;
+                Form_Main.lastRigProfit.currentProfitAPI = 0;
+                Form_Main.lastRigProfit.currentProfit = 0;
+                Form_Main.lastRigProfit.unpaidAmount = 0;
+            } else
+            {
+                NiceHashStats.GetRigProfit();
+            }
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
+            if (ConfigManager.GeneralConfig.ChartEnable)
+            {
+                Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
+
+                NiceHashStats.GetRigProfit();
+            } else
+            {
+                Form_Main.lastRigProfit.totalRate = 0;
+                Form_Main.lastRigProfit.currentProfitAPI = 0;
+                Form_Main.lastRigProfit.currentProfit = 0;
+                Form_Main.lastRigProfit.unpaidAmount = 0;
+            }
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             if (Form_Main.RigProfits.Count == 2)
             {
+                /*
                 RigProfits.Clear();
                 Form_Main.lastRigProfit.DateTime = DateTime.Now.AddMinutes(-1);
                 Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
                 Form_Main.lastRigProfit.DateTime = DateTime.Now;
                 Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
+                */
             }
-            /*
+            
             foreach (var RigProfit in Form_Main.RigProfits)
             {
-                Helpers.ConsolePrint("DateTime", RigProfit.DateTime.ToString("G"));
-                Helpers.ConsolePrint("currentProfit", (RigProfit.currentProfit).ToString());
-                Helpers.ConsolePrint("totalRate", (RigProfit.totalRate).ToString());
+                ChartDataAvail = RigProfit.currentProfitAPI + RigProfit.totalRate;
             }
-            */
+            
             _updateTimerCount++;
             int period = 0;
             switch (ConfigManager.GeneralConfig.ProgramUpdateIndex)

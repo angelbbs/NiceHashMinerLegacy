@@ -220,24 +220,34 @@ namespace NiceHashMiner.Stats
 
                         case "balance":
                             SetBalance(message.value.Value);
-
+                            /*
                             if (message.prof != null)
                             {
                                 Form_Main.profitabilityFromNH = SetProf(message.prof.Value);
                                 double totalRate = MinersManager.GetTotalRate();
                                 Form_Main.lastRigProfit.DateTime = DateTime.Now;
-                                Form_Main.lastRigProfit.currentProfit = Math.Round(Form_Main.profitabilityFromNH, 9);
-                                Form_Main.lastRigProfit.totalRate = Math.Round(totalRate, 9);
-                                Form_Main.lastRigProfit.unpaidAmount = 0;
+                                if (ConfigManager.GeneralConfig.ChartEnable)
+                                {
+                                    Form_Main.lastRigProfit.currentProfit = Math.Round(Form_Main.profitabilityFromNH, 9);
+                                    Form_Main.lastRigProfit.totalRate = Math.Round(totalRate, 9);
+                                    Form_Main.lastRigProfit.unpaidAmount = 0;
+                                } else
+                                {
+                                    Form_Main.lastRigProfit.currentProfit = 0;
+                                    Form_Main.lastRigProfit.totalRate = 0;
+                                    Form_Main.lastRigProfit.unpaidAmount = 0;
+                                }
                                 //Helpers.ConsolePrint("profWSS", (Form_Main.profitabilityFromNH * 1000).ToString());
                                 //***********************
-                                //GetRigProfit();
+                                GetRigProfit();
+                                Helpers.ConsolePrint("Form_Main.lastRigProfit.currentProfitAPI", (Form_Main.lastRigProfit.currentProfitAPI * 1000).ToString());
                                 //Form_Main.profitabilityFromNH = Form_Main.lastRigProfit.currentProfit;
                                 //Helpers.ConsolePrint("profAPI", (Form_Main.profitabilityFromNH * 1000).ToString());
                             } else
                             {
                                 break;
                             }
+                            */
                             /*
                             if (!CalcRigStatusString().Equals("MINING"))
                             {
@@ -647,34 +657,60 @@ namespace NiceHashMiner.Stats
         }
         public static bool GetRigProfit()//big traffic
         {
-            Helpers.ConsolePrint("NHM_API_info", "Trying GetRigProfit");
-
             try
             {
-                string resp;
-                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ/rigs2?sort=NAME&page=0", "x");
-                //resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ/rigs/activeWorkers?sortDirection=ASC", "x");
-                if (resp != null)
+                if (ConfigManager.GeneralConfig.ChartEnable)
                 {
-                    //Helpers.ConsolePrint("NHM_API_info", resp);
-                    dynamic respJson = JsonConvert.DeserializeObject(resp);
-                    var Rigs = respJson.miningRigs;
-                    
-                    foreach (var rig in Rigs)
+                    string apistr = "https://api2.nicehash.com/main/api/v2/mining/external/" + Globals.GetBitcoinUser() + "/rigs2?sort=NAME&page=0";
+                    string resp;
+                    Helpers.ConsolePrint("NHM_API_info", "Trying GetRigProfit");
+                    resp = NiceHashStats.GetNiceHashApiData(apistr, "");
+                    //resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/" +  "/rigs/activeWorkers?sortDirection=ASC", "x");
+                    Helpers.ConsolePrint("NHM_API_info", apistr);
+                    if (resp != null)
                     {
-                        if (rig.rigId.ToString() == NiceHashSocket.RigID)
+                        //Helpers.ConsolePrint("NHM_API_info", resp);
+                        dynamic respJson = JsonConvert.DeserializeObject(resp);
+                        var Rigs = respJson.miningRigs;
+
+                        foreach (var rig in Rigs)
                         {
-                            /*
-                            Helpers.ConsolePrint("NHM_API_info", rig.rigId.ToString());
-                            Helpers.ConsolePrint("NHM_API_info", rig.name.ToString());
-                            Helpers.ConsolePrint("NHM_API_info", rig.profitability.ToString());
-                            Helpers.ConsolePrint("NHM_API_info", rig.unpaidAmount.ToString());
-                            */
-                            Form_Main.lastRigProfit.currentProfit = rig.profitability;
-                            Form_Main.lastRigProfit.unpaidAmount = rig.unpaidAmount;
+                            if (rig.rigId.ToString() == NiceHashSocket.RigID)
+                            {
+                                /*
+                                Helpers.ConsolePrint("NHM_API_info", rig.rigId.ToString());
+                                Helpers.ConsolePrint("NHM_API_info", rig.name.ToString());
+                                Helpers.ConsolePrint("NHM_API_info", rig.profitability.ToString());
+                                Helpers.ConsolePrint("NHM_API_info", rig.unpaidAmount.ToString());
+                                */
+                                if (rig.profitability > Form_Main.lastRigProfit.currentProfitAPI * 10 &&
+                                    Form_Main.lastRigProfit.currentProfitAPI != 0 && rig.profitability != 0)
+                                {
+                                    Helpers.ConsolePrint("GetRigProfit too high. Ignoring", (rig.profitability * 1000).ToString());
+                                    //Helpers.ConsolePrint("Form_Main.lastRigProfit.currentProfitAPI", (Form_Main.lastRigProfit.currentProfitAPI * 1000).ToString());
+                                }
+                                else if (rig.profitability * 10 < Form_Main.lastRigProfit.currentProfitAPI &&
+                                    Form_Main.lastRigProfit.currentProfitAPI != 0 && rig.profitability != 0)
+                                {
+                                    Helpers.ConsolePrint("GetRigProfit too low. Ignoring", (rig.profitability * 1000).ToString());
+                                    //Helpers.ConsolePrint("Form_Main.lastRigProfit.currentProfitAPI", (Form_Main.lastRigProfit.currentProfitAPI * 1000).ToString());
+                                }
+                                else
+                                {
+                                    Form_Main.lastRigProfit.currentProfitAPI = rig.profitability;
+                                    Helpers.ConsolePrint("GetRigProfit", (rig.profitability * 1000).ToString());
+                                }
+//                                Form_Main.lastRigProfit.unpaidAmount = rig.unpaidAmount;
+                            }
                         }
+                        double unpaidAmount = respJson.unpaidAmount;
+                        Helpers.ConsolePrint("unpaidAmount", unpaidAmount.ToString());
+                        SetBalance(unpaidAmount.ToString());
                     }
-                    
+                } else
+                {
+                    Form_Main.lastRigProfit.currentProfitAPI = 0;
+                    Form_Main.lastRigProfit.unpaidAmount = 0;
                 }
             }
             catch (Exception ex)
@@ -707,7 +743,7 @@ namespace NiceHashMiner.Stats
                 }
                 if (ConfigManager.GeneralConfig.MOPA5)
                 {
-                    GetSmaAPI24h(); //bug *10
+                    //GetSmaAPI24h(); //bug *10
                     GetSmaAPI5m(); //bug *10
                     GetSmaAPICurrent(); //bug *10
                 }
@@ -1113,8 +1149,7 @@ namespace NiceHashMiner.Stats
                 string worker;
                 string group = "";
                 string rig = UUID.GetDeviceB64UUID();
-                string CpuID = UUID.GetCpuID();
-
+                //string CpuID = UUID.GetCpuID();
                 var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
                     protocol = 3;
                     version = "NHML/3.0.0.5"; //

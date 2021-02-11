@@ -63,7 +63,7 @@ namespace NiceHashMiner.Miners
             {
                 var algo = "ethash";
                 var port = "3353";
-                return $" --main-pool-reconnect 2 --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+                return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
                + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
                + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
                + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
@@ -186,8 +186,9 @@ namespace NiceHashMiner.Miners
                 }
             } catch (Exception ex)
             {
-                Helpers.ConsolePrint("API", ex.Message);
+                Helpers.ConsolePrint("API error", ex.Message);
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                ad.Speed = 0;
                 return ad;
             }
 

@@ -76,6 +76,7 @@ namespace NiceHashMiner.Configs.Data
         public int ProfitFormLeft = 0;
         public bool StartChartWithProgram = false;
         public bool ChartFiat = false;
+        public bool ChartEnable = false;
 
         public bool MinimizeMiningWindows = false;
 
@@ -208,6 +209,7 @@ namespace NiceHashMiner.Configs.Data
             Language = LanguageType.En;
             ForceCPUExtension = CpuExtensionType.Automatic;
             WorkerName = "worker1";
+            MachineGuid = "";
             TimeUnit = TimeUnitType.Day;
             ServiceLocation = 0;
             ShowUptime = true;

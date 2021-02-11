@@ -455,6 +455,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />
+    <None Include="Resources\recycle2.ico" />
+    <None Include="Resources\recycle1.ico" />
     <None Include="Resources\NHM_logo_xxsmall_light92.png" />
     <None Include="Resources\Refresh-hot_bw.png" />
     <None Include="Resources\Refresh-disabled.png" />

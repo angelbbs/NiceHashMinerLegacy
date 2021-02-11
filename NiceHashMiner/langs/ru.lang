@@ -493,9 +493,14 @@
 "Form_Profit_12h_efficiency": "Эффективность майнинга (12ч.):",
 "Form_Profit_24h_efficiency": "Эффективность майнинга (24ч.):",
 "Form_Profit_Total_actual_profitabilities": "Общая фактическая прибыльность:",
+"Form_Profit_Total_local_profitabilities": "Общая локальная прибыльность:",
 "Form_Profit_StartChartWithProgram": "Показать при запуске программы",
 "Form_Profit_Chart_Fiat": "Показывать прибыльность в фиатной валюте",
+"Form_Profit_Chart_Enable": "Включить график прибыльности",
 "Form_Profit_Chart_Filename": "График успешно сохранен в файл:",
+"Form_Profit_Chart_Warning1": "Включение графика прибыльности вызовет повышенное потребление интернет трафика",
+"Form_Profit_Chart_Delete": "Удалить данные графика?",
+"Form_Profit_Chart_Disabled": "График прибыльности отключен",
 "Form_Settings_DH3GB_Warning": "С алгоритмом DaggerHashimoto3GB или DaggerHashimoto4GB должен быть включен минимум еще один алгоритм",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }

@@ -25,7 +25,8 @@ namespace NiceHashMiner.Forms
         public int ProfitsCount = 0;
         //public int ProfitsCountScroll = 0;
         public double totalRateAll = 0d;
-        public double currentProfitAll = 0d;
+        //public double currentProfitAll = 0d;
+        public double currentProfitAllAPI = 0d;
         public double totalRate3 = 0d;
         public double currentProfit3 = 0d;
         public double totalRate12 = 0d;
@@ -35,6 +36,7 @@ namespace NiceHashMiner.Forms
         public static bool FormChartMoved = false;
         private string CurrencyName = "";
         private double ce;
+        private double cel;//local prof
         public Form_RigProfitChart()
         {
             InitializeComponent();
@@ -43,6 +45,17 @@ namespace NiceHashMiner.Forms
             Text = International.GetText("Form_Main_chart");
             checkBox_StartChartWithProgram.Checked = ConfigManager.GeneralConfig.StartChartWithProgram;
             checkBox_Chart_Fiat.Checked = ConfigManager.GeneralConfig.ChartFiat;
+            checkBox_EnableChart.Checked = ConfigManager.GeneralConfig.ChartEnable;
+            buttonClear.Text = "";
+            labelChartDisabled.Text = International.GetText("Form_Profit_Chart_Disabled");
+            labelChartDisabled.Visible = !checkBox_EnableChart.Checked;
+            if (Form_Main.ChartDataAvail > 0)
+            {
+                buttonClear.BackgroundImage = Properties.Resources.recycle2;
+            } else
+            {
+                buttonClear.BackgroundImage = Properties.Resources.recycle1;
+            }
         }
         public void InitializeColorProfile()
         {
@@ -57,6 +70,10 @@ namespace NiceHashMiner.Forms
                 checkBox_Chart_Fiat.FlatStyle = FlatStyle.Flat;
                 checkBox_Chart_Fiat.BackColor = Form_Main._backColor;
                 checkBox_Chart_Fiat.ForeColor = Form_Main._textColor;
+
+                checkBox_EnableChart.FlatStyle = FlatStyle.Flat;
+                checkBox_EnableChart.BackColor = Form_Main._backColor;
+                checkBox_EnableChart.ForeColor = Form_Main._textColor;
 
                 chartRigProfit.BackColor = Form_Main._backColor;
                 chartRigProfit.ForeColor = Form_Main._textColor;
@@ -74,6 +91,14 @@ namespace NiceHashMiner.Forms
             {
 
             }
+            chartRigProfit.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            label_totalEfficiency.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            label_Total_actual_profitabilities.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            label_Total_local_profit.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            checkBox_Chart_Fiat.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            checkBox_StartChartWithProgram.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            buttonSave.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            buttonClear.Enabled = ConfigManager.GeneralConfig.ChartEnable;
         }
         void ChartData(object sender, EventArgs e)
         {
@@ -89,23 +114,23 @@ namespace NiceHashMiner.Forms
                 return;
             }
 
-            Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
+            //Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
 
             if (ConfigManager.GeneralConfig.ChartFiat)
             {
+                //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
                 chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
-                chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfit * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
+                chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
                
             }
             else
             {
+                //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
                 chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalRate * 1000);
-                chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfit * 1000);
+                chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
             }
-   
-            //
-            //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.lastRigProfit.unpaidAmount * 1000);
-            //chartRigProfit.Series["Series3"].Enabled = false;
+
+            chartRigProfit.Series["Series3"].Enabled = false;
             chartRigProfit.ChartAreas[0].AxisX.Maximum = ProfitsCount;
             if (ProfitsCount > 60 * 24)
             {
@@ -127,25 +152,30 @@ namespace NiceHashMiner.Forms
             }
 
             totalRateAll = 0;
-            currentProfitAll = 0;
+            //currentProfitAll = 0;
+            currentProfitAllAPI = 0;
             for (int i = 0; i < Form_Main.RigProfits.Count; i++)
             {
                 totalRateAll = totalRateAll + Form_Main.RigProfits[i].totalRate * 1000;
-                currentProfitAll = currentProfitAll + Form_Main.RigProfits[i].currentProfit * 1000;
+                //currentProfitAll = currentProfitAll + Form_Main.RigProfits[i].currentProfit * 1000;
+                currentProfitAllAPI = currentProfitAllAPI + Form_Main.RigProfits[i].currentProfitAPI * 1000;
             }
 
             ProfitsCount++;
 
-            var cp =currentProfitAll / totalRateAll;
-            ce = currentProfitAll / (Form_Main.RigProfits.Count);
+            var cpAPI =currentProfitAllAPI / totalRateAll;
+            ce = currentProfitAllAPI / (Form_Main.RigProfits.Count);
+            cel = totalRateAll / (Form_Main.RigProfits.Count);
             string ces = "";
+            string cesl = "";
 
             if (ConfigManager.GeneralConfig.ChartFiat)
             {
                 CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 ces = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(ce * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
+                cesl = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(cel * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
                 chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
-                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.currentProfit * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
+                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
                 chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
                     ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
             }
@@ -153,28 +183,43 @@ namespace NiceHashMiner.Forms
             {
                 CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 ces = Math.Round((ce), 5).ToString();
+                cesl = Math.Round((cel), 5).ToString();
                 chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
-                    ": " + Form_Main.lastRigProfit.currentProfit * 1000 + " " + CurrencyName;
+                    ": " + Form_Main.lastRigProfit.currentProfitAPI * 1000 + " " + CurrencyName;
                 chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
                     ": " + Form_Main.lastRigProfit.totalRate * 1000 + " " + CurrencyName;
             }
 
-            if (currentProfitAll == 0 || totalRateAll == 0)
+            if (currentProfitAllAPI == 0 || totalRateAll == 0)
             {
                 label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " --";
                 label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " --";
+                label_Total_local_profit.Text = International.GetText("Form_Profit_Total_local_profitabilities") + " --";
             }
-            if (currentProfitAll != 0 && totalRateAll != 0)
+            if (currentProfitAllAPI != 0 && totalRateAll != 0)
             {
-                label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " " + Math.Round((cp * 100), 1).ToString() + "%";
+                label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " " + 
+                    Math.Round((cpAPI * 100), 1).ToString() + "%";
             }
             if (ce != 0)
             {
                 label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " " + ces + " " + CurrencyName; 
             }
-
+            if (cel != 0)
+            {
+                label_Total_local_profit.Text = International.GetText("Form_Profit_Total_local_profitabilities") + " " + cesl + " " + CurrencyName;
+            }
             //chartRigProfit.Update();
             //GC.Collect();
+            if (Form_Main.ChartDataAvail > 0)
+            {
+                buttonClear.BackgroundImage = Properties.Resources.recycle2;
+            }
+            else
+            {
+                buttonClear.BackgroundImage = Properties.Resources.recycle1;
+            }
+
         }
 
         private void chartRigProfit_Click(object sender, EventArgs e)
@@ -233,12 +278,13 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Series["Series1"].BorderWidth = 2;
             chartRigProfit.Series["Series2"].BorderWidth = 2;
             chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities");
-            //chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_unpaidAmount");
-            //chartRigProfit.Series["Series3"].BorderWidth = 2;
+            //chartRigProfit.Series["Series3"].LegendText = "API";
+            //chartRigProfit.Series["Series3"].BorderWidth = 1;
+            //chartRigProfit.Series["Series3"].ChartType = SeriesChartType.Line;
             chartRigProfit.Series["Series2"].ChartType = SeriesChartType.Spline;
             chartRigProfit.Series["Series1"].ChartType = SeriesChartType.Spline;
-            chartRigProfit.Series["Series1"].Color = Color.Orange;
-            chartRigProfit.Series["Series2"].Color = Color.Green;
+            chartRigProfit.Series["Series2"].Color = Color.Orange;
+            chartRigProfit.Series["Series1"].Color = Color.Green;
             //chartRigProfit.Series["Series3"].Color = Color.Aqua;
 
             chartRigProfit.ChartAreas[0].AxisX.Minimum = 0;
@@ -256,6 +302,7 @@ namespace NiceHashMiner.Forms
 
             checkBox_StartChartWithProgram.Text = International.GetText("Form_Profit_StartChartWithProgram");
             checkBox_Chart_Fiat.Text = International.GetText("Form_Profit_Chart_Fiat");
+            checkBox_EnableChart.Text = International.GetText("Form_Profit_Chart_Enable");
 
             _updateTimer = new Timer();
             _updateTimer.Tick += ChartData;
@@ -401,25 +448,6 @@ namespace NiceHashMiner.Forms
             if (ConfigManager.GeneralConfig.ChartFiat != checkBox_Chart_Fiat.Checked)
             {
                 ConfigManager.GeneralConfig.ChartFiat = checkBox_Chart_Fiat.Checked;
-                /*
-                string ces = "";
-                if (ConfigManager.GeneralConfig.ChartFiat)
-                {
-                    CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                    ces = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(ce * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
-                }
-                else
-                {
-                    CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                    ces = Math.Round((ce), 8).ToString();
-                }
-                chartRigProfit.ChartAreas[0].AxisY.Title = CurrencyName;
-                if (ce != 0)
-                {
-                    label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " " + ces + " " + CurrencyName;
-                }
-                */
-
                 this.Close();
                 Thread.Sleep(100);
                 var chart = new Form_RigProfitChart();
@@ -449,6 +477,65 @@ namespace NiceHashMiner.Forms
             catch (Exception er)
             {
                 Helpers.ConsolePrint("ChartSave", er.ToString());
+            }
+        }
+
+        private void label_totalEfficiency_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label_Total_actual_profitabilities_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox_EnableChart_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!ConfigManager.GeneralConfig.ChartEnable && checkBox_EnableChart.Checked)
+            {
+                MessageBox.Show(International.GetText("Form_Profit_Chart_Warning1"),
+        International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            
+            ConfigManager.GeneralConfig.ChartEnable = checkBox_EnableChart.Checked;
+            labelChartDisabled.Visible = !checkBox_EnableChart.Checked;
+            chartRigProfit.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            label_totalEfficiency.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            label_Total_actual_profitabilities.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            label_Total_local_profit.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            checkBox_Chart_Fiat.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            checkBox_StartChartWithProgram.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            buttonSave.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+            buttonClear.Enabled = ConfigManager.GeneralConfig.ChartEnable;
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show(International.GetText("Form_Profit_Chart_Delete"), "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.No) return;
+
+            Form_Main.RigProfits.Clear();
+            Form_Main.ChartDataAvail = 0;
+            chartRigProfit.Series["Series1"].Points.Clear();
+            chartRigProfit.Series["Series2"].Points.Clear();
+            buttonClear.BackgroundImage = Properties.Resources.recycle1;
+
+            //Form_Main.lastRigProfit.currentProfitAPI = 0;
+            //Form_Main.lastRigProfit.totalRate = 0;
+            Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
+            ChartData(null, null);
+
+            this.Close();
+            Thread.Sleep(100);
+            var chart = new Form_RigProfitChart();
+            try
+            {
+                chart.Show();
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("chart", er.ToString());
             }
         }
     }

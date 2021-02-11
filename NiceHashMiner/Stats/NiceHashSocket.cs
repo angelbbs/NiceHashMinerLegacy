@@ -46,7 +46,8 @@ namespace NiceHashMiner.Stats
         public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
         public event EventHandler OnConnectionLost;
-        public static string RigID => UUID.GetDeviceB64UUID();
+        //public static string RigID => UUID.GetDeviceB64UUID();
+        public static string RigID => ConfigManager.GeneralConfig.MachineGuid;
 
         public NiceHashSocket(string address)
         {
@@ -296,17 +297,33 @@ namespace NiceHashMiner.Stats
                 string CpuID = UUID.GetCpuID();
                 if (Configs.ConfigManager.GeneralConfig.CpuID.Length == 0)
                 {
+                    Helpers.ConsolePrint("UUID", "Unknown CPUId detected. Reseting MachineGuid");
                     Configs.ConfigManager.GeneralConfig.CpuID = CpuID;
+                    Configs.ConfigManager.GeneralConfig.MachineGuid = "";
+                } else
+                {
+                    if (!Configs.ConfigManager.GeneralConfig.CpuID.Equals(CpuID))
+                    {
+                        Helpers.ConsolePrint("UUID", "Old CpuID: " + ConfigManager.GeneralConfig.CpuID + " " +
+                        "New CpuID: " + CpuID);
+                        Configs.ConfigManager.GeneralConfig.MachineGuid = "";
+                        Configs.ConfigManager.GeneralConfig.CpuID = CpuID;
+                        Helpers.ConsolePrint("UUID", "New CPUId detected. Reseting MachineGuid");
+                    }
+
                 }
 
                 if (Configs.ConfigManager.GeneralConfig.MachineGuid.Length == 0)
                 {
+                    Helpers.ConsolePrint("UUID", "Unknown MachineGuid detected. Reseting MachineGuid");
                     Configs.ConfigManager.GeneralConfig.MachineGuid = rig;
                 }
 
-                if (!Configs.ConfigManager.GeneralConfig.MachineGuid.Equals(rig) && Configs.ConfigManager.GeneralConfig.CpuID.Equals(CpuID))
+                if (!Configs.ConfigManager.GeneralConfig.MachineGuid.Equals(rig))
                 {
-                    Helpers.ConsolePrint("UUID", "New MachineGuid. Maybe error. Using previous MachineGuid");
+                    Helpers.ConsolePrint("UUID", "Old MachineGuid: " + ConfigManager.GeneralConfig.MachineGuid + " " +
+                        "New MachineGuid: " + rig);
+                    Helpers.ConsolePrint("UUID", "Using old MachineGuid from config");
                     rig = Configs.ConfigManager.GeneralConfig.MachineGuid;
                 }
                 var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))

@@ -1348,11 +1348,14 @@ namespace NiceHashMiner.Forms
             {
                 IsChange = true;
                 IsChangeSaved = true;
+
                 ConfigManager.GeneralConfig.SetDefaults();
 
                 International.Initialize(ConfigManager.GeneralConfig.Language);
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();
+                ConfigManager.GeneralConfigFileCommit();
+                Form_Main.MakeRestart(0);
             }
         }
 
