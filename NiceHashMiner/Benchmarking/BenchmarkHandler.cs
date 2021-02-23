@@ -118,8 +118,7 @@ namespace NiceHashMiner.Benchmarking
                 }
                 else if (dualAlgo != null && dualAlgo.TuningEnabled)
                 {
-                    var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-                        .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
+                    var time = 170;
                     _currentMiner.BenchmarkStart(time, this);
                 }
             }
@@ -177,8 +176,7 @@ namespace NiceHashMiner.Benchmarking
             {
                 _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm));
 
-                var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-                    .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
+                var time = GetBenchmarktime(_performanceType, Device.DeviceGroupType);
                 //currentConfig.TimeLimit = time;
                 if (_cpuBenchmarkStatus != null) _cpuBenchmarkStatus.Time = time;
                 if (_claymoreZcashStatus != null) _claymoreZcashStatus.Time = time;
@@ -195,6 +193,20 @@ namespace NiceHashMiner.Benchmarking
             {
                 NextBenchmark();
             }
+        }
+
+        private int GetBenchmarktime(BenchmarkPerformanceType benchmarkPerformanceType, DeviceGroupType deviceGroupType)
+        {
+            switch (benchmarkPerformanceType)
+            {
+                case BenchmarkPerformanceType.Standard:
+                    return 60;
+                case BenchmarkPerformanceType.Precise:
+                    return 180;
+                default:
+                    return 60;
+            }
+            return 60;
         }
 
         private void EndBenchmark()

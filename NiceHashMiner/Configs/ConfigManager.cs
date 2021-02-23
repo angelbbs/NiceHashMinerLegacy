@@ -37,7 +37,17 @@ namespace NiceHashMiner.Configs
             if (GeneralConfigFile.IsFileExists())
             {
                 fromFile = GeneralConfigFile.ReadFile();
+            } else
+            {
+                GeneralConfigFile.RestoreFromBackup();
+                fromFile = GeneralConfigFile.ReadFile();
             }
+            if (fromFile == null)
+            {
+                GeneralConfigFile.RestoreFromBackup();
+                fromFile = GeneralConfigFile.ReadFile();
+            }
+
             // just in case
             if (fromFile != null)
             {
@@ -53,7 +63,7 @@ namespace NiceHashMiner.Configs
                         Helpers.ConsolePrint(Tag, "Loaded Config file no version detected falling back to defaults.");
                         GeneralConfig.SetDefaults();
                     }
-                    Helpers.ConsolePrint(Tag, "Config file is from an older version of NiceHashMiner..");
+                    //Helpers.ConsolePrint(Tag, "Config file is from an older version of NiceHashMiner..");
                     _isNewVersion = true;
                     GeneralConfigFile.CreateBackup();
                 }

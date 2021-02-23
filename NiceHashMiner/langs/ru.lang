@@ -91,8 +91,8 @@
     "Form_Benchmark_buttonCheckProfitability": "&Проверить прибыльность",
     "Form_Benchmark_buttonSubmitHardware": "Отп&равить оборудование",
     "Form_Benchmark_radioButton_QuickBenchmark": "&Быстрый (неточный)",
-    "Form_Benchmark_radioButton_StandardBenchmark": "Ст&андартный",
-    "Form_Benchmark_radioButton_PreciseBenchmark": "&Точный (долгий)",
+    "Form_Benchmark_radioButton_StandardBenchmark": "Стандартный (1 мин)",
+    "Form_Benchmark_radioButton_PreciseBenchmark": "Точный (3 мин)",
     "Form_Benchmark_listView_WaitSeconds": "Подождите, пожалуйста, около {0} секунд…",
     "Form_Benchmark_listView_WaitMinutes": " Подождите, пожалуйста, около {0} минут…",
     "Form_Benchmark_listView_WaitForEth": "Бенчмарк (2-4 минуты)…",
@@ -502,6 +502,7 @@
 "Form_Profit_Chart_Delete": "Удалить данные графика?",
 "Form_Profit_Chart_Disabled": "График прибыльности отключен",
 "Form_Settings_DH3GB_Warning": "С алгоритмом DaggerHashimoto3GB или DaggerHashimoto4GB должен быть включен минимум еще один алгоритм",
+"Form_Benchmark_BenchmarkProgress": "Ожидание хешрейта",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

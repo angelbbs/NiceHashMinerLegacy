@@ -373,7 +373,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 18)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -381,7 +380,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 19)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -389,7 +387,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 19.1)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -397,7 +394,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 19.2)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -405,7 +401,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 20)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -413,7 +408,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 20.1)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -421,7 +415,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 20.20)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -429,7 +422,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 21)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -437,7 +429,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 22)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -445,7 +436,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 22.1)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -453,7 +443,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 22.2)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -461,7 +450,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 23)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -469,7 +457,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 23.1)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -477,7 +464,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 24)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
@@ -485,7 +471,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 24.1)
                 {
-                    ConfigManager.GeneralConfig.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);

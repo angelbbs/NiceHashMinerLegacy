@@ -144,7 +144,27 @@ namespace NiceHashMiner
         public static double ChartDataAvail = 0;
         public Form_Main()
         {
-            WindowState = FormWindowState.Minimized;
+            if (this != null)
+            {
+                Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
+                if (ConfigManager.GeneralConfig.FormLeft + ConfigManager.GeneralConfig.FormWidth <= screenSize.Size.Width)
+                {
+                    if (ConfigManager.GeneralConfig.FormTop + ConfigManager.GeneralConfig.FormLeft >= 1)
+                    {
+                        this.Top = ConfigManager.GeneralConfig.FormTop;
+                        this.Left = ConfigManager.GeneralConfig.FormLeft;
+                    }
+
+                    this.Width = ConfigManager.GeneralConfig.FormWidth;
+                    //this.Height = ConfigManager.GeneralConfig.FormHeight;
+                    this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
+                }
+                else
+                {
+                    // this.Width = 660; // min width
+                }
+            }
+            //WindowState = FormWindowState.Minimized;
             Helpers.ConsolePrint("NICEHASH", "Start Form_Main");
             switch (ConfigManager.GeneralConfig.ColorProfileIndex)
             {
@@ -896,6 +916,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("Temp Dir", ex.ToString());
             }
+            /*
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
@@ -914,7 +935,9 @@ namespace NiceHashMiner
                 {
                     // this.Width = 660; // min width
                 }
+            
             }
+            */
             if (!Configs.ConfigManager.GeneralConfig.MinimizeToTray)
             {
                 WindowState = FormWindowState.Normal;

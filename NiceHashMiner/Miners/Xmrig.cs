@@ -14,6 +14,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Linq;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -22,7 +23,7 @@ namespace NiceHashMiner.Miners
         [DllImport("psapi.dll")]
         public static extern bool EmptyWorkingSet(IntPtr hProcess);
 
-        private int benchmarkTimeWait = 180;
+        private int _benchmarkTimeWait = 180;
         private const string LookForStart = "speed 10s/60s/15m";
         private const string LookForEnd = "h/s max";
         private System.Diagnostics.Process CMDconfigHandle;
@@ -249,55 +250,40 @@ namespace NiceHashMiner.Miners
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
                 myServers[0, 0],
                 ConectionType);
-            benchmarkTimeWait = time;
+            _benchmarkTimeWait = time;
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
-                + $" -l {platform_prefix}{GetLogFileName()} --print-time=10 --nicehash";
+                + $" --print-time=10 --nicehash";
         }
 
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
-            BenchmarkThreadRoutineAlternateXmRig(commandLine, benchmarkTimeWait);
-        }
-
-        protected void BenchmarkThreadRoutineAlternateXmRig(object commandLine, int benchmarkTimeWait)
-        {
-            //CleanOldLogs();
-
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
-            int repeats = 0;
+            double repeats = 0;
             double summspeed = 0.0d;
-            BenchmarkAlgorithm.BenchmarkSpeed = 0;
+
+            int delay_before_calc_hashrate = 10;
+            int MinerStartDelay = 10;
+
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-
-            if (File.Exists("bin\\xmrig\\" + platform_prefix + GetLogFileName()))
-                File.Delete("bin\\xmrig\\" + platform_prefix + GetLogFileName());
-
 
             try
             {
-                Helpers.ConsolePrint("BENCHMARK-routineAlt", "Benchmark starts");
-                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
-                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
+                //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
                 benchmarkTimer.Start();
-                //BenchmarkThreadRoutineStartSettup();
-                // wait a little longer then the benchmark routine if exit false throw
-                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
-                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
-                // don't use wait for it breaks everything
+
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                var keepRunning = true;
-                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
+                BenchmarkThreadRoutineStartSettup(); //need for benchmark log
+                while (IsActiveProcess(BenchmarkHandle.Id))
                 {
-                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
-                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
-                    // terminate process situations
-                    if (benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 2)
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
                         || BenchmarkSignalQuit
                         || BenchmarkSignalFinnished
                         || BenchmarkSignalHanged
@@ -306,7 +292,8 @@ namespace NiceHashMiner.Miners
                     {
                         var imageName = MinerExeName.Replace(".exe", "");
                         // maybe will have to KILL process
-                        KillProspectorClaymoreMinerBase(imageName);
+                        EndBenchmarkProcces();
+                        //  KillMinerBase(imageName);
                         if (BenchmarkSignalTimedout)
                         {
                             throw new Exception("Benchmark timedout");
@@ -327,27 +314,44 @@ namespace NiceHashMiner.Miners
                             break;
                         }
 
-                        keepRunning = false;
+                        //keepRunning = false;
                         break;
                     }
-
-                    // wait a second reduce CPU load
+                    // wait a second due api request
                     Thread.Sleep(1000);
+
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
                         repeats++;
-                        if (repeats > 5)//skip first 5s
+                        double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
+                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        if (repeats > delay_before_calc_hashrate)
                         {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
                             summspeed += ad.Result.Speed;
                         }
-                        if (repeats >= 20)
+                        else
                         {
-                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 2);//15s speed
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+
+                            BenchmarkHandle.Kill();
+                            BenchmarkHandle.Dispose();
+                            EndBenchmarkProcces();
+
                             break;
                         }
+
                     }
                 }
+                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
             }
             catch (Exception ex)
             {
@@ -355,29 +359,8 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-                /*
-                BenchmarkAlgorithm.BenchmarkSpeed = 0;
-                // find latest log file
-                string latestLogFile = "";
-                var dirInfo = new DirectoryInfo(WorkingDirectory);
-                foreach (var file in dirInfo.GetFiles(platform_prefix + GetLogFileName()))
-                {
-                    latestLogFile = file.Name;
-               //     Helpers.ConsolePrint("BENCHMARK-routineAlt", latestLogFile);
-                    break;
-                }
-
-                BenchmarkHandle?.WaitForExit(10000);
-                // read file log
-               // Helpers.ConsolePrint("BENCHMARK-routineAlt", WorkingDirectory + latestLogFile);
-                if (File.Exists(WorkingDirectory + latestLogFile))
-                {
-                    var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
-                //    Helpers.ConsolePrint("BENCHMARK-routineAlt", lines.ToString());
-                    ProcessBenchLinesAlternate(lines);
-                }
-                */
                 BenchmarkThreadRoutineFinish();
+                
             }
         }
 
@@ -436,13 +419,17 @@ namespace NiceHashMiner.Miners
         {
             CheckOutdata(outdata);
         }
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
+        /*
         protected override bool BenchmarkParseLine(string outdata)
         {
             Helpers.ConsolePrint(MinerTag(), outdata);
             return false;
         }
-
+        */
         #endregion
     }
 }

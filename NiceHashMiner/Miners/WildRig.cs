@@ -136,11 +136,11 @@ namespace NiceHashMiner.Miners
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
                 + " -l "+ GetLogFileName()+ " --print-time=2";
         }
-
+        
         protected override void BenchmarkThreadRoutine(object CommandLine) {
-            BenchmarkThreadRoutineAlternate(CommandLine, _benchmarkTimeWait);
+            BenchmarkThreadRoutineAPI(CommandLine, _benchmarkTimeWait);
         }
-
+        
         protected override void ProcessBenchLinesAlternate(string[] lines) {
             var twoSecTotal = 0d;
             var sixtySecTotal = 0d;
@@ -203,12 +203,16 @@ namespace NiceHashMiner.Miners
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
             CheckOutdata(outdata);
         }
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
+        /*
         protected override bool BenchmarkParseLine(string outdata) {
             Helpers.ConsolePrint(MinerTag(), outdata);
             return false;
         }
-
+        */
         #endregion
     }
 }

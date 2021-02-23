@@ -44,7 +44,10 @@ namespace NiceHashMiner.Miners {
         }
 
         // benchmark stuff
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             BenchmarkTimeWait = time;
 

@@ -1155,48 +1155,7 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void CheckBox_DisableDefaultOptimizations_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-
-            // indicate there has been a change
-            IsChange = true;
-            if (ConfigManager.GeneralConfig.DisableDefaultOptimizations)
-            {
-                foreach (var cDev in ComputeDeviceManager.Available.Devices)
-                {
-                    foreach (var algorithm in cDev.GetAlgorithmSettings())
-                    {
-                        algorithm.ExtraLaunchParameters = "";
-                        if (cDev.DeviceType == DeviceType.AMD && algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
-                        {
-                            algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, algorithm), algorithm.NiceHashID, cDev.DeviceType, false);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach (var cDev in ComputeDeviceManager.Available.Devices)
-                {
-                    if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
-                    var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
-                    foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
-                    {
-                        var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);
-                        if (toSetAlgo != null)
-                        {
-                            toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
-                            toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, toSetAlgo), toSetAlgo.NiceHashID, cDev.DeviceType, false);
-                        }
-                    }
-                }
-            }
-        }
-
+        
         private void checkBox_RunAtStartup_CheckedChanged_1(object sender, EventArgs e)
         {
             _isStartupChanged = true;

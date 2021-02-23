@@ -103,7 +103,7 @@ namespace NiceHashMiner.Miners
 
             return commandLine;
         }
-
+        /*
         protected override bool BenchmarkParseLine(string outdata)
         {
             int count = 0;
@@ -151,10 +151,14 @@ namespace NiceHashMiner.Miners
 
             return false;
         }
-
+        */
                protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);
+        }
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
         }
         protected override void BenchmarkThreadRoutine(object CommandLine)
         {

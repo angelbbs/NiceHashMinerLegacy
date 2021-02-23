@@ -11,6 +11,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Threading;
 using System.Diagnostics;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -292,7 +293,10 @@ namespace NiceHashMiner.Miners
         {
             CheckOutdata(outdata);
         }
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
             BenchmarkSignalQuit = false;
@@ -301,29 +305,37 @@ namespace NiceHashMiner.Miners
             BenchmarkException = null;
             double repeats = 0.0d;
             double summspeed = 0.0d;
-            //Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
+            int delay_before_calc_hashrate = 5;
+            int MinerStartDelay = 20;
+
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
             {
-                BenchmarkAlgorithm.BenchmarkSpeed = 0;
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
-                //Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
+                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
-                BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
+                //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
                 benchmarkTimer.Start();
-                BenchmarkThreadRoutineStartSettup();
+
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                BenchmarkThreadRoutineStartSettup(); //need for benchmark log
                 while (IsActiveProcess(BenchmarkHandle.Id))
                 {
-                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 2)
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
                         || BenchmarkSignalQuit
                         || BenchmarkSignalFinnished
                         || BenchmarkSignalHanged
                         || BenchmarkSignalTimedout
                         || BenchmarkException != null)
                     {
+                        var imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        EndBenchmarkProcces();
+                        //  KillMinerBase(imageName);
                         if (BenchmarkSignalTimedout)
                         {
                             throw new Exception("Benchmark timedout");
@@ -344,26 +356,44 @@ namespace NiceHashMiner.Miners
                             break;
                         }
 
+                        //keepRunning = false;
                         break;
                     }
+                    // wait a second due api request
+                    Thread.Sleep(1000);
 
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
-                        //Helpers.ConsolePrint(MinerTag(), "ad.Result.Speed: " + ad.Result.Speed.ToString());
                         repeats++;
-                        if (repeats > 5)//skip first 5s
+                        double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 10);
+                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        if (repeats > delay_before_calc_hashrate)
                         {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
                             summspeed += ad.Result.Speed;
                         }
-                        //if (repeats >= 15)
-                        //{
-                        //BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / 15, 2);//15s speed
-                        //  break;
-                        //}
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        if (repeats >= _benchmarkTimeWait - MinerStartDelay - 10)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+
+                            BenchmarkHandle.Kill();
+                            BenchmarkHandle.Dispose();
+                            EndBenchmarkProcces();
+
+                            break;
+                        }
+
                     }
                 }
-                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - 5), 2);
+                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
             }
             catch (Exception ex)
             {
@@ -371,10 +401,11 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-                BenchmarkSignalFinnished = true;
+
                 BenchmarkThreadRoutineFinish();
             }
         }
+
         protected override bool IsApiEof(byte third, byte second, byte last)
         {
             return third == 0x7d && second == 0xa && last == 0x7d;
@@ -427,7 +458,7 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("NBMiner:", "resp - null");
             }
 
-            Thread.Sleep(1000);
+            Thread.Sleep(10);
             return ad;
         }
 
@@ -436,10 +467,11 @@ namespace NiceHashMiner.Miners
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
-
+        /*
         protected override bool BenchmarkParseLine(string outdata)
         {
             return false;
         }
+        */
     }
 }

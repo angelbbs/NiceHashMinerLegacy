@@ -32,8 +32,8 @@ namespace NiceHashMiner.Forms {
             this.radioButton_RE_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
             this.checkBox_StartMiningAfterBenchmark = new System.Windows.Forms.CheckBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -142,15 +142,6 @@ namespace NiceHashMiner.Forms {
             this.algorithmsListView1.TabIndex = 109;
             this.algorithmsListView1.Load += new System.EventHandler(this.algorithmsListView1_Load);
             // 
-            // benchmarkOptions1
-            // 
-            this.benchmarkOptions1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.benchmarkOptions1.Location = new System.Drawing.Point(474, 15);
-            this.benchmarkOptions1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.benchmarkOptions1.Name = "benchmarkOptions1";
-            this.benchmarkOptions1.Size = new System.Drawing.Size(208, 112);
-            this.benchmarkOptions1.TabIndex = 106;
-            // 
             // devicesListViewEnableControl1
             // 
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -167,6 +158,15 @@ namespace NiceHashMiner.Forms {
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(456, 164);
             this.devicesListViewEnableControl1.TabIndex = 0;
             this.devicesListViewEnableControl1.Load += new System.EventHandler(this.devicesListViewEnableControl1_Load);
+            // 
+            // benchmarkOptions1
+            // 
+            this.benchmarkOptions1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.benchmarkOptions1.Location = new System.Drawing.Point(474, 15);
+            this.benchmarkOptions1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.benchmarkOptions1.Name = "benchmarkOptions1";
+            this.benchmarkOptions1.Size = new System.Drawing.Size(208, 140);
+            this.benchmarkOptions1.TabIndex = 106;
             // 
             // Form_Benchmark
             // 
@@ -203,7 +203,6 @@ namespace NiceHashMiner.Forms {
         private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.Button StartStopBtn;
         private System.Windows.Forms.Button CloseBtn;
-        private Components.BenchmarkOptions benchmarkOptions1;
         private System.Windows.Forms.GroupBox groupBoxBenchmarkProgress;
         private System.Windows.Forms.Label labelBenchmarkSteps;
         private System.Windows.Forms.ProgressBar progressBarBenchmarkSteps;
@@ -211,5 +210,6 @@ namespace NiceHashMiner.Forms {
         private System.Windows.Forms.RadioButton radioButton_SelectedUnbenchmarked;
         private System.Windows.Forms.RadioButton radioButton_RE_SelectedUnbenchmarked;
         private System.Windows.Forms.CheckBox checkBox_StartMiningAfterBenchmark;
+        private Components.BenchmarkOptions benchmarkOptions1;
     }
 }

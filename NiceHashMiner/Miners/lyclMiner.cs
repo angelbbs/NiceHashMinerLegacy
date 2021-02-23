@@ -290,7 +290,11 @@ namespace NiceHashMiner.Miners
             return " " + configfilename;
 
         }
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
+        /*
         protected override bool BenchmarkParseLine(string outdata) {
             Helpers.ConsolePrint(MinerTag(), outdata);
 
@@ -327,7 +331,7 @@ namespace NiceHashMiner.Miners
             }
             return false;
         }
-
+        */
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
             CheckOutdata(outdata);
         }

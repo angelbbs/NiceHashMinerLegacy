@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -30,7 +31,7 @@ namespace NiceHashMiner.Miners
         private const int TotalDelim = 2;
         double speed = 0;
         int count = 0;
-        private int _benchmarkTimeWait = 120;
+        private int _benchmarkTimeWait = 180;
         private string[,] myServers = Form_Main.myServers;
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.CryptoDredge;
 
@@ -62,12 +63,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "--algo kawpow";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
-            {
-                algo = "--algo cuckaroo29";
-                //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.CryptoDredge;
-                IsApiReadException = true; //0.18.0 api broken
-            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 algo = "--algo aeternity";
@@ -84,7 +80,7 @@ namespace NiceHashMiner.Miners
                 " -o " + alg + "." + myServers[4, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o " + alg + "." + myServers[5, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o " + alg + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + url + " -u " + username + " -p x --log " + GetLogFileName() +
+                " -o " + url + " -u " + username + " -p x " + 
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -123,16 +119,15 @@ namespace NiceHashMiner.Miners
             var commandLine = "";
             _benchmarkTimeWait = time;
             TotalCount = _benchmarkTimeWait/60;
-
+            /*
             if (File.Exists("miners\\CryptoDredge\\" + GetLogFileName()))
                 File.Delete("miners\\CryptoDredge\\" + GetLogFileName());
-
+            */
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 commandLine = "--algo x16rv2" +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o stratum+tcp://x16rv2.eu.mine.zpool.ca:3637" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --log " + GetLogFileName() +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -145,7 +140,6 @@ namespace NiceHashMiner.Miners
                 commandLine = "--algo kawpow" +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.CryptoDredge" + " -p x" +
-                " --log " + GetLogFileName() +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -159,7 +153,6 @@ namespace NiceHashMiner.Miners
                 commandLine = "--algo lyra2v3" +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --log " + GetLogFileName() +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -175,7 +168,6 @@ namespace NiceHashMiner.Miners
                 " -o stratum+tcp://neoscrypt.jp.mine.zpool.ca:4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                 " -o stratum+tcp://neoscrypt.sea.mine.zpool.ca:4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                 " -o stratum+tcp://neoscrypt.eu.mine.zpool.ca:4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " --log " + GetLogFileName() +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -190,7 +182,6 @@ namespace NiceHashMiner.Miners
                 commandLine = algo +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o stratum+tcp://xzc.2miners.com:8080" + " -u aMGfYX8ARy4wKE57fPxkEBcnNuHegDBweE." + ConfigManager.GeneralConfig.WorkerName.Trim() + " -p x " +
-                " --log " + GetLogFileName() +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -205,7 +196,6 @@ namespace NiceHashMiner.Miners
                 commandLine = algo +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o stratum+tcp://ae.f2pool.com:7898" + " -u ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + ConfigManager.GeneralConfig.WorkerName.Trim() + " -p x " +
-                " --log " + GetLogFileName() +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -221,7 +211,7 @@ namespace NiceHashMiner.Miners
                 " -o " + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o " + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
                 " -o " + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + url + " -u " + username + " -p x --log " + GetLogFileName() +
+                " -o " + url + " -u " + username + " -p x " + 
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -231,135 +221,123 @@ namespace NiceHashMiner.Miners
             return commandLine;
         }
 
-        protected override bool BenchmarkParseLine(string outdata)
-        {
-          try
-          {
-                //[20:42:11] INFO  - GPU0 GTX 1070 : 18,83MH/s (Avr 17,33MH/s) : 124,1KH/W : T=60C Fan=0%
-                double tmp = 0;
-                    if (outdata.Contains("GPU") && outdata.ToUpper().Contains("GH/S)"))
-                    {
-                        var st = outdata.IndexOf("Avr ");
-                        var e = outdata.ToUpper().IndexOf("GH/S)");
-                        var parse = outdata.Substring(st + 4, e - st - 4).Trim().Replace(",",".");
-                  //  if (count > 0)//skip first
-                    {
-                        tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        tmp *= 10000000000;
-                    }
-                        speed += tmp;
-                        count++;
-                        TotalCount--;
-                        goto norm;
-                    } else if (outdata.Contains("GPU") && outdata.ToUpper().Contains("MH/S)"))
-                    {
-                    var st = outdata.IndexOf("Avr ");
-                        var e = outdata.ToUpper().IndexOf("MH/S)");
-                        var parse = outdata.Substring(st + 4, e - st - 4).Trim().Replace(",", ".");
-                   // if (count > 0)//skip first
-
-                        tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        tmp *= 1000000;
-
-                        speed += tmp;
-                        count++;
-                        TotalCount--;
-                        goto norm;
-                    } else if (outdata.Contains("GPU") && outdata.ToUpper().Contains("KH/S)"))
-                    {
-                    var st = outdata.IndexOf("Avr ");
-                        var e = outdata.ToUpper().IndexOf("KH/S)");
-                        var parse = outdata.Substring(st + 4, e - st - 4).Trim().Replace(",", ".");
-                 //   if (count > 0)//skip first
-                    {
-                        tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                        tmp *= 1000;
-                    }
-                        speed += tmp;
-                        count++;
-                        TotalCount--;
-                        goto norm;
-                    }
-                    else if (outdata.Contains("GPU") && outdata.ToUpper().Contains("H/S)"))
-                    {
-                    var st = outdata.IndexOf("Avr ");
-                        var e = outdata.ToUpper().IndexOf("H/S)");
-                        var parse = outdata.Substring(st + 4, e - st - 4).Trim().Replace(",", ".");
-                 //   if (count > 0)//skip first
-                    {
-                        tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                    }
-                        speed += tmp;
-                        count++;
-                        TotalCount--;
-                        goto norm;
-                    }
-norm:
-                    if (TotalCount <= 0 && speed > 0.0d)
-                    {
-                    BenchmarkAlgorithm.BenchmarkSpeed = speed / (count);
-                    BenchmarkSignalFinnished = true;
-                    return true;
-                    }
-
-                return false;
-          }
-          catch
-          {
-                MessageBox.Show("Unsupported miner version " + MiningSetup.MinerPath,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                BenchmarkSignalFinnished = true;
-                return false;
-          }
-        }
-
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);
         }
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
 
-        protected override void BenchmarkThreadRoutine(object CommandLine)
+        protected override void BenchmarkThreadRoutine(object commandLine)
         {
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
+            double repeats = 0.0d;
+            double summspeed = 0.0d;
+
+            int delay_before_calc_hashrate = 10;
+            int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
-                BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
+                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
+                var benchmarkTimer = new Stopwatch();
+                benchmarkTimer.Reset();
+                benchmarkTimer.Start();
 
-                BenchmarkThreadRoutineStartSettup();
-                BenchmarkTimeInSeconds = 300;
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                var exited = BenchmarkHandle.WaitForExit((BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) + 20) * 1000);
-                if (BenchmarkSignalTimedout && !TimeoutStandard)
+                BenchmarkThreadRoutineStartSettup(); //need for benchmark log
+                while (IsActiveProcess(BenchmarkHandle.Id))
                 {
-                    throw new Exception("Benchmark timedout");
-                }
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null)
+                    {
+                        var imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        EndBenchmarkProcces();
+                        //  KillMinerBase(imageName);
+                        if (BenchmarkSignalTimedout)
+                        {
+                            throw new Exception("Benchmark timedout");
+                        }
 
-                if (BenchmarkException != null)
-                {
-                    throw BenchmarkException;
-                }
+                        if (BenchmarkException != null)
+                        {
+                            throw BenchmarkException;
+                        }
 
-                if (BenchmarkSignalQuit)
-                {
-                    throw new Exception("Termined by user request");
-                }
+                        if (BenchmarkSignalQuit)
+                        {
+                            throw new Exception("Termined by user request");
+                        }
 
-                if (BenchmarkSignalHanged || !exited)
-                {
-                    throw new Exception("Miner is not responding");
-                }
+                        if (BenchmarkSignalFinnished)
+                        {
+                            break;
+                        }
 
-                if (BenchmarkSignalFinnished)
-                {
-                    //break;
+                        //keepRunning = false;
+                        break;
+                    }
+                    // wait a second due api request
+                    Thread.Sleep(1000);
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 20;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                    {
+                        delay_before_calc_hashrate = 2;
+                        MinerStartDelay = 10;
+                    }
+
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        repeats++;
+                        double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
+                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        if (repeats > delay_before_calc_hashrate)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            summspeed += ad.Result.Speed;
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+
+                            BenchmarkHandle.Kill();
+                            BenchmarkHandle.Dispose();
+                            EndBenchmarkProcces();
+
+                            break;
+                        }
+
+                    }
                 }
+                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
             }
             catch (Exception ex)
             {
@@ -367,10 +345,10 @@ norm:
             }
             finally
             {
+
                 BenchmarkThreadRoutineFinish();
             }
         }
-
         #endregion // Decoupled benchmarking routines
 
         public override async Task<ApiData> GetSummaryAsync()

@@ -106,7 +106,7 @@ namespace NiceHashMiner.Miners
             _benchmarkTimeWait = time;
             return CommandLine;
         }
-
+        /*
         protected override bool BenchmarkParseLine(string outdata)
         {
             Helpers.ConsolePrint(MinerTag(), outdata);
@@ -139,12 +139,15 @@ namespace NiceHashMiner.Miners
             }
             return false;
         }
-
+        */
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);
         }
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
         protected override void BenchmarkThreadRoutine(object CommandLine)
         {
             BenchmarkSignalQuit = false;

@@ -666,7 +666,7 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("NHM_API_info", "Trying GetRigProfit");
                     resp = NiceHashStats.GetNiceHashApiData(apistr, "");
                     //resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/mining/external/" +  "/rigs/activeWorkers?sortDirection=ASC", "x");
-                    Helpers.ConsolePrint("NHM_API_info", apistr);
+                    //Helpers.ConsolePrint("NHM_API_info", apistr);
                     if (resp != null)
                     {
                         //Helpers.ConsolePrint("NHM_API_info", resp);
@@ -704,8 +704,12 @@ namespace NiceHashMiner.Stats
                             }
                         }
                         double unpaidAmount = respJson.unpaidAmount;
-                        Helpers.ConsolePrint("unpaidAmount", unpaidAmount.ToString());
+                        Helpers.ConsolePrint("unpaidAmount", (unpaidAmount * 1000).ToString());
                         SetBalance(unpaidAmount.ToString());
+                    } else
+                    {
+                        Form_Main.lastRigProfit.currentProfitAPI = 0;
+                        Form_Main.lastRigProfit.unpaidAmount = 0;
                     }
                 } else
                 {

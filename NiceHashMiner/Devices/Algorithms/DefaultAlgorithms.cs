@@ -195,7 +195,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 MinerBaseType.teamredminer,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.X16RV2, "X16Rv2"),
+                            //new Algorithm(MinerBaseType.teamredminer, AlgorithmType.X16RV2, "X16Rv2"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             //new Algorithm(MinerBaseType.teamredminer, AlgorithmType.GrinCuckarood29, "GrinCuckarood29"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW")
@@ -295,22 +295,24 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             },
             */
+            /*
             { MinerBaseType.hsrneoscrypt,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.hsrneoscrypt, AlgorithmType.NeoScrypt, "Neoscrypt"),
                         }
             },
+            */
             { MinerBaseType.CryptoDredge,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
-                            new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.X16RV2, "X16Rv2"),
+                            //new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.X16RV2, "X16Rv2"),
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.KAWPOW, "KAWPOW"),
                           // new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.CuckooCycle, "CuckooCycle"),
                         }
             },
             { MinerBaseType.trex,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16Rv2"),
+                            //new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16Rv2"),
                             new Algorithm(MinerBaseType.trex, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.trex, AlgorithmType.KAWPOW, "KAWPOW")
                             {
@@ -325,7 +327,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
             { MinerBaseType.ZEnemy,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.X16RV2, "X16Rv2"),
+                            //new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.X16RV2, "X16Rv2"),
                             new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.KAWPOW, "KAWPOW"),
                         }
             },

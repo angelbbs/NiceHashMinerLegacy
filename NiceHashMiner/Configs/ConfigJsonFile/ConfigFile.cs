@@ -86,6 +86,9 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             try
             {
                 File.WriteAllText(FilePath, JsonConvert.SerializeObject(file, Formatting.Indented));
+                if (File.Exists(FilePathOld))
+                    File.Delete(FilePathOld);
+                File.Copy(FilePath, FilePathOld, true);
             }
             catch (Exception ex)
             {
@@ -95,12 +98,23 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
 
         public void CreateBackup()
         {
-            Helpers.ConsolePrint(_tag, $"Backing up {FilePath} to {FilePathOld}..");
+            //Helpers.ConsolePrint(_tag, $"Backing up {FilePath} to {FilePathOld}..");
             try
             {
                 if (File.Exists(FilePathOld))
                     File.Delete(FilePathOld);
                 File.Copy(FilePath, FilePathOld, true);
+            }
+            catch { }
+        }
+        public void RestoreFromBackup()
+        {
+            Helpers.ConsolePrint(_tag, $"Restoring from {FilePathOld} to {FilePath}..");
+            try
+            {
+                if (File.Exists(FilePath))
+                    File.Delete(FilePath);
+                File.Copy(FilePathOld, FilePath, true);
             }
             catch { }
         }

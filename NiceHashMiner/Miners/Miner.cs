@@ -674,7 +674,7 @@ namespace NiceHashMiner
 
             var commandLine = BenchmarkCreateCommandLine(BenchmarkAlgorithm, time);
 
-            var benchmarkThread = new Thread(BenchmarkThreadRoutine);
+            var benchmarkThread = new Thread(BenchmarkThreadRoutine, time);
 
             benchmarkThread.Start(commandLine);
 
@@ -694,8 +694,8 @@ namespace NiceHashMiner
                     FileName = MiningSetup.MinerPath
                 }
             };
-            
-            if (benchmarkHandle.StartInfo.FileName.Contains("CryptoDredge") && commandLine.Contains("neoscrypt"))
+
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("cryptodredge") && (commandLine.ToLower().Contains("neoscrypt") || commandLine.ToLower().Contains("x16rv2")))
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
@@ -782,8 +782,8 @@ namespace NiceHashMiner
 
         protected void CheckOutdata(string outdata)
         {
-            //            Helpers.ConsolePrint("BENCHMARK_CheckOutData" , outdata);
             BenchLines.Add(outdata);
+            /*
             // ccminer, cpuminer
             if (outdata.Contains("Cuda error"))
                 BenchmarkException = new Exception("CUDA error");
@@ -803,13 +803,10 @@ namespace NiceHashMiner
             // xmr-stak
             if (outdata.Contains("Press any key to exit"))
                 BenchmarkException = new Exception("Xmr-Stak erred, check its logs");
-
+            */
             // lastly parse data
-            Helpers.ConsolePrint("BENCHMARK_CheckOutData", outdata);
-            if (BenchmarkParseLine(outdata))
-            {
-                BenchmarkSignalFinnished = true;
-            }
+            //Helpers.ConsolePrint("BENCHMARK_CheckOutData", outdata);
+
         }
 
         public void InvokeBenchmarkSignalQuit()
@@ -860,6 +857,7 @@ namespace NiceHashMiner
         // killing proccesses can take time
         public virtual void EndBenchmarkProcces()
         {
+            //Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType.FORCE_END);
             if (BenchmarkHandle != null && BenchmarkProcessStatus != BenchmarkProcessStatus.Killing &&
                 BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling)
             {
@@ -895,6 +893,7 @@ namespace NiceHashMiner
             BenchmarkAlgorithm.BenchmarkSpeed = 0;
 
             Helpers.ConsolePrint(MinerTag(), "Benchmark Exception: " + ex.Message);
+            Helpers.ConsolePrint(MinerTag(), "Benchmark Exception: " + ex.ToString());
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled)
             {
                 OnBenchmarkCompleteCalled = true;
@@ -911,8 +910,12 @@ namespace NiceHashMiner
 
         protected void BenchmarkThreadRoutineFinish()
         {
+            ComputeDevice.BenchmarkProgress = 0;
             var status = BenchmarkProcessStatus.Finished;
+            //BenchmarkHandle.CancelErrorRead();
+            //BenchmarkHandle.CancelOutputRead();
             RunCMDBeforeOrAfterMining(false);
+            
             if (!BenchmarkAlgorithm.BenchmarkNeeded)
             {
                 status = BenchmarkProcessStatus.Success;
@@ -929,7 +932,7 @@ namespace NiceHashMiner
                 }
             }
             catch { }
-
+            
             BenchmarkProcessStatus = status;
             if (BenchmarkAlgorithm is DualAlgorithm dualAlg)
             {
@@ -1015,11 +1018,6 @@ namespace NiceHashMiner
             }
         }
 
-        /// <summary>
-        /// Thread routine for miners that cannot be scheduled to stop and need speed data read from command line
-        /// </summary>
-        /// <param name="commandLine"></param>
-        /// <param name="benchmarkTimeWait"></param>
         protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait)
         {
             CleanOldLogs();
@@ -1112,6 +1110,192 @@ namespace NiceHashMiner
                 {
                     var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
                     ProcessBenchLinesAlternate(lines);
+                }
+
+                BenchmarkThreadRoutineFinish();
+            }
+        }
+
+        /// <summary>
+        /// Thread routine for miners that cannot be scheduled to stop and need speed data read from command line
+        /// </summary>
+        /// <param name="commandLine"></param>
+        /// <param name="benchmarkTimeWait"></param>
+        //protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait)
+        //public void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait)
+        protected virtual void BenchmarkThreadRoutineAPI(object commandLine, int benchmarkTimeWait)
+        {
+            CleanOldLogs();
+
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+            double repeats = 0.0d;
+            double summspeed = 0.0d;
+            double maxspeed = 0.0d;
+            int MinerStartDelay = 5;
+
+
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            if (MinerDeviceName.Contains("Phoenix")) benchmarkTimeWait = benchmarkTimeWait + 30;
+
+            try
+            {
+                Helpers.ConsolePrint("BENCHMARK-routineAlt", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 60);
+                var benchmarkTimer = new Stopwatch();
+                benchmarkTimer.Reset();
+                benchmarkTimer.Start();
+
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                var keepRunning = true;
+                int delay_before_calc_hashrate = 10;
+                int bench_time = benchmarkTimeWait - 10;
+                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
+                {
+                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
+                    // terminate process situations
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 60)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null)
+                    {
+                        if (BenchmarkSignalTimedout)
+                        {
+                            throw new Exception("Benchmark timedout");
+                        }
+
+                        if (BenchmarkException != null)
+                        {
+                            throw BenchmarkException;
+                        }
+
+                        if (BenchmarkSignalQuit)
+                        {
+                            throw new Exception("Termined by user request");
+                        }
+
+                        if (BenchmarkSignalFinnished)
+                        {
+                            break;
+                        }
+
+                        keepRunning = false;
+                        break;
+                    }
+
+                    // wait a second due api request
+                    Thread.Sleep(1000);
+
+                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto)) &&
+                        MinerDeviceName.Contains("Claymore"))
+                    {
+                        MinerStartDelay = 20;
+                        delay_before_calc_hashrate = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NeoScrypt) &&
+                        MinerDeviceName.Contains("Claymore"))
+                    {
+                        MinerStartDelay = 5;
+                        delay_before_calc_hashrate = 5;
+                    }
+
+                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto)) &&
+                        MinerDeviceName.Contains("Phoenix"))
+                    {
+                        MinerStartDelay = 20;
+                        delay_before_calc_hashrate = 20;
+                    }
+
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+
+                        repeats++;
+                        if (repeats > delay_before_calc_hashrate)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            summspeed += ad.Result.Speed;
+                            maxspeed = Math.Max(maxspeed, ad.Result.Speed);
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        //if (repeats >= bench_time + delay_before_calc_hashrate)
+                        if (repeats >= benchmarkTimeWait - MinerStartDelay)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
+                            //BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (bench_time), 2);
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+                            /*
+                            BenchmarkHandle.Dispose();
+                            EndBenchmarkProcces();
+                            */
+                            break;
+                        }
+                    }
+                    benchmarkTimer.Stop();
+                }
+                //Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString() + " bench_time:" + bench_time.ToString());
+                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                if (MinerDeviceName.Contains("Phoenix"))
+                {
+                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(maxspeed,2);
+                }
+                if (MinerDeviceName.Contains("Claymore"))
+                {
+                   //Thread.Sleep(10000);
+                }
+            }
+            catch (Exception ex)
+            {
+                BenchmarkThreadRoutineCatch(ex);
+            }
+            finally
+            {
+                
+                int pid = _currentPidData.Pid;
+                if (MinerTag().Contains("Phoenix"))
+                {
+                    try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
+                    Thread.Sleep(1000);
+                }
+                //KillProcessAndChildren(pid);
+                
+                Helpers.ConsolePrint("BENCHMARK-end",
+                        $"Trying to kill benchmark process {BenchmarkProcessPath}, pID:{pid}  algorithm {BenchmarkAlgorithm.AlgorithmName}");
+                try
+                {
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                            ("Select * From Win32_Process Where ParentProcessID=" + pid);
+                    ManagementObjectCollection moc = searcher.Get();
+
+                    foreach (ManagementObject mo in moc)
+                    {
+                        KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+                    }
+                }
+                
+                catch (Exception er)
+                {
+                    Helpers.ConsolePrint("BenchmarkThreadRoutineAPI", er.ToString());
+                }
+                finally
+                {
+                    //KillAllUsedMinerProcesses();
                 }
 
                 BenchmarkThreadRoutineFinish();
@@ -1297,7 +1481,7 @@ namespace NiceHashMiner
                 }
             }
 
-            if (MiningSetup.MinerPath.Contains("CryptoDredge") && LastCommandLine.Contains("NeoScrypt"))
+            if (MiningSetup.MinerPath.ToLower().Contains("cryptodredge") && (LastCommandLine.ToLower().Contains("neoscrypt") || LastCommandLine.ToLower().Contains("x16rv2")))
             {
                 Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             } 

@@ -7,7 +7,6 @@ namespace NiceHashMiner.Utils
             @"/vc_redist.x64.exe",
             @"/xmrig/xmrig.exe",
             @"/claymore_dual/EthDcrMiner64.exe",
-            @"/hsrminer_neoscrypt/hsrminer_neoscrypt.exe",
             @"/CryptoDredge/CryptoDredge.exe",
             @"/Z-ENEMY/z-enemy.exe",
             @"/phoenix/PhoenixMiner.exe",

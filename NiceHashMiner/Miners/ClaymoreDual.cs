@@ -19,8 +19,6 @@ namespace NiceHashMiner.Miners
 
             LookForStart = "eth - total speed:";
             SecondaryLookForStart = SecondaryShortName() + " - total speed:";
-            DevFee = IsDual() ? 1.5 : 1.0;
-
             IsMultiType = true;
         }
         private string[,] myServers = Form_Main.myServers;
@@ -593,7 +591,10 @@ namespace NiceHashMiner.Miners
         }
 
         // benchmark stuff
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             // network stub

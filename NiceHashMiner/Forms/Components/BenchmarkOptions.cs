@@ -28,12 +28,9 @@ namespace NiceHashMiner.Forms.Components
 
         public void SetPerformanceType(BenchmarkPerformanceType performanceType)
         {
+            /*
             switch (performanceType)
             {
-                case BenchmarkPerformanceType.Quick:
-                    radioButton_QuickBenchmark.Checked = true;
-                    PerformanceType = BenchmarkPerformanceType.Quick;
-                    break;
                 case BenchmarkPerformanceType.Standard:
                     radioButton_StandardBenchmark.Checked = true;
                     PerformanceType = BenchmarkPerformanceType.Standard;
@@ -46,29 +43,28 @@ namespace NiceHashMiner.Forms.Components
                     radioButton_StandardBenchmark.Checked = true;
                     break;
             }
+            */
+            //radioButton_StandardBenchmark.Checked = ConfigManager.GeneralConfig.StandartBenchmarkTime;
+            radioButton_PreciseBenchmark.Checked = !ConfigManager.GeneralConfig.StandartBenchmarkTime;
         }
 
         public void InitLocale()
         {
             groupBox1.Text = International.GetText("BenchmarkOptions_Benchmark_Type");
-            radioButton_QuickBenchmark.Text = International.GetText("Form_Benchmark_radioButton_QuickBenchmark");
             radioButton_StandardBenchmark.Text = International.GetText("Form_Benchmark_radioButton_StandardBenchmark");
             radioButton_PreciseBenchmark.Text = International.GetText("Form_Benchmark_radioButton_PreciseBenchmark");
-        }
-
-        private void RadioButton_QuickBenchmark_CheckedChanged(object sender, EventArgs e)
-        {
-            PerformanceType = BenchmarkPerformanceType.Quick;
         }
 
         private void RadioButton_StandardBenchmark_CheckedChanged(object sender, EventArgs e)
         {
             PerformanceType = BenchmarkPerformanceType.Standard;
+            ConfigManager.GeneralConfig.StandartBenchmarkTime = true;
         }
 
         private void RadioButton_PreciseBenchmark_CheckedChanged(object sender, EventArgs e)
         {
             PerformanceType = BenchmarkPerformanceType.Precise;
+            ConfigManager.GeneralConfig.StandartBenchmarkTime = false;
         }
     }
 }

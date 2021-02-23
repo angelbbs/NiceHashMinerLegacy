@@ -39,7 +39,6 @@ namespace NiceHashMiner.Miners
             //IsNeverHideMiningWindow = true;
             SecondaryAlgorithmType = secondaryAlgorithmType;
             IsMultiType = true;
-            //Helpers.ConsolePrint(MinerTag(), "SecondaryAlgorithmType: " + SecondaryAlgorithmType.ToString());
         }
 
         public override void Start(string url, string btcAdress, string worker)
@@ -59,7 +58,6 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint(MinerTag(), "Copy msvcp.dll failed: " + e.Message);
                 }
             }
-
             ProcessHandle = _Start();
         }
 
@@ -67,10 +65,7 @@ namespace NiceHashMiner.Miners
         {
             Helpers.ConsolePrint("GMINER Stop", "");
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
-            //Thread.Sleep(200);
             KillGminer();
-            //KillMinerBase("miner");
-
         }
         private string GetStartCommand(string url, string btcAddress, string worker)
         {
@@ -157,7 +152,6 @@ namespace NiceHashMiner.Miners
                 ssl = " --ssl 0";
             }
             */
-            
 
             var ret = GetDevicesCommandString()
                       + " --algo " + algo + pers + " --server " + url.Split(':')[0]
@@ -186,17 +180,6 @@ namespace NiceHashMiner.Miners
             foreach (var mPair in sortedMinerPairs)
             {
                 id = mPair.Device.IDByBus;
-                /*
-                if (ConfigManager.GeneralConfig.GMinerIDByBusEnumeration)
-                {
-                    id = mPair.Device.IDByBus;
-                    Helpers.ConsolePrint("GMinerIndexing", "IDByBus: " + id);
-                } else
-                {
-                    id = mPair.Device.ID;
-                    Helpers.ConsolePrint("GMinerIndexing", "ID: " + id);
-                }
-                */
 
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -285,59 +268,34 @@ namespace NiceHashMiner.Miners
         }
         public void KillGminer()
         {
-           // if (ProcessHandle != null)
+            try
             {
-                try
-                {
-                    //ProcessHandle.Kill();
-                    int k = ProcessTag().IndexOf("pid(");
-                    int i = ProcessTag().IndexOf(")|bin");
-                    var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
+                int k = ProcessTag().IndexOf("pid(");
+                int i = ProcessTag().IndexOf(")|bin");
+                var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
 
-                    int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                    Helpers.ConsolePrint("GMINER", "gminer.exe PID: " + pid.ToString());
-                    KillProcessAndChildren(pid);
-                    ProcessHandle.Kill();
-                    ProcessHandle.Close();
-                }
-                catch { }
-                /*
-                try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
+                int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
+                Helpers.ConsolePrint("GMINER", "gminer.exe PID: " + pid.ToString());
+                KillProcessAndChildren(pid);
+                ProcessHandle.Kill();
                 ProcessHandle.Close();
-                ProcessHandle = null;
-                */
-                if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
             }
-            //KillMinerBase("miner");
-            //foreach (Process process in Process.GetProcessesByName("miner")) { //kill ewbf to
-            //     try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
-            //}
+            catch { }
+            if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
+            
         }
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            CleanOldLogs();
             _benchmarkTimeWait = time;
             var ret = "";
-            //var suff = "0_";
 
             var btcAddress = Globals.GetBitcoinUser();
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
             string username = GetUsername(btcAddress, worker);
-            /*
-            foreach (var pair in MiningSetup.MiningPairs)
-            {
-                if (pair.Device.DeviceType == DeviceType.NVIDIA)
-                {
-                    suff = "1_";
-                }
-            }
-            */
-            if (File.Exists("miners\\gminer\\"+ GetLogFileName()))
-                File.Delete("miners\\gminer\\"+ GetLogFileName());
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --pers auto --algo 144_5" +
+                ret = " --color 0 --pec --pers auto --algo 144_5" +
                 " --server btg.2miners.com --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.gminer --pass x --port 4040 " +
                 " --server equihash144.eu.mine.zpool.ca --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 --pass c=BTC --port 2144 " +
                 " --server zhash.eu" + ".nicehash.com --user " + username + " --pass x --port 3369" +
@@ -348,8 +306,7 @@ namespace NiceHashMiner.Miners
             
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
-                //_benchmarkTimeWait = 180;
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo BeamHashII" +
+                ret = " --color 0 --pec --algo BeamHashII" +
                 " --server beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
                 " --server beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
                 " --server beamv2.eu.nicehash.com:3378 --user " + username + " --pass x --ssl 0" +
@@ -358,8 +315,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
-                //_benchmarkTimeWait = 180;
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo BeamHashIII" +
+                ret = " --color 0 --pec --algo BeamHashIII" +
                 " --server beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
                 " --server beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
                 " --server beamv2.eu.nicehash.com:3378 --user " + username + " --pass x --ssl 0" +
@@ -368,16 +324,15 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckaroo29)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo cuckaroo29" +
-                //" --server grin.sparkpool.com --user angelbbs@mail.ru/" + worker + " --pass x --port 6666 --ssl 0" +
+                ret = " --color 0 --pec --algo cuckaroo29" +
                 " --server grincuckaroo29.eu" + ".nicehash.com --user " + username + " --pass x --port 3371 --ssl 0" +
                 " --server grincuckaroo29.hk" + ".nicehash.com --user " + username + " --pass x --port 3371 --ssl 0" +
                 GetDevicesCommandString();
             }
-            //start miner.exe--algo cuckarood29 --server eu.frostypool.com:3516 --user angelbbs
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo cuckarood29" +
+                ret = " --color 0 --pec --algo cuckarood29" +
                 " --server  mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.gminer --ssl 0" +
                 " --server grincuckarood29.eu:3377" + ".nicehash.com --user " + username + " --ssl 0" +
                 " --server grincuckarood29.hk:3377" + ".nicehash.com --user " + username + " --ssl 0" +
@@ -385,7 +340,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo cuckaroom29_qitmeer" +
+                ret = " --color 0 --pec --algo cuckaroom29_qitmeer" +
                 " --server pmeercuckaroom.uupool.cn:9660 --user Tmk9X8FPuu5SxP6mW32zQ5N68SNsn76xZrY.gminer --pass x  --ssl 0" +
                 " --server cuckaroom.eu.nicehash.com:3382 --user " + username + " --pass x --ssl 0" +
                 " --server cuckaroom.hk.nicehash.com:3382 --user " + username + " --pass x --ssl 0" +
@@ -393,7 +348,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo grin31" +
+                ret = " --color 0 --pec --algo grin31" +
                 " --server mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.gminer --pass x  --ssl 0" +
                 " --server grincuckatoo31.eu.nicehash.com:3372 --user " + username + " --pass x --ssl 0" +
                 " --server grincuckatoo31.hk.nicehash.com:3372 --user " + username + " --pass x --ssl 0" +
@@ -401,7 +356,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo grin32" +
+                ret = " --color 0 --pec --algo grin32" +
                 " --server grin.2miners.com:3030 --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.gminer --pass x  --ssl 0" +
                 " --server grincuckatoo32.eu.nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
                 " --server grincuckatoo32.hk.nicehash.com:3383 --user " + username + " --pass x --ssl 0" +
@@ -409,8 +364,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo aeternity" +
-                //" --server ae.f2pool.com --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + worker + " --pass x --port 7898 --ssl 0" +
+                ret = " --color 0 --pec --algo aeternity" +
                 " --server ae.2miners.com:4040 --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.gminer --pass x --ssl 0" +
                 " --server cuckoocycle.eu.nicehash.com:3376 --user " + username + " --pass x --ssl 0" +
                 " --server cuckoocycle.hk.nicehash.com:3376 --user " + username + " --pass x --ssl 0" +
@@ -418,7 +372,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo ethash" +
+                ret = " --color 0 --pec --algo ethash" +
                 " --server eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.GMiner --pass x --ssl 0 --proto proxy" +
                 " --server daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --pass x --ssl 0 --proto stratum" +
                 " --server daggerhashimoto.hk.nicehash.com:3353 --user " + username + " --pass x --ssl 0 --proto stratum" +
@@ -426,7 +380,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo kawpow" +
+                ret = " --color 0 --pec --algo kawpow" +
                 " --server rvn.2miners.com:6060 --user RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.GMiner --pass x " +
                 " --server kawpow.eu.nicehash.com:3385 --user " + username + " --pass x --proto stratum" +
                 GetDevicesCommandString();
@@ -434,7 +388,7 @@ namespace NiceHashMiner.Miners
             /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo bfc" +
+                ret = " --color 0 --pec --algo bfc" +
                 " --server bfc.f2pool.com:4900 --user angelbbs.GMiner --pass x " +
                 " --server cuckaroo29bfc.eu.nicehash.com:3386 --user " + username + " --pass x --proto stratum" +
                 GetDevicesCommandString();
@@ -443,7 +397,7 @@ namespace NiceHashMiner.Miners
             
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckaRooz29)
             {
-                ret = " --logfile " + GetLogFileName() + " --color 0 --pec --algo cuckarooz29" +
+                ret = " --color 0 --pec --algo cuckarooz29" +
                 " --server grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.gminer --pass x  --ssl 0" +
                 " --server grin.sparkpool.com:6666 --user angelbbs@mail.ru/" + worker + " --pass x --ssl 0" +
                 " --server cuckarooz29.eu.nicehash.com:3388 --user " + username + " --pass x --ssl 0" +
@@ -452,18 +406,30 @@ namespace NiceHashMiner.Miners
             }
             return ret + " --api " + ApiPort; ;
         }
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
+        }
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
-            double repeats = 0.0d;
+            int repeats = 0;
             double summspeed = 0.0d;
 
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            int delay_before_calc_hashrate = 5;
+            int MinerStartDelay = 10;
 
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            /*
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW) ||
+                MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                _benchmarkTimeWait = _benchmarkTimeWait + 30;
+            }
+            */
             try
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
@@ -475,107 +441,67 @@ namespace NiceHashMiner.Miners
                 benchmarkTimer.Start();
 
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-
+                BenchmarkThreadRoutineStartSettup(); //need for benchmark log
                 while (IsActiveProcess(BenchmarkHandle.Id))
                 {
-                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 2)
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
                         || BenchmarkSignalQuit
                         || BenchmarkSignalFinnished
                         || BenchmarkSignalHanged
                         || BenchmarkSignalTimedout
                         || BenchmarkException != null)
                     {
-                        var imageName = MinerExeName.Replace(".exe", "");
-                        // maybe will have to KILL process
-                        EndBenchmarkProcces();
-                      //  KillMinerBase(imageName);
-                        if (BenchmarkSignalTimedout)
-                        {
-                            throw new Exception("Benchmark timedout");
-                        }
-
-                        if (BenchmarkException != null)
-                        {
-                            throw BenchmarkException;
-                        }
-
-                        if (BenchmarkSignalQuit)
-                        {
-                            throw new Exception("Termined by user request");
-                        }
-
-                        if (BenchmarkSignalFinnished)
-                        {
-                            break;
-                        }
-
-                        //keepRunning = false;
-                        break;
+                         break;
                     }
                     // wait a second due api request
                     Thread.Sleep(1000);
 
-                    int delay_before_calc_hashrate = 90;
-                    int bench_time = 30;
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
-                        delay_before_calc_hashrate = 15;
-                        bench_time = 20;
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 5;
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
                     {
+                        MinerStartDelay = 10;
                         delay_before_calc_hashrate = 10;
-                        bench_time = 20;
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
                     {
-                        delay_before_calc_hashrate = 10;
-                        bench_time = 30;
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 5;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                     {
-                        delay_before_calc_hashrate = 30;
-                        bench_time = 30;
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 5;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
-                    {
-                        delay_before_calc_hashrate = 30;
-                        bench_time = 30;
-                    }
+
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
                     {
-                        delay_before_calc_hashrate = 30;
-                        bench_time = 30;
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 5;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
                     {
-                        delay_before_calc_hashrate = 30;
-                        bench_time = 30;
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 5;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                     {
-                        delay_before_calc_hashrate = 20;
-                        bench_time = 20;
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 5;
                     }
-                    /*
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
-                    {
-                        delay_before_calc_hashrate = 20;
-                        bench_time = 20;
-                    }
-                    */
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckaRooz29))
-                    {
-                        delay_before_calc_hashrate = 30;
-                        bench_time = 20;
-                    }
+
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
-
+                        ComputeDevice.BenchmarkProgress = repeats;
                         repeats++;
+                        double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
+                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
                             Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
@@ -586,19 +512,39 @@ namespace NiceHashMiner.Miners
                             Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
                         }
 
-                        if (repeats >= bench_time + delay_before_calc_hashrate)
+                        if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
                         {
-                            //Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString() + " bench_time:" + bench_time.ToString());
-                            BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (bench_time), 2);
+                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
+
                             ad.Dispose();
                             benchmarkTimer.Stop();
+
+                            KillProcessAndChildren(BenchmarkHandle.Id);
                             BenchmarkHandle.Dispose();
                             EndBenchmarkProcces();
+
+                            /*
+                            try
+                            {
+                                int k = ProcessTag().IndexOf("pid(");
+                                int i = ProcessTag().IndexOf(")|bin");
+                                var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
+
+                                int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
+                                Helpers.ConsolePrint("GMINER", "gminer.exe PID: " + pid.ToString());
+                                KillProcessAndChildren(pid);
+                                ProcessHandle.Kill();
+                                ProcessHandle.Close();
+                            }
+                            catch { }
+                            if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
+                            */
                             break;
                         }
 
                     }
                 }
+                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
             }
             catch (Exception ex)
             {
@@ -615,12 +561,6 @@ namespace NiceHashMiner.Miners
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);
-        }
-
-        protected override bool BenchmarkParseLine(string outdata)
-        {
-            Helpers.ConsolePrint("BENCHMARK", outdata);
-            return false;
         }
 
         protected double GetNumber(string outdata)
@@ -645,8 +585,7 @@ namespace NiceHashMiner.Miners
                 return GetNumber(outdata, LookForStart, LookForEnd);
             }
         }
-        //|  GPU0 58 C 378.05 MH/s    0/0  87 W  4.35 MH/W |
-        //|  GPU0 61 C  24.50 MH/s + 291.49 MH/s  1/0 + 0/0 113 W  216.79 KH/W |
+
         protected double GetNumberSecond(string outdata)
         {
                 return GetNumber(outdata, LookForStartDual, LookForEndDual);
@@ -705,10 +644,6 @@ namespace NiceHashMiner.Miners
             return third == 0x7d && second == 0xa && last == 0x7d;
         }
 
-        //{ "uptime":3,"server":"stratum://zhash.eu.nicehash.com:3369","user": "wallet.Farm2",
-        //"algorithm":"Equihash 144,5 \"BgoldPoW\"","electricity":0.000,
-        //"devices":[{"gpu_id":4,"cuda_id":4,"bus_id":"0000:07:00.0","name":"ASUS GeForce GTX 1060 3GB"
-        //,"speed":38,"accepted_shares":0,"rejected_shares":0,"temperature":14,"temperature_limit":90,"power_usage":93}]}
         private class JsonApiResponse
         {
             public class Devices
@@ -727,8 +662,7 @@ namespace NiceHashMiner.Miners
 
 
             ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-            
-            //Helpers.ConsolePrint("GMINER API", "SecondaryAlgorithmType: " + SecondaryAlgorithmType.ToString() + " ad.AlgorithmID: " + ad.AlgorithmID.ToString() + " ad.SecondaryAlgorithmID: " + ad.SecondaryAlgorithmID.ToString());
+
             string ResponseFromGMiner;
             double total = 0;
             double totalSec = 0;
@@ -754,19 +688,30 @@ namespace NiceHashMiner.Miners
                 return null;
             }
 
-            dynamic resp = JsonConvert.DeserializeObject<JsonApiResponse>(ResponseFromGMiner);
-
-            //Helpers.ConsolePrint("API resp...........", resp);
-            if (resp != null)
+            //Helpers.ConsolePrint("API ResponseFromGMiner:", ResponseFromGMiner);
+            ResponseFromGMiner = ResponseFromGMiner.Replace("-nan", "0.00");
+            try
             {
-                for (var i = 0; i < resp.devices.Length; i++)
+                dynamic resp = JsonConvert.DeserializeObject<JsonApiResponse>(ResponseFromGMiner);
+                if (resp != null)
                 {
-                    total = total + resp.devices[i].speed;
-                    
-                }
+                    for (var i = 0; i < resp.devices.Length; i++)
+                    {
+                        total = total + resp.devices[i].speed;
 
+                    }
+                }
+                else
+                {
+                    Helpers.ConsolePrint("GMiner:", "resp - null");
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GMiner API:", "Error JSON parsing");
+            } finally
+            {
                 ad.Speed = total;
-                
+
                 if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
@@ -775,12 +720,9 @@ namespace NiceHashMiner.Miners
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
-            } else
-            {
-                Helpers.ConsolePrint("GMiner:", "resp - null");
             }
 
-            Thread.Sleep(200);
+            Thread.Sleep(100);
             return ad;
         }
     }

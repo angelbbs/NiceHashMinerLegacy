@@ -89,8 +89,8 @@
         "Form_Benchmark_buttonCheckProfitability": "Check &profitability",
         "Form_Benchmark_buttonSubmitHardware": "Submit &hardware",
         "Form_Benchmark_radioButton_QuickBenchmark": "&Quick (can be inaccurate)",
-        "Form_Benchmark_radioButton_StandardBenchmark": "&Standard",
-        "Form_Benchmark_radioButton_PreciseBenchmark": "&Precise (will take longer)",
+        "Form_Benchmark_radioButton_StandardBenchmark": "Standard (1 min)",
+        "Form_Benchmark_radioButton_PreciseBenchmark": "Precise (3 min)",
         "Form_Benchmark_listView_WaitSeconds": "Please wait about {0} seconds...",
         "Form_Benchmark_listView_WaitMinutes": "Please wait about {0} minutes...",
         "Form_Benchmark_listView_WaitForEth": "Benchmarking (2-4 minutes)...",
@@ -509,6 +509,7 @@
 "Form_Profit_Chart_Delete": "Delete chart data?",
 "Form_Profit_Chart_Disabled": "Profitability chart disabled",
 "Form_Settings_DH3GB_Warning": "With DaggerHashimoto3GB or DaggerHashimoto4GB algorithm, at least one more algorithm must be enabled",
+"Form_Benchmark_BenchmarkProgress": "Waiting for miner hashrate",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

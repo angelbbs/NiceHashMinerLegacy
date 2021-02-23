@@ -416,11 +416,11 @@ namespace NiceHashMiner.Forms
 
         private string GetDotsWaitString()
         {
+            
             ++_dotCount;
             if (_dotCount > 3) _dotCount = 1;
             string ret = new string('.', _dotCount);
             return ret + NiceHashMiner.Miner.BenchmarkStringAdd;
-            //return ret;
         }
 
         private void InitLocale()

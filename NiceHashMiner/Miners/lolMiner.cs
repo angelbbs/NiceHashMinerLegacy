@@ -28,10 +28,7 @@ namespace NiceHashMiner.Miners
     {
         private readonly int GPUPlatformNumber;
         Stopwatch _benchmarkTimer = new Stopwatch();
-        int count = 0;
-        int firstcount = 0;
-        double speed = 0;
-        private int _benchmarkTimeWait = 240;
+        private int _benchmarkTimeWait = 180;
         private string[,] myServers = Form_Main.myServers;
         public lolMiner()
             : base("lolMiner")
@@ -208,7 +205,7 @@ namespace NiceHashMiner.Miners
         #region Decoupled benchmarking routines
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            //GetEnimeration();
+            var apiBind = " --apiport " + ApiPort;
             var CommandLine = "";
 
             string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
@@ -309,6 +306,7 @@ namespace NiceHashMiner.Miners
                 sColor = " --nocolor";
             }
             CommandLine += sColor;
+            CommandLine += apiBind;
             return CommandLine;
 
         }
@@ -331,7 +329,6 @@ namespace NiceHashMiner.Miners
             };
 
             {
-                //BenchmarkProcessPath = EnimerationHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner for enumeration: " + EnimerationHandle.StartInfo.FileName);
                 EnimerationHandle.StartInfo.WorkingDirectory = WorkingDirectory;
             }
@@ -345,7 +342,6 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            // Thread.Sleep(500);
             var CommandLine = " --coin BEAM-II " +
                  " --pool localhost --port fake --user " + username + " --pass x --tls 0 --devices 999";//fake port for enumeration
 
@@ -404,8 +400,7 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception ex)
             {
-                //                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " error: " + ex.Message);
-                //PidData is NULL error: Ссылка на объект не указывает на экземпляр объекта.
+
             }
 
 
@@ -421,16 +416,6 @@ namespace NiceHashMiner.Miners
             catch { }
 
             Thread.Sleep(50);
-
-            // string output = benchmarkconfigHandle.StandardOutput.ReadToEnd();
-
-
-            /*
-                        if (outdata.Contains("Setup Miner..."))
-                        {
-
-                        }
-                        */
         }
 
         protected override string GetDevicesCommandString()
@@ -446,9 +431,6 @@ namespace NiceHashMiner.Miners
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             foreach (var mPair in sortedMinerPairs)
             {
-                // var id = mPair.Device.ID;
-                //int id = mPair.Device.IDByBus + variables.mPairDeviceIDByBus_lolBeam;
-
                 Helpers.ConsolePrint("lolMinerIndexing", "ID: " + mPair.Device.ID);
                 Helpers.ConsolePrint("lolMinerIndexing", "IDbybus: " + mPair.Device.IDByBus);
                 Helpers.ConsolePrint("lolMinerIndexing", "busid: " + mPair.Device.BusID);
@@ -481,185 +463,162 @@ namespace NiceHashMiner.Miners
 
             return deviceStringCommand;
         }
-        protected override bool BenchmarkParseLine(string outdata) {
-            string hashSpeed = "";
-
-            //Average speed (30s): 25.5 sol/s
-            //GPU 3: Share accepted (45 ms)
-            //Average speed (30s): 0.13 g/s
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2 ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
-            {
-                if (outdata.Contains("Average speed (30s):"))
-                {
-                    int i = outdata.IndexOf("Average speed (30s):");
-                    int k = outdata.IndexOf("sol/s");
-                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
-                    try
-                    {
-                        speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    count++;
-                }
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
-            {
-                if (outdata.Contains("Average speed (30s):"))
-                {
-                    int i = outdata.IndexOf("Average speed (30s):");
-                    int k = outdata.IndexOf("sol/s");
-                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
-                    try
-                    {
-                            speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    count++;
-                }
-            }
-            //Average speed (30s): 0.13 g/s
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
-            {
-                if (outdata.Contains("Average speed (30s):"))
-                {
-                    int i = outdata.IndexOf("Average speed (30s):");
-                    int k = outdata.IndexOf("g/s");
-                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
-                    try
-                    {
-                            speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    count++;
-                }
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                if (outdata.Contains("Average speed (30s):"))
-                {
-                    int i = outdata.IndexOf("Average speed (30s):");
-                    int k = outdata.IndexOf("g/s");
-                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
-                    try
-                    {
-                        speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    count++;
-                }
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
-            {
-                if (outdata.Contains("Average speed (30s):"))
-                {
-                    int i = outdata.IndexOf("Average speed (30s):");
-                    int k = outdata.IndexOf("g/s");
-                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
-                    try
-                    {
-                            speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    count++;
-                }
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
-            {
-                if (outdata.Contains("Average speed (30s):"))
-                {
-                    int i = outdata.IndexOf("Average speed (30s):");
-                    int k = outdata.IndexOf("g/s");
-                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
-                    try
-                    {
-                        speed = speed + Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    count++;
-                }
-            }
-            //Average speed (30s): 11.20 mh/s
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
-            {
-                if (outdata.Contains("Average speed (30s):") && firstcount > 0)
-                {
-                    int i = outdata.IndexOf("Average speed (30s):");
-                    int k = outdata.IndexOf("mh/s");
-                    hashSpeed = outdata.Substring(i + 21, k - i - 22).Trim();
-                    try
-                    {
-                        speed = speed + (Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * 1000000);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        BenchmarkSignalFinnished = true;
-                        return false;
-                    }
-                    count++;
-                }
-                if (outdata.Contains("Average speed (30s):"))
-                {
-                    firstcount++;
-                }
-            }
-            /*
-            if ((outdata.Contains("Share accepted") && speed != 0 && count > 4) || (count > 8 && speed != 0))
-            {
-                BenchmarkAlgorithm.BenchmarkSpeed = speed / count;
-                BenchmarkSignalFinnished = true;
-                return true;
-            }
-            */
-            if ((count > _benchmarkTimeWait / 30 && speed != 0))
-            {
-                BenchmarkAlgorithm.BenchmarkSpeed = speed / count;
-                BenchmarkSignalFinnished = true;
-                return true;
-            }
-            return false;
-
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            return true;
         }
+        protected override void BenchmarkThreadRoutine(object commandLine)
+        {
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+            double repeats = 0.0d;
+            double summspeed = 0.0d;
 
+            int delay_before_calc_hashrate = 10;
+            int MinerStartDelay = 10;
 
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
+            try
+            {
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                }
+                    Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
+                var benchmarkTimer = new Stopwatch();
+                benchmarkTimer.Reset();
+                benchmarkTimer.Start();
+
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                BenchmarkThreadRoutineStartSettup(); //need for benchmark log
+                while (IsActiveProcess(BenchmarkHandle.Id))
+                {
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null)
+                    {
+                        var imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        EndBenchmarkProcces();
+                        //  KillMinerBase(imageName);
+                        if (BenchmarkSignalTimedout)
+                        {
+                            throw new Exception("Benchmark timedout");
+                        }
+
+                        if (BenchmarkException != null)
+                        {
+                            throw BenchmarkException;
+                        }
+
+                        if (BenchmarkSignalQuit)
+                        {
+                            throw new Exception("Termined by user request");
+                        }
+
+                        if (BenchmarkSignalFinnished)
+                        {
+                            break;
+                        }
+
+                        //keepRunning = false;
+                        break;
+                    }
+                    // wait a second due api request
+                    Thread.Sleep(1000);
+                    
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        delay_before_calc_hashrate = 60;
+                        MinerStartDelay = 20;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 30;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
+                    {
+                        delay_before_calc_hashrate = 20;
+                        MinerStartDelay = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 30;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
+                    {
+                        delay_before_calc_hashrate = 20;
+                        MinerStartDelay = 20;
+                    }
+                    var ad = GetSummaryAsync();
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        repeats++;
+                        double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
+                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        if (repeats > delay_before_calc_hashrate)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                            {
+                                summspeed = Math.Max(summspeed, ad.Result.Speed);
+                            }
+                            else
+                            {
+                                summspeed += ad.Result.Speed;
+                            }
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+
+                            BenchmarkHandle.Kill();
+                            BenchmarkHandle.Dispose();
+                            EndBenchmarkProcces();
+
+                            break;
+                        }
+
+                    }
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                {
+                    BenchmarkAlgorithm.BenchmarkSpeed = summspeed;
+                }
+                else
+                {
+                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                }
+            }
+            catch (Exception ex)
+            {
+                BenchmarkThreadRoutineCatch(ex);
+            }
+            finally
+            {
+
+                BenchmarkThreadRoutineFinish();
+            }
+        }
+        
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);
