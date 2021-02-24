@@ -658,8 +658,8 @@ namespace NiceHashMiner
                 return;
             }
 
+            _loadingScreen.Show();
             // Query Available ComputeDevices
-
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
 
             _isDeviceDetectionInitialized = true;
@@ -1038,12 +1038,13 @@ namespace NiceHashMiner
             this.Refresh();
             // general loading indicator
             const int totalLoadSteps = 11;
+
             _loadingScreen = new Form_Loading(this,
                 International.GetText("Form_Loading_label_LoadingText"),
                 International.GetText("Form_Main_loadtext_CPU"), totalLoadSteps);
 
             SetChildFormCenter(_loadingScreen);
-            _loadingScreen.Show();
+           // _loadingScreen.Show();
 
 
             _startupTimer = new Timer();

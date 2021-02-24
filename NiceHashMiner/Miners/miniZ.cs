@@ -96,6 +96,11 @@ namespace NiceHashMiner.Miners
                 algo = "beam3";
                 algoName = "beamv3";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+            {
+                algo = "ethash";
+                algoName = "daggerhashimoto";
+            }
             string sColor = "";
             if ( GetWinVer(Environment.OSVersion.Version) < 8)
             {

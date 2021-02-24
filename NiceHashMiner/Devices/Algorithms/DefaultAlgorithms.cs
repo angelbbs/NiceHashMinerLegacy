@@ -361,6 +361,9 @@ namespace NiceHashMiner.Devices.Algorithms
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
                             },
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            {
+                            },
                         }
             },
             /*
