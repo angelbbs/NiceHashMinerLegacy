@@ -41,6 +41,7 @@ namespace NiceHashMiner.Devices
         }
         #endregion JSON settings
         private static int CUDAQueryCount = 1;
+        private static string nvmlRootPath = "";
         public static class Query
         {
             private const string Tag = "ComputeDeviceManager.Query";
@@ -107,9 +108,7 @@ namespace NiceHashMiner.Devices
                     string stdErr;
                     string args;
                     var stdOut = stdErr = args = string.Empty;
-                    var smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                  "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
-                    if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
+                    var smiPath = nvmlRootPath + "\\nvidia-smi.exe";
                     try
                     {
                         var P = new Process
@@ -214,6 +213,104 @@ namespace NiceHashMiner.Devices
                 }
                 return (gpusNew < gpusOld);
             }
+            private static bool TryAddNvmlToEnvPath()
+            {
+                string defaultpath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                                   "\\NVIDIA Corporation\\NVSMI";
+                nvmlRootPath = defaultpath;
+                if (!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")) || !File.Exists(Path.Combine(nvmlRootPath, "nvidia-smi.exe")))
+                {
+                    nvmlRootPath = GetNVMLFiles();
+                    if (!Directory.Exists(defaultpath))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(defaultpath);
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
+                        }
+                    }
+                    if (File.Exists(nvmlRootPath + "\\nvidia-smi.exe") || !File.Exists(defaultpath + "\\nvidia-smi.exe"))
+                    {
+                        try
+                        {
+                            var copyToPath = defaultpath + "\\nvidia-smi.exe";
+                            File.Copy(nvmlRootPath + "\\nvidia-smi.exe", copyToPath, true);
+                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\nvidia-smi.exe"} to {copyToPath} done");
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "Copy nvidia-smi.exe failed: " + e.Message);
+                        }
+                    }
+                    if (File.Exists(nvmlRootPath + "\\nvml.dll") || !File.Exists(defaultpath + "\\nvml.dll"))
+                    {
+                        try
+                        {
+                            var copyToPath = defaultpath + "\\nvml.dll";
+                            File.Copy(nvmlRootPath + "\\nvml.dll", copyToPath, true);
+                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\\nvml.dll"} to {copyToPath} done");
+                            nvmlRootPath = defaultpath;
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
+                        }
+                    }
+                }
+
+                if (File.Exists(defaultpath + "\\nvml.dll"))
+                {
+                    Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
+                    if (Directory.Exists(nvmlRootPath))
+                    {
+                        var pathVar = Environment.GetEnvironmentVariable("PATH");
+                        pathVar += ";" + nvmlRootPath;
+                        Environment.SetEnvironmentVariable("PATH", pathVar);
+                        return true;
+                    }
+                } else
+                {
+                    Helpers.ConsolePrint(Tag, "Warning! nvml.dll not found!");
+                    return false;
+                }
+                return false;
+            }
+
+            private static string GetNVMLFiles()
+            {
+                DateTime dt = new DateTime();
+                string pathToFiles = null;
+                string DriverFolder = "C:\\Windows\\System32\\DriverStore\\FileRepository";
+                try
+                {
+                    string[] folders = Directory.GetDirectories(DriverFolder);
+                    foreach (string folder in folders)
+                    {
+                        string[] files = Directory.GetFiles(folder);
+                        foreach (string filename in files)
+                        {
+                            if (filename.Contains("nvml.dll"))
+                            {
+                                FileInfo fi = new FileInfo(filename);
+                                if (DateTime.Compare(fi.CreationTime, dt) > 0)
+                                {
+                                    dt = fi.CreationTime;
+                                    pathToFiles = folder;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Helpers.ConsolePrint("GetNVMLFiles", e.ToString());
+                }
+                return pathToFiles;
+            }
 
             public static void QueryDevices(IMessageNotifier messageNotifier)
             {
@@ -221,23 +318,11 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint(Tag, "HasNvidiaVideoController: " + WindowsDisplayAdapters.HasNvidiaVideoController());
                 if (WindowsDisplayAdapters.HasNvidiaVideoController())
                 {
+                    /*
                     string NVPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                        "\\NVIDIA Corporation";
                     string NVCommon = "Common\\NVSMI";
-                    /*
-                    try
-                    {
-                        if (File.Exists("nvml.dll"))
-                        {
-                            File.Delete("nvml.dll");
 
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint(Tag, "Del nvml.dll failed: " + e.Message);
-                    }
-                    */
                     if (!Directory.Exists(NVPath + "\\NVSMI"))
                     {
                         try
@@ -298,7 +383,16 @@ namespace NiceHashMiner.Devices
                             Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
                         }
                     }
-                    
+                    */
+                    if (TryAddNvmlToEnvPath())
+                    {
+                        nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
+                        //Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
+                        if (nvmlLoaded != nvmlReturn.Success)
+                        {
+                            Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
+                        }
+                    }
                 }
 
                 MessageNotifier = messageNotifier;
