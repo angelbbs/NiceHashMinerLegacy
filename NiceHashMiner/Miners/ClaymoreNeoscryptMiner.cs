@@ -31,9 +31,7 @@ namespace NiceHashMiner.Miners {
             String epools = String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[0, 0], nhsuff, username) + "\n"
                + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[1, 0], nhsuff, username) + "\n"
                + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[2, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[3, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[4, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[5, 0], nhsuff, username) + "\n";
+               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[3, 0], nhsuff, username) + "\n";
 
             FileStream fs = new FileStream("miners\\claymore_neoscrypt\\pools.txt", FileMode.Create, FileAccess.Write);
             StreamWriter w = new StreamWriter(fs);

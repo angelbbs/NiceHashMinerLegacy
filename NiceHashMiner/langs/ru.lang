@@ -10,11 +10,9 @@
 
     "Service_Location": "Локация",
     "LocationName_eu": "Европа - Амстердам",
+    "LocationName_eu-north": "Европа (север) - Хамина",
     "LocationName_usa": "США - Сан-Хосе",
-    "LocationName_hk": "Китай - Гонконг",
-    "LocationName_jp": "Япония - Токио",
-    "LocationName_in": "Индия - Ченнаи",
-    "LocationName_br": "Бразилия - Сан-Паулу",
+    "LocationName_usa-east": "США (восток) - Ашберн",
     "Warning_with_Exclamation": "Предупреждение!",
     "Error_with_Exclamation": "Ошибка!",
     "BitcoinAddress": "Биткоин-адрес",

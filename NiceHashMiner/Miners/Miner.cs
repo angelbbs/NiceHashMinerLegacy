@@ -149,7 +149,7 @@ namespace NiceHashMiner
         protected bool IsMultiType;
         public static string BenchmarkStringAdd = "";
         public static string InBenchmark = "";
-        
+
 
 
         protected virtual int GetMaxCooldownTimeInMilliseconds()
@@ -699,7 +699,7 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
-            
+
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -912,10 +912,8 @@ namespace NiceHashMiner
         {
             ComputeDevice.BenchmarkProgress = 0;
             var status = BenchmarkProcessStatus.Finished;
-            //BenchmarkHandle.CancelErrorRead();
-            //BenchmarkHandle.CancelOutputRead();
             RunCMDBeforeOrAfterMining(false);
-            
+
             if (!BenchmarkAlgorithm.BenchmarkNeeded)
             {
                 status = BenchmarkProcessStatus.Success;
@@ -932,7 +930,7 @@ namespace NiceHashMiner
                 }
             }
             catch { }
-            
+
             BenchmarkProcessStatus = status;
             if (BenchmarkAlgorithm is DualAlgorithm dualAlg)
             {
@@ -1266,7 +1264,7 @@ namespace NiceHashMiner
             }
             finally
             {
-                
+
                 int pid = _currentPidData.Pid;
                 if (MinerTag().Contains("Phoenix"))
                 {
@@ -1274,7 +1272,7 @@ namespace NiceHashMiner
                     Thread.Sleep(1000);
                 }
                 //KillProcessAndChildren(pid);
-                
+
                 Helpers.ConsolePrint("BENCHMARK-end",
                         $"Trying to kill benchmark process {BenchmarkProcessPath}, pID:{pid}  algorithm {BenchmarkAlgorithm.AlgorithmName}");
                 try
@@ -1288,7 +1286,7 @@ namespace NiceHashMiner
                         KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
                     }
                 }
-                
+
                 catch (Exception er)
                 {
                     Helpers.ConsolePrint("BenchmarkThreadRoutineAPI", er.ToString());
@@ -1359,7 +1357,7 @@ namespace NiceHashMiner
 
             string server = "";
             Helpers.ConsolePrint("PingServers", " start ping");
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 4; i++)
             {
                 try
                 {
@@ -1397,13 +1395,13 @@ namespace NiceHashMiner
                 serverId++;
             }
 
-            string[,] tmpServers = { { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
-            int pingReplyTimeTmp;
+            string[,] tmpServers = {{ "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" }};
+        int pingReplyTimeTmp;
             long bestReplyTimeTmp = 10000;
             int iTmp = 0;
-            for (int k = 0; k < 6; k++)
+            for (int k = 0; k < 4; k++)
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     pingReplyTimeTmp = Convert.ToInt32(myServers[i, 1]);
                     if (pingReplyTimeTmp < bestReplyTimeTmp && pingReplyTimeTmp != -1)
@@ -1420,7 +1418,7 @@ namespace NiceHashMiner
             }
 
             Form_Main.myServers = tmpServers;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
             {
                 server = "stratum." + Form_Main.myServers[i, 0] + ".nicehash.com";
                 //Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
@@ -1484,7 +1482,7 @@ namespace NiceHashMiner
             if (MiningSetup.MinerPath.ToLower().Contains("cryptodredge") && (LastCommandLine.ToLower().Contains("neoscrypt") || LastCommandLine.ToLower().Contains("x16rv2")))
             {
                 Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
-            } 
+            }
             P.StartInfo.FileName = Path;
 
             P.ExitEvent = Miner_Exited;
@@ -1698,7 +1696,7 @@ namespace NiceHashMiner
                 }
             }
             Thread.Sleep(restartInMs);
-            Restart(); //Всё тут правильно у меня! 
+            Restart(); //Всё тут правильно у меня!
             //If a person updated miner with their hands and it doesn't work, then this is their problem.
 
             /*
@@ -1707,7 +1705,7 @@ namespace NiceHashMiner
             {
                 Thread.Sleep(restartInMs);
                 Restart();//???????????
-                
+
             } else
 
             {
@@ -2003,7 +2001,7 @@ namespace NiceHashMiner
             var strPlatform = "";
             var strDual = "SINGLE";
             var strAlgo = AlgorithmNiceHashNames.GetName(MiningSetup.CurrentAlgorithmType);
-            
+
             var minername = MinerDeviceName;
             int subStr;
             subStr = MinerDeviceName.IndexOf("_");

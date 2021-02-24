@@ -61,8 +61,6 @@ namespace NiceHashMiner.Miners
                 " -U -P stratum://" + username + "@kawpow." + myServers[1, 0] + ".nicehash.com:3385" +
                 " -U -P stratum://" + username + "@kawpow." + myServers[2, 0] + ".nicehash.com:3385" +
                 " -U -P stratum://" + username + "@kawpow." + myServers[3, 0] + ".nicehash.com:3385" +
-                " -U -P stratum://" + username + "@kawpow." + myServers[4, 0] + ".nicehash.com:3385" +
-                " -U -P stratum://" + username + "@kawpow." + myServers[5, 0] + ".nicehash.com:3385" +
                 " -U -P stratum://" + username + "@kawpow." + myServers[0, 0] + ".nicehash.com:3385" +
                 " " + apiBind +
                 " --failover-timeout 60 --cu-devices " + devs + " " +

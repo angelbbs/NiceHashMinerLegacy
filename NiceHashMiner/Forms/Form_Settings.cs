@@ -2216,7 +2216,7 @@ namespace NiceHashMiner.Forms
             {
                 richTextBoxCheckNiceHashservers.Text += "NiceHash speedtest servers down. Try alternate method\n";
                 Miner.PingServers("daggerhashimoto");
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     var server = "daggerhashimoto." + Globals.MiningLocation[i] + ".nicehash.com";
                     richTextBoxCheckNiceHashservers.Text += server + " ping: " + Form_Main.myServers[i, 1] + " ms\n";
@@ -2224,7 +2224,7 @@ namespace NiceHashMiner.Forms
             }
             else
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     var server = "speedtest." + Globals.MiningLocation[i] + ".nicehash.com";
                     richTextBoxCheckNiceHashservers.Text += server + " ping: " + Form_Main.myServers[i, 1] + " ms\n";

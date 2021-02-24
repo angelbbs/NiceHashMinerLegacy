@@ -55,8 +55,6 @@ namespace NiceHashMiner.Miners
                 " --url=stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[5, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
                 " --url=" + url + " --userpass=" + username + ":x" +
                 " --userpass=" + username + ":x" + apiBind +
@@ -91,8 +89,6 @@ namespace NiceHashMiner.Miners
                 " --url=stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + myServers[5, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
                 " --url=" + url + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
@@ -111,8 +107,6 @@ namespace NiceHashMiner.Miners
                 " -o stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                 " -o stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                 " -o stratum+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                " -o stratum+tcp://" + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                " -o stratum+tcp://" + alg + "." + myServers[5, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                 " -o stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                               timeLimit + " --api-bind=" + ApiPort + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(

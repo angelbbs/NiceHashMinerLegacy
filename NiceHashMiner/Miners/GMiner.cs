@@ -162,10 +162,6 @@ namespace NiceHashMiner.Miners
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
                       + " --server " + algoName + "." + myServers[3, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[4, 0] + ".nicehash.com" + nicehashstratum
-                      + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[5, 0] + ".nicehash.com" + nicehashstratum
-                      + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
                       + " --api " + ApiPort;
             return ret;
         }

@@ -111,7 +111,6 @@ namespace NiceHashMiner.Miners
                + $" -o stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} -u {username} -p x "
                + $" -o stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} -u {username} -p x {platform}"
                + GetDevicesCommandString().TrimStart();
             }

@@ -54,8 +54,6 @@ namespace NiceHashMiner.Miners
      " -o stratum2+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
      " -o stratum2+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
      " -o stratum2+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[5, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
      " -o stratum2+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
      apiBind +
      " -d " + GetDevicesCommandString() + " --no-watchdog " +

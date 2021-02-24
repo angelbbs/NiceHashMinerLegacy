@@ -71,7 +71,6 @@ namespace NiceHashMiner.Miners
                 + $" -o stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} -u {username}:x "
                 + $" -o stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} -u {username}:x "
                 + $" -o stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} -u {username}:x "
-                + $" -o stratum+tcp://{algo}.{myServers[4, 0]}.nicehash.com:{port} -u {username}:x "
                 + "  --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
         }
 

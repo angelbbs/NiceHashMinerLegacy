@@ -73,8 +73,6 @@ namespace NiceHashMiner.Miners
                     " --pool zhash." + myServers[1, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
                     " --pool zhash." + myServers[2, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
                     " --pool zhash." + myServers[3, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
-                    " --pool zhash." + myServers[4, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
-                    " --pool zhash." + myServers[5, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
                     apiBind + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
@@ -88,8 +86,6 @@ namespace NiceHashMiner.Miners
                 " --pool beamv2." + myServers[1, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv2." + myServers[2, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv2." + myServers[3, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv2." + myServers[4, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv2." + myServers[5, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
                              apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -102,8 +98,6 @@ namespace NiceHashMiner.Miners
                 " --pool beamv3." + myServers[1, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv3." + myServers[2, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv3." + myServers[3, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv3." + myServers[4, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv3." + myServers[5, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
                              apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -117,8 +111,6 @@ namespace NiceHashMiner.Miners
                 " --pool grincuckatoo31." + myServers[1, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo31." + myServers[2, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo31." + myServers[3, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo31." + myServers[4, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo31." + myServers[5, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -131,8 +123,6 @@ namespace NiceHashMiner.Miners
                 " --pool grincuckatoo32." + myServers[1, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo32." + myServers[2, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo32." + myServers[3, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo32." + myServers[4, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo32." + myServers[5, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -145,8 +135,6 @@ namespace NiceHashMiner.Miners
                 " --pool grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
                 " --pool grincuckarood29." + myServers[2, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
                 " --pool grincuckarood29." + myServers[3, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
-                " --pool grincuckarood29." + myServers[4, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
-                " --pool grincuckarood29." + myServers[5, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -159,8 +147,6 @@ namespace NiceHashMiner.Miners
                 " --pool cuckaroom." + myServers[1, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
                 " --pool cuckaroom." + myServers[2, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
                 " --pool cuckaroom." + myServers[3, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + myServers[4, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + myServers[5, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -173,8 +159,6 @@ namespace NiceHashMiner.Miners
                 " --pool daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 " --pool daggerhashimoto." + myServers[2, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 " --pool daggerhashimoto." + myServers[3, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
-                " --pool daggerhashimoto." + myServers[4, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
-                " --pool daggerhashimoto." + myServers[5, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,

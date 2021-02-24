@@ -76,9 +76,7 @@ namespace NiceHashMiner.Miners
                + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", myServers[0, 0]) + "\n"
                + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", myServers[1, 0]) + "\n"
                + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", myServers[2, 0]) + "\n"
-               + String.Format("pool5 = daggerhashimoto.{0}.nicehash.com:3353", myServers[3, 0]) + "\n"
-               + String.Format("pool6 = daggerhashimoto.{0}.nicehash.com:3353", myServers[4, 0]) + "\n";
-
+               + String.Format("pool5 = daggerhashimoto.{0}.nicehash.com:3353", myServers[3, 0]) + "\n";
 
             try
             {

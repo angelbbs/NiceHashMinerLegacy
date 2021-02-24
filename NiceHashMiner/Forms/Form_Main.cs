@@ -114,13 +114,9 @@ namespace NiceHashMiner
         public static bool GoogleAvailable = false;
         public static bool DivertAvailable = true;
         private static string dialogClearBTC = "You want to delete BTC address?";
-        //public static string[,] myServers = { { Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" } };
         public static string[,] myServers = {
-            { "eu", "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
-            //{ Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], "20000" }, { "usa", "20001" }, { "hk", "20002" }, { "jp", "20003" }, { "in", "20004" }, { "br", "20005" }
-        };//need to reread config data?
+            { "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" }};
         internal static bool DeviceStatusTimer_FirstTick = false;
-        //private static readonly Computer _gpus = new Computer { GPUEnabled = true };
         public static Computer thisComputer;
         public static DateTime StartTime = new DateTime();
         public static TimeSpan Uptime;
@@ -356,7 +352,7 @@ namespace NiceHashMiner
                 var i = 0;
                 foreach (var loc in Globals.MiningLocation)
                 {
-                    if (i != 6)
+                    if (i != 4)
                     {
                         comboBoxLocation.Items[i++] = International.GetText("LocationName_" + loc);
                     }
@@ -425,10 +421,10 @@ namespace NiceHashMiner
         {
             if (ConfigManager.GeneralConfig.ServiceLocation >= 0 &&
                 //ConfigManager.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
-                ConfigManager.GeneralConfig.ServiceLocation < 6)
+                ConfigManager.GeneralConfig.ServiceLocation < 4)
                 comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
             else
-                comboBoxLocation.SelectedIndex = 6;
+                comboBoxLocation.SelectedIndex = 4;
 
             //textBoxBTCAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
             textBoxBTCAddress_new.Text = ConfigManager.GeneralConfig.BitcoinAddressNew;
@@ -458,7 +454,7 @@ namespace NiceHashMiner
                     _factorTimeUnit = 365;
                     break;
             }
-           
+
 
             if (_isDeviceDetectionInitialized)
             {
@@ -754,7 +750,7 @@ namespace NiceHashMiner
             InstallVcRedist();
             _loadingScreen.FinishLoad();
 
-            
+
 
             _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
             _autostartTimerDelay = new Timer();
@@ -935,7 +931,7 @@ namespace NiceHashMiner
                 {
                     // this.Width = 660; // min width
                 }
-            
+
             }
             */
             if (!Configs.ConfigManager.GeneralConfig.MinimizeToTray)
@@ -999,7 +995,7 @@ namespace NiceHashMiner
                     lbl.ForeColor = _foreColor;
                     lbl.BorderStyle = BorderStyle.FixedSingle;
                 }
-               
+
                 try
                 {
                     foreach (var lbl in this.Controls.OfType<StatusStrip>()) lbl.BackColor = _backColor;
@@ -1011,7 +1007,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("ToolStripStatusLabel", ex.ToString());
                 }
-                
+
 
                     foreach (var lbl in this.Controls.OfType<Button>()) lbl.BackColor = _backColor;
                 foreach (var lbl in this.Controls.OfType<Button>())
@@ -1072,7 +1068,7 @@ namespace NiceHashMiner
             _updateTimer.Interval = 1000 * 60;//1 min
             _updateTimerCount = 0;
             _updateTimer.Start();
-            
+
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (!ConfigManager.GeneralConfig.ChartEnable)
             {
@@ -1113,12 +1109,12 @@ namespace NiceHashMiner
                 Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
                 */
             }
-            
+
             foreach (var RigProfit in Form_Main.RigProfits)
             {
                 ChartDataAvail = RigProfit.currentProfitAPI + RigProfit.totalRate;
             }
-            
+
             _updateTimerCount++;
             int period = 0;
             switch (ConfigManager.GeneralConfig.ProgramUpdateIndex)
@@ -1683,14 +1679,14 @@ public static void CloseChilds(Process parentId)
                     toolStripStatusLabelBalanceBTCCode.Text = "BTC";
                     toolStripStatusLabelBalanceBTCValue.Text = balance.ToString("F6", CultureInfo.InvariantCulture);
                 }
-                
+
 
                     var amountUsd = (balance * ExchangeRateApi.GetUsdExchangeRate());
                     var amount = ExchangeRateApi.ConvertToActiveCurrency(amountUsd);
-                
+
                 toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
                     toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
-                
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("Balance update", ex.ToString());
@@ -2033,7 +2029,7 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("chart", er.ToString());
             }
         }
-       
+
         private void TextBoxCheckBoxMain_Leave(object sender, EventArgs e)
         {
             if (true)
@@ -2188,6 +2184,7 @@ public static void CloseChilds(Process parentId)
                 }
             }
             // Check if the user has run benchmark first
+            /*
             if (!isBenchInit)
             {
                 var result = DialogResult.No;
@@ -2202,7 +2199,6 @@ public static void CloseChilds(Process parentId)
                     _benchmarkForm = new Form_Benchmark(
                         BenchmarkPerformanceType.Standard,
                         true);
-                  //  SetChildFormCenter(_benchmarkForm);
                     _benchmarkForm.ShowDialog();
                     _benchmarkForm = null;
                     InitMainConfigGuiData();
@@ -2228,6 +2224,7 @@ public static void CloseChilds(Process parentId)
                     return StartMiningReturnType.IgnoreMsg;
                 }
             }
+            */
            // textBoxBTCAddress.Enabled = false;
             textBoxBTCAddress_new.Enabled = false;
             textBoxWorkerName.Enabled = false;
@@ -2256,7 +2253,7 @@ public static void CloseChilds(Process parentId)
                  btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress_new.Text.Trim();
             }
 
-            if (comboBoxLocation.SelectedIndex < 6)
+            if (comboBoxLocation.SelectedIndex < 4)
             {
                 isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
                     textBoxWorkerName.Text.Trim(), btcAdress);

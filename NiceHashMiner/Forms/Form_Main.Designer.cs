@@ -99,15 +99,13 @@ namespace NiceHashMiner
             this.comboBoxLocation.FormattingEnabled = true;
             this.comboBoxLocation.Items.AddRange(new object[] {
             "Europe - Amsterdam",
+            "Europe (north) - Hamina",
             "USA - San Jose",
-            "China - Hong Kong",
-            "Japan - Tokyo",
-            "India - Chennai",
-            "Brazil - Sao Paulo",
+            "USA (east) - Ashburn",
             "Auto"});
             this.comboBoxLocation.Location = new System.Drawing.Point(110, 6);
             this.comboBoxLocation.Name = "comboBoxLocation";
-            this.comboBoxLocation.Size = new System.Drawing.Size(138, 21);
+            this.comboBoxLocation.Size = new System.Drawing.Size(165, 21);
             this.comboBoxLocation.TabIndex = 0;
             this.comboBoxLocation.SelectedIndexChanged += new System.EventHandler(this.comboBoxLocation_SelectedIndexChanged);
             this.comboBoxLocation.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
@@ -310,7 +308,7 @@ namespace NiceHashMiner
             this.labelDemoMode.BackColor = System.Drawing.Color.Transparent;
             this.labelDemoMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDemoMode.ForeColor = System.Drawing.Color.Red;
-            this.labelDemoMode.Location = new System.Drawing.Point(263, 9);
+            this.labelDemoMode.Location = new System.Drawing.Point(281, 9);
             this.labelDemoMode.Name = "labelDemoMode";
             this.labelDemoMode.Size = new System.Drawing.Size(331, 18);
             this.labelDemoMode.TabIndex = 100;

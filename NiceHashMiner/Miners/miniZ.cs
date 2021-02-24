@@ -109,8 +109,6 @@ namespace NiceHashMiner.Miners
                       + " --url " + username + "@" + algoName + "." + myServers[1, 0] + ".nicehash.com:" + url.Split(':')[1]
                       + " --url " + username + "@" + algoName + "." + myServers[2, 0] + ".nicehash.com:" + url.Split(':')[1]
                       + " --url " + username + "@" + algoName + "." + myServers[3, 0] + ".nicehash.com:" + url.Split(':')[1]
-                      + " --url " + username + "@" + algoName + "." + myServers[4, 0] + ".nicehash.com:" + url.Split(':')[1]
-                      + " --url " + username + "@" + algoName + "." + myServers[5, 0] + ".nicehash.com:" + url.Split(':')[1]
                       + " --url " + username + "@" + algoName + "." + myServers[0, 0] + ".nicehash.com:" + url.Split(':')[1]
                       + " --pass=x" + " --telemetry=" + ApiPort;
 

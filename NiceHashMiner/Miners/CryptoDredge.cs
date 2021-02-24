@@ -74,11 +74,9 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine = algo +
                 " -o " + url + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[3, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[4, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[5, 0] + nhsuff + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                " -o " + alg + "." + myServers[1, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
+                " -o " + alg + "." + myServers[2, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
+                " -o " + alg + "." + myServers[3, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
                 " -o " + alg + "." + myServers[0, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
                 " -o " + url + " -u " + username + " -p x " + 
                 apiBind +
@@ -206,10 +204,8 @@ namespace NiceHashMiner.Miners
             commandLine = algo +
                 " -o " + url + " -u " + username + " -p x " +
                 " --url=stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[5, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[4, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                " -o " + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
+                " -o " + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
                 " -o " + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
                 " -o " + url + " -u " + username + " -p x " + 
                 apiBind +

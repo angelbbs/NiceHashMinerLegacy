@@ -10,11 +10,9 @@
 
         "Service_Location": "Service location",
         "LocationName_eu": "Europe - Amsterdam",
+	"LocationName_eu-north": "Europe (north) - Hamina",
         "LocationName_usa": "USA - San Jose",
-        "LocationName_hk": "China - Hong Kong",
-        "LocationName_jp": "Japan - Tokyo",
-        "LocationName_in": "India - Chennai",
-        "LocationName_br": "Brazil - Sao Paulo",
+        "LocationName_usa-east": "USA (east) - Ashburn",
         "Warning_with_Exclamation": "Warning!",
         "Error_with_Exclamation": "Error!",
         "BitcoinAddress": "Bitcoin Address",
