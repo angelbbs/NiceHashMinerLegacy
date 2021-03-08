@@ -507,7 +507,7 @@
 "Form_Profit_Chart_Delete": "Delete chart data?",
 "Form_Profit_Chart_Disabled": "Profitability chart disabled",
 "Form_Settings_DH3GB_Warning": "With DaggerHashimoto3GB or DaggerHashimoto4GB algorithm, at least one more algorithm must be enabled",
-"Form_Benchmark_BenchmarkProgress": "Waiting for miner hashrate",
+"Form_Benchmark_BenchmarkProgress": "Benchmark",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

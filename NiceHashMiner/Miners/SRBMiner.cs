@@ -96,9 +96,11 @@ namespace NiceHashMiner.Miners
             {
                 algo = "randomxmonero";
                 port = "3380";
+                ApiPort = 4040;
 
                 return $" --algorithm randomx"
-                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark --nicehash false --api-enable --api-port {ApiPort} {extras}";
+                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" + 
+                $" --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
@@ -144,10 +146,12 @@ namespace NiceHashMiner.Miners
                 //    throw new Exception("Not JSON!");
                 Reader.Close();
                 Response.Close();
+                WR.Abort();
+                SS.Close();
             }
             catch (Exception ex)
             {
-                //Helpers.ConsolePrint("API", ex.Message);
+                Helpers.ConsolePrint("API", ex.Message);
                 return null;
             }
 
@@ -276,7 +280,7 @@ namespace NiceHashMiner.Miners
                     {
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
-                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
                             Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());

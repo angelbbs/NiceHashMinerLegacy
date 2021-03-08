@@ -123,10 +123,12 @@ namespace NiceHashMiner.Algorithms
             Enabled = enabled;
             Hidden = false;
             BenchmarkStatus = "";
+            BenchmarkProgressPercent = 0;
         }
         #region Benchmark info
 
         public string BenchmarkStatus { get; set; }
+        public int BenchmarkProgressPercent { get; set; }
 
         public bool IsBenchmarkPending { get; private set; }
 
@@ -184,14 +186,7 @@ namespace NiceHashMiner.Algorithms
 
         private bool IsPendingString()
         {
-            /*
-            return BenchmarkStatus == International.GetText("Algorithm_Waiting_Benchmark")
-                   || BenchmarkStatus == "."
-                   || BenchmarkStatus == ".."
-                   || BenchmarkStatus == "..."; //hmm...
-            */
-
-            return BenchmarkStatus.Contains(International.GetText("Algorithm_Waiting_Benchmark"))
+            return BenchmarkStatus.Contains(".")
                    || BenchmarkStatus.Contains("%");
 
             //return BenchmarkStatus == International.GetText("Algorithm_Waiting_Benchmark");
@@ -214,31 +209,12 @@ namespace NiceHashMiner.Algorithms
 
         public string BenchmarkSpeedString()
         {
-            string BenchmarkProgress = "";
-            if (ComputeDevice.BenchmarkProgress == 0)
-            {
-                BenchmarkProgress = " " + International.GetText("Form_Benchmark_BenchmarkProgress");
-            } else
-            {
-                //BenchmarkStatus = BenchmarkStatus.Replace(".", "");
-                BenchmarkProgress = ComputeDevice.BenchmarkProgress.ToString() + "%";
-            }
-
-            if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus))
-            {
-                if (BenchmarkProgress.Contains("%"))
-                {
-                    return BenchmarkProgress;
-                } else
-                {
-                    return BenchmarkStatus + BenchmarkProgress;
-                }
-            }
             if (BenchmarkSpeed > 0)
             {
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, NiceHashID);
             }
-            if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
+            //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
+            if (!string.IsNullOrEmpty(BenchmarkStatus))
             {
                 return BenchmarkStatus;
             }

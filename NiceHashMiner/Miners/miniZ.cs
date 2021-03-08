@@ -167,22 +167,7 @@ namespace NiceHashMiner.Miners
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
-            
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
-            {
-                algo = "150,5,3";
-                algoName = "beamv2";
-                stratumPort = "3378";
-                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
-                      + " --pers auto --par=" + algo
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.2miners.com:5252"
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.f2pool.com:5000"
-                      + " --url " + username + "@" + algoName + "." + myServers[0, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[1, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + myServers[2, 0] + ".nicehash.com:" + stratumPort
-                      + " --pass=x" + " --telemetry=" + ApiPort;
-                _benchmarkTimeWait = time;
-            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 algo = "beam3";
@@ -199,7 +184,15 @@ namespace NiceHashMiner.Miners
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
-
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+            {
+                algo = "ethash";
+                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
+                      + " --par=" + algo
+                      + " --url tcp://0x9290E50e7CcF1bdC90da8248a2bBaCc5063AeEE1.miniz@eu1.ethermine.org:4444"
+                      + " --pass=x" + " --telemetry=" + ApiPort;
+                _benchmarkTimeWait = time;
+            }
             return ret;
         }
         
@@ -284,7 +277,8 @@ namespace NiceHashMiner.Miners
                     {
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
-                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        //ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
                             Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());

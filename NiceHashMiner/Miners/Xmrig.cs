@@ -189,6 +189,8 @@ namespace NiceHashMiner.Miners
 
                 Reader.Close();
                 Response.Close();
+                WR.Abort();
+                SS.Close();
                 //Helpers.ConsolePrint(MinerTag(), respStr);
 
                 if (string.IsNullOrEmpty(respStr))
@@ -227,7 +229,7 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint(MinerTag(), ex.Message);
             }
-
+            
             return ad;
         }
 
@@ -324,7 +326,7 @@ namespace NiceHashMiner.Miners
                     {
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
-                        ComputeDevice.BenchmarkProgress = (int)(benchProgress * 100);
+                        BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
                             Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());

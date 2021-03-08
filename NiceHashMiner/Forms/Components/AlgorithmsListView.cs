@@ -262,6 +262,7 @@ namespace NiceHashMiner.Forms.Components
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
+                    //ProgressBar pb = new ProgressBar();
                     var name = "";
                     var miner = "";
                     var secondarySpeed = "";
@@ -353,6 +354,17 @@ namespace NiceHashMiner.Forms.Components
                     lvi.Tag = alg;
                     lvi.Checked = alg.Enabled;
                     listViewAlgorithms.Items.Add(lvi);
+                    //*******
+                    /*
+                    Rectangle r = lvi.SubItems[3].Bounds;//*******************************
+                    pb.SetBounds(r.X, r.Y, r.Width, r.Height);
+                    pb.Minimum = 1;
+                    pb.Maximum = 10;
+                    pb.Value = 5;
+                    pb.Name = totalSpeed;                   
+                    listViewAlgorithms.Controls.Add(pb);
+                    pb.Value = 8;
+                    */
                 }
             }
 
@@ -948,35 +960,38 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
         {
             try
             {
-                if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("3GB"))
+                if (listViewAlgorithms != null)
                 {
-                    Form_Main.DaggerHashimoto3GBVisible = true;
-                    Form_Main.DaggerHashimoto4GBVisible = false;
-                    Form_Main.DaggerHashimoto1070Visible = false;
-                    Form_Main.DaggerHashimotoMaxEpochUpdated = true;
-                }
-                else
-                if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("4GB"))
-                {
-                    Form_Main.DaggerHashimoto3GBVisible = false;
-                    Form_Main.DaggerHashimoto4GBVisible = true;
-                    Form_Main.DaggerHashimoto1070Visible = false;
-                    Form_Main.DaggerHashimotoMaxEpochUpdated = true;
-                }
-                else
-                if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("1070"))
-                {
-                    Form_Main.DaggerHashimoto3GBVisible = false;
-                    Form_Main.DaggerHashimoto4GBVisible = false;
-                    Form_Main.DaggerHashimoto1070Visible = true;
-                    Form_Main.DaggerHashimotoMaxEpochUpdated = true;
-                }
-                else
-                {
-                    Form_Main.DaggerHashimoto3GBVisible = false;
-                    Form_Main.DaggerHashimoto4GBVisible = false;
-                    Form_Main.DaggerHashimoto1070Visible = false;
-                    Form_Main.DaggerHashimotoMaxEpochUpdated = false;
+                    if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("3GB"))
+                    {
+                        Form_Main.DaggerHashimoto3GBVisible = true;
+                        Form_Main.DaggerHashimoto4GBVisible = false;
+                        Form_Main.DaggerHashimoto1070Visible = false;
+                        Form_Main.DaggerHashimotoMaxEpochUpdated = true;
+                    }
+                    else
+                    if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("4GB"))
+                    {
+                        Form_Main.DaggerHashimoto3GBVisible = false;
+                        Form_Main.DaggerHashimoto4GBVisible = true;
+                        Form_Main.DaggerHashimoto1070Visible = false;
+                        Form_Main.DaggerHashimotoMaxEpochUpdated = true;
+                    }
+                    else
+                    if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("1070"))
+                    {
+                        Form_Main.DaggerHashimoto3GBVisible = false;
+                        Form_Main.DaggerHashimoto4GBVisible = false;
+                        Form_Main.DaggerHashimoto1070Visible = true;
+                        Form_Main.DaggerHashimotoMaxEpochUpdated = true;
+                    }
+                    else
+                    {
+                        Form_Main.DaggerHashimoto3GBVisible = false;
+                        Form_Main.DaggerHashimoto4GBVisible = false;
+                        Form_Main.DaggerHashimoto1070Visible = false;
+                        Form_Main.DaggerHashimotoMaxEpochUpdated = false;
+                    }
                 }
             } catch (Exception ex)
             {

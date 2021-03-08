@@ -59,6 +59,7 @@ namespace NiceHashMiner.Devices
         //public readonly bool IsOptimizedVersion;
         public string Codename { get; protected set; }
         public string Manufacturer = "UNK";
+        public string BenchmarkProgressString = "";
 
         public string InfSection { get; protected set; }
 

@@ -40,7 +40,7 @@ namespace NiceHashMiner.Forms
         //private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
 
         private readonly Timer _benchmarkingTimer;
-        private int _dotCount;
+        public int _dotCount;
 
         private bool _hasFailedAlgorithms;
         private List<BenchmarkHandler> _runningBenchmarkThreads = new List<BenchmarkHandler>();
@@ -167,7 +167,7 @@ namespace NiceHashMiner.Forms
 
             _benchmarkingTimer = new Timer();
             _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
-            _benchmarkingTimer.Interval = 1000; // 1s
+            _benchmarkingTimer.Interval = 500; 
 
 
             //Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
@@ -320,7 +320,7 @@ namespace NiceHashMiner.Forms
             {
                 algorithmsListView1.SetSpeedStatus(device, algorithm, status);
             });
-            algorithmsListView1.UpdateLvi();
+            //algorithmsListView1.UpdateLvi();
         }
 
         public void StepUpBenchmarkStepProgress()
@@ -410,17 +410,41 @@ namespace NiceHashMiner.Forms
             if (InBenchmark)
                 foreach (var key in _statusCheckAlgos.Keys)
                 {
-                    algorithmsListView1.SetSpeedStatus(key, _statusCheckAlgos[key], GetDotsWaitString());
+                    string percent;
+                    if (_statusCheckAlgos[key].BenchmarkProgressPercent <= 0)
+                    {
+                        percent = International.GetText("Form_Benchmark_BenchmarkProgress");
+                        algorithmsListView1.SetSpeedStatus(key, _statusCheckAlgos[key], GetDotsWaitString() + percent);
+                    } else
+                    {
+                        
+                        percent = _statusCheckAlgos[key].BenchmarkProgressPercent.ToString() + "%";
+                        algorithmsListView1.SetSpeedStatus(key, _statusCheckAlgos[key], percent);
+                    }
                 }
         }
 
         private string GetDotsWaitString()
         {
-            
-            ++_dotCount;
-            if (_dotCount > 3) _dotCount = 1;
-            string ret = new string('.', _dotCount);
-            return ret + NiceHashMiner.Miner.BenchmarkStringAdd;
+            Thread.Sleep(10);
+            _dotCount++;
+            switch (_dotCount)
+            {
+                case 1:
+                    return ".";
+                case 2:
+                    return "..";
+                case 3:
+                    return "...";
+                case 4:
+                    return "....";
+            }
+
+            if (_dotCount > 5)
+            {
+                _dotCount = 1;
+            }
+            return ".";
         }
 
         private void InitLocale()

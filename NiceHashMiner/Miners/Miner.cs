@@ -70,7 +70,7 @@ namespace NiceHashMiner
         private string _minerTag;
         public string MinerDeviceName { get; set; }
 
-        protected int ApiPort { get; private set; }
+        protected int ApiPort { get; set; }
 
         // if miner has no API bind port for reading curentlly only CryptoNight on ccminer
         public bool IsApiReadException { get; protected set; }
@@ -700,6 +700,11 @@ namespace NiceHashMiner
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
 
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("gminer") && (commandLine.ToLower().Contains("cuckoocycle") && commandLine.ToLower().Contains("--cuda 0")))
+            {
+                benchmarkHandle.StartInfo.FileName = MiningSetup.MinerPath.Replace("miner.exe", "miner234.exe");
+            }
+
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -911,6 +916,8 @@ namespace NiceHashMiner
         protected void BenchmarkThreadRoutineFinish()
         {
             ComputeDevice.BenchmarkProgress = 0;
+            BenchmarkAlgorithm.BenchmarkProgressPercent = 0;
+            //Helpers.ConsolePrint(MinerTag(), "ComputeDevice.BenchmarkProgress: " + ComputeDevice.);
             var status = BenchmarkProcessStatus.Finished;
             RunCMDBeforeOrAfterMining(false);
 
@@ -1482,6 +1489,10 @@ namespace NiceHashMiner
             if (MiningSetup.MinerPath.ToLower().Contains("cryptodredge") && (LastCommandLine.ToLower().Contains("neoscrypt") || LastCommandLine.ToLower().Contains("x16rv2")))
             {
                 Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
+            }
+            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle") && LastCommandLine.ToLower().Contains("--cuda 0")))
+            {
+                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner234.exe");
             }
             P.StartInfo.FileName = Path;
 
