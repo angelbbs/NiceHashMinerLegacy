@@ -153,7 +153,7 @@ namespace NiceHashMiner.Miners
             {
                 string[,] myServers = Form_Main.myServers;
                 Random r = new Random();
-                int r1 = r.Next(0, 5);
+                int r1 = r.Next(0, 3);
                 //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[r1, 0] + ".nicehash.com"));
                 IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[0, 0] + ".nicehash.com"));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");

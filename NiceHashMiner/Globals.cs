@@ -41,7 +41,8 @@ namespace NiceHashMiner
             var port = nPort;
             if (miningLocation.Contains("Auto"))
             {
-                miningLocation = miningLocation.Replace("Auto", "eu");
+                //miningLocation = miningLocation.Replace("Auto", "eu");
+                miningLocation = Form_Main.myServers[0, 0];
             }
             switch (conectionType)
             {

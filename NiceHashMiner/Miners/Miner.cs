@@ -411,6 +411,10 @@ namespace NiceHashMiner
             //new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
             //NiceHashStats.SetDeviceStatus("STOPPED");
+            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
+            {
+                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            }
         }
 
         public void End()
@@ -1352,7 +1356,6 @@ namespace NiceHashMiner
         { }
 
         protected abstract bool BenchmarkParseLine(string outdata);
-
 
         public static int PingServers( string serv = "")
         {

@@ -674,6 +674,10 @@ namespace NiceHashMiner
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
             new Task(() => CheckGithubDownload()).Start();
+            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
+            {
+                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            }
             //_loadingScreen.SetInfoMsg("Set firewall rules");
             _loadingScreen.SetValueAndMsg(4, "Set firewall rules");
 
@@ -1804,12 +1808,14 @@ public static void CloseChilds(Process parentId)
             }
         }
 
-        static int GetWinVer(Version ver)
+        public static double GetWinVer(Version ver)
         {
             if (ver.Major == 6 & ver.Minor == 1)
                 return 7;
             else if (ver.Major == 6 & ver.Minor == 2)
                 return 8;
+            else if (ver.Major == 6 & ver.Minor == 3)
+                return 8.1;
             else
                 return 10;
         }
@@ -2261,12 +2267,17 @@ public static void CloseChilds(Process parentId)
             }
             else
             {
+                /*
                 var ml = Miner.PingServers();
                 if (ml < 0)
                 {
                     ml = Miner.PingServers("daggerhashimoto");
                 }
-                isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[ml],
+                */
+                //int ml = NiceHashMiner.Utils.ServerResponceTime.GetBestServer();
+
+                //isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[0],
+                isMining = MinersManager.StartInitialize(this, Form_Main.myServers[0, 0],
                     textBoxWorkerName.Text.Trim(), btcAdress);
             }
 
@@ -2572,6 +2583,10 @@ public static void CloseChilds(Process parentId)
         private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+            if (ConfigManager.GeneralConfig.ServiceLocation == 4 && Enabled == true)
+            {
+                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            }
         }
 
         private void comboBoxLocation_DrawItem(object sender, DrawItemEventArgs e)

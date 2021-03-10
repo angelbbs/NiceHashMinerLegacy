@@ -473,10 +473,10 @@ namespace NiceHashMiner.Stats
             //_attemptReconnect.Stop();
             //_attemptReconnect = null;
             _attemptingReconnect = true;
-            var sleep = _connectionEstablished ? 10 + _random.Next(0, 5) : 0;
+            var sleep = _connectionEstablished ? 10 + _random.Next(0, 5) : 1;
             Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep + " seconds");
             // More retries on first attempt
-            var retries = _connectionEstablished ? 5 : 25;
+            var retries = _connectionEstablished ? 5 : 10;
             if (_connectionEstablished)
             {
                 // Don't wait if no connection yet
