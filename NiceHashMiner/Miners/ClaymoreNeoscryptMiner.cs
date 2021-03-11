@@ -14,7 +14,6 @@ using NiceHashMinerLegacy.Common.Enums;
 namespace NiceHashMiner.Miners {
     public class ClaymoreNeoscryptMiner : ClaymoreBaseMiner
     {
-        private string[,] myServers = Form_Main.myServers;
         public ClaymoreNeoscryptMiner()
             : base("ClaymoreNeoscryptMiner") {
             LookForStart = "ns - total speed:";
@@ -28,10 +27,10 @@ namespace NiceHashMiner.Miners {
                                   " -wal " + username + " -psw x -dbg -1 -ftime 10 -retrydelay 5";
             string nhsuff = "";
 
-            String epools = String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[0, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[1, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[2, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", myServers[3, 0], nhsuff, username) + "\n";
+            String epools = String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[0, 0], nhsuff, username) + "\n"
+               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[1, 0], nhsuff, username) + "\n"
+               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[2, 0], nhsuff, username) + "\n"
+               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[3, 0], nhsuff, username) + "\n";
 
             FileStream fs = new FileStream("miners\\claymore_neoscrypt\\pools.txt", FileMode.Create, FileAccess.Write);
             StreamWriter w = new StreamWriter(fs);

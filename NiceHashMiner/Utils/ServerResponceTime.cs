@@ -112,7 +112,7 @@ namespace NiceHashMiner.Utils
             {
                 try
                 {
-                    StartTime = DateTime.Now;
+                    //StartTime = DateTime.Now;
                     using (TcpClient tcpClient = new TcpClient() { SendTimeout = 2000, ReceiveTimeout = 2000, LingerState = lingerOption })
                     {
                         tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
@@ -125,6 +125,7 @@ namespace NiceHashMiner.Utils
                         using (serverStream = tcpClient.GetStream())
                         {
                             serverStream.ReadTimeout = 1000 * 2;
+                            StartTime = DateTime.Now;
                             ms = ReadFromServer(serverStream, tcpClient);
                         }
                         tcpClient.Close();

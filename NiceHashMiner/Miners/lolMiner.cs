@@ -29,7 +29,6 @@ namespace NiceHashMiner.Miners
         private readonly int GPUPlatformNumber;
         Stopwatch _benchmarkTimer = new Stopwatch();
         private int _benchmarkTimeWait = 180;
-        private string[,] myServers = Form_Main.myServers;
         public lolMiner()
             : base("lolMiner")
         {
@@ -70,9 +69,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 LastCommandLine = "--coin AUTO144_5 --pool " + url + " --user " + username + " --pass x" +
-                    " --pool zhash." + myServers[1, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
-                    " --pool zhash." + myServers[2, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
-                    " --pool zhash." + myServers[3, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[1, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[2, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[3, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
                     apiBind + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
@@ -83,9 +82,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 LastCommandLine = "--algo BEAM-II --pool " + url + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv2." + myServers[1, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv2." + myServers[2, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv2." + myServers[3, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + Form_Main.myServers[1, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + Form_Main.myServers[2, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv2." + Form_Main.myServers[3, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
                              apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -95,9 +94,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 LastCommandLine = "--algo BEAM-III --pool " + url + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv3." + myServers[1, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv3." + myServers[2, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
-                " --pool beamv3." + myServers[3, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + Form_Main.myServers[1, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + Form_Main.myServers[2, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
+                " --pool beamv3." + Form_Main.myServers[3, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
                              apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -108,9 +107,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 LastCommandLine = "--coin MWC-C31 --pool " + url + " --user " + username + " --pass x" +
-                " --pool grincuckatoo31." + myServers[1, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo31." + myServers[2, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo31." + myServers[3, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + Form_Main.myServers[1, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + Form_Main.myServers[2, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo31." + Form_Main.myServers[3, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -120,9 +119,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 LastCommandLine = "--coin GRIN-C32 --pool " + url + " --user " + username + " --pass x" +
-                " --pool grincuckatoo32." + myServers[1, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo32." + myServers[2, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
-                " --pool grincuckatoo32." + myServers[3, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + Form_Main.myServers[1, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + Form_Main.myServers[2, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
+                " --pool grincuckatoo32." + Form_Main.myServers[3, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -132,9 +131,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
                 LastCommandLine = "--coin MWC-C29D --pool " + url + " --user " + username + " --pass x" +
-                " --pool grincuckarood29." + myServers[1, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
-                " --pool grincuckarood29." + myServers[2, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
-                " --pool grincuckarood29." + myServers[3, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + Form_Main.myServers[1, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + Form_Main.myServers[2, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
+                " --pool grincuckarood29." + Form_Main.myServers[3, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -144,9 +143,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 LastCommandLine = "--coin GRIN-C29M --pool " + url + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + myServers[1, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + myServers[2, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + myServers[3, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + Form_Main.myServers[1, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + Form_Main.myServers[2, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                " --pool cuckaroom." + Form_Main.myServers[3, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -156,9 +155,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1 --pool " + url + " --user " + username + " --pass x" +
-                " --pool daggerhashimoto." + myServers[1, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
-                " --pool daggerhashimoto." + myServers[2, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
-                " --pool daggerhashimoto." + myServers[3, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
+                " --pool daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -519,7 +518,7 @@ namespace NiceHashMiner.Miners
                     }
                     // wait a second due api request
                     Thread.Sleep(1000);
-                    
+
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
                         delay_before_calc_hashrate = 60;
@@ -602,7 +601,7 @@ namespace NiceHashMiner.Miners
                 BenchmarkThreadRoutineFinish();
             }
         }
-        
+
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);

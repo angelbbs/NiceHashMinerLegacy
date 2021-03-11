@@ -674,10 +674,7 @@ namespace NiceHashMiner
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
             new Task(() => CheckGithubDownload()).Start();
-            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
-            {
-                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
-            }
+
             //_loadingScreen.SetInfoMsg("Set firewall rules");
             _loadingScreen.SetValueAndMsg(4, "Set firewall rules");
 
@@ -687,11 +684,14 @@ namespace NiceHashMiner
             int ticks = 0;//костыль
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
-            //_minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
             _minerStatsCheck.Interval = 1000;
 
             _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
+            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
+            {
+                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            }
 
             _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
 

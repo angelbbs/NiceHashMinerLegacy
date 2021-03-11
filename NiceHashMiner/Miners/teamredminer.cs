@@ -26,7 +26,6 @@ namespace NiceHashMiner.Miners
         private readonly int GPUPlatformNumber;
         Stopwatch _benchmarkTimer = new Stopwatch();
         private int TotalCount = 0;
-        private string[,] myServers = Form_Main.myServers;
         private int _benchmarkTimeWait = 180;
 
         public teamredminer()
@@ -74,7 +73,7 @@ namespace NiceHashMiner.Miners
             var algo = "";
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
 
-           
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
             {
                 algo = " -a lyra2z";
@@ -111,10 +110,10 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine = sc + " --watchdog_script " + algo + " -o " + url +
                               " -u " + username + " -p x " +
-                               " -o stratum+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                               apiBind +
                               " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
@@ -165,19 +164,19 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
-                CommandLine = sc + " -a x16rv2" + 
+                CommandLine = sc + " -a x16rv2" +
                 " --url stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                 " -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
             {
-                CommandLine = sc + " -a cuckarood29_grin" + 
+                CommandLine = sc + " -a cuckarood29_grin" +
                 " --url stratum+tcp://mwc.2miners.com:1111" + " --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.teamred" + " -p x " +
                 " -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
             {
-                CommandLine = sc + " -a lyra2rev3" + 
+                CommandLine = sc + " -a lyra2rev3" +
                 " --url stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                  " -d ";
             }
@@ -205,7 +204,7 @@ namespace NiceHashMiner.Miners
         {
             return true;
         }
-        
+
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
             BenchmarkSignalQuit = false;

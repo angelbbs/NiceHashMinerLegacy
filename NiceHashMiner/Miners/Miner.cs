@@ -399,6 +399,11 @@ namespace NiceHashMiner
 
         public virtual void Stop(MinerStopType willswitch = MinerStopType.SWITCH)
         {
+            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
+            {
+                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+                Thread.Sleep(2000);
+            }
             //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             _cooldownCheckTimer?.Stop();
             _Stop(willswitch);
@@ -411,10 +416,6 @@ namespace NiceHashMiner
             //new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
             //NiceHashStats.SetDeviceStatus("STOPPED");
-            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
-            {
-                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
-            }
         }
 
         public void End()
@@ -1439,6 +1440,7 @@ namespace NiceHashMiner
         protected string GetServiceUrl(AlgorithmType algo)
         {
             return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+            //return Globals.GetLocationUrl(algo, Form_Main.myServers[0, 0],
                 ConectionType);
         }
         protected bool IsActiveProcess(int pid)
@@ -1710,22 +1712,7 @@ namespace NiceHashMiner
                 }
             }
             Thread.Sleep(restartInMs);
-            Restart(); //Всё тут правильно у меня!
-            //If a person updated miner with their hands and it doesn't work, then this is their problem.
-
-            /*
-            // directly restart since cooldown checker not running
-            if (!AlgorithmSwitchingManager.newProfit)//профит майнеров не изменился - рестарт
-            {
-                Thread.Sleep(restartInMs);
-                Restart();//???????????
-
-            } else
-
-            {
-               // Stop();// не уверен
-            }
-            */
+            Restart(); 
         }
 
         protected void Restart()

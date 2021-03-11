@@ -31,7 +31,6 @@ namespace NiceHashMiner.Miners
         private const double DevFee = 2.0;
         string  gminer_var = "";
         protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
-        private string[,] myServers = Form_Main.myServers;
 
         public GMiner(AlgorithmType secondaryAlgorithmType) : base("GMiner")
         {
@@ -152,15 +151,14 @@ namespace NiceHashMiner.Miners
                 ssl = " --ssl 0";
             }
             */
-
             var ret = GetDevicesCommandString()
                       + " --algo " + algo + pers + " --server " + url.Split(':')[0]
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[1, 0] + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + Form_Main.myServers[1, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[2, 0] + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + Form_Main.myServers[2, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --server " + algoName + "." + myServers[3, 0] + ".nicehash.com" + nicehashstratum
+                      + " --server " + algoName + "." + Form_Main.myServers[3, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
                       + " --api " + ApiPort;
             return ret;

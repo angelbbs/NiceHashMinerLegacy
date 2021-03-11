@@ -25,7 +25,6 @@ namespace NiceHashMiner.Miners
         //private const string _lookForEnd = "n/a kh/s max";
         private const string _lookForEnd = "60s:";
         private int count = 0;
-        private string[,] myServers = Form_Main.myServers;
 
         public WildRig() : base("WildRig") {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
@@ -49,7 +48,7 @@ namespace NiceHashMiner.Miners
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             var algo = "";
             var port = "";
-            
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 algo = "x16rv2";
@@ -68,9 +67,9 @@ namespace NiceHashMiner.Miners
 
             string username = GetUsername(btcAdress, worker);
             return $" -a {algo} -o {url} -u {username}:x {extras} --api-port {ApiPort} "
-                + $" -o stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} -u {username}:x "
-                + $" -o stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} -u {username}:x "
-                + $" -o stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} -u {username}:x "
+                + $" -o stratum+tcp://{algo}.{Form_Main.myServers[1, 0]}.nicehash.com:{port} -u {username}:x "
+                + $" -o stratum+tcp://{algo}.{Form_Main.myServers[2, 0]}.nicehash.com:{port} -u {username}:x "
+                + $" -o stratum+tcp://{algo}.{Form_Main.myServers[3, 0]}.nicehash.com:{port} -u {username}:x "
                 + "  --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
         }
 
@@ -81,7 +80,7 @@ namespace NiceHashMiner.Miners
             var port = "";
             string username = GetUsername(btcAdress, worker);
 
-            
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 algo = "x16rv2";
@@ -135,11 +134,11 @@ namespace NiceHashMiner.Miners
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
                 + " -l "+ GetLogFileName()+ " --print-time=2";
         }
-        
+
         protected override void BenchmarkThreadRoutine(object CommandLine) {
             BenchmarkThreadRoutineAPI(CommandLine, _benchmarkTimeWait);
         }
-        
+
         protected override void ProcessBenchLinesAlternate(string[] lines) {
             var twoSecTotal = 0d;
             var sixtySecTotal = 0d;

@@ -36,7 +36,6 @@ namespace NiceHashMiner.Miners
         string cSpeed = "";
         int count = 0;
         string ResponseFromPhoenix;
-        private string[,] myServers = Form_Main.myServers;
         private int _benchmarkTimeWait = 120;
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -67,10 +66,10 @@ namespace NiceHashMiner.Miners
 
             Thread.Sleep(200);
 
-            var epools = String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[1, 0], username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[2, 0], username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[3, 0], username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", myServers[0, 0], username) + "\n";
+            var epools = String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[1, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[2, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[3, 0], username) + "\n"
+               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[0, 0], username) + "\n";
             try
             {
                 FileStream fs = new FileStream("miners\\phoenix\\epools.txt", FileMode.Create, FileAccess.Write);
@@ -169,7 +168,7 @@ namespace NiceHashMiner.Miners
             }
             return ret;
         }
-        
+
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);

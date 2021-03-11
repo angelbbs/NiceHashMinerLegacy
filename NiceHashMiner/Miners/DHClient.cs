@@ -25,7 +25,7 @@ namespace NiceHashMiner.Miners
         internal static TcpClient tcpClient = null;
         public static NetworkStream serverStream = null;
         private static List<TcpClient> tcpClientList = new List<TcpClient>();
-        
+
         public static bool needStart = false;
         private static int waitReconnect = 300;
         private static int ci = 0;
@@ -151,11 +151,10 @@ namespace NiceHashMiner.Miners
             LingerOption lingerOption = new LingerOption(true, 0);
             while (Divert.checkConnection3GB)
             {
-                string[,] myServers = Form_Main.myServers;
                 Random r = new Random();
                 int r1 = r.Next(0, 3);
-                //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[r1, 0] + ".nicehash.com"));
-                IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[0, 0] + ".nicehash.com"));
+                //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[r1, 0] + ".nicehash.com"));
+                IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com"));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
 Reconnect:
                 serverStream = null;

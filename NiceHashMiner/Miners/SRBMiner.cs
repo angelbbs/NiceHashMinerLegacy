@@ -31,7 +31,6 @@ namespace NiceHashMiner.Miners
         int count = 0;
         private double speed = 0;
         private double tmp = 0;
-        private string[,] myServers = Form_Main.myServers;
 
         public SRBMiner() : base("SRBMiner") {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
@@ -53,20 +52,20 @@ namespace NiceHashMiner.Miners
                 var port = "3380";
                 url = url.Replace("randomx", "randomxmonero");
                 return $" --algorithm randomx --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
-               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} ";
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} "
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 var algo = "ethash";
                 var port = "3353";
                 return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
-               + $" --pool stratum+tcp://{algo}.{myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://{algo}.{myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://{algo}.{myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://{algo}.{myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
                "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
             return "unsupported algo";
@@ -99,7 +98,7 @@ namespace NiceHashMiner.Miners
                 ApiPort = 4040;
 
                 return $" --algorithm randomx"
-                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" + 
+                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" +
                 $" --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
@@ -107,7 +106,7 @@ namespace NiceHashMiner.Miners
                 algo = "ethash";
                 port = "3353";
 
-                return $" --disable-cpu --algorithm ethash" + 
+                return $" --disable-cpu --algorithm ethash" +
                     $" --pool stratum+tcp://eu1.ethermine.org:4444" +
                     $" --wallet 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
@@ -169,7 +168,7 @@ namespace NiceHashMiner.Miners
                     {
                         totals = resp.algorithms[0].hashrate.cpu.total;
                     }
-                         
+
                     //Helpers.ConsolePrint("API hashrate...........", totals.ToString());
 
                     ad.Speed = totals;
@@ -345,7 +344,7 @@ namespace NiceHashMiner.Miners
                 }
             }
         }
-        
+
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);

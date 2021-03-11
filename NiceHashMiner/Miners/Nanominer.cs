@@ -24,7 +24,6 @@ namespace NiceHashMiner.Miners
     public class Nanominer : Miner
     {
         private int _benchmarkTimeWait = 180;
-        private string[,] myServers = Form_Main.myServers;
         string ResponseFromNanominer;
         public string platform = "";
 
@@ -73,10 +72,10 @@ namespace NiceHashMiner.Miners
                + String.Format("wallet = {0}", btcAdress) + "\n"
                + String.Format("rigName = \"{0}\"", rigName) + "\n"
                + String.Format("pool1 = {0}", url) + "\n"
-               + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", myServers[0, 0]) + "\n"
-               + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", myServers[1, 0]) + "\n"
-               + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", myServers[2, 0]) + "\n"
-               + String.Format("pool5 = daggerhashimoto.{0}.nicehash.com:3353", myServers[3, 0]) + "\n";
+               + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[0, 0]) + "\n"
+               + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[1, 0]) + "\n"
+               + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[2, 0]) + "\n"
+               + String.Format("pool5 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[3, 0]) + "\n";
 
             try
             {
@@ -292,7 +291,7 @@ namespace NiceHashMiner.Miners
                 }
             }
         }
-        
+
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
             BenchmarkSignalQuit = false;

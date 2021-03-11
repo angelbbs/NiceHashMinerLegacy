@@ -34,7 +34,7 @@ namespace NiceHashMiner.Miners
         private const string DoubleFormat = "F12";
 
         // session varibles fixed
-        public static  string _miningLocation;
+        public static string _miningLocation;
 
         public static  string _btcAdress;
         public static  string _worker;
@@ -100,6 +100,7 @@ namespace NiceHashMiner.Miners
             // init fixed
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
+            //_miningLocation = Form_Main.myServers[0, 0];
             _switchingManager = new AlgorithmSwitchingManager();
 
             if (!FuncAttached)
@@ -713,8 +714,8 @@ namespace NiceHashMiner.Miners
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType}, ");
-
-                        toStart.Start(_miningLocation, _btcAdress, _worker);
+                        //toStart.Start(_miningLocation, _btcAdress, _worker);
+                        toStart.Start(Form_Main.myServers[0, 0], _btcAdress, _worker);
                         _runningGroupMiners[toStart.Key] = toStart;
                     }
 

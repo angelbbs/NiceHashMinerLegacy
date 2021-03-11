@@ -21,7 +21,6 @@ namespace NiceHashMiner.Miners
     public class trex : Miner
     {
         private int _benchmarkTimeWait = 180;
-        private string[,] myServers = Form_Main.myServers;
         private const int TotalDelim = 2;
         public trex() : base("trex")
         {
@@ -51,10 +50,10 @@ namespace NiceHashMiner.Miners
             url = url.Replace("stratum+tcp", "stratum2+tcp");
             LastCommandLine = algo +
      " -o " + url + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
      apiBind +
      " -d " + GetDevicesCommandString() + " --no-watchdog " +
      ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

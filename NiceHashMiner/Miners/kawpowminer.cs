@@ -29,7 +29,6 @@ namespace NiceHashMiner.Miners
 
         private int Total = 0;
         private const int TotalDelim = 2;
-        private string[,] myServers = Form_Main.myServers;
 
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.Kawpowminer;
 
@@ -58,10 +57,10 @@ namespace NiceHashMiner.Miners
             var devs = string.Join(" ", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
 
             LastCommandLine = " -U -P stratum://" + username + "@" + url +
-                " -U -P stratum://" + username + "@kawpow." + myServers[1, 0] + ".nicehash.com:3385" +
-                " -U -P stratum://" + username + "@kawpow." + myServers[2, 0] + ".nicehash.com:3385" +
-                " -U -P stratum://" + username + "@kawpow." + myServers[3, 0] + ".nicehash.com:3385" +
-                " -U -P stratum://" + username + "@kawpow." + myServers[0, 0] + ".nicehash.com:3385" +
+                " -U -P stratum://" + username + "@kawpow." + Form_Main.myServers[1, 0] + ".nicehash.com:3385" +
+                " -U -P stratum://" + username + "@kawpow." + Form_Main.myServers[2, 0] + ".nicehash.com:3385" +
+                " -U -P stratum://" + username + "@kawpow." + Form_Main.myServers[3, 0] + ".nicehash.com:3385" +
+                " -U -P stratum://" + username + "@kawpow." + Form_Main.myServers[0, 0] + ".nicehash.com:3385" +
                 " " + apiBind +
                 " --failover-timeout 60 --cu-devices " + devs + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -90,7 +89,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 commandLine = " -U -P stratum://RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.KawpowMiner@rvn.2miners.com:6060" +
-                " -U -P stratum://" + username + "@kawpow." + myServers[1, 0] + ".nicehash.com:3385" +
+                " -U -P stratum://" + username + "@kawpow." + Form_Main.myServers[1, 0] + ".nicehash.com:3385" +
                 " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) +
                 "--cu-devices " + devs + " ";
             }
