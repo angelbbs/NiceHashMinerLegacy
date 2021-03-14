@@ -16,7 +16,7 @@ namespace NiceHashMiner.Devices
         private readonly int _adapterIndex2; // For ADL2
         private readonly IntPtr _adlContext;
 
-        public override int FanSpeed
+        public override int FanSpeed //percent
         {
             get
             {
@@ -28,15 +28,8 @@ namespace NiceHashMiner.Devices
                 {
                     var adlf = new ADLFanSpeedValue
                     {
-                        SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_RPM
+                        SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_PERCENT
                     };
-                    if (ConfigManager.GeneralConfig.ShowFanAsPercent)
-                    {
-                        adlf = new ADLFanSpeedValue
-                        {
-                            SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_PERCENT
-                        };
-                    }
                     var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
                     if (result == ADL.ADL_SUCCESS)
                     {
@@ -59,27 +52,71 @@ namespace NiceHashMiner.Devices
                                 {
                                     foreach (var sensor in hardware.Sensors)
                                     {
-                                        if (ConfigManager.GeneralConfig.ShowFanAsPercent)
+                                        if (sensor.SensorType == SensorType.Control)
                                         {
-                                            if (sensor.SensorType == SensorType.Control)
+                                            if ((int)sensor.Value >= 0)
                                             {
-                                                if ((int)sensor.Value >= 0)
-                                                {
-                                                    return (int)sensor.Value;
-                                                }
-                                                else return -1;
+                                                return (int)sensor.Value;
                                             }
+                                            else return -1;
                                         }
-                                        else
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
+                    }
+                }
+                return -1;
+            }
+        }
+
+        public override int FanSpeedRPM
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                {
+                    return -1;
+                }
+                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    var adlf = new ADLFanSpeedValue
+                    {
+                        SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_RPM
+                    };
+                    var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
+                    if (result == ADL.ADL_SUCCESS)
+                    {
+                        return adlf.FanSpeed;
+                    }
+                }
+                else
+                {
+
+                    try
+                    {
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        {
+                            //hardware.Update();
+                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            {
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                if (gpuId == _adapterIndex)
+                                {
+                                    foreach (var sensor in hardware.Sensors)
+                                    {
+                                        if (sensor.SensorType == SensorType.Fan)
                                         {
-                                            if (sensor.SensorType == SensorType.Fan)
+                                            if ((int)sensor.Value >= 0)
                                             {
-                                                if ((int)sensor.Value >= 0)
-                                                {
-                                                    return (int)sensor.Value;
-                                                }
-                                                else return -1;
+                                                return (int)sensor.Value;
                                             }
+                                            else return -1;
                                         }
                                     }
                                 }

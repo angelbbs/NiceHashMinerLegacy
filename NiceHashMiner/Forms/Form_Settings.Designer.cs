@@ -143,6 +143,10 @@ namespace NiceHashMiner.Forms
             this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.tabPageOverClock = new System.Windows.Forms.TabPage();
+            this.groupBoxMinerSettings = new System.Windows.Forms.GroupBox();
+            this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
+            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageTools = new System.Windows.Forms.TabPage();
             this.groupBoxToolsNH = new System.Windows.Forms.GroupBox();
             this.richTextBoxCheckNiceHashservers = new System.Windows.Forms.RichTextBox();
@@ -204,6 +208,8 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDetectionNVIDIA)).BeginInit();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            this.tabPageOverClock.SuspendLayout();
+            this.groupBoxMinerSettings.SuspendLayout();
             this.tabPageTools.SuspendLayout();
             this.groupBoxToolsNH.SuspendLayout();
             this.groupBoxToolsNET.SuspendLayout();
@@ -263,6 +269,7 @@ namespace NiceHashMiner.Forms
             this.tabControlGeneral.Controls.Add(this.tabPageGeneral);
             this.tabControlGeneral.Controls.Add(this.tabPageAdvanced1);
             this.tabControlGeneral.Controls.Add(this.tabPageDevicesAlgos);
+            this.tabControlGeneral.Controls.Add(this.tabPageOverClock);
             this.tabControlGeneral.Controls.Add(this.tabPageTools);
             this.tabControlGeneral.Controls.Add(this.tabPageAbout);
             // 
@@ -1701,6 +1708,57 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
+            // tabPageOverClock
+            // 
+            this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageOverClock.Controls.Add(this.groupBoxMinerSettings);
+            this.tabPageOverClock.Controls.Add(this.devicesListViewEnableControl2);
+            this.tabPageOverClock.Location = new System.Drawing.Point(4, 23);
+            this.tabPageOverClock.Name = "tabPageOverClock";
+            this.tabPageOverClock.Size = new System.Drawing.Size(669, 439);
+            this.tabPageOverClock.TabIndex = 5;
+            this.tabPageOverClock.Text = "OverClock";
+            // 
+            // groupBoxMinerSettings
+            // 
+            this.groupBoxMinerSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMinerSettings.Controls.Add(this.algorithmsListViewOverClock1);
+            this.groupBoxMinerSettings.Location = new System.Drawing.Point(4, 187);
+            this.groupBoxMinerSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxMinerSettings.Name = "groupBoxMinerSettings";
+            this.groupBoxMinerSettings.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxMinerSettings.Size = new System.Drawing.Size(662, 249);
+            this.groupBoxMinerSettings.TabIndex = 400;
+            this.groupBoxMinerSettings.TabStop = false;
+            this.groupBoxMinerSettings.Text = "Miners settings for selected device:";
+            // 
+            // algorithmsListViewOverClock1
+            // 
+            this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListViewOverClock1.ComunicationInterface = null;
+            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 17);
+            this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
+            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(539, 226);
+            this.algorithmsListViewOverClock1.TabIndex = 399;
+            // 
+            // devicesListViewEnableControl2
+            // 
+            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl2.IsInBenchmark = false;
+            this.devicesListViewEnableControl2.IsMining = false;
+            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(6, 16);
+            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
+            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 165);
+            this.devicesListViewEnableControl2.TabIndex = 398;
+            this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
+            // 
             // tabPageTools
             // 
             this.tabPageTools.BackColor = System.Drawing.SystemColors.Control;
@@ -2116,6 +2174,8 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            this.tabPageOverClock.ResumeLayout(false);
+            this.groupBoxMinerSettings.ResumeLayout(false);
             this.tabPageTools.ResumeLayout(false);
             this.groupBoxToolsNH.ResumeLayout(false);
             this.groupBoxToolsNET.ResumeLayout(false);
@@ -2279,5 +2339,9 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_ShowDeviceMemSize;
         private System.Windows.Forms.CheckBox checkBox_show_AMDdevice_manufacturer;
         private System.Windows.Forms.CheckBox checkbox_current_actual_profitabilities;
+        private System.Windows.Forms.TabPage tabPageOverClock;
+        private Components.DevicesListViewEnableControl devicesListViewEnableControl2;
+        private System.Windows.Forms.GroupBox groupBoxMinerSettings;
+        private Components.AlgorithmsListViewOverClock algorithmsListViewOverClock1;
     }
 }

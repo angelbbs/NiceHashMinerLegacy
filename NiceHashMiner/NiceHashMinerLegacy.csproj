@@ -98,6 +98,9 @@
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MSIAfterburner.NET">
+      <HintPath>..\Debug\common\MSIAfterburner.NET.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -144,6 +147,12 @@
     <Compile Include="Devices\Querying\AmdQuery.cs" />
     <Compile Include="Devices\Querying\OpenCLJsonData.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
+    <Compile Include="Forms\Components\AlgorithmsListViewOverClock.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\AlgorithmsListViewOverClock.Designer.cs">
+      <DependentUpon>AlgorithmsListViewOverClock.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_RigProfitChart.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -369,6 +378,10 @@
     <Compile Include="Utils\MinersExistanceChecker.cs" />
     <Compile Include="Utils\ServerResponceTime.cs" />
     <Compile Include="variables.cs" />
+    <EmbeddedResource Include="Forms\Components\AlgorithmsListViewOverClock.resx">
+      <DependentUpon>AlgorithmsListViewOverClock.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
       <SubType>Designer</SubType>

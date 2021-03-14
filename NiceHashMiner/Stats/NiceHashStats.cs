@@ -1386,13 +1386,11 @@ namespace NiceHashMiner.Stats
                     {
                         speedsJson.Add(new JArray(20, HashRate)); //  номер алгоритма, хешрейт
                     }
-                    //    }
-                    //}
-                    array.Add(speedsJson);
 
+                    array.Add(speedsJson);
                     // Hardware monitoring
                     array.Add((int)Math.Round(device.Temp));
-                    array.Add(device.FanSpeed);
+                    array.Add(device.FanSpeedRPM);
                     array.Add((int)Math.Round(device.PowerUsage));
 
                     // Power mode
@@ -1400,6 +1398,15 @@ namespace NiceHashMiner.Stats
 
                     // Intensity mode
                     array.Add(0);
+
+                    //fan speen percent
+                    if (device.DeviceType != DeviceType.CPU)
+                    {
+                        array.Add(device.FanSpeed);
+                    } else
+                    {
+                        array.Add(-1);
+                    }
 
                     deviceList.Add(array);
                 }

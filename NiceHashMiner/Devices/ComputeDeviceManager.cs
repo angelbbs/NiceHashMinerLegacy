@@ -18,6 +18,8 @@ using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
 using NiceHashMinerLegacy.Common.Enums;
 using System.Threading.Tasks;
+using MSI.Afterburner;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace NiceHashMiner.Devices
 {
@@ -89,11 +91,11 @@ namespace NiceHashMiner.Devices
             private static NvidiaSmiDriver _currentNvidiaSmiDriver = new NvidiaSmiDriver(-1, -1);
             private static readonly NvidiaSmiDriver InvalidSmiDriver = new NvidiaSmiDriver(-1, -1);
 
-            private static readonly NvidiaSmiDriver NvidiaCuda92Driver = new NvidiaSmiDriver(398,26);
-            private static readonly NvidiaSmiDriver NvidiaCuda10Driver = new NvidiaSmiDriver(411,31);
-            private static readonly NvidiaSmiDriver NvidiaCuda101Driver = new NvidiaSmiDriver(418,96);
-            private static readonly NvidiaSmiDriver NvidiaCuda11Driver = new NvidiaSmiDriver(451,48);
-            private static readonly NvidiaSmiDriver NvidiaCuda111Driver = new NvidiaSmiDriver(456,71);
+            private static readonly NvidiaSmiDriver NvidiaCuda92Driver = new NvidiaSmiDriver(398, 26);
+            private static readonly NvidiaSmiDriver NvidiaCuda10Driver = new NvidiaSmiDriver(411, 31);
+            private static readonly NvidiaSmiDriver NvidiaCuda101Driver = new NvidiaSmiDriver(418, 96);
+            private static readonly NvidiaSmiDriver NvidiaCuda11Driver = new NvidiaSmiDriver(451, 48);
+            private static readonly NvidiaSmiDriver NvidiaCuda111Driver = new NvidiaSmiDriver(456, 71);
 
             public static string CUDA_version;
             // naming purposes
@@ -190,8 +192,8 @@ namespace NiceHashMiner.Devices
                 // check CUDA devices
                 //var currentCudaDevices = new List<CudaDevice>();
                 var currentCudaDevices = new CudaDevicesList();
-              //  if (!Nvidia.IsSkipNvidia())
-                    Nvidia.QueryCudaDevices(ref currentCudaDevices);
+                //  if (!Nvidia.IsSkipNvidia())
+                Nvidia.QueryCudaDevices(ref currentCudaDevices);
                 var currentCudaDevices2 = new CudaDevicesList();
 
                 var gpusOld = _cudaDevices.CudaDevices.Count;
@@ -318,72 +320,7 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint(Tag, "HasNvidiaVideoController: " + WindowsDisplayAdapters.HasNvidiaVideoController());
                 if (WindowsDisplayAdapters.HasNvidiaVideoController())
                 {
-                    /*
-                    string NVPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                       "\\NVIDIA Corporation";
-                    string NVCommon = "Common\\NVSMI";
 
-                    if (!Directory.Exists(NVPath + "\\NVSMI"))
-                    {
-                        try
-                        {
-                            Directory.CreateDirectory(NVPath + "\\NVSMI");
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
-                        }
-                    }
-
-                    if (File.Exists(NVPath + "\\NVSMI\\nvml.dll"))
-                    {
-                        try
-                        {
-                            var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                            File.Copy(NVPath + "\\NVSMI\\nvml.dll", copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {NVPath + "\\NVSMI\\nvml.dll"} to {copyToPath} done");
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                        }
-                    } else
-                    {
-                        
-                        try
-                        {
-                            foreach (string newPath in Directory.GetFiles(NVCommon, "*.*", SearchOption.AllDirectories))
-                                File.Copy(newPath, newPath.Replace(NVCommon, NVPath + "\\NVSMI"), true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {NVCommon} to {NVPath + "\\NVSMI"} done");
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy files failed: " + e.Message);
-                        }
-                        
-                        try
-                        {
-                            
-                            var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                            File.Copy(NVPath + "\\NVSMI\\nvml.dll", copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {NVPath + "\\NVSMI\\nvml.dll"} to {copyToPath} done");
-                            
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                        }
-                    }
-                    if (File.Exists(NVPath + "\\NVSMI\\nvml.dll"))
-                    {
-                        nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
-                        //Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
-                        if (nvmlLoaded != nvmlReturn.Success)
-                        {
-                            Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
-                        }
-                    }
-                    */
                     if (TryAddNvmlToEnvPath())
                     {
                         nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
@@ -472,7 +409,7 @@ namespace NiceHashMiner.Devices
                 {
                     CUDA_version = "CUDA 11.0";
                 }
-                if ( !_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda101Driver))
+                if (!_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda101Driver))
                 {
                     CUDA_version = "CUDA 10.1";
                 }
@@ -578,7 +515,7 @@ namespace NiceHashMiner.Devices
                 }
                 // Make gpu ram needed not larger than 4GB per GPU
                 var totalGpuRam = Math.Min((Available.NvidiaRamSum + Available.AmdRamSum) * 0.6 / 1024,
-                    (double) Available.AvailGpUs * 4 * 1024 * 1024);
+                    (double)Available.AvailGpUs * 4 * 1024 * 1024);
                 double totalSysRam = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
                 // check
                 if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && totalSysRam < totalGpuRam)
@@ -749,15 +686,15 @@ namespace NiceHashMiner.Devices
                         }
 
                         avaliableVideoControllers.Add(vidController);
-                        
+
                         if (vidController.DriverVersion.Contains("4.6079"))
                         {
                             MessageBox.Show("Unsupported NVIDIA driver version 460.79\r " +
-                                "Please revert to previous drivers or install newest" ,
+                                "Please revert to previous drivers or install newest",
     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
-                        
+
                     }
                     Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
@@ -781,14 +718,169 @@ namespace NiceHashMiner.Devices
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
-                    
+                    test_msi_ab();
                 }
+
+
 
                 public static bool HasNvidiaVideoController()
                 {
                     return AvaliableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("nvidia"));
                 }
+
+                private static void test_msi_ab()
+                {
+                    try
+                    {
+                        // connect to MACM shared memory
+                        ControlMemory macm = new ControlMemory();
+                        HardwareMonitor mahm = new HardwareMonitor();
+                        // print out current MACM Header values
+
+                        Helpers.ConsolePrint("header", macm.Header.ToString().Replace(";", "\n"));
+
+                        // print out current MACM GPU Entry values
+                        for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+                        {
+                            Helpers.ConsolePrint(i.ToString(), macm.GpuEntries[i].ToString().Replace("; ", "\n"));
+                        }
+                        // print out current Entry values
+                        for (int i = 0; i < mahm.Header.GpuEntryCount; i++)
+                        {
+                            Helpers.ConsolePrint(i.ToString(), "gpuid="+ mahm.GpuEntries[i].GpuId.ToString() +
+                                " " + mahm.Entries[i].ToString().Replace(";", "\n"));
+
+                        }
+                        //[4] gpuid=VEN_10DE&DEV_1B81&SUBSYS_37031458&REV_A1&BUS_4&DEV_0&FN_0
+                        //[5] gpuid=VEN_10DE&DEV_1B81&SUBSYS_1B8110DE&REV_A1&BUS_5&DEV_0&FN_0
+                        //[0] gpuid=VEN_1002&DEV_67DF&SUBSYS_E3531DA2&REV_EF&BUS_6&DEV_0&FN_0
+                        //[1] gpuid=VEN_1002&DEV_67DF&SUBSYS_34181462&REV_E7&BUS_7&DEV_0&FN_0
+                        //[2] gpuid=VEN_1002&DEV_67DF&SUBSYS_2379148C&REV_EF&BUS_8&DEV_0&FN_0
+                        //[3] gpuid=VEN_1002&DEV_67DF&SUBSYS_E347174B&REV_C7&BUS_9&DEV_0&FN_0
+                        //return;
+                        /*
+                        // save existing settings for GPU 0 to file
+                        //string filename = System.Environment.GetEnvironmentVariable("TEMP") + @"\gpuEntry0.gpu";
+                        string filename = "gpuEntry0.gpu";
+                        Stream stream = File.Open(filename, FileMode.Create);
+                        BinaryFormatter bformatter = new BinaryFormatter();
+                        bformatter.Serialize(stream, macm.GpuEntries[0]);
+                        stream.Close();
+                        */
+                        // prompt user to change fan speed
+                        //Console.WriteLine("Enter a new Fan speed % for GPU 0");
+                        Helpers.ConsolePrint("Current Fan speed for GPU 0 is: ", macm.GpuEntries[0].FanSpeedCur + "%");
+                        Helpers.ConsolePrint("New value must be between ", macm.GpuEntries[0].FanSpeedMin + " and " + macm.GpuEntries[0].FanSpeedMax);
+                        /*
+                        String input = Console.ReadLine();
+                        UInt32 newValue;
+                        if (UInt32.TryParse(input, out newValue))
+                        {
+                            try
+                            {
+                                macm.GpuEntries[0].FanSpeedCur = newValue;
+                                isDirty = true;
+                            }
+                            catch (MACMFanControlNotManual e)
+                            {
+                                Console.WriteLine("\nYour fan is currently set to auto.  Would you like to change it to manual?  Enter 'Y'");
+                                ConsoleKeyInfo cki = Console.ReadKey(true);
+                                if (cki.Key == ConsoleKey.Y)
+                                {
+                                    macm.GpuEntries[0].FanFlagsCur = MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None;
+                                    macm.GpuEntries[0].FanSpeedCur = newValue;
+                                    isDirty = true;
+                                }
+                                else
+                                {
+                                    Console.WriteLine(e.Message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("New fan speed entered is not valid: " + input);
+                        }
+                        */
+                        /*
+                        // prompt user to change core clock speed
+                        Console.WriteLine("\nEnter a new Core Clock speed for GPU 0");
+                        Console.WriteLine("Current Core Clock speed for GPU 0 is: " + macm.GpuEntries[0].CoreClockCur);
+                        Console.WriteLine("New value must be between " + macm.GpuEntries[0].CoreClockMin + " and " + macm.GpuEntries[0].CoreClockMax);
+                        input = Console.ReadLine();
+                        if (UInt32.TryParse(input, out newValue))
+                        {
+                            try
+                            {
+                                macm.GpuEntries[0].CoreClockCur = newValue;
+                                isDirty = true;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("New clock speed entered is not valid: " + input);
+                        }
+
+                        // prompt user to apply changes in Afterburner
+                        if (isDirty)
+                        {
+                            Console.WriteLine("\nWould you like to apply these changes?  Enter 'Y'");
+                            ConsoleKeyInfo cki = Console.ReadKey(true);
+                            if (cki.Key == ConsoleKey.Y)
+                            {
+                                // apply these changes in MSI Afterburner
+                                Console.WriteLine("Committing Changes.....Pausing 2 seconds\n");
+                                macm.CommitChanges();
+                                System.Threading.Thread.Sleep(2000);
+                                // reread changes from Afterburner to ensure the change took place
+                                macm.ReloadAll();
+                                Console.WriteLine("Fan Speed for GPU 0 is: " + macm.GpuEntries[0].FanSpeedCur);
+                                Console.WriteLine("Core Clock Speed for GPU 0 is: " + macm.GpuEntries[0].CoreClockCur);
+
+                                // prompt user to undo changes
+                                Console.WriteLine("\nWould you like to undo these changes?  Enter 'Y'");
+                                cki = Console.ReadKey(true);
+                                if (cki.Key == ConsoleKey.Y)
+                                {
+                                    // undo changes by reading back saved profile and applying it
+                                    stream = File.Open(filename, FileMode.Open);
+                                    bformatter = new BinaryFormatter();
+                                    ControlMemoryGpuEntry gpu = new ControlMemoryGpuEntry(macm.Header, 0);
+                                    gpu = (ControlMemoryGpuEntry)bformatter.Deserialize(stream);
+                                    stream.Close();
+                                    macm.GpuEntries[0] = gpu;
+                                    Console.WriteLine("Undoing Changes.....Pausing 2 seconds\n");
+                                    macm.CommitChanges();
+                                    System.Threading.Thread.Sleep(2000);
+                                    // reread changes from Afterburner to ensure the change took place
+                                    macm.ReloadAll();
+                                    Console.WriteLine("Fan Speed for GPU 0 is: " + macm.GpuEntries[0].FanSpeedCur);
+                                    Console.WriteLine("Core Clock Speed for GPU 0 is: " + macm.GpuEntries[0].CoreClockCur);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n*** Changes aborted ***");
+                                Console.WriteLine();
+                            }
+                        }
+                        */
+                    }
+
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("error", e.Message);
+                        if (e.InnerException != null)
+                            Helpers.ConsolePrint("error", e.InnerException.Message);
+                    }
+
+                }
             }
+            
 
             private static class Cpu
             {

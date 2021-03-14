@@ -48,6 +48,7 @@ namespace NiceHashMiner.Forms.Components
         public IBenchmarkCalculation BenchmarkCalculation { get; set; }
 
         private AlgorithmsListView _algorithmsListView;
+        private AlgorithmsListViewOverClock _algorithmsListViewOverClock;
 
         // disable checkboxes when in benchmark mode
         private bool _isInBenchmark;
@@ -131,6 +132,11 @@ namespace NiceHashMiner.Forms.Components
         public void SetAlgorithmsListView(AlgorithmsListView algorithmsListView)
         {
             _algorithmsListView = algorithmsListView;
+        }
+
+        public void SetAlgorithmsListViewOverClock(AlgorithmsListViewOverClock algorithmsListViewOverClock)
+        {
+            _algorithmsListViewOverClock = algorithmsListViewOverClock;
         }
 
         public void ResetListItemColors()
@@ -256,10 +262,19 @@ namespace NiceHashMiner.Forms.Components
             {
                 string cTemp = Math.Truncate(computeDevice.Temp).ToString() + "°C";
                 string cLoad = Math.Truncate(computeDevice.Load).ToString() + "%";
-                string cFanSpeed = computeDevice.FanSpeed.ToString();
+                string cFanSpeed = "";
                 if (ConfigManager.GeneralConfig.ShowFanAsPercent)
                 {
-                    cFanSpeed += "%";
+                    if (computeDevice.DeviceType == DeviceType.CPU)
+                    {
+                        cFanSpeed = computeDevice.FanSpeed.ToString();
+                    } else
+                    {
+                        cFanSpeed = computeDevice.FanSpeed.ToString() + "%";
+                    }
+                } else
+                {
+                    cFanSpeed = computeDevice.FanSpeedRPM.ToString();
                 }
                 string cPowerUsage = Math.Truncate(computeDevice.PowerUsage).ToString();
                 if (Math.Truncate(computeDevice.PowerUsage) == 0)

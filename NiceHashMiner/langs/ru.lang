@@ -289,6 +289,8 @@
     "AlgorithmsListView_Speed": "Скорость",
     "AlgorithmsListView_Ratio": "BTC/GH/дн соотношение",
     "AlgorithmsListView_Rate": "BTC/дн",
+    "AlgorithmsListView_Miner": "Майнер",
+    "AlgorithmsListView_Power": "Потребление",
     "AlgorithmSettingsControl_IntensityWarning": "Значения интенсивности для выбранного алгоритма должны быть между {0} и {1}",
     "EnabledUnbenchmarkedAlgorithmsWarning": "Для выбранных устройств есть алгоритмы, не прошедшие бенчмарк. Нажмите «Да» для бенчмарка и начала майнинга, «Нет» — для пропуска бенчмарка и продолжения майнинга, «Отмена» — для прерывания",
     "AlgorithmSettingsControl_Label_Intensity": "Интенсивность",

@@ -80,6 +80,29 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public override int FanSpeedRPM
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringCPU)
+                {
+                    return -1;
+                }
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    try
+                    {
+                        return ComputeDeviceCPU.CpuReader.GetFan();
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    }
+                }
+                return -1;
+            }
+        }
+
         public override double PowerUsage
         {
             get

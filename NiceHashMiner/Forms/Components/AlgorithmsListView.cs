@@ -229,17 +229,10 @@ namespace NiceHashMiner.Forms.Components
 
             listViewAlgorithms.Columns[ENABLED].Text = International.GetText("AlgorithmsListView_Enabled");
             listViewAlgorithms.Columns[ALGORITHM].Text = International.GetText("AlgorithmsListView_Algorithm");
-            listViewAlgorithms.Columns[MINER].Text = "Miner";
+            listViewAlgorithms.Columns[MINER].Text = International.GetText("AlgorithmsListView_Miner");
             listViewAlgorithms.Columns[SPEED].Text = International.GetText("AlgorithmsListView_Speed");
             //listViewAlgorithms.Columns[SECSPEED].Text = International.GetText("Form_DcriValues_SecondarySpeed");
-            listViewAlgorithms.Columns[POWER].Text = "Power";
-            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-            {
-                listViewAlgorithms.Columns[MINER].Text = "Майнер";
-                listViewAlgorithms.Columns[POWER].Text = "Потребление";
-            }
-
-
+            listViewAlgorithms.Columns[POWER].Text = International.GetText("AlgorithmsListView_Power");
 
             listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");

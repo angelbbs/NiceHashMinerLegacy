@@ -102,7 +102,10 @@ namespace NiceHashMiner.Forms
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
                 groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                     _selectedComputeDevice.Name);
-               // groupBoxAlgorithmSettings.ForeColor = Form_Main._foreColor;
+                // groupBoxAlgorithmSettings.ForeColor = Form_Main._foreColor;
+                algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                groupBoxMinerSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
+                    _selectedComputeDevice.Name);
             }
 
             // At the very end set to true
@@ -536,6 +539,7 @@ namespace NiceHashMiner.Forms
 
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
+            devicesListViewEnableControl2.InitLocale();
             Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
             if (ConfigManager.GeneralConfig.SettingsFormLeft + ConfigManager.GeneralConfig.SettingsFormWidth <= screenSize.Size.Width &&
                 ConfigManager.GeneralConfig.SettingsFormTop + ConfigManager.GeneralConfig.SettingsFormHeight <= screenSize.Size.Height)
@@ -832,6 +836,10 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;
                 algorithmsListView1.BackColor = Form_Main._backColor;
                 algorithmsListView1.ForeColor = Form_Main._foreColor;
+                devicesListViewEnableControl2.BackColor = Form_Main._backColor;
+                devicesListViewEnableControl2.ForeColor = Form_Main._foreColor;
+                algorithmsListViewOverClock1.BackColor = Form_Main._backColor;
+                algorithmsListViewOverClock1.ForeColor = Form_Main._foreColor;
                 tabPageGeneral.BackColor = Form_Main._backColor;
                 tabPageGeneral.ForeColor = Form_Main._foreColor;
             } else
@@ -840,6 +848,10 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;
                 algorithmsListView1.BackColor = SystemColors.ControlLightLight;
                 algorithmsListView1.ForeColor = Form_Main._foreColor;
+                devicesListViewEnableControl2.BackColor = SystemColors.ControlLightLight;
+                devicesListViewEnableControl2.ForeColor = Form_Main._foreColor;
+                algorithmsListViewOverClock1.BackColor = SystemColors.ControlLightLight;
+                algorithmsListViewOverClock1.ForeColor = Form_Main._foreColor;
             }
 
             tabControlGeneral.TabPages[0].Text = International.GetText("FormSettings_Tab_General");
@@ -1024,6 +1036,10 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Available.Devices);
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
                 devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
+
+                devicesListViewEnableControl2.SetComputeDevices(ComputeDeviceManager.Available.Devices);
+                devicesListViewEnableControl2.SetAlgorithmsListViewOverClock(algorithmsListViewOverClock1);
+                devicesListViewEnableControl2.IsSettingsCopyEnabled = true;
             }
 
             // Add language selections list
@@ -1065,6 +1081,8 @@ namespace NiceHashMiner.Forms
             {
                 var tp = tabPageTools;
                 tabControlGeneral.TabPages.Remove(tp);
+                var oc = tabPageOverClock;
+                tabControlGeneral.TabPages.Remove(oc);
             }
 
         }
@@ -1088,6 +1106,7 @@ namespace NiceHashMiner.Forms
         private void InitializeDevicesCallbacks()
         {
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
+//            devicesListViewEnableControl2.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
         }
 
         #endregion //Tab Devices
@@ -1248,6 +1267,16 @@ namespace NiceHashMiner.Forms
         #region Tab Device
 
         private void DevicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            algorithmSettingsControl1.Deselect();
+            // show algorithms
+            _selectedComputeDevice =
+                ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
+                _selectedComputeDevice.Name);
+        }
+        private void DevicesListView2_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             algorithmSettingsControl1.Deselect();
             // show algorithms
@@ -2327,6 +2356,11 @@ namespace NiceHashMiner.Forms
         private void Form_Settings_ResizeEnd(object sender, EventArgs e)
         {
             FormSettingsMoved = false;
+        }
+
+        private void devicesListViewEnableControl2_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

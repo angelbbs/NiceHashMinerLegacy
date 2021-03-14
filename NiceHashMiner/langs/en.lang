@@ -297,6 +297,8 @@
         "AlgorithmsListView_Speed": "Speed",
         "AlgorithmsListView_Ratio": "Ratio BTC/GH/Day",
         "AlgorithmsListView_Rate": "BTC/Day",
+	"AlgorithmsListView_Miner": "Miner",
+	"AlgorithmsListView_Power": "Power",
         "AlgorithmSettingsControl_IntensityWarning": "Intensity values for selected algorithm must be in range from {0} to {1}",
         "EnabledUnbenchmarkedAlgorithmsWarning": "There are unbenchmarked algorithms for selected enabled devices. Click Yes to benchmark and start mining, No to skip benchmark and continue mining, Cancel to abort",
         "AlgorithmSettingsControl_Label_Intensity": "Intensity",

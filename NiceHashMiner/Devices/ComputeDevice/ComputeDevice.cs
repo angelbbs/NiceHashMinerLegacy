@@ -75,6 +75,7 @@ namespace NiceHashMiner.Devices
         public virtual float Load => -1;
         public virtual float Temp => -1;
         public virtual int FanSpeed => -1;
+        public virtual int FanSpeedRPM => -1;
         public virtual double PowerUsage => -1;
         //********************************************************************************************************************
         private const string Tag = "CPUDetector";

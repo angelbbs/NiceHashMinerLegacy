@@ -199,7 +199,7 @@ namespace NiceHashMiner.Devices
             return null;
         }
 
-        public override int FanSpeed
+        public override int FanSpeed //percent
         {
             get
             {
@@ -208,53 +208,61 @@ namespace NiceHashMiner.Devices
                     return -1;
                 }
 
-                if (!ConfigManager.GeneralConfig.ShowFanAsPercent)
+                
+                    var fan = -1;
+
+                    try
                     {
-                        var fanSpeed = -1;
-
-
-                        // we got the lock
-                        var nvHandle = GetNvPhysicalGpuHandle();
-                        if (!nvHandle.HasValue)
+                        var ufan = 0u;
+                        var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref ufan);
+                        if (ret != nvmlReturn.Success)
                         {
-                            Helpers.ConsolePrint("NVAPI", $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
+                            Form_Main.needRestart = true;
+                        }
+                        fan = (int)ufan;
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("NVML", e.ToString());
+                    }
+
+                    return fan;
+                
+            }
+        }
+
+        public override int FanSpeedRPM
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
+
+                    var fanSpeed = -1;
+
+                    // we got the lock
+                    var nvHandle = GetNvPhysicalGpuHandle();
+                    if (!nvHandle.HasValue)
+                    {
+                        Helpers.ConsolePrint("NVAPI", $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
+                        return -1;
+                    }
+
+                    if (NVAPI.NvAPI_GPU_GetTachReading != null)
+                    {
+                        var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
+                        if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
+                        {
+                            // GPUs without fans are not uncommon, so don't treat as error and just return -1
+                            Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
                             return -1;
                         }
-
-                        if (NVAPI.NvAPI_GPU_GetTachReading != null)
-                        {
-                            var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
-                            if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
-                            {
-                                // GPUs without fans are not uncommon, so don't treat as error and just return -1
-                                Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
-                                return -1;
-                            }
-                        }
-
-                        return fanSpeed;
                     }
-                    else
-                    {
-                        var fan = -1;
 
-                        try
-                        {
-                            var ufan = 0u;
-                            var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref ufan);
-                            if (ret != nvmlReturn.Success)
-                            {
-                                Form_Main.needRestart = true;
-                            }
-                            fan = (int)ufan;
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint("NVML", e.ToString());
-                        }
-
-                        return fan;
-                    }
+                    return fanSpeed;
+                
             }
         }
 
