@@ -104,7 +104,7 @@ namespace NiceHashMiner.Forms
                     _selectedComputeDevice.Name);
                 // groupBoxAlgorithmSettings.ForeColor = Form_Main._foreColor;
                 algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-                groupBoxMinerSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
+                groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_OverclockSettings"),
                     _selectedComputeDevice.Name);
             }
 
@@ -346,6 +346,9 @@ namespace NiceHashMiner.Forms
 
             checkBoxAutoupdate.Text = International.GetText("Form_Settings_checkBoxAutoupdate");
             checkBox_BackupBeforeUpdate.Text = International.GetText("Form_Settings_checkBox_backup_before_update");
+            checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
+            checkBox_ABOverclock_Relative.Text = International.GetText("FormSettings_ABOverclock_Relative");
+            checkBox_AB_ForceRun.Text = International.GetText("FormSettings_AB_ForceRun");
             labelCheckforprogramupdatesevery.Text = International.GetText("Form_Settings_labelCheckforprogramupdatesevery");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
@@ -562,6 +565,7 @@ namespace NiceHashMiner.Forms
             }
 
             algorithmsListView1.InitLocale();
+            algorithmsListViewOverClock1.InitLocale();
 
             comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
@@ -768,6 +772,15 @@ namespace NiceHashMiner.Forms
                 checkBox_RunEthlargement.BackColor = Form_Main._backColor;
                 checkBox_RunEthlargement.ForeColor = Form_Main._textColor;
 
+                checkBox_ABEnableOverclock.BackColor = Form_Main._backColor;
+                checkBox_ABEnableOverclock.ForeColor = Form_Main._textColor;
+
+                checkBox_ABOverclock_Relative.BackColor = Form_Main._backColor;
+                checkBox_ABOverclock_Relative.ForeColor = Form_Main._textColor;
+
+                checkBox_AB_ForceRun.BackColor = Form_Main._backColor;
+                checkBox_AB_ForceRun.ForeColor = Form_Main._textColor;
+
                 textBox_AutoStartMiningDelay.BackColor = Form_Main._backColor;
                 textBox_AutoStartMiningDelay.ForeColor = Form_Main._foreColor;
                 textBox_AutoStartMiningDelay.BorderStyle = BorderStyle.FixedSingle;
@@ -916,6 +929,9 @@ namespace NiceHashMiner.Forms
                 checkBox_BackupBeforeUpdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ABEnableOverclock.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ABOverclock_Relative.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_AB_ForceRun.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -1015,6 +1031,9 @@ namespace NiceHashMiner.Forms
                 checkBox_BackupBeforeUpdate.Checked = ConfigManager.GeneralConfig.BackupBeforeUpdate;
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
+                checkBox_AB_ForceRun.Checked = ConfigManager.GeneralConfig.AB_ForceRun;
+                checkBox_ABEnableOverclock.Checked = ConfigManager.GeneralConfig.ABEnableOverclock;
+                checkBox_ABOverclock_Relative.Checked = ConfigManager.GeneralConfig.ABOverclock_Relative;
             }
 
             // Textboxes
@@ -1081,8 +1100,8 @@ namespace NiceHashMiner.Forms
             {
                 var tp = tabPageTools;
                 tabControlGeneral.TabPages.Remove(tp);
-                var oc = tabPageOverClock;
-                tabControlGeneral.TabPages.Remove(oc);
+                //var oc = tabPageOverClock;
+                //tabControlGeneral.TabPages.Remove(oc);
             }
 
         }
@@ -1106,7 +1125,7 @@ namespace NiceHashMiner.Forms
         private void InitializeDevicesCallbacks()
         {
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
-//            devicesListViewEnableControl2.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
+            devicesListViewEnableControl2.SetDeviceSelectionChangedCallback(DevicesListView2_ItemSelectionChanged);
         }
 
         #endregion //Tab Devices
@@ -1165,6 +1184,9 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.BackupBeforeUpdate = checkBox_BackupBeforeUpdate.Checked;
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
             ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
+            ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
+            ConfigManager.GeneralConfig.ABOverclock_Relative = checkBox_ABOverclock_Relative.Checked;
+            ConfigManager.GeneralConfig.AB_ForceRun = checkBox_AB_ForceRun.Checked;
             if (checkBox_LogToFile.Checked)
             {
                 textBox_LogMaxFileSize.Enabled = true;
@@ -1282,8 +1304,8 @@ namespace NiceHashMiner.Forms
             // show algorithms
             _selectedComputeDevice =
                 ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
-            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-            groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
+            algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                 _selectedComputeDevice.Name);
         }
 
@@ -1751,6 +1773,7 @@ namespace NiceHashMiner.Forms
         private void comboBox_Language_SelectedIndexChanged(object sender, EventArgs e)
         {
             devicesListViewEnableControl1.InitLocale();
+            devicesListViewEnableControl2.InitLocale();
         }
 
         private void comboBox_Language_DrawItem(object sender, DrawItemEventArgs e)
@@ -2361,6 +2384,13 @@ namespace NiceHashMiner.Forms
         private void devicesListViewEnableControl2_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkBox_ABEnableOverclock_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBox_AB_ForceRun.Enabled = checkBox_ABEnableOverclock.Checked;
+            devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
+            algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
         }
     }
 }

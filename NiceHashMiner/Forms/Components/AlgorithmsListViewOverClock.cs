@@ -22,8 +22,12 @@ namespace NiceHashMiner.Forms.Components
         private const int GPU_clock = 3;
         private const int Mem_clock = 4;
         private const int GPU_voltage = 5;
-        private const int PoverLimit = 6;
+        private const int PowerLimit = 6;
         public static bool isListViewEnabled = true;
+
+        private static int _SubItembIndex = 0;
+        private static char _keyPressed;
+
         public interface IAlgorithmsListViewOverClock
         {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
@@ -100,29 +104,7 @@ namespace NiceHashMiner.Forms.Components
 
         private readonly IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultAlgorithmColorSeter();
 
-        // disable checkboxes when in benchmark mode
-        //private bool _isInBenchmark = false;
-
-        // helper for benchmarking logic
-        /*
-        public bool IsInBenchmark
-        {
-            get => _isInBenchmark;
-            set
-            {
-                if (value)
-                {
-                    _isInBenchmark = true;
-                    listViewAlgorithms.CheckBoxes = false;
-                }
-                else
-                {
-                    _isInBenchmark = false;
-                    listViewAlgorithms.CheckBoxes = true;
-                }
-            }
-        }
-        */
+        
         public AlgorithmsListViewOverClock()
         {
             InitializeComponent();
@@ -208,25 +190,14 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.Columns[ENABLED].Text = International.GetText("AlgorithmsListView_Enabled");
             listViewAlgorithms.Columns[ALGORITHM].Text = International.GetText("AlgorithmsListView_Algorithm");
             listViewAlgorithms.Columns[MINER].Text = "Miner";
-            //listViewAlgorithms.Columns[SPEED].Text = International.GetText("AlgorithmsListView_Speed");
-            //listViewAlgorithms.Columns[POWER].Text = "Power";
-            /*
-            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-            {
-                listViewAlgorithms.Columns[MINER].Text = "Майнер";
-                listViewAlgorithms.Columns[POWER].Text = "Потребление";
-            }
-            */
-            //listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
-            //listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
-            //listViewAlgorithms.Columns[RATE].Width = 0;
+
             listViewAlgorithms.Columns[ALGORITHM].Width = ConfigManager.GeneralConfig.ColumnListALGORITHM;
             listViewAlgorithms.Columns[MINER].Width = ConfigManager.GeneralConfig.ColumnListMINER;
-            //listViewAlgorithms.Columns[SPEED].Width = ConfigManager.GeneralConfig.ColumnListSPEED;
-            //listViewAlgorithms.Columns[POWER].Width = ConfigManager.GeneralConfig.ColumnListPOWER;
-            //listViewAlgorithms.Columns[RATIO].Width = ConfigManager.GeneralConfig.ColumnListRATIO;
-            //listViewAlgorithms.Columns[RATE].Width = ConfigManager.GeneralConfig.ColumnListRATE;
-        }
+            listViewAlgorithms.Columns[GPU_clock].Width = ConfigManager.GeneralConfig.ColumnListGPU_clock;
+            listViewAlgorithms.Columns[Mem_clock].Width = ConfigManager.GeneralConfig.ColumnListMem_clock;
+            listViewAlgorithms.Columns[GPU_voltage].Width = ConfigManager.GeneralConfig.ColumnListGPU_voltage;
+            listViewAlgorithms.Columns[PowerLimit].Width = ConfigManager.GeneralConfig.ColumnListPowerLimit;
+    }
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
         {
@@ -238,29 +209,28 @@ namespace NiceHashMiner.Forms.Components
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
-                    //ProgressBar pb = new ProgressBar();
                     string name;
                     string miner;
-                    string gpu_clock;
-                    string mem_clock;
-                    string gpu_voltage;
-                    string power_limit;
+                    int gpu_clock;
+                    int mem_clock;
+                    double gpu_voltage;
+                    int power_limit;
 
                         name = alg.AlgorithmName;
                         miner = alg.MinerBaseTypeName;
-                        gpu_clock = "1234";
-                        mem_clock = "5678";
-                        gpu_voltage = "1.050";
-                        power_limit = "98";
+                        gpu_clock = alg.gpu_clock;
+                        mem_clock = alg.mem_clock;
+                        gpu_voltage = alg.gpu_voltage;
+                        power_limit = alg.power_limit;
                         //name = $"{alg.AlgorithmName} ({alg.MinerBaseTypeName})";
                         //payingRatio = alg.CurPayingRatio;
 
                     lvi.SubItems.Add(name);
                     lvi.SubItems.Add(miner);
-                    lvi.SubItems.Add(gpu_clock);
-                    lvi.SubItems.Add(mem_clock);
-                    lvi.SubItems.Add(gpu_voltage);
-                    lvi.SubItems.Add(power_limit);
+                    lvi.SubItems.Add(gpu_clock.ToString());
+                    lvi.SubItems.Add(mem_clock.ToString());
+                    lvi.SubItems.Add(gpu_voltage.ToString());
+                    lvi.SubItems.Add(power_limit.ToString());
                     
                     lvi.Tag = alg;
                     lvi.Checked = alg.Enabled;
@@ -397,7 +367,9 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            ComunicationInterface?.SetCurrentlySelected(e.Item, _computeDevice);
+           // MessageBox.Show(_computeDevice.Name.ToString());
+            //ComunicationInterface?.SetCurrentlySelected(e.Item, _computeDevice);
+
         }
 
         private void ListViewAlgorithms_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -781,12 +753,11 @@ namespace NiceHashMiner.Forms.Components
         {
             ConfigManager.GeneralConfig.ColumnListALGORITHM = listViewAlgorithms.Columns[ALGORITHM].Width;
             ConfigManager.GeneralConfig.ColumnListMINER = listViewAlgorithms.Columns[MINER].Width;
-            /*
-            ConfigManager.GeneralConfig.ColumnListSPEED = listViewAlgorithms.Columns[SPEED].Width;
-            ConfigManager.GeneralConfig.ColumnListPOWER = listViewAlgorithms.Columns[POWER].Width;
-            ConfigManager.GeneralConfig.ColumnListRATIO = listViewAlgorithms.Columns[RATIO].Width;
-            ConfigManager.GeneralConfig.ColumnListRATE = listViewAlgorithms.Columns[RATE].Width;
-            */
+            ConfigManager.GeneralConfig.ColumnListGPU_clock = listViewAlgorithms.Columns[GPU_clock].Width;
+            ConfigManager.GeneralConfig.ColumnListMem_clock = listViewAlgorithms.Columns[Mem_clock].Width;
+            ConfigManager.GeneralConfig.ColumnListGPU_voltage = listViewAlgorithms.Columns[GPU_voltage].Width;
+            ConfigManager.GeneralConfig.ColumnListPowerLimit = listViewAlgorithms.Columns[PowerLimit].Width;
+
         }
 
         private void listViewAlgorithms_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -811,6 +782,169 @@ namespace NiceHashMiner.Forms.Components
                 listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparerOverClock(2);
                 listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparerOverClock(ConfigManager.GeneralConfig.ColumnListSort);
             }
+        }
+
+        private void AlgorithmsListViewOverClock_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AlgorithmsListViewOverClock_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void listViewAlgorithms_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks > 1)
+            {
+                ListViewItem item = listViewAlgorithms.GetItemAt(e.X, e.Y);
+                if (item != null)
+                {
+                    var c = item.Checked;
+                    var CurrentSubItem = item.GetSubItemAt(e.X, e.Y);
+                    int SubItembIndex = item.SubItems.IndexOf(CurrentSubItem);
+                    if (SubItembIndex < 3) return;
+
+                    TextBox tbox = new TextBox();
+                    this.Controls.Add(tbox);
+                    //MessageBox.Show(SubItembIndex.ToString());
+                    int x_cord = 0;
+                    for (int i = 0; i < SubItembIndex; i++)
+                        x_cord += listViewAlgorithms.Columns[i].Width;
+
+
+                    tbox.Width = listViewAlgorithms.Columns[SubItembIndex].Width;
+                    tbox.Height = listViewAlgorithms.GetItemRect(0).Height - 2;
+                    tbox.Left = x_cord;
+                    tbox.Top = item.Position.Y;
+                    tbox.Text = item.SubItems[SubItembIndex].Text;
+                    tbox.TextAlign = listViewAlgorithms.Columns[SubItembIndex].TextAlign;
+                    _SubItembIndex = SubItembIndex;
+                    tbox.Leave += DisposeTextBox;
+                    tbox.KeyPress += TextBoxKeyPress;
+                    listViewAlgorithms.Controls.Add(tbox);
+                    tbox.Focus();
+                    //tbox.Select(tbox.Text.Length, 1);
+                    tbox.SelectAll();
+                    item.Checked = !c;
+                    //                    ConfigManager.CommitBenchmarks();
+
+                }
+            }
+        }
+        private void DisposeTextBox(object sender, EventArgs e)
+        {
+            var tb = (sender as TextBox);
+
+            //if (e == null)
+            double valuetb = 0.0;
+            try
+            {
+                double.TryParse(tb.Text, out valuetb);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            tb.Text = valuetb.ToString();
+
+
+            if (_keyPressed != 27)
+            {
+                var item = listViewAlgorithms.GetItemAt(0, tb.Top + 1);
+                if (item != null)
+                    item.SubItems[_SubItembIndex].Text = tb.Text;
+            }
+            else
+            {
+
+            }
+
+
+            tb.Dispose();
+
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        if (_SubItembIndex == 3) algorithm.gpu_clock = (int)valuetb;
+                        if (_SubItembIndex == 4) algorithm.mem_clock = (int)valuetb;
+                        if (_SubItembIndex == 5) algorithm.gpu_voltage = valuetb;
+                        if (_SubItembIndex == 6) algorithm.power_limit = (int)valuetb;
+
+                    }
+                }
+            }
+        }
+
+        private void TextBoxKeyPress(object sender, KeyPressEventArgs e)
+        {
+            char DecSep = Convert.ToChar(NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator);
+            char minus = (char)45;
+            char inputChar = e.KeyChar;
+            var text = sender as TextBox;
+            int pos = text.SelectionStart;
+
+            if (_SubItembIndex != 5 && inputChar == DecSep) inputChar = (char)0;
+
+            if ((inputChar <= 47 || inputChar >= 58) &&
+                inputChar != 8 &&
+                inputChar != '-' &&
+                inputChar != DecSep) 
+            {
+                e.Handled = true;
+            }
+
+            if (text.SelectionLength == text.Text.Length)
+            {
+                text.Text = "";
+            }
+
+            if (e.KeyChar == '-' && (sender as TextBox).Text.StartsWith("-"))
+            {
+                e.Handled = true;
+            }
+            if (e.KeyChar == '-' && (sender as TextBox).SelectionStart > 1)
+            {
+                e.Handled = true;
+            }
+            
+            if (text.Text.StartsWith(Convert.ToString(DecSep)))
+            {
+                // добавление лидирующего ноля
+                text.Text = "0" + text.Text;
+                text.SelectionStart = pos + 1;
+            }
+            if (inputChar == DecSep && text.Text.Contains(Convert.ToString(DecSep)))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            if (text.Text.StartsWith("-") && !text.Text.Contains("-"))
+            {
+                // добавление лидирующего -
+                text.Text = "-" + text.Text;
+                text.SelectionStart = text.Text.Length;
+            }
+           
+            _keyPressed = inputChar;
+
+            if (text.Text == "-" || text.Text == "0." || text.Text == "-.")
+            {
+                _keyPressed = (char)27;
+            }
+            if (inputChar == 13)
+            {
+                DisposeTextBox((sender as TextBox), null);
+            }
+            if (inputChar == 27)
+                DisposeTextBox((sender as TextBox), e);
+            //(sender as TextBox).Dispose();
+
         }
     }
     class ListViewColumnComparerOverClock : IComparer

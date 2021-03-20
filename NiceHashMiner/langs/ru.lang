@@ -503,6 +503,10 @@
 "Form_Profit_Chart_Disabled": "График прибыльности отключен",
 "Form_Settings_DH3GB_Warning": "С алгоритмом DaggerHashimoto3GB или DaggerHashimoto4GB должен быть включен минимум еще один алгоритм",
 "Form_Benchmark_BenchmarkProgress": "Бенчмарк",
+"FormSettings_OverclockSettings": "Настройки разгона для {0} :",
+"FormSettings_ABEnableOverclock": "Включить разгон",
+"FormSettings_ABOverclock_Relative": "Относительные значения",
+"FormSettings_AB_ForceRun": "Принудительный запуск MSI Afterburner при старте",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

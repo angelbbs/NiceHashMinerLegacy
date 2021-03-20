@@ -139,7 +139,7 @@ namespace NiceHashMiner.Forms.Components
             //}
             //else
 
-                AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Form_Main._backColor, Form_Main._textColor);
+            AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Form_Main._backColor, Form_Main._textColor);
 
 
             // callback initializations

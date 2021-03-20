@@ -671,7 +671,7 @@ namespace NiceHashMiner.Miners
                 SS.ReadTimeout = 20 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromGMiner = await Reader.ReadToEndAsync();
-                //Helpers.ConsolePrint("API...........", ResponseFromGMiner);
+                //Helpers.ConsolePrint("GMiner API:", ResponseFromGMiner);
                 if (ResponseFromGMiner.Length == 0 || (ResponseFromGMiner[0] != '{' && ResponseFromGMiner[0] != '['))
                     throw new Exception("Not JSON!");
                 Reader.Close();
@@ -682,23 +682,32 @@ namespace NiceHashMiner.Miners
                 return null;
             }
 
-            //Helpers.ConsolePrint("API ResponseFromGMiner:", ResponseFromGMiner);
             ResponseFromGMiner = ResponseFromGMiner.Replace("-nan", "0.00");
+
             try
             {
                 dynamic resp = JsonConvert.DeserializeObject<JsonApiResponse>(ResponseFromGMiner);
                 if (resp != null)
                 {
+                    double[] hashrates = new double[resp.devices.Length];
                     for (var i = 0; i < resp.devices.Length; i++)
                     {
                         total = total + resp.devices[i].speed;
-
+                        hashrates[i] = resp.devices[i].speed;
+                    }
+                    int dev = 0;
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+                    foreach (var mPair in sortedMinerPairs)
+                    {
+                        mPair.Device.MiningHashrate = hashrates[dev];
+                        dev++;
                     }
                 }
                 else
                 {
                     Helpers.ConsolePrint("GMiner:", "resp - null");
                 }
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("GMiner API:", "Error JSON parsing");
@@ -716,7 +725,7 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            Thread.Sleep(100);
+                Thread.Sleep(100);
             return ad;
         }
     }

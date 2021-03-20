@@ -55,6 +55,10 @@ namespace NiceHashMiner.Configs.Data
         public int ColumnListPOWER = 88;
         public int ColumnListRATIO = 90;
         public int ColumnListRATE = 148;
+        public int ColumnListGPU_clock = 100;
+        public int ColumnListMem_clock = 100;
+        public int ColumnListGPU_voltage = 100;
+        public int ColumnListPowerLimit = 100;
         public bool ColumnSort = false;
         public int ColumnListSort = 1;
 
@@ -77,6 +81,9 @@ namespace NiceHashMiner.Configs.Data
         public bool StartChartWithProgram = false;
         public bool ChartFiat = false;
         public bool ChartEnable = false;
+        public bool AB_ForceRun = true;
+        public bool ABEnableOverclock = false;
+        public bool ABOverclock_Relative = false;
 
         public bool MinimizeMiningWindows = false;
         public bool StandartBenchmarkTime = true;
@@ -275,6 +282,10 @@ namespace NiceHashMiner.Configs.Data
             ColumnListPOWER = 88;
             ColumnListRATIO = 90;
             ColumnListRATE = 148;
+            ColumnListGPU_clock = 100;
+            ColumnListMem_clock = 100;
+            ColumnListGPU_voltage = 100;
+            ColumnListPowerLimit = 100;
             ColumnSort = false;
             ColumnListSort = 1;
 

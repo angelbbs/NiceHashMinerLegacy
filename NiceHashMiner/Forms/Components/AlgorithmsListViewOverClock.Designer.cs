@@ -38,7 +38,6 @@ namespace NiceHashMiner.Forms.Components
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.Fan = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listViewAlgorithms
@@ -52,8 +51,7 @@ namespace NiceHashMiner.Forms.Components
             this.columnHeader3,
             this.columnHeader4,
             this.columnHeader5,
-            this.columnHeader6,
-            this.Fan});
+            this.columnHeader6});
             this.listViewAlgorithms.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAlgorithms.FullRowSelect = true;
             this.listViewAlgorithms.GridLines = true;
@@ -74,6 +72,7 @@ namespace NiceHashMiner.Forms.Components
             this.listViewAlgorithms.EnabledChanged += new System.EventHandler(this.listViewAlgorithms_EnabledChanged);
             this.listViewAlgorithms.Click += new System.EventHandler(this.listViewAlgorithms_Click);
             this.listViewAlgorithms.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewAlgorithms_MouseClick);
+            this.listViewAlgorithms.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listViewAlgorithms_MouseDown);
             this.listViewAlgorithms.Resize += new System.EventHandler(this.listViewAlgorithms_Resize);
             // 
             // columnHeader0
@@ -94,7 +93,7 @@ namespace NiceHashMiner.Forms.Components
             // columnHeader3
             // 
             this.columnHeader3.Text = "GPU clock";
-            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader3.Width = 70;
             // 
             // columnHeader4
@@ -106,11 +105,13 @@ namespace NiceHashMiner.Forms.Components
             // columnHeader5
             // 
             this.columnHeader5.Text = "GPU voltage";
+            this.columnHeader5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader5.Width = 74;
             // 
             // columnHeader6
             // 
             this.columnHeader6.Text = "Power limit";
+            this.columnHeader6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader6.Width = 64;
             // 
             // contextMenuStrip1
@@ -129,6 +130,8 @@ namespace NiceHashMiner.Forms.Components
             this.Size = new System.Drawing.Size(539, 380);
             this.Load += new System.EventHandler(this.AlgorithmsListView_Load);
             this.EnabledChanged += new System.EventHandler(this.AlgorithmsListView_EnabledChanged);
+            this.DoubleClick += new System.EventHandler(this.AlgorithmsListViewOverClock_DoubleClick);
+            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.AlgorithmsListViewOverClock_MouseDoubleClick);
             this.ResumeLayout(false);
 
         }
@@ -143,6 +146,5 @@ namespace NiceHashMiner.Forms.Components
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         public System.Windows.Forms.ListView listViewAlgorithms;
-        private System.Windows.Forms.ColumnHeader Fan;
     }
 }

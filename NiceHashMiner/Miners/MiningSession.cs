@@ -715,7 +715,13 @@ namespace NiceHashMiner.Miners
                     {
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType}, ");
                         //toStart.Start(_miningLocation, _btcAdress, _worker);
-                        toStart.Start(Form_Main.myServers[0, 0], _btcAdress, _worker);
+                        if (ConfigManager.GeneralConfig.ServiceLocation == 4)
+                        {
+                            toStart.Start(Form_Main.myServers[0, 0], _btcAdress, _worker);
+                        } else
+                        {
+                            toStart.Start(_miningLocation, _btcAdress, _worker);
+                        }
                         _runningGroupMiners[toStart.Key] = toStart;
                     }
 

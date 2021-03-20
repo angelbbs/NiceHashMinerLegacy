@@ -263,10 +263,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
 
                             },
+                            /*
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus")
                             {
 
                             },
+                            */
                  }
             },
         }.ConcatDictList(All, Gpu);

@@ -1133,58 +1133,7 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        private class NicehashLoginNew
-        {
-            public string method = "login";
-            public string version;
-            public int protocol = 1;
-            public string btc;
-            public string worker;
-            public string group;
-            public string rig;
-        }
-        public void SendLogin()
-        {
-            try
-            {
-                //send login
-                int protocol = 1;
-                string btc;
-                string worker;
-                string group = "";
-                string rig = UUID.GetDeviceB64UUID();
-                //string CpuID = UUID.GetCpuID();
-                var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
-                    protocol = 3;
-                    version = "NHML/3.0.0.5"; //
-                    if (ConfigManager.GeneralConfig.Send_actual_version_info)
-                    {
-                        version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
-                    }
-                    btc = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;
-                    worker = Configs.ConfigManager.GeneralConfig.WorkerName;
-
-
-                    var login = new NicehashLoginNew
-                    {
-                        version = version,
-                        protocol = protocol,
-                        btc = btc,
-                        worker = worker,
-                        group = group,
-                        rig = rig
-
-                    };
-                    var loginJson = JsonConvert.SerializeObject(login);
-                    //loginJson = loginJson.Replace("{", " { ");
-                    _socket.SendData(loginJson);
-
-            }
-            catch (Exception er)
-            {
-                Helpers.ConsolePrint("SendLogin", er.ToString());
-            }
-        }
+       
         public static void DeviceStatus_TickNew(object sender, ElapsedEventArgs e)
         {
             //_socket.ConnectCallback(null, null);
@@ -1377,7 +1326,7 @@ namespace NiceHashMiner.Stats
                     else
                     */
                     //HashRate = Math.Round(ComputeDevice.HashRate / (devices.Count - 1), 2);
-                    HashRate = 0;
+                    HashRate = device.MiningHashrate;
                     if (rigs == 1 & device.AlgorithmID > 0)
                     {
                         speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт

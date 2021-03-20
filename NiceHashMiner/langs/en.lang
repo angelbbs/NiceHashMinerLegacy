@@ -510,6 +510,10 @@
 "Form_Profit_Chart_Disabled": "Profitability chart disabled",
 "Form_Settings_DH3GB_Warning": "With DaggerHashimoto3GB or DaggerHashimoto4GB algorithm, at least one more algorithm must be enabled",
 "Form_Benchmark_BenchmarkProgress": "Benchmark",
+"FormSettings_OverclockSettings": "Overclock settings for {0} :",
+"FormSettings_ABEnableOverclock": "Enable overclock",
+"FormSettings_ABOverclock_Relative": "Relative values",
+"FormSettings_AB_ForceRun": "Force run MSI Afterburner on program startup",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

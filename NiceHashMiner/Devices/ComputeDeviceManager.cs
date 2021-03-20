@@ -873,9 +873,9 @@ namespace NiceHashMiner.Devices
 
                     catch (Exception e)
                     {
-                        Helpers.ConsolePrint("error", e.Message);
+                        Helpers.ConsolePrint("MSI AB error", e.Message);
                         if (e.InnerException != null)
-                            Helpers.ConsolePrint("error", e.InnerException.Message);
+                            Helpers.ConsolePrint("MSI AB error", e.InnerException.Message);
                     }
 
                 }

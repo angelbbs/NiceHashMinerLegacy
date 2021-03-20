@@ -129,6 +129,8 @@ namespace NiceHashMiner
         public static RigProfitList lastRigProfit = new Form_Main.RigProfitList();
         public static bool Form_RigProfitChartRunning = false;
         public static bool FormMainMoved = false;
+        public static bool MSIAfterburnerAvailabled = false;
+        public static bool MSIAfterburnerRunning = false;
         public struct RigProfitList
         {
             public DateTime DateTime;
@@ -1896,7 +1898,7 @@ public static void CloseChilds(Process parentId)
                 CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleWD.Start();
             }
-
+            
             try
             {
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher
@@ -2277,8 +2279,15 @@ public static void CloseChilds(Process parentId)
                 //int ml = NiceHashMiner.Utils.ServerResponceTime.GetBestServer();
 
                 //isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[0],
-                isMining = MinersManager.StartInitialize(this, Form_Main.myServers[0, 0],
+                if (ConfigManager.GeneralConfig.ServiceLocation == 4)
+                {
+                    isMining = MinersManager.StartInitialize(this, Form_Main.myServers[0, 0],
                     textBoxWorkerName.Text.Trim(), btcAdress);
+                } else
+                {
+                    isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[0],
+                        textBoxWorkerName.Text.Trim(), btcAdress);
+                }
             }
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
@@ -2586,6 +2595,10 @@ public static void CloseChilds(Process parentId)
             if (ConfigManager.GeneralConfig.ServiceLocation == 4 && Enabled == true)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            } else
+            {
+                string[,] tmpServers = { { "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" } };
+                Form_Main.myServers = tmpServers;
             }
         }
 

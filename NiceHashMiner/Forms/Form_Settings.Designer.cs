@@ -144,7 +144,10 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
-            this.groupBoxMinerSettings = new System.Windows.Forms.GroupBox();
+            this.checkBox_ABOverclock_Relative = new System.Windows.Forms.CheckBox();
+            this.checkBox_AB_ForceRun = new System.Windows.Forms.CheckBox();
+            this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
+            this.groupBoxOverClockSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
             this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageTools = new System.Windows.Forms.TabPage();
@@ -209,7 +212,7 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             this.tabPageOverClock.SuspendLayout();
-            this.groupBoxMinerSettings.SuspendLayout();
+            this.groupBoxOverClockSettings.SuspendLayout();
             this.tabPageTools.SuspendLayout();
             this.groupBoxToolsNH.SuspendLayout();
             this.groupBoxToolsNET.SuspendLayout();
@@ -1711,7 +1714,10 @@ namespace NiceHashMiner.Forms
             // tabPageOverClock
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPageOverClock.Controls.Add(this.groupBoxMinerSettings);
+            this.tabPageOverClock.Controls.Add(this.checkBox_ABOverclock_Relative);
+            this.tabPageOverClock.Controls.Add(this.checkBox_AB_ForceRun);
+            this.tabPageOverClock.Controls.Add(this.checkBox_ABEnableOverclock);
+            this.tabPageOverClock.Controls.Add(this.groupBoxOverClockSettings);
             this.tabPageOverClock.Controls.Add(this.devicesListViewEnableControl2);
             this.tabPageOverClock.Location = new System.Drawing.Point(4, 23);
             this.tabPageOverClock.Name = "tabPageOverClock";
@@ -1719,28 +1725,74 @@ namespace NiceHashMiner.Forms
             this.tabPageOverClock.TabIndex = 5;
             this.tabPageOverClock.Text = "OverClock";
             // 
-            // groupBoxMinerSettings
+            // checkBox_ABOverclock_Relative
             // 
-            this.groupBoxMinerSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.checkBox_ABOverclock_Relative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_ABOverclock_Relative.AutoSize = true;
+            this.checkBox_ABOverclock_Relative.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_ABOverclock_Relative.Location = new System.Drawing.Point(371, 164);
+            this.checkBox_ABOverclock_Relative.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ABOverclock_Relative.Name = "checkBox_ABOverclock_Relative";
+            this.checkBox_ABOverclock_Relative.Size = new System.Drawing.Size(99, 17);
+            this.checkBox_ABOverclock_Relative.TabIndex = 403;
+            this.checkBox_ABOverclock_Relative.Text = "Relative values";
+            this.checkBox_ABOverclock_Relative.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_AB_ForceRun
+            // 
+            this.checkBox_AB_ForceRun.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_AB_ForceRun.AutoSize = true;
+            this.checkBox_AB_ForceRun.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_AB_ForceRun.Location = new System.Drawing.Point(371, 39);
+            this.checkBox_AB_ForceRun.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_AB_ForceRun.Name = "checkBox_AB_ForceRun";
+            this.checkBox_AB_ForceRun.Size = new System.Drawing.Size(242, 17);
+            this.checkBox_AB_ForceRun.TabIndex = 402;
+            this.checkBox_AB_ForceRun.Text = "Force run MSI Afterburner on program startup ";
+            this.checkBox_AB_ForceRun.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_ABEnableOverclock
+            // 
+            this.checkBox_ABEnableOverclock.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_ABEnableOverclock.AutoSize = true;
+            this.checkBox_ABEnableOverclock.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_ABEnableOverclock.Location = new System.Drawing.Point(371, 16);
+            this.checkBox_ABEnableOverclock.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ABEnableOverclock.Name = "checkBox_ABEnableOverclock";
+            this.checkBox_ABEnableOverclock.Size = new System.Drawing.Size(109, 17);
+            this.checkBox_ABEnableOverclock.TabIndex = 401;
+            this.checkBox_ABEnableOverclock.Text = "Enable overclock";
+            this.checkBox_ABEnableOverclock.UseVisualStyleBackColor = true;
+            this.checkBox_ABEnableOverclock.CheckedChanged += new System.EventHandler(this.checkBox_ABEnableOverclock_CheckedChanged);
+            // 
+            // groupBoxOverClockSettings
+            // 
+            this.groupBoxOverClockSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxMinerSettings.Controls.Add(this.algorithmsListViewOverClock1);
-            this.groupBoxMinerSettings.Location = new System.Drawing.Point(4, 187);
-            this.groupBoxMinerSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxMinerSettings.Name = "groupBoxMinerSettings";
-            this.groupBoxMinerSettings.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxMinerSettings.Size = new System.Drawing.Size(662, 249);
-            this.groupBoxMinerSettings.TabIndex = 400;
-            this.groupBoxMinerSettings.TabStop = false;
-            this.groupBoxMinerSettings.Text = "Miners settings for selected device:";
+            this.groupBoxOverClockSettings.Controls.Add(this.algorithmsListViewOverClock1);
+            this.groupBoxOverClockSettings.Location = new System.Drawing.Point(4, 187);
+            this.groupBoxOverClockSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxOverClockSettings.Name = "groupBoxOverClockSettings";
+            this.groupBoxOverClockSettings.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxOverClockSettings.Size = new System.Drawing.Size(662, 249);
+            this.groupBoxOverClockSettings.TabIndex = 400;
+            this.groupBoxOverClockSettings.TabStop = false;
+            this.groupBoxOverClockSettings.Text = "Overclock settings for selected device:";
             // 
             // algorithmsListViewOverClock1
             // 
+            this.algorithmsListViewOverClock1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
             this.algorithmsListViewOverClock1.ComunicationInterface = null;
-            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 17);
+            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 19);
             this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
-            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(539, 226);
+            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(652, 224);
             this.algorithmsListViewOverClock1.TabIndex = 399;
             // 
             // devicesListViewEnableControl2
@@ -1755,7 +1807,7 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
             this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 165);
+            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 163);
             this.devicesListViewEnableControl2.TabIndex = 398;
             this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
             // 
@@ -2175,7 +2227,8 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             this.tabPageOverClock.ResumeLayout(false);
-            this.groupBoxMinerSettings.ResumeLayout(false);
+            this.tabPageOverClock.PerformLayout();
+            this.groupBoxOverClockSettings.ResumeLayout(false);
             this.tabPageTools.ResumeLayout(false);
             this.groupBoxToolsNH.ResumeLayout(false);
             this.groupBoxToolsNET.ResumeLayout(false);
@@ -2341,7 +2394,10 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkbox_current_actual_profitabilities;
         private System.Windows.Forms.TabPage tabPageOverClock;
         private Components.DevicesListViewEnableControl devicesListViewEnableControl2;
-        private System.Windows.Forms.GroupBox groupBoxMinerSettings;
+        private System.Windows.Forms.GroupBox groupBoxOverClockSettings;
         private Components.AlgorithmsListViewOverClock algorithmsListViewOverClock1;
+        private System.Windows.Forms.CheckBox checkBox_ABEnableOverclock;
+        private System.Windows.Forms.CheckBox checkBox_ABOverclock_Relative;
+        private System.Windows.Forms.CheckBox checkBox_AB_ForceRun;
     }
 }

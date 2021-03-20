@@ -99,6 +99,10 @@ namespace NiceHashMiner.Algorithms
         /// Power consumption of this algorithm, in Watts
         /// </summary>
         public virtual double PowerUsage { get; set; }
+        public virtual int gpu_clock { get; set; }
+        public virtual int mem_clock { get; set; }
+        public virtual double gpu_voltage { get; set; }
+        public virtual int power_limit { get; set; }
 
         #endregion
 
@@ -124,7 +128,11 @@ namespace NiceHashMiner.Algorithms
             Hidden = false;
             BenchmarkStatus = "";
             BenchmarkProgressPercent = 0;
-        }
+            gpu_clock = 0;
+            mem_clock = 0;
+            gpu_voltage = 0.0d;
+            power_limit = 0;
+    }
         #region Benchmark info
 
         public string BenchmarkStatus { get; set; }

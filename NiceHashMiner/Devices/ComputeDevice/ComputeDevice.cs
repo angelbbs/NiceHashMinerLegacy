@@ -60,6 +60,7 @@ namespace NiceHashMiner.Devices
         public string Codename { get; protected set; }
         public string Manufacturer = "UNK";
         public string BenchmarkProgressString = "";
+        public double MiningHashrate = 0.0d;
 
         public string InfSection { get; protected set; }
 
@@ -458,6 +459,10 @@ namespace NiceHashMiner.Devices
                         }
                         setAlgo.LessThreads = conf.LessThreads;
                         setAlgo.PowerUsage = conf.PowerUsage;
+                        setAlgo.gpu_clock = conf.gpu_clock;
+                        setAlgo.mem_clock = conf.mem_clock;
+                        setAlgo.gpu_voltage = conf.gpu_voltage;
+                        setAlgo.power_limit = conf.power_limit;
                         if (setAlgo is DualAlgorithm dualSA)
                         {
                             dualSA.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
@@ -515,7 +520,11 @@ namespace NiceHashMiner.Devices
                     Enabled = algo.Enabled,
                     Hidden = algo.Hidden,
                     LessThreads = algo.LessThreads,
-                    PowerUsage =  algo.PowerUsage
+                    PowerUsage =  algo.PowerUsage,
+                    gpu_clock = algo.gpu_clock,
+                    mem_clock = algo.mem_clock,
+                    gpu_voltage = algo.gpu_voltage,
+                    power_limit = algo.power_limit
                 };
                 // insert
                 if (!conf.Hidden)

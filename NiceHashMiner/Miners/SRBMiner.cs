@@ -118,6 +118,25 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
+            StopDriver();
+        }
+
+        private void StopDriver()
+        {
+            //srbminer driver
+            var CMDconfigHandleWD = new Process
+
+            {
+                StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+            };
+
+            CMDconfigHandleWD.StartInfo.Arguments = "stop winio";
+            CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+            CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+            CMDconfigHandleWD.Start();
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -140,9 +159,7 @@ namespace NiceHashMiner.Miners
                 SS.ReadTimeout = 20 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromSRBMiner = await Reader.ReadToEndAsync();
-                //Helpers.ConsolePrint("API...........", ResponseFromSRBMiner);
-                //if (ResponseFromSRBMiner.Length == 0 || (ResponseFromSRBMiner[0] != '{' && ResponseFromSRBMiner[0] != '['))
-                //    throw new Exception("Not JSON!");
+
                 Reader.Close();
                 Response.Close();
                 WR.Abort();
@@ -161,15 +178,34 @@ namespace NiceHashMiner.Miners
                 int totals = 0;
                 if (resp != null)
                 {
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList(); var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
+                    int devs = sortedMinerPairs.Count;
+
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
+                        devs = 0;
+                        foreach (var mPair in sortedMinerPairs)
+                        {
+                            try
+                            {
+                                string token = $"algorithms[0].hashrate.gpu.gpu{devs}";
+                                var hash = resp.SelectToken(token);
+                                //Helpers.ConsolePrint("API hashrate:", hash.ToString());
+                                mPair.Device.MiningHashrate = hash;
+
+                            } catch (Exception ex)
+                            {
+                                //Helpers.ConsolePrint("API Exception:", ex.ToString());
+                            }
+                            devs++;
+                        }
+                        
                         totals = resp.algorithms[0].hashrate.gpu.total;
-                    } else
+                    }
+                    else
                     {
                         totals = resp.algorithms[0].hashrate.cpu.total;
                     }
-
-                    //Helpers.ConsolePrint("API hashrate...........", totals.ToString());
 
                     ad.Speed = totals;
                     if (ad.Speed == 0)
@@ -299,7 +335,7 @@ namespace NiceHashMiner.Miners
                             BenchmarkHandle.Kill();
                             BenchmarkHandle.Dispose();
                             EndBenchmarkProcces();
-
+                            StopDriver();
                             break;
                         }
 

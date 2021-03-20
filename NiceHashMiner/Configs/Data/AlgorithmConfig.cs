@@ -18,5 +18,11 @@ namespace NiceHashMiner.Configs.Data
         public bool Hidden = false;
         public int LessThreads = 0;
         public double PowerUsage = 0;
+        //configs/benchmark_...json
+        public int gpu_clock = 0;
+        public int mem_clock = 0;
+        public double gpu_voltage = 0.0d;
+        public int power_limit = 0;
+        
     }
 }

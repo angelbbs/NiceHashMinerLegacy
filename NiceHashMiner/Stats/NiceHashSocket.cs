@@ -329,7 +329,7 @@ namespace NiceHashMiner.Stats
                 var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
 
                 protocol = 3;
-                version = "NHML/3.0.5.5"; //
+                version = "NHM/3.0.5.6"; //
                 if (ConfigManager.GeneralConfig.Send_actual_version_info)
                 {
                     version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");

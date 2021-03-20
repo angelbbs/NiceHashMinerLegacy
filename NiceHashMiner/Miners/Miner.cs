@@ -403,6 +403,10 @@ namespace NiceHashMiner
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
                 Thread.Sleep(2000);
+            } else
+            {
+                string[,] tmpServers = { { "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" } };
+                Form_Main.myServers = tmpServers;
             }
             //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             _cooldownCheckTimer?.Stop();
