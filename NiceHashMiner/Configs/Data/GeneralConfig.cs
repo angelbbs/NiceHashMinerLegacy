@@ -84,6 +84,7 @@ namespace NiceHashMiner.Configs.Data
         public bool AB_ForceRun = true;
         public bool ABEnableOverclock = false;
         public bool ABOverclock_Relative = false;
+        public bool ABMinimize = false;
 
         public bool MinimizeMiningWindows = false;
         public bool StandartBenchmarkTime = true;

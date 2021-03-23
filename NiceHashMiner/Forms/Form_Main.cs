@@ -618,6 +618,7 @@ namespace NiceHashMiner
             }
         }
 
+       
         public static int ProgressMinimum = 0;
         public static int ProgressMaximum = 100;
         public static int ProgressValue = 0;
@@ -662,6 +663,7 @@ namespace NiceHashMiner
 
             _loadingScreen.Show();
             // Query Available ComputeDevices
+            _loadingScreen.SetValueAndMsg(1, "Detecting compute devices");
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
 
             _isDeviceDetectionInitialized = true;
@@ -669,7 +671,7 @@ namespace NiceHashMiner
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
-            _loadingScreen.SetValueAndMsg(3, International.GetText("Form_Main_loadtext_SaveConfig"));
+            _loadingScreen.SetValueAndMsg(2, International.GetText("Form_Main_loadtext_SaveConfig"));
 
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
@@ -678,7 +680,10 @@ namespace NiceHashMiner
             new Task(() => CheckGithubDownload()).Start();
 
             //_loadingScreen.SetInfoMsg("Set firewall rules");
-            _loadingScreen.SetValueAndMsg(4, "Set firewall rules");
+            _loadingScreen.SetValueAndMsg(3, "Set firewall rules");
+
+            new Task(() => MSIAfterburner.MSIAfterburnerRUN()).Start();
+            //MSIAfterburner.MSIAfterburnerRUN();
 
             flowLayoutPanelRates.Visible = true;
 
@@ -688,8 +693,10 @@ namespace NiceHashMiner
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = 1000;
 
-            _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            _loadingScreen.SetValueAndMsg(4, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
+
+            _loadingScreen.SetValueAndMsg(5, "Checking servers locations");
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
@@ -699,16 +706,16 @@ namespace NiceHashMiner
 
             Thread.Sleep(10);
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
-
+            /*
             if (ConfigManager.GeneralConfig.NVIDIAP0State)
             {
                 //_loadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
                 _loadingScreen.SetValueAndMsg(7, International.GetText("Form_Main_loadtext_NVIDIAP0State"));
                 Helpers.SetNvidiaP0State();
             }
-
+            */
             //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
+            _loadingScreen.SetValueAndMsg(7, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             //new Task(() => CheckUpdates()).Start();
             CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
@@ -721,13 +728,12 @@ namespace NiceHashMiner
                 thisComputer.Open();
             }
             //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
-            _loadingScreen.SetValueAndMsg(9, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
 
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
-            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
-            _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetBTCRate"));
+            _loadingScreen.SetValueAndMsg(9, International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
@@ -751,7 +757,29 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfig.DownloadInit = true;
                 ConfigManager.GeneralConfigFileCommit();
             }
-            //_loadingScreen.IncreaseLoadCounterAndMessage("Check VC redistributable");
+
+            _loadingScreen.SetValueAndMsg(10, "Check MSI Afterburner");
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                int countab = 0;
+                do
+                {
+                    Thread.Sleep(100);
+                    countab++;
+                    if (Process.GetProcessesByName("MSIAfterburner").Any()) break;
+                } while (countab < 50); //5 sec
+
+                //if (ConfigManager.GeneralConfig.AB_ForceRun)
+                {
+                    if (!MSIAfterburner.MSIAfterburnerInit())
+                    {
+                        new Task(() =>
+                            MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
+                    } 
+                }
+            }
+
             _loadingScreen.SetValueAndMsg(11, International.GetText("Check VC redistributable"));
             InstallVcRedist();
             _loadingScreen.FinishLoad();
@@ -770,6 +798,8 @@ namespace NiceHashMiner
             _autostartTimer.Start();
 
             //Form_Main.ActiveForm.TopMost = true;
+            //this.TopMost = true;
+            //this.TopMost = false;
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
 
         }

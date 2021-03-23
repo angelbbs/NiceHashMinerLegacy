@@ -146,7 +146,6 @@ namespace NiceHashMiner.Forms.Components
                 _listItemCheckColorSetter?.LviSetColor(lvi);
             }
         }
-
         public void SetComputeDevices(List<ComputeDevice> computeDevices)
         {
             // to not run callbacks when setting new

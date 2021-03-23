@@ -514,6 +514,9 @@
 "FormSettings_ABEnableOverclock": "Enable overclock",
 "FormSettings_ABOverclock_Relative": "Relative values",
 "FormSettings_AB_ForceRun": "Force run MSI Afterburner on program startup",
+"FormSettings_AB_Minimize": "Minimize MSI Afterburner",
+"FormSettings_AB_Error": "MSI Afterburner error. Overclock don't working!",
+"FormSettings_AB_FileNotFound": "MSI Afterburner error.\r\nFile {0} not found.\r\nPlease install MSI Afterburner",
 "Form_Settings_buttonLicence": "View licence"
     }
 }

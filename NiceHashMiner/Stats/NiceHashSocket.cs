@@ -194,13 +194,10 @@ namespace NiceHashMiner.Stats
                 return true;
             }
             _attemptingReconnect = true;
-            var sleep = _connectionEstablished ? 10 + _random.Next(0, 20) : 0;
-            Helpers.ConsolePrint("SOCKET", $"Attempting reconnect" +
-                $"" +
-                $"" +
-                $" in {sleep} seconds");
+            var sleep = 1;
+            
             // More retries on first attempt
-            var retries = _connectionEstablished ? 5 : 25;
+            var retries = _connectionEstablished ? 5 : 6;
             if (_connectionEstablished)
             {
                 // Don't wait if no connection yet
@@ -213,10 +210,14 @@ namespace NiceHashMiner.Stats
             }
             for (var i = 0; i < retries; i++)
             {
+                Helpers.ConsolePrint("SOCKET", $"Attempting reconnect" +
+                $"" +
+                $"" +
+                $" in {sleep} seconds");
                 try
                 {
                     _webSocket.Connect();
-                    Thread.Sleep(100);
+                    Thread.Sleep(1000 * sleep);
                     if (IsAlive)
                     {
                         _attemptingReconnect = false;

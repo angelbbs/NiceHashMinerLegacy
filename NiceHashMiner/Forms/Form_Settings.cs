@@ -349,6 +349,7 @@ namespace NiceHashMiner.Forms
             checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
             checkBox_ABOverclock_Relative.Text = International.GetText("FormSettings_ABOverclock_Relative");
             checkBox_AB_ForceRun.Text = International.GetText("FormSettings_AB_ForceRun");
+            checkBox_ABMinimize.Text = International.GetText("FormSettings_AB_Minimize");
             labelCheckforprogramupdatesevery.Text = International.GetText("Form_Settings_labelCheckforprogramupdatesevery");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
@@ -781,6 +782,9 @@ namespace NiceHashMiner.Forms
                 checkBox_AB_ForceRun.BackColor = Form_Main._backColor;
                 checkBox_AB_ForceRun.ForeColor = Form_Main._textColor;
 
+                checkBox_ABMinimize.BackColor = Form_Main._backColor;
+                checkBox_ABMinimize.ForeColor = Form_Main._textColor;
+
                 textBox_AutoStartMiningDelay.BackColor = Form_Main._backColor;
                 textBox_AutoStartMiningDelay.ForeColor = Form_Main._foreColor;
                 textBox_AutoStartMiningDelay.BorderStyle = BorderStyle.FixedSingle;
@@ -932,6 +936,7 @@ namespace NiceHashMiner.Forms
                 checkBox_ABEnableOverclock.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABOverclock_Relative.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AB_ForceRun.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ABMinimize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -997,7 +1002,8 @@ namespace NiceHashMiner.Forms
                 if (checkBox_LogToFile.Checked)
                 {
                     textBox_LogMaxFileSize.Enabled = true;
-                } else
+                }
+                else
                 {
                     textBox_LogMaxFileSize.Enabled = false;
                 }
@@ -1034,6 +1040,7 @@ namespace NiceHashMiner.Forms
                 checkBox_AB_ForceRun.Checked = ConfigManager.GeneralConfig.AB_ForceRun;
                 checkBox_ABEnableOverclock.Checked = ConfigManager.GeneralConfig.ABEnableOverclock;
                 checkBox_ABOverclock_Relative.Checked = ConfigManager.GeneralConfig.ABOverclock_Relative;
+                checkBox_ABMinimize.Checked = ConfigManager.GeneralConfig.ABMinimize;
             }
 
             // Textboxes
@@ -1041,7 +1048,7 @@ namespace NiceHashMiner.Forms
                 textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
                 textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
                 textBox_AutoStartMiningDelay.Text = ConfigManager.GeneralConfig.AutoStartMiningDelay.ToString();
-                textBox_SwitchProfitabilityThreshold.Text = ((ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)*100)
+                textBox_SwitchProfitabilityThreshold.Text = ((ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) * 100)
                     .ToString("F1").Replace(',', '.'); // force comma;
                 textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
                 textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
@@ -1068,7 +1075,7 @@ namespace NiceHashMiner.Forms
                 comboBox_Language.Items.Clear();
                 for (var i = 0; i < lang.Count; i++)
                 {
-                    comboBox_Language.Items.Add(lang[(LanguageType) i]);
+                    comboBox_Language.Items.Add(lang[(LanguageType)i]);
                 }
             }
 
@@ -1085,7 +1092,7 @@ namespace NiceHashMiner.Forms
 
             // ComboBox
             {
-                comboBox_Language.SelectedIndex = (int) ConfigManager.GeneralConfig.Language;
+                comboBox_Language.SelectedIndex = (int)ConfigManager.GeneralConfig.Language;
                 //comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
@@ -1096,13 +1103,19 @@ namespace NiceHashMiner.Forms
                 comboBoxRestartProgram.SelectedIndex = ConfigManager.GeneralConfig.ProgramRestartIndex;
             }
 
+            checkBox_AB_ForceRun.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
+            devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
+            algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
+
             //if (!ConfigManager.GeneralConfig.ShowToolsFolder)
             {
                 var tp = tabPageTools;
                 tabControlGeneral.TabPages.Remove(tp);
-                //var oc = tabPageOverClock;
-                //tabControlGeneral.TabPages.Remove(oc);
+                var oc = tabPageOverClock;
+                tabControlGeneral.TabPages.Remove(oc);
             }
+      
 
         }
 
@@ -1187,6 +1200,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
             ConfigManager.GeneralConfig.ABOverclock_Relative = checkBox_ABOverclock_Relative.Checked;
             ConfigManager.GeneralConfig.AB_ForceRun = checkBox_AB_ForceRun.Checked;
+            ConfigManager.GeneralConfig.ABMinimize = checkBox_ABMinimize.Checked;
             if (checkBox_LogToFile.Checked)
             {
                 textBox_LogMaxFileSize.Enabled = true;
@@ -2389,8 +2403,45 @@ namespace NiceHashMiner.Forms
         private void checkBox_ABEnableOverclock_CheckedChanged(object sender, EventArgs e)
         {
             checkBox_AB_ForceRun.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
             devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
             algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
+
+            var oc = tabPageOverClock;
+            //tabControlGeneral.TabPages.Remove(oc);
+
+            if (checkBox_ABEnableOverclock.Checked && oc.Created)
+            {
+                string str = " ";
+                checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock") + str.PadRight(1, '.');
+                checkBox_ABEnableOverclock.Update();
+                if (!MSIAfterburner.MSIAfterburnerRUN(true))
+                {
+                    checkBox_ABEnableOverclock.Checked = false;
+                    return;
+                }
+
+                for (int i = 2; i <= 10; i++)
+                {
+                    checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock") + str.PadRight(i, '.');
+                    System.Threading.Thread.Sleep(300);
+                    checkBox_ABEnableOverclock.Update();
+                }
+                checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
+                checkBox_ABEnableOverclock.Update();
+                if (!MSIAfterburner.MSIAfterburnerInit())
+                {
+                    MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+            if (!checkBox_ABEnableOverclock.Checked)
+            {
+                MSIAfterburner.macm = null;
+                MSIAfterburner.mahm = null;
+            }
+            oc.Focus();
         }
     }
 }

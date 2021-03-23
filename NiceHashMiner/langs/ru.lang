@@ -507,6 +507,9 @@
 "FormSettings_ABEnableOverclock": "Включить разгон",
 "FormSettings_ABOverclock_Relative": "Относительные значения",
 "FormSettings_AB_ForceRun": "Принудительный запуск MSI Afterburner при старте",
+"FormSettings_AB_Minimize": "Сворачивать MSI Afterburner",
+"FormSettings_AB_Error": "Ошибка MSI Afterburner. Разгон не работает!",
+"FormSettings_AB_FileNotFound": "Ошибка MSI Afterburner.\r\nФайл {0} не найден.\r\nПожалуйста, установите MSI Afterburner",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

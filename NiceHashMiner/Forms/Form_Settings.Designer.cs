@@ -144,6 +144,7 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
+            this.checkBox_ABMinimize = new System.Windows.Forms.CheckBox();
             this.checkBox_ABOverclock_Relative = new System.Windows.Forms.CheckBox();
             this.checkBox_AB_ForceRun = new System.Windows.Forms.CheckBox();
             this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
@@ -1714,6 +1715,7 @@ namespace NiceHashMiner.Forms
             // tabPageOverClock
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageOverClock.Controls.Add(this.checkBox_ABMinimize);
             this.tabPageOverClock.Controls.Add(this.checkBox_ABOverclock_Relative);
             this.tabPageOverClock.Controls.Add(this.checkBox_AB_ForceRun);
             this.tabPageOverClock.Controls.Add(this.checkBox_ABEnableOverclock);
@@ -1724,6 +1726,20 @@ namespace NiceHashMiner.Forms
             this.tabPageOverClock.Size = new System.Drawing.Size(669, 439);
             this.tabPageOverClock.TabIndex = 5;
             this.tabPageOverClock.Text = "OverClock";
+            // 
+            // checkBox_ABMinimize
+            // 
+            this.checkBox_ABMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_ABMinimize.AutoSize = true;
+            this.checkBox_ABMinimize.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_ABMinimize.Location = new System.Drawing.Point(371, 62);
+            this.checkBox_ABMinimize.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ABMinimize.Name = "checkBox_ABMinimize";
+            this.checkBox_ABMinimize.Size = new System.Drawing.Size(143, 17);
+            this.checkBox_ABMinimize.TabIndex = 404;
+            this.checkBox_ABMinimize.Text = "Minimize MSI Afterburner";
+            this.checkBox_ABMinimize.UseVisualStyleBackColor = true;
             // 
             // checkBox_ABOverclock_Relative
             // 
@@ -2399,5 +2415,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_ABEnableOverclock;
         private System.Windows.Forms.CheckBox checkBox_ABOverclock_Relative;
         private System.Windows.Forms.CheckBox checkBox_AB_ForceRun;
+        private System.Windows.Forms.CheckBox checkBox_ABMinimize;
     }
 }
