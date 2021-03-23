@@ -2420,13 +2420,14 @@ namespace NiceHashMiner.Forms
                     checkBox_ABEnableOverclock.Checked = false;
                     return;
                 }
-
+                /*
                 for (int i = 2; i <= 10; i++)
                 {
                     checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock") + str.PadRight(i, '.');
                     System.Threading.Thread.Sleep(300);
                     checkBox_ABEnableOverclock.Update();
                 }
+                */
                 checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
                 checkBox_ABEnableOverclock.Update();
                 if (!MSIAfterburner.MSIAfterburnerInit())
@@ -2438,8 +2439,11 @@ namespace NiceHashMiner.Forms
             }
             if (!checkBox_ABEnableOverclock.Checked)
             {
+                if (MSIAfterburner.macm != null) MSIAfterburner.macm.Disconnect();
+                if (MSIAfterburner.mahm != null) MSIAfterburner.mahm.Disconnect();
                 MSIAfterburner.macm = null;
                 MSIAfterburner.mahm = null;
+                
             }
             oc.Focus();
         }

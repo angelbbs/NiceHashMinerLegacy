@@ -470,8 +470,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />
-    <None Include="Resources\ZKZx.gif" />
-    <None Include="Resources\waiting-icon-gif-5.jpg" />
     <None Include="Resources\recycle2.ico" />
     <None Include="Resources\recycle1.ico" />
     <None Include="Resources\NHM_logo_xxsmall_light92.png" />

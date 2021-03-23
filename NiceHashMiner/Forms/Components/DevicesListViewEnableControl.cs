@@ -257,7 +257,9 @@ namespace NiceHashMiner.Forms.Components
                 return;
             }
             int index = 0;
-            foreach (var computeDevice in computeDevices)
+            var _computeDevices = ComputeDeviceManager.ReSortDevices(computeDevices);
+            
+            foreach (var computeDevice in _computeDevices)
             {
                 string cTemp = Math.Truncate(computeDevice.Temp).ToString() + "°C";
                 string cLoad = Math.Truncate(computeDevice.Load).ToString() + "%";

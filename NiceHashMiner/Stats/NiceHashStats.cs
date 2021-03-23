@@ -1143,6 +1143,9 @@ namespace NiceHashMiner.Stats
         public static async void SetDeviceStatus(object state, bool devName = false)
         {
             var devices = ComputeDeviceManager.Available.Devices;
+            
+            var _computeDevices = ComputeDeviceManager.ReSortDevices(devices);
+
             var rigStatus = CalcRigStatusString();
             var activeIDs = MinersManager.GetActiveMinersIndexes();
             string type;
@@ -1160,24 +1163,16 @@ namespace NiceHashMiner.Stats
             };
 
             var deviceList = new JArray();
-            foreach (var device in devices)
+            foreach (var device in _computeDevices)
             {
                 try
                 {
-                    /*
-                    Helpers.ConsolePrint("DEVICE", device.DeviceType.ToString());
-                    Helpers.ConsolePrint("DEVICE", device.Name);
-                    Helpers.ConsolePrint("DEVICE", device.Uuid);
-                    Helpers.ConsolePrint("DEVICE", device.NewUuid);
-                    */
                     int status = 0;
                     if (device.DeviceType == DeviceType.CPU)
                     {
                         type = "1";
                         status = 8;
                         b64Web = UUID.GetB64UUID(device.NewUuid);
-                        //Helpers.ConsolePrint("device.NewUuid", device.NewUuid);
-                        //Helpers.ConsolePrint("device.Uuid", device.Uuid);
                         nuuid = $"{type}-{b64Web}";
                     }
                     if (device.DeviceType == DeviceType.NVIDIA)
@@ -1191,12 +1186,6 @@ namespace NiceHashMiner.Stats
                     {
                         type = "3";
                         status = 24;
-                        /*
-                        var uuidHEX = UUID.GetHexUUID(device.Uuid);//это не правильный uuid, но будет работать
-                        var Newuuid = $"AMD-{uuidHEX}";
-                        b64Web = UUID.GetB64UUID(Newuuid);
-                        nuuid = $"{type}-{b64Web}";
-                        */
                         b64Web = UUID.GetB64UUID(device.Uuid);
                         nuuid = $"{type}-{b64Web}";
                     }
@@ -1224,7 +1213,8 @@ namespace NiceHashMiner.Stats
                             if (deviceName.Contains(GpuRam))
                             {
                                 GpuRam = "";
-                            } else
+                            }
+                            else
                             {
                                 deviceName = deviceName + " " + GpuRam;
                             }
@@ -1268,13 +1258,13 @@ namespace NiceHashMiner.Stats
                             GpuRam = "";
                         }
                     }
-                    
+
                     if (!devName)
                     {
                         deviceName = "";
                         Manufacturer = "";
                     }
-                    
+
                     /*
                     if (rigStatus != "PENDING")
                     {
@@ -1287,11 +1277,6 @@ namespace NiceHashMiner.Stats
                         nuuid
                     };
 
-                    //var status = DeviceReportStatus(device.DeviceType, device.State);
-                    //var status = Convert.ToInt32(activeIDs.Contains(device.Index)) + ((int)device.DeviceType + 1) * 2;
-
-                    //var status = ((int)device.DeviceType + 9) + Convert.ToInt32(Miner.IsRunningNew);
-                    //var status =  9;
                     int rigs = 0;
                     if (rigStatus == "STOPPED")
                     {
@@ -1318,14 +1303,7 @@ namespace NiceHashMiner.Stats
 
 
                     var speedsJson = new JArray();
-                    /*
-                    if (rigStatus != "MINING")
-                    {
-                        speedsJson.Add(new JArray()); // все скорости
-                    }
-                    else
-                    */
-                    //HashRate = Math.Round(ComputeDevice.HashRate / (devices.Count - 1), 2);
+
                     HashRate = device.MiningHashrate;
                     if (rigs == 1 & device.AlgorithmID > 0)
                     {
@@ -1352,7 +1330,8 @@ namespace NiceHashMiner.Stats
                     if (device.DeviceType != DeviceType.CPU)
                     {
                         array.Add(device.FanSpeed);
-                    } else
+                    }
+                    else
                     {
                         array.Add(-1);
                     }
@@ -1371,9 +1350,6 @@ namespace NiceHashMiner.Stats
                     param = paramList
                 };
                 var sendData = JsonConvert.SerializeObject(data);
-                // This function is run every minute and sends data every run which has two auxiliary effects
-                // Keeps connection alive and attempts reconnection if internet was dropped
-                // _socket?.SendData(sendData);
 
                 if (_socket != null)
                 {
@@ -1384,55 +1360,9 @@ namespace NiceHashMiner.Stats
             catch (Exception ex)
             {
                 throw new Exception($"DeviceStatus_TickNew: {ex.ToString()}");
-               // Helpers.ConsolePrint("DeviceStatus_TickNew", e.ToString());
             }
-}
-       // private static async void DeviceStatus_Tick(object state)
-        private static async void DeviceStatus_Tick(object sender, ElapsedEventArgs e)
-        {
-            var devices = ComputeDeviceManager.Available.Devices;
-            var deviceList = new List<JArray>();
-            var activeIDs = MinersManager.GetActiveMinersIndexes();
-            foreach (var device in devices)
-            {
-                try
-                {
-                    /*
-                    Helpers.ConsolePrint("DEVICE", device.DeviceType.ToString());
-                    Helpers.ConsolePrint("DEVICE", device.Name);
-                    Helpers.ConsolePrint("DEVICE", device.Uuid);
-                    Helpers.ConsolePrint("DEVICE", device.NewUuid);
-                    */
-                    var array = new JArray
-                    {
-                        device.Index,
-                        device.Name
-                    };
-                    Thread.Sleep(50);
-                    var status = Convert.ToInt32(activeIDs.Contains(device.Index)) + ((int) device.DeviceType + 1) * 2;
-                    array.Add(status);
-                    array.Add((int) Math.Round(device.Load));
-                    array.Add((int) Math.Round(device.Temp));
-                    array.Add(device.FanSpeed);
-                    deviceList.Add(array);
-                }
-                catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
-            }
-            var data = new NicehashDeviceStatus
-            {
-                devices = deviceList
-            };
-            var sendData = JsonConvert.SerializeObject(data);
-            // This function is run every minute and sends data every run which has two auxiliary effects
-            // Keeps connection alive and attempts reconnection if internet was dropped
-            // _socket?.SendData(sendData);
-
-            if (_socket != null)
-            {
-                await _socket.SendData(sendData);
-            }
-
         }
+       
 
         #endregion
 

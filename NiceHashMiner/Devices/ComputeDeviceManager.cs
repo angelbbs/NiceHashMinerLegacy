@@ -44,6 +44,51 @@ namespace NiceHashMiner.Devices
         #endregion JSON settings
         private static int CUDAQueryCount = 1;
         private static string nvmlRootPath = "";
+
+        //костыль, когда у nvidia порядок карт deviceID не совпадает с порядком busID (1230 - 0123)
+        public static List<ComputeDevice> ReSortDevices(List<ComputeDevice> computeDevices)
+        {
+            //separate 
+            List<ComputeDevice> _computeDevices = computeDevices;
+            List<ComputeDevice> _computeDevicesCPU = new List<ComputeDevice>();
+            List<ComputeDevice> _computeDevicesAMD = new List<ComputeDevice>();
+            List<ComputeDevice> _computeDevicesNVIDIA = new List<ComputeDevice>();
+
+            foreach (var cpu in _computeDevices)
+            {
+                if (cpu.DeviceType == DeviceType.CPU)
+                {
+                    _computeDevicesCPU.Add(cpu);
+                }
+            }
+            foreach (var amd in _computeDevices)
+            {
+                if (amd.DeviceType == DeviceType.AMD)
+                {
+                    _computeDevicesAMD.Add(amd);
+                }
+            }
+            foreach (var nvidia in _computeDevices)
+            {
+                if (nvidia.DeviceType == DeviceType.NVIDIA)
+                {
+                    _computeDevicesNVIDIA.Add(nvidia);
+                }
+            }
+
+            if (Form_Main.NVIDIA_orderBug)
+            {
+                _computeDevicesNVIDIA.Sort((a, b) => a.ID.CompareTo(b.ID));
+            }
+
+            List<ComputeDevice> all = new List<ComputeDevice>();
+
+            all.AddRange(_computeDevicesCPU);
+            all.AddRange(_computeDevicesNVIDIA);
+            all.AddRange(_computeDevicesAMD);
+
+            return all;
+        }
         public static class Query
         {
             private const string Tag = "ComputeDeviceManager.Query";
@@ -102,6 +147,8 @@ namespace NiceHashMiner.Devices
             public static int CpuCount = 0;
 
             public static int GpuCount = 0;
+
+            
 
             private static NvidiaSmiDriver GetNvidiaSmiDriver()
             {
@@ -732,6 +779,7 @@ namespace NiceHashMiner.Devices
 
                 private static void test_msi_ab()
                 {
+                    return;
                     try
                     {
                         // connect to MACM shared memory
@@ -973,6 +1021,8 @@ namespace NiceHashMiner.Devices
                     return ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 }
 
+                
+
                 public static void QueryCudaDevices()
                 {
                     Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
@@ -1047,166 +1097,91 @@ namespace NiceHashMiner.Devices
                         {
                             Helpers.ConsolePrint("NVML", e.ToString());
                         }
-
+                        /*
                         //check id & busid order
                         int oldId = -1;
-                        bool idBug = false;
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
                             if ((int)cudaDev.DeviceID < oldId)
                             {
                                 Helpers.ConsolePrint("QueryCudaDevices", "NVIDIA ID & BusID order bug detected");
-                                idBug = true;
-                                break;
+                                Form_Main.NVIDIA_orderBug = true;
                             }
                             oldId = (int)cudaDev.DeviceID;
                         }
-
-                        if (!idBug)
+                        */
+                        foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
-                            foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
+                            // check sm vesrions
+                            bool isUnderSM21;
                             {
-                                // check sm vesrions
-                                bool isUnderSM21;
-                                {
-                                    var isUnderSM2Major = cudaDev.SM_major < 2;
-                                    var isUnderSM1Minor = cudaDev.SM_minor < 1;
-                                    isUnderSM21 = isUnderSM2Major && isUnderSM1Minor;
-                                }
-                                string Manufacturer = (cudaDev.pciSubSystemId).ToString("X16").Substring((cudaDev.pciSubSystemId).ToString("X16").Length - 4);
-                                cudaDev.CUDAManufacturer = ComputeDevice.GetManufacturer(Manufacturer);
-                                //bool isOverSM6 = cudaDev.SM_major > 6;
-                                var skip = isUnderSM21;
-                                var skipOrAdd = skip ? "SKIPED" : "ADDED";
-                                const string isDisabledGroupStr = ""; // TODO remove
-                                var etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
-                                stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                                stringBuilder.AppendLine($"\t\tID: {cudaDev.DeviceID}");
-                                stringBuilder.AppendLine($"\t\tpciBusID: {cudaDev.pciBusID}");
-                                stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
-                                stringBuilder.AppendLine($"\t\tMANUFACTURER: {cudaDev.CUDAManufacturer} ({Manufacturer})");
-                                stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
-                                stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
-                                stringBuilder.AppendLine($"\t\tMonitor: {cudaDev.HasMonitorConnected}");
-                                stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
-                                stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-                                //force 1080 detection
-                                if (cudaDev.GetName().Contains("1080") || cudaDev.GetName().Contains("Titan Xp"))
-                                {
-                                    Form_Main.ShouldRunEthlargement = true;
-                                }
-
-                                if (!skip)
-                                {
-                                    DeviceGroupType group;
-                                    switch (cudaDev.SM_major)
-                                    {
-                                        case 2:
-                                            group = DeviceGroupType.NVIDIA_2_1;
-                                            break;
-                                        case 3:
-                                            group = DeviceGroupType.NVIDIA_3_x;
-                                            break;
-                                        case 5:
-                                            group = DeviceGroupType.NVIDIA_5_x;
-                                            break;
-                                        case 6:
-                                            group = DeviceGroupType.NVIDIA_6_x;
-                                            break;
-                                        default:
-                                            group = DeviceGroupType.NVIDIA_6_x;
-                                            break;
-                                    }
-
-                                    var nvmlHandle = new nvmlDevice();
-
-                                    if (nvmlInit)
-                                    {
-                                        var ret = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(cudaDev.UUID, ref nvmlHandle);
-                                        stringBuilder.AppendLine(
-                                            "\t\tNVML HANDLE: " +
-                                            $"{(ret == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
-                                    }
-
-                                    idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
-                                    Available.Devices.Add(
-                                        new CudaComputeDevice(cudaDev, group, ++GpuCount, handle, nvmlHandle)
-                                    );
-                                }
+                                var isUnderSM2Major = cudaDev.SM_major < 2;
+                                var isUnderSM1Minor = cudaDev.SM_minor < 1;
+                                isUnderSM21 = isUnderSM2Major && isUnderSM1Minor;
                             }
-                        } else
-                        {
-                            foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.DeviceID))
+                            string Manufacturer = (cudaDev.pciSubSystemId).ToString("X16").Substring((cudaDev.pciSubSystemId).ToString("X16").Length - 4);
+                            cudaDev.CUDAManufacturer = ComputeDevice.GetManufacturer(Manufacturer);
+                            //bool isOverSM6 = cudaDev.SM_major > 6;
+                            var skip = isUnderSM21;
+                            var skipOrAdd = skip ? "SKIPED" : "ADDED";
+                            const string isDisabledGroupStr = ""; // TODO remove
+                            var etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
+                            stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
+                            stringBuilder.AppendLine($"\t\tID: {cudaDev.DeviceID}");
+                            stringBuilder.AppendLine($"\t\tpciBusID: {cudaDev.pciBusID}");
+                            stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
+                            stringBuilder.AppendLine($"\t\tMANUFACTURER: {cudaDev.CUDAManufacturer} ({Manufacturer})");
+                            stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
+                            stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
+                            stringBuilder.AppendLine($"\t\tMonitor: {cudaDev.HasMonitorConnected}");
+                            stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
+                            stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
+                            //force 1080 detection
+                            if (cudaDev.GetName().Contains("1080") || cudaDev.GetName().Contains("Titan Xp"))
                             {
-                                // check sm vesrions
-                                bool isUnderSM21;
+                                Form_Main.ShouldRunEthlargement = true;
+                            }
+
+                            if (!skip)
+                            {
+                                DeviceGroupType group;
+                                switch (cudaDev.SM_major)
                                 {
-                                    var isUnderSM2Major = cudaDev.SM_major < 2;
-                                    var isUnderSM1Minor = cudaDev.SM_minor < 1;
-                                    isUnderSM21 = isUnderSM2Major && isUnderSM1Minor;
-                                }
-                                string Manufacturer = (cudaDev.pciSubSystemId).ToString("X16").Substring((cudaDev.pciSubSystemId).ToString("X16").Length - 4);
-                                cudaDev.CUDAManufacturer = ComputeDevice.GetManufacturer(Manufacturer);
-                                //bool isOverSM6 = cudaDev.SM_major > 6;
-                                var skip = isUnderSM21;
-                                var skipOrAdd = skip ? "SKIPED" : "ADDED";
-                                const string isDisabledGroupStr = ""; // TODO remove
-                                var etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
-                                stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                                stringBuilder.AppendLine($"\t\tID: {cudaDev.DeviceID}");
-                                stringBuilder.AppendLine($"\t\tpciBusID: {cudaDev.pciBusID}");
-                                stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
-                                stringBuilder.AppendLine($"\t\tMANUFACTURER: {cudaDev.CUDAManufacturer} ({Manufacturer})");
-                                stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
-                                stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
-                                stringBuilder.AppendLine($"\t\tMonitor: {cudaDev.HasMonitorConnected}");
-                                stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
-                                stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-                                //force 1080 detection
-                                if (cudaDev.GetName().Contains("1080") || cudaDev.GetName().Contains("Titan Xp"))
-                                {
-                                    Form_Main.ShouldRunEthlargement = true;
+                                    case 2:
+                                        group = DeviceGroupType.NVIDIA_2_1;
+                                        break;
+                                    case 3:
+                                        group = DeviceGroupType.NVIDIA_3_x;
+                                        break;
+                                    case 5:
+                                        group = DeviceGroupType.NVIDIA_5_x;
+                                        break;
+                                    case 6:
+                                        group = DeviceGroupType.NVIDIA_6_x;
+                                        break;
+                                    default:
+                                        group = DeviceGroupType.NVIDIA_6_x;
+                                        break;
                                 }
 
-                                if (!skip)
+                                var nvmlHandle = new nvmlDevice();
+
+                                if (nvmlInit)
                                 {
-                                    DeviceGroupType group;
-                                    switch (cudaDev.SM_major)
-                                    {
-                                        case 2:
-                                            group = DeviceGroupType.NVIDIA_2_1;
-                                            break;
-                                        case 3:
-                                            group = DeviceGroupType.NVIDIA_3_x;
-                                            break;
-                                        case 5:
-                                            group = DeviceGroupType.NVIDIA_5_x;
-                                            break;
-                                        case 6:
-                                            group = DeviceGroupType.NVIDIA_6_x;
-                                            break;
-                                        default:
-                                            group = DeviceGroupType.NVIDIA_6_x;
-                                            break;
-                                    }
-
-                                    var nvmlHandle = new nvmlDevice();
-
-                                    if (nvmlInit)
-                                    {
-                                        var ret = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(cudaDev.UUID, ref nvmlHandle);
-                                        stringBuilder.AppendLine(
-                                            "\t\tNVML HANDLE: " +
-                                            $"{(ret == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
-                                    }
-
-                                    idHandles.TryGetValue((int)cudaDev.DeviceID, out var handle);
-                                    Available.Devices.Add(
-                                        new CudaComputeDevice(cudaDev, group, ++GpuCount, handle, nvmlHandle)
-                                    );
+                                    var ret = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(cudaDev.UUID, ref nvmlHandle);
+                                    stringBuilder.AppendLine(
+                                        "\t\tNVML HANDLE: " +
+                                        $"{(ret == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
                                 }
+
+                                idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
+                                Available.Devices.Add(
+                                    new CudaComputeDevice(cudaDev, group, ++GpuCount, handle, nvmlHandle)
+                                );
                             }
                         }
+                        
+                        
                         Helpers.ConsolePrint(Tag, stringBuilder.ToString());
                     }
                     Helpers.ConsolePrint(Tag, "QueryCudaDevices END");

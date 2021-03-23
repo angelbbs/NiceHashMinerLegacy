@@ -1,4 +1,5 @@
 ﻿using MSI.Afterburner;
+using MSI.Afterburner.Exceptions;
 using NiceHashMiner.Configs;
 using System;
 using System.Collections.Generic;
@@ -63,6 +64,7 @@ namespace NiceHashMiner.Devices
                         P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
                         P.StartInfo.UseShellExecute = false;
                         P.Start();
+                        /*
                         do
                         {
                             Thread.Sleep(100);
@@ -71,6 +73,26 @@ namespace NiceHashMiner.Devices
                                 break;
                             }
                         } while (true);
+                        */
+                        int repeats = 0;
+                        do
+                        {
+                            Helpers.ConsolePrint("MSI AB", "Check MSI Afterburner instance. Try " + repeats.ToString());
+                            if (Process.GetProcessesByName("MSIAfterburner").Any())
+                            {
+                                IntPtr wdwIntPtr = FindWindow(null, "MSI Afterburner ");
+
+                                if ((int)wdwIntPtr > 1)
+                                {
+                                    Thread.Sleep(2000);//обязательная пауза
+                                    break;
+                                }
+                                repeats++;
+                                Thread.Sleep(1000);
+                            }
+                        } while (repeats < 30);
+                        
+
                     }
                     catch (Exception ex)
                     {
@@ -99,17 +121,100 @@ namespace NiceHashMiner.Devices
             }
             return true;
         }
+
+        public static void MSIAfterburnerKill()
+        {
+            foreach (var process in Process.GetProcessesByName("MSIAfterburner"))
+            {
+                try { process.Kill(); }
+                catch (Exception e) { Helpers.ConsolePrint("MSIAfterburnerKill", e.ToString()); }
+            }
+        }
         public static bool MSIAfterburnerInit()
         {
-            try
+            string _ex = "";
+            int repeatsab = 0;
+            do
             {
-                macm = new ControlMemory();
-                mahm = new HardwareMonitor();
-            } catch (Exception ex)
+                try
+                {
+                    Helpers.ConsolePrint("*************", "MSIAfterburnerInit 1");
+                    macm = new ControlMemory();
+                    macm.Connect();
+                   // macm.Reinitialize();
+                    Helpers.ConsolePrint("*************", "MSIAfterburnerInit 2");
+                    mahm = new HardwareMonitor();
+                    mahm.Connect();
+                    //mahm.ReloadAll();
+                    Helpers.ConsolePrint("*************", "MSIAfterburnerInit 3");
+
+                    Helpers.ConsolePrint("*************", "***** MSI AFTERTERBURNER CONTROL HEADER *****");
+                    Helpers.ConsolePrint("*************", macm.Header.ToString().Replace(";", "\r\n"));
+
+                    // print out current MACM GPU Entry values
+                    for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+                    {
+                        Helpers.ConsolePrint("*************", "***** MSI AFTERTERBURNER GPU " + i.ToString() + " *****");
+                        Helpers.ConsolePrint("*************", macm.GpuEntries[i].ToString().Replace(";", "\r\n"));
+                    }
+                    //macm.GpuEntries[0].CoreClockCur = 1400;
+                    //macm.CommitChanges();
+                    /*
+                    for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+                    {
+                        Helpers.ConsolePrint("macm: " + i.ToString(), macm.GpuEntries[i].ToString().Replace(";", "\r\n"));
+                    }
+                    //macm.GpuEntries[0].CoreClockCur = 1400;
+                    //macm.CommitChanges();
+                    // print out current Entry values
+                    for (int i = 0; i < mahm.Header.GpuEntryCount; i++)
+                    {
+                        Helpers.ConsolePrint("mahm: " + i.ToString(), "gpuid=" + mahm.GpuEntries[i].GpuId.ToString() +
+                            " " + mahm.Entries[i].ToString().Replace(";", "\r\n"));
+
+                    }
+                    */
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    //_ex = ex.Message;
+                    //Connected to invalid MSI Afterburner shared memory.
+                    //Could not connect to MSI Afterburner 2.1 or later.
+
+                    //GPU 0 does not support changing the core voltage.
+                    Helpers.ConsolePrint("MSI AB error:", ex.Message);
+                    if (ex.InnerException != null)
+                        Helpers.ConsolePrint("MSI AB error message", ex.InnerException.Message);
+
+                    //break;
+                    if (macm != null) macm.Disconnect();
+                    if (mahm != null) mahm.Disconnect();
+
+                    MSIAfterburner.macm = null;
+                    MSIAfterburner.mahm = null;
+
+                    if (ex.Message.Contains("not connect"))
+                    {
+                        Thread.Sleep(2000);
+                    }
+
+                    if (ex.Message.Contains("invalid"))
+                    {
+                        Helpers.ConsolePrint("MSI AB", "Killing old instance AB and run again");
+                        MSIAfterburnerKill();
+                        Thread.Sleep(1000);
+                        MSIAfterburnerRUN(true);
+                        Thread.Sleep(1000);
+                    }
+                }
+                Thread.Sleep(1000);
+                repeatsab++;
+            } while (repeatsab < 5);
+
+            if (repeatsab >= 5)
             {
-                Helpers.ConsolePrint("MSI AB error:", ex.Message);
-                if (ex.InnerException != null)
-                    Helpers.ConsolePrint("MSI AB error message", ex.InnerException.Message);
+                Helpers.ConsolePrint("MSI AB error:", "Fatal error");
                 return false;
             }
             return true;

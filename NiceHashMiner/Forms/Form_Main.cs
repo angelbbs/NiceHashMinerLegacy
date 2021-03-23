@@ -131,6 +131,7 @@ namespace NiceHashMiner
         public static bool FormMainMoved = false;
         public static bool MSIAfterburnerAvailabled = false;
         public static bool MSIAfterburnerRunning = false;
+        public static bool NVIDIA_orderBug = false;
         public struct RigProfitList
         {
             public DateTime DateTime;
@@ -682,8 +683,8 @@ namespace NiceHashMiner
             //_loadingScreen.SetInfoMsg("Set firewall rules");
             _loadingScreen.SetValueAndMsg(3, "Set firewall rules");
 
-            new Task(() => MSIAfterburner.MSIAfterburnerRUN()).Start();
-            //MSIAfterburner.MSIAfterburnerRUN();
+            //new Task(() => MSIAfterburner.MSIAfterburnerRUN()).Start();
+            MSIAfterburner.MSIAfterburnerRUN();
 
             flowLayoutPanelRates.Visible = true;
 
@@ -769,15 +770,13 @@ namespace NiceHashMiner
                     if (Process.GetProcessesByName("MSIAfterburner").Any()) break;
                 } while (countab < 50); //5 sec
 
-                //if (ConfigManager.GeneralConfig.AB_ForceRun)
+                if (!MSIAfterburner.MSIAfterburnerInit())
                 {
-                    if (!MSIAfterburner.MSIAfterburnerInit())
-                    {
-                        new Task(() =>
-                            MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
-                    } 
+                    new Task(() =>
+                        MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                 }
+                
             }
 
             _loadingScreen.SetValueAndMsg(11, International.GetText("Check VC redistributable"));
