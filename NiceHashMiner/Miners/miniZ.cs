@@ -429,6 +429,20 @@ namespace NiceHashMiner.Miners
                 if (resp != null && resp.error == null)
                 {
                     ad.Speed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_sps);
+                    double[] hashrates = new double[resp.result.Count];
+                    for (var i = 0; i < resp.result.Count; i++)
+                    {
+                        //total = total + resp.devices[i].speed;
+                        hashrates[i] = resp.result[i].speed_sps;
+                    }
+                    int dev = 0;
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+                    foreach (var mPair in sortedMinerPairs)
+                    {
+                        mPair.Device.MiningHashrate = hashrates[dev];
+                        dev++;
+                    }
+
                     prevSpeed = ad.Speed;
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                     if (ad.Speed == 0)
@@ -439,7 +453,7 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(MinerTag(), ex.Message);
+                Helpers.ConsolePrint(MinerTag(), ex.ToString());
                 //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = prevSpeed;

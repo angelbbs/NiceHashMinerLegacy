@@ -17,6 +17,7 @@ using Timer = System.Windows.Forms.Timer;
 using System.Diagnostics;
 using System.IO;
 using NiceHashMiner.Forms.Components;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Forms
 {
@@ -619,8 +620,26 @@ namespace NiceHashMiner.Forms
             _benchmarkingTimer.Start();
         }
 
-        private Process RunCMDAfterBenchmark()
+        public static void RunCMDAfterBenchmark()
         {
+            foreach (var filePath in MinersBins.ALL_FILES_BINS)
+            {
+                string[] sep = { "/", "." };
+                string toKill = filePath.Split(sep, StringSplitOptions.RemoveEmptyEntries)[1];
+                
+                if (toKill != "x64" && toKill != "txt")
+                {
+                    Helpers.ConsolePrint("RunCMDAfterBenchmark", "Try kill: " + toKill);
+                    foreach (var process in Process.GetProcessesByName(toKill))
+                    {
+                        try { process.Kill(); }
+                        catch (Exception e) { Helpers.ConsolePrint("RunCMDAfterBenchmark", e.ToString()); }
+                    }
+                }
+
+            }
+
+            /*
             bool CreateNoWindow = false;
             var CMDconfigHandle = new Process
 
@@ -678,6 +697,7 @@ namespace NiceHashMiner.Forms
 
             Thread.Sleep(5);
             return CMDconfigHandle;
+            */
         }
         private void EndBenchmark()
         {

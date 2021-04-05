@@ -28,22 +28,13 @@ namespace NiceHashMiner
         /// </summary>
         private void InitializeComponent()
         {
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.LoadText = new System.Windows.Forms.Label();
             this.label_LoadingText = new System.Windows.Forms.Label();
+            this.progressBar2 = new ProgressBarSample.TextProgressBar();
             this.SuspendLayout();
-            //
-            // progressBar1
-            //
-            this.progressBar1.ForeColor = System.Drawing.Color.Blue;
-            this.progressBar1.Location = new System.Drawing.Point(12, 25);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(286, 23);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBar1.TabIndex = 1;
-            //
+            // 
             // LoadText
-            //
+            // 
             this.LoadText.AutoSize = true;
             this.LoadText.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.LoadText.Location = new System.Drawing.Point(9, 51);
@@ -52,9 +43,9 @@ namespace NiceHashMiner
             this.LoadText.TabIndex = 2;
             this.LoadText.Text = "                                                                                 " +
     "           ";
-            //
+            // 
             // label_LoadingText
-            //
+            // 
             this.label_LoadingText.AutoSize = true;
             this.label_LoadingText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label_LoadingText.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -63,16 +54,30 @@ namespace NiceHashMiner
             this.label_LoadingText.Size = new System.Drawing.Size(136, 13);
             this.label_LoadingText.TabIndex = 0;
             this.label_LoadingText.Text = "Loading, please wait...";
-            //
+            // 
+            // progressBar2
+            // 
+            this.progressBar2.CustomText = "";
+            this.progressBar2.Location = new System.Drawing.Point(12, 28);
+            this.progressBar2.Margin = new System.Windows.Forms.Padding(0);
+            this.progressBar2.Name = "progressBar2";
+            this.progressBar2.ProgressColor = System.Drawing.SystemColors.ControlDark;
+            this.progressBar2.Size = new System.Drawing.Size(286, 23);
+            this.progressBar2.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar2.TabIndex = 397;
+            this.progressBar2.TextColor = System.Drawing.Color.Black;
+            this.progressBar2.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progressBar2.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
+            // 
             // Form_Loading
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(310, 76);
             this.ControlBox = false;
+            this.Controls.Add(this.progressBar2);
             this.Controls.Add(this.LoadText);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label_LoadingText);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
@@ -89,9 +94,8 @@ namespace NiceHashMiner
         }
 
         #endregion
-
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label LoadText;
         private System.Windows.Forms.Label label_LoadingText;
+        private ProgressBarSample.TextProgressBar progressBar2;
     }
 }

@@ -9,10 +9,10 @@
     "Global_Retry": "&Повторить",
 
     "Service_Location": "Локация",
-    "LocationName_eu": "Европа - Амстердам",
-    "LocationName_eu-north": "Европа (север) - Хамина",
-    "LocationName_usa": "США - Сан-Хосе",
-    "LocationName_usa-east": "США (восток) - Ашберн",
+        "LocationName_eu-west": "Европа (запад) - Бельгия",
+	"LocationName_eu-north": "Европа (север) - Финляндия",
+        "LocationName_usa-west": "США (запад) - Калифорния",
+        "LocationName_usa-east": "США (восток) - Нью Йорк",
     "Warning_with_Exclamation": "Предупреждение!",
     "Error_with_Exclamation": "Ошибка!",
     "BitcoinAddress": "Биткоин-адрес",
@@ -51,6 +51,8 @@
     "Form_Main_DemoModeMsg": "Вы не ввели Биткоин-адрес. Miner Legacy Fork Fix начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nДИСКЛАМАЦИЯ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
 
     "Form_Main_loadtext_CPU": "Проверка устройств CPU…",
+    "Form_Main_loadtext_FireWall": "Настройка правил фаервола…",
+    "Form_Main_loadtext_MSI_AB": "Запуск MSI Afterburner…",
     "Form_Main_loadtext_NVIDIA5X": "Проверка устройств NVIDIA5.x и NVIDIA6.x…",
     "Form_Main_loadtext_NVIDIA3X": "Проверка устройств NVIDIA3.x…",
     "Form_Main_loadtext_NVIDIA2X": "Проверка устройств NVIDIA2.1…",
@@ -63,6 +65,13 @@
     "Form_Main_loadtext_SetEnvironmentVariable": "Установка переменных окружения…",
     "Form_Main_loadtext_SetWindowsErrorReporting": "Установка отчета об ошибках Windows…",
     "Form_Main_loadtext_NVIDIAP0State": "Изменение всех поддерживаемых NVIDIA GPU в статус P0…",
+    "Form_Main_loadtext_Check_VC_redistributable": "Проверка распространяемого пакета Visual C++…",
+
+    "Form_Main_device_hashrate": "Скорость",
+    "Form_Main_device_temp": "Температура",
+    "Form_Main_device_load": "Нагрузка",
+    "Form_Main_device_fan": "Об/мин",
+    "Form_Main_device_power": "Потребление",
 
     "Form_Main_msgbox_CPUMining64bitMsg": "Miner Legacy Fork Fix работает только на 64-разрядной версии ОС для майнинга на CPU. Майнинг на CPU будет отключён.",
     "Form_Main_msgbox_CPUMining64CoresMsg": "Miner Legacy Fork Fix не поддерживает более 64 виртуальных ядер. Майнинг на CPU будет отключён.",

@@ -76,7 +76,7 @@ namespace NiceHashMiner.Devices
                 }
             }
 
-            if (Form_Main.NVIDIA_orderBug)
+            if (Form_Main.NVIDIA_orderBug)//костыль из-за неправильной нумерации карт
             {
                 _computeDevicesNVIDIA.Sort((a, b) => a.ID.CompareTo(b.ID));
             }
@@ -394,7 +394,6 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
                     SetValueAndMsg(2, International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
                     Nvidia.QueryCudaDevices();
                 }
@@ -402,8 +401,7 @@ namespace NiceHashMiner.Devices
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
-                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
-                    SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
+                    //SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
                 }
                 else
                 {
@@ -413,7 +411,7 @@ namespace NiceHashMiner.Devices
                     OpenCL.QueryOpenCLDevices();
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
                     //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
-                    SetValueAndMsg(4, International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+                    SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_AMD_Query"));
                     var amd = new AmdQuery(AvaliableVideoControllers);
                     AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
                 }
@@ -1097,7 +1095,7 @@ namespace NiceHashMiner.Devices
                         {
                             Helpers.ConsolePrint("NVML", e.ToString());
                         }
-                        /*
+                        
                         //check id & busid order
                         int oldId = -1;
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
@@ -1109,7 +1107,7 @@ namespace NiceHashMiner.Devices
                             }
                             oldId = (int)cudaDev.DeviceID;
                         }
-                        */
+                        
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
                             // check sm vesrions

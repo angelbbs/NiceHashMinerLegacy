@@ -11,6 +11,7 @@ using NiceHashMiner.Configs;
 using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Devices;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner.Miners
 {
@@ -25,7 +26,7 @@ namespace NiceHashMiner.Miners
         private double Total = 0;
         private const int TotalDelim = 2;
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.ZEnemy;
-
+        public static string apiRequest = "summary";
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
             return 60 * 1000 * 5;
@@ -47,7 +48,7 @@ namespace NiceHashMiner.Miners
             string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             algo = "--algo=" + MiningSetup.MinerName;
-            apiBind = " --api-bind=" + ApiPort;
+            apiBind = " --api-bind-http=" + ApiPort;
 
             LastCommandLine = algo +
                 " --url=" + url + " --userpass=" + username + ":x" +
@@ -91,7 +92,7 @@ namespace NiceHashMiner.Miners
                 " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
                 " --url=" + url + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
-                              timeLimit + " --api-bind=" + ApiPort + " " +
+                              timeLimit + " --api-bind-http=" + ApiPort + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
                                   DeviceType.NVIDIA) +
@@ -107,7 +108,7 @@ namespace NiceHashMiner.Miners
                 " -o stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                 " -o stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
                 " -o stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                              timeLimit + " --api-bind=" + ApiPort + " " +
+                              timeLimit + " --api-bind-http=" + ApiPort + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
                                   DeviceType.NVIDIA) +
@@ -325,46 +326,51 @@ namespace NiceHashMiner.Miners
 
         #endregion // Decoupled benchmarking routines
 
+        
         public override async Task<ApiData> GetSummaryAsync()
         {
-            if (!IsApiReadException) return await GetSummaryCpuCcminerAsync();
-            // check if running
-            if (ProcessHandle == null)
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            string dataToSend;
+
+            dataToSend = GetHttpRequestNhmAgentStrin("summary?gpuinfo=1");
+            var resp = await GetApiDataAsync(ApiPort, dataToSend, true);
+             
+            if (resp == null || !resp.Contains("dev_id"))
             {
-                CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Could not read data from CryptoNight Proccess is null");
+                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " summary is null");
+                ad.Speed = 0;
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return null;
             }
             try
             {
-                Process.GetProcessById(ProcessHandle.Id);
+                string jsonData = resp.Substring(resp.IndexOf('{'));
+                //Helpers.ConsolePrint("API", jsonData);
+                dynamic respJson = JsonConvert.DeserializeObject(jsonData);
+                int devs = 0;
+                double total = 0.0d;
+                foreach (var dev in respJson.gpus)
+                {
+                    //Helpers.ConsolePrint("API:", dev.dev_id.ToString());
+                    sortedMinerPairs[devs].Device.MiningHashrate = (double)dev.hashrate;
+                    total = total + (double)dev.hashrate;
+                    devs++;
+                }
+                ad.Speed = total;
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
-                return null; // will restart outside
+                Helpers.ConsolePrint(MinerTag(), ex.ToString());
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                return null;
             }
-            catch (InvalidOperationException ex)
-            {
-                CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
-                return null; // will restart outside
-            }
-
-            var totalSpeed = MiningSetup.MiningPairs
-                .Select(miningPair =>
-                    miningPair.Device.GetAlgorithm(MinerBaseType.ZEnemy, AlgorithmType.KAWPOW, AlgorithmType.NONE))
-                .Where(algo => algo != null).Sum(algo => algo.BenchmarkSpeed);
-
-            var zenemyData = new ApiData(MiningSetup.CurrentAlgorithmType)
-            {
-                Speed = totalSpeed
-            };
+            
             CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             // check if speed zero
-            if (zenemyData.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-            return zenemyData;
+            if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+
+            return ad;
         }
     }
 }

@@ -179,7 +179,7 @@ namespace NiceHashMiner.Miners.Parsing
                     // SingleParam
                     new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("lolMiner_enablezilcache", "--enablezilcache=", "--enablezilcache=", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_enablezilcache", "--enablezilcache=", "--enablezilcache=", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMiner_win4galloc", "", "--win4galloc", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_4gallocsize", "", "--4g-alloc-size", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_keepfree", "", "--keepfree", "0", MinerOptionFlagType.MultiParam, ","),
@@ -505,6 +505,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Phoenix_rxboost", "-rxboost", "-rxboost", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_minrigspeed", "-minrigspeed", "-minrigspeed", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("Phoenix_gsi", "-gsi", "-gsi", "", MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("Phoenix_log", "-log", "-log", "", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("Phoenix_gswin", "-gswin", "-gswin", "", MinerOptionFlagType.SingleParam, ""),
                 },
                 new List<MinerOption>
@@ -550,6 +551,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_OC", "--oc", "--oc", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("GMiner_mt", "--mt", "--mt", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_safe_dag", "--safe_dag", "--safe_dag", "1", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_electricity_cost", "--electricity_cost", "--electricity_cost", "0", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()

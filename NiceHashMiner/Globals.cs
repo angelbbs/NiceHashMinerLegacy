@@ -8,7 +8,7 @@ namespace NiceHashMiner
     public class Globals
     {
         // Constants
-        public static string[] MiningLocation = {"eu", "eu-north", "usa", "usa-east", "Auto"};
+        public static string[] MiningLocation = {"eu-west", "eu-north", "usa-west", "usa-east", "Auto"};
 
         public static readonly string DemoUser = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";
         public static readonly string DemoUserNew = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";

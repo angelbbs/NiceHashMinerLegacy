@@ -13,10 +13,11 @@ namespace NiceHashMiner.Forms.Components
     public partial class DevicesListViewEnableControl : UserControl
     {
         private const int ENABLED = 0;
-        private const int TEMP = 1;
-        private const int LOAD = 2;
-        private const int FAN = 3;
-        private const int POWER = 4;
+        private const int HASHRATE = 1;
+        private const int TEMP = 2;
+        private const int LOAD = 3;
+        private const int FAN = 4;
+        private const int POWER = 5;
         public static Color EnabledColor = Form_Main._backColor;
         //public static Color DisabledColor = ConfigManager.GeneralConfig.ColorProfileIndex != 0 ? Color.FromArgb(Form_Main._backColor.ToArgb() + 40 * 256 * 256 * 256 + 40 * 256 * 256 + 40 * 256 + 40) : Color.DarkGray;
         public static Color DisabledColor = Form_Main._backColor;
@@ -242,6 +243,7 @@ namespace NiceHashMiner.Forms.Components
                 lvi.SubItems.Add("");
                 lvi.SubItems.Add("");
                 lvi.SubItems.Add("");
+                lvi.SubItems.Add("");
                 _listItemCheckColorSetter.LviSetColor(lvi);
             }
             listViewDevices.EndUpdate();
@@ -261,6 +263,8 @@ namespace NiceHashMiner.Forms.Components
             
             foreach (var computeDevice in _computeDevices)
             {
+                Helpers.ConsolePrint("SetComputeDevicesStatus", computeDevice.MiningHashrate.ToString());
+                string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, 0, (AlgorithmType)computeDevice.AlgorithmID);
                 string cTemp = Math.Truncate(computeDevice.Temp).ToString() + "°C";
                 string cLoad = Math.Truncate(computeDevice.Load).ToString() + "%";
                 string cFanSpeed = "";
@@ -294,10 +298,13 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (index >= 0)
                     {
-                        listViewDevices.Items[index].SubItems[1].Text = cTemp.Contains("-1") ? "--" : cTemp;
-                        listViewDevices.Items[index].SubItems[2].Text = cLoad.Contains("-1") ? "--" : cLoad;
-                        listViewDevices.Items[index].SubItems[3].Text = cFanSpeed.Contains("-1") ? "--" : cFanSpeed;
-                        listViewDevices.Items[index].SubItems[4].Text = cPowerUsage.Contains("-1") ? "--" : cPowerUsage;
+                        Helpers.ConsolePrint("listViewDevices.Columns.Count", listViewDevices.Columns.Count.ToString());
+                        Helpers.ConsolePrint("index", index.ToString());
+                        listViewDevices.Items[index].SubItems[1].Text = cHashrate.Contains("0.00") ? "--" : cHashrate;
+                        listViewDevices.Items[index].SubItems[2].Text = cTemp.Contains("-1") ? "--" : cTemp;
+                        listViewDevices.Items[index].SubItems[3].Text = cLoad.Contains("-1") ? "--" : cLoad;
+                        listViewDevices.Items[index].SubItems[4].Text = cFanSpeed.Contains("-1") ? "--" : cFanSpeed;
+                        listViewDevices.Items[index].SubItems[POWER].Text = cPowerUsage.Contains("-1") ? "--" : cPowerUsage;
                     }
                     index++;
                 }
@@ -397,19 +404,13 @@ namespace NiceHashMiner.Forms.Components
 
             listViewDevices.Columns[ENABLED].Text = " " + International.GetText("ListView_Device");
 
-            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-            {
-                listViewDevices.Columns[TEMP].Text = "Температура";
-                listViewDevices.Columns[LOAD].Text = "Нагрузка";
-                listViewDevices.Columns[FAN].Text = "Об/мин";
-                listViewDevices.Columns[POWER].Text = "Потребление";
-            } else
-            {
-                listViewDevices.Columns[TEMP].Text = "Temp";
-                listViewDevices.Columns[LOAD].Text = "Load";
-                listViewDevices.Columns[FAN].Text = "Fan";
-                listViewDevices.Columns[POWER].Text = "Power";
-            }
+                listViewDevices.Columns[HASHRATE].Text = International.GetText("Form_Main_device_hashrate");
+                listViewDevices.Columns[TEMP].Text = International.GetText("Form_Main_device_temp");
+                listViewDevices.Columns[LOAD].Text = International.GetText("Form_Main_device_load");
+                listViewDevices.Columns[FAN].Text = International.GetText("Form_Main_device_fan");
+                listViewDevices.Columns[POWER].Text = International.GetText("Form_Main_device_power");
+
+            listViewDevices.Columns[HASHRATE].Width = 0;
             listViewDevices.Columns[TEMP].Width = 0;
             listViewDevices.Columns[TEMP].TextAlign = HorizontalAlignment.Center; //не работает
             listViewDevices.Columns[LOAD].Width = 0;
@@ -449,21 +450,15 @@ namespace NiceHashMiner.Forms.Components
 
 
             listViewDevices.Columns[ENABLED].Text = " " + International.GetText("ListView_Device");
-            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-            {
-                listViewDevices.Columns[TEMP].Text = "Температура";
-                listViewDevices.Columns[LOAD].Text = "Нагрузка";
-                listViewDevices.Columns[FAN].Text = "Об/мин";
-                listViewDevices.Columns[POWER].Text = "Потребление";
-            } else
-            {
-                listViewDevices.Columns[TEMP].Text = "Temp";
-                listViewDevices.Columns[LOAD].Text = "Load";
-                listViewDevices.Columns[FAN].Text = "Fan";
-                listViewDevices.Columns[POWER].Text = "Power";
-            }
+
+            listViewDevices.Columns[HASHRATE].Text = International.GetText("Form_Main_device_hashrate");
+            listViewDevices.Columns[TEMP].Text = International.GetText("Form_Main_device_temp");
+            listViewDevices.Columns[LOAD].Text = International.GetText("Form_Main_device_load");
+            listViewDevices.Columns[FAN].Text = International.GetText("Form_Main_device_fan");
+            listViewDevices.Columns[POWER].Text = International.GetText("Form_Main_device_power");
 
             listViewDevices.Columns[ENABLED].Width = ConfigManager.GeneralConfig.ColumnENABLED;
+            listViewDevices.Columns[HASHRATE].Width = ConfigManager.GeneralConfig.ColumnHASHRATE;
             listViewDevices.Columns[TEMP].Width = ConfigManager.GeneralConfig.ColumnTEMP;
             listViewDevices.Columns[LOAD].Width = ConfigManager.GeneralConfig.ColumnLOAD;
             listViewDevices.Columns[FAN].Width = ConfigManager.GeneralConfig.ColumnFAN;
@@ -473,10 +468,11 @@ namespace NiceHashMiner.Forms.Components
         public void SaveColumns()
         {
            // if (listViewDevices.Columns[ENABLED] != null)
-            if (listViewDevices.Columns[TEMP].Width + listViewDevices.Columns[LOAD].Width + listViewDevices.Columns[FAN].Width + listViewDevices.Columns[POWER].Width > 0)
+            if (listViewDevices.Columns[HASHRATE].Width + listViewDevices.Columns[TEMP].Width + listViewDevices.Columns[LOAD].Width + listViewDevices.Columns[FAN].Width + listViewDevices.Columns[POWER].Width > 0)
             {
                 ConfigManager.GeneralConfig.ColumnENABLED = listViewDevices.Columns[ENABLED].Width;
                 ConfigManager.GeneralConfig.ColumnTEMP = listViewDevices.Columns[TEMP].Width;
+                ConfigManager.GeneralConfig.ColumnHASHRATE = listViewDevices.Columns[HASHRATE].Width;
                 ConfigManager.GeneralConfig.ColumnLOAD = listViewDevices.Columns[LOAD].Width;
                 ConfigManager.GeneralConfig.ColumnFAN = listViewDevices.Columns[FAN].Width;
                 ConfigManager.GeneralConfig.ColumnPOWER = listViewDevices.Columns[POWER].Width;
@@ -765,16 +761,20 @@ namespace NiceHashMiner.Forms.Components
         {
             listViewDevices.BeginUpdate();
 
-            if (e.ColumnIndex == 4)
+            if (e.ColumnIndex == 5)
             {
                 ResizeAutoSizeColumn(listViewDevices, 0);
             }
             if (e.ColumnIndex == 0)
             {
-                ResizeAutoSizeColumn(listViewDevices, 4);
+                ResizeAutoSizeColumn(listViewDevices, 5);
             }
-          //  ResizeAutoSizeColumn(listViewDevices, 0);
+            //  ResizeAutoSizeColumn(listViewDevices, 0);
+
             listViewDevices.EndUpdate();
+            listViewDevices.Update();
+            listViewDevices.Refresh();
+            
 
             //   ResizeColumn();
         }
@@ -829,9 +829,10 @@ namespace NiceHashMiner.Forms.Components
 
         private void listViewDevices_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
-            if (listViewDevices.Columns[TEMP].Width + listViewDevices.Columns[LOAD].Width + listViewDevices.Columns[FAN].Width + listViewDevices.Columns[POWER].Width > 0)
+            if (listViewDevices.Columns[HASHRATE].Width + listViewDevices.Columns[TEMP].Width + listViewDevices.Columns[LOAD].Width + listViewDevices.Columns[FAN].Width + listViewDevices.Columns[POWER].Width > 0)
             {
                 ConfigManager.GeneralConfig.ColumnENABLED = listViewDevices.Columns[ENABLED].Width;
+                ConfigManager.GeneralConfig.ColumnHASHRATE = listViewDevices.Columns[HASHRATE].Width;
                 ConfigManager.GeneralConfig.ColumnTEMP = listViewDevices.Columns[TEMP].Width;
                 ConfigManager.GeneralConfig.ColumnLOAD = listViewDevices.Columns[LOAD].Width;
                 ConfigManager.GeneralConfig.ColumnFAN = listViewDevices.Columns[FAN].Width;

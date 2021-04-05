@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Configs;
+using System.Threading;
 
 namespace NiceHashMiner
 {
@@ -17,8 +18,8 @@ namespace NiceHashMiner
             void AfterLoadComplete();
         }
 
-        private int LoadCounter = 0;
-        private int TotalLoadSteps = 11;
+        //private int LoadCounter = 0;
+        private int TotalLoadSteps;
         private readonly IAfterInitializationCaller AfterInitCaller;
 
         // init loading stuff
@@ -45,8 +46,8 @@ namespace NiceHashMiner
             AfterInitCaller = initCaller;
 
             TotalLoadSteps = totalLoadSteps;
-            this.progressBar1.Maximum = TotalLoadSteps;
-            this.progressBar1.Value = 0;
+            progressBar2.Maximum = TotalLoadSteps;
+            progressBar2.Value = 0;
 
             SetInfoMsg(startInfoMsg);
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
@@ -66,37 +67,55 @@ namespace NiceHashMiner
         }
 
         public void SetProgressMaxValue(int maxValue) {
-            this.progressBar1.Maximum = maxValue;
+            this.progressBar2.Maximum = maxValue;
         }
         public void SetInfoMsg(string infoMsg) {
             this.LoadText.Text = infoMsg;
         }
 
         public void IncreaseLoadCounter() {
+            /*
             LoadCounter++;
-            this.progressBar1.Value = LoadCounter;
+            this.progressBar2.Value = LoadCounter;
             this.Update();
+            
             if (LoadCounter >= TotalLoadSteps) {
                 AfterInitCaller.AfterLoadComplete();
                 this.Close();
                 this.Dispose();
             }
+            */
         }
 
         public void FinishLoad() {
+            this.Close();
+            this.Dispose();
+            AfterInitCaller.AfterLoadComplete();
+            /*
             while (LoadCounter < TotalLoadSteps) {
                 IncreaseLoadCounter();
             }
+            */
         }
 
         public void SetValueAndMsg(int setValue, string infoMsg) {
-            SetInfoMsg(infoMsg);
-            progressBar1.Value = setValue;
+            //SetInfoMsg(infoMsg);
+            progressBar2.Maximum = TotalLoadSteps;
+            this.LoadText.Text = infoMsg;
+            progressBar2.Value = setValue;
             this.Update();
-            if (progressBar1.Value >= progressBar1.Maximum) {
+            progressBar2.Update();
+            progressBar2.Refresh();
+            Thread.Sleep(100);
+            /*
+            if (progressBar2.Value >= progressBar2.Maximum)
+            {
+                Thread.Sleep(200);
                 this.Close();
                 this.Dispose();
+                AfterInitCaller.AfterLoadComplete();
             }
+            */
         }
 
         #region IMessageNotifier
@@ -112,17 +131,17 @@ namespace NiceHashMiner
         #region IMinerUpdateIndicator
         public void SetMaxProgressValue(int max) {
             this.Invoke((MethodInvoker)delegate {
-                this.progressBar1.Maximum = max;
-                this.progressBar1.Value = 0;
+                this.progressBar2.Maximum = max;
+                this.progressBar2.Value = 0;
             });
         }
 
         public void SetProgressValueAndMsg(int value, string msg) {
-            if (value <= this.progressBar1.Maximum) {
+            if (value <= this.progressBar2.Maximum) {
                 this.Invoke((MethodInvoker)delegate {
-                    this.progressBar1.Value = value;
+                    this.progressBar2.Value = value;
                     this.LoadText.Text = msg;
-                    this.progressBar1.Invalidate();
+                    this.progressBar2.Invalidate();
                     this.LoadText.Invalidate();
                 });
             }

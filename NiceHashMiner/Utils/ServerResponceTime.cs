@@ -30,7 +30,7 @@ namespace NiceHashMiner.Utils
                 myServers[s, 1] = ReplyTime.ToString();
             }
 
-            string[,] tmpServers = { { "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" } };
+            string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
             int ReplyTimeTmp;
             long bestReplyTimeTmp = 19999;
             int iTmp = 0;
@@ -147,7 +147,7 @@ namespace NiceHashMiner.Utils
             return ms;
         }
 
-        public static int ReadFromServer(Stream serverStream, TcpClient tcpClient) 
+        public static int ReadFromServer(Stream serverStream, TcpClient tcpClient)
         {
             string[,] myServers = Form_Main.myServers;
             System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();

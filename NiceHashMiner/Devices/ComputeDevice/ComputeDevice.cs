@@ -22,7 +22,7 @@ namespace NiceHashMiner.Devices
         public int Index { get; protected set; } // For socket control, unique
 
         // to identify equality;
-        public readonly string Name; // { get; set; }
+        public string Name; // { get; set; }
 
         // name count is the short name for displaying in moning groups
         public readonly string NameCount;

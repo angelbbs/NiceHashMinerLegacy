@@ -173,7 +173,7 @@ namespace NiceHashMiner.Miners
         protected async Task<ApiData> GetSummaryCpuAsyncXMRig(string method = "", bool overrideLoop = false)
         {
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/1/summary");
@@ -208,6 +208,10 @@ namespace NiceHashMiner.Miners
                         if (total.Value<string>() == null) continue;
                         ad.Speed = total.Value<double>();
                         break;
+                    }
+                    foreach (var dev in sortedMinerPairs)
+                    {
+                        dev.Device.MiningHashrate = ad.Speed;
                     }
 
                     if (ad.Speed == 0)

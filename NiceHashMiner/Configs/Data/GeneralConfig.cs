@@ -44,6 +44,7 @@ namespace NiceHashMiner.Configs.Data
         public bool MOPA4 = false;
         public bool MOPA5 = false;
         public int ColumnENABLED = 304;
+        public int ColumnHASHRATE = 84;
         public int ColumnTEMP = 80;
         public int ColumnLOAD = 66;
         public int ColumnFAN = 56;
@@ -272,6 +273,7 @@ namespace NiceHashMiner.Configs.Data
             MOPA4 = false;
             MOPA5 = false;
             ColumnENABLED = 304;
+            ColumnHASHRATE = 84;
             ColumnTEMP = 80;
             ColumnLOAD = 66;
             ColumnFAN = 56;

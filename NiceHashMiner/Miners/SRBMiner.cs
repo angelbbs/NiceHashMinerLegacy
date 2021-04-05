@@ -178,7 +178,8 @@ namespace NiceHashMiner.Miners
                 int totals = 0;
                 if (resp != null)
                 {
-                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList(); var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList(); 
+                    //var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
                     int devs = sortedMinerPairs.Count;
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
@@ -205,6 +206,10 @@ namespace NiceHashMiner.Miners
                     else
                     {
                         totals = resp.algorithms[0].hashrate.cpu.total;
+                        foreach (var mPair in sortedMinerPairs)
+                        {
+                                mPair.Device.MiningHashrate = totals;
+                        }
                     }
 
                     ad.Speed = totals;

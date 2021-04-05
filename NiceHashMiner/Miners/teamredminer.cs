@@ -349,56 +349,36 @@ namespace NiceHashMiner.Miners
 
         public override async Task<ApiData> GetSummaryAsync()
         {
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-            var resp = await GetApiDataAsync(ApiPort, "summary");
-
-            if (resp == null)
+            var resp2 = await GetApiDataAsync(ApiPort, "devs");
+            if (resp2 == null)
             {
                 CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+                ad.Speed = 0.0d;
                 return null;
             }
-            //Helpers.ConsolePrint("trm-DEBUG_resp", resp.Trim());
+            //Helpers.ConsolePrint("API: ", resp2.Trim());
             try
             {
-                // Checks if all the GPUs are Alive first
-                var resp2 = await GetApiDataAsync(ApiPort, "devs");
-                if (resp2 == null)
+                var devStatus = resp2.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                int dev = 0;
+                double totalSpeed = 0.0d;
+                foreach (var s in devStatus)
                 {
-                    CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                    return null;
-                }
-
-                var checkGpuStatus = resp2.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-
-                var resps = resp.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (resps[1].Contains("SUMMARY"))
-                {
-                    var data = resps[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    // Get miner's current 30s speed
-                    var speed = data[3].Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                    // Get miner's current total MH
-                    var totalMH = double.Parse(data[18].Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1],
-                        new CultureInfo("en-US"));
-
-                    ad.Speed = double.Parse(speed[1]) * 1000000;
-                    /*
-                    if (totalMH <= PreviousTotalMH)
+                    if (s.Contains("GPU="))
                     {
-                        //Helpers.ConsolePrint(MinerTag(), ProcessTag() + " teamredminer might be stuck as no new hashes are being produced");
-                        //Helpers.ConsolePrint(MinerTag(),
-                         //   ProcessTag() + " Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + totalMH);
-                        CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                        return null;
+                        var st = s.LastIndexOf("MHS 30s=");
+                        var e = s.LastIndexOf(",KHS av=");
+                        string cSpeed = s.Substring(st + 8, e - st - 8);
+                        //Helpers.ConsolePrint("API: ", cSpeed);
+                        double.TryParse(cSpeed, out double devSpeed);
+                        sortedMinerPairs[dev].Device.MiningHashrate = devSpeed * 1000000;
+                        totalSpeed = totalSpeed + devSpeed * 1000000;
+                        ad.Speed = totalSpeed;
+                        dev++;
                     }
-                    */
-                    PreviousTotalMH = totalMH;
-                }
-                else
-                {
-                    ad.Speed = 0;
+
                 }
             }
             catch

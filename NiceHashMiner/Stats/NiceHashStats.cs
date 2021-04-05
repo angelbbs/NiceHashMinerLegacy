@@ -1144,7 +1144,8 @@ namespace NiceHashMiner.Stats
         {
             var devices = ComputeDeviceManager.Available.Devices;
             
-            var _computeDevices = ComputeDeviceManager.ReSortDevices(devices);
+            var _computeDevicesResort = ComputeDeviceManager.ReSortDevices(devices);
+            var _computeDevices = devices;
 
             var rigStatus = CalcRigStatusString();
             var activeIDs = MinersManager.GetActiveMinersIndexes();
@@ -1163,8 +1164,12 @@ namespace NiceHashMiner.Stats
             };
 
             var deviceList = new JArray();
-            foreach (var device in _computeDevices)
+            //foreach (var device in _computeDevices)
+            for (int dev = 0; dev < _computeDevices.Count; dev++)
             {
+                var device = _computeDevices[dev];
+                var deviceResort = _computeDevicesResort[dev];
+
                 try
                 {
                     int status = 0;
@@ -1190,41 +1195,40 @@ namespace NiceHashMiner.Stats
                         nuuid = $"{type}-{b64Web}";
                     }
                     var deviceName = device.Name;
+                    
                     string Manufacturer = "";
                     string GpuRam = "";
 
-                    if (device.DeviceType == DeviceType.NVIDIA)
+                    if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                     {
-                        if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
+                        if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
                         {
-                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
-                            {
-                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
-                            }
-                        }
-                        else
-                        {
-                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
-                        }
-
-                        GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
-                        if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
-                        {
-                            if (deviceName.Contains(GpuRam))
-                            {
-                                GpuRam = "";
-                            }
-                            else
-                            {
-                                deviceName = deviceName + " " + GpuRam;
-                            }
-                        }
-                        else
-                        {
-                            deviceName = deviceName.Replace(GpuRam, "");
-                            GpuRam = "";
+                            Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
                         }
                     }
+                    else
+                    {
+                        deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                    }
+
+                    GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
+                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                    {
+                        if (deviceName.Contains(GpuRam))
+                        {
+                            GpuRam = "";
+                        }
+                        else
+                        {
+                            deviceName = deviceName + " " + GpuRam;
+                        }
+                    }
+                    else
+                    {
+                        deviceName = deviceName.Replace(GpuRam, "");
+                        GpuRam = "";
+                    }
+                    
 
                     if (device.DeviceType == DeviceType.AMD)
                     {
@@ -1305,6 +1309,7 @@ namespace NiceHashMiner.Stats
                     var speedsJson = new JArray();
 
                     HashRate = device.MiningHashrate;
+
                     if (rigs == 1 & device.AlgorithmID > 0)
                     {
                         speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
@@ -1316,10 +1321,17 @@ namespace NiceHashMiner.Stats
 
                     array.Add(speedsJson);
                     // Hardware monitoring
-                    array.Add((int)Math.Round(device.Temp));
-                    array.Add(device.FanSpeedRPM);
-                    array.Add((int)Math.Round(device.PowerUsage));
-
+                    if (!Form_Main.NVIDIA_orderBug)
+                    {
+                        array.Add((int)Math.Round(device.Temp));
+                        array.Add(device.FanSpeedRPM);
+                        array.Add((int)Math.Round(device.PowerUsage));
+                    } else
+                    {
+                        array.Add((int)Math.Round(deviceResort.Temp));
+                        array.Add(deviceResort.FanSpeedRPM);
+                        array.Add((int)Math.Round(deviceResort.PowerUsage));
+                    }
                     // Power mode
                     array.Add(-1);
 
@@ -1327,13 +1339,26 @@ namespace NiceHashMiner.Stats
                     array.Add(0);
 
                     //fan speen percent
-                    if (device.DeviceType != DeviceType.CPU)
+                    if (!Form_Main.NVIDIA_orderBug)
                     {
-                        array.Add(device.FanSpeed);
-                    }
-                    else
+                        if (device.DeviceType != DeviceType.CPU)
+                        {
+                            array.Add(device.FanSpeed);
+                        }
+                        else
+                        {
+                            array.Add(-1);
+                        }
+                    } else
                     {
-                        array.Add(-1);
+                        if (deviceResort.DeviceType != DeviceType.CPU)
+                        {
+                            array.Add(deviceResort.FanSpeed);
+                        }
+                        else
+                        {
+                            array.Add(-1);
+                        }
                     }
 
                     deviceList.Add(array);
@@ -1354,7 +1379,7 @@ namespace NiceHashMiner.Stats
                 if (_socket != null)
                 {
                     await _socket.SendData(sendData);
-
+                    //Helpers.ConsolePrint("SetDeviceStatus", "sendData -> " + sendData);
                 }
             }
             catch (Exception ex)

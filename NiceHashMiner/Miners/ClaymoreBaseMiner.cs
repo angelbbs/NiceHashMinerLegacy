@@ -80,7 +80,7 @@ namespace NiceHashMiner.Miners
                 var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 client.Close();
-                //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", respStr);
+                //Helpers.ConsolePrint("ClaymoreMiner API: ", respStr);
             }
             catch (Exception ex)
             {
@@ -95,6 +95,13 @@ namespace NiceHashMiner.Miners
                     var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
                     ad.Speed = 0;
                     ad.SecondarySpeed = 0;
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NeoScrypt))
+                    {
+                        ApiReadMult = 1000;
+                    }
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderByDescending(pair => pair.Device.DeviceType)
+                                .ThenBy(pair => pair.Device.IDByBus).ToList();
+                    int dev = 0;
                     foreach (var speed in speeds)
                     {
                         double tmpSpeed;
@@ -106,7 +113,8 @@ namespace NiceHashMiner.Miners
                         {
                             tmpSpeed = 0;
                         }
-
+                        sortedMinerPairs[dev].Device.MiningHashrate = tmpSpeed * ApiReadMult;
+                        dev++;
                         ad.Speed += tmpSpeed;
                     }
 
@@ -124,10 +132,7 @@ namespace NiceHashMiner.Miners
 
                         ad.SecondarySpeed += tmpSpeed;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NeoScrypt))
-                    {
-                        ApiReadMult = 1000;
-                    }
+
                     ad.Speed *= ApiReadMult;
                     ad.SecondarySpeed *= ApiReadMult;
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
@@ -151,6 +156,11 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch)
         {
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+            foreach (var mPair in sortedMinerPairs)
+            {
+                mPair.Device.MiningHashrate = 0;
+            }
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 

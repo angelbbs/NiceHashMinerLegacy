@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Utils;
 using System;
@@ -178,13 +179,13 @@ namespace NiceHashMiner.Updater
                         Form_Main.BackupFileDate = file.CreationTime.ToString("dd.MM.yyyy HH:mm");
                     }
                 }
-
+                //Form_Benchmark.RunCMDAfterBenchmark();
                 try
                 {
                     var cmdFile = "@echo off\r\n" +
                         "taskkill /F /IM \"MinerLegacyForkFixMonitor.exe\"\r\n" +
                         "taskkill /F /IM \"NiceHashMinerLegacy.exe\"\r\n" +
-                        "call AfterBenchmark.cmd\r\n" +
+                        //"call AfterBenchmark.cmd\r\n" +
                         "timeout /T 2 /NOBREAK\r\n" +
                         "utils\\7z.exe x -r -y " + "backup\\backup_" + fname + ".zip" + "\r\n" +
                         "start NiceHashMinerLegacy.exe\r\n";

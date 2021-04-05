@@ -2138,13 +2138,13 @@ namespace NiceHashMiner.Forms
                             " (" + Form_Main.BackupFileDate + ")";
                     }
                 }
-
+                Form_Benchmark.RunCMDAfterBenchmark();
                 try
                 {
                     var cmdFile = "@echo off\r\n" +
                         "taskkill /F /IM \"MinerLegacyForkFixMonitor.exe\"\r\n" +
                         "taskkill /F /IM \"NiceHashMinerLegacy.exe\"\r\n" +
-                        "call AfterBenchmark.cmd\"\r\n" +
+                        //"call AfterBenchmark.cmd\"\r\n" +
                         "timeout /T 2 /NOBREAK\r\n" +
                         "utils\\7z.exe x -r -y " + "backup\\backup_" + fname + ".zip" + "\r\n" +
                         "start NiceHashMinerLegacy.exe\r\n";

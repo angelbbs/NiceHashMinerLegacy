@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Devices;
+using System.Net;
 
 namespace NiceHashMiner.Miners
 {
@@ -42,7 +43,7 @@ namespace NiceHashMiner.Miners
             string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             algo = "-a " + MiningSetup.MinerName.ToLower();
-            apiBind = " -b 127.0.0.1:" + ApiPort;
+            apiBind = " --api-bind-http 127.0.0.1:" + ApiPort;
             IsApiReadException = false;
 
             //  url = url.Replace(".nicehash.", "-new.nicehash.");
@@ -92,7 +93,7 @@ namespace NiceHashMiner.Miners
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
                                   DeviceType.NVIDIA) +
-                                  " -b 127.0.0.1:" + ApiPort +
+                                  " --api-bind-http 127.0.0.1:" + ApiPort +
                               " -d ";
                 commandLine += GetDevicesCommandString();
                 //_benchmarkTimeWait = 180;
@@ -106,7 +107,7 @@ namespace NiceHashMiner.Miners
                  " -o " + url + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
-                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog -b 127.0.0.1:" + ApiPort +
+                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                               " -d ";
                 commandLine += GetDevicesCommandString();
                 _benchmarkTimeWait = time;
@@ -118,7 +119,7 @@ namespace NiceHashMiner.Miners
                  " -o " + url + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
-                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog -b 127.0.0.1:" + ApiPort +
+                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                               " -d ";
                 commandLine += GetDevicesCommandString();
                 _benchmarkTimeWait = time;
@@ -130,7 +131,7 @@ namespace NiceHashMiner.Miners
                  " -o " + url + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
-                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog -b 127.0.0.1:" + ApiPort +
+                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                               " -d ";
                 commandLine += GetDevicesCommandString();
                 _benchmarkTimeWait = time;
@@ -296,32 +297,51 @@ namespace NiceHashMiner.Miners
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             string resp = null;
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             try
             {
-                var bytesToSend = Encoding.ASCII.GetBytes("summary\r\n");
-                var client = new TcpClient("127.0.0.1", ApiPort);
-                var nwStream = client.GetStream();
-                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                var bytesToRead = new byte[client.ReceiveBufferSize];
-                var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/summary");
+                WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
+                WR.Timeout = 30 * 1000;
+                WR.Credentials = CredentialCache.DefaultCredentials;
+                WebResponse Response = WR.GetResponse();
+                Stream SS = Response.GetResponseStream();
+                SS.ReadTimeout = 20 * 1000;
+                StreamReader Reader = new StreamReader(SS);
+                resp = await Reader.ReadToEndAsync();
 
-                client.Close();
-                resp = respStr;
-                //Helpers.ConsolePrint(MinerTag(), "API: " + respStr);
+                Reader.Close();
+                Response.Close();
+                WR.Abort();
+                SS.Close();
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
+                Helpers.ConsolePrint("API", ex.Message);
+                return null;
             }
 
             if (resp != null)
             {
-                var st = resp.IndexOf(";KHS=");
-                var e = resp.IndexOf(";SOLV=");
-                var parse = resp.Substring(st + 5, e - st - 5).Trim();
-                double tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
-                ad.Speed = tmp * 1000;
+                //Helpers.ConsolePrint(MinerTag(), "API: " + resp);
+                try
+                {
+                    dynamic respJson = JsonConvert.DeserializeObject(resp);
+                    int devs = 0;
+                    foreach (var dev in respJson.gpus)
+                    {
+                        //Helpers.ConsolePrint(MinerTag(), "API device_id: " + dev.device_id + " gpu_id: " + dev.gpu_id + " gpu_user_id: " + " hashrate: " + dev.hashrate);
+                        sortedMinerPairs[devs].Device.MiningHashrate = dev.hashrate;
+                        devs++;
+                    }
+                    //Helpers.ConsolePrint(MinerTag(), "API total: " + respJson.hashrate);
+                    ad.Speed = respJson.hashrate;
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("API eror", ex.Message);
+                    return null;
+                }
 
                 if (ad.Speed == 0)
                 {
@@ -332,7 +352,6 @@ namespace NiceHashMiner.Miners
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
 
-                // some clayomre miners have this issue reporting negative speeds in that case restart miner
                 if (ad.Speed < 0)
                 {
                     Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
@@ -340,7 +359,7 @@ namespace NiceHashMiner.Miners
                 }
             } else
             {
-                Thread.Sleep(10);
+                Thread.Sleep(1);
             }
 
             return ad;

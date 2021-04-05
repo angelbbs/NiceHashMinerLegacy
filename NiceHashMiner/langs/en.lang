@@ -9,10 +9,10 @@
         "Global_Retry": "&Retry",
 
         "Service_Location": "Service location",
-        "LocationName_eu": "Europe - Amsterdam",
-	"LocationName_eu-north": "Europe (north) - Hamina",
-        "LocationName_usa": "USA - San Jose",
-        "LocationName_usa-east": "USA (east) - Ashburn",
+        "LocationName_eu-west": "Europe (west) - Belgium",
+	"LocationName_eu-north": "Europe (north) - Finland",
+        "LocationName_usa-west": "USA (west) - California",
+        "LocationName_usa-east": "USA (east) - New York",
         "Warning_with_Exclamation": "Warning!",
         "Error_with_Exclamation": "Error!",
         "BitcoinAddress": "Bitcoin Address",
@@ -51,6 +51,8 @@
         "Form_Main_DemoModeMsg": "You have not entered a bitcoin address. Miner Legacy Fork Fix will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!",
 
         "Form_Main_loadtext_CPU": "Querying CPU devices...",
+	"Form_Main_loadtext_FireWall": "Set firewall rules…",
+	"Form_Main_loadtext_MSI_AB": "Start MSI Afterburner…",
         "Form_Main_loadtext_NVIDIA5X": "Querying NVIDIA5.x and NVIDIA6.x devices...",
         "Form_Main_loadtext_NVIDIA3X": "Querying NVIDIA3.x devices...",
         "Form_Main_loadtext_NVIDIA2X": "Querying NVIDIA2.1 devices...",
@@ -63,6 +65,13 @@
         "Form_Main_loadtext_SetEnvironmentVariable": "Setting environment variables...",
         "Form_Main_loadtext_SetWindowsErrorReporting": "Setting Windows error reporting...",
         "Form_Main_loadtext_NVIDIAP0State": "Changing all supported NVIDIA GPUs to P0 state...",
+        "Form_Main_loadtext_Check_VC_redistributable": "Check Visual C++ redistributable…",
+
+    "Form_Main_device_hashrate": "Speed",
+    "Form_Main_device_temp": "Temp",
+    "Form_Main_device_load": "Load",
+    "Form_Main_device_fan": "Fan",
+    "Form_Main_device_power": "Power",
 
         "Form_Main_msgbox_CPUMining64bitMsg": "Miner Legacy Fork Fix works only on 64-bit version of OS for CPU mining. CPU mining will be disabled.",
         "Form_Main_msgbox_CPUMining64CoresMsg": "Miner Legacy Fork Fix does not support more than 64 virtual cores. CPU mining will be disabled.",

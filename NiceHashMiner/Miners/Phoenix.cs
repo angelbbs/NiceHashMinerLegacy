@@ -309,6 +309,7 @@ namespace NiceHashMiner.Miners
         }
         #endregion // Decoupled benchmarking routines
 
+        /*
         public override async Task<ApiData> GetSummaryAsync()
         {
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
@@ -332,7 +333,7 @@ namespace NiceHashMiner.Miners
                 //Helpers.ConsolePrint("API", ex.Message);
                 return null;
             }
-
+            Helpers.ConsolePrint("API", ResponseFromPhoenix);
             if (ResponseFromPhoenix.Contains("Eth speed:"))
             {
                 var st = ResponseFromPhoenix.LastIndexOf("Eth speed: ");
@@ -374,7 +375,109 @@ namespace NiceHashMiner.Miners
             return ad;
 
         }
+        */
 
+        private class JsonApiResponse
+        {
+#pragma warning disable IDE1006 // Naming Styles
+            public List<string> result { get; set; }
+            public int id { get; set; }
+            public object error { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
+        }
+        protected double ApiReadMult = 1;
+        protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
+        public bool IsDual()
+        {
+            return (SecondaryAlgorithmType != AlgorithmType.NONE);
+        }
+        public override async Task<ApiData> GetSummaryAsync()
+        {
+            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            ApiReadMult = 1000;
+            JsonApiResponse resp = null;
+            try
+            {
+                var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}\n");
+                var client = new TcpClient("127.0.0.1", ApiPort);
+                var nwStream = client.GetStream();
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+                var bytesToRead = new byte[client.ReceiveBufferSize];
+                var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
+                client.Close();
+                //Helpers.ConsolePrint("API: ", respStr);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
+            }
+
+            if (resp != null && resp.error == null)
+            {
+                if (resp.result != null && resp.result.Count > 4)
+                {
+                    var speeds = resp.result[3].Split(';');
+                    var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderByDescending(pair => pair.Device.DeviceType)
+                              .ThenBy(pair => pair.Device.IDByBus + 1).ToList();
+
+                    int dev = 0;
+                    foreach (var speed in speeds)
+                    {
+                        double tmpSpeed;
+                        try
+                        {
+                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
+                        }
+                        catch
+                        {
+                            tmpSpeed = 0;
+                        }
+                        sortedMinerPairs[dev].Device.MiningHashrate = tmpSpeed * ApiReadMult;
+                        dev++;
+                        ad.Speed += tmpSpeed;
+                    }
+
+                    foreach (var speed in secondarySpeeds)
+                    {
+                        double tmpSpeed;
+                        try
+                        {
+                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
+                        }
+                        catch
+                        {
+                            tmpSpeed = 0;
+                        }
+
+                        ad.SecondarySpeed += tmpSpeed;
+                    }
+
+                    ad.Speed *= ApiReadMult;
+                    ad.SecondarySpeed *= ApiReadMult;
+                    CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                }
+
+                if (ad.Speed == 0)
+                {
+                    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                }
+
+                if (ad.Speed < 0)
+                {
+                    Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
+                    Restart();
+                }
+            }
+
+            return ad;
+        }
 
     }
 

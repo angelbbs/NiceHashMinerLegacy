@@ -442,10 +442,28 @@ namespace NiceHashMiner.Miners
             }
             //Helpers.ConsolePrint("NBMiner:", ResponseFromNBMiner);
             dynamic resp = JsonConvert.DeserializeObject<JsonApiResponse>(ResponseFromNBMiner);
-            //Helpers.ConsolePrint("NBMiner-resp:", resp);
 
             if (resp != null)
             {
+                /*
+                foreach (var d in resp.miner.devices)
+                {
+                    Helpers.ConsolePrint("NBMiner:", "d.hashrate_raw: " + d.hashrate_raw.ToString());
+                }
+                */
+                var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+                double[] hashrates = new double[sortedMinerPairs.Count];
+                for (var i = 0; i < sortedMinerPairs.Count; i++)
+                {
+                    hashrates[i] = resp.miner.devices[i].hashrate_raw;
+                }
+                int dev = 0;
+
+                foreach (var mPair in sortedMinerPairs)
+                {
+                    mPair.Device.MiningHashrate = hashrates[dev];
+                    dev++;
+                }
 
                 ad.Speed = resp.TotalHashrate ?? 0;
 

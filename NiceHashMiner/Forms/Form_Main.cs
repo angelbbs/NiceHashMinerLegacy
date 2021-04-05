@@ -115,7 +115,7 @@ namespace NiceHashMiner
         public static bool DivertAvailable = true;
         private static string dialogClearBTC = "You want to delete BTC address?";
         public static string[,] myServers = {
-            { "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" }};
+            { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }};
         internal static bool DeviceStatusTimer_FirstTick = false;
         public static Computer thisComputer;
         public static DateTime StartTime = new DateTime();
@@ -619,7 +619,7 @@ namespace NiceHashMiner
             }
         }
 
-       
+
         public static int ProgressMinimum = 0;
         public static int ProgressMaximum = 100;
         public static int ProgressValue = 0;
@@ -664,15 +664,15 @@ namespace NiceHashMiner
 
             _loadingScreen.Show();
             // Query Available ComputeDevices
-            _loadingScreen.SetValueAndMsg(1, "Detecting compute devices");
-            ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
+            _loadingScreen.SetValueAndMsg(1, International.GetText("Form_Main_loadtext_CPU"));
+            ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//step 2,3
 
             _isDeviceDetectionInitialized = true;
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
-            _loadingScreen.SetValueAndMsg(2, International.GetText("Form_Main_loadtext_SaveConfig"));
+            _loadingScreen.SetValueAndMsg(4, International.GetText("Form_Main_loadtext_SaveConfig"));
 
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
@@ -680,32 +680,40 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
             new Task(() => CheckGithubDownload()).Start();
 
-            //_loadingScreen.SetInfoMsg("Set firewall rules");
-            _loadingScreen.SetValueAndMsg(3, "Set firewall rules");
-
-            //new Task(() => MSIAfterburner.MSIAfterburnerRUN()).Start();
-            MSIAfterburner.MSIAfterburnerRUN();
-
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_MSI_AB"));
+                //new Task(() => MSIAfterburner.MSIAfterburnerRUN()).Start();
+                MSIAfterburner.MSIAfterburnerRUN();
+            }
             flowLayoutPanelRates.Visible = true;
 
+            //_loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_FireWall"));
             new Task(() => Firewall.AddToFirewall()).Start();
             int ticks = 0;//костыль
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = 1000;
 
-            _loadingScreen.SetValueAndMsg(4, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
+            new Task(() => FlushCache()).Start();
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                thisComputer = new OpenHardwareMonitor.Hardware.Computer();
+                thisComputer.GPUEnabled = true;
+                thisComputer.CPUEnabled = true;
+                thisComputer.Open();
+            }
 
-            _loadingScreen.SetValueAndMsg(5, "Checking servers locations");
+            _loadingScreen.SetValueAndMsg(7, "Checking servers locations");
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+                //NiceHashMiner.Utils.ServerResponceTime.GetBestServer();
             }
 
-            _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
-
-            Thread.Sleep(10);
+            _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
             /*
             if (ConfigManager.GeneralConfig.NVIDIAP0State)
@@ -716,25 +724,18 @@ namespace NiceHashMiner
             }
             */
             //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            _loadingScreen.SetValueAndMsg(7, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
+            _loadingScreen.SetValueAndMsg(9, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             //new Task(() => CheckUpdates()).Start();
             CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
-            new Task(() => FlushCache()).Start();
-            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-            {
-                thisComputer = new OpenHardwareMonitor.Hardware.Computer();
-                thisComputer.GPUEnabled = true;
-                thisComputer.CPUEnabled = true;
-                thisComputer.Open();
-            }
+
             //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
-            _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
 
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
-            _loadingScreen.SetValueAndMsg(9, International.GetText("Form_Main_loadtext_GetBTCRate"));
+            _loadingScreen.SetValueAndMsg(11, International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
@@ -759,9 +760,9 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            _loadingScreen.SetValueAndMsg(10, "Check MSI Afterburner");
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
+                _loadingScreen.SetValueAndMsg(12, "Check MSI Afterburner");
                 int countab = 0;
                 do
                 {
@@ -776,13 +777,16 @@ namespace NiceHashMiner
                         MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                 }
-                
+
             }
 
-            _loadingScreen.SetValueAndMsg(11, International.GetText("Check VC redistributable"));
+            _loadingScreen.SetValueAndMsg(13, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
-            _loadingScreen.FinishLoad();
-
+            Thread.Sleep(300);
+            if (_loadingScreen != null)
+            {
+                _loadingScreen.FinishLoad();
+            }
 
 
             _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
@@ -1072,14 +1076,14 @@ namespace NiceHashMiner
             this.Update();
             this.Refresh();
             // general loading indicator
-            const int totalLoadSteps = 11;
+            const int totalLoadSteps = 13;
 
             _loadingScreen = new Form_Loading(this,
                 International.GetText("Form_Loading_label_LoadingText"),
                 International.GetText("Form_Main_loadtext_CPU"), totalLoadSteps);
 
             SetChildFormCenter(_loadingScreen);
-           // _loadingScreen.Show();
+            _loadingScreen.Show();
 
 
             _startupTimer = new Timer();
@@ -1234,8 +1238,29 @@ namespace NiceHashMiner
                 MakeRestart(periodRestartProgram);
             }
         }
+
+        public static void StopWinIODriver()
+        {
+            //srbminer driver
+            var CMDconfigHandleWD = new Process
+
+            {
+                StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+            };
+
+            CMDconfigHandleWD.StartInfo.Arguments = "stop winio";
+            CMDconfigHandleWD.StartInfo.UseShellExecute = false;
+            CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
+            CMDconfigHandleWD.Start();
+        }
+
+
         public static void MakeRestart(int periodRestartProgram)
         {
+            StopWinIODriver();
             try
             {
                 new Task(() => MinersManager.StopAllMiners()).Start();
@@ -1288,6 +1313,7 @@ namespace NiceHashMiner
                     CMDconfigHandleWD.Start();
                 }
                 Thread.Sleep(500);
+                Form_Benchmark.RunCMDAfterBenchmark();
 
                 var RestartProgram = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\RestartProgram.cmd")
                 {
@@ -1927,7 +1953,7 @@ public static void CloseChilds(Process parentId)
                 CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleWD.Start();
             }
-            
+            StopWinIODriver();
             try
             {
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher
@@ -2626,7 +2652,7 @@ public static void CloseChilds(Process parentId)
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
             } else
             {
-                string[,] tmpServers = { { "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" } };
+                string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
                 Form_Main.myServers = tmpServers;
             }
         }

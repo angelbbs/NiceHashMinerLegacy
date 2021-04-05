@@ -399,13 +399,19 @@ namespace NiceHashMiner
 
         public virtual void Stop(MinerStopType willswitch = MinerStopType.SWITCH)
         {
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+            foreach (var mPair in sortedMinerPairs)
+            {
+                mPair.Device.MiningHashrate = 0;
+            }
+
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
                 Thread.Sleep(2000);
             } else
             {
-                string[,] tmpServers = { { "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" } };
+                string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
                 Form_Main.myServers = tmpServers;
             }
             //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
@@ -460,6 +466,7 @@ namespace NiceHashMiner
             string strPlatform = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
+                pair.Device.MiningHashrate = 0;
                 int a = (int)pair.Algorithm.NiceHashID;
                 pair.Device.AlgorithmID = a;
 
@@ -1410,7 +1417,7 @@ namespace NiceHashMiner
                 serverId++;
             }
 
-            string[,] tmpServers = {{ "eu", "20000" }, { "eu-north", "20001" }, { "usa", "20002" }, { "usa-east", "20003" }};
+            string[,] tmpServers = {{ "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }};
         int pingReplyTimeTmp;
             long bestReplyTimeTmp = 10000;
             int iTmp = 0;
@@ -1716,7 +1723,7 @@ namespace NiceHashMiner
                 }
             }
             Thread.Sleep(restartInMs);
-            Restart(); 
+            Restart();
         }
 
         protected void Restart()
@@ -1784,6 +1791,8 @@ namespace NiceHashMiner
             {
                 var tcpc = new TcpClient("127.0.0.1", port);
                 var nwStream = tcpc.GetStream();
+                nwStream.ReadTimeout = 2 * 1000;
+                nwStream.WriteTimeout = 2 * 1000;
 
                 var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
                 await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);

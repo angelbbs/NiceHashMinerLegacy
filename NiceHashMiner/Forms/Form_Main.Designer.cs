@@ -98,14 +98,14 @@ namespace NiceHashMiner
             this.comboBoxLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLocation.FormattingEnabled = true;
             this.comboBoxLocation.Items.AddRange(new object[] {
-            "Europe - Amsterdam",
-            "Europe (north) - Hamina",
-            "USA - San Jose",
-            "USA (east) - Ashburn",
+            "Europe (west) - Belgium",
+            "Europe (north) - Finland",
+            "USA (west) - California",
+            "USA (east) - New York",
             "Auto"});
-            this.comboBoxLocation.Location = new System.Drawing.Point(110, 6);
+            this.comboBoxLocation.Location = new System.Drawing.Point(107, 6);
             this.comboBoxLocation.Name = "comboBoxLocation";
-            this.comboBoxLocation.Size = new System.Drawing.Size(165, 21);
+            this.comboBoxLocation.Size = new System.Drawing.Size(182, 21);
             this.comboBoxLocation.TabIndex = 0;
             this.comboBoxLocation.SelectedIndexChanged += new System.EventHandler(this.comboBoxLocation_SelectedIndexChanged);
             this.comboBoxLocation.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
@@ -216,7 +216,7 @@ namespace NiceHashMiner
             // linkLabelCheckStats
             // 
             this.linkLabelCheckStats.AutoSize = true;
-            this.linkLabelCheckStats.Location = new System.Drawing.Point(398, 36);
+            this.linkLabelCheckStats.Location = new System.Drawing.Point(395, 36);
             this.linkLabelCheckStats.Name = "linkLabelCheckStats";
             this.linkLabelCheckStats.Size = new System.Drawing.Size(113, 13);
             this.linkLabelCheckStats.TabIndex = 9;
@@ -235,7 +235,7 @@ namespace NiceHashMiner
             // 
             // textBoxWorkerName
             // 
-            this.textBoxWorkerName.Location = new System.Drawing.Point(110, 59);
+            this.textBoxWorkerName.Location = new System.Drawing.Point(107, 59);
             this.textBoxWorkerName.Name = "textBoxWorkerName";
             this.textBoxWorkerName.Size = new System.Drawing.Size(105, 20);
             this.textBoxWorkerName.TabIndex = 2;
@@ -283,14 +283,13 @@ namespace NiceHashMiner
             // buttonLogo
             // 
             this.buttonLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonLogo.AutoSize = true;
             this.buttonLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonLogo.FlatAppearance.BorderSize = 0;
             this.buttonLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xxsmall92;
-            this.buttonLogo.Location = new System.Drawing.Point(637, 3);
+            this.buttonLogo.Location = new System.Drawing.Point(632, 3);
             this.buttonLogo.Name = "buttonLogo";
-            this.buttonLogo.Size = new System.Drawing.Size(103, 32);
+            this.buttonLogo.Size = new System.Drawing.Size(110, 32);
             this.buttonLogo.TabIndex = 11;
             this.buttonLogo.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.buttonLogo.UseMnemonic = false;
@@ -308,7 +307,7 @@ namespace NiceHashMiner
             this.labelDemoMode.BackColor = System.Drawing.Color.Transparent;
             this.labelDemoMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDemoMode.ForeColor = System.Drawing.Color.Red;
-            this.labelDemoMode.Location = new System.Drawing.Point(281, 9);
+            this.labelDemoMode.Location = new System.Drawing.Point(295, 9);
             this.labelDemoMode.Name = "labelDemoMode";
             this.labelDemoMode.Size = new System.Drawing.Size(331, 18);
             this.labelDemoMode.TabIndex = 100;
@@ -367,7 +366,7 @@ namespace NiceHashMiner
             // linkLabelNewVersion
             // 
             this.linkLabelNewVersion.AutoSize = true;
-            this.linkLabelNewVersion.Location = new System.Drawing.Point(398, 62);
+            this.linkLabelNewVersion.Location = new System.Drawing.Point(395, 62);
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
             this.linkLabelNewVersion.Size = new System.Drawing.Size(15, 13);
             this.linkLabelNewVersion.TabIndex = 110;
@@ -381,7 +380,7 @@ namespace NiceHashMiner
             this.buttonBTC_Save.FlatAppearance.BorderSize = 0;
             this.buttonBTC_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonBTC_Save.Image = global::NiceHashMiner.Properties.Resources.Ok_normal;
-            this.buttonBTC_Save.Location = new System.Drawing.Point(372, 32);
+            this.buttonBTC_Save.Location = new System.Drawing.Point(369, 32);
             this.buttonBTC_Save.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonBTC_Save.Name = "buttonBTC_Save";
             this.buttonBTC_Save.Size = new System.Drawing.Size(20, 20);
@@ -404,7 +403,7 @@ namespace NiceHashMiner
             // 
             // textBoxBTCAddress_new
             // 
-            this.textBoxBTCAddress_new.Location = new System.Drawing.Point(110, 33);
+            this.textBoxBTCAddress_new.Location = new System.Drawing.Point(107, 33);
             this.textBoxBTCAddress_new.Name = "textBoxBTCAddress_new";
             this.textBoxBTCAddress_new.Size = new System.Drawing.Size(230, 20);
             this.textBoxBTCAddress_new.TabIndex = 111;
@@ -416,7 +415,7 @@ namespace NiceHashMiner
             this.buttonBTC_Clear.FlatAppearance.BorderSize = 0;
             this.buttonBTC_Clear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonBTC_Clear.Image = global::NiceHashMiner.Properties.Resources.Close_normal;
-            this.buttonBTC_Clear.Location = new System.Drawing.Point(346, 32);
+            this.buttonBTC_Clear.Location = new System.Drawing.Point(343, 32);
             this.buttonBTC_Clear.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonBTC_Clear.Name = "buttonBTC_Clear";
             this.buttonBTC_Clear.Size = new System.Drawing.Size(20, 20);
@@ -431,7 +430,7 @@ namespace NiceHashMiner
             // label_Uptime
             // 
             this.label_Uptime.AutoSize = true;
-            this.label_Uptime.Location = new System.Drawing.Point(223, 62);
+            this.label_Uptime.Location = new System.Drawing.Point(220, 62);
             this.label_Uptime.Name = "label_Uptime";
             this.label_Uptime.Size = new System.Drawing.Size(43, 13);
             this.label_Uptime.TabIndex = 115;

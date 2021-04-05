@@ -26,6 +26,7 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
         string ResponseFromNanominer;
         public string platform = "";
+        public string[] devices;
 
         public Nanominer() : base("Nanominer")
         {
@@ -107,12 +108,14 @@ namespace NiceHashMiner.Miners
             var allDeviceCount = ComputeDeviceManager.Query.GpuCount;
             if (platform.Contains("amd"))
             {
-                Helpers.ConsolePrint("lolMinerIndexing", $"Found {allDeviceCount} Total GPU devices");
-                Helpers.ConsolePrint("lolMinerIndexing", $"Found {amdDeviceCount} AMD devices");
+                Helpers.ConsolePrint("NanominerIndexing", $"Found {allDeviceCount} Total GPU devices");
+                Helpers.ConsolePrint("NanominerIndexing", $"Found {amdDeviceCount} AMD devices");
                 var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+                devices = new string[sortedMinerPairs.Count];
+                int dev = 0;
                 foreach (var mPair in sortedMinerPairs)
                 {
-                    double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
+                    int id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
 
                     if (id < 0)
                     {
@@ -128,6 +131,8 @@ namespace NiceHashMiner.Miners
 
                     Helpers.ConsolePrint("NanominerIndexing", "ID: " + id);
                     {
+                        devices[dev] = id.ToString();
+                        dev++;
                         ids.Add(id.ToString());
                     }
 
@@ -468,6 +473,7 @@ namespace NiceHashMiner.Miners
             CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
             int dSpeed = 0;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/stats");
@@ -490,16 +496,25 @@ namespace NiceHashMiner.Miners
             try
             {
                 //Helpers.ConsolePrint("API", ResponseFromNanominer);
-                dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer);
+                dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
                 if (json == null) return ad;
                 var cSpeed1 = (json.Algorithms[0].Ethash);
                 if (cSpeed1 == null) return ad;
                 var cSpeed = (json.Algorithms[0].Ethash.Total.Hashrate);
                 dSpeed = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
+
+                for (int i = 0; i < sortedMinerPairs.Count; i++)
+                {
+                    string gpu = devices[i];
+                    string token = $"Algorithms[0].Ethash.GPU{gpu}.Hashrate";
+                    var hash = (string)json.SelectToken(token);
+                    var gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
+                    sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                }
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("API", ex.Message);
+                Helpers.ConsolePrint("API", ex.ToString());
                 return null;
             }
             ad.Speed = dSpeed;

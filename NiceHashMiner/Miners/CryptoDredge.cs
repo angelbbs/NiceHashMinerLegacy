@@ -83,7 +83,15 @@ namespace NiceHashMiner.Miners
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
             ProcessHandle = _Start();
         }
+        protected override string GetDevicesCommandString()
+        {
+            var deviceStringCommand = " ";
 
+            var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.ID.ToString()).ToList();
+            deviceStringCommand += string.Join(",", ids);
+
+            return deviceStringCommand;
+        }
         protected override void _Stop(MinerStopType willswitch)
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
@@ -348,51 +356,6 @@ namespace NiceHashMiner.Miners
 
         public override async Task<ApiData> GetSummaryAsync()
         {
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29)) //0.18.0 api broken
-            {
-                var totalSpeed = 0.0d;
-                foreach (var miningPair in MiningSetup.MiningPairs)
-                {
-                    var algo = miningPair.Device.GetAlgorithm(MinerBaseType.CryptoDredge, AlgorithmType.GrinCuckaroo29, AlgorithmType.NONE);
-                    if (algo != null)
-                    {
-                        totalSpeed += algo.BenchmarkSpeed;
-                    }
-                }
-
-                var cdData = new ApiData(MiningSetup.CurrentAlgorithmType)
-                {
-                    Speed = totalSpeed
-                };
-                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                // check if speed zero
-                if (cdData.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                return cdData;
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle)) //0.18.0 api broken
-            {
-                var totalSpeed = 0.0d;
-                foreach (var miningPair in MiningSetup.MiningPairs)
-                {
-                    var algo = miningPair.Device.GetAlgorithm(MinerBaseType.CryptoDredge, AlgorithmType.CuckooCycle, AlgorithmType.NONE);
-                    if (algo != null)
-                    {
-                        totalSpeed += algo.BenchmarkSpeed;
-                    }
-                }
-
-                var cdData = new ApiData(MiningSetup.CurrentAlgorithmType)
-                {
-                    Speed = totalSpeed
-                };
-                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                // check if speed zero
-                if (cdData.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                return cdData;
-            }
-
-
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             double tmp = 0;
@@ -400,14 +363,15 @@ namespace NiceHashMiner.Miners
             string resp = null;
             try
             {
-                var bytesToSend = Encoding.ASCII.GetBytes("summary");
+                //var bytesToSend = Encoding.ASCII.GetBytes("summary");
+                var bytesToSend = Encoding.ASCII.GetBytes("threads");
                 var client = new TcpClient("127.0.0.1", ApiPort);
                 var nwStream = client.GetStream();
                 await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                 var bytesToRead = new byte[client.ReceiveBufferSize];
                 var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                 var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                //Helpers.ConsolePrint(MinerTag(), "API: " + respStr);
+                Helpers.ConsolePrint(MinerTag(), "API: " + respStr);
                 client.Close();
                 resp = respStr;
             }
@@ -415,45 +379,53 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
             }
-
-            if (resp != null )
-            {
-                    var st = resp.IndexOf(";KHS=");
-                    var e = resp.IndexOf(";SOLV=");
-                    var parse = resp.Substring(st + 5, e - st - 5).Trim();
+            
+           if (resp != null )
+           {
+                var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.ID).ToList();
+                string[] mass = resp.Split('|');
+                string parse = "";
                 try
                 {
-                    tmp = Double.Parse(parse, CultureInfo.InvariantCulture);
+                    for (int i = 0; i < sortedMinerPairs.Count(); i++)
+                    {
+                        var st = mass[i].IndexOf(";KHS=");
+                        var e = mass[i].IndexOf(";KHW=");
+                        parse = mass[i].Substring(st + 5, e - st - 5).Trim();
+                        //double hr = Double.Parse(parse, CultureInfo.InvariantCulture);
+                        Double.TryParse(parse, out double hr);
+                        //Helpers.ConsolePrint(MinerTag(), parse + " - " + hr.ToString());
+                        sortedMinerPairs[i].Device.MiningHashrate = hr * 1000;
+                        tmp = tmp + hr;
+                    }
+
                 }
-                catch
+                catch (Exception e)
                 {
+                    Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + e.ToString());
+                    /*
                     MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    */
                     BenchmarkSignalFinnished = true;
                 }
-                ad.Speed = tmp*1000;
-                /*
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
-                {
-                    ad.Speed = BenchmarkAlgorithm.BenchmarkSpeed;
-                }
-                */
+                ad.Speed = tmp * 1000;
 
                 if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                } else
+                }
+                else
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
 
-                if (ad.Speed < 0)
-                {
-                    Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
-                    Restart();
-                }
-            }
-
+               if (ad.Speed < 0)
+               {
+                   Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
+                   Restart();
+               }
+           }
             return ad;
         }
 

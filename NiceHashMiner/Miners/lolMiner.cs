@@ -622,7 +622,6 @@ namespace NiceHashMiner.Miners
         // TODO _currentMinerReadStatus
         public override async Task<ApiData> GetSummaryAsync()
         {
-            //Helpers.ConsolePrint("try API...........", "");
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             string ResponseFromlolMiner;
             double total = 0;
@@ -637,7 +636,7 @@ namespace NiceHashMiner.Miners
                 SS.ReadTimeout = 20 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromlolMiner = await Reader.ReadToEndAsync();
-                //Helpers.ConsolePrint("API...........", ResponseFromlolMiner);
+                //Helpers.ConsolePrint("API: ", ResponseFromlolMiner);
                 //if (ResponseFromlolMiner.Length == 0 || (ResponseFromlolMiner[0] != '{' && ResponseFromlolMiner[0] != '['))
                 //    throw new Exception("Not JSON!");
                 Reader.Close();
@@ -653,26 +652,52 @@ namespace NiceHashMiner.Miners
                 CurrentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
-            dynamic resp = JsonConvert.DeserializeObject(ResponseFromlolMiner);
-            if (resp != null)
+            try
             {
-                double totals = resp.Session.Performance_Summary;
-                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+                dynamic resp = JsonConvert.DeserializeObject(ResponseFromlolMiner);
+                int mult = 1;
+                if (resp != null)
                 {
-                    ad.Speed = totals * 1000000;
+                    int gpus = resp.Session.Active_GPUs;
+                    double totals = resp.Session.Performance_Summary;
+                    if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+                    {
+                        mult = 1000000;
+                    }
+                    else
+                    {
+                        mult = 1;
+                    }
+                    ad.Speed = totals * mult;
+                    if (gpus > 0)
+                    {
+                        double[] hashrates = new double[gpus];
+                        for (var i = 0; i < gpus; i++)
+                        {
+                            hashrates[i] = resp.GPUs[i].Performance;
+                        }
+                        int dev = 0;
+                        var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+                        foreach (var mPair in sortedMinerPairs)
+                        {
+                            mPair.Device.MiningHashrate = hashrates[dev] * mult;
+                            dev++;
+                        }
+
+
+                        if (ad.Speed == 0)
+                        {
+                            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                        }
+                        else
+                        {
+                            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                        }
+                    }
                 }
-                else
-                {
-                    ad.Speed = totals;
-                }
-                if (ad.Speed == 0)
-                {
-                    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                }
-                else
-                {
-                    CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                }
+            } catch (Exception e)
+            {
+                Helpers.ConsolePrint(MinerTag(), e.ToString());
             }
 
             Thread.Sleep(100);
