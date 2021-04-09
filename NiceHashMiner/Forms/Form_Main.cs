@@ -132,6 +132,7 @@ namespace NiceHashMiner
         public static bool MSIAfterburnerAvailabled = false;
         public static bool MSIAfterburnerRunning = false;
         public static bool NVIDIA_orderBug = false;
+        public static bool MiningStarted = false;
         public struct RigProfitList
         {
             public DateTime DateTime;
@@ -305,7 +306,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "36";
+            Text += "37";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -2160,6 +2161,7 @@ public static void CloseChilds(Process parentId)
 
         public StartMiningReturnType StartMining(bool showWarnings)
         {
+            MiningStarted = true;
             if (_autostartTimerDelay != null)
             {
                 _autostartTimerDelay.Stop();
@@ -2602,6 +2604,7 @@ public static void CloseChilds(Process parentId)
         }
         private void StopMining()
         {
+            MiningStarted = false;
             ticks = 0;
             _minerStatsCheck.Interval = 1000;
             Form_Main.smaCount = 0;

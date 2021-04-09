@@ -106,13 +106,15 @@ namespace NiceHashMiner.Miners
             var ids = new List<string>();
             var amdDeviceCount = ComputeDeviceManager.Query.AmdDevices.Count;
             var allDeviceCount = ComputeDeviceManager.Query.GpuCount;
+            Helpers.ConsolePrint("NanominerIndexing", "platform: " + platform);
+            int dev = 0;
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+            devices = new string[sortedMinerPairs.Count];
             if (platform.Contains("amd"))
             {
                 Helpers.ConsolePrint("NanominerIndexing", $"Found {allDeviceCount} Total GPU devices");
                 Helpers.ConsolePrint("NanominerIndexing", $"Found {amdDeviceCount} AMD devices");
-                var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
-                devices = new string[sortedMinerPairs.Count];
-                int dev = 0;
+
                 foreach (var mPair in sortedMinerPairs)
                 {
                     int id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
@@ -140,6 +142,22 @@ namespace NiceHashMiner.Miners
                 deviceStringCommand += string.Join(",", ids);
             } else
             {
+                foreach (var mPair in sortedMinerPairs)
+                {
+                    int id = mPair.Device.IDByBus;
+
+                    if (id < 0)
+                    {
+                        Helpers.ConsolePrint("NanominerIndexing", "ID too low: " + id + " skipping device");
+                        continue;
+                    }
+
+                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + id);
+                    {
+                        devices[dev] = id.ToString();
+                        dev++;
+                    }
+                }
                 var ids2 = MiningSetup.MiningPairs.Select(mPair => (mPair.Device.lolMinerBusID).ToString()).ToList();
                 deviceStringCommand += string.Join(",", ids2);
             }
@@ -184,15 +202,6 @@ namespace NiceHashMiner.Miners
                 } while (Form_Main.nanominerCount >= Environment.ProcessorCount);
             }
 
-            var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType).Replace("stratum+tcp://", "");
-            var username = Globals.GetBitcoinUser();
-            var rigName = ConfigManager.GeneralConfig.WorkerName.Trim();
-
-            if (File.Exists("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
-                File.Delete("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
-
-            var platform = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
@@ -204,6 +213,14 @@ namespace NiceHashMiner.Miners
                     platform = "amd";
                 }
             }
+
+            var server = Globals.GetLocationUrl(algorithm.NiceHashID,
+                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType).Replace("stratum+tcp://", "");
+            var username = Globals.GetBitcoinUser();
+            var rigName = ConfigManager.GeneralConfig.WorkerName.Trim();
+
+            if (File.Exists("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
+                File.Delete("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
@@ -334,6 +351,8 @@ namespace NiceHashMiner.Miners
                     {
                         var imageName = MinerExeName.Replace(".exe", "");
                         // maybe will have to KILL process
+                        BenchmarkHandle.Kill();
+                        BenchmarkHandle.Dispose();
                         EndBenchmarkProcces();
                         //  KillMinerBase(imageName);
                         if (BenchmarkSignalTimedout)

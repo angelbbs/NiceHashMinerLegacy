@@ -552,6 +552,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("GMiner_mt", "--mt", "--mt", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_safe_dag", "--safe_dag", "--safe_dag", "1", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_tfan", "--tfan", "--tfan", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_electricity_cost", "--electricity_cost", "--electricity_cost", "0", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()

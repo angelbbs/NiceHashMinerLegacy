@@ -52,7 +52,7 @@ namespace NiceHashMiner.Forms.Components
         private AlgorithmsListViewOverClock _algorithmsListViewOverClock;
 
         // disable checkboxes when in benchmark mode
-        private bool _isInBenchmark;
+        public static bool _isInBenchmark;
 
         // helper for benchmarking logic
         public bool IsInBenchmark
@@ -73,7 +73,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private bool _isMining;
+        public static bool _isMining;
 
         public bool IsMining
         {
@@ -260,10 +260,10 @@ namespace NiceHashMiner.Forms.Components
             }
             int index = 0;
             var _computeDevices = ComputeDeviceManager.ReSortDevices(computeDevices);
-            
+
             foreach (var computeDevice in _computeDevices)
             {
-                Helpers.ConsolePrint("SetComputeDevicesStatus", computeDevice.MiningHashrate.ToString());
+//                Helpers.ConsolePrint("SetComputeDevicesStatus", computeDevice.MiningHashrate.ToString());
                 string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, 0, (AlgorithmType)computeDevice.AlgorithmID);
                 string cTemp = Math.Truncate(computeDevice.Temp).ToString() + "°C";
                 string cLoad = Math.Truncate(computeDevice.Load).ToString() + "%";
@@ -298,9 +298,14 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (index >= 0)
                     {
-                        Helpers.ConsolePrint("listViewDevices.Columns.Count", listViewDevices.Columns.Count.ToString());
-                        Helpers.ConsolePrint("index", index.ToString());
-                        listViewDevices.Items[index].SubItems[1].Text = cHashrate.Contains("0.00") ? "--" : cHashrate;
+                        if (_isInBenchmark || !_isMining)
+                        {
+                            listViewDevices.Items[index].SubItems[1].Text = "--";
+                        }
+                        else
+                        {
+                            listViewDevices.Items[index].SubItems[1].Text = cHashrate.Contains("0.00") ? "--" : cHashrate;
+                        }
                         listViewDevices.Items[index].SubItems[2].Text = cTemp.Contains("-1") ? "--" : cTemp;
                         listViewDevices.Items[index].SubItems[3].Text = cLoad.Contains("-1") ? "--" : cLoad;
                         listViewDevices.Items[index].SubItems[4].Text = cFanSpeed.Contains("-1") ? "--" : cFanSpeed;
@@ -310,7 +315,7 @@ namespace NiceHashMiner.Forms.Components
                 }
                 catch (Exception e)
                 {
-                    Helpers.ConsolePrint("SetComputeDevicesStatus", e.ToString()); 
+                    Helpers.ConsolePrint("SetComputeDevicesStatus", e.ToString());
                 } finally
                 {
 
@@ -492,7 +497,7 @@ namespace NiceHashMiner.Forms.Components
                 if (e.Item is ListViewItem lvi) _listItemCheckColorSetter.LviSetColor(lvi);
                 _algorithmsListView?.RepaintStatus(cDevice.Enabled, cDevice.Uuid);
             }
-            BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
+            //BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
         }
 
         public void SetDeviceSelectionChangedCallback(ListViewItemSelectionChangedEventHandler callback)
@@ -511,7 +516,7 @@ namespace NiceHashMiner.Forms.Components
                 devNumInc = 1;//костыль. при многопроцессорной конфигурации это работать не будет
             }
 
-                if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location))
                 {
@@ -710,18 +715,6 @@ namespace NiceHashMiner.Forms.Components
             }
             */
         }
-        private void Bink(object sender, System.EventArgs e)
-        {
-            /*
-            CheckBox test = sender as CheckBox;
-
-            for (int i = 0; i < listViewDevices.Items.Count; i++)
-            {
-                listViewDevices.Items[i].Checked = test.Checked;
-                listViewDevices.Items[i].BackColor = DisabledColor;
-            }
-            */
-        }
         private void listViewDevices_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             /*
@@ -774,7 +767,7 @@ namespace NiceHashMiner.Forms.Components
             listViewDevices.EndUpdate();
             listViewDevices.Update();
             listViewDevices.Refresh();
-            
+
 
             //   ResizeColumn();
         }

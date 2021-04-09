@@ -24,7 +24,7 @@ namespace NiceHashMiner.Switching
         public static Timer _smaCheckTimer;
         private static readonly Random _random = new Random();//?
 
-        private static int _ticksForStable;
+        public static int _ticksForStable;
         private static int _ticksForUnstable;
         private static double _smaCheckTime = 180;
         public static bool SmaCheckTimerOnElapsedRun = false;
@@ -39,7 +39,7 @@ namespace NiceHashMiner.Switching
         private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
 
         private static bool _hasStarted;
-        public static bool newProfit = false;
+        public static bool newProfit = true;
         /// <summary>
         /// Currently used normalized profits
         /// </summary>

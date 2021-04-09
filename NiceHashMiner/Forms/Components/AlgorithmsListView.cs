@@ -953,7 +953,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
         {
             try
             {
-                if (listViewAlgorithms != null)
+                if (listViewAlgorithms != null & listViewAlgorithms.SelectedItems.Count > 0)
                 {
                     if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("3GB"))
                     {

@@ -32,8 +32,8 @@ namespace NiceHashMiner.Forms
         private AlgorithmBenchmarkSettingsType _algorithmOption =
             AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
 
-        private int _bechmarkCurrentIndex;
-        private int _benchmarkAlgorithmsCount;
+        public static int _bechmarkCurrentIndex = 0;
+        public static int _benchmarkAlgorithmsCount = 0;
 
         private List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchmarkDevicesAlgorithmQueue;
 
@@ -66,9 +66,10 @@ namespace NiceHashMiner.Forms
 
             // clear prev pending statuses
             foreach (var dev in ComputeDeviceManager.Available.Devices)
-            foreach (var algo in dev.GetAlgorithmSettings())
-                algo.ClearBenchmarkPendingFirst();
-
+            {
+                foreach (var algo in dev.GetAlgorithmSettings())
+                    algo.ClearBenchmarkPendingFirst();
+            }
             benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
 
             // benchmark only unique devices
@@ -224,6 +225,10 @@ namespace NiceHashMiner.Forms
                 UpdateListView_timer.Start();
             }
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
+
+            progressBarBenchmarkSteps.Maximum = 0;
+            progressBarBenchmarkSteps.Value = 0;
+            SetLabelBenchmarkSteps(0, 0);
         }
 
         private void UpdateLvi_Tick(object sender, EventArgs e)
@@ -276,10 +281,12 @@ namespace NiceHashMiner.Forms
             }
 
             // GUI stuff
+            /*
             progressBarBenchmarkSteps.Maximum = _benchmarkAlgorithmsCount;
             progressBarBenchmarkSteps.Value = 0;
             SetLabelBenchmarkSteps(0, _benchmarkAlgorithmsCount);
             _bechmarkCurrentIndex = 0;
+            */
         }
 
         #endregion
@@ -326,7 +333,10 @@ namespace NiceHashMiner.Forms
 
         public void StepUpBenchmarkStepProgress()
         {
-            if (InvokeRequired) Invoke((MethodInvoker) StepUpBenchmarkStepProgress);
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker)StepUpBenchmarkStepProgress);
+            }
             else
             {
                 _bechmarkCurrentIndex++;
@@ -530,6 +540,24 @@ namespace NiceHashMiner.Forms
 
         private bool StartButonClick()
         {
+            /*
+            bool ismining = false;
+            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            {
+                Helpers.ConsolePrint(cDev.Name, cDev.AlgorithmID.ToString());
+                if (cDev.AlgorithmID != 0)
+                {
+                    ismining = true;
+                    break;
+                }
+            }
+            */
+             if (Form_Main.MiningStarted)   
+            {
+                MessageBox.Show(International.GetText("Form_Benchmark_Stop_mining_first"), 
+                    International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
             Form_Main.nanominerCount = 0;
             CalcBenchmarkDevicesAlgorithmQueue();
             // device selection check scope
@@ -575,6 +603,10 @@ namespace NiceHashMiner.Forms
                 if (deviceAlgosTuple.Item1 != null)
                     algorithmsListView1.RepaintStatus(deviceAlgosTuple.Item1.Enabled, deviceAlgosTuple.Item1.Uuid);
             }
+
+            progressBarBenchmarkSteps.Maximum = _benchmarkAlgorithmsCount;
+            progressBarBenchmarkSteps.Value = 0;
+            SetLabelBenchmarkSteps(0, _benchmarkAlgorithmsCount);
 
             StartBenchmark();
 
@@ -854,6 +886,10 @@ namespace NiceHashMiner.Forms
 
         private void ResetBenchmarkProgressStatus()
         {
+            foreach (var cdev in ComputeDeviceManager.Available.Devices)
+            {
+                cdev.MiningHashrate = 0;
+            }
             progressBarBenchmarkSteps.Value = 0;
         }
 

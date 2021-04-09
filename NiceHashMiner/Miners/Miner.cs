@@ -127,7 +127,7 @@ namespace NiceHashMiner
 
         // TODO maybe set for individual miner cooldown/retries logic variables
         // this replaces MinerAPIGraceSeconds(AMD)
-        private const int MinCooldownTimeInMilliseconds = 30 * 1000; // 30 seconds for gminer
+        private const int MinCooldownTimeInMilliseconds = 5 * 1000; // 30 seconds for gminer
         //private const int _MIN_CooldownTimeInMilliseconds = 1000; // TESTING
 
         //private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
@@ -716,7 +716,7 @@ namespace NiceHashMiner
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
 
-            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("gminer") && (commandLine.ToLower().Contains("cuckoocycle") && commandLine.ToLower().Contains("--cuda 0")))
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("gminer") && (commandLine.ToLower().Contains("cuckoocycle")))
             {
                 benchmarkHandle.StartInfo.FileName = MiningSetup.MinerPath.Replace("miner.exe", "miner234.exe");
             }
@@ -1506,7 +1506,7 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
-            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle") && LastCommandLine.ToLower().Contains("--cuda 0")))
+            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle")))
             {
                 Path = MiningSetup.MinerPath.Replace("miner.exe", "miner234.exe");
             }
@@ -1673,8 +1673,12 @@ namespace NiceHashMiner
 
         protected void ScheduleRestart(int ms)
         {
+            if (ProcessHandle != null)
+            {
+                if (!ProcessHandle._bRunning) return;
+            }
+            //ProcessHandle._bRunning = true;
 
-            if (!ProcessHandle._bRunning) return;
             var restartInMs = ConfigManager.GeneralConfig.MinerRestartDelayMS > ms
                 ? ConfigManager.GeneralConfig.MinerRestartDelayMS
                 : ms;
@@ -1728,6 +1732,7 @@ namespace NiceHashMiner
 
         protected void Restart()
         {
+            //if (ProcessHandle._bRunning) return;
             if (_isEnded) return;
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             string strPlatform = "";
@@ -1971,10 +1976,31 @@ namespace NiceHashMiner
                 End();
                 return;
             }
+            if (ProcessHandle == null)
+            {
+                CooldownCheck = 100;
+                Helpers.ConsolePrint(MinerTag(), ProcessTag() + "Process not exist. Restart miner");
+                CooldownCheck = 0;
+                Restart();
+            }
+            if (ProcessHandle != null && !ProcessHandle._bRunning)
+            {
+                try
+                {
+                    var p = Process.GetProcessById(ProcessHandle.Id);
+                } catch (Exception ex)
+                {
+                    CooldownCheck = 100;
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + "Process not exist. Restart miner");
+                    CooldownCheck = 0;
+                    Restart();
+                }
+            }
+            
             switch (CurrentMinerReadStatus)
             {
                 case MinerApiReadStatus.GOT_READ:
-                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.GOT_READ");
+                    //Helpers.ConsolePrint(MinerTag(), ProcessTag() + "MinerApiReadStatus.GOT_READ");
                     CooldownCheck = 0;
                     break;
                 case MinerApiReadStatus.READ_SPEED_ZERO:
@@ -1992,7 +2018,7 @@ namespace NiceHashMiner
             }
 
             //_currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
-            if (CooldownCheck > 5)//150 sec
+            if (CooldownCheck > 30)//150 sec
             {
                 CooldownCheck = 0;
                 Restart();

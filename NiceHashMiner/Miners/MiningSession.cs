@@ -50,7 +50,7 @@ namespace NiceHashMiner.Miners
 
         private GroupMiner _ethminerNvidiaPaused;
         private GroupMiner _ethminerAmdPaused;
-
+        private static int _tick = 0;
 
         private bool _isProfitable;
 
@@ -146,6 +146,7 @@ namespace NiceHashMiner.Miners
             AlgorithmSwitchingManager.Stop();
             AlgorithmSwitchingManager.Start();
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
+            _tick = 999;
         }
 
         #region Timers stuff
@@ -518,14 +519,40 @@ namespace NiceHashMiner.Miners
 
             // check profit threshold
             bool needSwitch = false;
-            foreach (var device in _miningDevices)
+            if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
             {
                 Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
-                //if (prevStateProfit > 0 && currentProfit > 0)
+                var a = Math.Max(prevStateProfit, currentProfit);
+                var b = Math.Min(prevStateProfit, currentProfit);
+                var percDiff = ((a - b)) / Math.Abs(b);
+                if (percDiff <= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
                 {
+                    // don't switch
+                    Helpers.ConsolePrint(Tag,
+                        $"{"Total rig profit"}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                    // RESTORE OLD PROFITS STATE
+                    foreach (var device in _miningDevices)
+                    {
+                        device.RestoreOldProfitsState();
+                    }
+                }
+                else
+                {
+                        needSwitch = true;
+                        Helpers.ConsolePrint(Tag,
+                            $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                }
+            }
+            else
+            {
+                foreach (var device in _miningDevices)
+                {
+                    currentProfit = device.GetCurrentMostProfitValue;
+                    prevStateProfit = device.GetPrevMostProfitValue;
+                   
+                    Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
                     var a = Math.Max(prevStateProfit, currentProfit);
                     var b = Math.Min(prevStateProfit, currentProfit);
-                    //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
                     var percDiff = ((a - b)) / Math.Abs(b);
                     if (percDiff <= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
                     {
@@ -537,28 +564,12 @@ namespace NiceHashMiner.Miners
                         {
                             device.RestoreOldProfitsState();
                         }
-
-                        //return;
                     }
                     else
                     {
-                        if (device.GetMostProfitableString().Contains("DaggerHashimoto3GB") && ConfigManager.GeneralConfig.DivertRun)
-                        {
-                            if (Divert.DaggerHashimoto3GBForce)
-                            {
-                                if (Divert.DaggerHashimoto3GBProfit && Divert.checkConnection3GB)
-                                {
-                                    //Divert.Dagger3GBEpochCount = 0;
-                                    //Divert.DaggerHashimoto3GBForce = false;
-                                    //DHClient.checkConnection = false;
-
-                                }
-                            }
-                        }
-
-                                    needSwitch = true;
-                        Helpers.ConsolePrint(Tag,
-                            $"Will SWITCH profit diff is {percDiff * 100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            needSwitch = true;
+                            Helpers.ConsolePrint(Tag,
+                                $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                     }
                 }
             }

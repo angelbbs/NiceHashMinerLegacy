@@ -129,7 +129,7 @@ namespace NiceHashMiner.Forms.Components {
             this.Controls.Add(this.listViewDevices);
             this.Name = "DevicesListViewEnableControl";
             this.Size = new System.Drawing.Size(667, 226);
-            this.Leave += new System.EventHandler(this.DevicesListViewEnableControl_Leave);
+            this.Leave += new System.EventHandler(this.listViewDevices_SelectedIndexChanged);
             this.Resize += new System.EventHandler(this.DevicesListViewEnableControl_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

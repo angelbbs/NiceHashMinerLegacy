@@ -512,6 +512,7 @@
 "Form_Profit_Chart_Disabled": "График прибыльности отключен",
 "Form_Settings_DH3GB_Warning": "С алгоритмом DaggerHashimoto3GB или DaggerHashimoto4GB должен быть включен минимум еще один алгоритм",
 "Form_Benchmark_BenchmarkProgress": "Бенчмарк",
+"Form_Benchmark_Stop_mining_first": "Сначала остановите майнинг",
 "FormSettings_OverclockSettings": "Настройки разгона для {0} :",
 "FormSettings_ABEnableOverclock": "Включить разгон",
 "FormSettings_ABOverclock_Relative": "Относительные значения",
@@ -519,6 +520,7 @@
 "FormSettings_AB_Minimize": "Сворачивать MSI Afterburner",
 "FormSettings_AB_Error": "Ошибка MSI Afterburner. Разгон не работает!",
 "FormSettings_AB_FileNotFound": "Ошибка MSI Afterburner.\r\nФайл {0} не найден.\r\nПожалуйста, установите MSI Afterburner",
+"FormSettings_By_profitability_of_all_devices": "По прибыльности всех устройств",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

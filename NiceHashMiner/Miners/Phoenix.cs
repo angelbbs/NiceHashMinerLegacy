@@ -309,74 +309,7 @@ namespace NiceHashMiner.Miners
         }
         #endregion // Decoupled benchmarking routines
 
-        /*
-        public override async Task<ApiData> GetSummaryAsync()
-        {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-            try
-            {
-                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString());
-                WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
-                WR.Timeout = 30 * 1000;
-                WR.Credentials = CredentialCache.DefaultCredentials;
-                WebResponse Response = WR.GetResponse();
-                Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 20 * 1000;
-                StreamReader Reader = new StreamReader(SS);
-                ResponseFromPhoenix = await Reader.ReadToEndAsync();
-                Reader.Close();
-                Response.Close();
-            }
-            catch (Exception ex)
-            {
-                //Helpers.ConsolePrint("API", ex.Message);
-                return null;
-            }
-            Helpers.ConsolePrint("API", ResponseFromPhoenix);
-            if (ResponseFromPhoenix.Contains("Eth speed:"))
-            {
-                var st = ResponseFromPhoenix.LastIndexOf("Eth speed: ");
-                var e = ResponseFromPhoenix.LastIndexOf("/s, shares");
-                cSpeed = ResponseFromPhoenix.Substring(st + 11, e - st - 14);
-
-                try
-                {
-                    dSpeed = Double.Parse(cSpeed); // тут проблема
-                } catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("API exeption:", ex.Message);
-                    Helpers.ConsolePrint("API st:", ResponseFromPhoenix);
-                    Helpers.ConsolePrint("API st:", st.ToString());
-                    Helpers.ConsolePrint("API e:", e.ToString());
-                }
-
-
-                if (ResponseFromPhoenix.ToUpper().Contains("KH/S"))
-                    dSpeed *= 1000;
-                else if (ResponseFromPhoenix.ToUpper().Contains("MH/S"))
-                    dSpeed *= 1000000;
-                else if (ResponseFromPhoenix.ToUpper().Contains("GH/S"))
-                    dSpeed *= 10000000000;
-
-                ad.Speed = dSpeed;
-
-            }
-
-            if (ad.Speed == 0)
-            {
-                //CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-            }
-            else
-            {
-                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-            }
-
-            return ad;
-
-        }
-        */
-
+        
         private class JsonApiResponse
         {
 #pragma warning disable IDE1006 // Naming Styles

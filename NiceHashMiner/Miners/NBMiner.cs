@@ -412,7 +412,7 @@ namespace NiceHashMiner.Miners
 
         public override async Task<ApiData> GetSummaryAsync()
         {
-            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
             ApiData ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
 

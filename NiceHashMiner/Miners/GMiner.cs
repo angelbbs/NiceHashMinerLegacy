@@ -142,10 +142,11 @@ namespace NiceHashMiner.Miners
                 algo = "kawpow";
                 algoName = "kawpow";
                 ssl = " --ssl 0";
+                nicehashstratum = " --proto stratum";
             }
 
             var ret = GetDevicesCommandString()
-                      + " --algo " + algo + pers + " --server " + url.Split(':')[0]
+                      + " --algo " + algo + pers + " --server " + url.Split(':')[0] + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
                       + " --server " + algoName + "." + Form_Main.myServers[1, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
@@ -368,7 +369,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
                 ret = " --color 0 --pec --algo kawpow" +
-                " --server rvn.2miners.com:6060 --user RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.GMiner --pass x " +
+                " --server rvn.2miners.com:6060 --user RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.GMiner --pass x --proto stratum " +
                 " --server kawpow.eu.nicehash.com:3385 --user " + username + " --pass x --proto stratum" +
                 GetDevicesCommandString();
             }
