@@ -298,7 +298,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (index >= 0)
                     {
-                        if (_isInBenchmark || !_isMining)
+                        if (Form_Benchmark.BenchmarkStarted)
                         {
                             listViewDevices.Items[index].SubItems[1].Text = "--";
                         }

@@ -52,6 +52,7 @@ namespace NiceHashMiner.Forms
         public bool StartMining { get; private set; }
 
         public bool InBenchmark { get; private set; }
+        public static bool BenchmarkStarted = false;
 
         public string benchmarkfail = "";
         private static Timer UpdateListView_timer;
@@ -476,6 +477,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("FormBenchmark_Benchmark_All_Selected_ReUnbenchmarked");
             checkBox_StartMiningAfterBenchmark.Text =
                 International.GetText("Form_Benchmark_checkbox_StartMiningAfterBenchmark");
+            checkBox_StartMiningAfterBenchmark.Enabled = !Form_Main.MiningStarted;
         }
 
         #region Start/Stop methods
@@ -520,6 +522,10 @@ namespace NiceHashMiner.Forms
             devicesListViewEnableControl1.IsInBenchmark = false;
 
             CloseBtn.Enabled = true;
+            foreach (var cdev in ComputeDeviceManager.Available.Devices)
+            {
+                cdev.MiningHashrate = 0;
+            }
         }
 
         // TODO add list for safety and kill all miners
@@ -527,6 +533,7 @@ namespace NiceHashMiner.Forms
         {
             _benchmarkingTimer.Stop();
             InBenchmark = false;
+            BenchmarkStarted = false;
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
             //// copy benchmarked
             //CopyBenchmarks();
@@ -635,6 +642,7 @@ namespace NiceHashMiner.Forms
         private void StartBenchmark()
         {
             InBenchmark = true;
+            BenchmarkStarted = true;
             lock (_runningBenchmarkThreads)
             {
                 foreach (var pair in _benchmarkDevicesAlgorithmQueue)
@@ -737,6 +745,7 @@ namespace NiceHashMiner.Forms
             {
                 _benchmarkingTimer.Stop();
                 InBenchmark = false;
+                BenchmarkStarted = false;
                 Ethlargement.Stop();
                 Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
 
@@ -886,10 +895,6 @@ namespace NiceHashMiner.Forms
 
         private void ResetBenchmarkProgressStatus()
         {
-            foreach (var cdev in ComputeDeviceManager.Available.Devices)
-            {
-                cdev.MiningHashrate = 0;
-            }
             progressBarBenchmarkSteps.Value = 0;
         }
 
