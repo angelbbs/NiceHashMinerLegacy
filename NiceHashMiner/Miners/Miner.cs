@@ -931,7 +931,7 @@ namespace NiceHashMiner
 
         protected void BenchmarkThreadRoutineFinish()
         {
-            ComputeDevice.BenchmarkProgress = 0;
+            //ComputeDevice.BenchmarkProgress = 0;
             BenchmarkAlgorithm.BenchmarkProgressPercent = 0;
             //Helpers.ConsolePrint(MinerTag(), "ComputeDevice.BenchmarkProgress: " + ComputeDevice.);
             var status = BenchmarkProcessStatus.Finished;
@@ -1175,6 +1175,7 @@ namespace NiceHashMiner
                 var keepRunning = true;
                 int delay_before_calc_hashrate = 10;
                 int bench_time = benchmarkTimeWait - 10;
+                Task<ApiData> ad;
                 while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
                 {
                     //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
@@ -1238,7 +1239,7 @@ namespace NiceHashMiner
                         delay_before_calc_hashrate = 20;
                     }
 
-                    var ad = GetSummaryAsync();
+                    ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
 
@@ -1724,6 +1725,18 @@ namespace NiceHashMiner
                     {
                         Helpers.ConsolePrint("ScheduleRestart error: ", e.ToString());
                     }
+                }
+            }
+            if (ProcessHandle != null)
+            {
+                try
+                {
+                    var p = Process.GetProcessById(ProcessHandle.Id);
+                    p.Kill();
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + "Process not exist.");
                 }
             }
             Thread.Sleep(restartInMs);

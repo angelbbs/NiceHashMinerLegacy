@@ -15,9 +15,10 @@ using NiceHashMinerLegacy.UUID;
 
 namespace NiceHashMiner.Devices
 {
+    [Serializable]
     public class ComputeDevice
     {
-        public readonly int ID;
+        public int ID;
 
         public int Index { get; protected set; } // For socket control, unique
 
@@ -25,13 +26,13 @@ namespace NiceHashMiner.Devices
         public string Name; // { get; set; }
 
         // name count is the short name for displaying in moning groups
-        public readonly string NameCount;
+        public string NameCount;
         public bool Enabled;
 
-        public readonly DeviceGroupType DeviceGroupType;
+        public DeviceGroupType DeviceGroupType;
 
         // CPU, NVIDIA, AMD
-        public readonly DeviceType DeviceType;
+        public DeviceType DeviceType;
 
         // UUID now used for saving
         public string Uuid { get; protected set; }
@@ -50,11 +51,13 @@ namespace NiceHashMiner.Devices
 
         // GPU extras
         public ulong GpuRam;
-        public readonly bool IsEtherumCapale;
+        public bool IsEtherumCapale;
+        /*
         public static readonly ulong Memory3Gb = 3221225472;
         public static readonly ulong Memory4Gb = 4293918720;
         public static double HashRate = 0.0d;
         public static int BenchmarkProgress = 0;
+        */
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
         public string Codename { get; protected set; }
@@ -301,28 +304,7 @@ namespace NiceHashMiner.Devices
             return virtualCoreCount;
         }
 
-        private static async Task DetectCPU()
-        {
-            Helpers.ConsolePrint("DetectCPU", $"DetectCPU START");
-            var cpu = await TryQueryCPUDeviceTask();
-            //DetectionResult.CPU = cpu;
-            if (cpu == null)
-            {
-                Helpers.ConsolePrint("DetectCPU", $"Found No Compatible CPU");
-            }
-            else
-            {
-                var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine($"Found CPU:");
-                stringBuilder.AppendLine($"\tUUID: {cpu.UUID}");
-                stringBuilder.AppendLine($"\tName: {cpu.Name}");
-                stringBuilder.AppendLine($"\tPhysicalProcessorCount: {cpu.PhysicalProcessorCount}");
-                stringBuilder.AppendLine($"\tThreadsPerCPU: {cpu.ThreadsPerCPU}");
-                stringBuilder.AppendLine($"\tSupportsHyperThreading: {cpu.SupportsHyperThreading}");
-                Helpers.ConsolePrint("DetectCPU", stringBuilder.ToString());
-            }
-            Helpers.ConsolePrint("DetectCPU", $"DetectCPU END");
-        }
+        
         //********************************************************************************************************************
         // Ambiguous constructor
         protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,

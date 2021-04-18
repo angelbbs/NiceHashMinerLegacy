@@ -452,6 +452,10 @@ namespace NiceHashMiner.Miners
                 }
                 */
                 var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+                if (Form_Main.NVIDIA_orderBug)
+                {
+                    sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+                }
                 double[] hashrates = new double[sortedMinerPairs.Count];
                 for (var i = 0; i < sortedMinerPairs.Count; i++)
                 {

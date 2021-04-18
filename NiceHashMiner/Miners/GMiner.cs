@@ -477,7 +477,7 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
-                        ComputeDevice.BenchmarkProgress = repeats;
+                        //ComputeDevice.BenchmarkProgress = repeats;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
@@ -641,7 +641,7 @@ namespace NiceHashMiner.Miners
 
 
             ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
+            
             string ResponseFromGMiner;
             double total = 0;
             double totalSec = 0;
@@ -682,6 +682,11 @@ namespace NiceHashMiner.Miners
                     }
                     int dev = 0;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+                    if (Form_Main.NVIDIA_orderBug)
+                    {
+                        sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+                    }
+
                     foreach (var mPair in sortedMinerPairs)
                     {
                         mPair.Device.MiningHashrate = hashrates[dev];

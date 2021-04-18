@@ -267,65 +267,79 @@ namespace NiceHashMiner.Devices
                 string defaultpath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                    "\\NVIDIA Corporation\\NVSMI";
                 nvmlRootPath = defaultpath;
-                if (!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")) || !File.Exists(Path.Combine(nvmlRootPath, "nvidia-smi.exe")))
+                /*
+                nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) +
+               "\\System32";
+                Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
+                if (Directory.Exists(nvmlRootPath))
                 {
-                    nvmlRootPath = GetNVMLFiles();
-                    if (!Directory.Exists(defaultpath))
-                    {
-                        try
-                        {
-                            Directory.CreateDirectory(defaultpath);
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
-                        }
-                    }
-                    if (File.Exists(nvmlRootPath + "\\nvidia-smi.exe") || !File.Exists(defaultpath + "\\nvidia-smi.exe"))
-                    {
-                        try
-                        {
-                            var copyToPath = defaultpath + "\\nvidia-smi.exe";
-                            File.Copy(nvmlRootPath + "\\nvidia-smi.exe", copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\nvidia-smi.exe"} to {copyToPath} done");
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy nvidia-smi.exe failed: " + e.Message);
-                        }
-                    }
-                    if (File.Exists(nvmlRootPath + "\\nvml.dll") || !File.Exists(defaultpath + "\\nvml.dll"))
-                    {
-                        try
-                        {
-                            var copyToPath = defaultpath + "\\nvml.dll";
-                            File.Copy(nvmlRootPath + "\\nvml.dll", copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\\nvml.dll"} to {copyToPath} done");
-                            nvmlRootPath = defaultpath;
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                        }
-                    }
+                    var pathVar = Environment.GetEnvironmentVariable("PATH");
+                    pathVar += ";" + nvmlRootPath;
+                    Environment.SetEnvironmentVariable("PATH", pathVar);
+                    return true;
                 }
+                */
+                    
+                    if (!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")) || !File.Exists(Path.Combine(nvmlRootPath, "nvidia-smi.exe")))
+                    {
+                        nvmlRootPath = GetNVMLFiles();
+                        if (!Directory.Exists(defaultpath))
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(defaultpath);
+                            }
+                            catch (Exception e)
+                            {
+                                Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
+                            }
+                        }
+                        if (File.Exists(nvmlRootPath + "\\nvidia-smi.exe") || !File.Exists(defaultpath + "\\nvidia-smi.exe"))
+                        {
+                            try
+                            {
+                                var copyToPath = defaultpath + "\\nvidia-smi.exe";
+                                File.Copy(nvmlRootPath + "\\nvidia-smi.exe", copyToPath, true);
+                                Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\nvidia-smi.exe"} to {copyToPath} done");
+                            }
+                            catch (Exception e)
+                            {
+                                Helpers.ConsolePrint(Tag, "Copy nvidia-smi.exe failed: " + e.Message);
+                            }
+                        }
+                        if (File.Exists(nvmlRootPath + "\\nvml.dll") || !File.Exists(defaultpath + "\\nvml.dll"))
+                        {
+                            try
+                            {
+                                var copyToPath = defaultpath + "\\nvml.dll";
+                                File.Copy(nvmlRootPath + "\\nvml.dll", copyToPath, true);
+                                Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\\nvml.dll"} to {copyToPath} done");
+                                nvmlRootPath = defaultpath;
+                            }
+                            catch (Exception e)
+                            {
+                                Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
+                            }
+                        }
+                    }
 
-                if (File.Exists(defaultpath + "\\nvml.dll"))
-                {
-                    Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
-                    if (Directory.Exists(nvmlRootPath))
+                    if (File.Exists(defaultpath + "\\nvml.dll"))
                     {
-                        var pathVar = Environment.GetEnvironmentVariable("PATH");
-                        pathVar += ";" + nvmlRootPath;
-                        Environment.SetEnvironmentVariable("PATH", pathVar);
-                        return true;
+                        Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
+                        if (Directory.Exists(nvmlRootPath))
+                        {
+                            var pathVar = Environment.GetEnvironmentVariable("PATH");
+                            pathVar += ";" + nvmlRootPath;
+                            Environment.SetEnvironmentVariable("PATH", pathVar);
+                            return true;
+                        }
+                    } else
+                    {
+                        Helpers.ConsolePrint(Tag, "Warning! nvml.dll not found!");
+                        return false;
                     }
-                } else
-                {
-                    Helpers.ConsolePrint(Tag, "Warning! nvml.dll not found!");
+                    
                     return false;
-                }
-                return false;
             }
 
             private static string GetNVMLFiles()
@@ -519,7 +533,21 @@ namespace NiceHashMiner.Devices
                         Process.Start(Links.NhmNoDevHelp);
                     }
                 }
+                foreach (var dev in Available.Devices)
+                {
+                    Helpers.ConsolePrint("QueryDevices", "ID: " + dev.ID.ToString() + " BusID: " + 
+                        dev.BusID.ToString() + " IDByBus: " + dev.IDByBus + " Index: " + dev.Index + " lolMinerBusID:" + 
+                        dev.lolMinerBusID + " " + dev.Name);
+                }
+                //Available.Devices.FindAll((a) => a.DeviceType == DeviceType.NVIDIA || a.DeviceType == DeviceType.AMD).Sort((x, y) => x.BusID.CompareTo(y.BusID));
+               /*
+                Available.Devices.Sort((x, y) => x.BusID.CompareTo(y.BusID));
 
+                foreach (var dev in Available.Devices)
+                {
+                    Helpers.ConsolePrint("After sorting", "ID: " + dev.ID.ToString() + " BusID: " + dev.BusID.ToString() + " " + dev.Name);
+                }
+               */
                 // create AMD bus ordering for Claymore
                 var amdDevices = Available.Devices.FindAll((a) => a.DeviceType == DeviceType.AMD);
                 amdDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));

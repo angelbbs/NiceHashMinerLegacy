@@ -772,9 +772,10 @@ namespace NiceHashMiner.Miners
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
             try
             {
+                Miner m;
                 foreach (var groupMiners in checks)
                 {
-                    var m = groupMiners.Miner;
+                    m = groupMiners.Miner;
 
                     // skip if not running or if await already in progress
                     // if (!Miner.IsRunning || m.IsUpdatingApi) continue;
@@ -796,7 +797,7 @@ namespace NiceHashMiner.Miners
                     // set rates
                     if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
-                        ComputeDevice.HashRate = ad.Speed;
+                        //ComputeDevice.HashRate = ad.Speed;
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
                         NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
                         double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;
@@ -829,6 +830,7 @@ namespace NiceHashMiner.Miners
                         groupMiners.CurrentRate, groupMiners.PowerRate, groupMiners.StartMinerTime,
                         m.IsApiReadException, m.ProcessTag());
                 }
+                m = null;
             }
             catch (Exception e)
             {

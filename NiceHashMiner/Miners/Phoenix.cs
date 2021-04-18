@@ -359,6 +359,10 @@ namespace NiceHashMiner.Miners
 
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderByDescending(pair => pair.Device.DeviceType)
                               .ThenBy(pair => pair.Device.IDByBus + 1).ToList();
+                    if (Form_Main.NVIDIA_orderBug)
+                    {
+                        sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+                    }
 
                     int dev = 0;
                     foreach (var speed in speeds)

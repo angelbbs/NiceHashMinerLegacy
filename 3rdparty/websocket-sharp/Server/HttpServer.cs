@@ -914,18 +914,23 @@ namespace WebSocketSharp.Server
     private void processRequest (HttpListenerWebSocketContext context)
     {
       var uri = context.RequestUri;
+
       if (uri == null) {
         context.Close (HttpStatusCode.BadRequest);
+
         return;
       }
 
       var path = uri.AbsolutePath;
+
       if (path.IndexOfAny (new[] { '%', '+' }) > -1)
         path = HttpUtility.UrlDecode (path, Encoding.UTF8);
 
       WebSocketServiceHost host;
+
       if (!_services.InternalTryGetServiceHost (path, out host)) {
         context.Close (HttpStatusCode.NotImplemented);
+
         return;
       }
 
@@ -936,13 +941,16 @@ namespace WebSocketSharp.Server
     {
       while (true) {
         HttpListenerContext ctx = null;
+
         try {
           ctx = _listener.GetContext ();
+
           ThreadPool.QueueUserWorkItem (
             state => {
               try {
                 if (ctx.Request.IsUpgradeRequest ("websocket")) {
-                  processRequest (ctx.AcceptWebSocket (null));
+                  processRequest (ctx.GetWebSocketContext (null));
+
                   return;
                 }
 
@@ -959,10 +967,12 @@ namespace WebSocketSharp.Server
         }
         catch (HttpListenerException) {
           _log.Info ("The underlying listener is stopped.");
+
           break;
         }
         catch (InvalidOperationException) {
           _log.Info ("The underlying listener is stopped.");
+
           break;
         }
         catch (Exception ex) {

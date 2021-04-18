@@ -280,7 +280,7 @@ namespace NiceHashMiner.Miners
                                                 DeviceType.AMD) +
                 " --devices ";
             }
-            CommandLine += GetDevicesCommandString(); //amd карты перечисляются первыми
+            CommandLine += GetDevicesCommandString() + " "; //amd карты перечисляются первыми
             _benchmarkTimeWait = time;
             CommandLine = CommandLine.Replace("--asm 1", "");
             string sColor = "";
@@ -411,30 +411,33 @@ namespace NiceHashMiner.Miners
             Helpers.ConsolePrint("lolMinerIndexing", $"Found {amdDeviceCount} AMD devices");
             //   var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.ID.ToString()).ToList();
             //var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.DeviceType).ToList();
-            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.lolMinerBusID).ToList();
             foreach (var mPair in sortedMinerPairs)
             {
+                Helpers.ConsolePrint("lolMinerIndexing", "Index: " + mPair.Device.Index);
+                Helpers.ConsolePrint("lolMinerIndexing", "Name: " + mPair.Device.Name);
                 Helpers.ConsolePrint("lolMinerIndexing", "ID: " + mPair.Device.ID);
                 Helpers.ConsolePrint("lolMinerIndexing", "IDbybus: " + mPair.Device.IDByBus);
                 Helpers.ConsolePrint("lolMinerIndexing", "busid: " + mPair.Device.BusID);
                 Helpers.ConsolePrint("lolMinerIndexing", "lol: " + mPair.Device.lolMinerBusID);
 
                 //список карт выводить --devices 999
-                double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
+                //double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
+                int id = (int)mPair.Device.lolMinerBusID;
 
                 if (id < 0)
                 {
                     Helpers.ConsolePrint("lolMinerIndexing", "ID too low: " + id + " skipping device");
                     continue;
                 }
-
+                /*
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     Helpers.ConsolePrint("lolMinerIndexing", "NVIDIA found. Increasing index");
                     id ++;
                 }
-
-                Helpers.ConsolePrint("lolMinerIndexing", "ID: " + id );
+                */
+                Helpers.ConsolePrint("lolMinerIndexing", "Minind ID: " + id );
                 {
                     ids.Add(id.ToString());
                 }
@@ -678,6 +681,10 @@ namespace NiceHashMiner.Miners
                         }
                         int dev = 0;
                         var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+                        if (Form_Main.NVIDIA_orderBug)
+                        {
+                            sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+                        }
                         foreach (var mPair in sortedMinerPairs)
                         {
                             mPair.Device.MiningHashrate = hashrates[dev] * mult;

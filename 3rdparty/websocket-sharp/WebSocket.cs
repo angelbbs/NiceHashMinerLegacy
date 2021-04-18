@@ -1158,28 +1158,13 @@ namespace WebSocketSharp
       }
 
       if (code == 1005) { // == no status
-                try
-                {
-                    closeAsync(PayloadData.Empty, true, true, false);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex.Message);
-                    _logger.Debug(ex.ToString());
-                }
-                return;
+        closeAsync (PayloadData.Empty, true, true, false);
+        return;
       }
-            try
-            {
-                var send = !code.IsReserved();
-                closeAsync(new PayloadData(code, reason), send, send, false);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Debug(ex.ToString());
-            }
-        }
+
+      var send = !code.IsReserved ();
+      closeAsync (new PayloadData (code, reason), send, send, false);
+    }
 
     private void closeAsync (
       PayloadData payloadData, bool send, bool receive, bool received
@@ -1447,47 +1432,23 @@ namespace WebSocketSharp
 
     private void fatal (string message, Exception exception)
     {
-            try
-            {
-                var code = exception is WebSocketException
-                           ? ((WebSocketException)exception).Code
-                           : CloseStatusCode.Abnormal;
+      var code = exception is WebSocketException
+                 ? ((WebSocketException) exception).Code
+                 : CloseStatusCode.Abnormal;
 
-                fatal(message, (ushort)code);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Debug(ex.ToString());
-            }
-        }
+      fatal (message, (ushort) code);
+    }
 
     private void fatal (string message, ushort code)
     {
-            try
-            {
-                var payload = new PayloadData(code, message);
-                close(payload, !code.IsReserved(), false, false);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Debug(ex.ToString());
-            }
-        }
+      var payload = new PayloadData (code, message);
+      close (payload, !code.IsReserved (), false, false);
+    }
 
     private void fatal (string message, CloseStatusCode code)
     {
-            try
-            {
-                fatal(message, (ushort)code);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Debug(ex.ToString());
-            }
-        }
+      fatal (message, (ushort) code);
+    }
 
     private ClientSslConfiguration getSslConfiguration ()
     {
@@ -1564,53 +1525,34 @@ namespace WebSocketSharp
 
         e = _messageEventQueue.Dequeue ();
       }
-            try
-            {
-                ThreadPool.QueueUserWorkItem(state => messages(e));
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.ToString());
-                error("An error has occurred during the messages event.", ex);
-            }
-        }
+
+      ThreadPool.QueueUserWorkItem (state => messages (e));
+    }
 
     private void open ()
     {
-            try
-            {
-                _inMessage = true;
-                startReceiving();
-                try
-                {
-                    OnOpen.Emit(this, EventArgs.Empty);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex.ToString());
-                    error("An error has occurred during the OnOpen event.", ex);
-                }
+      _inMessage = true;
+      startReceiving ();
+      try {
+        OnOpen.Emit (this, EventArgs.Empty);
+      }
+      catch (Exception ex) {
+        _logger.Error (ex.ToString ());
+        error ("An error has occurred during the OnOpen event.", ex);
+      }
 
-                MessageEventArgs e = null;
-                lock (_forMessageEventQueue)
-                {
-                    if (_messageEventQueue.Count == 0 || _readyState != WebSocketState.Open)
-                    {
-                        _inMessage = false;
-                        return;
-                    }
-
-                    e = _messageEventQueue.Dequeue();
-                }
-
-                _message.BeginInvoke(e, ar => _message.EndInvoke(ar), null);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Debug(ex.ToString());
-            }
+      MessageEventArgs e = null;
+      lock (_forMessageEventQueue) {
+        if (_messageEventQueue.Count == 0 || _readyState != WebSocketState.Open) {
+          _inMessage = false;
+          return;
         }
+
+        e = _messageEventQueue.Dequeue ();
+      }
+
+      _message.BeginInvoke (e, ar => _message.EndInvoke (ar), null);
+    }
 
     private bool ping (byte[] data)
     {
@@ -2050,8 +1992,7 @@ namespace WebSocketSharp
     private HttpResponse sendHandshakeRequest ()
     {
       var req = createHandshakeRequest ();
-//      var res = sendHttpRequest (req, 90000);
-      var res = sendHttpRequest (req, 15000);
+      var res = sendHttpRequest (req, 90000);
       if (res.IsUnauthorized) {
         var chal = res.Headers["WWW-Authenticate"];
         _logger.Warn (String.Format ("Received an authentication requirement for '{0}'.", chal));
@@ -2135,8 +2076,7 @@ namespace WebSocketSharp
     private void sendProxyConnectRequest ()
     {
       var req = HttpRequest.CreateConnectRequest (_uri);
-//      var res = sendHttpRequest (req, 90000);
-      var res = sendHttpRequest (req, 15000);
+      var res = sendHttpRequest (req, 90000);
       if (res.IsProxyAuthenticationRequired) {
         var chal = res.Headers["Proxy-Authenticate"];
         _logger.Warn (

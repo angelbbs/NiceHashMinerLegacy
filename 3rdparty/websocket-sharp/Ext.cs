@@ -177,22 +177,6 @@ namespace WebSocketSharp
       return buff.ToArray ();
     }
 
-    internal static void Close (
-      this HttpListenerResponse response, HttpStatusCode code
-    )
-    {
-      response.StatusCode = (int) code;
-      response.OutputStream.Close ();
-    }
-
-    internal static void CloseWithAuthChallenge (
-      this HttpListenerResponse response, string challenge
-    )
-    {
-      response.Headers.InternalSet ("WWW-Authenticate", challenge, true);
-      response.Close (HttpStatusCode.Unauthorized);
-    }
-
     internal static byte[] Compress (this byte[] data, CompressionMethod method)
     {
       return method == CompressionMethod.Deflate
@@ -949,9 +933,9 @@ namespace WebSocketSharp
     )
     {
       var len = value.Length;
+      var end = len - 1;
 
       var buff = new StringBuilder (32);
-      var end = len - 1;
       var escaped = false;
       var quoted = false;
 
@@ -962,10 +946,12 @@ namespace WebSocketSharp
         if (c == '"') {
           if (escaped) {
             escaped = false;
+
             continue;
           }
 
           quoted = !quoted;
+
           continue;
         }
 
@@ -984,9 +970,11 @@ namespace WebSocketSharp
             continue;
 
           buff.Length -= 1;
+
           yield return buff.ToString ();
 
           buff.Length = 0;
+
           continue;
         }
       }
@@ -1077,7 +1065,9 @@ namespace WebSocketSharp
       return BitConverter.ToUInt64 (source.ToHostOrder (sourceOrder), 0);
     }
 
-    internal static IEnumerable<string> Trim (this IEnumerable<string> source)
+    internal static IEnumerable<string> TrimEach (
+      this IEnumerable<string> source
+    )
     {
       foreach (var elm in source)
         yield return elm.Trim ();

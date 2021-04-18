@@ -383,6 +383,10 @@ namespace NiceHashMiner.Miners
            if (resp != null )
            {
                 var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.ID).ToList();
+                if (Form_Main.NVIDIA_orderBug)
+                {
+                    sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+                }
                 string[] mass = resp.Split('|');
                 string parse = "";
                 try

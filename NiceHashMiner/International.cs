@@ -36,18 +36,22 @@ namespace NiceHashMiner
                         var l = JsonConvert.DeserializeObject<Language>(
                             File.ReadAllText(fi.FullName)); // TODO , Globals.JsonSettings not sure since data must be localized
                         langs.Add(l);
+                        l = null;
                     }
                     catch (Exception ex)
                     {
                         Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
                     }
                 }
+                di = null;
+                //di.Delete();
+                files = null;
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
             }
-
+            
             return langs;
         }
 
@@ -85,7 +89,8 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("NICEHASH", "Found language: " + lang.Name);
                 retdict.Add(lang.ID, lang.Name);
             }
-
+            langs.Clear();
+            langs = null;
             return retdict;
         }
 

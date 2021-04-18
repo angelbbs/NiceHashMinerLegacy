@@ -46,6 +46,7 @@ namespace NiceHashMiner.Stats
         public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
         public event EventHandler OnConnectionLost;
+
         //public static string RigID => UUID.GetDeviceB64UUID();
         public static string RigID => ConfigManager.GeneralConfig.MachineGuid;
 
@@ -103,7 +104,6 @@ namespace NiceHashMiner.Stats
                 _webSocket.Log.Level = LogLevel.Debug;
                 _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
                 _webSocket.EnableRedirection = true;
-
                 _webSocket.Connect();
                 Helpers.ConsolePrint("SOCKET", "Connected");
                 _connectionEstablished = true;
@@ -404,6 +404,7 @@ namespace NiceHashMiner.Stats
                     {
                         Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
                         _webSocket.Send(data);
+                        dataJson = null;
                         return true;
                         //return await SendAsync(data);
                     }

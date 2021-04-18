@@ -117,7 +117,14 @@ namespace NiceHashMiner.Miners
 
                 foreach (var mPair in sortedMinerPairs)
                 {
-                    int id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
+                    Helpers.ConsolePrint("NanominerIndexing", "Index: " + mPair.Device.Index);
+                    Helpers.ConsolePrint("NanominerIndexing", "Name: " + mPair.Device.Name);
+                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + mPair.Device.ID);
+                    Helpers.ConsolePrint("NanominerIndexing", "IDbybus: " + mPair.Device.IDByBus);
+                    Helpers.ConsolePrint("NanominerIndexing", "busid: " + mPair.Device.BusID);
+                    Helpers.ConsolePrint("NanominerIndexing", "lol: " + mPair.Device.lolMinerBusID);
+                    //int id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
+                    int id = (int)mPair.Device.lolMinerBusID;
 
                     if (id < 0)
                     {
@@ -131,7 +138,7 @@ namespace NiceHashMiner.Miners
                         id++;
                     }
 
-                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + id);
+                    Helpers.ConsolePrint("NanominerIndexing", "Mining ID: " + id);
                     {
                         devices[dev] = id.ToString();
                         dev++;
@@ -144,6 +151,12 @@ namespace NiceHashMiner.Miners
             {
                 foreach (var mPair in sortedMinerPairs)
                 {
+                    Helpers.ConsolePrint("NanominerIndexing", "Index: " + mPair.Device.Index);
+                    Helpers.ConsolePrint("NanominerIndexing", "Name: " + mPair.Device.Name);
+                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + mPair.Device.ID);
+                    Helpers.ConsolePrint("NanominerIndexing", "IDbybus: " + mPair.Device.IDByBus);
+                    Helpers.ConsolePrint("NanominerIndexing", "busid: " + mPair.Device.BusID);
+                    Helpers.ConsolePrint("NanominerIndexing", "lol: " + mPair.Device.lolMinerBusID);
                     int id = mPair.Device.IDByBus;
 
                     if (id < 0)
@@ -152,7 +165,7 @@ namespace NiceHashMiner.Miners
                         continue;
                     }
 
-                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + id);
+                    Helpers.ConsolePrint("NanominerIndexing", "Mining ID: " + id);
                     {
                         devices[dev] = id.ToString();
                         dev++;
@@ -493,6 +506,10 @@ namespace NiceHashMiner.Miners
             int dSpeed = 0;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+            if (Form_Main.NVIDIA_orderBug)
+            {
+                sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            }
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/stats");

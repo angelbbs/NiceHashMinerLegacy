@@ -28,7 +28,45 @@ using System.Runtime.InteropServices;
 
 namespace ManagedCuda.Nvml
 {
-	public static class NvmlNativeMethods
+    public static class NativeMethods
+    {
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr LoadLibrary(string dllToLoad);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeLibrary(IntPtr hModule);
+        [DllImport("kernel32.dll")]
+        public static extern bool SetProcessWorkingSetSize(IntPtr handle, int minimumWorkingSetSize, int maximumWorkingSetSize);
+    }
+
+    public static class GetPowerNativeMethod
+    {
+        public delegate int nvmlDeviceGetPowerUsage(nvmlDevice device, ref uint power);
+        public static uint GetPower(nvmlDevice device, ref uint power)
+        {
+            IntPtr pDll = NativeMethods.LoadLibrary("nvml");
+            IntPtr pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "nvmlDeviceGetPowerUsage");
+            nvmlDeviceGetPowerUsage nvmlDeviceGetPowerUsage = (nvmlDeviceGetPowerUsage)Marshal.GetDelegateForFunctionPointer(
+                                                                                        pAddressOfFunctionToCall,
+                                                                                        typeof(nvmlDeviceGetPowerUsage));
+            var theResult = nvmlDeviceGetPowerUsage(device, ref power);
+
+            bool result = NativeMethods.FreeLibrary(pDll);
+
+            return power;
+        }
+        public static IntPtr GetPtr()
+        {
+            IntPtr pDll = NativeMethods.LoadLibrary("nvml");
+            IntPtr pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "nvmlDeviceGetPowerUsage");
+            return pAddressOfFunctionToCall;
+        }
+    }
+
+    public static class NvmlNativeMethods
 	{
 		internal const string NVML_API_DLL_NAME = "nvml";
 
@@ -57,7 +95,7 @@ namespace ManagedCuda.Nvml
 		///         - \ref NVML_ERROR_NO_PERMISSION       if NVML does not have permission to talk to the driver
 		///         - \ref NVML_ERROR_UNKNOWN             on any unexpected error
  		/// </returns>
-		[DllImport(NVML_API_DLL_NAME, EntryPoint = "nvmlInit_v2")]
+		[DllImport(NVML_API_DLL_NAME, EntryPoint = "nvmlInit")]
 		public static extern nvmlReturn nvmlInit();
 
 
@@ -1625,7 +1663,7 @@ namespace ManagedCuda.Nvml
 		///         - \ref NVML_ERROR_UNKNOWN           on any unexpected error
  		/// </returns>
 		[DllImport(NVML_API_DLL_NAME)]
-		public static extern nvmlReturn nvmlDeviceGetPowerUsage(nvmlDevice device, ref uint power);
+        public static extern nvmlReturn nvmlDeviceGetPowerUsage(nvmlDevice device, ref uint power);
 
 
 		/// <summary>

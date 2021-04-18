@@ -47,7 +47,7 @@ namespace NiceHashMiner.Devices
                     "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
                 return false;
             }
-            return DeviceGlobalMemory >= ComputeDevice.Memory4Gb && SM_major >= 3;
+            return DeviceGlobalMemory >= 4293918720 && SM_major >= 3;
         }
     }
 }

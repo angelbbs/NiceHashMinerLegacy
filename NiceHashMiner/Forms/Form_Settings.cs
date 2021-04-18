@@ -68,7 +68,7 @@ namespace NiceHashMiner.Forms
 
             // Initialize toolTip
             InitializeToolTip();
-
+            
             // Initialize tabs
             this.comboBox_ColorProfile.Items.Add("Default");
             this.comboBox_ColorProfile.Items.Add("Gray");
@@ -84,9 +84,9 @@ namespace NiceHashMiner.Forms
             this.comboBox_ColorProfile.Items.Add("DarkViolet");
             this.comboBox_ColorProfile.Items.Add("DarkSlateBlue");
             this.comboBox_ColorProfile.Items.Add("Tan");
-
+            
             InitializeGeneralTab();
-
+            
             // initialization calls
             InitializeDevicesTab();
             // link algorithm list with algorithm settings control
@@ -404,7 +404,7 @@ namespace NiceHashMiner.Forms
                 buttonUpdate.Visible = true;
                 linkLabelNewVersion2.LinkBehavior = LinkBehavior.SystemDefault;
             }
-            var programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
+            string programVersion = ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
             if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.githubVersion)
             {
                 linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
@@ -424,8 +424,8 @@ namespace NiceHashMiner.Forms
             {
                 if (Directory.Exists("backup"))
                 {
-                    var dirInfo = new DirectoryInfo("backup");
-                    foreach (var file in dirInfo.GetFiles())
+                    DirectoryInfo dirInfo = new DirectoryInfo("backup");
+                    foreach (FileInfo file in dirInfo.GetFiles())
                     {
                         if (file.Name.Contains("backup_") && file.Name.Contains(".zip"))
                         {
@@ -478,6 +478,7 @@ namespace NiceHashMiner.Forms
             radioButtonMOPA4.Text = International.GetText("Form_Settings_radioButtonMOPA4");
             radioButtonMOPA5.Text = International.GetText("Form_Settings_radioButtonMOPA5");
             groupBox1.Text = International.GetText("Form_Settings_groupBox1");
+
             label_switching_algorithms.Text = International.GetText("Form_Settings_label_switching_algorithms");
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms1"));
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms3"));
@@ -492,12 +493,14 @@ namespace NiceHashMiner.Forms
             groupBoxUpdates.Text = International.GetText("Form_Settings_groupBoxUpdates");
             groupBoxBackup.Text = International.GetText("Form_Settings_groupBoxBackup");
             buttonLicence.Text = International.GetText("Form_Settings_buttonLicence");
+            //mem leak here
 
             richTextBoxInfo.ReadOnly = true;
             richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Bold);
             richTextBoxInfo.AppendText("Miner Legacy Fork Fix");
             richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Regular);
             richTextBoxInfo.AppendText(International.GetText("Form_Settings_richTextBoxInfo"));
+            
             buttonCheckNewVersion.Text = International.GetText("Form_Settings_Checknow");
             buttonUpdate.Text = International.GetText("Form_Settings_Updatenow");
 
@@ -1127,7 +1130,7 @@ namespace NiceHashMiner.Forms
 
         private void InitializeGeneralTab()
         {
-            InitializeGeneralTabTranslations();
+            InitializeGeneralTabTranslations();//<- mem leak
             InitializeGeneralTabCallbacks();
             InitializeGeneralTabFieldValuesReferences();
         }
@@ -1429,6 +1432,8 @@ namespace NiceHashMiner.Forms
 
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
+            richTextBoxInfo.Dispose();
+            GC.Collect();
             if (IsChange && !IsChangeSaved)
             {
                 var result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),

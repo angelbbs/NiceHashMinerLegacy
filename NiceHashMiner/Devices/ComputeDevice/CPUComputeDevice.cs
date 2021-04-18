@@ -6,6 +6,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
 {
+    [Serializable]
     public class CpuComputeDevice : ComputeDevice
     {
         //private readonly PerformanceCounter _cpuCounter;

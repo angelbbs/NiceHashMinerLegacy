@@ -711,6 +711,7 @@ namespace WebSocketSharp.Net
       }
       else if (requestUri.MaybeUri ()) {
         Uri uri;
+
         if (!Uri.TryCreate (requestUri, UriKind.Absolute, out uri))
           return null;
 
@@ -729,6 +730,7 @@ namespace WebSocketSharp.Net
       }
       else {
         // As the authority form.
+
         host = requestUri;
       }
 
@@ -742,8 +744,8 @@ namespace WebSocketSharp.Net
         host = String.Format ("{0}:{1}", host, secure ? 443 : 80);
 
       var url = String.Format ("{0}://{1}{2}", schm, host, path);
-
       Uri ret;
+
       return Uri.TryCreate (url, UriKind.Absolute, out ret) ? ret : null;
     }
 
@@ -815,10 +817,12 @@ namespace WebSocketSharp.Net
 
       foreach (var elm in contentType.SplitHeaderValue (';')) {
         var part = elm.Trim ();
-        if (part.IndexOf (name, compType) != 0)
+
+        if (!part.StartsWith (name, compType))
           continue;
 
         var val = part.GetValue ('=', true);
+
         if (val == null || val.Length == 0)
           return null;
 

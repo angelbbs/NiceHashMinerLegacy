@@ -61,7 +61,7 @@ namespace NiceHashMiner.Switching
 
         public static void Start()
         {
-
+            
             if (_smaCheckTimer == null)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
@@ -70,6 +70,8 @@ namespace NiceHashMiner.Switching
                 _smaCheckTimer.AutoReset = false;
                 _smaCheckTimer.Start();
             }
+            
+            //SmaCheckNow();
         }
         public static void SmaCheckNow()
         {
@@ -103,6 +105,11 @@ namespace NiceHashMiner.Switching
             if (SmaCheckTimerOnElapsedRun)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed already running");
+                if (_smaCheckTimer != null)
+                {
+                    _smaCheckTimer.Interval = _smaCheckTime * 1000;
+                }
+                SmaCheckTimerOnElapsedRun = false;
                 return;
             }
 

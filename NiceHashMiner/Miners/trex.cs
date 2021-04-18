@@ -298,6 +298,10 @@ namespace NiceHashMiner.Miners
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             string resp = null;
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+            if (Form_Main.NVIDIA_orderBug)
+            {
+                sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            }
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/summary");

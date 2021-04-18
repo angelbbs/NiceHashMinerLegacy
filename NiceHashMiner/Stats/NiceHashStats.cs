@@ -120,6 +120,7 @@ namespace NiceHashMiner.Stats
         {
             NHSmaData.InitializeIfNeeded();
             LoadCachedSMAData();
+            
             try
             {
                 _socket = null;
@@ -136,7 +137,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("StartConnection", er.ToString());
             }
-
+            
     _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
             _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
             _deviceUpdateTimer.Start();
@@ -293,7 +294,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
             }
-            GC.Collect();
+            //GC.Collect();
         }
 
         public class Rootobject
@@ -875,9 +876,10 @@ namespace NiceHashMiner.Stats
                 }
 
                 NHSmaData.UpdateSmaPaying(payingDict);
+                
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);
-
+                
             }
             catch (Exception e)
             {
@@ -959,8 +961,10 @@ namespace NiceHashMiner.Stats
                 }
 
                 NHSmaData.UpdateSmaPaying(payingDict);
+                
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);
+                
             }
             catch (Exception e)
             {

@@ -8,9 +8,12 @@ using static NiceHashMiner.Devices.ComputeDeviceManager;
 using System.Diagnostics;
 using System.Windows.Forms;
 using OpenHardwareMonitor.Hardware;
+using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace NiceHashMiner.Devices
 {
+    [Serializable]
     internal class CudaComputeDevice : ComputeDevice
     {
         private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
@@ -27,16 +30,17 @@ namespace NiceHashMiner.Devices
                 {
                     return -1;
                 }
+                int load = -1;
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    var load = -1;
                     try
                     {
                         var rates = new nvmlUtilization();
                         var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
                         if (ret != nvmlReturn.Success)
-                            throw new Exception($"NVML get load failed with code: {ret}");
-
+                        {
+                            Helpers.ConsolePrint("NVML", $"NVML get load failed with code: {ret}");
+                        }
                         load = (int)rates.gpu;
                     }
                     catch (Exception e)
@@ -65,9 +69,9 @@ namespace NiceHashMiner.Devices
                                         {
                                             if ((int)sensor.Value >= 0)
                                             {
-                                                return (int)sensor.Value;
+                                                load = (int)sensor.Value;
                                             }
-                                            else return -1;
+                                            else load = -1;
                                         }
                                     }
                                 }
@@ -78,6 +82,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                     }
+                    return load;
                 }
                 return -1;
             }
@@ -92,9 +97,9 @@ namespace NiceHashMiner.Devices
                 {
                     return -1;
                 }
+                var temp = -1f;
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    var temp = -1f;
                     try
                     {
                         var utemp = 0u;
@@ -102,7 +107,9 @@ namespace NiceHashMiner.Devices
                             ref utemp);
                         if (ret != nvmlReturn.Success)
                         {
-                            Form_Main.needRestart = true;
+                            Helpers.ConsolePrint("NVML", $"NVML get temp failed with code: {ret}");
+
+                            //Form_Main.needRestart = true;
                             //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
                             //if(ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
 
@@ -135,9 +142,9 @@ namespace NiceHashMiner.Devices
                                         {
                                             if ((int)sensor.Value > 0)
                                             {
-                                                return (int)sensor.Value;
+                                                temp = (int)sensor.Value;
                                             }
-                                            else return -1;
+                                            else temp = -1;
                                         }
 
                                     }
@@ -149,6 +156,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                     }
+                    return temp;
                 }
                 return -1;
             }
@@ -217,8 +225,9 @@ namespace NiceHashMiner.Devices
                         var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref ufan);
                         if (ret != nvmlReturn.Success)
                         {
-                            Form_Main.needRestart = true;
-                        }
+                        //Form_Main.needRestart = true;
+                        Helpers.ConsolePrint("NVML", $"NVML get fan failed with code: {ret}");
+                    }
                         fan = (int)ufan;
                     }
                     catch (Exception e)
@@ -274,21 +283,47 @@ namespace NiceHashMiner.Devices
                 {
                     return -1;
                 }
+                int power = -1;
+                //return power;
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     try
                     {
-                        var power = 0u;
-                        var ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref power);
-                        if (ret != nvmlReturn.Success)
-                            throw new Exception($"NVML power get failed with status: {ret}");
+                        var _power = 0u;
 
-                        return power * 0.001;
+                        //IntPtr ptr = GetPowerNativeMethod.GetPtr();
+                        //GetPowerNativeMethod.GetPower(_nvmlDevice, ref _power); //<- mem leak 461.40+
+                        /*
+                        var ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref _power);// <- mem leak 461.40+
+                        if (ret != nvmlReturn.Success)
+                        {
+                            Helpers.ConsolePrint("NVML", $"NVML get power failed with code: {ret}");
+                        }
+                        */
+                        //Helpers.ConsolePrint("NVML", $"NVML get power: {_power.ToString()}");
+                        //Marshal.FreeHGlobal(ptr);
+                        /*
+                        try
+                        {
+                            Process Mem;
+                            Mem = Process.GetCurrentProcess();
+                            NativeMethods.SetProcessWorkingSetSize(Mem.Handle, -1, -1);
+                            Mem = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("NVML", "Error = " + ex.ToString() + " " + ex.StackTrace.ToString());
+                        }
+                        */
+
+                        power = (int)(_power/1000);
                     }
                     catch (Exception e)
                     {
                         // Helpers.ConsolePrint("NVML", e.ToString());
+                        power = -1;
                     }
+                    return power;
                 }
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
@@ -309,9 +344,9 @@ namespace NiceHashMiner.Devices
                                         {
                                             if ((int)sensor.Value >= 0)
                                             {
-                                                return (int)sensor.Value;
+                                                power = (int)sensor.Value;
                                             }
-                                            else return -1;
+                                            else power = -1;
                                         }
                                     }
                                 }
@@ -322,6 +357,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("CudaComputeDevice", er.ToString());
                     }
+                    return power;
                 }
                 return -1;
             }

@@ -330,6 +330,10 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+            if (Form_Main.NVIDIA_orderBug)
+            {
+                sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            }
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             string dataToSend;
 

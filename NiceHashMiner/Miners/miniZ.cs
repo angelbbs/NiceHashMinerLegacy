@@ -437,6 +437,10 @@ namespace NiceHashMiner.Miners
                     }
                     int dev = 0;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+                    if (Form_Main.NVIDIA_orderBug)
+                    {
+                        sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+                    }
                     foreach (var mPair in sortedMinerPairs)
                     {
                         mPair.Device.MiningHashrate = hashrates[dev];

@@ -34,6 +34,7 @@ namespace NiceHashMiner
     using System.Net.Sockets;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
@@ -133,6 +134,7 @@ namespace NiceHashMiner
         public static bool MSIAfterburnerRunning = false;
         public static bool NVIDIA_orderBug = false;
         public static bool MiningStarted = false;
+
         public struct RigProfitList
         {
             public DateTime DateTime;
@@ -736,6 +738,16 @@ namespace NiceHashMiner
 
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
+            //NiceHashStats.OnBalanceUpdate += BalanceCallback;
+            //NiceHashStats.OnSmaUpdate += SmaCallback;
+            //NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
+            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+            //NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
+            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
+            //NiceHashStats.OnExchangeUpdate += ExchangeCallback;
+            //NiceHashStats.StartConnection(Links.NhmSocketAddress);
+
+
             _loadingScreen.SetValueAndMsg(11, International.GetText("Form_Main_loadtext_GetBTCRate"));
             Thread.Sleep(10);
 
@@ -1126,6 +1138,11 @@ namespace NiceHashMiner
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
+            GC.Collect(GC.MaxGeneration);
+            GC.WaitForPendingFinalizers();
+            Process currentProc = Process.GetCurrentProcess();
+            double bytesInUse = currentProc.PrivateMemorySize64;
+            Helpers.ConsolePrint("MEMORY", "Mem used: " + Math.Round(bytesInUse / 1048576, 2).ToString() + "MB");
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
@@ -1627,7 +1644,7 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("NiceHash", e.ToString());
             }
         }
-
+       
         private void UpdateGlobalRate()
         {
             try
@@ -1639,9 +1656,9 @@ public static void CloseChilds(Process parentId)
                 double TotalPower = 0;
                 TotalPower = MinersManager.GetTotalPowerRate();
 
-                foreach (var computeDevice in Available.Devices)
+                foreach (ComputeDevice computeDevice in Available.Devices)
                 {
-                    TotalPower += computeDevice.PowerUsage;
+                    TotalPower += computeDevice.PowerUsage;// mem leak on drivers above 461
                 }
 
                 double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
@@ -1656,7 +1673,7 @@ public static void CloseChilds(Process parentId)
                 {
                     totalPowerRateDec = totalPowerRate;
                 }
-
+                
                 if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
                 {
                     if (totalPowerRate != 0)
@@ -1710,7 +1727,7 @@ public static void CloseChilds(Process parentId)
                 toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                     International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString()) + "   " +
                      International.GetText("Form_Main_balance") + ":";
-                BalanceCallback();
+                BalanceCallback(null, null);
                 toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
                 toolStripStatusLabel_power2.Text = totalPower.ToString();
                 toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
@@ -1723,7 +1740,7 @@ public static void CloseChilds(Process parentId)
         }
 
 
-        private void BalanceCallback()
+        private void BalanceCallback(object sender, EventArgs e)
         {
             try
             {
@@ -1757,6 +1774,12 @@ public static void CloseChilds(Process parentId)
             //Helpers.ConsolePrint("NICEHASH", "Balance updated");
         }
 
+        private void SmaCallback(object sender, EventArgs e)
+        {
+             //Helpers.ConsolePrint("NICEHASH", "SmaCallback");
+            //_isSmaUpdated = true;
+        }
+
 
         //private void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
         //{
@@ -1765,7 +1788,7 @@ public static void CloseChilds(Process parentId)
         //    UpdateExchange();
         //}
 
-        private void ExchangeCallback()
+        private void ExchangeCallback(object sender, EventArgs e)
         {
             //// We are getting data from socket so stop checking manually
             //_bitcoinExchangeCheck?.Stop();
@@ -2556,6 +2579,7 @@ public static void CloseChilds(Process parentId)
                     label_Uptime.Visible = true;
                     label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
                 }
+
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     if (Form_Main.thisComputer != null)
@@ -2581,10 +2605,12 @@ public static void CloseChilds(Process parentId)
                 new Task(() => UpdateGlobalRate()).Start();
                 Thread.Sleep(10);
                 */
-                ExchangeCallback();
-                Thread.Sleep(10);
+
+                ExchangeCallback(null, null);
+                
+                //Thread.Sleep(10);
                 UpdateGlobalRate();
-                Thread.Sleep(10);
+                //Thread.Sleep(10);
                 //new Task(() => BalanceCallback()).Start();
 
                 if (needRestart)
@@ -2594,6 +2620,7 @@ public static void CloseChilds(Process parentId)
                 }
                 devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices);
                 //new Task(() => devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices)).Start();
+                
             }
 
             catch (Exception ex)
