@@ -107,6 +107,9 @@
     <Reference Include="NiceHashMinerLegacy.Divert">
       <HintPath>..\NiceHashMinerLegacy.Divert\bin\Debug\NiceHashMinerLegacy.Divert.dll</HintPath>
     </Reference>
+    <Reference Include="NvidiaGPUGetDataHost">
+      <HintPath>..\Debug\common\NvidiaGPUGetDataHost.exe</HintPath>
+    </Reference>
     <Reference Include="OpenHardwareMonitorLib, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Debug\OpenHardwareMonitorLib.dll</HintPath>
@@ -561,8 +564,10 @@ del cpuid.lib /Q
 del cpuid.ilk /Q
 del cpuid.exp /Q
 del *.config /Q
+del common\*.config /Q
 7za a -tzip -mx0 ../LatestBuild/nhmlffLatest *.*
-7za u -tzip -mx0 ../LatestBuild/nhmlffLatest langs\*.* -r</PostBuildEvent>
+7za u -tzip -mx0 ../LatestBuild/nhmlffLatest langs\*.* -r
+7za u -tzip -mx0 ../LatestBuild/nhmlffLatest common\*.* -r</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Fody.6.1.1\build\Fody.targets" Condition="Exists('..\packages\Fody.6.1.1\build\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

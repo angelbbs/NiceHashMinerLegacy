@@ -709,7 +709,34 @@ namespace NiceHashMiner
                 thisComputer.Open();
             }
 
-            _loadingScreen.SetValueAndMsg(7, "Checking servers locations");
+            if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
+            {
+                if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
+                {
+                    //if (ComputeDeviceManager.Query._currentNvidiaSmiDriver.IsLesserVersionThan(ComputeDeviceManager.Query.LastGoodNvidiaCuda111Driver))
+                    {
+                        if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
+                        {
+                            var MonitorProc = new Process
+                            {
+                                StartInfo = {FileName = "common\\NvidiaGPUGetDataHost.exe"}
+                            };
+
+                            MonitorProc.StartInfo.UseShellExecute = false;
+                            MonitorProc.StartInfo.CreateNoWindow = true;
+                            if (MonitorProc.Start())
+                            {
+                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
+                            }
+                        }
+                    }
+                }
+            }
+                _loadingScreen.SetValueAndMsg(7, "Checking servers locations");
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();

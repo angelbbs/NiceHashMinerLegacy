@@ -94,7 +94,7 @@ namespace NiceHashMiner.Devices
             private const string Tag = "ComputeDeviceManager.Query";
 
             // format 372.54;
-            private class NvidiaSmiDriver
+            public class NvidiaSmiDriver
             {
                 public NvidiaSmiDriver(int left, int right)
                 {
@@ -129,18 +129,17 @@ namespace NiceHashMiner.Devices
                 }
             }
 
-            //private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
             private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(456, 71);
-            //private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
             private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(456, 71);
-            private static NvidiaSmiDriver _currentNvidiaSmiDriver = new NvidiaSmiDriver(-1, -1);
+            public static NvidiaSmiDriver _currentNvidiaSmiDriver = new NvidiaSmiDriver(-1, -1);
             private static readonly NvidiaSmiDriver InvalidSmiDriver = new NvidiaSmiDriver(-1, -1);
 
             private static readonly NvidiaSmiDriver NvidiaCuda92Driver = new NvidiaSmiDriver(398, 26);
             private static readonly NvidiaSmiDriver NvidiaCuda10Driver = new NvidiaSmiDriver(411, 31);
             private static readonly NvidiaSmiDriver NvidiaCuda101Driver = new NvidiaSmiDriver(418, 96);
             private static readonly NvidiaSmiDriver NvidiaCuda11Driver = new NvidiaSmiDriver(451, 48);
-            private static readonly NvidiaSmiDriver NvidiaCuda111Driver = new NvidiaSmiDriver(456, 71);
+            private static readonly NvidiaSmiDriver NvidiaCuda111Driver = new NvidiaSmiDriver(456, 71);//457.51 last worked driver
+            public static readonly NvidiaSmiDriver LastGoodNvidiaCuda111Driver = new NvidiaSmiDriver(457, 51);//457.51 last worked driver
 
             public static string CUDA_version;
             // naming purposes
@@ -612,7 +611,7 @@ namespace NiceHashMiner.Devices
             private static readonly List<VideoControllerData> AvaliableVideoControllers =
                 new List<VideoControllerData>();
 
-            private static class WindowsDisplayAdapters
+            public static class WindowsDisplayAdapters
             {
                 private static string SafeGetProperty(ManagementBaseObject mbo, string key)
                 {
