@@ -54,11 +54,13 @@ namespace NiceHashMiner.Devices
             List<ComputeDevice> _computeDevicesAMD = new List<ComputeDevice>();
             List<ComputeDevice> _computeDevicesNVIDIA = new List<ComputeDevice>();
 
+            Form_Main.PowerAllDevices = 0;
             foreach (var cpu in _computeDevices)
             {
                 if (cpu.DeviceType == DeviceType.CPU)
                 {
                     _computeDevicesCPU.Add(cpu);
+                    Form_Main.PowerAllDevices += cpu.PowerUsage;
                 }
             }
             foreach (var amd in _computeDevices)
@@ -66,6 +68,7 @@ namespace NiceHashMiner.Devices
                 if (amd.DeviceType == DeviceType.AMD)
                 {
                     _computeDevicesAMD.Add(amd);
+                    Form_Main.PowerAllDevices += amd.PowerUsage;
                 }
             }
             foreach (var nvidia in _computeDevices)
@@ -73,6 +76,7 @@ namespace NiceHashMiner.Devices
                 if (nvidia.DeviceType == DeviceType.NVIDIA)
                 {
                     _computeDevicesNVIDIA.Add(nvidia);
+                    Form_Main.PowerAllDevices += nvidia.PowerUsage;
                 }
             }
 

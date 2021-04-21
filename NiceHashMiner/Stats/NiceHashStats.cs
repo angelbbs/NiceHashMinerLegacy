@@ -109,11 +109,12 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("SOCKET", "Using previous SMA");
                     JArray smadata = (JArray.Parse(jsonData));
                     SetAlgorithmRates(smadata);
-                } catch (Exception er)
+                }
+                catch (Exception er)
                 {
                     Helpers.ConsolePrint("SMA.DAT", er.ToString());
                 }
-        }
+            }
         }
 
         public static void StartConnection(string address)
@@ -221,43 +222,11 @@ namespace NiceHashMiner.Stats
 
                         case "balance":
                             SetBalance(message.value.Value);
-                            /*
-                            if (message.prof != null)
-                            {
-                                Form_Main.profitabilityFromNH = SetProf(message.prof.Value);
-                                double totalRate = MinersManager.GetTotalRate();
-                                Form_Main.lastRigProfit.DateTime = DateTime.Now;
-                                if (ConfigManager.GeneralConfig.ChartEnable)
-                                {
-                                    Form_Main.lastRigProfit.currentProfit = Math.Round(Form_Main.profitabilityFromNH, 9);
-                                    Form_Main.lastRigProfit.totalRate = Math.Round(totalRate, 9);
-                                    Form_Main.lastRigProfit.unpaidAmount = 0;
-                                } else
-                                {
-                                    Form_Main.lastRigProfit.currentProfit = 0;
-                                    Form_Main.lastRigProfit.totalRate = 0;
-                                    Form_Main.lastRigProfit.unpaidAmount = 0;
-                                }
-                                //Helpers.ConsolePrint("profWSS", (Form_Main.profitabilityFromNH * 1000).ToString());
-                                //***********************
-                                GetRigProfit();
-                                Helpers.ConsolePrint("Form_Main.lastRigProfit.currentProfitAPI", (Form_Main.lastRigProfit.currentProfitAPI * 1000).ToString());
-                                //Form_Main.profitabilityFromNH = Form_Main.lastRigProfit.currentProfit;
-                                //Helpers.ConsolePrint("profAPI", (Form_Main.profitabilityFromNH * 1000).ToString());
-                            } else
-                            {
-                                break;
-                            }
-                            */
-                            /*
-                            if (!CalcRigStatusString().Equals("MINING"))
-                            {
-                                Form_Main.profitabilityFromNH = 0;
-                            }
-                            */
-
-                            
                             break;
+                        case "versions":
+                            ConfigManager.GeneralConfig.NHMVersion = message.v3.Value;
+                            break;
+
                         case "mining.start":
                              RemoteMiningStart(message.id.Value.ToString(), message.device.Value);
                             break;

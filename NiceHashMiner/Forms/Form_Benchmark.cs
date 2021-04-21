@@ -62,7 +62,7 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
             Icon = Resources.logo;
-
+            Algorithm.BenchmarkActive = true;
             StartMining = false;
 
             // clear prev pending statuses
@@ -812,7 +812,7 @@ namespace NiceHashMiner.Forms
                 e.Cancel = true;
                 return;
             }
-
+            Algorithm.BenchmarkActive = false;
             // disable all pending benchmark
             foreach (var cDev in ComputeDeviceManager.Available.Devices)
             foreach (var algorithm in cDev.GetAlgorithmSettings())

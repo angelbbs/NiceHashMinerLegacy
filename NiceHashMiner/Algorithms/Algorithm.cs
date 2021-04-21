@@ -13,6 +13,7 @@ namespace NiceHashMiner.Algorithms
         /// Used for converting SMA values to BTC/H/Day
         /// </summary>
         protected const double Mult = 0.000000001;
+        public static bool BenchmarkActive = false;
 
         #region Identity
 
@@ -222,7 +223,7 @@ namespace NiceHashMiner.Algorithms
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, NiceHashID);
             }
             //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
-            if (!string.IsNullOrEmpty(BenchmarkStatus))
+            if (!string.IsNullOrEmpty(BenchmarkStatus) && BenchmarkActive)
             {
                 return BenchmarkStatus;
             }

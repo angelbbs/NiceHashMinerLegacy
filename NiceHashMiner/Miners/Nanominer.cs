@@ -66,6 +66,7 @@ namespace NiceHashMiner.Miners
 
             var cfgFile =
                String.Format("webPort = {0}", ApiPort) + "\n"
+               + String.Format("mport = 0\n")
                + String.Format("protocol = stratum\n")
                + String.Format(param) + "\n"
                + String.Format("[Ethash]\n")
@@ -206,14 +207,16 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            Form_Main.nanominerCount++;
-            if (Form_Main.nanominerCount >= Environment.ProcessorCount)
+            //Random R = new Random();
+            //Thread.Sleep(R.Next(1, 10) * 1000);
+            if (Form_Main.nanominerCount > 0)
             {
                 do
                 {
                     Thread.Sleep(1000);
-                } while (Form_Main.nanominerCount >= Environment.ProcessorCount);
+                } while (Form_Main.nanominerCount > 0);
             }
+            Form_Main.nanominerCount++;
 
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -239,6 +242,7 @@ namespace NiceHashMiner.Miners
             {
                 var cfgFile =
                    String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
                    + String.Format("protocol = stratum\n")
                    + String.Format("watchdog = false\n")
                    + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).TrimStart(' ') + (char)10
@@ -314,7 +318,6 @@ namespace NiceHashMiner.Miners
                     BenchmarkHandle.Kill();
                     BenchmarkHandle.Close();
                     if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
-                    Form_Main.nanominerCount--;
                 }
                 catch { }
                 finally
@@ -435,6 +438,7 @@ namespace NiceHashMiner.Miners
             {
 
                 BenchmarkThreadRoutineFinish();
+                Form_Main.nanominerCount--;
             }
         }
         // stub benchmarks read from file
@@ -514,11 +518,11 @@ namespace NiceHashMiner.Miners
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/stats");
                 WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
-                WR.Timeout = 15 * 1000;
+                WR.Timeout = 5 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 10 * 1000;
+                SS.ReadTimeout = 5 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromNanominer = await Reader.ReadToEndAsync();
                 Reader.Close();

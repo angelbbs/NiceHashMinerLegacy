@@ -115,6 +115,21 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
         }
+        public static void StopConnection()
+        {
+            try
+            {
+                if (_webSocket != null)
+                {
+                    _webSocket.Close();
+                    _webSocket = null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
 
         private void ReceiveCallbackNew(object sender, MessageEventArgs e)
         {
@@ -284,7 +299,6 @@ namespace NiceHashMiner.Stats
             }
         }
 
-
         public void ConnectCallback(object sender, EventArgs e)
         {
             try
@@ -327,10 +341,10 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("UUID", "Using old MachineGuid from config");
                     rig = Configs.ConfigManager.GeneralConfig.MachineGuid;
                 }
-                var version = "NHML/1.9.1.12";//на старой платформе нельзя отправлять версию форка. Страница статистики падает )))
+                var version = "NHM/" + ConfigManager.GeneralConfig.NHMVersion;
 
                 protocol = 3;
-                version = "NHM/3.0.5.6"; //
+
                 if (ConfigManager.GeneralConfig.Send_actual_version_info)
                 {
                     version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");

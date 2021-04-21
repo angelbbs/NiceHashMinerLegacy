@@ -134,6 +134,8 @@ namespace NiceHashMiner
         public static bool MSIAfterburnerRunning = false;
         public static bool NVIDIA_orderBug = false;
         public static bool MiningStarted = false;
+        public static int devCur = 0;
+        public static double PowerAllDevices = 0;
 
         public struct RigProfitList
         {
@@ -146,6 +148,7 @@ namespace NiceHashMiner
         public static double ChartDataAvail = 0;
         public Form_Main()
         {
+            
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
@@ -166,6 +169,7 @@ namespace NiceHashMiner
                     // this.Width = 660; // min width
                 }
             }
+            
             //WindowState = FormWindowState.Minimized;
             Helpers.ConsolePrint("NICEHASH", "Start Form_Main");
             switch (ConfigManager.GeneralConfig.ColorProfileIndex)
@@ -308,7 +312,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "37";
+            Text += "37.1";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -991,7 +995,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("Temp Dir", ex.ToString());
             }
-            /*
+            
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
@@ -1012,7 +1016,7 @@ namespace NiceHashMiner
                 }
 
             }
-            */
+            
             if (!Configs.ConfigManager.GeneralConfig.MinimizeToTray)
             {
                 WindowState = FormWindowState.Normal;
@@ -1597,7 +1601,7 @@ public static void CloseChilds(Process parentId)
             {
                 Helpers.ConsolePrint("AddRateInfo", ex.ToString());
             }
-
+            //new Task(() => UpdateGlobalRate()).Start();
             UpdateGlobalRate();
         }
 
@@ -1672,21 +1676,26 @@ public static void CloseChilds(Process parentId)
             }
         }
        
+        private void SummAllPower()
+        {
+            PowerAllDevices = 0;
+            foreach (ComputeDevice computeDevice in Available.Devices)
+            {
+                PowerAllDevices += computeDevice.PowerUsage;// mem leak on drivers above 461
+                //Thread.Sleep(500);
+            }
+        }
         private void UpdateGlobalRate()
         {
             try
             {
+                //new Task(() => SummAllPower()).Start();
                 double psuE = (double)ConfigManager.GeneralConfig.PowerPSU / 100;
                 var totalRate = MinersManager.GetTotalRate();
 
                 var powerString = "";
                 double TotalPower = 0;
-                TotalPower = MinersManager.GetTotalPowerRate();
-
-                foreach (ComputeDevice computeDevice in Available.Devices)
-                {
-                    TotalPower += computeDevice.PowerUsage;// mem leak on drivers above 461
-                }
+                TotalPower = MinersManager.GetTotalPowerRate() + PowerAllDevices;
 
                 double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
                 totalPower = Math.Round(totalPower, 0);
@@ -1930,6 +1939,14 @@ public static void CloseChilds(Process parentId)
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (AlgorithmSwitchingManager._smaCheckTimer != null)
+            {
+                AlgorithmSwitchingManager._smaCheckTimer.Stop();
+                AlgorithmSwitchingManager._smaCheckTimer.Dispose();
+                AlgorithmSwitchingManager._smaCheckTimer = null;
+            }
+            NiceHashSocket.StopConnection();
+
             devicesListViewEnableControl1.SaveColumns();
             if (this != null)
             {
@@ -2634,9 +2651,10 @@ public static void CloseChilds(Process parentId)
                 */
 
                 ExchangeCallback(null, null);
-                
+
                 //Thread.Sleep(10);
                 UpdateGlobalRate();
+                //new Task(() => UpdateGlobalRate()).Start();
                 //Thread.Sleep(10);
                 //new Task(() => BalanceCallback()).Start();
 
@@ -2694,6 +2712,7 @@ public static void CloseChilds(Process parentId)
             }
 
             UpdateGlobalRate();
+            //new Task(() => UpdateGlobalRate()).Start();
             //toolStripStatusLabel_power1.Text = "";
             //toolStripStatusLabel_power2.Text = "";
             //toolStripStatusLabel_power3.Text = "";

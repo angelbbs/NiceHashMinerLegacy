@@ -152,11 +152,11 @@ namespace NiceHashMiner.Miners
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString());
                 WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
-                WR.Timeout = 30 * 1000;
+                WR.Timeout = 3 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 20 * 1000;
+                SS.ReadTimeout = 2 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromSRBMiner = await Reader.ReadToEndAsync();
 
@@ -178,7 +178,7 @@ namespace NiceHashMiner.Miners
                 int totals = 0;
                 if (resp != null)
                 {
-                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList(); 
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                     //var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
                     int devs = sortedMinerPairs.Count;
 
@@ -200,7 +200,7 @@ namespace NiceHashMiner.Miners
                             }
                             devs++;
                         }
-                        
+
                         totals = resp.algorithms[0].hashrate.gpu.total;
                     }
                     else

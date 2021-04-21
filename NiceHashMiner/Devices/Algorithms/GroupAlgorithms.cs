@@ -144,14 +144,14 @@ namespace NiceHashMiner.Devices.Algorithms
                 Form_Main.DaggerHashimoto3GB = false;
             }
 
-            if (device.DeviceType == DeviceType.AMD && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
+            if (device.DeviceType == DeviceType.AMD && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 1.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.DaggerHashimoto4GB
                     });
             }
-            if (device.DeviceType == DeviceType.AMD && (device.GpuRam > (ulong)(1024 * 1024 * 1024 * 3.2) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7)))
+            if (device.DeviceType == DeviceType.AMD && (device.GpuRam > (ulong)(1024 * 1024 * 1024 * 1.2) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7)))
             {
                 Form_Main.DaggerHashimoto4GB = true;
             }
@@ -386,6 +386,19 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.AMD &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+
+            if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.lolMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.CuckooCycle && device.DeviceType == DeviceType.AMD &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;

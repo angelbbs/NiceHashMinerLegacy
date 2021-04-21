@@ -653,7 +653,7 @@ namespace NiceHashMiner.Miners
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 20 * 1000;
+                SS.ReadTimeout = 2 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromGMiner = await Reader.ReadToEndAsync();
                 //Helpers.ConsolePrint("GMiner API:", ResponseFromGMiner);

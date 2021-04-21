@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -281,8 +282,10 @@ namespace NiceHashMiner.Forms.Components
                 {
                     cFanSpeed = computeDevice.FanSpeedRPM.ToString();
                 }
-                string cPowerUsage = Math.Truncate(computeDevice.PowerUsage).ToString();
-                if (Math.Truncate(computeDevice.PowerUsage) == 0)
+                double _PowerUsage = computeDevice.PowerUsage;
+                string cPowerUsage = Math.Truncate(_PowerUsage).ToString();
+
+                if (Math.Truncate(_PowerUsage) == 0)
                 {
                     cPowerUsage = "-1";
                 }

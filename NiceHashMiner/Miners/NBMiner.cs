@@ -424,11 +424,11 @@ namespace NiceHashMiner.Miners
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/api/v1/status");
                 WR.UserAgent = "GET / HTTP/1.1\r\n";
-                WR.Timeout = 30 * 1000;
+                WR.Timeout = 3 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 20 * 1000;
+                SS.ReadTimeout = 2 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromNBMiner = await Reader.ReadToEndAsync();
                 if (ResponseFromNBMiner.Length == 0 || (ResponseFromNBMiner[0] != '{' && ResponseFromNBMiner[0] != '['))

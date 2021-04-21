@@ -140,12 +140,12 @@ namespace NiceHashMiner.Miners
                                                                DeviceType.AMD) +
                              " --devices ";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
-                LastCommandLine = "--coin GRIN-C29M --pool " + url + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + Form_Main.myServers[1, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + Form_Main.myServers[2, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
-                " --pool cuckaroom." + Form_Main.myServers[3, 0] + ".nicehash.com:3382 " + " --user " + username + " --pass x" +
+                LastCommandLine = "--algo C29AE --pool " + url + " --user " + username + " --pass x" +
+                " --pool cuckoocycle." + Form_Main.myServers[1, 0] + ".nicehash.com:3376 " + " --user " + username + " --pass x" +
+                " --pool cuckoocycle." + Form_Main.myServers[2, 0] + ".nicehash.com:3376 " + " --user " + username + " --pass x" +
+                " --pool cuckoocycle." + Form_Main.myServers[3, 0] + ".nicehash.com:3376 " + " --user " + username + " --pass x" +
                 apiBind + " " +
                              ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                MiningSetup,
@@ -201,7 +201,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 CommandLine = "--algo BEAM-II " +
-                    " --pool beamv2.usa.nicehash.com:3378 --user " + username + " --pass x --tls 0" +
+                    " --pool beamv2.eu-north.nicehash.com:3378 --user " + username + " --pass x --tls 0" +
                                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.AMD) +
@@ -234,7 +234,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--coin MWC-C31 " +
                 " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x " +
-                "--pool grincuckatoo31.usa.nicehash.com:3372 --user " +username + " --pass x" +
+                "--pool grincuckatoo31.eu-north.nicehash.com:3372 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -244,7 +244,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--coin GRIN-C32" +
                 " --pool grin.2miners.com:3030 --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.lolMiner --pass x" +
-                " --pool grincuckatoo32.usa.nicehash.com:3383 --user " + username + " --pass x" +
+                " --pool grincuckatoo32.eu-north.nicehash.com:3383 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -254,17 +254,17 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--coin MWC-C29D " +
                 " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x" +
-                " --pool grincuckaroo29.usa.nicehash.com:3372 --user " + username + " --pass x" +
+                " --pool grincuckaroo29.eu-north.nicehash.com:3372 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
                 " --devices ";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
-                CommandLine = "--coin GRIN-C29M " +
-                " --pool grin.2miners.com:3030 --user 2aHR0cHM6Ly9kZXBvc2l0Z3Jpbi5rdWNvaW4uY29tL2RlcG9zaXQvMTg2MTU0MTY0MA.lolMiner --pass x" +
-                " --pool cuckaroom.usa.nicehash.com:3382 --user " + username + " --pass x" +
+                CommandLine = "--algo C29AE " +
+                " --pool ae.2miners.com:4040 --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.lolMiner --pass x" +
+                " --pool cuckoocycle.eu-north.nicehash.com:3376 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -274,7 +274,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo ETHASH " +
                 " --pool eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.lolMiner --pass x" +
-                " --pool daggerhashimoto.eu.nicehash.com:3353 --user " + username + " --pass x" +
+                " --pool daggerhashimoto.eu-north.nicehash.com:3353 --user " + username + " --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -473,7 +473,11 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
-                    Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
+                }
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
                 //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
@@ -546,6 +550,11 @@ namespace NiceHashMiner.Miners
                     {
                         delay_before_calc_hashrate = 20;
                         MinerStartDelay = 20;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
+                    {
+                        delay_before_calc_hashrate = 40;
+                        MinerStartDelay = 5;
                     }
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
@@ -632,11 +641,11 @@ namespace NiceHashMiner.Miners
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/summary");
                 WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
-                WR.Timeout = 30 * 1000;
+                WR.Timeout = 3 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 20 * 1000;
+                SS.ReadTimeout = 2 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromlolMiner = await Reader.ReadToEndAsync();
                 //Helpers.ConsolePrint("API: ", ResponseFromlolMiner);

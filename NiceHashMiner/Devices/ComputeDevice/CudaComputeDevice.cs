@@ -289,7 +289,9 @@ namespace NiceHashMiner.Devices
             public uint nGpu;
             public uint power;
         }
-        
+        public byte[] NVdata;
+        public int devCount = 0;
+        public int ferrorCount = 0;
         public override double PowerUsage
         {
             get
@@ -311,24 +313,33 @@ namespace NiceHashMiner.Devices
                 {
                     GC.Collect();
                 }
+
                 try
                 {
                     var _power = 0u;
                     nvmlDevice nvmlDevice = new nvmlDevice();
-                    byte[] data;
                     int size;
-                    MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("NvidiaGPUGetDataHost");
-                    using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 1, MemoryMappedFileAccess.Read))
+                    //var elapsedMSeconds = DateTime.Now.Subtract(_started).Milliseconds;
+                    //Random R = new Random();
+                    //Thread.Sleep(R.Next(10, 100));
+                    if (Form_Main.devCur > devCount)
                     {
-                        size = reader.ReadByte(0);
-                    }
-                    using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read))
-                    {
-                        data = new byte[size];
-                        reader.ReadArray<byte>(0, data, 0, size);
-                    }
+                        Form_Main.devCur = 0;
 
-                    int devCount = (size - 1) / 2;
+                        MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("NvidiaGPUGetDataHost");
+                        using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 1, MemoryMappedFileAccess.Read))
+                        {
+                            size = reader.ReadByte(0);
+                        }
+                        using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read))
+                        {
+                            NVdata = new byte[size];
+                            reader.ReadArray<byte>(0, NVdata, 0, size);
+                        }
+
+                        devCount = (size - 1) / 2;
+                    }
+                    Form_Main.devCur++;
                     for (int dev = 0; dev < devCount; dev++)
                     {
                         var ret = NvmlNativeMethods.nvmlDeviceGetHandleByIndex((uint)dev, ref nvmlDevice);
@@ -342,7 +353,7 @@ namespace NiceHashMiner.Devices
                         }
                         if (_nvmlDevice.Equals(nvmlDevice))
                         {
-                            power = data[dev * 2 + 2];
+                            power = NVdata[dev * 2 + 2];
                         }
                     }
 
@@ -375,26 +386,31 @@ namespace NiceHashMiner.Devices
                 }
                 catch (FileNotFoundException e)
                 {
-                    Helpers.ConsolePrint("NVML", "Error! MemoryMappedFile not found");
-                    if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
+                    if (ferrorCount > 5)
                     {
-                        var MonitorProc = new Process
+                        ferrorCount = 0;
+                        Helpers.ConsolePrint("NVML", "Error! MemoryMappedFile not found");
+                        if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
                         {
-                            StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
-                        };
+                            var MonitorProc = new Process
+                            {
+                                StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
+                            };
 
-                        MonitorProc.StartInfo.UseShellExecute = false;
-                        MonitorProc.StartInfo.CreateNoWindow = true;
-                        if (MonitorProc.Start())
-                        {
-                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
+                            MonitorProc.StartInfo.UseShellExecute = false;
+                            MonitorProc.StartInfo.CreateNoWindow = true;
+                            if (MonitorProc.Start())
+                            {
+                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
+                            }
                         }
                     }
-                    Thread.Sleep(500);
+                    ferrorCount++;
+                    //Thread.Sleep(500);
                 }
                 catch (Exception e)
                 {

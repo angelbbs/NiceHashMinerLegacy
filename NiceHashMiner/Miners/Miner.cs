@@ -715,12 +715,12 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
-
+            /*
             if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("gminer") && (commandLine.ToLower().Contains("cuckoocycle")))
             {
                 benchmarkHandle.StartInfo.FileName = MiningSetup.MinerPath.Replace("miner.exe", "miner234.exe");
             }
-
+            */
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -1507,10 +1507,12 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
+            /*
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle")))
             {
                 Path = MiningSetup.MinerPath.Replace("miner.exe", "miner234.exe");
             }
+            */
             P.StartInfo.FileName = Path;
 
             P.ExitEvent = Miner_Exited;

@@ -179,9 +179,11 @@ namespace NiceHashMiner.Devices.Algorithms
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "")
                         {
                         },
+                        /*
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.CuckooCycle, "")
                         {
                         },
+                        */
                         /*
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.Cuckaroo29BFC, "")
                         {
@@ -213,12 +215,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            /*
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckarood29, "GrinCuckarood29")
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.CuckooCycle, "CuckooCycle")
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31")
                             {
                                 ExtraLaunchParameters = ""
@@ -309,6 +309,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
                             //new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.X16RV2, "X16Rv2"),
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.KAWPOW, "KAWPOW"),
+                            //new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.Lyra2REv3, "Lyra2REv3"),
                           // new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.CuckooCycle, "CuckooCycle"),
                         }
             },
