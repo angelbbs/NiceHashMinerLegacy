@@ -41,13 +41,14 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        var rates = new nvmlUtilization();
-                        var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
-                        if (ret != nvmlReturn.Success)
+                        //uint dev = (uint)_nvmlDevice.Pointer;
+                        foreach (var d in Form_Main.gpuList)
                         {
-                            Helpers.ConsolePrint("NVML", $"NVML get load failed with code: {ret}");
+                            if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                            {
+                                return d.load;
+                            }
                         }
-                        load = (int)rates.gpu;
                     }
                     catch (Exception e)
                     {
@@ -55,6 +56,7 @@ namespace NiceHashMiner.Devices
                     }
                     return load;
                 }
+                /*
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     try
@@ -90,6 +92,7 @@ namespace NiceHashMiner.Devices
                     }
                     return load;
                 }
+                */
                 return -1;
             }
         }
@@ -108,20 +111,14 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        var utemp = 0u;
-                        var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu,
-                            ref utemp);
-                        if (ret != nvmlReturn.Success)
+                        //uint dev = (uint)_nvmlDevice.Pointer;
+                        foreach (var d in Form_Main.gpuList)
                         {
-                            Helpers.ConsolePrint("NVML", $"NVML get temp failed with code: {ret}");
-
-                            //Form_Main.needRestart = true;
-                            //ComputeDeviceManager.Query.Nvidia.QueryCudaDevices();
-                            //if(ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
-
-                            // throw new Exception($"NVML get temp failed with code: {ret}");
+                            if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                            {
+                                return d.temp;
+                            }
                         }
-                        temp = utemp;
                     }
                     catch (Exception e)
                     {
@@ -129,6 +126,7 @@ namespace NiceHashMiner.Devices
                     }
                     return temp;
                 }
+                /*
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     try
@@ -164,6 +162,7 @@ namespace NiceHashMiner.Devices
                     }
                     return temp;
                 }
+                */
                 return -1;
             }
         }
@@ -225,21 +224,21 @@ namespace NiceHashMiner.Devices
                 
                     var fan = -1;
 
-                    try
+                try
+                {
+                    //uint dev = (uint)_nvmlDevice.Pointer;
+                    foreach (var d in Form_Main.gpuList)
                     {
-                        var ufan = 0u;
-                        var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref ufan);
-                        if (ret != nvmlReturn.Success)
+                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
                         {
-                        //Form_Main.needRestart = true;
-                        Helpers.ConsolePrint("NVML", $"NVML get fan failed with code: {ret}");
+                            return (int)d.fan;
+                        }
                     }
-                        fan = (int)ufan;
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("NVML", e.ToString());
-                    }
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("NVML", e.ToString());
+                }
 
                     return fan;
                 
@@ -305,6 +304,7 @@ namespace NiceHashMiner.Devices
                 //if (ComputeDeviceManager.Query._currentNvidiaSmiDriver.IsLesserVersionThan(ComputeDeviceManager.Query.LastGoodNvidiaCuda111Driver))
                 //{
                 //}
+                /*
                 try
                 {
                     var p = Process.GetProcessesByName("NvidiaGPUGetDataHost");
@@ -313,104 +313,17 @@ namespace NiceHashMiner.Devices
                 {
                     GC.Collect();
                 }
+                */
 
                 try
                 {
-                    var _power = 0u;
-                    nvmlDevice nvmlDevice = new nvmlDevice();
-                    int size;
-                    //var elapsedMSeconds = DateTime.Now.Subtract(_started).Milliseconds;
-                    //Random R = new Random();
-                    //Thread.Sleep(R.Next(10, 100));
-                    if (Form_Main.devCur > devCount)
+                    foreach (var d in Form_Main.gpuList)
                     {
-                        Form_Main.devCur = 0;
-
-                        MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("NvidiaGPUGetDataHost");
-                        using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 1, MemoryMappedFileAccess.Read))
+                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
                         {
-                            size = reader.ReadByte(0);
-                        }
-                        using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read))
-                        {
-                            NVdata = new byte[size];
-                            reader.ReadArray<byte>(0, NVdata, 0, size);
-                        }
-
-                        devCount = (size - 1) / 2;
-                    }
-                    Form_Main.devCur++;
-                    for (int dev = 0; dev < devCount; dev++)
-                    {
-                        var ret = NvmlNativeMethods.nvmlDeviceGetHandleByIndex((uint)dev, ref nvmlDevice);
-                        if (ret != nvmlReturn.Success)
-                        {
-                            using (EventLog eventLog = new EventLog("Application"))
-                            {
-                                Helpers.ConsolePrint("NVML", "nvmlDeviceGetHandleByIndex error: " + ret.ToString());
-                            }
-                            break;
-                        }
-                        if (_nvmlDevice.Equals(nvmlDevice))
-                        {
-                            power = NVdata[dev * 2 + 2];
+                            return d.power / 1000;
                         }
                     }
-
-                    //IntPtr ptr = GetPowerNativeMethod.GetPtr();
-                    //GetPowerNativeMethod.GetPower(_nvmlDevice, ref _power); //<- mem leak 461.40+
-                    /*
-                    var ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref _power);// <- mem leak 461.40+
-                    if (ret != nvmlReturn.Success)
-                    {
-                        Helpers.ConsolePrint("NVML", $"NVML get power failed with code: {ret}");
-                    }
-                    */
-                    //Helpers.ConsolePrint("NVML", $"NVML get power: {_power.ToString()}");
-                    //Marshal.FreeHGlobal(ptr);
-                    /*
-                    try
-                    {
-                        Process Mem;
-                        Mem = Process.GetCurrentProcess();
-                        NativeMethods.SetProcessWorkingSetSize(Mem.Handle, -1, -1);
-                        Mem = null;
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("NVML", "Error = " + ex.ToString() + " " + ex.StackTrace.ToString());
-                    }
-                    */
-
-                    //power = (int)(_power/1000);
-                }
-                catch (FileNotFoundException e)
-                {
-                    if (ferrorCount > 5)
-                    {
-                        ferrorCount = 0;
-                        Helpers.ConsolePrint("NVML", "Error! MemoryMappedFile not found");
-                        if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
-                        {
-                            var MonitorProc = new Process
-                            {
-                                StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
-                            };
-
-                            MonitorProc.StartInfo.UseShellExecute = false;
-                            MonitorProc.StartInfo.CreateNoWindow = true;
-                            if (MonitorProc.Start())
-                            {
-                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
-                            }
-                            else
-                            {
-                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
-                            }
-                        }
-                    }
-                    ferrorCount++;
-                    //Thread.Sleep(500);
                 }
                 catch (Exception e)
                 {

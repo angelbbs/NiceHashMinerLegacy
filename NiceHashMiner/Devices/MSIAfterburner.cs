@@ -84,12 +84,13 @@ namespace NiceHashMiner.Devices
 
                                 if ((int)wdwIntPtr > 1)
                                 {
-                                    Thread.Sleep(2000);//обязательная пауза
+                                    Thread.Sleep(3000);//обязательная пауза
                                     break;
                                 }
                                 repeats++;
                                 Thread.Sleep(1000);
                             }
+                            Thread.Sleep(1000);
                         } while (repeats < 30);
                         
 
@@ -141,7 +142,8 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint("*************", "MSIAfterburnerInit 1");
                     macm = new ControlMemory();
                     macm.Connect();
-                   // macm.Reinitialize();
+                    // macm.Reinitialize();
+                    //macm.ReloadAll();
                     Helpers.ConsolePrint("*************", "MSIAfterburnerInit 2");
                     mahm = new HardwareMonitor();
                     mahm.Connect();
@@ -154,8 +156,84 @@ namespace NiceHashMiner.Devices
                     // print out current MACM GPU Entry values
                     for (int i = 0; i < macm.Header.GpuEntryCount; i++)
                     {
-                        Helpers.ConsolePrint("*************", "***** MSI AFTERTERBURNER GPU " + i.ToString() + " *****");
-                        Helpers.ConsolePrint("*************", macm.GpuEntries[i].ToString().Replace(";", "\r\n"));
+                        macm.GpuEntries[0].FanFlagsCur = MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None;
+                        macm.GpuEntries[0].FanSpeedCur = 80;
+                        //macm.GpuEntries[i].Flags = MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK; //2147630216
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Flags: " + macm.GpuEntries[i].Flags.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Header.HeaderSize: " + macm.Header.HeaderSize.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Header.GpuEntrySize: " + macm.Header.GpuEntrySize.ToString());
+
+                        macm.GpuEntries[i].CoreClockBoostCur = -234000  - i * 1000;
+                        macm.CommitChanges(i);
+                        //System.Threading.Thread.Sleep(2000);
+                        //macm.ReloadAll();
+                        Helpers.ConsolePrint("MSIAfterburnerInit", macm.GpuEntries[i].ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Index: " + macm.GpuEntries[i].Index.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuId: " + mahm.GpuEntries[i].GpuId.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Index: " + mahm.GpuEntries[i].Index.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Device: " + mahm.GpuEntries[i].Device.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "IsMaster: " + macm.GpuEntries[i].IsMaster.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostCur: " + macm.GpuEntries[i].AuxVoltageBoostCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostDef: " + macm.GpuEntries[i].AuxVoltageBoostDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostMax: " + macm.GpuEntries[i].AuxVoltageBoostMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostMin: " + macm.GpuEntries[i].AuxVoltageBoostMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageCur: " + macm.GpuEntries[i].AuxVoltageCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageDef: " + macm.GpuEntries[i].AuxVoltageDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageMax: " + macm.GpuEntries[i].AuxVoltageMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageMin: " + macm.GpuEntries[i].AuxVoltageMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostCur: " + macm.GpuEntries[i].CoreClockBoostCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostDef: " + macm.GpuEntries[i].CoreClockBoostDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostMax: " + macm.GpuEntries[i].CoreClockBoostMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostMin: " + macm.GpuEntries[i].CoreClockBoostMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockCur: " + macm.GpuEntries[i].CoreClockCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockDef: " + macm.GpuEntries[i].CoreClockDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockMax: " + macm.GpuEntries[i].CoreClockMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockMin: " + macm.GpuEntries[i].CoreClockMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostCur: " + macm.GpuEntries[i].CoreVoltageBoostCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostDef: " + macm.GpuEntries[i].CoreVoltageBoostDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostMax: " + macm.GpuEntries[i].CoreVoltageBoostMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostMin: " + macm.GpuEntries[i].CoreVoltageBoostMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageCur: " + macm.GpuEntries[i].CoreVoltageCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageDef: " + macm.GpuEntries[i].CoreVoltageDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageMax: " + macm.GpuEntries[i].CoreVoltageMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageMin: " + macm.GpuEntries[i].CoreVoltageMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanFlagsCur: " + macm.GpuEntries[i].FanFlagsCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanFlagsDef: " + macm.GpuEntries[i].FanFlagsDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedCur: " + macm.GpuEntries[i].FanSpeedCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedDef: " + macm.GpuEntries[i].FanSpeedDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedMax: " + macm.GpuEntries[i].FanSpeedMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedMin: " + macm.GpuEntries[i].FanSpeedMin.ToString());
+
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostCur: " + macm.GpuEntries[i].MemoryClockBoostCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostDef: " + macm.GpuEntries[i].MemoryClockBoostDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostMax: " + macm.GpuEntries[i].MemoryClockBoostMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostMin: " + macm.GpuEntries[i].MemoryClockBoostMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockCur: " + macm.GpuEntries[i].MemoryClockCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockDef: " + macm.GpuEntries[i].MemoryClockDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockMax: " + macm.GpuEntries[i].MemoryClockMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockMin: " + macm.GpuEntries[i].MemoryClockMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostCur: " + macm.GpuEntries[i].MemoryVoltageBoostCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostDef: " + macm.GpuEntries[i].MemoryVoltageBoostDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostMax: " + macm.GpuEntries[i].MemoryVoltageBoostMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostMin: " + macm.GpuEntries[i].MemoryVoltageBoostMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageCur: " + macm.GpuEntries[i].MemoryVoltageCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageDef: " + macm.GpuEntries[i].MemoryVoltageDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageMax: " + macm.GpuEntries[i].MemoryVoltageMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageMin: " + macm.GpuEntries[i].MemoryVoltageMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitCur: " + macm.GpuEntries[i].PowerLimitCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitDef: " + macm.GpuEntries[i].PowerLimitDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitMax: " + macm.GpuEntries[i].PowerLimitMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitMin: " + macm.GpuEntries[i].PowerLimitMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockCur: " + macm.GpuEntries[i].ShaderClockCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockDef: " + macm.GpuEntries[i].ShaderClockDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockMax: " + macm.GpuEntries[i].ShaderClockMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockMin: " + macm.GpuEntries[i].ShaderClockMin.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitCur: " + macm.GpuEntries[i].ThermalLimitCur.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitDef: " + macm.GpuEntries[i].ThermalLimitDef.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitMax: " + macm.GpuEntries[i].ThermalLimitMax.ToString());
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitMin: " + macm.GpuEntries[i].ThermalLimitMin.ToString());
+
+
                     }
                     //macm.GpuEntries[0].CoreClockCur = 1400;
                     //macm.CommitChanges();

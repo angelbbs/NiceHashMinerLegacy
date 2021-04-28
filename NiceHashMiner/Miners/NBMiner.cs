@@ -90,7 +90,7 @@ namespace NiceHashMiner.Miners
             var cmd = "";
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                url = url.Replace("stratum", "ethnh");
+                url = url.Replace("stratum", "nicehash");
             }
 
             var user = GetUsername(btcAddress, worker);
@@ -116,8 +116,8 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 ethnh+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 -u1 " + user +
-                    $" -o2 ethnh+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 -u2 " + user  +
+                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 -u1 " + user +
+                    $" -o2 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 -u2 " + user  +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))

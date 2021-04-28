@@ -98,9 +98,6 @@
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MSIAfterburner.NET">
-      <HintPath>..\Debug\common\MSIAfterburner.NET.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -540,6 +537,10 @@
     <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
       <Name>MessageBoxManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MSIAfterburner.NET\MSIAfterburner.NET.csproj">
+      <Project>{08f25f99-9d46-4d1f-a776-377ada69b23e}</Project>
+      <Name>MSIAfterburner.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>

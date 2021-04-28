@@ -103,6 +103,7 @@ namespace NiceHashMiner.Algorithms
         public virtual int gpu_clock { get; set; }
         public virtual int mem_clock { get; set; }
         public virtual double gpu_voltage { get; set; }
+        public virtual double mem_voltage { get; set; }
         public virtual int power_limit { get; set; }
 
         #endregion

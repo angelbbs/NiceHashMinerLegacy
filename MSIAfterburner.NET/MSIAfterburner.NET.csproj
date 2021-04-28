@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: D:\NiceHashMinerLegacy\msi afterburner\MSIAfterburner.NET.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{08F25F99-9D46-4D1F-A776-377ADA69B23E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>MSIAfterburner.NET</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>MSI.Afterburner</RootNamespace>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.1.1.0</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="ControlMemory.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_GPU_ENTRY.cs" />
+    <Compile Include="ControlMemoryGpuEntry.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_FLAG.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_COMMAND.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_HEADER.cs" />
+    <Compile Include="ControlMemoryHeader.cs" />
+    <Compile Include="MAHM_SHARED_MEMORY_ENTRY_FLAG.cs" />
+    <Compile Include="MONITORING_SOURCE_ID.cs" />
+    <Compile Include="MAHM_SHARED_MEMORY_ENTRY.cs" />
+    <Compile Include="HardwareMonitorEntry.cs" />
+    <Compile Include="MAHM_SHARED_MEMORY_GPU_ENTRY.cs" />
+    <Compile Include="HardwareMonitorGpuEntry.cs" />
+    <Compile Include="MAHM_SHARED_MEMORY_HEADER.cs" />
+    <Compile Include="HardwareMonitorHeader.cs" />
+    <Compile Include="HardwareMonitor.cs" />
+    <Compile Include="SharedMemory.cs" />
+    <Compile Include="Win32API.cs" />
+    <Compile Include="Exceptions\MACMFanControlNotManual.cs" />
+    <Compile Include="Exceptions\MACMFeatureNotSupported.cs" />
+    <Compile Include="Exceptions\CustomErrorException.cs" />
+    <Compile Include="Exceptions\SharedMemoryNotFound.cs" />
+    <Compile Include="Exceptions\SharedMemoryInvalid.cs" />
+    <Compile Include="Exceptions\SharedMemoryDead.cs" />
+    <Compile Include="Exceptions\SharedMemoryVersionNotSupported.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

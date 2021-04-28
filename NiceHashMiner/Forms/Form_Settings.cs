@@ -1121,8 +1121,8 @@ namespace NiceHashMiner.Forms
             {
                 var tp = tabPageTools;
                 tabControlGeneral.TabPages.Remove(tp);
-                var oc = tabPageOverClock;
-                tabControlGeneral.TabPages.Remove(oc);
+                //var oc = tabPageOverClock;
+                //tabControlGeneral.TabPages.Remove(oc);
             }
       
 

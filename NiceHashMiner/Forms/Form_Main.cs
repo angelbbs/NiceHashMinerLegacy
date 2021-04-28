@@ -30,6 +30,7 @@ namespace NiceHashMiner
     using System.Drawing.Drawing2D;
     using System.Drawing.Text;
     using System.IO;
+    using System.IO.MemoryMappedFiles;
     using System.Net;
     using System.Net.Sockets;
     using System.Reflection;
@@ -38,8 +39,7 @@ namespace NiceHashMiner
     using System.Text;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
-
-
+    using static NiceHashMiner.Devices.ComputeDeviceManager.Query;
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
@@ -146,6 +146,18 @@ namespace NiceHashMiner
             public double unpaidAmount;
         }
         public static double ChartDataAvail = 0;
+        public static int MemoryMappedFileError = 0;
+
+        public static List<NvData> gpuList = new List<NvData>();
+        [Serializable]
+        public struct NvData
+        {
+            public uint nGpu;
+            public uint power;
+            public uint fan;
+            public uint load;
+            public uint temp;
+        }
         public Form_Main()
         {
             
@@ -1438,12 +1450,14 @@ public static void CloseChilds(Process parentId)
                 {
                     Form_Main.NewVersionExist = true;
                     linkLabelNewVersion.Text = (string.Format(International.GetText("Form_Main_new_build_released").Replace("{0}", "{0}"), ""));
+                    linkLabelNewVersion.Visible = true;
                     ret = true;
                 }
                 if (Form_Main.currentVersion < Form_Main.githubVersion)
                 {
                     Form_Main.NewVersionExist = true;
                     linkLabelNewVersion.Text = (string.Format(International.GetText("Form_Main_new_version_released").Replace("v{0}", "{0}"), "Fork Fix " + Form_Main.githubVersion.ToString()));
+                    linkLabelNewVersion.Visible = true;
                     ret = true;
                 }
                 if (Form_Main.githubVersion <= 0)
@@ -1451,6 +1465,7 @@ public static void CloseChilds(Process parentId)
                     Form_Main.NewVersionExist = false;
                     ret = false;
                 }
+
             }
             return ret;
         }
@@ -2657,6 +2672,7 @@ public static void CloseChilds(Process parentId)
                 //new Task(() => UpdateGlobalRate()).Start();
                 //Thread.Sleep(10);
                 //new Task(() => BalanceCallback()).Start();
+                GetNVMLData();
 
                 if (needRestart)
                 {
@@ -2673,6 +2689,94 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("DeviceStatusTimer_Tick error: ", ex.ToString());
                 Thread.Sleep(500);
             }
+        }
+
+        private void GetNVMLData()
+        {
+            if (!WindowsDisplayAdapters.HasNvidiaVideoController())
+            {
+                return;
+            }
+            uint devCount = 0;
+            uint _dev = 0;
+            uint _power = 0u;
+            uint _fan = 0u;
+            uint _load = 0u;
+            uint _temp = 0u;
+
+            int size = Marshal.SizeOf(_dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_temp);
+
+            try
+            {
+                MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("NvidiaGPUGetDataHost");
+                using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, Marshal.SizeOf(devCount), MemoryMappedFileAccess.Read))
+                {
+                    devCount = reader.ReadUInt32(0);
+                }
+                            NvData d = new NvData();
+            gpuList.Clear();
+
+            for (int dev = 0; dev < devCount; dev++)
+            {
+                using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, size * devCount + Marshal.SizeOf(devCount), MemoryMappedFileAccess.Read))
+                {
+                    _dev = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount));
+                    _power = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev));
+                    _fan = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power));
+                    _load = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan));
+                    _temp = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load));
+                    //Helpers.ConsolePrint("GetNVMLData", "dev: " + dev.ToString() + " _dev: " + _dev.ToString() +
+                      //" _power: " + _power.ToString() + " _fan: " + _fan.ToString() + " _load: " + _load.ToString() +
+                     //" _temp: " + _temp.ToString());
+                    d.nGpu = _dev;
+                    d.power = _power;
+                    d.fan = _fan;
+                    d.load = _load;
+                    d.temp = _temp;
+                    gpuList.Add(d);
+                }
+            }
+            }
+            catch (FileNotFoundException e)
+            {
+                if (MemoryMappedFileError > 5)
+                {
+                    MemoryMappedFileError = 0;
+                    Helpers.ConsolePrint("NVML", "Error! MemoryMappedFile not found");
+                    if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
+                    {
+                        var MonitorProc = new Process
+                        {
+                            StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
+                        };
+
+                        MonitorProc.StartInfo.UseShellExecute = false;
+                        MonitorProc.StartInfo.CreateNoWindow = true;
+                        if (MonitorProc.Start())
+                        {
+                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
+                        }
+                    }
+                }
+                MemoryMappedFileError++;
+                return;
+            }
+        }
+
+        internal static object RawDeserialize(byte[] rawdatas, Type anytype)
+        {
+            int num1 = Marshal.SizeOf(anytype);
+            if (num1 > rawdatas.Length)
+                return (object)null;
+            IntPtr num2 = Marshal.AllocHGlobal(num1);
+            Marshal.Copy(rawdatas, 0, num2, num1);
+            object structure = Marshal.PtrToStructure(num2, anytype);
+            Marshal.FreeHGlobal(num2);
+            return structure;
         }
         private void StopMining()
         {
