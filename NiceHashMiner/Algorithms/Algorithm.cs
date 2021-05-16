@@ -101,10 +101,34 @@ namespace NiceHashMiner.Algorithms
         /// </summary>
         public virtual double PowerUsage { get; set; }
         public virtual int gpu_clock { get; set; }
+        public virtual int gpu_clock_def { get; set; }
+        public virtual int gpu_clock_min { get; set; }
+        public virtual int gpu_clock_max { get; set; }
         public virtual int mem_clock { get; set; }
+        public virtual int mem_clock_def { get; set; }
+        public virtual int mem_clock_min { get; set; }
+        public virtual int mem_clock_max { get; set; }
         public virtual double gpu_voltage { get; set; }
+        public virtual double gpu_voltage_def { get; set; }
+        public virtual double gpu_voltage_min { get; set; }
+        public virtual double gpu_voltage_max { get; set; }
         public virtual double mem_voltage { get; set; }
+        public virtual double mem_voltage_def { get; set; }
+        public virtual double mem_voltage_min { get; set; }
+        public virtual double mem_voltage_max { get; set; }
         public virtual int power_limit { get; set; }
+        public virtual int power_limit_def { get; set; }
+        public virtual int power_limit_min { get; set; }
+        public virtual int power_limit_max { get; set; }
+        public virtual int fan { get; set; }
+        public virtual int fan_def { get; set; }
+        public virtual int fan_min { get; set; }
+        public virtual int fan_max { get; set; }
+        public virtual int fan_flag { get; set; }
+        public virtual int thermal_limit { get; set; }
+        public virtual int thermal_limit_def { get; set; }
+        public virtual int thermal_limit_min { get; set; }
+        public virtual int thermal_limit_max { get; set; }
 
         #endregion
 
@@ -133,7 +157,10 @@ namespace NiceHashMiner.Algorithms
             gpu_clock = 0;
             mem_clock = 0;
             gpu_voltage = 0.0d;
+            mem_voltage = 0.0d;
             power_limit = 0;
+            fan = 0;
+            thermal_limit = 0;
     }
         #region Benchmark info
 

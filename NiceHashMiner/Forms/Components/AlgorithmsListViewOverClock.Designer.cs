@@ -37,6 +37,9 @@ namespace NiceHashMiner.Forms.Components
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
@@ -51,7 +54,10 @@ namespace NiceHashMiner.Forms.Components
             this.columnHeader3,
             this.columnHeader4,
             this.columnHeader5,
-            this.columnHeader6});
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader8,
+            this.columnHeader9});
             this.listViewAlgorithms.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAlgorithms.FullRowSelect = true;
             this.listViewAlgorithms.GridLines = true;
@@ -59,7 +65,7 @@ namespace NiceHashMiner.Forms.Components
             this.listViewAlgorithms.Location = new System.Drawing.Point(0, 0);
             this.listViewAlgorithms.MultiSelect = false;
             this.listViewAlgorithms.Name = "listViewAlgorithms";
-            this.listViewAlgorithms.Size = new System.Drawing.Size(539, 380);
+            this.listViewAlgorithms.Size = new System.Drawing.Size(744, 380);
             this.listViewAlgorithms.TabIndex = 11;
             this.listViewAlgorithms.UseCompatibleStateImageBehavior = false;
             this.listViewAlgorithms.View = System.Windows.Forms.View.Details;
@@ -110,9 +116,24 @@ namespace NiceHashMiner.Forms.Components
             // 
             // columnHeader6
             // 
-            this.columnHeader6.Text = "Power limit";
+            this.columnHeader6.Text = "Mem Voltage";
             this.columnHeader6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader6.Width = 64;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "Power limit";
+            this.columnHeader7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader7.Width = 64;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "Fan, %";
+            this.columnHeader8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "°C";
+            this.columnHeader9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // contextMenuStrip1
             // 
@@ -127,7 +148,7 @@ namespace NiceHashMiner.Forms.Components
             this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.listViewAlgorithms);
             this.Name = "AlgorithmsListViewOverClock";
-            this.Size = new System.Drawing.Size(539, 380);
+            this.Size = new System.Drawing.Size(744, 380);
             this.Load += new System.EventHandler(this.AlgorithmsListView_Load);
             this.EnabledChanged += new System.EventHandler(this.AlgorithmsListView_EnabledChanged);
             this.DoubleClick += new System.EventHandler(this.AlgorithmsListViewOverClock_DoubleClick);
@@ -141,10 +162,13 @@ namespace NiceHashMiner.Forms.Components
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         public System.Windows.Forms.ListView listViewAlgorithms;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader columnHeader9;
     }
 }

@@ -2044,6 +2044,38 @@ namespace NiceHashMiner
 
         protected Process RunCMDBeforeOrAfterMining(bool isBefore)
         {
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                if (isBefore)
+                {
+                    foreach (var dev in MiningSetup.MiningPairs)
+                    {
+                        string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
+                        Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile: " + fName);
+                        MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
+                        //MSIAfterburner.CommitChanges(dev.Device.ID);
+                        //Thread.Sleep(10);
+                    }
+                    MSIAfterburner.CommitChanges();
+                    Thread.Sleep(2000);
+                    MSIAfterburner.CommitChanges();
+                }
+                else
+                {
+                    foreach (var dev in MiningSetup.MiningPairs)
+                    {
+                        //Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ResetToDefaults: " + dev.Device.BusID.ToString());
+                        MSIAfterburner.ResetToDefaults(dev.Device.BusID, true);
+                        //MSIAfterburner.CommitChanges(dev.Device.ID);
+                        Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ResetToDefaults: " + dev.Device.ID.ToString());
+                        //Thread.Sleep(10);
+                    }
+                    MSIAfterburner.CommitChanges();
+                    Thread.Sleep(2000);
+                    MSIAfterburner.CommitChanges();
+                }
+            }
+
             bool CreateNoWindow = false;
             var CMDconfigHandle = new Process
             {
@@ -2105,7 +2137,8 @@ namespace NiceHashMiner
             if (isBefore)
             {
                 CMDconfigHandle.StartInfo.FileName = "GPU-Scrypt.cmd";
-            } else
+            }
+            else
             {
                 CMDconfigHandle.StartInfo.FileName = "GPU-Reset.cmd";
             }
@@ -2126,9 +2159,9 @@ namespace NiceHashMiner
                     return null;
                 }
             }
-                //BenchmarkProcessPath = CMDconfigHandle.StartInfo.WorkingDirectory;
-                Helpers.ConsolePrint(MinerTag(), "Using CMD: " + CMDconfigHandle.StartInfo.FileName);
-                //CMDconfigHandle.StartInfo.WorkingDirectory = WorkingDirectory;
+            //BenchmarkProcessPath = CMDconfigHandle.StartInfo.WorkingDirectory;
+            Helpers.ConsolePrint(MinerTag(), "Using CMD: " + CMDconfigHandle.StartInfo.FileName);
+            //CMDconfigHandle.StartInfo.WorkingDirectory = WorkingDirectory;
 
             if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
             {
@@ -2140,7 +2173,7 @@ namespace NiceHashMiner
                 }
             }
 
-            CMDconfigHandle.StartInfo.Arguments = " " + strPlatform + " " + strDual + " " + strAlgo + " \"" + gpus +"\"" + " " + minername;
+            CMDconfigHandle.StartInfo.Arguments = " " + strPlatform + " " + strDual + " " + strAlgo + " \"" + gpus + "\"" + " " + minername;
             CMDconfigHandle.StartInfo.UseShellExecute = false;
             // CMDconfigHandle.StartInfo.RedirectStandardError = true;
             // CMDconfigHandle.StartInfo.RedirectStandardOutput = true;
@@ -2163,6 +2196,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("KillCMDBeforeOrAfterMining", e.ToString());
             }
+
             return CMDconfigHandle;
         }
 

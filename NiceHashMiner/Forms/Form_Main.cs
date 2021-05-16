@@ -709,7 +709,6 @@ namespace NiceHashMiner
 
             //_loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_FireWall"));
             new Task(() => Firewall.AddToFirewall()).Start();
-            int ticks = 0;//костыль
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = 1000;
@@ -819,6 +818,7 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 _loadingScreen.SetValueAndMsg(12, "Check MSI Afterburner");
+                //MSIAfterburner.CheckMSIAfterburner();
                 int countab = 0;
                 do
                 {
@@ -1486,8 +1486,8 @@ public static void CloseChilds(Process parentId)
 
         private static void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
         {
-            bool check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
-            if (check && CheckVideoControllersCount)
+            int check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
+            if (check > -1 && CheckVideoControllersCount)
             {
                 // less GPUs than before, ACT!
                 try
@@ -1498,8 +1498,8 @@ public static void CloseChilds(Process parentId)
                         {
                             WindowStyle = ProcessWindowStyle.Minimized
                         };
-                        onGpusLost.Arguments = "1";
-                        Helpers.ConsolePrint("ERROR", "Restart Windows due CUDA GPU is lost");
+                        onGpusLost.Arguments = "1 " + check;
+                        Helpers.ConsolePrint("ERROR", "Restart Windows due CUDA GPU#" + check.ToString() + " is lost");
                         Process.Start(onGpusLost);
                     }
                     if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost)
@@ -1508,8 +1508,10 @@ public static void CloseChilds(Process parentId)
                         {
                             WindowStyle = ProcessWindowStyle.Minimized
                         };
-                        onGpusLost.Arguments = "2";
-                        Helpers.ConsolePrint("ERROR", "Restart driver due CUDA GPU is lost");
+                        onGpusLost.Arguments = "2 " + check;
+                        Helpers.ConsolePrint("ERROR", "Restart driver due CUDA GPU#" + check.ToString() + " is lost");
+                        Form_Benchmark.RunCMDAfterBenchmark();
+                        Thread.Sleep(1000);
                         Process.Start(onGpusLost);
                     }
                 }
@@ -1518,7 +1520,7 @@ public static void CloseChilds(Process parentId)
                     Helpers.ConsolePrint("NICEHASH", "OnGPUsLost.bat error: " + ex.Message);
                 }
             }
-                CheckVideoControllersCount = check;
+                CheckVideoControllersCount = check > -1;
         }
 
         private void InitFlowPanelStart()
@@ -2693,7 +2695,7 @@ public static void CloseChilds(Process parentId)
 
         private void GetNVMLData()
         {
-            if (!WindowsDisplayAdapters.HasNvidiaVideoController())
+            if (!ComputeDeviceManager.Available.HasNvidia)
             {
                 return;
             }
@@ -2703,7 +2705,7 @@ public static void CloseChilds(Process parentId)
             uint _fan = 0u;
             uint _load = 0u;
             uint _temp = 0u;
-
+            //Helpers.ConsolePrint("GetNVMLData", "*********");
             int size = Marshal.SizeOf(_dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_temp);
 
             try
@@ -2713,7 +2715,8 @@ public static void CloseChilds(Process parentId)
                 {
                     devCount = reader.ReadUInt32(0);
                 }
-                            NvData d = new NvData();
+                NvData d = new NvData();
+                ComputeDeviceManager.CudaDevicesCountFromNVMLHost = (int)devCount;
             gpuList.Clear();
 
             for (int dev = 0; dev < devCount; dev++)

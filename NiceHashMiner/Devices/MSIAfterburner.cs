@@ -1,6 +1,8 @@
 ﻿using MSI.Afterburner;
 using MSI.Afterburner.Exceptions;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,16 +13,59 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static NiceHashMiner.Devices.ComputeDeviceManager;
 
 namespace NiceHashMiner.Devices
 {
     public static class MSIAfterburner
     {
+        public static List<ABData> gpuList = new List<ABData>();
+        [Serializable]
+        public struct ABData
+        {
+            public int index;
+            public int busID;
+            public int CoreClockBoostCur;
+            public int CoreClockBoostDef;
+            public int CoreClockBoostMin;
+            public int CoreClockBoostMax;
+            public int MemoryClockBoostCur;
+            public int MemoryClockBoostDef;
+            public int MemoryClockBoostMin;
+            public int MemoryClockBoostMax;
+            public int CoreVoltageBoostCur;
+            public int CoreVoltageBoostDef;
+            public int CoreVoltageBoostMin;
+            public int CoreVoltageBoostMax;
+            public int MemoryVoltageBoostCur;
+            public int MemoryVoltageBoostDef;
+            public int MemoryVoltageBoostMin;
+            public int MemoryVoltageBoostMax;
+            public int PowerLimitCur;
+            public int PowerLimitDef;
+            public int PowerLimitMin;
+            public int PowerLimitMax;
+            public int FanFlagsCur;//0-none, 1-auto
+            public int FanSpeedCur;
+            public int FanSpeedDef;
+            public int FanSpeedMin;
+            public int FanSpeedMax;
+            public int ThermalLimitCur;
+            public int ThermalLimitDef;
+            public int ThermalLimitMin;
+            public int ThermalLimitMax;
+
+        }
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string className, string windowTitle);
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
+        [DllImport("user32.dll")]
+        private static extern int SetForegroundWindow(IntPtr hwnd);
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetWindowPlacement(IntPtr hWnd, ref Windowplacement lpwndpl);
         private enum ShowWindowEnum
         {
             Hide = 0,
@@ -29,9 +74,19 @@ namespace NiceHashMiner.Devices
             Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
             Restore = 9, ShowDefault = 10, ForceMinimized = 11
         };
+        private struct Windowplacement
+        {
+            public int length;
+            public int flags;
+            public int showCmd;
+            public System.Drawing.Point ptMinPosition;
+            public System.Drawing.Point ptMaxPosition;
+            public System.Drawing.Rectangle rcNormalPosition;
+        }
 
         public static ControlMemory macm;
         public static HardwareMonitor mahm;
+        public static bool Initialized = false;
 
         public static bool MSIAfterburnerCheckPath()
         {
@@ -40,12 +95,93 @@ namespace NiceHashMiner.Devices
             return false;
         }
 
+        public static bool CheckMSIAfterburner()
+        {
+            bool running = false;
+            int countab = 0;
+            do
+            {
+                Thread.Sleep(100);
+                countab++;
+                if (Process.GetProcessesByName("MSIAfterburner").Any())
+                {
+                    running = true;
+                    break;
+                }
+            } while (countab < 20); //2 sec
+            if (!running)
+            {
+                Helpers.ConsolePrint("CheckMSIAfterburner", "MSIAfterburner not running");
+                MSIAfterburnerRUN();
+                MSIAfterburnerInit();
+            }
+            try
+            {
+                if (macm != null) macm.ReloadHeader();
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("CheckMSIAfterburner", ex.Message);
+                if (ex.InnerException != null)
+                    Helpers.ConsolePrint("CheckMSIAfterburner", ex.InnerException.Message);
+
+                //break;
+                if (ex.Message.Contains("not support"))
+                {
+
+                }
+
+                if (ex.Message.Contains("not connect"))
+                {
+                    if (macm != null) macm.Disconnect();
+                    if (mahm != null) mahm.Disconnect();
+                    Initialized = false;
+                    MSIAfterburner.macm = null;
+                    MSIAfterburner.mahm = null;
+                    Helpers.ConsolePrint("CheckMSIAfterburner", "Killing old instance AB and run again");
+                    MSIAfterburnerKill();
+                    Thread.Sleep(10);
+                    MSIAfterburnerRUN(true);
+                    Thread.Sleep(100);
+                }
+
+                if (ex.Message.Contains("invalid"))
+                {
+                    if (macm != null) macm.Disconnect();
+                    if (mahm != null) mahm.Disconnect();
+                    Initialized = false;
+                    MSIAfterburner.macm = null;
+                    MSIAfterburner.mahm = null;
+                    Helpers.ConsolePrint("CheckMSIAfterburner", "Killing old instance AB and run again");
+                    MSIAfterburnerKill();
+                    Thread.Sleep(10);
+                    MSIAfterburnerRUN(true);
+                    Thread.Sleep(100);
+                }
+                if (ex.Message.Contains("dead"))
+                {
+                    if (macm != null) macm.Disconnect();
+                    if (mahm != null) mahm.Disconnect();
+                    Initialized = false;
+                    MSIAfterburner.macm = null;
+                    MSIAfterburner.mahm = null;
+                    Helpers.ConsolePrint("CheckMSIAfterburner", "Killing old instance AB and run again");
+                    MSIAfterburnerKill();
+                    Thread.Sleep(10);
+                    MSIAfterburnerRUN(true);
+                    Thread.Sleep(100);
+                }
+            }
+
+
+            return true;
+        }
         public static bool MSIAfterburnerRUN(bool forceRun = false)
         {
             string msiabpath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\MSI Afterburner\\MSIAfterburner.exe";
+            string msiabdir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\MSI Afterburner\\";
             if (ConfigManager.GeneralConfig.ABEnableOverclock || forceRun)
             {
-                if (ConfigManager.GeneralConfig.AB_ForceRun && !Process.GetProcessesByName("MSIAfterburner").Any())
+                //if (ConfigManager.GeneralConfig.AB_ForceRun && !Process.GetProcessesByName("MSIAfterburner").Any())
                 {
                     if (!MSIAfterburnerCheckPath())
                     {
@@ -60,230 +196,506 @@ namespace NiceHashMiner.Devices
                     Process P = new Process();
                     try
                     {
+                        
                         P.StartInfo.FileName = msiabpath;
-                        P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                        P.StartInfo.UseShellExecute = false;
+
+                        P.StartInfo.Verb = "runas";
+                        P.StartInfo.UseShellExecute = true;
+                       // P.Exited += new EventHandler(MSIABprocessExited);
+                        //P.EnableRaisingEvents = true;
+
                         P.Start();
-                        /*
-                        do
-                        {
-                            Thread.Sleep(100);
-                            if (P.Responding)
-                            {
-                                break;
-                            }
-                        } while (true);
-                        */
+
                         int repeats = 0;
+                        IntPtr wdwIntPtr = new IntPtr();
+
                         do
                         {
-                            Helpers.ConsolePrint("MSI AB", "Check MSI Afterburner instance. Try " + repeats.ToString());
+                            Helpers.ConsolePrint("MSIAfterburnerRUN", "Check MSI Afterburner instance. Try " + repeats.ToString());
                             if (Process.GetProcessesByName("MSIAfterburner").Any())
                             {
-                                IntPtr wdwIntPtr = FindWindow(null, "MSI Afterburner ");
+                                wdwIntPtr = FindWindow(null, "MSI Afterburner ");
 
                                 if ((int)wdwIntPtr > 1)
                                 {
-                                    Thread.Sleep(3000);//обязательная пауза
+                                    //Thread.Sleep(3000);//обязательная пауза
                                     break;
                                 }
                                 repeats++;
-                                Thread.Sleep(1000);
+
                             }
                             Thread.Sleep(1000);
                         } while (repeats < 30);
-                        
+
+                        repeats = 0;
+                        bool meminit = false;
+                        do
+                        {
+                            Helpers.ConsolePrint("MSIAfterburnerRUN", "Check MSI Afterburner shared memory. Try " + repeats.ToString());
+                            IntPtr handle = MSI.Afterburner.SharedMemory.CheckSharedMemory("MACMSharedMemory", Win32API.FileMapAccess.FileMapAllAccess);
+                            Helpers.ConsolePrint("MSIAfterburnerRUN", "handle: " + handle.ToString());
+                            if (handle != IntPtr.Zero)
+                            {
+                                meminit = true;
+                                Win32API.CloseHandle(handle);
+                                P.Exited += new EventHandler(MSIABprocessExited);
+                                P.EnableRaisingEvents = true;
+                                if (ConfigManager.GeneralConfig.ABMinimize)
+                                {
+                                    //Windowplacement placement = new Windowplacement();
+                                    //GetWindowPlacement(wdwIntPtr, ref placement);
+                                    ShowWindow(wdwIntPtr, ShowWindowEnum.ForceMinimized);
+                                }
+                                Thread.Sleep(3000);//обязательная пауза
+                                break;
+                            }
+                            repeats++;
+                            Thread.Sleep(1000);
+                        } while (repeats < 5);
+
+                        if (!meminit) return false;
 
                     }
                     catch (Exception ex)
                     {
                         Helpers.ConsolePrint("MSI AB error", "Process exists? Exception on run: " + ex.Message);
+                        new Task(() =>
+                        MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
+                        return false;
                     }
                 }
-                if (ConfigManager.GeneralConfig.ABMinimize)
-                {
-                    int repeats = 0;
-                    do
-                    {
-                        repeats++;
-                        Thread.Sleep(100);
-                        if (Process.GetProcessesByName("MSIAfterburner").Any())
-                        {
-                            IntPtr wdwIntPtr = FindWindow(null, "MSI Afterburner ");
 
-                            if ((int)wdwIntPtr < 1) continue;
-
-                            ShowWindow(wdwIntPtr, ShowWindowEnum.ShowMinimized);
-                            break;
-                        }
-                    } while (repeats < 50);
-                }
-               
             }
             return true;
+        }
+
+        private static void MSIABprocessExited(object sender, EventArgs e)
+        {
+            Helpers.ConsolePrint("MSIABprocessExited", "MSI Afterburner exited"); 
+            CheckMSIAfterburner();
         }
 
         public static void MSIAfterburnerKill()
         {
             foreach (var process in Process.GetProcessesByName("MSIAfterburner"))
             {
-                try { process.Kill(); }
+                try { process.CloseMainWindow(); }
                 catch (Exception e) { Helpers.ConsolePrint("MSIAfterburnerKill", e.ToString()); }
             }
+            Initialized = false;
+        }
+        public static void FirstInitFiles()
+        {
+            foreach (var dev in Available.Devices)
+                if (dev.DeviceType != DeviceType.CPU)
+                {
+                    foreach (var alg in dev.GetAlgorithmSettings())
+                    {
+                        string fName = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
+                        if (!File.Exists(fName))
+                        {
+                            SaveDefaultDeviceData(dev.BusID, fName);
+                        }
+                    }
+                }
+            return;
+        }
+        public static void InitTempFiles()
+        {
+            CheckMSIAfterburner();
+            foreach (var dev in Available.Devices)
+                if (dev.DeviceType != DeviceType.CPU)
+                {
+                    foreach (var alg in dev.GetAlgorithmSettings())
+                    {
+                        try
+                        {
+                            string fNameSrc = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
+                            string fNameDst = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".tmp";
+                            if (!File.Exists(fNameSrc))
+                            {
+                                SaveDefaultDeviceData(dev.BusID, fNameSrc);
+                            }
+                            if (File.Exists(fNameDst)) File.Delete(fNameDst);
+
+                            File.Copy(fNameSrc, fNameDst);
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("InitTempFiles", "Error: " + ex.ToString());
+                        }
+                    }
+                }
+            return;
+        }
+        public static void CopyFromTempFiles()
+        {
+            CheckMSIAfterburner();
+            foreach (var dev in Available.Devices)
+                if (dev.DeviceType != DeviceType.CPU)
+                {
+                    foreach (var alg in dev.GetAlgorithmSettings())
+                    {
+                        try
+                        {
+                            string fNameDst = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
+                            string fNameSrc = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".tmp";
+                            if (!File.Exists(fNameSrc))
+                            {
+                                SaveDefaultDeviceData(dev.BusID, fNameSrc);
+                            }
+                            if (File.Exists(fNameDst)) File.Delete(fNameDst);
+
+                            File.Copy(fNameSrc, fNameDst);
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("CopyFromTempFiles", "Error: " + ex.ToString());
+                        }
+                    }
+                }
+            return;
+        }
+        public static ControlMemoryGpuEntry GetDeviceData(int _busID)
+        {
+            CheckMSIAfterburner();
+            if (!Initialized) return new ControlMemoryGpuEntry();
+            bool found = false;
+            macm.ReloadHeader();
+            mahm.ReloadHeader();
+            var devData = new ControlMemoryGpuEntry();
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    macm.ReloadGpuEntry(i);
+                    mahm.ReloadGpuEntry((uint)i);
+                    devData = macm.GpuEntries[i];
+                    found = true;
+                    break;
+                } 
+            }
+            if (!found)
+            {
+                if (_busID != -1)
+                {
+                    Helpers.ConsolePrint("MSIAfterburner GetDeviceData", "Error! Device with busID " + _busID.ToString() + " not found!");
+                }
+            }
+            return devData;
+        }
+        public static void ResetToDefaults(int _busID, bool commit)
+        {
+            CheckMSIAfterburner();
+            if (!Initialized) return;
+            macm.ReloadAll();
+            mahm.ReloadAll();
+            int index = -1;
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    index = macm.GpuEntries[i].Index;
+                    Helpers.ConsolePrint("ResetToDefaults", "MSIAfterburner.ResetToDefaults: " + busID.ToString());
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK_BOOST))
+                    {
+                        macm.GpuEntries[i].CoreClockBoostCur = macm.GpuEntries[i].CoreClockBoostDef;//nvidia
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK))
+                    {
+                        macm.GpuEntries[i].CoreClockCur = macm.GpuEntries[i].CoreClockDef;//amd
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE_BOOST))
+                    {
+                        macm.GpuEntries[i].CoreVoltageBoostCur = macm.GpuEntries[i].CoreVoltageBoostDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE))
+                    {
+                        macm.GpuEntries[i].CoreVoltageCur = macm.GpuEntries[i].CoreVoltageDef;
+                    }
+
+                    macm.GpuEntries[i].FanFlagsCur = macm.GpuEntries[i].FanFlagsDef;
+                    //macm.GpuEntries[i].FanSpeedCur = macm.GpuEntries[i].FanSpeedDef;//auto
+
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
+                    {
+                        macm.GpuEntries[i].Flags = macm.GpuEntries[i].Flags - (int)MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED;
+                    }
+
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK_BOOST))
+                    {
+                        macm.GpuEntries[i].MemoryClockBoostCur = macm.GpuEntries[i].MemoryClockBoostDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK))
+                    {
+                        macm.GpuEntries[i].MemoryClockCur = macm.GpuEntries[i].MemoryClockDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE_BOOST))
+                    {
+                        macm.GpuEntries[i].MemoryVoltageBoostCur = macm.GpuEntries[i].MemoryVoltageBoostDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE))
+                    {
+                        macm.GpuEntries[i].MemoryVoltageCur = macm.GpuEntries[i].MemoryVoltageDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT))
+                    {
+                        macm.GpuEntries[i].PowerLimitCur = macm.GpuEntries[i].PowerLimitDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.SHADER_CLOCK))
+                    {
+                        macm.GpuEntries[i].ShaderClockCur = macm.GpuEntries[i].ShaderClockDef;//nvidia not suppored
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_LIMIT))
+                    {
+                        macm.GpuEntries[i].ThermalLimitCur = macm.GpuEntries[i].ThermalLimitDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_PRIORITIZE))
+                    {
+                        //macm.GpuEntries[i].thermalPrioritizeCur = macm.GpuEntries[i].thermalPrioritizeDef;
+                    }
+                    break;
+                }
+            }
+            if (commit)
+            {
+                //macm.CommitChanges();
+            }
+            if (index == -1)
+            {
+                if (_busID != -1)
+                {
+                    Helpers.ConsolePrint("MSIAfterburner ResetToDefaults", "Error! Device with busID " + _busID.ToString() + " not found!");
+                }
+                return;
+            }
+        }
+        public static void SaveDefaultDeviceData(int _busID, string FileName)
+        {
+            CheckMSIAfterburner();
+            if (!Initialized) return;
+            int index = -1;
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    index = macm.GpuEntries[i].Index;
+                    macm.ReloadGpuEntry(index);
+                    mahm.ReloadGpuEntry((uint)index);
+                    break;
+                }
+            }
+            if (index == -1)
+            {
+                if (_busID != -1)
+                {
+                    Helpers.ConsolePrint("MSIAfterburner SaveDefaultDeviceData", "Error! Device with busID " + _busID.ToString() + " not found!");
+                }
+                return;
+            }
+            ResetToDefaults(_busID, false);
+
+            try
+            {
+                byte[] buffer = RawSerialize(macm.GpuEntries[index], (int)macm.Header.GpuEntrySize);
+                File.WriteAllBytes(FileName, buffer);
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner SaveDefaultDeviceData", "Error: " + ex.ToString());
+            }
+        }
+        public static void SaveDeviceData(ControlMemoryGpuEntry abdata, string FileName)
+        {
+            CheckMSIAfterburner();
+            if (!Initialized) return;
+
+            try
+            {
+                byte[] buffer = RawSerialize(abdata, (int)macm.Header.GpuEntrySize);
+                File.WriteAllBytes(FileName, buffer);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner SaveDeviceData", "Error: " + ex.ToString());
+            }
+        }
+        public static void ApplyFromFile(int _busID, string FileName)
+        {
+            ControlMemoryGpuEntry dev = ReadFromFile(_busID, FileName);
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    macm.GpuEntries[i] = dev;
+                }
+            }
+            //macm.CommitChanges();
+        }
+        public static void CommitChanges()
+        {
+            macm.CommitChanges();
+        }
+        public static void CommitChanges(int index)
+        {
+            macm.CommitChanges(index);
+        }
+        public static ControlMemoryGpuEntry ReadFromFile(int _busID, string FileName)
+        {
+            //CheckMSIAfterburner();
+            if (!Initialized) return new ControlMemoryGpuEntry();
+
+            ControlMemoryGpuEntry dev = new ControlMemoryGpuEntry(); 
+            int index = -1;
+            try
+            {
+                for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+                {
+                    int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                    if (busID == _busID)
+                    {
+                        index = macm.GpuEntries[i].Index;
+                        if (File.Exists(FileName))
+                        {
+                            byte[] buffer = File.ReadAllBytes(FileName);
+                            Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Load from file: " + FileName);
+                            dev = RawDeserialize(buffer, macm.GpuEntries[i]);
+                            if (dev == null)
+                            {
+                                Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Error buffer size mismath?");
+                                break;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        } else
+                        {
+                            Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Error. File not found: " + FileName);
+                            return new ControlMemoryGpuEntry();
+                        }
+                    }
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Error: " + ex.ToString());
+            }
+            if (index == -1)
+            {
+                if (_busID != -1)//cpu
+                {
+                    Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Error! Device with busID " + _busID.ToString() + " not found!");
+                }
+                return new ControlMemoryGpuEntry();
+            }
+            return dev;
+        }
+        public static byte[] RawSerialize(ControlMemoryGpuEntry obj, int length)
+        {
+            IntPtr num = Marshal.AllocHGlobal(length);
+            Marshal.StructureToPtr(obj, num, false);
+            byte[] destination = new byte[length];
+            Marshal.Copy(num, destination, 0, length);
+            Marshal.FreeHGlobal(num);
+            return destination;
+        }
+
+        internal static ControlMemoryGpuEntry RawDeserialize(byte[] rawdatas, ControlMemoryGpuEntry anytype)
+        {
+            int num1 = Marshal.SizeOf(anytype) - 8;
+            if (num1 > rawdatas.Length)
+            {
+                Helpers.ConsolePrint("RawDeserialize", "Error! Buffer size mismath: " + num1.ToString() + "!=" + rawdatas.Length.ToString());
+                return (ControlMemoryGpuEntry)null;
+            }
+            IntPtr num2 = Marshal.AllocHGlobal(num1);
+            Marshal.Copy(rawdatas, 0, num2, num1);
+            ControlMemoryGpuEntry structure = (ControlMemoryGpuEntry)Marshal.PtrToStructure(num2, anytype.GetType());
+            Marshal.FreeHGlobal(num2);
+            return (ControlMemoryGpuEntry)structure;
         }
         public static bool MSIAfterburnerInit()
         {
-            string _ex = "";
             int repeatsab = 0;
             do
             {
                 try
                 {
-                    Helpers.ConsolePrint("*************", "MSIAfterburnerInit 1");
+                    if (macm != null) macm.Disconnect();
+                    if (mahm != null) mahm.Disconnect();
                     macm = new ControlMemory();
                     macm.Connect();
-                    // macm.Reinitialize();
-                    //macm.ReloadAll();
-                    Helpers.ConsolePrint("*************", "MSIAfterburnerInit 2");
                     mahm = new HardwareMonitor();
                     mahm.Connect();
-                    //mahm.ReloadAll();
-                    Helpers.ConsolePrint("*************", "MSIAfterburnerInit 3");
-
-                    Helpers.ConsolePrint("*************", "***** MSI AFTERTERBURNER CONTROL HEADER *****");
-                    Helpers.ConsolePrint("*************", macm.Header.ToString().Replace(";", "\r\n"));
-
-                    // print out current MACM GPU Entry values
+                    Initialized = true;
+                    
                     for (int i = 0; i < macm.Header.GpuEntryCount; i++)
                     {
-                        macm.GpuEntries[0].FanFlagsCur = MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None;
-                        macm.GpuEntries[0].FanSpeedCur = 80;
-                        //macm.GpuEntries[i].Flags = MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK; //2147630216
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "Flags: " + macm.GpuEntries[i].Flags.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "Header.HeaderSize: " + macm.Header.HeaderSize.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "Header.GpuEntrySize: " + macm.Header.GpuEntrySize.ToString());
-
-                        macm.GpuEntries[i].CoreClockBoostCur = -234000  - i * 1000;
-                        macm.CommitChanges(i);
-                        //System.Threading.Thread.Sleep(2000);
-                        //macm.ReloadAll();
-                        Helpers.ConsolePrint("MSIAfterburnerInit", macm.GpuEntries[i].ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "Index: " + macm.GpuEntries[i].Index.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuId: " + mahm.GpuEntries[i].GpuId.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "Index: " + mahm.GpuEntries[i].Index.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "Device: " + mahm.GpuEntries[i].Device.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "IsMaster: " + macm.GpuEntries[i].IsMaster.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostCur: " + macm.GpuEntries[i].AuxVoltageBoostCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostDef: " + macm.GpuEntries[i].AuxVoltageBoostDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostMax: " + macm.GpuEntries[i].AuxVoltageBoostMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageBoostMin: " + macm.GpuEntries[i].AuxVoltageBoostMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageCur: " + macm.GpuEntries[i].AuxVoltageCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageDef: " + macm.GpuEntries[i].AuxVoltageDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageMax: " + macm.GpuEntries[i].AuxVoltageMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "AuxVoltageMin: " + macm.GpuEntries[i].AuxVoltageMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostCur: " + macm.GpuEntries[i].CoreClockBoostCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostDef: " + macm.GpuEntries[i].CoreClockBoostDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostMax: " + macm.GpuEntries[i].CoreClockBoostMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockBoostMin: " + macm.GpuEntries[i].CoreClockBoostMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockCur: " + macm.GpuEntries[i].CoreClockCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockDef: " + macm.GpuEntries[i].CoreClockDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockMax: " + macm.GpuEntries[i].CoreClockMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreClockMin: " + macm.GpuEntries[i].CoreClockMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostCur: " + macm.GpuEntries[i].CoreVoltageBoostCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostDef: " + macm.GpuEntries[i].CoreVoltageBoostDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostMax: " + macm.GpuEntries[i].CoreVoltageBoostMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageBoostMin: " + macm.GpuEntries[i].CoreVoltageBoostMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageCur: " + macm.GpuEntries[i].CoreVoltageCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageDef: " + macm.GpuEntries[i].CoreVoltageDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageMax: " + macm.GpuEntries[i].CoreVoltageMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "CoreVoltageMin: " + macm.GpuEntries[i].CoreVoltageMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanFlagsCur: " + macm.GpuEntries[i].FanFlagsCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanFlagsDef: " + macm.GpuEntries[i].FanFlagsDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedCur: " + macm.GpuEntries[i].FanSpeedCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedDef: " + macm.GpuEntries[i].FanSpeedDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedMax: " + macm.GpuEntries[i].FanSpeedMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "FanSpeedMin: " + macm.GpuEntries[i].FanSpeedMin.ToString());
-
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostCur: " + macm.GpuEntries[i].MemoryClockBoostCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostDef: " + macm.GpuEntries[i].MemoryClockBoostDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostMax: " + macm.GpuEntries[i].MemoryClockBoostMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockBoostMin: " + macm.GpuEntries[i].MemoryClockBoostMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockCur: " + macm.GpuEntries[i].MemoryClockCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockDef: " + macm.GpuEntries[i].MemoryClockDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockMax: " + macm.GpuEntries[i].MemoryClockMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryClockMin: " + macm.GpuEntries[i].MemoryClockMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostCur: " + macm.GpuEntries[i].MemoryVoltageBoostCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostDef: " + macm.GpuEntries[i].MemoryVoltageBoostDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostMax: " + macm.GpuEntries[i].MemoryVoltageBoostMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageBoostMin: " + macm.GpuEntries[i].MemoryVoltageBoostMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageCur: " + macm.GpuEntries[i].MemoryVoltageCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageDef: " + macm.GpuEntries[i].MemoryVoltageDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageMax: " + macm.GpuEntries[i].MemoryVoltageMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "MemoryVoltageMin: " + macm.GpuEntries[i].MemoryVoltageMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitCur: " + macm.GpuEntries[i].PowerLimitCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitDef: " + macm.GpuEntries[i].PowerLimitDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitMax: " + macm.GpuEntries[i].PowerLimitMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "PowerLimitMin: " + macm.GpuEntries[i].PowerLimitMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockCur: " + macm.GpuEntries[i].ShaderClockCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockDef: " + macm.GpuEntries[i].ShaderClockDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockMax: " + macm.GpuEntries[i].ShaderClockMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ShaderClockMin: " + macm.GpuEntries[i].ShaderClockMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitCur: " + macm.GpuEntries[i].ThermalLimitCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitDef: " + macm.GpuEntries[i].ThermalLimitDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitMax: " + macm.GpuEntries[i].ThermalLimitMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "ThermalLimitMin: " + macm.GpuEntries[i].ThermalLimitMin.ToString());
-
-
+                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
+                        {
+                            Helpers.ConsolePrint("MSIAfterburnerInit", "GPU"+i.ToString() + " Curve enabled");
+                        }
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.GpuId " + macm.GpuEntries[i].GpuId);
                     }
-                    //macm.GpuEntries[0].CoreClockCur = 1400;
-                    //macm.CommitChanges();
-                    /*
-                    for (int i = 0; i < macm.Header.GpuEntryCount; i++)
-                    {
-                        Helpers.ConsolePrint("macm: " + i.ToString(), macm.GpuEntries[i].ToString().Replace(";", "\r\n"));
-                    }
-                    //macm.GpuEntries[0].CoreClockCur = 1400;
-                    //macm.CommitChanges();
-                    // print out current Entry values
-                    for (int i = 0; i < mahm.Header.GpuEntryCount; i++)
-                    {
-                        Helpers.ConsolePrint("mahm: " + i.ToString(), "gpuid=" + mahm.GpuEntries[i].GpuId.ToString() +
-                            " " + mahm.Entries[i].ToString().Replace(";", "\r\n"));
-
-                    }
-                    */
+                    
+                    FirstInitFiles();
                     break;
+                    
                 }
                 catch (Exception ex)
                 {
-                    //_ex = ex.Message;
-                    //Connected to invalid MSI Afterburner shared memory.
-                    //Could not connect to MSI Afterburner 2.1 or later.
-
-                    //GPU 0 does not support changing the core voltage.
-                    Helpers.ConsolePrint("MSI AB error:", ex.Message);
+                    Helpers.ConsolePrint("MSIAfterburnerInit", ex.Message);
                     if (ex.InnerException != null)
-                        Helpers.ConsolePrint("MSI AB error message", ex.InnerException.Message);
+                        Helpers.ConsolePrint("MSIAfterburnerInitMessage", ex.InnerException.Message);
 
-                    //break;
-                    if (macm != null) macm.Disconnect();
-                    if (mahm != null) mahm.Disconnect();
-
-                    MSIAfterburner.macm = null;
-                    MSIAfterburner.mahm = null;
+                    if (ex.Message.Contains("not support"))
+                    {
+                        break;
+                    }
 
                     if (ex.Message.Contains("not connect"))
                     {
-                        Thread.Sleep(2000);
+                        if (macm != null) macm.Disconnect();
+                        if (mahm != null) mahm.Disconnect();
+                        Initialized = false;
+                        MSIAfterburner.macm = null;
+                        MSIAfterburner.mahm = null;
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Killing old instance AB and run again");
+                        MSIAfterburnerKill();
+                        Thread.Sleep(10);
+                        MSIAfterburnerRUN(true);
+                        Thread.Sleep(100);
                     }
 
                     if (ex.Message.Contains("invalid"))
                     {
-                        Helpers.ConsolePrint("MSI AB", "Killing old instance AB and run again");
+                        if (macm != null) macm.Disconnect();
+                        if (mahm != null) mahm.Disconnect();
+                        Initialized = false;
+                        MSIAfterburner.macm = null;
+                        MSIAfterburner.mahm = null;
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Killing old instance AB and run again");
                         MSIAfterburnerKill();
-                        Thread.Sleep(1000);
+                        Thread.Sleep(10);
                         MSIAfterburnerRUN(true);
-                        Thread.Sleep(1000);
+                        Thread.Sleep(100);
+                    }
+                    if (ex.Message.Contains("dead"))
+                    {
+                        if (macm != null) macm.Disconnect();
+                        if (mahm != null) mahm.Disconnect();
+                        Initialized = false;
+                        MSIAfterburner.macm = null;
+                        MSIAfterburner.mahm = null;
+                        Helpers.ConsolePrint("MSIAfterburnerInit", "Killing old instance AB and run again");
+                        MSIAfterburnerKill();
+                        Thread.Sleep(10);
+                        MSIAfterburnerRUN(true);
+                        Thread.Sleep(100);
                     }
                 }
                 Thread.Sleep(1000);
@@ -292,7 +704,10 @@ namespace NiceHashMiner.Devices
 
             if (repeatsab >= 5)
             {
-                Helpers.ConsolePrint("MSI AB error:", "Fatal error");
+                Helpers.ConsolePrint("MSIAfterburnerInit", "Fatal error");
+                new Task(() =>
+                        MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                 return false;
             }
             return true;

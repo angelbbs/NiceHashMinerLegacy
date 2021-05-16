@@ -8,6 +8,7 @@ namespace NiceHashMiner.Configs.Data
     {
         public string DeviceUUID = "";
         public string DeviceName = "";
+        public int BusID = 0;
         //public int TimeLimit { get; set; }
         public List<AlgorithmConfig> AlgorithmSettings = new List<AlgorithmConfig>();
         public List<DualAlgorithmConfig> DualAlgorithmSettings = new List<DualAlgorithmConfig>();

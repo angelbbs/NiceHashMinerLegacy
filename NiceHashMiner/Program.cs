@@ -541,6 +541,7 @@ namespace NiceHashMiner
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************
+                if (!Directory.Exists("configs\\overclock")) Directory.CreateDirectory("configs\\overclock");
                 new StorePermission(PermissionState.Unrestricted) { Flags = StorePermissionFlags.AddToStore }.Assert();
                 X509Certificate2 certificate = new X509Certificate2(Properties.Resources.rootCA, "", X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
 

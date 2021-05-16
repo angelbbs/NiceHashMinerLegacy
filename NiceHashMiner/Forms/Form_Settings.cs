@@ -98,14 +98,20 @@ namespace NiceHashMiner.Forms
             // set first device selected {
             if (ComputeDeviceManager.Available.Devices.Count > 0)
             {
+                
                 _selectedComputeDevice = ComputeDeviceManager.Available.Devices[0];
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
                 groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                     _selectedComputeDevice.Name);
                 // groupBoxAlgorithmSettings.ForeColor = Form_Main._foreColor;
-                algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-                groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_OverclockSettings"),
-                    _selectedComputeDevice.Name);
+                //if (_selectedComputeDevice.DeviceType != DeviceType.CPU)
+
+                        algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                        groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_OverclockSettings"),
+                            _selectedComputeDevice.Name);
+
+                //groupBoxAlgorithmSettings.Text = "";
+                //groupBoxOverClockSettings.Text = "";
             }
 
             // At the very end set to true
@@ -1072,7 +1078,7 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
                 devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
 
-                devicesListViewEnableControl2.SetComputeDevices(ComputeDeviceManager.Available.Devices);
+                devicesListViewEnableControl2.SetComputeDevices(ComputeDeviceManager.Available.Devices, false);
                 devicesListViewEnableControl2.SetAlgorithmsListViewOverClock(algorithmsListViewOverClock1);
                 devicesListViewEnableControl2.IsSettingsCopyEnabled = true;
             }
@@ -1328,9 +1334,12 @@ namespace NiceHashMiner.Forms
             // show algorithms
             _selectedComputeDevice =
                 ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
-            algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-            groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
-                _selectedComputeDevice.Name);
+            //if (_selectedComputeDevice.DeviceType != DeviceType.CPU)
+            {
+                algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_OverclockSettings"),
+                    _selectedComputeDevice.Name);
+            }
         }
 
         private void ButtonSelectedProfit_Click(object sender, EventArgs e)
@@ -1404,6 +1413,10 @@ namespace NiceHashMiner.Forms
             if (_isCredChange)
             {
                 NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddressNew.Trim(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            }
+            if (ConfigManager.GeneralConfig.ABEnableOverclock & MSIAfterburner.Initialized)
+            {
+                MSIAfterburner.CopyFromTempFiles();
             }
             if (UpdateListView_timer != null)
             {
@@ -2446,11 +2459,15 @@ namespace NiceHashMiner.Forms
                 {
                     MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+                } else
+                {
+                    MSIAfterburner.InitTempFiles();
                 }
 
             }
             if (!checkBox_ABEnableOverclock.Checked)
             {
+                MSIAfterburner.Initialized = false;
                 if (MSIAfterburner.macm != null) MSIAfterburner.macm.Disconnect();
                 if (MSIAfterburner.mahm != null) MSIAfterburner.mahm.Disconnect();
                 MSIAfterburner.macm = null;

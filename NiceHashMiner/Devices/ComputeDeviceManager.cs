@@ -43,6 +43,7 @@ namespace NiceHashMiner.Devices
         }
         #endregion JSON settings
         private static int CUDAQueryCount = 1;
+        public static int CudaDevicesCountFromNVMLHost = 0;
         private static string nvmlRootPath = "";
 
         //костыль, когда у nvidia порядок карт deviceID не совпадает с порядком busID (1230 - 0123)
@@ -221,49 +222,48 @@ namespace NiceHashMiner.Devices
             }
             public static IMessageNotifier MessageNotifier { get; private set; }
 
-            public static bool CheckVideoControllersCountMismath()
+            public static int CheckVideoControllersCountMismath()
             {
-                // this function checks if count of CUDA devices is same as it was on application start, reason for that is
-                // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
-                // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
-
-                /* commented because when GPU is "lost" windows still see all of them
-                // first check windows video controlers
-                List<VideoControllerData> currentAvaliableVideoControllers = new List<VideoControllerData>();
-                WindowsDisplayAdapters.QueryVideoControllers(currentAvaliableVideoControllers, false);
-
-
-                int GPUsOld = AvaliableVideoControllers.Count;
-                int GPUsNew = currentAvaliableVideoControllers.Count;
-
-                Helpers.ConsolePrint("ComputeDeviceManager.CheckCount", "Video controlers GPUsOld: " + GPUsOld.ToString() + " GPUsNew:" + GPUsNew.ToString());
-                */
-
-                // check CUDA devices
-                //var currentCudaDevices = new List<CudaDevice>();
-                var currentCudaDevices = new CudaDevicesList();
-                //  if (!Nvidia.IsSkipNvidia())
-                Nvidia.QueryCudaDevices(ref currentCudaDevices);
-                var currentCudaDevices2 = new CudaDevicesList();
+                int ret = -1;
+                Helpers.ConsolePrint("ComputeDeviceManager.CheckCount", "1");
+                if (!WindowsDisplayAdapters.HasNvidiaVideoController()) return ret;
 
                 var gpusOld = _cudaDevices.CudaDevices.Count;
-                var gpusNew = Math.Max(currentCudaDevices.CudaDevices.Count, currentCudaDevices2.CudaDevices.Count);
+                var gpusNew = CudaDevicesCountFromNVMLHost;
 
                 Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
                     "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
+
                 if (gpusOld == gpusNew)
                 {
                     CUDAQueryCount = 0;
-                    return false;
-                } else
+                    return ret;
+                }
+                else
                 {
+
+                    foreach (var dev in _cudaDevices.CudaDevices)
+                    {
+                        int devn = (int)dev.DeviceID;
+                        nvmlDevice _nvmlDevice = new nvmlDevice();
+                        foreach (var devNVML in Form_Main.gpuList)
+                        {
+                            var retNVML = NvmlNativeMethods.nvmlDeviceGetHandleByIndex((uint)devn, ref _nvmlDevice);
+                            if (retNVML != nvmlReturn.Success)
+                            {
+                                ret = devn;
+                                Helpers.ConsolePrint("ComputeDeviceManager.CheckCount", "GPU#" + devn.ToString() + " error");
+                                break;
+                            }
+                        }
+                    }
                     CUDAQueryCount++;
                 }
                 if (CUDAQueryCount >= 2)
                 {
-                    return true;
+                    return ret;
                 }
-                return (gpusNew < gpusOld);
+                return -1;
             }
             private static bool TryAddNvmlToEnvPath()
             {

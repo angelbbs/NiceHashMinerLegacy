@@ -527,6 +527,7 @@
 "FormSettings_AB_Minimize": "Minimize MSI Afterburner",
 "FormSettings_AB_Error": "MSI Afterburner error. Overclock don't working!",
 "FormSettings_AB_FileNotFound": "MSI Afterburner error.\r\nFile {0} not found.\r\nPlease install MSI Afterburner",
+"FormSettings_AB_ValueWarning": "Value must be between {0} and {1}",
 "FormSettings_By_profitability_of_all_devices": "By profitability of all devices",
 "Form_Settings_buttonLicence": "View licence"
     }

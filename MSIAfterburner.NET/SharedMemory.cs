@@ -1,17 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MSI.Afterburner
 {
-    internal sealed class SharedMemory : IDisposable
+    public sealed class SharedMemory : IDisposable
     {
         private IntPtr hMMF = IntPtr.Zero;
         public uint AllocationGranularity;
         private BinaryFormatter Formatter = new BinaryFormatter();
+        public const int MAX_PATH = 260;
+        public const int MACM_SHARED_MEMORY_VF_CURVE_POINTS_MAX = 80;
+        public const int MACM_SHARED_MEMORY_VF_CURVE_TUPLES_MAX = 70;
+        public const Int32 INVALID_HANDLE_VALUE = -1;
+
+        public static IntPtr CheckSharedMemory(string name, Win32API.FileMapAccess accessLevel)
+        {
+            IntPtr hm = Win32API.OpenFileMapping(accessLevel, false, name);
+            Console.WriteLine("hm: " + hm.ToString());
+            //Win32API.CloseHandle(hm);
+            return hm;
+        }
 
         internal SharedMemory(string name, Win32API.FileMapAccess accessLevel)
         {
@@ -86,8 +100,34 @@ namespace MSI.Afterburner
                     Win32API.UnmapViewOfFile(lpBaseAddress);
             }
         }
+        public unsafe int Read(byte[] buffer, int bytesToRead, long offset)
+        {
+            IntPtr lpBaseAddress = IntPtr.Zero;
+            try
+            {
+                long ddFileOffset = offset / (long)this.AllocationGranularity * (long)this.AllocationGranularity;
+                long len = (long)bytesToRead;
+                lpBaseAddress = Win32API.MapViewOfFile(this.hMMF, Win32API.FileMapAccess.FileMapRead, ddFileOffset, (int)offset + (int)len);
+                if (lpBaseAddress == IntPtr.Zero) throw new Win32Exception();
 
-        public unsafe void Read(long offset, object obj, int size)
+                long num1 = offset % (long)this.AllocationGranularity + (long)this.AllocationGranularity;
+                long num2 = offset - ddFileOffset;
+                IntPtr ptr = !(lpBaseAddress == IntPtr.Zero) ? new IntPtr(lpBaseAddress.ToInt64() + offset) : throw new Win32Exception();
+
+                UnmanagedMemoryStream unmanagedMemoryStream = new UnmanagedMemoryStream((byte*)(IntPtr)((Int64)lpBaseAddress.ToPointer() + (Int64)num2), num1, num1, FileAccess.Read);
+                byte[] numArray = new byte[bytesToRead];
+                byte[] buffer1 = buffer;
+                int count = bytesToRead;
+                return unmanagedMemoryStream.Read(buffer1, 0, count);
+            }
+            finally
+            {
+                if (lpBaseAddress != IntPtr.Zero)
+                    Win32API.UnmapViewOfFile(lpBaseAddress);
+            }
+        }
+
+        public unsafe void Write(long offset, object obj, int size)
         {
             IntPtr lpBaseAddress = IntPtr.Zero;
             try
@@ -213,30 +253,7 @@ namespace MSI.Afterburner
             }
         }
 
-        public unsafe int Read(byte[] buffer, int bytesToRead, long offset)
-        {
-            IntPtr lpBaseAddress = IntPtr.Zero;
-            try
-            {
-                long ddFileOffset = offset / (long)this.AllocationGranularity * (long)this.AllocationGranularity;
-                long num1 = offset % (long)this.AllocationGranularity + (long)this.AllocationGranularity;
-                long num2 = offset - ddFileOffset;
-                lpBaseAddress = Win32API.MapViewOfFile(this.hMMF, Win32API.FileMapAccess.FileMapRead, ddFileOffset, (int)num1);
-                if (lpBaseAddress == IntPtr.Zero)
-                    throw new Win32Exception();
-                UnmanagedMemoryStream unmanagedMemoryStream = new UnmanagedMemoryStream((byte*)(IntPtr)((Int64)lpBaseAddress.ToPointer() + (Int64)num2), num1, num1, FileAccess.Read);
-                byte[] numArray = new byte[bytesToRead];
-                byte[] buffer1 = buffer;
-                int count = bytesToRead;
-                return unmanagedMemoryStream.Read(buffer1, 0, count);
-            }
-            finally
-            {
-                if (lpBaseAddress != IntPtr.Zero)
-                    Win32API.UnmapViewOfFile(lpBaseAddress);
-            }
-        }
-
+        
         public long Size(object T)
         {
             MemoryStream memoryStream = new MemoryStream();

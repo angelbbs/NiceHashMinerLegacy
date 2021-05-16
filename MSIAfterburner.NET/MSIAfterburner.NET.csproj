@@ -70,6 +70,10 @@
     <Compile Include="MACM_SHARED_MEMORY_COMMAND.cs" />
     <Compile Include="MACM_SHARED_MEMORY_HEADER.cs" />
     <Compile Include="ControlMemoryHeader.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_POWER_TUPLE_ENTRY.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_THERMAL_TUPLE_ENTRY.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_VF_CURVE.cs" />
+    <Compile Include="MACM_SHARED_MEMORY_VF_POINT_ENTRY.cs" />
     <Compile Include="MAHM_SHARED_MEMORY_ENTRY_FLAG.cs" />
     <Compile Include="MONITORING_SOURCE_ID.cs" />
     <Compile Include="MAHM_SHARED_MEMORY_ENTRY.cs" />

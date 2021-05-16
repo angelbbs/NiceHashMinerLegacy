@@ -86,14 +86,14 @@ namespace MSI.Afterburner
       {
         this.entries[(int) index] = new HardwareMonitorEntry();
         this.loadEntry(index);
-        Console.WriteLine(this.entries[(int) index].ToString());
+        //Console.WriteLine(this.entries[(int) index].ToString());
       }
       this.gpuEntries = new HardwareMonitorGpuEntry[(int) this.header.GpuEntryCount];
       for (uint index = 0; index < this.header.GpuEntryCount; ++index)
       {
         this.gpuEntries[(int) index] = new HardwareMonitorGpuEntry(index);
         this.loadGpuEntry(index);
-        Console.WriteLine(this.gpuEntries[(int) index].ToString());
+        //Console.WriteLine(this.gpuEntries[(int) index].ToString());
       }
     }
 

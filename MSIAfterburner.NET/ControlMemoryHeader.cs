@@ -6,6 +6,7 @@
 
 using MSI.Afterburner.Exceptions;
 using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
@@ -61,17 +62,28 @@ namespace MSI.Afterburner
 
     internal void SetCommandInit() => this.macmHeader.command = MACM_SHARED_MEMORY_COMMAND.INIT;
 
-    internal void Validate()
-    {
-      if (this.GetSignatureText().CompareTo("MACM") != 0)
-      {
-        if (this.Signature == 57005U)
-          throw new SharedMemoryDead();
-        throw new SharedMemoryInvalid();
-      }
-      if (this.macmHeader.version < 131073U)
-        throw new SharedMemoryVersionNotSupported();
-    }
+        internal void Validate()
+        {
+            try
+            {
+                if (this.GetSignatureText().CompareTo("MACM") != 0)
+                {
+                    if (this.Signature == 57005U)
+                    {
+                        throw new SharedMemoryDead();
+                    }
+
+                    throw new SharedMemoryInvalid();
+                }
+                if (this.macmHeader.version < 131073U)
+                {
+                    throw new SharedMemoryVersionNotSupported();
+                }
+            } catch (Exception ex)
+            {
+                throw new SharedMemoryInvalid(ex);
+            }
+        }
 
     public override string ToString()
     {

@@ -441,10 +441,15 @@ namespace NiceHashMiner.Devices
                         }
                         setAlgo.LessThreads = conf.LessThreads;
                         setAlgo.PowerUsage = conf.PowerUsage;
+                        /*
                         setAlgo.gpu_clock = conf.gpu_clock;
                         setAlgo.mem_clock = conf.mem_clock;
                         setAlgo.gpu_voltage = conf.gpu_voltage;
                         setAlgo.power_limit = conf.power_limit;
+                        setAlgo.fan = conf.fan;
+                        setAlgo.fan_flag = conf.fan_flag;
+                        setAlgo.thermal_limit = conf.thermal_limit;
+                        */
                         if (setAlgo is DualAlgorithm dualSA)
                         {
                             dualSA.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
@@ -485,12 +490,14 @@ namespace NiceHashMiner.Devices
             var ret = new DeviceBenchmarkConfig
             {
                 DeviceName = Name,
-                DeviceUUID = Uuid
+                DeviceUUID = Uuid,
+                BusID = BusID
             };
             // init algo settings
             foreach (var algo in AlgorithmSettings)
             {
                 // create/setup
+                
                 var conf = new AlgorithmConfig
                 {
                     Name = algo.AlgorithmStringID,
@@ -502,12 +509,53 @@ namespace NiceHashMiner.Devices
                     Enabled = algo.Enabled,
                     Hidden = algo.Hidden,
                     LessThreads = algo.LessThreads,
-                    PowerUsage =  algo.PowerUsage,
+                    PowerUsage =  algo.PowerUsage
+                    /*
                     gpu_clock = algo.gpu_clock,
                     mem_clock = algo.mem_clock,
                     gpu_voltage = algo.gpu_voltage,
-                    power_limit = algo.power_limit
+                    power_limit = algo.power_limit,
+                    fan = algo.fan,
+                    fan_flag = algo.fan_flag,
+                    thermal_limit = algo.thermal_limit
+                    */
                 };
+                /*
+                var conf = new AlgorithmConfig();
+                conf.Name = algo.AlgorithmStringID;
+                conf.NiceHashID = algo.NiceHashID;
+                conf.MinerBaseType = algo.MinerBaseType;
+                conf.MinerName = algo.MinerName;
+                conf.BenchmarkSpeed = algo.BenchmarkSpeed;
+                conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
+                conf.Enabled = algo.Enabled;
+                conf.Hidden = algo.Hidden;
+                conf.LessThreads = algo.LessThreads;
+                conf.PowerUsage = algo.PowerUsage;
+                conf.gpu_clock = algo.gpu_clock;
+                conf.mem_clock = algo.mem_clock;
+                conf.gpu_voltage = algo.gpu_voltage;
+                conf.power_limit = algo.power_limit;
+                //fan = algo.fan,
+                conf.fan_flag = algo.fan_flag;
+                conf.thermal_limit = algo.thermal_limit;
+                */
+                //Helpers.ConsolePrint("***************", "MSIAfterburner.Initialized?" + MSIAfterburner.Initialized);
+                if (MSIAfterburner.Initialized)
+                {
+                    //Helpers.ConsolePrint("***************", "MSIAfterburner.Initialized");
+                    /*
+                    MSIAfterburner.ABData _abdata = MSIAfterburner.GetDeviceData(BusID);
+                    //Helpers.ConsolePrint("***************", "conf.fan: " + conf.fan.ToString() + " _abdata.FanSpeedMin: " + _abdata.FanSpeedMin.ToString());
+                    if (conf.gpu_clock < _abdata.CoreClockBoostMin || conf.gpu_clock > _abdata.CoreClockBoostMax) conf.gpu_clock = _abdata.CoreClockBoostDef;
+                    if (conf.mem_clock < _abdata.MemoryClockBoostMin || conf.mem_clock > _abdata.MemoryClockBoostMax) conf.mem_clock = _abdata.MemoryClockBoostDef;
+                    if (conf.gpu_voltage < _abdata.CoreVoltageBoostMin || conf.gpu_voltage > _abdata.CoreVoltageBoostMax) conf.gpu_voltage = _abdata.CoreVoltageBoostDef;
+                    if (conf.power_limit < _abdata.PowerLimitMin || conf.power_limit > _abdata.PowerLimitMax) conf.power_limit = _abdata.PowerLimitDef;
+                    if (conf.fan < _abdata.FanSpeedMin || conf.fan > _abdata.FanSpeedMax) algo.fan = _abdata.FanSpeedDef;
+                    if (conf.thermal_limit < _abdata.ThermalLimitMin || conf.thermal_limit > _abdata.ThermalLimitMax) algo.thermal_limit = _abdata.ThermalLimitDef;
+                    */
+                }
+                //Helpers.ConsolePrint("***************", "conf.fan: " + conf.fan.ToString() + " algo.fan: " + algo.fan.ToString());
                 // insert
                 if (!conf.Hidden)
                 {

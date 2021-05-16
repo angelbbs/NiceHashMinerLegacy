@@ -148,7 +148,7 @@ namespace NiceHashMiner.Forms.Components
                 _listItemCheckColorSetter?.LviSetColor(lvi);
             }
         }
-        public void SetComputeDevices(List<ComputeDevice> computeDevices)
+        public void SetComputeDevices(List<ComputeDevice> computeDevices, bool includeCPU = true)
         {
             // to not run callbacks when setting new
             var tmpSaveToGeneralConfig = SaveToGeneralConfig;
@@ -164,6 +164,10 @@ namespace NiceHashMiner.Forms.Components
             // set devices
             foreach (var computeDevice in computeDevices)
             {
+                if (computeDevice.DeviceType == DeviceType.CPU && !includeCPU)
+                {
+                    //continue;
+                }
                 devNum = computeDevice.NameCount; ;
                 devInfo = computeDevice.Name;
 

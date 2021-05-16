@@ -172,7 +172,7 @@ namespace NiceHashMiner.Miners
             }
 
             dynamic resp = JsonConvert.DeserializeObject(ResponseFromSRBMiner);
-
+            //Helpers.ConsolePrint("API ResponseFromSRBMiner:", ResponseFromSRBMiner.ToString());
             try
             {
                 int totals = 0;
@@ -181,7 +181,6 @@ namespace NiceHashMiner.Miners
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                     //var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
                     int devs = sortedMinerPairs.Count;
-
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
                         devs = 0;
@@ -189,14 +188,15 @@ namespace NiceHashMiner.Miners
                         {
                             try
                             {
-                                string token = $"algorithms[0].hashrate.gpu.gpu{devs}";
+                                string token = $"algorithms[0].hashrate.gpu.gpu{mPair.Device.IDByBus}";
                                 var hash = resp.SelectToken(token);
-                                //Helpers.ConsolePrint("API hashrate:", hash.ToString());
-                                mPair.Device.MiningHashrate = hash;
+                                int gpu_hr = (int)Convert.ToInt32(hash, CultureInfo.InvariantCulture.NumberFormat);
+                                //Helpers.ConsolePrint("API hashrate:", gpu_hr.ToString());
+                                mPair.Device.MiningHashrate = gpu_hr;
 
                             } catch (Exception ex)
                             {
-                                //Helpers.ConsolePrint("API Exception:", ex.ToString());
+                                Helpers.ConsolePrint("API Exception:", ex.ToString());
                             }
                             devs++;
                         }

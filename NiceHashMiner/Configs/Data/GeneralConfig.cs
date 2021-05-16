@@ -51,16 +51,19 @@ namespace NiceHashMiner.Configs.Data
         public int ColumnFAN = 56;
         public int ColumnPOWER = 85;
 
-        public int ColumnListALGORITHM = 110;
+        public int ColumnListALGORITHM = 106;
         public int ColumnListMINER = 82;
         public int ColumnListSPEED = 152;
         public int ColumnListPOWER = 88;
         public int ColumnListRATIO = 90;
         public int ColumnListRATE = 148;
-        public int ColumnListGPU_clock = 100;
-        public int ColumnListMem_clock = 100;
-        public int ColumnListGPU_voltage = 100;
-        public int ColumnListPowerLimit = 100;
+        public int ColumnListGPU_clock = 64;
+        public int ColumnListMem_clock = 68;
+        public int ColumnListGPU_voltage = 74;
+        public int ColumnListMem_voltage = 74;
+        public int ColumnListPowerLimit = 66;
+        public int ColumnListFan = 44;
+        public int ColumnListThermalLimit = 40;
         public bool ColumnSort = false;
         public int ColumnListSort = 1;
 
@@ -281,16 +284,19 @@ namespace NiceHashMiner.Configs.Data
             ColumnFAN = 56;
             ColumnPOWER = 85;
 
-            ColumnListALGORITHM = 110;
+            ColumnListALGORITHM = 106;
             ColumnListMINER = 82;
             ColumnListSPEED = 152;
             ColumnListPOWER = 88;
             ColumnListRATIO = 90;
             ColumnListRATE = 148;
-            ColumnListGPU_clock = 100;
-            ColumnListMem_clock = 100;
-            ColumnListGPU_voltage = 100;
-            ColumnListPowerLimit = 100;
+            ColumnListGPU_clock = 64;
+            ColumnListMem_clock = 68;
+            ColumnListGPU_voltage = 74;
+            ColumnListMem_voltage = 74;
+            ColumnListPowerLimit = 66;
+            ColumnListFan = 44;
+            ColumnListThermalLimit = 40;
             ColumnSort = false;
             ColumnListSort = 1;
 

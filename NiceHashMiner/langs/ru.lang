@@ -520,6 +520,7 @@
 "FormSettings_AB_Minimize": "Сворачивать MSI Afterburner",
 "FormSettings_AB_Error": "Ошибка MSI Afterburner. Разгон не работает!",
 "FormSettings_AB_FileNotFound": "Ошибка MSI Afterburner.\r\nФайл {0} не найден.\r\nПожалуйста, установите MSI Afterburner",
+"FormSettings_AB_ValueWarning": "Значение должно быть между {0} и {1}",
 "FormSettings_By_profitability_of_all_devices": "По прибыльности всех устройств",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }

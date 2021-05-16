@@ -74,7 +74,6 @@ namespace NvidiaGPUGetDataHost
                 NvmlNativeMethods.nvmlInit();
 
                 ret = NvmlNativeMethods.nvmlDeviceGetCount(ref devCount);
-
                 using (EventLog eventLog = new EventLog("Application"))
                 {
                     eventLog.Source = "NvidiaGPUGetDataHost";
@@ -93,6 +92,7 @@ namespace NvidiaGPUGetDataHost
                 List<NvData> gpuList = new List<NvData>();
 
                 int ticks = 0;
+                int errors = 0;
 
                 int devn = 0;
                 var _power = 0u;
@@ -107,6 +107,17 @@ namespace NvidiaGPUGetDataHost
                 {
                     for (int dev = 0; dev < devCount; dev++)
                     {
+                        ret = NvmlNativeMethods.nvmlDeviceGetCount(ref devCount);
+                        if (ret != nvmlReturn.Success)
+                        {
+                            using (EventLog eventLog = new EventLog("Application"))
+                            {
+                                eventLog.Source = "NvidiaGPUGetDataHost";
+                                eventLog.WriteEntry("nvmlDeviceGetCount error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
+                            }
+                            return;
+                        }
+
                         ret = NvmlNativeMethods.nvmlDeviceGetHandleByIndex((uint)dev, ref _nvmlDevice);
                         if (ret != nvmlReturn.Success)
                         {
@@ -115,9 +126,10 @@ namespace NvidiaGPUGetDataHost
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetHandleByIndex error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
+                            errors++;
                             break;
                         }
-                        
+                        Thread.Sleep(200);
                         ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref _power);// <- mem leak 461.40+
                         if (ret != nvmlReturn.Success)
                         {
@@ -126,8 +138,10 @@ namespace NvidiaGPUGetDataHost
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetPowerUsage error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
+                            errors++;
                             break;
                         }
+                        Thread.Sleep(200);
                         ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref _fan);
                         if (ret != nvmlReturn.Success)
                         {
@@ -136,8 +150,10 @@ namespace NvidiaGPUGetDataHost
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetFanSpeed error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
+                            errors++;
                             break;
                         }
+                        Thread.Sleep(200);
                         var rates = new nvmlUtilization();
                         ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
                         if (ret != nvmlReturn.Success)
@@ -149,6 +165,7 @@ namespace NvidiaGPUGetDataHost
                             }
                             break;
                         }
+                        Thread.Sleep(200);
                         _load = rates.gpu;
                         ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu, ref _temp);
                         if (ret != nvmlReturn.Success)
@@ -158,9 +175,10 @@ namespace NvidiaGPUGetDataHost
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetTemperature error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
+                            errors++;
                             break;
                         }
-
+                        Thread.Sleep(200);
                         using (MemoryMappedViewAccessor writer = sharedMemory.CreateViewAccessor(0, size * devCount + Marshal.SizeOf(devCount)))
                         {
                             writer.WriteArray<byte>(0, RawSerialize(devCount), 0, Marshal.SizeOf(devCount));
@@ -171,8 +189,8 @@ namespace NvidiaGPUGetDataHost
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load), BitConverter.GetBytes(_temp), 0, Marshal.SizeOf(_temp));
                         }
                     }
-
-                    Thread.Sleep(1000);
+                    Thread.Sleep(200);
+                    //Thread.Sleep(1000);
                     //sharedMemory.Dispose();
 
                     Process currentProc = Process.GetCurrentProcess();
@@ -188,6 +206,17 @@ namespace NvidiaGPUGetDataHost
                         {
                             eventLog.Source = "NvidiaGPUGetDataHost";
                             eventLog.WriteEntry("Mem leak. Restart", EventLogEntryType.Warning, 101, 1);
+                        }
+                        System.Windows.Forms.Application.Restart();
+                        System.Environment.Exit(1);
+                    }
+                    if (errors > 5)
+                    {
+                        NvmlNativeMethods.nvmlShutdown();
+                        using (EventLog eventLog = new EventLog("Application"))
+                        {
+                            eventLog.Source = "NvidiaGPUGetDataHost";
+                            eventLog.WriteEntry("Too many errors. Restart", EventLogEntryType.Warning, 101, 1);
                         }
                         System.Windows.Forms.Application.Restart();
                         System.Environment.Exit(1);
