@@ -136,6 +136,7 @@ namespace NiceHashMiner
         public static bool MiningStarted = false;
         public static int devCur = 0;
         public static double PowerAllDevices = 0;
+        public static bool ProgramClosing = false;
 
         public struct RigProfitList
         {
@@ -703,7 +704,9 @@ namespace NiceHashMiner
             {
                 _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_MSI_AB"));
                 //new Task(() => MSIAfterburner.MSIAfterburnerRUN()).Start();
+
                 MSIAfterburner.MSIAfterburnerRUN();
+
             }
             flowLayoutPanelRates.Visible = true;
 
@@ -1140,6 +1143,7 @@ namespace NiceHashMiner
 
             SetChildFormCenter(_loadingScreen);
             _loadingScreen.Show();
+            _loadingScreen.SetValueAndMsg(0, "Starting...");
 
 
             _startupTimer = new Timer();
@@ -1321,6 +1325,11 @@ namespace NiceHashMiner
 
         public static void MakeRestart(int periodRestartProgram)
         {
+            ProgramClosing = true;
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                MSIAfterburner.MSIAfterburnerKill();
+            }
             StopWinIODriver();
             try
             {
@@ -1956,6 +1965,7 @@ public static void CloseChilds(Process parentId)
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ProgramClosing = true;
             if (AlgorithmSwitchingManager._smaCheckTimer != null)
             {
                 AlgorithmSwitchingManager._smaCheckTimer.Stop();

@@ -2062,17 +2062,16 @@ namespace NiceHashMiner
                 }
                 else
                 {
+                    /*
                     foreach (var dev in MiningSetup.MiningPairs)
                     {
-                        //Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ResetToDefaults: " + dev.Device.BusID.ToString());
                         MSIAfterburner.ResetToDefaults(dev.Device.BusID, true);
-                        //MSIAfterburner.CommitChanges(dev.Device.ID);
                         Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ResetToDefaults: " + dev.Device.ID.ToString());
-                        //Thread.Sleep(10);
                     }
                     MSIAfterburner.CommitChanges();
                     Thread.Sleep(2000);
                     MSIAfterburner.CommitChanges();
+                    */
                 }
             }
 
