@@ -57,6 +57,7 @@ namespace NiceHashMiner.Forms
             {
                 //this.Text = Text;
                 this.SetLabel(Text);
+                this.Update();
                 this.Refresh();
                 System.Threading.Thread.Sleep(50);
             }

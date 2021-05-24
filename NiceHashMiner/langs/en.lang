@@ -347,6 +347,9 @@
         "DeviceListView_ContextMenu_DisableDevice": "Disable Device",
         "DeviceListView_ContextMenu_EnableDevice": "Enable Device",
         "DeviceListView_ContextMenu_CopySettings": "Copy Settings From (Benchmarks, algorithm parameters, ...)",
+        "DeviceListView_ContextMenu_CopyOverClock": "Copy overclock setings from",
+        "DeviceListView_ContextMenu_GetValues": "Get settings from MSI Afterburner",
+        "DeviceListView_ContextMenu_TestValues": "Check MSI Afterburner settings",
         "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg": "Are you sure you want to copy settings from {0} to {1}?",
         "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title": "Confirm Settings Copy",
         "FormSettings_AlgorithmsSettings": "Algorithm settings for {0} :",
@@ -385,6 +388,7 @@
         "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended": "We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer.",
         "Compute_Device_Query_Manager_No_Devices": "No supported devices are found. Select the OK button for help or cancel to continue.",
         "Compute_Device_Query_Manager_No_Devices_Title": "No Supported Devices",
+	"Compute_Device_Query_Manager_LostDevice": "One or more NVIDIA GPU are dead or disabled",
         "NET45_Not_Installed_msg": "Miner Legacy Fork Fix requires .NET Framework 4.7 or higher to work properly. Please install Microsoft .NET Framework 4.7",
         "Form_Settings_ToolTip_DisableDefaultOptimizations": "When checked it disables all default optimization settings, making mining potentially more stable but significantly slower (especially for AMD cards).",
         "Form_Settings_Text_DisableDefaultOptimizations": "Disable Default Optimizations",
@@ -530,6 +534,7 @@
 "FormSettings_AB_ValueWarning": "Value must be between {0} and {1}",
 "MSIAB_Starting": "Starting MSI Afterburner",
 "MSIAB_Checking": "Checking MSI Afterburner",
+"MSIAB_Closing": "Closing MSI Afterburner",
 "FormSettings_By_profitability_of_all_devices": "By profitability of all devices",
 "Form_Settings_buttonLicence": "View licence"
     }

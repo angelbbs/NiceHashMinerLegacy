@@ -137,6 +137,7 @@ namespace NiceHashMiner
         public static int devCur = 0;
         public static double PowerAllDevices = 0;
         public static bool ProgramClosing = false;
+        public static Form_Settings settings;// = new Form_Settings();
 
         public struct RigProfitList
         {
@@ -161,7 +162,7 @@ namespace NiceHashMiner
         }
         public Form_Main()
         {
-            
+
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
@@ -182,7 +183,7 @@ namespace NiceHashMiner
                     // this.Width = 660; // min width
                 }
             }
-            
+
             //WindowState = FormWindowState.Minimized;
             Helpers.ConsolePrint("NICEHASH", "Start Form_Main");
             switch (ConfigManager.GeneralConfig.ColorProfileIndex)
@@ -1010,7 +1011,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("Temp Dir", ex.ToString());
             }
-            
+
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
@@ -1031,7 +1032,7 @@ namespace NiceHashMiner
                 }
 
             }
-            
+
             if (!Configs.ConfigManager.GeneralConfig.MinimizeToTray)
             {
                 WindowState = FormWindowState.Normal;
@@ -1701,7 +1702,7 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("NiceHash", e.ToString());
             }
         }
-       
+
         private void SummAllPower()
         {
             PowerAllDevices = 0;
@@ -1735,7 +1736,7 @@ public static void CloseChilds(Process parentId)
                 {
                     totalPowerRateDec = totalPowerRate;
                 }
-                
+
                 if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
                 {
                     if (totalPowerRate != 0)
@@ -1938,7 +1939,7 @@ public static void CloseChilds(Process parentId)
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             //Process.Start(_visitUrlNew);
-            var settings = new Form_Settings();
+            settings = new Form_Settings();
             try
             {
                 //   SetChildFormCenter(settings);
@@ -2005,7 +2006,7 @@ public static void CloseChilds(Process parentId)
 
                 foreach (FileInfo file in dirInfo.GetFiles())
                 {
-                    if (file.Name.Contains("pkt") || file.Name.Contains("dmp") || file.Name.Contains("github.test") ||
+                    if (file.Name.Contains("tmp") || file.Name.Contains("pkt") || file.Name.Contains("dmp") || file.Name.Contains("github.test") ||
                         file.Name.Contains("MinerOptionPackage_"))
                     {
                         file.Delete();
@@ -2099,7 +2100,7 @@ public static void CloseChilds(Process parentId)
 
         private void ButtonSettings_Click(object sender, EventArgs e)
         {
-            var settings = new Form_Settings();
+            settings = new Form_Settings();
             try
             {
                 //   SetChildFormCenter(settings);
@@ -2657,7 +2658,7 @@ public static void CloseChilds(Process parentId)
                     {
                         foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.GpuNvidia)
+                            if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.CPU)
                             {
                                 hardware.Update();
                             }
@@ -2693,7 +2694,7 @@ public static void CloseChilds(Process parentId)
                 }
                 devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices);
                 //new Task(() => devicesListViewEnableControl1.SetComputeDevicesStatus(ComputeDeviceManager.Available.Devices)).Start();
-                
+
             }
 
             catch (Exception ex)

@@ -12,6 +12,8 @@ using System.Globalization;
 using System.Collections;
 using NiceHashMiner.Miners.Grouping;
 using MSI.Afterburner;
+using System.IO;
+using System.Threading;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -50,8 +52,6 @@ namespace NiceHashMiner.Forms.Components
         {
             public static Color DisabledColor = Form_Main._backColor;
             public static Color DisabledForeColor = Color.Gray;
-            private static readonly Color BenchmarkedColor = Form_Main._backColor;
-            private static readonly Color UnbenchmarkedColor = Color.LightBlue;
 
             public void LviSetColor(ListViewItem lvi)
             {
@@ -61,7 +61,7 @@ namespace NiceHashMiner.Forms.Components
                 }
                 if (lvi.Tag is Algorithm algorithm)
                 {
-                    if (!algorithm.Enabled && !algorithm.IsBenchmarkPending)
+                    if (!algorithm.Enabled)
                     {
                         if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
                         {
@@ -71,7 +71,32 @@ namespace NiceHashMiner.Forms.Components
                             lvi.BackColor = SystemColors.ControlLightLight;
                         }
                         lvi.ForeColor = DisabledForeColor;
+                    } else
+                        if (isListViewEnabled)
+                    {
+                        lvi.ForeColor = Form_Main._foreColor;
+                        if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
+                        {
+                            lvi.BackColor = DisabledColor;
+                        }
+                        else
+                        {
+                            lvi.BackColor = SystemColors.ControlLightLight;
+                        }
                     }
+                    else
+                    {
+                        lvi.ForeColor = DisabledForeColor;
+                        if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
+                        {
+                            lvi.BackColor = DisabledColor;
+                        }
+                        else
+                        {
+                            lvi.BackColor = SystemColors.ControlLightLight;
+                        }
+                    }
+                    /*
                     else if (!algorithm.BenchmarkNeeded && !algorithm.IsBenchmarkPending)
                     {
                         lvi.BackColor = BenchmarkedColor;
@@ -103,6 +128,7 @@ namespace NiceHashMiner.Forms.Components
                     {
                         lvi.BackColor = UnbenchmarkedColor;
                     }
+                    */
                 }
             }
         }
@@ -262,7 +288,8 @@ namespace NiceHashMiner.Forms.Components
                     lvi.SubItems.Add(name);
                     lvi.SubItems.Add(miner);
 
-                    if (dev.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
+                    if (dev.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED) &&
+                        _computeDevice.DeviceType == DeviceType.NVIDIA)
                     {
                         lvi.SubItems.Add("Curve");
                     }
@@ -299,80 +326,6 @@ namespace NiceHashMiner.Forms.Components
                 listViewAlgorithms.CheckBoxes = isEnabled;
         }
 
-        public void UpdateLvi()
-        {
-            /*
-            try
-            {
-                if (_computeDevice != null && listViewAlgorithms.Items != null)
-                {
-                    foreach (ListViewItem lvi in listViewAlgorithms.Items)
-                    {
-                        if (lvi != null && lvi.Tag is Algorithm algorithm)
-                        {
-                            var algo = lvi.Tag as Algorithm;
-                            if (algo != null)
-                            {
-                                if (algorithm is DualAlgorithm dualAlg)
-                                {
-                                    lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
-                                }
-                                else
-                                {
-                                    lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
-                                }
-                                double.TryParse(algorithm.CurPayingRate, out var valueRate);
-                                double WithPowerRate = 0;
-                                WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
-                                if (!ConfigManager.GeneralConfig.DecreasePowerCost)
-                                {
-                                    WithPowerRate = valueRate;
-                                }
-                                string rateCurrencyString = ExchangeRateApi
-                                         .ConvertToActiveCurrency((WithPowerRate) * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
-                                         .ToString("F2", CultureInfo.InvariantCulture);
-                                string fiatCurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" +
-                                     International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                                string btcCurrencyName = "BTC/" +
-                                     International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-
-                                if (ConfigManager.GeneralConfig.DecreasePowerCost)
-                                {
-                                    if (ConfigManager.GeneralConfig.FiatCurrency)
-                                    {
-                                        columnHeader6.Text = fiatCurrencyName;
-                                        lvi.SubItems[RATE].Text = rateCurrencyString;
-                                    }
-                                    else
-                                    {
-                                        columnHeader6.Text = btcCurrencyName;
-                                        lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
-                                    }
-                                }
-                                else
-                                {
-                                    if (ConfigManager.GeneralConfig.FiatCurrency)
-                                    {
-                                        columnHeader6.Text = fiatCurrencyName;
-                                        lvi.SubItems[RATE].Text = rateCurrencyString;
-                                    }
-                                    else
-                                    {
-                                        columnHeader6.Text = btcCurrencyName;
-                                        lvi.SubItems[RATE].Text = algo.CurPayingRate;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception er)
-            {
-                Helpers.ConsolePrint("UpdateLvi", er.ToString());
-            }
-            */
-        }
         public void RepaintStatus(bool isEnabled, string uuid)
         {
             /*
@@ -451,6 +404,8 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_MouseClick(object sender, MouseEventArgs e)
         {
+            if (!MSIAfterburner.Initialized) return;
+            if (_computeDevice.DeviceType == DeviceType.CPU) return;
             try
             {
                 if (!isListViewEnabled)
@@ -458,110 +413,55 @@ namespace NiceHashMiner.Forms.Components
                     listViewAlgorithms.SelectedItems.Clear();
                     return;
                 }
-                GetDefMinMax();
+                var copyOverClockItem = new ToolStripMenuItem();
+
                 if (e.Button == MouseButtons.Right)
                 {
                     contextMenuStrip1.Items.Clear();
+                    GetDefMinMax();
                     //test msi ab
                     {
                         var MSIABGET = new ToolStripMenuItem
                         {
-                            Text = "Get values from MSI Afterburner"
+                            Text = International.GetText("DeviceListView_ContextMenu_GetValues")
                         };
                         MSIABGET.Click += ToolStripMenuItemGET_Click;
                         contextMenuStrip1.Items.Add(MSIABGET);
                     }
-
+                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                     {
                         var MSIABSAVE = new ToolStripMenuItem
                         {
-                            Text = "Load GPU data from file to MSI Afterburner"
+                            Text = International.GetText("DeviceListView_ContextMenu_TestValues")
                         };
-                        MSIABSAVE.Click += ToolStripMenuItemLOADFILE_Click;
+                        MSIABSAVE.Click += ToolStripMenuItemTest_Click;
                         contextMenuStrip1.Items.Add(MSIABSAVE);
                     }
-                    // enable all
+                    var devicesAlgos = _computeDevice.GetAlgorithmSettings();
+                    foreach (var alg in devicesAlgos)
                     {
-                        var enableAllItems = new ToolStripMenuItem
+                        foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
                         {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_EnableAll")
-                        };
-                        enableAllItems.Click += ToolStripMenuItemEnableAll_Click;
-                        contextMenuStrip1.Items.Add(enableAllItems);
+                            if (lvi.Tag is Algorithm algorithm)
+                            {
+                                Algorithm l = algorithm;
+                                if (l.AlgorithmName != alg.AlgorithmName || l.MinerBaseTypeName != alg.MinerBaseTypeName)
+                                {
+                                    var copyOverclockDropDownItem = new ToolStripMenuItem
+                                    {
+                                        Text = alg.AlgorithmName + " (" + alg.MinerBaseTypeName + ")"
+                                    };
+                                    //copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
+                                    copyOverclockDropDownItem.Click += (sender1, e1) => ToolStripMenuItem_ClickOverclock(sender, _computeDevice.Uuid, l.AlgorithmStringID, alg.AlgorithmStringID);
+                                    copyOverclockDropDownItem.Tag = _computeDevice.Uuid;
+                                    copyOverClockItem.DropDownItems.Add(copyOverclockDropDownItem);
+                                    copyOverClockItem.Text = International.GetText("DeviceListView_ContextMenu_CopyOverClock");
+                                    contextMenuStrip1.Items.Add(copyOverClockItem);
+                                }
+                            }
+                        }
                     }
-                    // disable all
-                    {
-                        var disableAllItems = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll")
-                        };
-                        disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
-                        contextMenuStrip1.Items.Add(disableAllItems);
-                    }
-                    // test this
-                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                    {
-                        var testItem = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem") + " " +
-                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
-                        };
-                        testItem.Click += ToolStripMenuItemTest_Click;
-                        contextMenuStrip1.Items.Add(testItem);
-                    }
-                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                    // enable benchmarked only
-                    {
-                        var enableBenchedItem = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_EnableBenched")
-                        };
-                        enableBenchedItem.Click += ToolStripMenuItemEnableBenched_Click;
-                        contextMenuStrip1.Items.Add(enableBenchedItem);
-                    }
-                    // clear item
-                    {
-                        this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                        var clearItem = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem") + " " +
-                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
-                            " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
-                        };
-                        clearItem.Click += ToolStripMenuItemClear_Click;
-                        contextMenuStrip1.Items.Add(clearItem);
-                        //this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                        //
-                        var clearItemAll = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAll")
-                        };
-                        clearItemAll.Click += ToolStripMenuItemClearAll_Click;
-                        contextMenuStrip1.Items.Add(clearItemAll);
-                        this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                    }
-                    {
-                        var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
-                        var Enablealgo = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("Form_Settings_EnableAlgos").Replace("*", al)
-                        };
-                        Enablealgo.Click += ToolStripMenuEnablealgo_Click;
-                        contextMenuStrip1.Items.Add(Enablealgo);
-                    }
-                    {
-                        var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
-                        var Enablealgo = new ToolStripMenuItem
-                        {
-                            Text = International.GetText("Form_Settings_DisableAlgos").Replace("*", al)
-                        };
-                        Enablealgo.Click += ToolStripMenuDisablealgo_Click;
-                        contextMenuStrip1.Items.Add(Enablealgo);
-                    }
-
+                    
                     contextMenuStrip1.Show(Cursor.Position);
                 }
             } catch (Exception ex)
@@ -569,6 +469,46 @@ namespace NiceHashMiner.Forms.Components
 
             }
         }
+        /*
+        private void ToolStripMenuItemCopyOverclock_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem_ClickOverclock(sender);
+        }
+        */
+        private void ToolStripMenuItem_ClickOverclock(object sender, string uuid, string to, string from)
+        {
+            var copyOverclockCDev = ComputeDeviceManager.Available.GetDeviceWithUuid(uuid);
+
+            var result = MessageBox.Show(
+                string.Format(
+                    International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"),
+                    from.Split('_')[1] + " (" + from.Split('_')[0] + ")" + "\r\n", to.Split('_')[1] + " (" + to.Split('_')[0] + ")"),
+                International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title"),
+                MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    string fNameSrc = "temp\\" + uuid + "_" + from + ".tmp";
+                    string fNameDst = "temp\\" + uuid + "_" + to + ".tmp";
+                    if (!File.Exists(fNameSrc))
+                    {
+                        MSIAfterburner.SaveDefaultDeviceData(_computeDevice.BusID, fNameSrc);
+                    }
+                    if (File.Exists(fNameDst)) File.Delete(fNameDst);
+
+                    File.Copy(fNameSrc, fNameDst);
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("ToolStripMenuItem_ClickOverclock", "Error: " + ex.ToString());
+                }
+                SetAlgorithms(_computeDevice, _computeDevice.Enabled);
+                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+            }
+
+        }
+        
         private void GetDefMinMax()
         {
             if (!MSIAfterburner.Initialized) return;
@@ -628,15 +568,34 @@ namespace NiceHashMiner.Forms.Components
                 }
                 SetAlgorithms(_computeDevice, _computeDevice.Enabled);
                 RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                
             }
         }
-        private void ToolStripMenuItemLOADFILE_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemTest_Click(object sender, EventArgs e)
         {
             if (!MSIAfterburner.Initialized) return;
             if (_computeDevice != null)
             {
-                MSIAfterburner.ReadFromFile(_computeDevice.BusID, "gpu"+_computeDevice.Index.ToString()+".gpu");
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        WaitingForm waiting = new WaitingForm();
+                        waiting.SetText("", International.GetText("MSIAB_Checking"));
+                        waiting.ShowWaitingBox();
+                        string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".tmp";
+                        //Helpers.ConsolePrint("ToolStripMenuItemTest_Click", "MSIAfterburner.ApplyFromFile: " + fName);
+                        MSIAfterburner.ApplyFromFile(_computeDevice.BusID, fName);
+                        Thread.Sleep(100);
+                        MSIAfterburner.CommitChanges();
+                        Thread.Sleep(5000);
+                        ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
+                        Thread.Sleep(100);
+                        MSIAfterburner.SaveDeviceData(_abdata, fName);
+                        if (waiting != null) waiting.CloseWaitingBox();
+                    }
+                }
+                SetAlgorithms(_computeDevice, _computeDevice.Enabled);
+                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
             }
         }
 
@@ -771,26 +730,7 @@ namespace NiceHashMiner.Forms.Components
                 }
             }
         }
-        private void ToolStripMenuItemTest_Click(object sender, EventArgs e)
-        {
-            if (_computeDevice != null)
-            {
-                foreach (ListViewItem lvi in listViewAlgorithms.Items)
-                {
-                    if (lvi.Tag is Algorithm algorithm)
-                    {
-                        lvi.Checked = lvi.Selected;
-                        if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
-                        {
-                            // If it has zero speed, set to 1 so it can be tested
-                            //algorithm.BenchmarkSpeed = 1;
-                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                            ComunicationInterface?.ChangeSpeed(lvi);
-                        }
-                    }
-                }
-            }
-        }
+       
 
         private void ToolStripMenuItemEnableBenched_Click(object sender, EventArgs e)
         {
@@ -890,7 +830,7 @@ namespace NiceHashMiner.Forms.Components
         {
             //ResizeColumn();
             listViewAlgorithms.BeginUpdate();
-            ResizeAutoSizeColumn(listViewAlgorithms, 1);
+            ResizeAutoSizeColumn(listViewAlgorithms, 9);
             listViewAlgorithms.EndUpdate();
         }
 
@@ -1058,10 +998,12 @@ namespace NiceHashMiner.Forms.Components
                             }
                         }
                         //all
+                        
                         if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED))
                         {
                             algorithm.fan = (int)_abdataTmp.FanSpeedCur;
                         }
+                        
                         if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT))
                         {
                             algorithm.power_limit = _abdataTmp.PowerLimitCur;
@@ -1262,9 +1204,8 @@ namespace NiceHashMiner.Forms.Components
                     //all
                     if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED))
                     {
-                        if (_algorithm.fan_flag == 0)
+                        if (_abdataTmp.FanFlagsCur == MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None)
                         {
-                            _abdataTmp.FanFlagsCur = MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None;
                             _abdataTmp.FanSpeedCur = (uint)_algorithm.fan;
                         }
                     }

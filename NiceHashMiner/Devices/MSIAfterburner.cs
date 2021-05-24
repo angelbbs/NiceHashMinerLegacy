@@ -88,7 +88,8 @@ namespace NiceHashMiner.Devices
         public static ControlMemory macm;
         public static HardwareMonitor mahm;
         public static bool Initialized = false;
-
+        private static int MSIAB_exited = 0;
+        private static bool MSIAB_starting = false;
         public static bool MSIAfterburnerCheckPath()
         {
             string msiabpath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\MSI Afterburner\\MSIAfterburner.exe";
@@ -179,6 +180,8 @@ namespace NiceHashMiner.Devices
         }
         public static bool MSIAfterburnerRUN(bool forceRun = false)
         {
+            if (MSIAB_starting) return true;
+            MSIAB_starting = true;
             //[Settings]
             //VDDC_Generic_Detection = 1
             string msiabpath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\MSI Afterburner\\MSIAfterburner.exe";
@@ -186,21 +189,30 @@ namespace NiceHashMiner.Devices
             if (ConfigManager.GeneralConfig.ABEnableOverclock || forceRun)
             {
                 WaitingForm waiting = new WaitingForm();
-                waiting.SetText("", International.GetText("MSIAB_Starting")); 
                 waiting.ShowWaitingBox();
                 //if (ConfigManager.GeneralConfig.AB_ForceRun && !Process.GetProcessesByName("MSIAfterburner").Any())
                 {
                     if (!MSIAfterburnerCheckPath())
                     {
-                        if (waiting != null) waiting.CloseWaitingBox();
+                        //if (waiting != null) waiting.CloseWaitingBox();
                         new Task(() =>
                             MessageBox.Show(string.Format(International.GetText("FormSettings_AB_FileNotFound"),
                     msiabpath), "MSI Afterburner error!",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
+                        MSIAB_starting = false;
                         return false;
                     }
 
-                    
+                    var Pr = Process.GetProcessesByName("MSIAfterburner");
+                    if (Pr.Length > 0)
+                    {
+                        waiting.SetText("", International.GetText("MSIAB_Closing"));
+                        MSIAfterburnerKill();
+                        Thread.Sleep(1000);//обязательная пауза
+                    }
+
+                    waiting.SetText("", International.GetText("MSIAB_Starting"));
+                    //waiting.ShowWaitingBox();
                     Process P = new Process();
                     try
                     {
@@ -209,9 +221,9 @@ namespace NiceHashMiner.Devices
 
                         P.StartInfo.Verb = "runas";
                         P.StartInfo.UseShellExecute = true;
-                       // P.Exited += new EventHandler(MSIABprocessExited);
+                        // P.Exited += new EventHandler(MSIABprocessExited);
                         //P.EnableRaisingEvents = true;
-
+                        //P.StartInfo.Arguments = "-m";
                         P.Start();
 
                         int repeats = 0;
@@ -226,7 +238,7 @@ namespace NiceHashMiner.Devices
 
                                 if ((int)wdwIntPtr > 1)
                                 {
-                                    //Thread.Sleep(3000);//обязательная пауза
+                                    Thread.Sleep(3000);//обязательная пауза
                                     break;
                                 }
                                 repeats++;
@@ -264,6 +276,7 @@ namespace NiceHashMiner.Devices
                         if (!meminit)
                         {
                             if (waiting != null) waiting.CloseWaitingBox();
+                            MSIAB_starting = false;
                             return false;
                         }
                     }
@@ -274,11 +287,13 @@ namespace NiceHashMiner.Devices
                         new Task(() =>
                         MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
+                        MSIAB_starting = false;
                         return false;
                     }
                 }
                 if (waiting != null) waiting.CloseWaitingBox();
             }
+            MSIAB_starting = false;
             return true;
         }
 
@@ -286,6 +301,16 @@ namespace NiceHashMiner.Devices
         {
             if (Form_Main.ProgramClosing) return;
             Helpers.ConsolePrint("MSIABprocessExited", "MSI Afterburner exited");
+            MSIAB_exited++;
+            if (MSIAB_exited >= 5)
+            {
+                new Task(() =>
+                        MessageBox.Show("To many errors. Bad MSI Afterburner installation? Overclock disabled!", "MSI Afterburner error!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
+                ConfigManager.GeneralConfig.ABEnableOverclock = false;
+                return;
+                
+            }
             MSIAfterburnerRUN();
             Thread.Sleep(50);
             //CheckMSIAfterburner();
@@ -678,6 +703,11 @@ namespace NiceHashMiner.Devices
                     
                     for (int i = 0; i < macm.Header.GpuEntryCount; i++)
                     {
+                        if (macm.GpuEntries[i].GpuId.Contains("DEV_9498"))
+                        {
+                            Helpers.ConsolePrint("MSIAfterburnerInit", "Ahtung!");
+                            break;
+                        }
                         if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
                         {
                             Helpers.ConsolePrint("MSIAfterburnerInit", "GPU"+i.ToString() + " Curve enabled");
@@ -718,9 +748,9 @@ namespace NiceHashMiner.Devices
                         MSIAfterburner.macm = null;
                         MSIAfterburner.mahm = null;
                         Helpers.ConsolePrint("MSIAfterburnerInit", "Killing old instance AB and run again");
-                        MSIAfterburnerKill();
+                        //MSIAfterburnerKill();
                         Thread.Sleep(10);
-                        //MSIAfterburnerRUN(true);
+                        MSIAfterburnerRUN(true);
                         Thread.Sleep(100);
                     }
 
@@ -732,9 +762,9 @@ namespace NiceHashMiner.Devices
                         MSIAfterburner.macm = null;
                         MSIAfterburner.mahm = null;
                         Helpers.ConsolePrint("MSIAfterburnerInit", "Killing old instance AB and run again");
-                        MSIAfterburnerKill();
+                        //MSIAfterburnerKill();
                         Thread.Sleep(10);
-                        //MSIAfterburnerRUN(true);
+                        MSIAfterburnerRUN(true);
                         Thread.Sleep(100);
                     }
                     if (ex.Message.Contains("dead"))
@@ -745,9 +775,9 @@ namespace NiceHashMiner.Devices
                         MSIAfterburner.macm = null;
                         MSIAfterburner.mahm = null;
                         Helpers.ConsolePrint("MSIAfterburnerInit", "Killing old instance AB and run again");
-                        MSIAfterburnerKill();
+                        //MSIAfterburnerKill();
                         Thread.Sleep(10);
-                        //MSIAfterburnerRUN(true);
+                        MSIAfterburnerRUN(true);
                         Thread.Sleep(100);
                     }
                 }

@@ -31,11 +31,14 @@ namespace NiceHashMiner.Devices
 
         public string GetName()
         {
+            
             if (VendorName == "UNKNOWN")
             {
                 VendorName = string.Format(International.GetText("ComputeDevice_UNKNOWN_VENDOR_REPLACE"), VendorID);
             }
-            return $"{VendorName} {DeviceName}";
+            
+            //return $"{VendorName} {DeviceName}";
+            return $"{DeviceName}";
         }
 
         public bool IsEtherumCapable()

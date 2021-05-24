@@ -146,8 +146,6 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
             this.checkBox_ABMinimize = new System.Windows.Forms.CheckBox();
-            this.checkBox_ABOverclock_Relative = new System.Windows.Forms.CheckBox();
-            this.checkBox_AB_ForceRun = new System.Windows.Forms.CheckBox();
             this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
             this.groupBoxOverClockSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
@@ -1369,7 +1367,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_show_AMDdevice_manufacturer.AutoSize = true;
             this.checkBox_show_AMDdevice_manufacturer.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_show_AMDdevice_manufacturer.Location = new System.Drawing.Point(240, 42);
+            this.checkBox_show_AMDdevice_manufacturer.Location = new System.Drawing.Point(304, 42);
             this.checkBox_show_AMDdevice_manufacturer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_show_AMDdevice_manufacturer.Name = "checkBox_show_AMDdevice_manufacturer";
             this.checkBox_show_AMDdevice_manufacturer.Size = new System.Drawing.Size(180, 17);
@@ -1381,7 +1379,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_ShowDeviceMemSize.AutoSize = true;
             this.checkBox_ShowDeviceMemSize.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ShowDeviceMemSize.Location = new System.Drawing.Point(240, 65);
+            this.checkBox_ShowDeviceMemSize.Location = new System.Drawing.Point(304, 65);
             this.checkBox_ShowDeviceMemSize.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ShowDeviceMemSize.Name = "checkBox_ShowDeviceMemSize";
             this.checkBox_ShowDeviceMemSize.Size = new System.Drawing.Size(148, 17);
@@ -1406,7 +1404,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_show_NVdevice_manufacturer.AutoSize = true;
             this.checkBox_show_NVdevice_manufacturer.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_show_NVdevice_manufacturer.Location = new System.Drawing.Point(240, 19);
+            this.checkBox_show_NVdevice_manufacturer.Location = new System.Drawing.Point(304, 19);
             this.checkBox_show_NVdevice_manufacturer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_show_NVdevice_manufacturer.Name = "checkBox_show_NVdevice_manufacturer";
             this.checkBox_show_NVdevice_manufacturer.Size = new System.Drawing.Size(192, 17);
@@ -1462,7 +1460,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartDriver
             // 
             this.checkBoxRestartDriver.AutoSize = true;
-            this.checkBoxRestartDriver.Location = new System.Drawing.Point(240, 199);
+            this.checkBoxRestartDriver.Location = new System.Drawing.Point(304, 199);
             this.checkBoxRestartDriver.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartDriver.Name = "checkBoxRestartDriver";
             this.checkBoxRestartDriver.Size = new System.Drawing.Size(206, 17);
@@ -1474,7 +1472,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartWindows
             // 
             this.checkBoxRestartWindows.AutoSize = true;
-            this.checkBoxRestartWindows.Location = new System.Drawing.Point(240, 176);
+            this.checkBoxRestartWindows.Location = new System.Drawing.Point(304, 176);
             this.checkBoxRestartWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartWindows.Name = "checkBoxRestartWindows";
             this.checkBoxRestartWindows.Size = new System.Drawing.Size(224, 17);
@@ -1490,15 +1488,15 @@ namespace NiceHashMiner.Forms
             this.checkbox_Use_OpenHardwareMonitor.Location = new System.Drawing.Point(32, 157);
             this.checkbox_Use_OpenHardwareMonitor.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkbox_Use_OpenHardwareMonitor.Name = "checkbox_Use_OpenHardwareMonitor";
-            this.checkbox_Use_OpenHardwareMonitor.Size = new System.Drawing.Size(155, 17);
+            this.checkbox_Use_OpenHardwareMonitor.Size = new System.Drawing.Size(216, 17);
             this.checkbox_Use_OpenHardwareMonitor.TabIndex = 407;
-            this.checkbox_Use_OpenHardwareMonitor.Text = "Use OpenHardwareMonitor";
+            this.checkbox_Use_OpenHardwareMonitor.Text = "Use OpenHardwareMonitor (CPU, AMD)";
             this.checkbox_Use_OpenHardwareMonitor.UseVisualStyleBackColor = true;
             // 
             // label_devices_count
             // 
             this.label_devices_count.AutoSize = true;
-            this.label_devices_count.Location = new System.Drawing.Point(237, 134);
+            this.label_devices_count.Location = new System.Drawing.Point(301, 134);
             this.label_devices_count.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_devices_count.Name = "label_devices_count";
             this.label_devices_count.Size = new System.Drawing.Size(107, 13);
@@ -1509,7 +1507,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBox_devices_count.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_devices_count.FormattingEnabled = true;
-            this.comboBox_devices_count.Location = new System.Drawing.Point(382, 131);
+            this.comboBox_devices_count.Location = new System.Drawing.Point(446, 131);
             this.comboBox_devices_count.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_devices_count.Name = "comboBox_devices_count";
             this.comboBox_devices_count.Size = new System.Drawing.Size(41, 21);
@@ -1520,7 +1518,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_ShowFanAsPercent.AutoSize = true;
             this.checkBox_ShowFanAsPercent.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ShowFanAsPercent.Location = new System.Drawing.Point(240, 111);
+            this.checkBox_ShowFanAsPercent.Location = new System.Drawing.Point(304, 111);
             this.checkBox_ShowFanAsPercent.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ShowFanAsPercent.Name = "checkBox_ShowFanAsPercent";
             this.checkBox_ShowFanAsPercent.Size = new System.Drawing.Size(144, 17);
@@ -1555,7 +1553,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_Additional_info_about_device.AutoSize = true;
             this.checkBox_Additional_info_about_device.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Additional_info_about_device.Location = new System.Drawing.Point(240, 88);
+            this.checkBox_Additional_info_about_device.Location = new System.Drawing.Point(304, 88);
             this.checkBox_Additional_info_about_device.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Additional_info_about_device.Name = "checkBox_Additional_info_about_device";
             this.checkBox_Additional_info_about_device.Size = new System.Drawing.Size(157, 17);
@@ -1730,8 +1728,6 @@ namespace NiceHashMiner.Forms
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
             this.tabPageOverClock.Controls.Add(this.checkBox_ABMinimize);
-            this.tabPageOverClock.Controls.Add(this.checkBox_ABOverclock_Relative);
-            this.tabPageOverClock.Controls.Add(this.checkBox_AB_ForceRun);
             this.tabPageOverClock.Controls.Add(this.checkBox_ABEnableOverclock);
             this.tabPageOverClock.Controls.Add(this.groupBoxOverClockSettings);
             this.tabPageOverClock.Controls.Add(this.devicesListViewEnableControl2);
@@ -1747,41 +1743,13 @@ namespace NiceHashMiner.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_ABMinimize.AutoSize = true;
             this.checkBox_ABMinimize.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ABMinimize.Location = new System.Drawing.Point(371, 62);
+            this.checkBox_ABMinimize.Location = new System.Drawing.Point(371, 39);
             this.checkBox_ABMinimize.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ABMinimize.Name = "checkBox_ABMinimize";
             this.checkBox_ABMinimize.Size = new System.Drawing.Size(143, 17);
             this.checkBox_ABMinimize.TabIndex = 404;
             this.checkBox_ABMinimize.Text = "Minimize MSI Afterburner";
             this.checkBox_ABMinimize.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_ABOverclock_Relative
-            // 
-            this.checkBox_ABOverclock_Relative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_ABOverclock_Relative.AutoSize = true;
-            this.checkBox_ABOverclock_Relative.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ABOverclock_Relative.Location = new System.Drawing.Point(371, 164);
-            this.checkBox_ABOverclock_Relative.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_ABOverclock_Relative.Name = "checkBox_ABOverclock_Relative";
-            this.checkBox_ABOverclock_Relative.Size = new System.Drawing.Size(99, 17);
-            this.checkBox_ABOverclock_Relative.TabIndex = 403;
-            this.checkBox_ABOverclock_Relative.Text = "Relative values";
-            this.checkBox_ABOverclock_Relative.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_AB_ForceRun
-            // 
-            this.checkBox_AB_ForceRun.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_AB_ForceRun.AutoSize = true;
-            this.checkBox_AB_ForceRun.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_AB_ForceRun.Location = new System.Drawing.Point(371, 39);
-            this.checkBox_AB_ForceRun.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_AB_ForceRun.Name = "checkBox_AB_ForceRun";
-            this.checkBox_AB_ForceRun.Size = new System.Drawing.Size(242, 17);
-            this.checkBox_AB_ForceRun.TabIndex = 402;
-            this.checkBox_AB_ForceRun.Text = "Force run MSI Afterburner on program startup ";
-            this.checkBox_AB_ForceRun.UseVisualStyleBackColor = true;
             // 
             // checkBox_ABEnableOverclock
             // 
@@ -2427,8 +2395,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.GroupBox groupBoxOverClockSettings;
         private Components.AlgorithmsListViewOverClock algorithmsListViewOverClock1;
         private System.Windows.Forms.CheckBox checkBox_ABEnableOverclock;
-        private System.Windows.Forms.CheckBox checkBox_ABOverclock_Relative;
-        private System.Windows.Forms.CheckBox checkBox_AB_ForceRun;
         private System.Windows.Forms.CheckBox checkBox_ABMinimize;
         private System.Windows.Forms.CheckBox checkBox_By_profitability_of_all_devices;
     }

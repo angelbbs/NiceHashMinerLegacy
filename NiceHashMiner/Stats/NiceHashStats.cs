@@ -26,6 +26,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using NiceHashMiner.Algorithms;
+using System.Diagnostics;
 
 namespace NiceHashMiner.Stats
 {
@@ -254,6 +255,15 @@ namespace NiceHashMiner.Stats
                             break;
                         case "exchange_rates":
                             SetExchangeRates(message.data.Value);
+                            break;
+                        case "miner.reset":
+                            var OSrestart = new ProcessStartInfo("shutdown")
+                            {
+                                WindowStyle = ProcessWindowStyle.Minimized
+                            };
+                            OSrestart.Arguments = "-r -f -t 10";
+                            Helpers.ConsolePrint("*************", "Restart Windows");
+                            Process.Start(OSrestart);
                             break;
                     }
                 }
@@ -1174,6 +1184,7 @@ namespace NiceHashMiner.Stats
 
                     if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                     {
+                        deviceName = deviceName.Replace("NVIDIA", "");
                         if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
                         {
                             Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
@@ -1182,6 +1193,7 @@ namespace NiceHashMiner.Stats
                     else
                     {
                         deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                        if (!deviceName.Contains("NVIDIA")) deviceName = "NVIDIA " + deviceName;
                     }
 
                     GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";

@@ -402,19 +402,12 @@ namespace NiceHashMiner.Miners
             int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            /*
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW) ||
-                MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
-            {
-                _benchmarkTimeWait = _benchmarkTimeWait + 30;
-            }
-            */
+
             try
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string) commandLine);
-                //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
                 benchmarkTimer.Start();
@@ -477,7 +470,6 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
-                        //ComputeDevice.BenchmarkProgress = repeats;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
@@ -502,27 +494,13 @@ namespace NiceHashMiner.Miners
                             BenchmarkHandle.Dispose();
                             EndBenchmarkProcces();
 
-                            /*
-                            try
-                            {
-                                int k = ProcessTag().IndexOf("pid(");
-                                int i = ProcessTag().IndexOf(")|bin");
-                                var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
 
-                                int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                                Helpers.ConsolePrint("GMINER", "gminer.exe PID: " + pid.ToString());
-                                KillProcessAndChildren(pid);
-                                ProcessHandle.Kill();
-                                ProcessHandle.Close();
-                            }
-                            catch { }
-                            if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
-                            */
                             break;
                         }
 
                     }
                 }
+
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
             }
             catch (Exception ex)

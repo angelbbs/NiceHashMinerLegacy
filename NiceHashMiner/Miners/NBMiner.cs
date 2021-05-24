@@ -103,13 +103,13 @@ namespace NiceHashMiner.Miners
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 1 --no-watchdog";
+                    platform = "--platform 1 --no-watchdog ";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
                 }
                 else
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 2 --no-watchdog";
+                    platform = "--platform 2 --no-watchdog ";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
             }
@@ -118,7 +118,7 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 -u1 " + user +
                     $" -o2 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 -u2 " + user  +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
             {

@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Management;
 using System;
 using NiceHashMinerLegacy.UUID;
+using System.Windows.Forms;
+using System.IO;
 
 namespace NiceHashMiner.Devices
 {
@@ -366,7 +368,39 @@ namespace NiceHashMiner.Devices
         //    }
         //    return null;
         //}
+        public void CopyOverclockSettingsFrom(ComputeDevice copyBenchCDevFrom, ComputeDevice copyBenchCDevTo)
+        {
+            foreach (var copyFromAlgo in copyBenchCDevFrom.AlgorithmSettings)
+            {
+                var setAlgo = GetAlgorithm(copyFromAlgo);
+                if (setAlgo != null)
+                {
+                    /*
+                    MessageBox.Show("BusID: " + copyBenchCDevFrom.BusID.ToString() + " Index: " + copyBenchCDevFrom.Index.ToString() +
+                        " AlgorithmName: " + setAlgo.AlgorithmName + " AlgorithmStringID: " + setAlgo.AlgorithmStringID +
+                        " MinerBaseType: " + setAlgo.MinerBaseType +
+                        " MinerBaseTypeName: " + setAlgo.MinerBaseTypeName + " MinerName: " + setAlgo.MinerName);
+                    */
+                    try
+                    {
+                        string fNameSrc = "temp\\" + copyBenchCDevFrom.Uuid + "_" + setAlgo.AlgorithmStringID + ".tmp";
+                        string fNameDst = "temp\\" + copyBenchCDevTo.Uuid + "_" + setAlgo.AlgorithmStringID + ".tmp";
+                        if (!File.Exists(fNameSrc))
+                        {
+                            MSIAfterburner.SaveDefaultDeviceData(copyBenchCDevFrom.BusID, fNameSrc);
+                        }
+                        if (File.Exists(fNameDst)) File.Delete(fNameDst);
 
+                        File.Copy(fNameSrc, fNameDst);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("CopyOverclockSettingsFrom", "Error: " + ex.ToString());
+                    }
+                    
+                }
+            }
+        }
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)

@@ -2050,15 +2050,19 @@ namespace NiceHashMiner
                 {
                     foreach (var dev in MiningSetup.MiningPairs)
                     {
-                        string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
-                        Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile: " + fName);
-                        MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
-                        //MSIAfterburner.CommitChanges(dev.Device.ID);
-                        //Thread.Sleep(10);
+                        if (dev.Device.Enabled)
+                        {
+                            string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
+                            Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile: " + fName);
+                            MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
+                            //MSIAfterburner.CommitChanges(dev.Device.ID);
+                            //Thread.Sleep(10);
+                            MSIAfterburner.CommitChanges();
+                            Thread.Sleep(100);
+                        }
                     }
-                    MSIAfterburner.CommitChanges();
-                    Thread.Sleep(2000);
-                    MSIAfterburner.CommitChanges();
+//                    Thread.Sleep(2000);
+  //                  MSIAfterburner.CommitChanges();
                 }
                 else
                 {

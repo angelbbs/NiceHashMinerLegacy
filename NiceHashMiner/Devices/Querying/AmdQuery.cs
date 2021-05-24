@@ -176,7 +176,7 @@ namespace NiceHashMiner.Devices.Querying
                     ComputeDeviceManager.Available.HasAmd = true;
 
                     var busID = dev.BUS_ID;
-                    var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE;
+                    var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE + 16384 * 1024;
                     //var man = dev._CL_DEVICE_VENDOR_ID;
 
                     if (busID != -1 && _busIdInfos.ContainsKey(busID))

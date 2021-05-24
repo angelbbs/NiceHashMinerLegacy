@@ -488,17 +488,11 @@ namespace NiceHashMiner.Devices
                 var isNvidiaErrorShown = false; // to prevent showing twice
                 var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning &&
                                   WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && _cudaDevices.CudaDevices.Count != nvidiaCount &&
-                    _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaMinDetectionDriver))
+                if (showWarning && _cudaDevices.CudaDevices.Count != nvidiaCount)
                 {
                     isNvidiaErrorShown = true;
-                    var minDriver = NvidiaMinDetectionDriver.ToString();
-                    var recomendDrvier = NvidiaRecomendedDriver.ToString();
                     new Task(() =>
-                    MessageBox.Show(string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Detection"),
-                            minDriver, recomendDrvier),
-                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
+                    MessageBox.Show(International.GetText("Compute_Device_Query_Manager_LostDevice"), "Error!",
                         MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                 }
                 // recomended driver
@@ -516,13 +510,6 @@ namespace NiceHashMiner.Devices
                             recomendDrvier, nvdriverString, recomendDrvier),
                         International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning)).Start();
-                    /*
-                    MessageBox.Show(string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
-                            recomendDrvier, nvdriverString, recomendDrvier),
-                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        */
                 }
 
                 // no devices found
@@ -791,9 +778,9 @@ namespace NiceHashMiner.Devices
                                                vc.Name, vc.Status, vc.PnpDeviceID);
                                 }
                             }
-                            MessageBox.Show(msg,
+                            new Task(() => MessageBox.Show(msg,
                                 International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning)).Start();
                         }
                     }
                     //test_msi_ab();

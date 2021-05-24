@@ -164,6 +164,7 @@ namespace NiceHashMiner.Forms.Components
             // set devices
             foreach (var computeDevice in computeDevices)
             {
+                Manufacturer = "";
                 if (computeDevice.DeviceType == DeviceType.CPU && !includeCPU)
                 {
                     //continue;
@@ -182,6 +183,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                     {
+                        devInfo = devInfo.Replace("NVIDIA", "");
                         if (!devInfo.Contains(ComputeDevice.GetManufacturer(computeDevice.Manufacturer)))
                         {
                             Manufacturer = ComputeDevice.GetManufacturer(computeDevice.Manufacturer);
@@ -190,6 +192,7 @@ namespace NiceHashMiner.Forms.Components
                     else
                     {
                         devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(computeDevice.Manufacturer) + " ", "");
+                        if (!devInfo.Contains("NVIDIA")) devInfo = "NVIDIA " + devInfo;
                     }
 
                     GpuRam = (computeDevice.GpuRam / 1073741824).ToString() + "GB";
@@ -528,6 +531,9 @@ namespace NiceHashMiner.Forms.Components
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location))
                 {
                     contextMenuStrip1.Items.Clear();
+                    //var settings = new Form_Settings();
+                    var t = Form_Main.settings.tabControlGeneral.SelectedTab;
+
                     if (IsSettingsCopyEnabled)
                     {
                         if (listViewDevices.FocusedItem.Tag is ComputeDevice cDevice)
@@ -538,10 +544,12 @@ namespace NiceHashMiner.Forms.Components
                             {
                                 var copyBenchItem = new ToolStripMenuItem();
                                 var copyTuningItem = new ToolStripMenuItem();
+                                var copyOverClockItem = new ToolStripMenuItem();
                                 //copyBenchItem.DropDownItems
                                 //foreach (var cDev in sameDevTypes.OrderBy(i => i.IDByBus))
                                 foreach (var cDev in sameDevTypes)
                                 {
+                                    Manufacturer = "";
                                     if (cDev.Enabled)
                                     {
                                         string devInfo = cDev.Name;
@@ -550,6 +558,7 @@ namespace NiceHashMiner.Forms.Components
                                         {
                                             if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                                             {
+                                                devInfo = devInfo.Replace("NVIDIA", "");
                                                 if (!devInfo.Contains(ComputeDevice.GetManufacturer(cDev.Manufacturer)))
                                                 {
                                                     Manufacturer = ComputeDevice.GetManufacturer(cDev.Manufacturer);
@@ -558,6 +567,7 @@ namespace NiceHashMiner.Forms.Components
                                             else
                                             {
                                                 devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(cDev.Manufacturer) + " ", "");
+                                                if (!devInfo.Contains("NVIDIA")) devInfo = "NVIDIA " + devInfo;
                                             }
 
                                             GpuRam = (cDev.GpuRam / 1073741824).ToString() + "GB";
@@ -604,30 +614,48 @@ namespace NiceHashMiner.Forms.Components
                                             }
                                         }
 
-                                        var copyBenchDropDownItem = new ToolStripMenuItem
+                                        if (!t.Name.Equals("tabPageOverClock"))
                                         {
-                                            //Text = (cDev.NameCount).ToString() + " " + Manufacturer + cDev.Name,
-                                            Text = (cDev.NameCount).ToString() + " " + devInfo,
-                                            Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
-                                        };
-                                        copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
-                                        copyBenchDropDownItem.Tag = cDev.Uuid;
-                                        copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
+                                            var copyBenchDropDownItem = new ToolStripMenuItem
+                                            {
+                                                Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
+                                                //Text = (cDev.NameCount).ToString() + " " + devInfo,
+                                                Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
+                                            };
+                                            copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
+                                            copyBenchDropDownItem.Tag = cDev.Uuid;
+                                            copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
 
-                                        var copyTuningDropDownItem = new ToolStripMenuItem
+                                            var copyTuningDropDownItem = new ToolStripMenuItem
+                                            {
+                                                Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo
+                                                //Checked = cDev.UUID == CDevice.TuningCopyUUID
+                                            };
+                                            copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
+                                            copyTuningDropDownItem.Tag = cDev.Uuid;
+                                            copyTuningItem.DropDownItems.Add(copyTuningDropDownItem);
+
+                                            copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopySettings");
+                                            copyTuningItem.Text = International.GetText("DeviceListView_ContectMenu_CopyTuning");
+                                            contextMenuStrip1.Items.Add(copyBenchItem);
+                                            contextMenuStrip1.Items.Add(copyTuningItem);
+                                        } else
                                         {
-                                            Text = (cDev.NameCount).ToString() + " " + Manufacturer + cDev.Name
-                                            //Checked = cDev.UUID == CDevice.TuningCopyUUID
-                                        };
-                                        copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
-                                        copyTuningDropDownItem.Tag = cDev.Uuid;
-                                        copyTuningItem.DropDownItems.Add(copyTuningDropDownItem);
+                                            var copyOverclockDropDownItem = new ToolStripMenuItem
+                                            {
+                                                Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
+                                                //Text = (cDev.NameCount).ToString() + " " + devInfo,
+                                                //Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
+                                            };
+                                            copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
+                                            copyOverclockDropDownItem.Tag = cDev.Uuid;
+                                            copyOverClockItem.DropDownItems.Add(copyOverclockDropDownItem);
+                                            copyOverClockItem.Text = International.GetText("DeviceListView_ContextMenu_CopyOverClock");
+                                            contextMenuStrip1.Items.Add(copyOverClockItem);
+                                        }
                                     }
                                 }
-                                copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopySettings");
-                                copyTuningItem.Text = International.GetText("DeviceListView_ContectMenu_CopyTuning");
-                                contextMenuStrip1.Items.Add(copyBenchItem);
-                                contextMenuStrip1.Items.Add(copyTuningItem);
+
                             }
                         }
                     }
@@ -670,7 +698,38 @@ namespace NiceHashMiner.Forms.Components
                 }
             }
         }
+        private void ToolStripMenuItem_ClickOverclock(object sender)
+        {
+            if (sender is ToolStripMenuItem item && item.Tag is string uuid
+                && listViewDevices.FocusedItem.Tag is ComputeDevice CDevice)
+            {
+                var copyOverclockCDevFrom = ComputeDeviceManager.Available.GetDeviceWithUuid(uuid);
 
+                var result = MessageBox.Show(
+                    string.Format(
+                        International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"),
+                        copyOverclockCDevFrom.GetFullName() + "\r\n", CDevice.GetFullName()),
+                    International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title"),
+                    MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                        CDevice.BenchmarkCopyUuid = uuid;
+                        CDevice.CopyOverclockSettingsFrom(copyOverclockCDevFrom, CDevice);
+
+                    if (_algorithmsListViewOverClock != null)
+                    {
+                        _algorithmsListViewOverClock.SetAlgorithms(CDevice, CDevice.Enabled);
+                        _algorithmsListViewOverClock.Update();
+                        _algorithmsListViewOverClock.Refresh();
+                        _algorithmsListViewOverClock.RepaintStatus(CDevice.Enabled, CDevice.Uuid);
+                    }
+                }
+            }
+        }
+        private void ToolStripMenuItemCopyOverclock_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem_ClickOverclock(sender);
+        }
         private void ToolStripMenuItemCopySettings_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem_Click(sender, false);

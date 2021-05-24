@@ -344,6 +344,9 @@
     "DeviceListView_ContextMenu_DisableDevice": "Отключить устройство",
     "DeviceListView_ContextMenu_EnableDevice": "Включить устройство",
     "DeviceListView_ContextMenu_CopySettings": "Скопировать настройки из (Бенчмарк, параметры алгоритмов, …)",
+    "DeviceListView_ContextMenu_CopyOverClock": "Скопировать настройки разгона из",
+    "DeviceListView_ContextMenu_GetValues": "Получить настройки из MSI Afterburner",
+    "DeviceListView_ContextMenu_TestValues": "Проверить настройки MSI Afterburner",
     "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg": "Вы уверены, что хотите скопировать настройки из {0} в {1}?",
     "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title": "Подтверждение копирования настроек",
     "FormSettings_AlgorithmsSettings": "Настройки алгоритма для {0}:",
@@ -382,6 +385,7 @@
     "Compute_Device_Query_Manager_NVIDIA_Driver_Recomended": "Мы обнаружили, что ваш драйвер старее {0}{1}. Мы рекомендуем вам обновиться до {2} или новее.",
     "Compute_Device_Query_Manager_No_Devices": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или отмените для продолжения.",
     "Compute_Device_Query_Manager_No_Devices_Title": "Нет поддерживаемых устройств",
+    "Compute_Device_Query_Manager_LostDevice": "Одно или несколько NVIDIA GPU зависло или отключено",
     "NET45_Not_Installed_msg": "Для корректной работы Miner Legacy Fork Fix требуется .NET Framework 4.7 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.7",
     "Form_Settings_ToolTip_DisableDefaultOptimizations": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
     "Form_Settings_Text_DisableDefaultOptimizations": "Отключить оптимизацию",
@@ -465,7 +469,7 @@
 "Form_Settings_MessageBoxUpdate": "Закрыть программу и начать установку новой версии?",
 "Form_Settings_EnableAlgos": "Включить * для всех устройств",
 "Form_Settings_DisableAlgos": "Выключить * для всех устройств",
-"Form_Settings_checkbox_Use_OpenHardwareMonitor": "Использовать OpenHardwareMonitor",
+"Form_Settings_checkbox_Use_OpenHardwareMonitor": "Использовать OpenHardwareMonitor (CPU, AMD)",
 "Form_Main_Uptime": "Время работы:",
 "Form_Main_Miner": "Майнер: ",
 "Form_Settings_checkBox_ShowUptime": "Показывать время работы",
@@ -524,6 +528,7 @@
 "FormSettings_By_profitability_of_all_devices": "По прибыльности всех устройств",
 "MSIAB_Starting": "Запуск MSI Afterburner",
 "MSIAB_Checking": "Проверка MSI Afterburner",
+"MSIAB_Closing": "Завершение MSI Afterburner",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

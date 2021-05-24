@@ -15,6 +15,7 @@ namespace NiceHashMiner.Benchmarking.BenchHelpers
 
         private double _powerSum;
         private int _powerCount;
+        private int _calcDelay = 20;
         private bool _started;
 
         private readonly ComputeDevice _device;
@@ -53,12 +54,13 @@ namespace NiceHashMiner.Benchmarking.BenchHelpers
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             var power = _device.PowerUsage;
-            if ((_device.Load > LoadThreshold && power > 0) || _started)
+            if ((_device.Load > LoadThreshold && power > 0 && _calcDelay <=0 ) || _started)
             {
                 _powerSum += power;
                 _powerCount++;
                 _started = true;
             }
+            _calcDelay--;
         }
 
         public double EndAndReset()

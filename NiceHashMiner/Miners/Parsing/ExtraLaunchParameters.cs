@@ -59,6 +59,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("nbminer_Intensity", "-i", "--intensity", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_memorytweak", "--mt", "--memory-tweak", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_DIntensity", "--di", "--secondary-intensity", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_temperature-limit", "--tl", "--temperature-limit", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_temperature-start", "--ts", "--temperature-start", "-1", MinerOptionFlagType.MultiParam, ","),
                      new MinerOption("nbminer_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, "")
                 },
                 new List<MinerOption>()
