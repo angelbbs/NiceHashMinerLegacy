@@ -1197,7 +1197,7 @@ namespace NiceHashMiner.Stats
                     }
 
                     GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
-                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
                     {
                         if (deviceName.Contains(GpuRam))
                         {
@@ -1230,7 +1230,7 @@ namespace NiceHashMiner.Stats
                         }
 
                         GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
-                        if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                        if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
                         {
                             if (deviceName.Contains(GpuRam))
                             {

@@ -44,8 +44,6 @@ namespace NiceHashMiner.Forms.Components
 
         public IAlgorithmsListViewOverClock ComunicationInterface { get; set; }
 
-        //public IBenchmarkCalculation BenchmarkCalculation { get; set; }
-
         internal static ComputeDevice _computeDevice;
 
         private class DefaultAlgorithmColorSeter : IListItemCheckColorSetter
@@ -96,39 +94,6 @@ namespace NiceHashMiner.Forms.Components
                             lvi.BackColor = SystemColors.ControlLightLight;
                         }
                     }
-                    /*
-                    else if (!algorithm.BenchmarkNeeded && !algorithm.IsBenchmarkPending)
-                    {
-                        lvi.BackColor = BenchmarkedColor;
-                        if (isListViewEnabled)
-                        {
-                            lvi.ForeColor = Form_Main._foreColor;
-                            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
-                            {
-                                lvi.BackColor = DisabledColor;
-                            }
-                            else
-                            {
-                                lvi.BackColor = SystemColors.ControlLightLight;
-                            }
-                        } else
-                        {
-                            lvi.ForeColor = DisabledForeColor;
-                            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
-                            {
-                                lvi.BackColor = DisabledColor;
-                            }
-                            else
-                            {
-                                lvi.BackColor = SystemColors.ControlLightLight;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        lvi.BackColor = UnbenchmarkedColor;
-                    }
-                    */
                 }
             }
         }
@@ -248,7 +213,6 @@ namespace NiceHashMiner.Forms.Components
             {
                 if (!alg.Hidden)
                 {
-                    //ControlMemoryGpuEntry dev = MSIAfterburner.GetDeviceData(computeDevice.BusID);
                     var lvi = new ListViewItem();
                     string name;
                     string miner;
@@ -262,10 +226,8 @@ namespace NiceHashMiner.Forms.Components
                     int thermal_limit;
                     string fName = "temp\\" + computeDevice.Uuid + "_" + alg.AlgorithmStringID + ".tmp";
                     ControlMemoryGpuEntry dev = MSIAfterburner.ReadFromFile(computeDevice.BusID, fName);
-                    //читать из временых файлов
-
-                        name = alg.AlgorithmName;
-                        miner = alg.MinerBaseTypeName;
+                    name = alg.AlgorithmName;
+                    miner = alg.MinerBaseTypeName;
                     if (_computeDevice.DeviceType == DeviceType.NVIDIA)
                     {
                         gpu_clock = dev.CoreClockBoostCur / 1000;
@@ -317,7 +279,6 @@ namespace NiceHashMiner.Forms.Components
                     lvi.Tag = alg;
                     lvi.Checked = alg.Enabled;
                     listViewAlgorithms.Items.Add(lvi);
-
                 }
             }
 
@@ -599,163 +560,6 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void ToolStripMenuEnablealgo_Click(object sender, EventArgs e)
-        {
-            string aName = "";
-            MinerBaseType mName = MinerBaseType.NONE;
-            //if (_computeDevice != null && _computeDevice.DeviceType != DeviceType.CPU)
-            if (_computeDevice != null)
-            {
-                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
-                {
-                    if (lvi.Tag is Algorithm algorithm)
-                    {
-                        aName =  algorithm.AlgorithmName;
-                        mName = algorithm.MinerBaseType;
-                    }
-                }
-                var miningDevices = ComputeDeviceManager.Available.Devices;
-                foreach (var device in miningDevices)
-                {
-                    if (device != null)
-                    {
-                        var devicesAlgos = device.GetAlgorithmSettings();
-                        foreach (var a in devicesAlgos)
-                        {
-                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
-                            {
-                                a.Enabled = true;
-                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        private void ToolStripMenuDisablealgo_Click(object sender, EventArgs e)
-        {
-            string aName = "";
-            MinerBaseType mName = MinerBaseType.NONE;
-            //if (_computeDevice != null && _computeDevice.DeviceType != DeviceType.CPU)
-            if (_computeDevice != null)
-            {
-                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
-                {
-                    if (lvi.Tag is Algorithm algorithm)
-                    {
-                        aName = algorithm.AlgorithmName;
-                        mName = algorithm.MinerBaseType;
-                        if (algorithm is DualAlgorithm dualAlgo)
-                        {
-                        }
-                    }
-                }
-                var miningDevices = ComputeDeviceManager.Available.Devices;
-                foreach (var device in miningDevices)
-                {
-                    if (device != null)
-                    {
-                        var devicesAlgos = device.GetAlgorithmSettings();
-                        foreach (var a in devicesAlgos)
-                        {
-                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
-                            {
-                                a.Enabled = false;
-                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        private void ToolStripMenuItemEnableAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem lvi in listViewAlgorithms.Items)
-            {
-                lvi.Checked = true;
-            }
-        }
-
-        private void ToolStripMenuItemDisableAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem lvi in listViewAlgorithms.Items)
-            {
-                lvi.Checked = false;
-            }
-        }
-
-        private void ToolStripMenuItemClear_Click(object sender, EventArgs e)
-        {
-            if (_computeDevice != null)
-            {
-                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
-                {
-                    if (lvi.Tag is Algorithm algorithm)
-                    {
-                        algorithm.BenchmarkSpeed = 0;
-                        if (algorithm is DualAlgorithm dualAlgo)
-                        {
-                            dualAlgo.SecondaryBenchmarkSpeed = 0;
-                            dualAlgo.IntensitySpeeds = new Dictionary<int, double>();
-                            dualAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>();
-                            dualAlgo.IntensityUpToDate = false;
-                        }
-
-                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                        // update settings
-//                        ComunicationInterface?.ChangeSpeed(lvi);
-                    }
-                }
-            }
-        }
-        private void ToolStripMenuItemClearAll_Click(object sender, EventArgs e)
-        {
-            if (_computeDevice != null)
-            {
-                var dialogRes = MessageBox.Show(International.GetText("Form_Settings_DelBenchmarks"), "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dialogRes == System.Windows.Forms.DialogResult.No)
-                {
-                    return;
-                }
-
-                foreach (ListViewItem lvi in listViewAlgorithms.Items)
-                {
-                    if (lvi.Tag is Algorithm algorithm)
-                    {
-                        algorithm.BenchmarkSpeed = 0;
-                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-
-                        ComunicationInterface?.ChangeSpeed(lvi);
-                    }
-                }
-            }
-        }
-       
-
-        private void ToolStripMenuItemEnableBenched_Click(object sender, EventArgs e)
-        {
-            /*
-            if (_computeDevice != null)
-            {
-                foreach (ListViewItem lvi in listViewAlgorithms.Items)
-                {
-                    if (lvi.Tag is Algorithm algorithm)
-                    {
-                        if (algorithm.BenchmarkSpeed > 0)
-                        {
-                            lvi.Checked = true;
-                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                        } else
-                        {
-                            lvi.Checked = false;
-                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                        }
-                    }
-                }
-            }
-            */
-        }
-
         private void listViewAlgorithms_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -897,7 +701,6 @@ namespace NiceHashMiner.Forms.Components
 
                     TextBox tbox = new TextBox();
                     this.Controls.Add(tbox);
-                    //MessageBox.Show(SubItembIndex.ToString());
                     int x_cord = 0;
                     for (int i = 0; i < SubItembIndex; i++)
                         x_cord += listViewAlgorithms.Columns[i].Width;
@@ -914,11 +717,8 @@ namespace NiceHashMiner.Forms.Components
                     tbox.KeyPress += TextBoxKeyPress;
                     listViewAlgorithms.Controls.Add(tbox);
                     tbox.Focus();
-                    //tbox.Select(tbox.Text.Length, 1);
                     tbox.SelectAll();
                     item.Checked = !c;
-                    //                    ConfigManager.CommitBenchmarks();
-
                 }
             }
         }
@@ -998,12 +798,12 @@ namespace NiceHashMiner.Forms.Components
                             }
                         }
                         //all
-                        
+
                         if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED))
                         {
                             algorithm.fan = (int)_abdataTmp.FanSpeedCur;
                         }
-                        
+
                         if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT))
                         {
                             algorithm.power_limit = _abdataTmp.PowerLimitCur;
@@ -1123,7 +923,7 @@ namespace NiceHashMiner.Forms.Components
                             else
                             {
                                 algorithm.fan = (int)valuetb;
-                                algorithm.fan_flag = (int)MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None; 
+                                algorithm.fan_flag = (int)MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None;
                             }
                         }
                         //if (_SubItembIndex == 9) algorithm.fan_flag = (int)valuetb;
@@ -1142,7 +942,7 @@ namespace NiceHashMiner.Forms.Components
                             }
                         }
 
-                        }
+                    }
 
                 }
             }
@@ -1288,8 +1088,6 @@ namespace NiceHashMiner.Forms.Components
             }
             if (inputChar == 27)
                 DisposeTextBox((sender as TextBox), null);
-            
-            //(sender as TextBox).Dispose();
 
         }
     }

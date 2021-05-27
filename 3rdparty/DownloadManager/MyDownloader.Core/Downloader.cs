@@ -956,7 +956,7 @@ namespace MyDownloader.Core
                 segment.State = SegmentState.Error;
                 segment.LastError = ex;
 
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine(ex.ToString());
 
                 // raise the event
                 OnSegmentFailed(segment);

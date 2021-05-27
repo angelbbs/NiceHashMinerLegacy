@@ -89,11 +89,14 @@ namespace NiceHashMiner
         public static Color _windowColor;
         public static Color _textColor;
         public static double githubBuild = 0.0d;
+        public static double gitlabBuild = 0.0d;
         public static double currentBuild = 0.0d;
         public static double currentVersion = 0.0d;
         public static double githubVersion = 0.0d;
-        public static string githubName = "";
-        public static string github_browser_download_url = "";
+        public static double gitlabVersion = 0.0d;
+        public static string progName = "";
+        public static string browser_download_url = "";
+        public static string miners_url = "";
         public static string BackupFileName = "";
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
@@ -699,7 +702,7 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
-            new Task(() => CheckGithubDownload()).Start();
+            //new Task(() => CheckGithubDownload()).Start();
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
@@ -807,9 +810,33 @@ namespace NiceHashMiner
                 if (result == DialogResult.Yes)
                 {
                     ConfigManager.GeneralConfigFileCommit();
-                    var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.MinersDownloadSetup));
-                    SetChildFormCenter(downloadUnzipForm);
-                    downloadUnzipForm.ShowDialog();
+                    try
+                    {
+                        if (Updater.Updater.GetGITHUBVersion() > 0)
+                        {
+                            //Form_Main.miners_url = "https://github.com/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_" +
+            //Form_Main.currentVersion.ToString().Trim() + "/miners.zip";
+                            var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.MinersDownloadSetup));
+                            SetChildFormCenter(downloadUnzipForm);
+                            downloadUnzipForm.ShowDialog();
+                        }
+                        else if (Updater.Updater.GetGITLABVersion() > 0)
+                        {
+                            //Form_Main.miners_url = "https://mark.nl.tab.digital/s/dcSqQD4dxq7TLMW/download";
+                            var downloadUnzipForm = new Form_Loading(new MinersDownloader(new DownloadSetup(
+            Form_Main.miners_url,
+            "miners.zip",
+            "miners")));
+
+                            Helpers.ConsolePrint("Download miners", Form_Main.miners_url);
+                            SetChildFormCenter(downloadUnzipForm);
+                            downloadUnzipForm.ShowDialog();
+                        }
+                    } catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("Download miners", ex.ToString());
+                    }
+
                 }
             }
             else
@@ -1451,9 +1478,9 @@ public static void CloseChilds(Process parentId)
         private bool CheckNewVersion()
         {
             bool ret = false;
-            string githubVersion = Updater.Updater.GetVersion().Item1;
-            Double.TryParse(githubVersion.ToString(), out Form_Main.githubVersion);
-            Form_Main.githubBuild = Updater.Updater.GetVersion().Item2;
+            Form_Main.githubVersion = Updater.Updater.GetGITHUBVersion();
+            Form_Main.gitlabVersion = Updater.Updater.GetGITLABVersion();
+
             if (linkLabelNewVersion != null)
             {
                 if (Form_Main.currentBuild < Form_Main.githubBuild)//testing
@@ -1468,12 +1495,20 @@ public static void CloseChilds(Process parentId)
                     Form_Main.NewVersionExist = true;
                     linkLabelNewVersion.Text = (string.Format(International.GetText("Form_Main_new_version_released").Replace("v{0}", "{0}"), "Fork Fix " + Form_Main.githubVersion.ToString()));
                     linkLabelNewVersion.Visible = true;
-                    ret = true;
+                    return true;
                 }
-                if (Form_Main.githubVersion <= 0)
+                if (Form_Main.currentVersion < Form_Main.gitlabVersion)
+                {
+                    Form_Main.NewVersionExist = true;
+                    linkLabelNewVersion.Text = (string.Format(International.GetText("Form_Main_new_version_released").Replace("v{0}", "{0}"), "Fork Fix " + Form_Main.gitlabVersion.ToString()));
+                    linkLabelNewVersion.Visible = true;
+                    return true;
+                }
+                if (Form_Main.githubVersion <= 0 && Form_Main.gitlabVersion <= 0)
                 {
                     Form_Main.NewVersionExist = false;
-                    ret = false;
+                    Helpers.ConsolePrint("CheckNewVersion", "FATAL ERROR! GITHUB and GITLAB down");
+                    return false;
                 }
 
             }

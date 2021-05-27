@@ -36,13 +36,13 @@ namespace NiceHashMiner.Updater
                 }
             }
             _autoupdate = autoupdate;
-            string fileName = "temp/" + Form_Main.githubName;
+            string fileName = "temp/" + Form_Main.progName;
             if(!Directory.Exists("temp")) Directory.CreateDirectory("temp");
             if (File.Exists(fileName) != true)
             {
                 File.Delete(fileName);
             }
-            Helpers.ConsolePrint("Updater", "Try download " + Form_Main.github_browser_download_url);
+            Helpers.ConsolePrint("Updater", "Try download " + Form_Main.browser_download_url);
             try
             {
                 //ServicePointManager.SecurityProtocol = (SecurityProtocolType)SslProtocols.None;
@@ -52,7 +52,7 @@ namespace NiceHashMiner.Updater
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
 
-                client.DownloadFileAsync(new Uri(Form_Main.github_browser_download_url), "temp/" + Form_Main.githubName);
+                client.DownloadFileAsync(new Uri(Form_Main.browser_download_url), "temp/" + Form_Main.progName);
             }
             catch (WebException er)
             {
@@ -82,7 +82,7 @@ namespace NiceHashMiner.Updater
                     ConfigManager.GeneralConfigFileCommit();
                     Thread.Sleep(1000);
                     Process setupProcess = new Process();
-                    setupProcess.StartInfo.FileName = @"temp\" + Form_Main.githubName;
+                    setupProcess.StartInfo.FileName = @"temp\" + Form_Main.progName;
                     setupProcess.StartInfo.Arguments = "/silent /dir=\"" + curdir + "\"";
                     setupProcess.Start();
                 }
@@ -109,7 +109,7 @@ namespace NiceHashMiner.Updater
                         ConfigManager.GeneralConfigFileCommit();
 
                         Process setupProcess = new Process();
-                        setupProcess.StartInfo.FileName = @"temp\" + Form_Main.githubName;
+                        setupProcess.StartInfo.FileName = @"temp\" + Form_Main.progName;
                         setupProcess.StartInfo.Arguments = "/dir=\"" + curdir + "\"";
                         setupProcess.Start();
                     }
@@ -201,42 +201,105 @@ namespace NiceHashMiner.Updater
             }
         }
 
-        public static Tuple<string, double> GetVersion()
+        public static double GetGITHUBVersion()
         {
-            string url = "https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest";
+            //github
+            string url = "https://api.github.com/repos/angelbbs0/NiceHashMinerLegacy/releases/latest";
             //string url = "https://api.github.com/repos/angelbbs/nhmlff_update/releases/latest";
-            string r1 = GetGitHubAPIData(url);
-            if (r1 == null) return Tuple.Create("", 0d);
-            //github_version nhjson;
             string tagname = "";
-            try
+            string r1 = GetGitHubAPIData(url);
+            if (r1 != null & !r1.Contains("(404)"))
             {
-                dynamic nhjson = JsonConvert.DeserializeObject(r1, Globals.JsonSettings);
-                //var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
-                var gitassets = nhjson.assets;
-                for (var i = 0; i < gitassets.Count; i++)
+                try
                 {
-                    string n = gitassets[i].name;
-                    if (n.Contains("Setup.exe"))
+                    dynamic nhjson = JsonConvert.DeserializeObject(r1, Globals.JsonSettings);
+                    //var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
+                    var gitassets = nhjson.assets;
+                    for (var i = 0; i < gitassets.Count; i++)
                     {
-                        Form_Main.githubName = n;
-                        Form_Main.github_browser_download_url = gitassets[i].browser_download_url;
-                        DateTime build = gitassets[i].updated_at;
-                        string buildDate = build.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
-                        Double.TryParse(buildDate.ToString(), out Form_Main.githubBuild);
+                        string n = gitassets[i].name;
+                        if (n.Contains("Setup.exe"))
+                        {
+                            Form_Main.progName = n;
+                            Form_Main.browser_download_url = gitassets[i].browser_download_url;
+                            DateTime build = gitassets[i].updated_at;
+                            string buildDate = build.ToString("u").Replace("-", "").Replace(":", "").Replace("Z", "").Replace(" ", ".");
+                            Double.TryParse(buildDate.ToString(), out Form_Main.githubBuild);
+                        }
                     }
+                    tagname = nhjson.tag_name;
+                    Double.TryParse(tagname.Replace("Fork_Fix_", "").ToString(), out Form_Main.githubVersion);
+                    return (double)Form_Main.githubVersion;
                 }
-                tagname = nhjson.tag_name;
-                Double.TryParse(tagname.Replace("Fork_Fix_", "").ToString(), out Form_Main.githubVersion);
-                return Tuple.Create(tagname, (double)Form_Main.githubBuild);
-            }
-            catch (Exception ex)
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GITHUB", ex.ToString());
+                    Helpers.ConsolePrint("GITHUB", "Dev github account banned or not found!");
+                    Form_Main.githubBuild = 0;
+                    Form_Main.githubVersion = 0;
+                    return 0.0d;
+                }
+            } else
             {
-                Helpers.ConsolePrint("GITHUB", ex.ToString());
+                Helpers.ConsolePrint("GITHUB", "ERROR! Dev github account banned or not found!");
+                Form_Main.githubBuild = 0;
+                Form_Main.githubVersion = 0;
+                return 0.0d;
             }
-            return Tuple.Create("", (double)Form_Main.githubBuild);
         }
+        public static double GetGITLABVersion()
+        {
+            //gitlab
+            string url = "https://gitlab.com/api/v4/projects/26404146/repository/tags";
+            string r2 = GetGitHubAPIData(url);
+            if (r2 != null & !r2.Contains("(404)"))
+            {
+                try
+                {
+                    dynamic gitlabjson = JsonConvert.DeserializeObject(r2, Globals.JsonSettings);
+                    string tag = (gitlabjson[0].name).ToString();
+                    Double.TryParse(tag.Replace("Fork_Fix_", "").ToString(), out Form_Main.gitlabVersion);
+                    Helpers.ConsolePrint("GITLAB", tag);
 
+                    url = "https://gitlab.com/api/v4/projects/26404146/releases/" + tag;
+                    string r3 = GetGitHubAPIData(url);
+                    dynamic gitlabjson2 = JsonConvert.DeserializeObject(r3, Globals.JsonSettings);
+                    int count = gitlabjson2.assets.count;
+                    foreach (var l in gitlabjson2.assets.links)
+                    {
+                        string url0 = l.url;
+                        string name = l.name;
+                        if (name.Contains("installer"))
+                        {
+                            Form_Main.browser_download_url = url0;
+                            //Form_Main.progName = url0.Substring(url0.LastIndexOfAny(@"/".ToCharArray()) + 1);
+                            Form_Main.progName = "NHML.Fork.Fix." + Form_Main.gitlabVersion.ToString() + ".Setup.exe";
+                        }
+                        if (name.Contains("iners"))
+                        {
+                            Form_Main.miners_url = url0;
+                        }
+                    }
+                    
+                    return (double)Form_Main.gitlabVersion;
+                }
+                catch (Exception ex2)
+                {
+                    Helpers.ConsolePrint("GITLAB", ex2.ToString());
+                    Helpers.ConsolePrint("GITLAB", "ERROR! Dev gitlab account banned or not found!");
+                    Form_Main.gitlabBuild = 0;
+                    Form_Main.gitlabVersion = 0;
+                    return 0.0d;
+                }
+            }
+            else
+            {
+                Helpers.ConsolePrint("GITLAB", "ERROR! Dev gitlab account banned or not found!");
+                Form_Main.gitlabBuild = 0;
+                Form_Main.gitlabVersion = 0;
+                return 0.0d;
+            }
+        }
         public static string GetGitHubAPIData(string URL)
         {
             string ResponseFromServer;
@@ -264,7 +327,7 @@ namespace NiceHashMiner.Updater
             {
                 Helpers.ConsolePrint("GITHUB", ex.Message);
                 //MessageBox.Show(ex.Message + " Response: " + ex.Data);
-                return null;
+                return ex.Message;
             }
             return ResponseFromServer;
         }

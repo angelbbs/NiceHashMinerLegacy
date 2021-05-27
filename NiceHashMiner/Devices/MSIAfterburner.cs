@@ -117,65 +117,7 @@ namespace NiceHashMiner.Devices
                 MSIAfterburnerRUN();
                 //MSIAfterburnerInit();
             }
-            /*
-            try
-            {
-                if (macm != null) macm.ReloadHeader();
-            } catch (Exception ex)
-            {
-                Helpers.ConsolePrint("CheckMSIAfterburner", ex.Message);
-                if (ex.InnerException != null)
-                    Helpers.ConsolePrint("CheckMSIAfterburner", ex.InnerException.Message);
-
-                //break;
-                if (ex.Message.Contains("not support"))
-                {
-
-                }
-
-                if (ex.Message.Contains("not connect"))
-                {
-                    if (macm != null) macm.Disconnect();
-                    if (mahm != null) mahm.Disconnect();
-                    Initialized = false;
-                    MSIAfterburner.macm = null;
-                    MSIAfterburner.mahm = null;
-                    Helpers.ConsolePrint("CheckMSIAfterburner", "Killing old instance AB and run again");
-                    MSIAfterburnerKill();
-                    Thread.Sleep(10);
-                    //MSIAfterburnerRUN(true);
-                    Thread.Sleep(100);
-                }
-
-                if (ex.Message.Contains("invalid"))
-                {
-                    if (macm != null) macm.Disconnect();
-                    if (mahm != null) mahm.Disconnect();
-                    Initialized = false;
-                    MSIAfterburner.macm = null;
-                    MSIAfterburner.mahm = null;
-                    Helpers.ConsolePrint("CheckMSIAfterburner", "Killing old instance AB and run again");
-                    MSIAfterburnerKill();
-                    Thread.Sleep(10);
-                    //MSIAfterburnerRUN(true);
-                    Thread.Sleep(100);
-                }
-                if (ex.Message.Contains("dead"))
-                {
-                    if (macm != null) macm.Disconnect();
-                    if (mahm != null) mahm.Disconnect();
-                    Initialized = false;
-                    MSIAfterburner.macm = null;
-                    MSIAfterburner.mahm = null;
-                    Helpers.ConsolePrint("CheckMSIAfterburner", "Killing old instance AB and run again");
-                    MSIAfterburnerKill();
-                    Thread.Sleep(10);
-                    //MSIAfterburnerRUN(true);
-                    Thread.Sleep(100);
-                }
-            }
-            */
-
+            
             return true;
         }
         public static bool MSIAfterburnerRUN(bool forceRun = false)
@@ -253,7 +195,7 @@ namespace NiceHashMiner.Devices
                         {
                             Helpers.ConsolePrint("MSIAfterburnerRUN", "Check MSI Afterburner shared memory. Try " + repeats.ToString());
                             IntPtr handle = MSI.Afterburner.SharedMemory.CheckSharedMemory("MACMSharedMemory", Win32API.FileMapAccess.FileMapAllAccess);
-                            Helpers.ConsolePrint("MSIAfterburnerRUN", "handle: " + handle.ToString());
+                            //Helpers.ConsolePrint("MSIAfterburnerRUN", "handle: " + handle.ToString());
                             if (handle != IntPtr.Zero)
                             {
                                 meminit = true;
@@ -630,7 +572,7 @@ namespace NiceHashMiner.Devices
                         if (File.Exists(FileName))
                         {
                             byte[] buffer = File.ReadAllBytes(FileName);
-                            Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Load from file: " + FileName);
+                            //Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Load from file: " + FileName);
                             dev = RawDeserialize(buffer, macm.GpuEntries[i]);
                             if (dev == null)
                             {
@@ -703,11 +645,14 @@ namespace NiceHashMiner.Devices
                     
                     for (int i = 0; i < macm.Header.GpuEntryCount; i++)
                     {
+                        /*
                         if (macm.GpuEntries[i].GpuId.Contains("DEV_9498"))
                         {
                             Helpers.ConsolePrint("MSIAfterburnerInit", "Ahtung!");
                             break;
                         }
+                        */
+                        /*
                         if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
                         {
                             Helpers.ConsolePrint("MSIAfterburnerInit", "GPU"+i.ToString() + " Curve enabled");
@@ -723,6 +668,7 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageDef" + macm.GpuEntries[i].CoreVoltageDef.ToString());
                         Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageMax" + macm.GpuEntries[i].CoreVoltageMax.ToString());
                         Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageMin" + macm.GpuEntries[i].CoreVoltageMin.ToString());
+                        */
                     }
                     
                     FirstInitFiles();

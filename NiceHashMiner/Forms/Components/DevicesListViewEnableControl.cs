@@ -531,7 +531,7 @@ namespace NiceHashMiner.Forms.Components
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location))
                 {
                     contextMenuStrip1.Items.Clear();
-                    //var settings = new Form_Settings();
+
                     var t = Form_Main.settings.tabControlGeneral.SelectedTab;
 
                     if (IsSettingsCopyEnabled)
@@ -545,8 +545,6 @@ namespace NiceHashMiner.Forms.Components
                                 var copyBenchItem = new ToolStripMenuItem();
                                 var copyTuningItem = new ToolStripMenuItem();
                                 var copyOverClockItem = new ToolStripMenuItem();
-                                //copyBenchItem.DropDownItems
-                                //foreach (var cDev in sameDevTypes.OrderBy(i => i.IDByBus))
                                 foreach (var cDev in sameDevTypes)
                                 {
                                     Manufacturer = "";
@@ -619,7 +617,6 @@ namespace NiceHashMiner.Forms.Components
                                             var copyBenchDropDownItem = new ToolStripMenuItem
                                             {
                                                 Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
-                                                //Text = (cDev.NameCount).ToString() + " " + devInfo,
                                                 Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
                                             };
                                             copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
@@ -629,7 +626,6 @@ namespace NiceHashMiner.Forms.Components
                                             var copyTuningDropDownItem = new ToolStripMenuItem
                                             {
                                                 Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo
-                                                //Checked = cDev.UUID == CDevice.TuningCopyUUID
                                             };
                                             copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
                                             copyTuningDropDownItem.Tag = cDev.Uuid;
@@ -644,8 +640,6 @@ namespace NiceHashMiner.Forms.Components
                                             var copyOverclockDropDownItem = new ToolStripMenuItem
                                             {
                                                 Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
-                                                //Text = (cDev.NameCount).ToString() + " " + devInfo,
-                                                //Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
                                             };
                                             copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
                                             copyOverclockDropDownItem.Tag = cDev.Uuid;

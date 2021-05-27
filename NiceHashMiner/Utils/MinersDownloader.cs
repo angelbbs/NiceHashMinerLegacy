@@ -189,8 +189,9 @@ namespace NiceHashMiner.Utils
                             entry.WriteToDirectory("", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 
                             var prog = sizeCount / (double) fileArchive.Length * 100;
-                            _minerUpdateIndicator.SetProgressValueAndMsg((int) prog,
-                                string.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
+                            // _minerUpdateIndicator.SetProgressValueAndMsg((int) prog,
+                            //   string.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
+                            _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, entry.Key.Replace("miners/", ""));
                         }
                     }
                     archive.Dispose();

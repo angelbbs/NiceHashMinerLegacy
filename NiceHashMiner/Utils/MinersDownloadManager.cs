@@ -7,5 +7,9 @@ namespace NiceHashMiner.Utils
             Form_Main.currentVersion.ToString().Trim() + "/miners.zip",
             "miners.zip",
             "miners");
+        public static DownloadSetup MinersDownloadSetupMirror = new DownloadSetup(
+            Form_Main.miners_url,
+            "miners.zip",
+            "miners");
     }
 }

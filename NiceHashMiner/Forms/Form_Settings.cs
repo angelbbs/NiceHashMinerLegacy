@@ -392,7 +392,12 @@ namespace NiceHashMiner.Forms
                     linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
                     buttonUpdate.Visible = true;
                 }
-                if (Form_Main.githubVersion <= 0)
+                if (Form_Main.currentVersion < Form_Main.gitlabVersion)
+                {
+                    linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.gitlabVersion.ToString();
+                    buttonUpdate.Visible = true;
+                }
+                if (Form_Main.githubVersion <= 0 && Form_Main.gitlabVersion <= 0)
                 {
                     linkLabelNewVersion2.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
                     buttonUpdate.Visible = false;
@@ -415,7 +420,13 @@ namespace NiceHashMiner.Forms
                 buttonUpdate.Visible = true;
                 linkLabelNewVersion2.LinkBehavior = LinkBehavior.SystemDefault;
             }
-            if (Form_Main.githubVersion <= 0)
+            if (ConfigManager.GeneralConfig.ForkFixVersion < Form_Main.gitlabVersion)
+            {
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.gitlabVersion.ToString();
+                buttonUpdate.Visible = true;
+                linkLabelNewVersion2.LinkBehavior = LinkBehavior.SystemDefault;
+            }
+            if (Form_Main.githubVersion <= 0 && Form_Main.gitlabVersion <= 0)
             {
                 linkLabelNewVersion2.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
                 buttonUpdate.Visible = false;
@@ -2045,9 +2056,10 @@ namespace NiceHashMiner.Forms
 
         private void buttonCheckNewVersion_Click(object sender, EventArgs e)
         {
-            string githubVersion = Updater.Updater.GetVersion().Item1;
-            Double.TryParse(githubVersion.ToString(), out Form_Main.githubVersion);
-            Form_Main.githubBuild = Updater.Updater.GetVersion().Item2;
+            Form_Main.githubVersion = Updater.Updater.GetGITHUBVersion();
+            Form_Main.gitlabVersion = Updater.Updater.GetGITLABVersion();
+
+            //Form_Main.githubBuild = Updater.Updater.GetVersion().Item2;
 
             linkLabelNewVersion2.Text = International.GetText("Form_Settings_Nonewversionorbuild");
             if (Form_Main.currentBuild < Form_Main.githubBuild)//testing
@@ -2061,7 +2073,12 @@ namespace NiceHashMiner.Forms
                 linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.githubVersion.ToString();
                 buttonUpdate.Visible = true;
             }
-            if (Form_Main.githubVersion <= 0)
+            if (Form_Main.currentVersion < Form_Main.gitlabVersion)
+            {
+                linkLabelNewVersion2.Text = International.GetText("Form_Settings_Newversion") + Form_Main.gitlabVersion.ToString();
+                buttonUpdate.Visible = true;
+            }
+            if (Form_Main.githubVersion <= 0 && Form_Main.gitlabVersion <= 0)
             {
                 linkLabelNewVersion2.Text = International.GetText("Form_Settings_Errorwhencheckingnewversion");
                 buttonUpdate.Visible = false;
@@ -2071,7 +2088,14 @@ namespace NiceHashMiner.Forms
 
         private void linkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+            if (Form_Main.githubVersion > 0)
+            {
+                System.Diagnostics.Process.Start("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+            }
+            if (Form_Main.githubVersion <= 0 && Form_Main.gitlabVersion > 0)
+            {
+                System.Diagnostics.Process.Start("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
+            }
         }
 
         private void linkLabelCurrentVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
