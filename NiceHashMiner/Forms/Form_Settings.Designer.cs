@@ -145,6 +145,8 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.checkBox_ABMinimize = new System.Windows.Forms.CheckBox();
             this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
             this.groupBoxOverClockSettings = new System.Windows.Forms.GroupBox();
@@ -212,6 +214,7 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             this.tabPageOverClock.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBoxOverClockSettings.SuspendLayout();
             this.tabPageTools.SuspendLayout();
             this.groupBoxToolsNH.SuspendLayout();
@@ -1727,6 +1730,8 @@ namespace NiceHashMiner.Forms
             // tabPageOverClock
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageOverClock.Controls.Add(this.linkLabel3);
+            this.tabPageOverClock.Controls.Add(this.pictureBox2);
             this.tabPageOverClock.Controls.Add(this.checkBox_ABMinimize);
             this.tabPageOverClock.Controls.Add(this.checkBox_ABEnableOverclock);
             this.tabPageOverClock.Controls.Add(this.groupBoxOverClockSettings);
@@ -1736,6 +1741,29 @@ namespace NiceHashMiner.Forms
             this.tabPageOverClock.Size = new System.Drawing.Size(669, 439);
             this.tabPageOverClock.TabIndex = 5;
             this.tabPageOverClock.Text = "OverClock";
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.linkLabel3.Location = new System.Drawing.Point(394, 166);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(55, 13);
+            this.linkLabel3.TabIndex = 406;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "linkLabel3";
+            this.linkLabel3.Click += new System.EventHandler(this.linkLabel3_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox2.Location = new System.Drawing.Point(371, 161);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox2.TabIndex = 405;
+            this.pictureBox2.TabStop = false;
             // 
             // checkBox_ABMinimize
             // 
@@ -2226,6 +2254,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             this.tabPageOverClock.ResumeLayout(false);
             this.tabPageOverClock.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBoxOverClockSettings.ResumeLayout(false);
             this.tabPageTools.ResumeLayout(false);
             this.groupBoxToolsNH.ResumeLayout(false);
@@ -2397,5 +2426,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_ABEnableOverclock;
         private System.Windows.Forms.CheckBox checkBox_ABMinimize;
         private System.Windows.Forms.CheckBox checkBox_By_profitability_of_all_devices;
+        public System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }

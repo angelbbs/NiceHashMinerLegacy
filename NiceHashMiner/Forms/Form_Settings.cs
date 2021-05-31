@@ -354,6 +354,7 @@ namespace NiceHashMiner.Forms
             checkBox_BackupBeforeUpdate.Text = International.GetText("Form_Settings_checkBox_backup_before_update");
             checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
             checkBox_ABMinimize.Text = International.GetText("FormSettings_AB_Minimize");
+            linkLabel3.Text = International.GetText("FormSettings_AB_HowToUse");
             labelCheckforprogramupdatesevery.Text = International.GetText("Form_Settings_labelCheckforprogramupdatesevery");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
@@ -890,6 +891,7 @@ namespace NiceHashMiner.Forms
             tabControlGeneral.TabPages[0].Text = International.GetText("FormSettings_Tab_General");
             tabControlGeneral.TabPages[1].Text = International.GetText("FormSettings_Tab_Advanced");
             tabControlGeneral.TabPages[2].Text = International.GetText("FormSettings_Tab_Devices_Algorithms");
+            tabControlGeneral.TabPages[3].Text = International.GetText("FormSettings_ABOverclockTab");
             groupBox_Main.Text = International.GetText("FormSettings_Tab_General_Group_Main");
             groupBox_Localization.Text = International.GetText("FormSettings_Tab_General_Group_Localization");
             groupBox_Logging.Text = International.GetText("FormSettings_Tab_General_Group_Logging");
@@ -2491,6 +2493,11 @@ namespace NiceHashMiner.Forms
                 
             }
             oc.Focus();
+        }
+
+        private void linkLabel3_Click(object sender, EventArgs e)
+        {
+            Process.Start("Help\\How to use MSI Afterburner for overclocking.avi");
         }
     }
 }

@@ -204,7 +204,7 @@ namespace NiceHashMiner.Updater
         public static double GetGITHUBVersion()
         {
             //github
-            string url = "https://api.github.com/repos/angelbbs0/NiceHashMinerLegacy/releases/latest";
+            string url = "https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest";
             //string url = "https://api.github.com/repos/angelbbs/nhmlff_update/releases/latest";
             string tagname = "";
             string r1 = GetGitHubAPIData(url);

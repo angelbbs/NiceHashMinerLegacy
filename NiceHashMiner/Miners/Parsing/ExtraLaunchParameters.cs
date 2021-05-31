@@ -46,7 +46,10 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("trex_mt", "--mt", "--mt", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_pl", "--pl", "--pl", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_mclock", "--mclock", "--mclock", "-1", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("trex_cclock ", "--cclock ", "--cclock", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_cclock", "--cclock", "--cclock", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lock_cclock", "--lock-cclock", "--lock-cclock", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lock_cv", "--lock-cv", "--lock-cv", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_pstate", "--pstate", "--pstate", "p0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.SingleParam)
                 },

@@ -6,6 +6,7 @@ using System.Timers;
 using NiceHashMinerLegacy.Common.Enums;
 using System.Threading.Tasks;
 using NiceHashMiner.Miners;
+using System.Threading;
 
 namespace NiceHashMiner.Switching
 {
@@ -21,7 +22,7 @@ namespace NiceHashMiner.Switching
         /// </summary>
         public static event EventHandler<SmaUpdateEventArgs> SmaCheck;
 
-        public static Timer _smaCheckTimer;
+        public static System.Timers.Timer _smaCheckTimer;
         private static readonly Random _random = new Random();//?
 
         public static int _ticksForStable;
@@ -65,7 +66,7 @@ namespace NiceHashMiner.Switching
             if (_smaCheckTimer == null)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
-                _smaCheckTimer = new Timer(1000);
+                _smaCheckTimer = new System.Timers.Timer(1000);
                 _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
                 _smaCheckTimer.AutoReset = false;
                 _smaCheckTimer.Start();
@@ -104,7 +105,10 @@ namespace NiceHashMiner.Switching
         {
             if (SmaCheckTimerOnElapsedRun)
             {
-                Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed already running");
+                Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed already running. Restarting");
+                Stop();
+                Thread.Sleep(1000);
+                Start();
                 if (_smaCheckTimer != null)
                 {
                     _smaCheckTimer.Interval = _smaCheckTime * 1000;
