@@ -1,4 +1,5 @@
 ﻿using ManagedCuda.Nvml;
+using NvidiaGPUGetDataHost.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,9 +56,12 @@ namespace NvidiaGPUGetDataHost
             return structure;
         }
 
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
+        private static Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.Name.Contains("log4net")) //имя dll
+                return Assembly.Load(Resources.log4net); //dll в ресурсах
+            return null;
+        }
         [STAThread]
         public static void Main()
         {
@@ -66,28 +70,47 @@ namespace NvidiaGPUGetDataHost
                 return;
             }
 
+            AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
+
+            Logger.ConfigureWithFile();
+            Logger.ConsolePrint("NvidiaGPUGetDataHost", "Start");
             try
             {
                 uint devCount = 0;
                 nvmlReturn ret;
+                var pathVar = Environment.GetEnvironmentVariable("PATH");
+                pathVar += ";" + Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                               "\\NVIDIA Corporation\\NVSMI"; ;
+                Environment.SetEnvironmentVariable("PATH", pathVar);
                 nvmlDevice _nvmlDevice = new nvmlDevice();
-                NvmlNativeMethods.nvmlInit();
+                nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
+                if (nvmlLoaded != nvmlReturn.Success)
+                {
+                    Logger.ConsolePrint("NvidiaGPUGetDataHost", "NVSMI Error: " + nvmlLoaded);
+                    return;
+                }
 
                 ret = NvmlNativeMethods.nvmlDeviceGetCount(ref devCount);
+                /*
                 using (EventLog eventLog = new EventLog("Application"))
                 {
                     eventLog.Source = "NvidiaGPUGetDataHost";
                     eventLog.WriteEntry("devCount: " + devCount.ToString(), EventLogEntryType.Information, 101, 1);
                 }
+                */
                 if (ret != nvmlReturn.Success)
                 {
+                    /*
                     using (EventLog eventLog = new EventLog("Application"))
                     {
                         eventLog.Source = "NvidiaGPUGetDataHost";
                         eventLog.WriteEntry("nvmlDeviceGetCount error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                     }
+                    */
+                    Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetCount error: " + ret.ToString());
                     return;
                 }
+                Logger.ConsolePrint("NvidiaGPUGetDataHost", "NVIDIA devices: " + devCount.ToString());
 
                 List<NvData> gpuList = new List<NvData>();
 
@@ -102,11 +125,13 @@ namespace NvidiaGPUGetDataHost
 
                 int size = Marshal.SizeOf(devn) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_temp);
 
-                MemoryMappedFile sharedMemory = MemoryMappedFile.CreateOrOpen("NvidiaGPUGetDataHost", size * Marshal.SizeOf(devCount));
+                //MemoryMappedFile sharedMemory = MemoryMappedFile.CreateOrOpen("NvidiaGPUGetDataHost", size * Marshal.SizeOf(devCount));
+                MemoryMappedFile sharedMemory = MemoryMappedFile.CreateOrOpen("NvidiaGPUGetDataHost", size * devCount + Marshal.SizeOf(devCount));
                 do
                 {
                     for (int dev = 0; dev < devCount; dev++)
                     {
+                        /*
                         ret = NvmlNativeMethods.nvmlDeviceGetCount(ref devCount);
                         if (ret != nvmlReturn.Success)
                         {
@@ -117,71 +142,107 @@ namespace NvidiaGPUGetDataHost
                             }
                             return;
                         }
-
+                        */
                         ret = NvmlNativeMethods.nvmlDeviceGetHandleByIndex((uint)dev, ref _nvmlDevice);
                         if (ret != nvmlReturn.Success)
                         {
+                            /*
                             using (EventLog eventLog = new EventLog("Application"))
                             {
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetHandleByIndex error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
-                            errors++;
-                            break;
+                            */
+                            Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetHandleByIndex error: " + ret.ToString());
+                            if (!ret.ToString().Contains("NotSupported"))
+                            {
+                                errors++;
+                                //break;
+                            }
                         }
                         Thread.Sleep(200);
                         ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref _power);// <- mem leak 461.40+
                         if (ret != nvmlReturn.Success)
                         {
+                            /*
                             using (EventLog eventLog = new EventLog("Application"))
                             {
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetPowerUsage error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
-                            errors++;
-                            break;
+                            */
+                            if (!ret.ToString().Contains("NotSupported"))
+                            {
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetPowerUsage error: " + ret.ToString());
+                                errors++;
+                            }
+                            //break;
                         }
                         Thread.Sleep(200);
                         ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref _fan);
                         if (ret != nvmlReturn.Success)
                         {
+                            /*
                             using (EventLog eventLog = new EventLog("Application"))
                             {
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetFanSpeed error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
-                            errors++;
-                            break;
+                            */
+                            if (!ret.ToString().Contains("NotSupported"))
+                            {
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetFanSpeed error: " + ret.ToString());
+                                errors++;
+                            }
+                            //break;
                         }
                         Thread.Sleep(200);
                         var rates = new nvmlUtilization();
                         ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
                         if (ret != nvmlReturn.Success)
                         {
+                            /*
                             using (EventLog eventLog = new EventLog("Application"))
                             {
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetUtilizationRates error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
-                            break;
+                            */
+                            if (!ret.ToString().Contains("NotSupported"))
+                            {
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetUtilizationRates error: " + ret.ToString());
+                            }
+                            //break;
                         }
                         Thread.Sleep(200);
                         _load = rates.gpu;
                         ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu, ref _temp);
                         if (ret != nvmlReturn.Success)
                         {
+                            /*
                             using (EventLog eventLog = new EventLog("Application"))
                             {
                                 eventLog.Source = "NvidiaGPUGetDataHost";
                                 eventLog.WriteEntry("nvmlDeviceGetTemperature error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
                             }
-                            errors++;
-                            break;
+                            */
+                            if (!ret.ToString().Contains("NotSupported"))
+                            {
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetTemperature error: " + ret.ToString());
+                                errors++;
+                            }
+                            //break;
                         }
                         Thread.Sleep(200);
                         using (MemoryMappedViewAccessor writer = sharedMemory.CreateViewAccessor(0, size * devCount + Marshal.SizeOf(devCount)))
                         {
-                            writer.WriteArray<byte>(0, RawSerialize(devCount), 0, Marshal.SizeOf(devCount));
+                            if (ret == nvmlReturn.Success)
+                            {
+                                writer.WriteArray<byte>(0, RawSerialize(devCount), 0, Marshal.SizeOf(devCount));
+                            } else
+                            {
+                                writer.WriteArray<byte>(0, RawSerialize(0), 0, Marshal.SizeOf(devCount));
+                            }
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount), BitConverter.GetBytes(Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue)), 0, Marshal.SizeOf(dev));
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev), BitConverter.GetBytes(_power), 0, Marshal.SizeOf(_power));
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power), BitConverter.GetBytes(_fan), 0, Marshal.SizeOf(_fan));
@@ -202,23 +263,29 @@ namespace NvidiaGPUGetDataHost
                     if (bytesInUse > 256 * 1048576)
                     {
                         NvmlNativeMethods.nvmlShutdown();
+                        /*
                         using (EventLog eventLog = new EventLog("Application"))
                         {
                             eventLog.Source = "NvidiaGPUGetDataHost";
                             eventLog.WriteEntry("Mem leak. Restart", EventLogEntryType.Warning, 101, 1);
                         }
-                        System.Windows.Forms.Application.Restart();
+                        */
+                        Logger.ConsolePrint("NvidiaGPUGetDataHost", "Memory leak exceeded limit in 256MB. Closing");
+                        //System.Windows.Forms.Application.Restart();
                         System.Environment.Exit(1);
                     }
-                    if (errors > 5)
+                    if (errors > 10)
                     {
                         NvmlNativeMethods.nvmlShutdown();
+                        /*
                         using (EventLog eventLog = new EventLog("Application"))
                         {
                             eventLog.Source = "NvidiaGPUGetDataHost";
                             eventLog.WriteEntry("Too many errors. Restart", EventLogEntryType.Warning, 101, 1);
                         }
-                        System.Windows.Forms.Application.Restart();
+                        */
+                        Logger.ConsolePrint("NvidiaGPUGetDataHost", "Too many errors. Closing");
+                        //System.Windows.Forms.Application.Restart();
                         System.Environment.Exit(1);
                     }
                     ticks++;
@@ -228,12 +295,16 @@ namespace NvidiaGPUGetDataHost
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                /*
                 using (EventLog eventLog = new EventLog("Application"))
                 {
                     eventLog.Source = "NvidiaGPUGetDataHost";
                     eventLog.WriteEntry("Exception: " + ex.ToString(), EventLogEntryType.Error, 101, 1);
                 }
+                */
+                Logger.ConsolePrint("NvidiaGPUGetDataHost", "Exception: " + ex.ToString());
             }
         }
+        
     }
 }

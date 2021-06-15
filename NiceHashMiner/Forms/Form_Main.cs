@@ -135,6 +135,7 @@ namespace NiceHashMiner
         public static bool FormMainMoved = false;
         public static bool MSIAfterburnerAvailabled = false;
         public static bool MSIAfterburnerRunning = false;
+        public static bool OverclockEnabled = false;
         public static bool NVIDIA_orderBug = false;
         public static bool MiningStarted = false;
         public static int devCur = 0;
@@ -649,6 +650,9 @@ namespace NiceHashMiner
         public static int ProgressValue = 0;
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
+            //Запускает приложение в классической теме windows. На 7-ке не отображается progressbar
+            //Application.VisualStyleState = System.Windows.Forms.VisualStyles.VisualStyleState.NoneEnabled;
+
             if (!ConfigManager.GeneralConfig.AutoStartMining)
             {
                 buttonStopMining.Enabled = false;
@@ -1472,6 +1476,7 @@ public static void CloseChilds(Process parentId)
             bool ret = CheckNewVersion();
                 Helpers.ConsolePrint("GITHUB", "GITHUB Version: " + Form_Main.githubVersion.ToString());
                 Helpers.ConsolePrint("GITHUB", "GITHUB Build: " + Form_Main.githubBuild.ToString());
+            Helpers.ConsolePrint("GITLAB", "GITLAB Version: " + Form_Main.gitlabVersion.ToString());
             //SetVersion(ghv);
             return ret;
         }
@@ -2051,6 +2056,19 @@ public static void CloseChilds(Process parentId)
             {
 
             }
+            try
+            {
+                foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
+                {
+                    process.Kill(); 
+                }
+
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
             //stop openhardwaremonitor
             if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {
@@ -2763,28 +2781,31 @@ public static void CloseChilds(Process parentId)
                 }
                 NvData d = new NvData();
                 ComputeDeviceManager.CudaDevicesCountFromNVMLHost = (int)devCount;
-            gpuList.Clear();
+                gpuList.Clear();
 
-            for (int dev = 0; dev < devCount; dev++)
-            {
-                using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, size * devCount + Marshal.SizeOf(devCount), MemoryMappedFileAccess.Read))
+                for (int dev = 0; dev < devCount; dev++)
                 {
-                    _dev = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount));
-                    _power = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev));
-                    _fan = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power));
-                    _load = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan));
-                    _temp = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load));
-                    //Helpers.ConsolePrint("GetNVMLData", "dev: " + dev.ToString() + " _dev: " + _dev.ToString() +
-                      //" _power: " + _power.ToString() + " _fan: " + _fan.ToString() + " _load: " + _load.ToString() +
-                     //" _temp: " + _temp.ToString());
-                    d.nGpu = _dev;
-                    d.power = _power;
-                    d.fan = _fan;
-                    d.load = _load;
-                    d.temp = _temp;
-                    gpuList.Add(d);
+                    using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, size * devCount + Marshal.SizeOf(devCount), MemoryMappedFileAccess.Read))
+                    {
+                        _dev = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount));
+                        _power = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev));
+                        _fan = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power));
+                        _load = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan));
+                        _temp = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load));
+                        //Helpers.ConsolePrint("GetNVMLData", "dev: " + dev.ToString() + " _dev: " + _dev.ToString() +
+                        //" _power: " + _power.ToString() + " _fan: " + _fan.ToString() + " _load: " + _load.ToString() +
+                        //" _temp: " + _temp.ToString());
+                        d.nGpu = _dev;
+                        d.power = _power;
+                        d.fan = _fan;
+                        d.load = _load;
+                        d.temp = _temp;
+                        gpuList.Add(d);
+                    }
                 }
-            }
+            } catch (UnauthorizedAccessException u)
+            {
+                Helpers.ConsolePrint("NVML", "Error! UnauthorizedAccessException. devCount="+ devCount.ToString() + " AvailNVGpus=" + ComputeDeviceManager.Available.AvailNVGpus.ToString());
             }
             catch (FileNotFoundException e)
             {

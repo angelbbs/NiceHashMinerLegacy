@@ -120,7 +120,6 @@ namespace NiceHashMiner.Forms.Components
             // intialize ListView callbacks
             listViewDevices.ItemChecked += ListViewDevicesItemChecked;
             this.listViewDevices.ItemCheck += new ItemCheckEventHandler(listViewDevices_ItemCheck);
-
             IsMining = false;
             BenchmarkCalculation = null;
           //  listViewDevices.OwnerDraw = true;
@@ -637,15 +636,18 @@ namespace NiceHashMiner.Forms.Components
                                             contextMenuStrip1.Items.Add(copyTuningItem);
                                         } else
                                         {
-                                            var copyOverclockDropDownItem = new ToolStripMenuItem
+                                            if (Form_Main.OverclockEnabled)
                                             {
-                                                Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
-                                            };
-                                            copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
-                                            copyOverclockDropDownItem.Tag = cDev.Uuid;
-                                            copyOverClockItem.DropDownItems.Add(copyOverclockDropDownItem);
-                                            copyOverClockItem.Text = International.GetText("DeviceListView_ContextMenu_CopyOverClock");
-                                            contextMenuStrip1.Items.Add(copyOverClockItem);
+                                                var copyOverclockDropDownItem = new ToolStripMenuItem
+                                                {
+                                                    Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
+                                                };
+                                                copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
+                                                copyOverclockDropDownItem.Tag = cDev.Uuid;
+                                                copyOverClockItem.DropDownItems.Add(copyOverclockDropDownItem);
+                                                copyOverClockItem.Text = International.GetText("DeviceListView_ContextMenu_CopyOverClock");
+                                                contextMenuStrip1.Items.Add(copyOverClockItem);
+                                            }
                                         }
                                     }
                                 }

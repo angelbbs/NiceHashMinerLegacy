@@ -5,6 +5,10 @@ using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Configs;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using NiceHashMiner.Forms;
 
 namespace NiceHashMiner.Devices
 {
@@ -178,7 +182,39 @@ namespace NiceHashMiner.Devices
                         {
                             // GPUs without fans are not uncommon, so don't treat as error and just return -1
                             Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
-                            return -1;
+
+                        //сомнительно...
+                        /*
+                        if (result == NvStatus.NVIDIA_DEVICE_NOT_FOUND)
+                        {
+                            int check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
+                            if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
+                            {
+                                var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                                {
+                                    WindowStyle = ProcessWindowStyle.Minimized
+                                };
+                                onGpusLost.Arguments = "1 " + check;
+                                Helpers.ConsolePrint("ERROR", "Restart Windows due CUDA GPU#" + check.ToString() + " is lost");
+                                Process.Start(onGpusLost);
+                                Thread.Sleep(2000);
+                            }
+                            if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost)
+                            {
+                                var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                                {
+                                    WindowStyle = ProcessWindowStyle.Minimized
+                                };
+                                onGpusLost.Arguments = "2 " + check;
+                                Helpers.ConsolePrint("ERROR", "Restart driver due CUDA GPU#" + check.ToString() + " is lost");
+                                Form_Benchmark.RunCMDAfterBenchmark();
+                                Thread.Sleep(1000);
+                                Process.Start(onGpusLost);
+                                Thread.Sleep(2000);
+                            }
+                        }
+                        */
+                        return -1;
                         }
                     }
 

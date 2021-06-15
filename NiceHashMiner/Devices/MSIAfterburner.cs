@@ -165,8 +165,11 @@ namespace NiceHashMiner.Devices
                         P.StartInfo.UseShellExecute = true;
                         // P.Exited += new EventHandler(MSIABprocessExited);
                         //P.EnableRaisingEvents = true;
-                        //P.StartInfo.Arguments = "-m";
-                        P.Start();
+                        if (ConfigManager.GeneralConfig.ABMinimize)
+                        {
+                            P.StartInfo.Arguments = "-m";
+                        }
+                            P.Start();
 
                         int repeats = 0;
                         IntPtr wdwIntPtr = new IntPtr();
@@ -204,7 +207,7 @@ namespace NiceHashMiner.Devices
                                 {
                                     //Windowplacement placement = new Windowplacement();
                                     //GetWindowPlacement(wdwIntPtr, ref placement);
-                                    ShowWindow(wdwIntPtr, ShowWindowEnum.ForceMinimized);
+                                    //ShowWindow(wdwIntPtr, ShowWindowEnum.ForceMinimized);
                                 }
                                 Thread.Sleep(3000);//обязательная пауза
                                 P.Exited += new EventHandler(MSIABprocessExited);

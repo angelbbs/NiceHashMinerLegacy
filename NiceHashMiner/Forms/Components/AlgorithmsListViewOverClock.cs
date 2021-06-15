@@ -110,7 +110,6 @@ namespace NiceHashMiner.Forms.Components
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += ListViewAlgorithms_ItemSelectionChanged;
             listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler) ListViewAlgorithms_ItemChecked;
-
             if (ConfigManager.GeneralConfig.ABEnableOverclock && MSIAfterburner.Initialized)
             {
                 MSIAfterburner.InitTempFiles();
@@ -365,6 +364,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_MouseClick(object sender, MouseEventArgs e)
         {
+            if (!Form_Main.OverclockEnabled) return;
             if (!MSIAfterburner.Initialized) return;
             if (_computeDevice.DeviceType == DeviceType.CPU) return;
             try

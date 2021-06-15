@@ -20,6 +20,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using System.Threading.Tasks;
 using MSI.Afterburner;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 
 namespace NiceHashMiner.Devices
 {
@@ -391,7 +392,36 @@ namespace NiceHashMiner.Devices
                         //Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
                         if (nvmlLoaded != nvmlReturn.Success)
                         {
+                            int check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
                             Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
+                            if ((int)nvmlLoaded == 6 || (int)nvmlLoaded == 15 || (int)nvmlLoaded == 16)
+                            {
+                                if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
+                                {
+                                    var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                                    {
+                                        WindowStyle = ProcessWindowStyle.Minimized
+                                    };
+                                    onGpusLost.Arguments = "1 " + check;
+                                    Helpers.ConsolePrint("ERROR", "Restart Windows due CUDA GPU#" + check.ToString() + " is lost");
+                                    Process.Start(onGpusLost);
+                                    Thread.Sleep(2000);
+                                }
+                                if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost)
+                                {
+                                    var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                                    {
+                                        WindowStyle = ProcessWindowStyle.Minimized
+                                    };
+                                    onGpusLost.Arguments = "2 " + check;
+                                    Helpers.ConsolePrint("ERROR", "Restart driver due CUDA GPU#" + check.ToString() + " is lost");
+                                    Form_Benchmark.RunCMDAfterBenchmark();
+                                    Thread.Sleep(1000);
+                                    Process.Start(onGpusLost);
+                                    Thread.Sleep(2000);
+                                }
+                                MessageBox.Show("NVSMI Error: " + nvmlLoaded + ". Please restart NVIDIA driver","ERROR!");
+                            }
                         }
                     }
                 }

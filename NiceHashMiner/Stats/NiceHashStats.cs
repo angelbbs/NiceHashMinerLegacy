@@ -164,12 +164,17 @@ namespace NiceHashMiner.Stats
                                 if (Form_Main.SMAdelayTick < 30) break;
                                 Form_Main.SMAdelayTick = 0;
                                 //***************************
+                                if (File.Exists("configs\\sma.dat")) File.Delete("configs\\sma.dat");
+                                string stw = (string)JsonConvert.SerializeObject(message.data);
+                                File.WriteAllText("configs\\sma.dat", stw);
+                                /*
                                 FileStream fs = new FileStream("configs\\sma.dat", FileMode.Create, FileAccess.Write);
                                 StreamWriter w = new StreamWriter(fs);
-                                w.Write(message.data);
+                                w.WriteAsync(message.data);
                                 //w.Write(JsonConvert.SerializeObject(message));
                                 w.Flush();
                                 w.Close();
+                                */
                                 foreach (var algo in message.data)
                                 {
                                     var algoKey = (AlgorithmType)algo[0];

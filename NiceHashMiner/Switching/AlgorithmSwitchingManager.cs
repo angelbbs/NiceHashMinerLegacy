@@ -90,10 +90,21 @@ namespace NiceHashMiner.Switching
                 _smaCheckTimer.Close();
                 _smaCheckTimer.Dispose();
                 _smaCheckTimer = null;
-                foreach (Delegate d in SmaCheck.GetInvocationList())
+
+                try
                 {
-                    SmaCheck -= (EventHandler<SmaUpdateEventArgs>)d;
+                    if (SmaCheck != null)
+                    {
+                        foreach (Delegate d in SmaCheck.GetInvocationList())
+                        {
+                            SmaCheck -= (EventHandler<SmaUpdateEventArgs>)d;
+                        }
+                    }
+                } catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("AlgorithmSwitchingManager", ex.ToString());
                 }
+                
             }
 
         }
@@ -114,7 +125,7 @@ namespace NiceHashMiner.Switching
                     _smaCheckTimer.Interval = _smaCheckTime * 1000;
                 }
                 SmaCheckTimerOnElapsedRun = false;
-                return;
+                //return;
             }
 
             SmaCheckTimerOnElapsedRun = true;

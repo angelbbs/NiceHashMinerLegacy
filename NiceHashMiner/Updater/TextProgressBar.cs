@@ -1,3 +1,4 @@
+using NiceHashMiner;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -136,17 +137,23 @@ namespace ProgressBarSample
 
         private void DrawProgressBar(Graphics g)
         {
-            Rectangle rect = ClientRectangle;
-
-            ProgressBarRenderer.DrawHorizontalBar(g, rect);
-
-            rect.Inflate(-1, -1);
-
-            if (Value > 0)
+            try
             {
-                Rectangle clip = new Rectangle(rect.X, rect.Y, (int)Math.Round(((float)Value / Maximum) * rect.Width), rect.Height);
+                Rectangle rect = ClientRectangle;
 
-                g.FillRectangle(_progressColourBrush, clip);
+                ProgressBarRenderer.DrawHorizontalBar(g, rect);
+
+                rect.Inflate(-1, -1);
+
+                if (Value > 0)
+                {
+                    Rectangle clip = new Rectangle(rect.X, rect.Y, (int)Math.Round(((float)Value / Maximum) * rect.Width), rect.Height);
+
+                    g.FillRectangle(_progressColourBrush, clip);
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("ERROR", "Classic theme used?");
             }
         }
 

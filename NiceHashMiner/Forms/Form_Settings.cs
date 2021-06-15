@@ -617,11 +617,20 @@ namespace NiceHashMiner.Forms
                     lbl.ForeColor = Form_Main._foreColor;
                 }
 
+                foreach (var lbl in this.Controls.OfType<ListBox>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
                 tabPageAdvanced1.BackColor = Form_Main._backColor;
                 tabPageAdvanced1.ForeColor = Form_Main._foreColor;
 
                 tabPageDevicesAlgos.BackColor = Form_Main._backColor;
                 tabPageDevicesAlgos.ForeColor = Form_Main._foreColor;
+
+                tabPageOverClock.BackColor = Form_Main._backColor;
+                tabPageOverClock.ForeColor = Form_Main._foreColor;
 
                 tabPageAbout.BackColor = Form_Main._backColor;
                 tabPageAbout.ForeColor = Form_Main._foreColor;
@@ -641,7 +650,11 @@ namespace NiceHashMiner.Forms
                     lbl.BackColor = Form_Main._backColor;
                     lbl.ForeColor = Form_Main._foreColor;
                 }
-
+                foreach (var lbl in tabPageOverClock.Controls.OfType<GroupBox>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
                 {
                     lbl.BackColor = Form_Main._backColor;
@@ -650,8 +663,16 @@ namespace NiceHashMiner.Forms
                     lbl.FlatAppearance.BorderColor = Form_Main._textColor;
                     lbl.FlatAppearance.BorderSize = 1;
                 }
+                foreach (var lbl in tabPageOverClock.Controls.OfType<Button>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._textColor;
+                    lbl.FlatStyle = FlatStyle.Flat;
+                    lbl.FlatAppearance.BorderColor = Form_Main._textColor;
+                    lbl.FlatAppearance.BorderSize = 1;
+                }
 
-                    richTextBoxInfo.BackColor = Form_Main._backColor;
+                richTextBoxInfo.BackColor = Form_Main._backColor;
                     richTextBoxInfo.ForeColor = Form_Main._textColor;
                 linkLabelCurrentVersion.BackColor = Form_Main._backColor;
                 linkLabelCurrentVersion.ForeColor = Form_Main._textColor;
@@ -665,6 +686,13 @@ namespace NiceHashMiner.Forms
                 linkLabelNewVersion2.BackColor = Form_Main._backColor;
                 linkLabelNewVersion2.ForeColor = Form_Main._textColor;
                 linkLabelNewVersion2.LinkColor = Form_Main._textColor;
+
+                linkLabel3.BackColor = Form_Main._backColor;
+                linkLabel3.ForeColor = Form_Main._textColor;
+                linkLabel3.LinkColor = Form_Main._textColor;
+                linkLabel3.ActiveLinkColor = Form_Main._textColor;
+                linkLabel3.MouseLeave += (s, e) => linkLabel3.LinkBehavior = LinkBehavior.NeverUnderline;
+                linkLabel3.MouseEnter += (s, e) => linkLabel3.LinkBehavior = LinkBehavior.AlwaysUnderline;
 
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
                 {
@@ -706,6 +734,12 @@ namespace NiceHashMiner.Forms
                     lbl.ForeColor = Form_Main._foreColor;
                 }
 
+                foreach (var lbl in tabPageOverClock.Controls.OfType<UserControl>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
                 //comboBox_ServiceLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_TimeUnit.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 currencyConverterCombobox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
@@ -732,6 +766,13 @@ namespace NiceHashMiner.Forms
                     lbl.BackColor = Form_Main._backColor;
                     lbl.ForeColor = Form_Main._foreColor;
                 }
+
+                foreach (var lbl in this.tabPageOverClock.Controls.OfType<CheckBox>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
+
                 checkBox_BackupBeforeUpdate.BackColor = Form_Main._backColor;
                 checkBox_BackupBeforeUpdate.ForeColor = Form_Main._textColor;
                 checkBoxAutoupdate.BackColor = Form_Main._backColor;
@@ -1120,8 +1161,9 @@ namespace NiceHashMiner.Forms
             }
 
             checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
-            devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
-            algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
+            //devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
+            //algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
+            Form_Main.OverclockEnabled = checkBox_ABEnableOverclock.Checked;
 
             //if (!ConfigManager.GeneralConfig.ShowToolsFolder)
             {
@@ -2447,12 +2489,12 @@ namespace NiceHashMiner.Forms
         private void checkBox_ABEnableOverclock_CheckedChanged(object sender, EventArgs e)
         {
             checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
-            devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
-            algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
+            //devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
+            //algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
 
             var oc = tabPageOverClock;
             //tabControlGeneral.TabPages.Remove(oc);
-
+            Form_Main.OverclockEnabled = checkBox_ABEnableOverclock.Checked;
             if (checkBox_ABEnableOverclock.Checked && oc.Created)
             {
                 string str = " ";
