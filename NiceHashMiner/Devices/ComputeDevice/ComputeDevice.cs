@@ -14,6 +14,8 @@ using System;
 using NiceHashMinerLegacy.UUID;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
+using MSI.Afterburner;
 
 namespace NiceHashMiner.Devices
 {
@@ -391,7 +393,10 @@ namespace NiceHashMiner.Devices
                         }
                         if (File.Exists(fNameDst)) File.Delete(fNameDst);
 
-                        File.Copy(fNameSrc, fNameDst);
+                        //File.Copy(fNameSrc, fNameDst);
+                        byte[] buffer = File.ReadAllBytes(fNameSrc);
+                        buffer = MSIAfterburner.ReplaceBytes(buffer, Encoding.ASCII.GetBytes("BUS_"), Encoding.ASCII.GetBytes("BUS_" + copyBenchCDevTo.BusID.ToString()));
+                        File.WriteAllBytes(fNameDst, buffer);
                     }
                     catch (Exception ex)
                     {

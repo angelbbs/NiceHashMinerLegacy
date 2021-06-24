@@ -939,7 +939,6 @@ namespace NiceHashMiner.Forms
             groupBox_Misc.Text = International.GetText("FormSettings_Tab_General_Group_Misc");
             // advanced
             groupBox_Miners.Text = International.GetText("FormSettings_Tab_Advanced_Group_Miners");
-            buttonGPUtuning.Text = International.GetText("Form_Settings_GPUTuning");
 
             label_SwitchProfitabilityThreshold.Text =
                 International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");

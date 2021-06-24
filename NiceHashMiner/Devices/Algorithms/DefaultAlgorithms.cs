@@ -153,6 +153,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                                 ExtraLaunchParameters = "--gpu-boost 3"
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "")
+                            {
+                                ExtraLaunchParameters = "--gpu-boost 3"
                             }
                             
                             /*
@@ -200,8 +204,8 @@ namespace NiceHashMiner.Devices.Algorithms
                             //new Algorithm(MinerBaseType.teamredminer, AlgorithmType.X16RV2, "X16Rv2"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             //new Algorithm(MinerBaseType.teamredminer, AlgorithmType.GrinCuckarood29, "GrinCuckarood29"),
-                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW")
-                          //  new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Lyra2REv3, "Lyra2REv3")
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW"),
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, "")
                         }
             },
             {
@@ -263,12 +267,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
 
                             },
-                            /*
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus")
+                            
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
 
                             },
-                            */
+                            
                  }
             },
         }.ConcatDictList(All, Gpu);
@@ -389,6 +393,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.BeamV3, "BeamV3"),
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos"),
                             /*
                             new DualAlgorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong)
                             {
@@ -446,6 +451,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                     },
                     */
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31, "")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
@@ -454,6 +460,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     }
+                    */
                 }
             },
         }.ConcatDictList(All, Gpu);

@@ -347,7 +347,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             */
-            //это починил. надо избавляться от FilterMinerAlgos
+            //это починил. 
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
@@ -363,6 +363,21 @@ namespace NiceHashMiner.Devices.Algorithms
                         algo.Hidden = true;
                     }
                 }
+            }
+
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.KAWPOW
+                    });
+            }
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.4))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.Autolykos
+                    });
             }
 
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.4))

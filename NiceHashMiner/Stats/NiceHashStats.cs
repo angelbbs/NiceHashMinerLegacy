@@ -149,14 +149,17 @@ namespace NiceHashMiner.Stats
         #region Socket Callbacks
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
-
-            try
+            new Task(() => SocketReceive(sender, e)).Start();
+        }
+        private static void SocketReceive(object sender, MessageEventArgs e)
+        {
+           try
             {
                 if (e.IsText)
                 {
                     Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
                     dynamic message = JsonConvert.DeserializeObject(e.Data);
-                   // Helpers.ConsolePrint("SOCKET", "Received1: " + e.Data);
+                    // Helpers.ConsolePrint("SOCKET", "Received1: " + e.Data);
                     switch (message.method.Value)
                     {
                         case "sma":
@@ -190,12 +193,14 @@ namespace NiceHashMiner.Stats
 
                                 SetAlgorithmRates(message.data);
                                 GetSmaAPI();
-                                
+
                                 if (AlgorithmSwitchingManager._smaCheckTimer != null)
                                 {
                                     AlgorithmSwitchingManager._smaCheckTimer.Stop();
+                                    Thread.Sleep(1000);
                                     AlgorithmSwitchingManager._smaCheckTimer.Dispose();
                                     AlgorithmSwitchingManager._smaCheckTimer = null;
+                                    Thread.Sleep(1000);
                                     AlgorithmSwitchingManager.Start();//************************
                                 }
 

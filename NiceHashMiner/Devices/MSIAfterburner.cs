@@ -117,7 +117,7 @@ namespace NiceHashMiner.Devices
                 MSIAfterburnerRUN();
                 //MSIAfterburnerInit();
             }
-            
+
             return true;
         }
         public static bool MSIAfterburnerRUN(bool forceRun = false)
@@ -158,7 +158,7 @@ namespace NiceHashMiner.Devices
                     Process P = new Process();
                     try
                     {
-                        
+
                         P.StartInfo.FileName = msiabpath;
 
                         P.StartInfo.Verb = "runas";
@@ -254,7 +254,7 @@ namespace NiceHashMiner.Devices
                             MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                 ConfigManager.GeneralConfig.ABEnableOverclock = false;
                 return;
-                
+
             }
             MSIAfterburnerRUN();
             Thread.Sleep(50);
@@ -285,6 +285,7 @@ namespace NiceHashMiner.Devices
                         string fName = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
                         if (!File.Exists(fName))
                         {
+                            Helpers.ConsolePrint("FirstInitFiles", "Init filedata for busId: " + dev.BusID + " algo: " + alg.AlgorithmStringID);
                             SaveDefaultDeviceData(dev.BusID, fName);
                         }
                     }
@@ -367,7 +368,7 @@ namespace NiceHashMiner.Devices
                     devData = macm.GpuEntries[i];
                     found = true;
                     break;
-                } 
+                }
             }
             if (!found)
             {
@@ -539,6 +540,7 @@ namespace NiceHashMiner.Devices
         public static void ApplyFromFile(int _busID, string FileName)
         {
             ControlMemoryGpuEntry dev = ReadFromFile(_busID, FileName);
+
             for (int i = 0; i < macm.Header.GpuEntryCount; i++)
             {
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
@@ -553,16 +555,23 @@ namespace NiceHashMiner.Devices
         {
             macm.CommitChanges();
         }
-        public static void CommitChanges(int index)
+        public static void CommitChanges(int _busID)
         {
-            macm.CommitChanges(index);
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    macm.CommitChanges(i);
+                    break;
+                }
+            }
         }
         public static ControlMemoryGpuEntry ReadFromFile(int _busID, string FileName)
         {
             //CheckMSIAfterburner();
             if (!Initialized) return new ControlMemoryGpuEntry();
-
-            ControlMemoryGpuEntry dev = new ControlMemoryGpuEntry(); 
+            ControlMemoryGpuEntry dev = new ControlMemoryGpuEntry();
             int index = -1;
             try
             {
@@ -575,7 +584,9 @@ namespace NiceHashMiner.Devices
                         if (File.Exists(FileName))
                         {
                             byte[] buffer = File.ReadAllBytes(FileName);
+                            buffer = ReplaceBytes(buffer, Encoding.ASCII.GetBytes("BUS_"), Encoding.ASCII.GetBytes("BUS_" + _busID.ToString()));
                             //Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Load from file: " + FileName);
+
                             dev = RawDeserialize(buffer, macm.GpuEntries[i]);
                             if (dev == null)
                             {
@@ -605,7 +616,39 @@ namespace NiceHashMiner.Devices
                 }
                 return new ControlMemoryGpuEntry();
             }
+
             return dev;
+        }
+
+        public static byte[] ReplaceBytes(byte[] src, byte[] search, byte[] repl)
+        {
+            if (repl == null) return src;
+            int index = FindBytes(src, search);
+            if (index < 0) return src;
+            //byte[] dst = new byte[src.Length - search.Length + repl.Length];
+            byte[] dst = new byte[src.Length];
+            //Buffer.BlockCopy(src, 0, dst, 0, index);
+            Buffer.BlockCopy(src, 0, dst, 0, src.Length);
+            Buffer.BlockCopy(repl, 0, dst, index, repl.Length);
+            //Buffer.BlockCopy(src, index + search.Length, dst, index + repl.Length, src.Length - (index + search.Length));
+            return dst;
+        }
+
+        public static int FindBytes(byte[] src, byte[] find)
+        {
+            if (src == null || find == null || src.Length == 0 || find.Length == 0 || find.Length > src.Length) return -1;
+            for (int i = 0; i < src.Length - find.Length + 1; i++)
+            {
+                if (src[i] == find[0])
+                {
+                    for (int m = 1; m < find.Length; m++)
+                    {
+                        if (src[i + m] != find[m]) break;
+                        if (m == find.Length - 1) return i;
+                    }
+                }
+            }
+            return -1;
         }
         public static byte[] RawSerialize(ControlMemoryGpuEntry obj, int length)
         {
@@ -645,7 +688,7 @@ namespace NiceHashMiner.Devices
                     mahm = new HardwareMonitor();
                     mahm.Connect();
                     Initialized = true;
-                    
+
                     for (int i = 0; i < macm.Header.GpuEntryCount; i++)
                     {
                         /*
@@ -673,10 +716,10 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageMin" + macm.GpuEntries[i].CoreVoltageMin.ToString());
                         */
                     }
-                    
+
                     FirstInitFiles();
                     break;
-                    
+
                 }
                 catch (Exception ex)
                 {

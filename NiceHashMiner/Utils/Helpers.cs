@@ -395,7 +395,8 @@ namespace NiceHashMiner
                 {"GPU_USE_SYNC_OBJECTS", "1"},
                 {"GPU_SINGLE_ALLOC_PERCENT", "100"},
                 {"GPU_MAX_HEAP_SIZE", "100"},
-                {"GPU_FORCE_64BIT_PTR", "1"}
+                {"GPU_FORCE_64BIT_PTR", "1"},
+                {"CUDA_DEVICE_ORDER", "PCI_BUS_ID"}
             };
 
             foreach (var kvp in envNameValues)

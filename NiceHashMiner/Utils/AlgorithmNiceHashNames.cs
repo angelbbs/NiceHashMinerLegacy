@@ -10,12 +10,15 @@ namespace NiceHashMiner
     {
         public static string GetName(AlgorithmType type)
         {
+            return Enum.GetName(typeof(AlgorithmType), type);
+            /*
             if ((AlgorithmType.INVALID <= type && type <= AlgorithmType.Octopus) ||
                 (AlgorithmType.DaggerHashimoto4GB <= type && type <= AlgorithmType.DaggerPascal))
             {
                 return Enum.GetName(typeof(AlgorithmType), type);
             }
             return "NameNotFound type not supported";
+            */
         }
     }
 }

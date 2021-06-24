@@ -458,7 +458,13 @@ namespace NiceHashMiner.Forms.Components
                     }
                     if (File.Exists(fNameDst)) File.Delete(fNameDst);
 
-                    File.Copy(fNameSrc, fNameDst);
+                    //File.Copy(fNameSrc, fNameDst);
+                    MSIAfterburner.ApplyFromFile(_computeDevice.BusID, fNameSrc);
+                    Thread.Sleep(100);
+                    MSIAfterburner.CommitChanges(_computeDevice.BusID);
+                    Thread.Sleep(100);
+                    ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
+                    MSIAfterburner.SaveDeviceData(_abdata, fNameDst);
                 }
                 catch (Exception ex)
                 {
@@ -544,13 +550,11 @@ namespace NiceHashMiner.Forms.Components
                         waiting.SetText("", International.GetText("MSIAB_Checking"));
                         waiting.ShowWaitingBox();
                         string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".tmp";
-                        //Helpers.ConsolePrint("ToolStripMenuItemTest_Click", "MSIAfterburner.ApplyFromFile: " + fName);
                         MSIAfterburner.ApplyFromFile(_computeDevice.BusID, fName);
                         Thread.Sleep(100);
-                        MSIAfterburner.CommitChanges();
-                        Thread.Sleep(5000);
-                        ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
+                        MSIAfterburner.CommitChanges(_computeDevice.BusID);
                         Thread.Sleep(100);
+                        ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
                         MSIAfterburner.SaveDeviceData(_abdata, fName);
                         if (waiting != null) waiting.CloseWaitingBox();
                     }

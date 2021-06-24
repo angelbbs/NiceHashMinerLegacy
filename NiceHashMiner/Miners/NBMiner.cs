@@ -56,13 +56,10 @@ namespace NiceHashMiner.Miners
                         return "cuckoo_ae";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
-
+                    case AlgorithmType.Autolykos:
+                        return "ergo";
                     case AlgorithmType.KAWPOW:
                         return "kawpow";
-                        /*
-                    case AlgorithmType.Cuckaroo29BFC:
-                        return "bfc";
-                        */
                     case AlgorithmType.BeamV3:
                         return "beamv3";
                     case AlgorithmType.Octopus:
@@ -103,13 +100,13 @@ namespace NiceHashMiner.Miners
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 1 --no-watchdog ";
+                    platform = "--platform 1";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
                 }
                 else
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 2 --no-watchdog ";
+                    platform = "--platform 2";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
             }
@@ -175,6 +172,12 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://octopus." + Form_Main.myServers[1, 0] + ".nicehash.com:3389 -u1 " + user +
                     $" -o2 stratum+tcp://octopus." + Form_Main.myServers[2, 0] + ".nicehash.com:3389 -u2 " + user +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://autolykos." + Form_Main.myServers[1, 0] + ".nicehash.com:3390 -u1 " + user +
+                    $" -o2 stratum+tcp://autolykos." + Form_Main.myServers[2, 0] + ".nicehash.com:3390 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
@@ -280,6 +283,11 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
                 cmd = $"-a {AlgoName} -o stratum+tcp://cfx.woolypooly.com:3094 -u 0x13097ee19fd453AfD6F2ecf155927f2b7380307F.nbminer " +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                cmd = $"-a {AlgoName} -o stratum+tcp://pool.eu.woolypooly.com:3100 -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;

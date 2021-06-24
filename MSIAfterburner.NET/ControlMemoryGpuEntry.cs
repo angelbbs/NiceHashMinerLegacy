@@ -320,6 +320,19 @@ namespace MSI.Afterburner
 
         //public unsafe char GpuId => this.macmGpuEntry.szGpuId[SharedMemory.MAX_PATH];
         public string GpuId => new string(this.macmGpuEntry.szGpuId).TrimEnd(new char[1]);
+        /*
+        public string GpuId
+        {
+            get
+            {
+                return new string(this.macmGpuEntry.szGpuId).TrimEnd(new char[1]);
+            }
+            set
+            {
+                this.macmGpuEntry.szGpuId = value.ToCharArray();
+            }
+        }
+        */
         public bool IsMaster => this.isMaster;
 
         public int Index => this.index;

@@ -36,8 +36,7 @@ namespace NiceHashMiner.Switching
 
         public static int MaxHistory => Math.Max(StableRange.Upper, UnstableRange.Upper);
 
-        private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _stableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
-        private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
+        private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _algosHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
 
         private static bool _hasStarted;
         public static bool newProfit = true;
@@ -48,16 +47,18 @@ namespace NiceHashMiner.Switching
 
         public AlgorithmSwitchingManager()
         {
-            foreach (var kvp in NHSmaData.FilteredCurrentProfits(true))
+            foreach (var kvp in NHSmaData.FilteredCurrentProfits())
             {
-                _stableHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
+                _algosHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
                 _lastLegitPaying[kvp.Key] = kvp.Value;
             }
+            /*
             foreach (var kvp in NHSmaData.FilteredCurrentProfits(false))
             {
                 _unstableHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
                 _lastLegitPaying[kvp.Key] = kvp.Value;
             }
+            */
         }
 
         public static void Start()
@@ -68,7 +69,7 @@ namespace NiceHashMiner.Switching
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
                 _smaCheckTimer = new System.Timers.Timer(1000);
                 _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
-                _smaCheckTimer.AutoReset = false;
+                //_smaCheckTimer.AutoReset = false;
                 _smaCheckTimer.Start();
             }
             
@@ -117,8 +118,11 @@ namespace NiceHashMiner.Switching
             if (SmaCheckTimerOnElapsedRun)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed already running. Restarting");
+                //Thread.CurrentThread.Interrupt();
                 Stop();
                 Thread.Sleep(1000);
+                _smaCheckTimer = null;
+                Thread.Sleep(100);
                 Start();
                 if (_smaCheckTimer != null)
                 {
@@ -129,27 +133,22 @@ namespace NiceHashMiner.Switching
             }
 
             SmaCheckTimerOnElapsedRun = true;
-            Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed");
             //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
             //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
             //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
-
-            Randomize();
+            Thread.Sleep(10);
+            // Randomize();
             // Will be null if manually called (in tests)
-            if (_smaCheckTimer != null)
-                _smaCheckTimer.Interval = _smaCheckTime * 1000;
+            if (_smaCheckTimer != null) _smaCheckTimer.Interval = _smaCheckTime * 1000;
 
             var sb = new StringBuilder();
-
             if (_hasStarted)
             {
                 sb.AppendLine("Normalizing profits");
             }
-
-            var stableUpdated = UpdateProfits(_stableHistory, _ticksForStable, sb);
-            var unstableUpdated = UpdateProfits(_unstableHistory, _ticksForUnstable, sb);
-
-            if (!stableUpdated && !unstableUpdated && _hasStarted)
+            var stableUpdated = UpdateProfits(_algosHistory, _ticksForStable, sb);
+            //var unstableUpdated = UpdateProfits(_unstableHistory, _ticksForUnstable, sb);
+            if (!stableUpdated && _hasStarted)
             {
                 sb.AppendLine("No algos affected (either no SMA update or no algos higher");
                 //NHSmaData.Initialize();
@@ -168,7 +167,6 @@ namespace NiceHashMiner.Switching
             SmaCheckTimerOnElapsedRun = false;
             new Task(() => SmaCheck(sender, args)).Start();
             //            SmaCheck?.Invoke(sender, args);
-
             SmaCheckTimerOnElapsedRun = false;
         }
 

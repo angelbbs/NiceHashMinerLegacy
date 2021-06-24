@@ -141,7 +141,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            this.buttonGPUtuning = new System.Windows.Forms.Button();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
@@ -1617,7 +1616,6 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.Controls.Add(this.labelMaxEpoch);
             this.tabPageDevicesAlgos.Controls.Add(this.checkBox_Disable_extra_launch_parameter_checking);
             this.tabPageDevicesAlgos.Controls.Add(this.groupBoxAlgorithmSettings);
-            this.tabPageDevicesAlgos.Controls.Add(this.buttonGPUtuning);
             this.tabPageDevicesAlgos.Controls.Add(this.algorithmSettingsControl1);
             this.tabPageDevicesAlgos.Controls.Add(this.devicesListViewEnableControl1);
             this.tabPageDevicesAlgos.Location = new System.Drawing.Point(4, 23);
@@ -1630,7 +1628,7 @@ namespace NiceHashMiner.Forms
             // 
             // textBoxMaxEpoch
             // 
-            this.textBoxMaxEpoch.Location = new System.Drawing.Point(233, 222);
+            this.textBoxMaxEpoch.Location = new System.Drawing.Point(233, 220);
             this.textBoxMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBoxMaxEpoch.Name = "textBoxMaxEpoch";
             this.textBoxMaxEpoch.Size = new System.Drawing.Size(32, 20);
@@ -1639,7 +1637,7 @@ namespace NiceHashMiner.Forms
             // labelMaxEpoch
             // 
             this.labelMaxEpoch.AutoSize = true;
-            this.labelMaxEpoch.Location = new System.Drawing.Point(5, 225);
+            this.labelMaxEpoch.Location = new System.Drawing.Point(5, 223);
             this.labelMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelMaxEpoch.Name = "labelMaxEpoch";
             this.labelMaxEpoch.Size = new System.Drawing.Size(206, 13);
@@ -1652,7 +1650,7 @@ namespace NiceHashMiner.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_Disable_extra_launch_parameter_checking.AutoSize = true;
             this.checkBox_Disable_extra_launch_parameter_checking.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Disable_extra_launch_parameter_checking.Location = new System.Drawing.Point(378, 224);
+            this.checkBox_Disable_extra_launch_parameter_checking.Location = new System.Drawing.Point(378, 222);
             this.checkBox_Disable_extra_launch_parameter_checking.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Disable_extra_launch_parameter_checking.Name = "checkBox_Disable_extra_launch_parameter_checking";
             this.checkBox_Disable_extra_launch_parameter_checking.Size = new System.Drawing.Size(219, 17);
@@ -1691,22 +1689,11 @@ namespace NiceHashMiner.Forms
             this.algorithmsListView1.Size = new System.Drawing.Size(645, 165);
             this.algorithmsListView1.TabIndex = 2;
             // 
-            // buttonGPUtuning
-            // 
-            this.buttonGPUtuning.Location = new System.Drawing.Point(8, 20);
-            this.buttonGPUtuning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonGPUtuning.Name = "buttonGPUtuning";
-            this.buttonGPUtuning.Size = new System.Drawing.Size(141, 23);
-            this.buttonGPUtuning.TabIndex = 394;
-            this.buttonGPUtuning.Text = "GPU tuning";
-            this.buttonGPUtuning.UseVisualStyleBackColor = true;
-            this.buttonGPUtuning.Click += new System.EventHandler(this.buttonGPUtuning_Click_1);
-            // 
             // algorithmSettingsControl1
             // 
             this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, 8);
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
             this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
             this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 208);
@@ -1720,11 +1707,11 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.devicesListViewEnableControl1.IsInBenchmark = false;
             this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 51);
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 8);
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 165);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 199);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
             // tabPageOverClock
@@ -2352,7 +2339,6 @@ namespace NiceHashMiner.Forms
         private Components.AlgorithmSettingsControl algorithmSettingsControl1;
         private System.Windows.Forms.GroupBox groupBoxAlgorithmSettings;
         private Components.AlgorithmsListView algorithmsListView1;
-        private System.Windows.Forms.Button buttonGPUtuning;
         private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.CheckBox checkBox_RunEthlargement;
         private System.Windows.Forms.CheckBox checkBox_ShowFanAsPercent;

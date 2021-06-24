@@ -102,6 +102,10 @@ namespace NiceHashMiner.Miners
             {
                 algo = " -a kawpow";
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                algo = " -a autolykos2";
+            }
             var sc = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
             {
@@ -191,7 +195,11 @@ namespace NiceHashMiner.Miners
                 CommandLine = sc + " -a kawpow" +
                  " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.teamred" + " -p x -d ";
             }
-
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                CommandLine = sc + " -a autolykos2" +
+                 " -o stratum+tcp://pool.eu.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
+            }
 
             CommandLine += GetDevicesCommandString() +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD)+
@@ -280,7 +288,7 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 0;
                     }
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                     {
                         delay_before_calc_hashrate = 30;
                         MinerStartDelay = 10;

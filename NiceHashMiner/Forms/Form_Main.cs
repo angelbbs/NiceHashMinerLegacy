@@ -330,7 +330,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "38";
+            Text += "39";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -691,8 +691,10 @@ namespace NiceHashMiner
             }
 
             _loadingScreen.Show();
+            _loadingScreen.SetValueAndMsg(1, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            Helpers.SetDefaultEnvironmentVariables();
             // Query Available ComputeDevices
-            _loadingScreen.SetValueAndMsg(1, International.GetText("Form_Main_loadtext_CPU"));
+            _loadingScreen.SetValueAndMsg(2, International.GetText("Form_Main_loadtext_CPU"));
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//step 2,3
 
             _isDeviceDetectionInitialized = true;
@@ -724,8 +726,6 @@ namespace NiceHashMiner
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = 1000;
 
-            _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
-            Helpers.SetDefaultEnvironmentVariables();
             new Task(() => FlushCache()).Start();
             if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {

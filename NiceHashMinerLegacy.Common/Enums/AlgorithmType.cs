@@ -110,7 +110,8 @@
         Cuckaroo29BFC_UNUSED = 53,
         BeamV3 = 54,
         CuckaRooz29 = 55,
-        Octopus = 56
+        Octopus = 56,
+        Autolykos = 57
         #endregion // NiceHashAPI
     }
 }

@@ -274,6 +274,7 @@ namespace NiceHashMiner.Switching
         /// <returns>True iff we know about this algo</returns>
         public static bool TryGetPaying(AlgorithmType algo, out double paying)
         {
+            InitializeIfNeeded();
             CheckInit();
 
             if (TryGetSma(algo, out var sma))
@@ -304,7 +305,7 @@ namespace NiceHashMiner.Switching
         /// </summary>
         /// <param name="stable">True to get stable, false to get unstable</param>
         /// <returns>Filtered Algorithm/double map</returns>
-        public static Dictionary<AlgorithmType, double> FilteredCurrentProfits(bool stable)
+        public static Dictionary<AlgorithmType, double> FilteredCurrentProfits()
         {
             CheckInit();
             var dict = new Dictionary<AlgorithmType, double>();
@@ -313,10 +314,10 @@ namespace NiceHashMiner.Switching
             {
                 foreach (var kvp in _currentSma)
                 {
-                    if (_stableAlgorithms.Contains(kvp.Key) == stable)
-                    {
+                    //if (_stableAlgorithms.Contains(kvp.Key) == stable)
+                    //{
                         dict[kvp.Key] = kvp.Value.Paying;
-                    }
+                    //}
                 }
             }
 

@@ -62,10 +62,21 @@ namespace NiceHashMiner.Miners
                 var algo = "ethash";
                 var port = "3353";
                 return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
+               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
+               "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                var algo = "autolykos2";
+                var port = "3390";
+                return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
+               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
                "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
             return "unsupported algo";
@@ -109,6 +120,17 @@ namespace NiceHashMiner.Miners
                 return $" --disable-cpu --algorithm ethash" +
                     $" --pool stratum+tcp://eu1.ethermine.org:4444" +
                     $" --wallet 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                algo = "autolykos2";
+                port = "3390";
+
+                return $" --disable-cpu --algorithm autolykos2" +
+                    $" --pool stratum+tcp://pool.eu.woolypooly.com:3100" +
+                    $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
@@ -181,7 +203,8 @@ namespace NiceHashMiner.Miners
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                     //var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
                     int devs = sortedMinerPairs.Count;
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                     {
                         devs = 0;
                         foreach (var mPair in sortedMinerPairs)
@@ -203,7 +226,7 @@ namespace NiceHashMiner.Miners
 
                         totals = resp.algorithms[0].hashrate.gpu.total;
                     }
-                    else
+                    else if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
                     {
                         totals = resp.algorithms[0].hashrate.cpu.total;
                         foreach (var mPair in sortedMinerPairs)

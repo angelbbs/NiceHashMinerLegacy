@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
+
 namespace NiceHashMiner.Utils
 {
     public class MinersDownloader
@@ -186,12 +187,10 @@ namespace NiceHashMiner.Utils
                         {
                             sizeCount += entry.CompressedSize;
                             Helpers.ConsolePrint(Tag, entry.Key);
-                            entry.WriteToDirectory("", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 
-                            var prog = sizeCount / (double) fileArchive.Length * 100;
-                            // _minerUpdateIndicator.SetProgressValueAndMsg((int) prog,
-                            //   string.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
+                            var prog = sizeCount / (double)fileArchive.Length * 100;
                             _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, entry.Key.Replace("miners/", ""));
+                            entry.WriteToDirectory("", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
                         }
                     }
                     archive.Dispose();
@@ -218,6 +217,7 @@ namespace NiceHashMiner.Utils
             catch (Exception e)
             {
                 Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
+                MessageBoxEx.Show(e.Message, "ERROR", 5000);
             }
         }
     }
