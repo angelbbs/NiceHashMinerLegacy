@@ -120,14 +120,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
 
             }
-            
-            if (algoSettings.ContainsKey(MinerBaseType.Nanominer) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7) && !device.Name.Contains("R7 370"))
-            {
-                algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType>
-                    {
-                        MinerBaseType.Nanominer
-                    });
-            }
+
 
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7) ))
             {
@@ -348,6 +341,7 @@ namespace NiceHashMiner.Devices.Algorithms
             }
             */
             //это починил. 
+            /*
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
@@ -364,7 +358,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
-
+            */
             if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>

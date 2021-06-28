@@ -193,17 +193,17 @@ namespace NiceHashMiner.Stats
 
                                 SetAlgorithmRates(message.data);
                                 GetSmaAPI();
-
+                                /*
                                 if (AlgorithmSwitchingManager._smaCheckTimer != null)
                                 {
                                     AlgorithmSwitchingManager._smaCheckTimer.Stop();
                                     Thread.Sleep(1000);
-                                    AlgorithmSwitchingManager._smaCheckTimer.Dispose();
+                                    //AlgorithmSwitchingManager._smaCheckTimer.Dispose();
                                     AlgorithmSwitchingManager._smaCheckTimer = null;
                                     Thread.Sleep(1000);
                                     AlgorithmSwitchingManager.Start();//************************
                                 }
-
+                                */
                                 if (Miner.IsRunningNew)
                                 {
                                     Form_Main.smaCount++;

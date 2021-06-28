@@ -3,6 +3,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -13,7 +14,6 @@ namespace NiceHashMiner.Forms.Components
         {
             InitializeComponent();
 
-            labelSpeedIndicator.Text = International.GetText("ListView_Speed");
             labelBTCRateIndicator.Text = International.GetText("Rate");
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
@@ -40,15 +40,13 @@ namespace NiceHashMiner.Forms.Components
             {
                 groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
             }
-            labelSpeedValue.Text = speedString;
+            richTextBoxSpeedValue.Rtf = speedString;
             labelBTCRateValue.Text = btcRateString;
             labelCurentcyPerDayVaue.Text = currencyRateString;
             groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
             groupBoxMinerGroup.BackColor = Form_Main._backColor;
             button_restart.Tag = ProcessTag;
             button_restart.Refresh();
-            //button_restart.Enabled = true;
-            //button_restart.Image = Properties.Resources.Refresh_normal;
         }
 
 

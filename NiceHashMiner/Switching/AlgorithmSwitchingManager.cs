@@ -67,13 +67,14 @@ namespace NiceHashMiner.Switching
             if (_smaCheckTimer == null)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
-                _smaCheckTimer = new System.Timers.Timer(1000);
+                //_smaCheckTimer = new System.Timers.Timer(1000);
+                _smaCheckTimer = new System.Timers.Timer();
+                _smaCheckTimer.Interval = 60 * 1000;
                 _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
-                //_smaCheckTimer.AutoReset = false;
                 _smaCheckTimer.Start();
             }
             
-            //SmaCheckNow();
+            SmaCheckNow();
         }
         public static void SmaCheckNow()
         {
@@ -115,6 +116,7 @@ namespace NiceHashMiner.Switching
         /// </summary>
         public static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
+            /*
             if (SmaCheckTimerOnElapsedRun)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed already running. Restarting");
@@ -131,15 +133,10 @@ namespace NiceHashMiner.Switching
                 SmaCheckTimerOnElapsedRun = false;
                 //return;
             }
-
+*/
             SmaCheckTimerOnElapsedRun = true;
-            //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
-            Thread.Sleep(10);
-            // Randomize();
-            // Will be null if manually called (in tests)
-            if (_smaCheckTimer != null) _smaCheckTimer.Interval = _smaCheckTime * 1000;
+
+            //if (_smaCheckTimer != null) _smaCheckTimer.Interval = _smaCheckTime * 1000;
 
             var sb = new StringBuilder();
             if (_hasStarted)
@@ -147,11 +144,10 @@ namespace NiceHashMiner.Switching
                 sb.AppendLine("Normalizing profits");
             }
             var stableUpdated = UpdateProfits(_algosHistory, _ticksForStable, sb);
-            //var unstableUpdated = UpdateProfits(_unstableHistory, _ticksForUnstable, sb);
+
             if (!stableUpdated && _hasStarted)
             {
                 sb.AppendLine("No algos affected (either no SMA update or no algos higher");
-                //NHSmaData.Initialize();
             }
 
             if (_hasStarted)
@@ -164,10 +160,10 @@ namespace NiceHashMiner.Switching
             }
 
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
-            SmaCheckTimerOnElapsedRun = false;
-            new Task(() => SmaCheck(sender, args)).Start();
-            //            SmaCheck?.Invoke(sender, args);
-            SmaCheckTimerOnElapsedRun = false;
+            //SmaCheckTimerOnElapsedRun = false;
+            //new Task(() => SmaCheck(sender, args)).Start();
+            SmaCheck?.Invoke(sender, args);
+            //SmaCheckTimerOnElapsedRun = false;
         }
 
         /// <summary>

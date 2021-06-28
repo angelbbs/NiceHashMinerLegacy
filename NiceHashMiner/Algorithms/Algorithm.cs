@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
@@ -40,7 +41,7 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// Used for miner ALGO flag parameter
         /// </summary>
-        public readonly string MinerName;
+        public readonly string AlgorithmNameCustom;
 
         #endregion
 
@@ -140,14 +141,14 @@ namespace NiceHashMiner.Algorithms
 
         #endregion
 
-        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName = "", bool enabled = true)
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string _AlgorithmNameCustom = "WOW!UnknownAlgo", bool enabled = true)
         {
             NiceHashID = niceHashID;
             AlgorithmName = AlgorithmNiceHashNames.GetName(NiceHashID);
             MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
             AlgorithmStringID = MinerBaseTypeName + "_" + AlgorithmName;
             MinerBaseType = minerBaseType;
-            MinerName = minerName;
+            AlgorithmNameCustom = _AlgorithmNameCustom;
             ExtraLaunchParameters = "";
             LessThreads = 0;
             Enabled = enabled;
@@ -187,11 +188,13 @@ namespace NiceHashMiner.Algorithms
             get
             {
                 var rate = International.GetText("BenchmarkRatioRateN_A");
+                
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
                     var payingRate = BenchmarkSpeed * paying * Mult;
                     rate = payingRate.ToString("F8");
                 }
+                
                 return rate;
             }
             set

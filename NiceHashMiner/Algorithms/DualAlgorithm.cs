@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -25,7 +26,25 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// AlgorithmType that uniquely identifies this choice of primary/secondary types
         /// </summary>
-        public override AlgorithmType DualNiceHashID => Helpers.DualAlgoFromAlgos(NiceHashID, SecondaryNiceHashID);
+        //public override AlgorithmType DualNiceHashID => Helpers.DualAlgoFromAlgos(NiceHashID, SecondaryNiceHashID);
+        public override AlgorithmType DualNiceHashID
+        {
+            get
+            {
+                if (NiceHashID == AlgorithmType.Autolykos)
+                {
+                    switch (SecondaryNiceHashID)
+                    {
+                        case AlgorithmType.DaggerHashimoto:
+                            return AlgorithmType.AutolykosZil;
+                    }
+                }
+
+                return NiceHashID;
+            }
+        }
+
+
 
         #endregion
 
@@ -125,7 +144,7 @@ namespace NiceHashMiner.Algorithms
         }
 
         #endregion
-
+        public readonly string DualAlgorithmNameCustom;
         #region Mining settings
 
         /// <summary>
@@ -246,7 +265,7 @@ namespace NiceHashMiner.Algorithms
         #endregion
 
 
-        public DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID)
+        public DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID, string _DualAlgorithmNameCustom = "WOW!UnknownDualAlgo")
             : base(minerBaseType, niceHashID, "")
         {
             SecondaryNiceHashID = secondaryNiceHashID;
@@ -254,7 +273,7 @@ namespace NiceHashMiner.Algorithms
             AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID); // needed to add secondary
             SecondaryAlgorithmName = AlgorithmNiceHashNames.GetName(secondaryNiceHashID);
             AlgorithmStringID = MinerBaseTypeName + "_" + AlgorithmName;
-
+            DualAlgorithmNameCustom = _DualAlgorithmNameCustom;
             SecondaryBenchmarkSpeed = 0.0d;
 
             IntensitySpeeds = new Dictionary<int, double>();
@@ -277,7 +296,13 @@ namespace NiceHashMiner.Algorithms
                     rate = payingRate.ToString("F8");
                 }
 
-                if (SecondaryBenchmarkSpeed > 0 && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying))
+                if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying2))//ZIL
+                {
+
+                    payingRate += SecondaryBenchmarkSpeed * (secPaying2 / 30) * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+                else if (SecondaryBenchmarkSpeed > 0 && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying))
                 {
                     payingRate += SecondaryBenchmarkSpeed * secPaying * Mult;
                     rate = payingRate.ToString("F8");
@@ -292,9 +317,25 @@ namespace NiceHashMiner.Algorithms
             get
             {
                 var ratio = International.GetText("BenchmarkRatioRateN_A");
+                if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))//ZIL
+                {
+                    ratio = (paying / 30).ToString("F8");
+                } else if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying2))
+                {
+                    ratio = paying2.ToString("F8");
+                }
+
+                return ratio;
+            }
+        }
+        public string SecondaryCurPayingRatioZIL
+        {
+            get
+            {
+                var ratio = International.GetText("BenchmarkRatioRateN_A");
                 if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))
                 {
-                    ratio = paying.ToString("F8");
+                    ratio = (paying / 30).ToString("F8");
                 }
 
                 return ratio;
@@ -323,9 +364,18 @@ namespace NiceHashMiner.Algorithms
         public override void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
         {
             base.UpdateCurProfit(profits);
-            profits.TryGetValue(SecondaryNiceHashID, out var secPaying);
+            if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto)//ZIL
+            {
+                profits.TryGetValue(SecondaryNiceHashID, out var secPaying2);
+                SecondaryCurNhmSmaDataVal = secPaying2 / 30;
 
-            SecondaryCurNhmSmaDataVal = secPaying;
+            }
+            else
+            {
+                profits.TryGetValue(SecondaryNiceHashID, out var secPaying);
+                SecondaryCurNhmSmaDataVal = secPaying;
+            }
+            
 
             IntensityUpToDate = false;
 

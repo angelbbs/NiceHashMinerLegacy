@@ -225,7 +225,15 @@ namespace NiceHashMiner.Forms.Components
                     int thermal_limit;
                     string fName = "temp\\" + computeDevice.Uuid + "_" + alg.AlgorithmStringID + ".tmp";
                     ControlMemoryGpuEntry dev = MSIAfterburner.ReadFromFile(computeDevice.BusID, fName);
-                    name = alg.AlgorithmName;
+                    //name = alg.AlgorithmName;
+                    if (alg is DualAlgorithm dualAlg)
+                    {
+                        name = dualAlg.DualAlgorithmNameCustom;
+                    }
+                    else
+                    {
+                        name = alg.AlgorithmNameCustom;
+                    }
                     miner = alg.MinerBaseTypeName;
                     if (_computeDevice.DeviceType == DeviceType.NVIDIA)
                     {

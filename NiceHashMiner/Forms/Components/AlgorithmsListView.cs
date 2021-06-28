@@ -130,15 +130,6 @@ namespace NiceHashMiner.Forms.Components
         {
             InitializeComponent();
             listViewAlgorithms.DoubleBuffer();
-
-            // System.Reflection.PropertyInfo dbProp = typeof(System.Windows.Forms.Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            // dbProp.SetValue(this, true, null);
-            //if (ConfigManager.GeneralConfig.ColorProfileIndex == 0)
-            //{
-              //  AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, SystemColors.ControlLightLight, Form_Main._textColor);
-            //}
-            //else
-
             AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Form_Main._backColor, Form_Main._textColor);
 
 
@@ -146,7 +137,6 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.ItemSelectionChanged += ListViewAlgorithms_ItemSelectionChanged;
             listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler) ListViewAlgorithms_ItemChecked;
             IsInBenchmark = false;
-         //   listViewAlgorithms.OwnerDraw = true;
         }
         public static void colorListViewHeader(ref ListView list, Color backColor, Color foreColor)
         {
@@ -208,12 +198,7 @@ namespace NiceHashMiner.Forms.Components
             var _backColor = Form_Main._backColor;
             var _foreColor = Form_Main._foreColor;
             var _textColor = Form_Main._textColor;
-            /*
-            //  foreach (var lbl in this.Controls.OfType<ListView>()) lbl.BackColor = _backColor;
-            listViewAlgorithms.BackColor = _backColor;
-            listViewAlgorithms.ForeColor = _textColor;
-            this.BackColor = _backColor;
-            */
+
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
                 listViewAlgorithms.BackColor = _backColor;
@@ -255,7 +240,6 @@ namespace NiceHashMiner.Forms.Components
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
-                    //ProgressBar pb = new ProgressBar();
                     var name = "";
                     var miner = "";
                     var secondarySpeed = "";
@@ -263,20 +247,23 @@ namespace NiceHashMiner.Forms.Components
                     var payingRatio = "";
                     if (alg is DualAlgorithm dualAlg)
                     {
-                       // name = "  ↑ + " + dualAlg.SecondaryAlgorithmName;
-                        //name = "  " + char.ConvertFromUtf32(8593) + " + " + dualAlg.SecondaryAlgorithmName;
-                        name = dualAlg.AlgorithmName;
+                        name = dualAlg.DualAlgorithmNameCustom;
                         miner = alg.MinerBaseTypeName;
                         secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
                         totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
+                        /*
+                        if (alg.NiceHashID == AlgorithmType.Autolykos && dualAlg.DualNiceHashID == AlgorithmType.DaggerHashimoto)
+                        {
+                            payingRatio = alg.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio / 30;
+                        }
+                        */
                         payingRatio = alg.CurPayingRatio + "/" +dualAlg.SecondaryCurPayingRatio;
                     }
                     else
                     {
-                        name = alg.AlgorithmName;
+                        name = alg.AlgorithmNameCustom;
                         miner = alg.MinerBaseTypeName;
                         totalSpeed = alg.BenchmarkSpeedString();
-                        //name = $"{alg.AlgorithmName} ({alg.MinerBaseTypeName})";
                         payingRatio = alg.CurPayingRatio;
                     }
 
@@ -354,7 +341,7 @@ namespace NiceHashMiner.Forms.Components
                     pb.Minimum = 1;
                     pb.Maximum = 10;
                     pb.Value = 5;
-                    pb.Name = totalSpeed;                   
+                    pb.Name = totalSpeed;
                     listViewAlgorithms.Controls.Add(pb);
                     pb.Value = 8;
                     */
@@ -392,8 +379,10 @@ namespace NiceHashMiner.Forms.Components
                                     lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
                                 }
                                 double.TryParse(algorithm.CurPayingRate, out var valueRate);
+
                                 double WithPowerRate = 0;
                                 WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+
                                 if (!ConfigManager.GeneralConfig.DecreasePowerCost)
                                 {
                                     WithPowerRate = valueRate;
@@ -507,7 +496,7 @@ namespace NiceHashMiner.Forms.Components
                  // e.Item.Checked = !e.Item.Checked;
                 //return;
             }
-            
+
             if (e.Item.Tag is Algorithm algo)
             {
                 algo.Enabled = e.Item.Checked;

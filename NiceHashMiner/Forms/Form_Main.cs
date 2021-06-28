@@ -1642,10 +1642,24 @@ public static void CloseChilds(Process parentId)
            DateTime StartMinerTime, bool isApiGetException, string processTag)
         {
             var apiGetExceptionString = isApiGetException ? " **" : "";
-            var speedString =
-                Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
-                iApiData.AlgorithmName + apiGetExceptionString;
-            //power = 0;
+            string speedString = "";
+            speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
+                          iApiData.AlgorithmName + apiGetExceptionString;
+            //хрень. надо поправить
+            string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}";
+            speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " +speedString + "\\b\\par}";
+            if (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto)
+            {
+                if (iApiData.SecondarySpeed > 0)
+                {
+                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.SecondarySpeed) + "H/s\\b0  Autolykos+\\b Zilliqua\\b\\par}";
+                }
+                else
+                {
+                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.Speed) + "H/s Autolykos\\b0 +Zilliqua\\b\\par}";
+                }
+            }
+
             var rateBtcString = FormatPayingOutput(paying, power);
             if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
@@ -1663,6 +1677,7 @@ public static void CloseChilds(Process parentId)
                 // flowLayoutPanelRatesIndex may be OOB, so catch
                 ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
                     .UpdateProfitStats(groupName, deviceStringInfo, speedString, StartMinerTime, rateBtcString, rateCurrencyString, processTag);
+            
             }
             catch (Exception ex)
             {
@@ -2060,13 +2075,13 @@ public static void CloseChilds(Process parentId)
             {
                 foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
                 {
-                    process.Kill(); 
+                    process.Kill();
                 }
 
             }
             catch (Exception ex)
             {
-                
+
             }
 
             //stop openhardwaremonitor
@@ -2439,8 +2454,8 @@ public static void CloseChilds(Process parentId)
                 }
             }
             */
-           // textBoxBTCAddress.Enabled = false;
-            textBoxBTCAddress_new.Enabled = false;
+                // textBoxBTCAddress.Enabled = false;
+                textBoxBTCAddress_new.Enabled = false;
             textBoxWorkerName.Enabled = false;
             comboBoxLocation.Enabled = false;
             //buttonBenchmark.Enabled = false;
@@ -2806,6 +2821,19 @@ public static void CloseChilds(Process parentId)
             } catch (UnauthorizedAccessException u)
             {
                 Helpers.ConsolePrint("NVML", "Error! UnauthorizedAccessException. devCount="+ devCount.ToString() + " AvailNVGpus=" + ComputeDeviceManager.Available.AvailNVGpus.ToString());
+                try
+                {
+                    foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
+                    {
+                        process.Kill();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                Thread.Sleep(500);
             }
             catch (FileNotFoundException e)
             {

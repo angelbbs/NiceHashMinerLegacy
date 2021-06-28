@@ -34,19 +34,49 @@ namespace NiceHashMiner
         public AlgorithmType AlgorithmID;
         public AlgorithmType SecondaryAlgorithmID;
         public string AlgorithmName;
+        public string AlgorithmNameCustom;
         public double Speed;
         public double SecondarySpeed;
         public double PowerUsage;
 
-        public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
+        public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE, MiningPair mpairs = null)
         {
             AlgorithmID = algorithmID;
             SecondaryAlgorithmID = secondaryAlgorithmID;
-            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmID, secondaryAlgorithmID));
+
+            if (mpairs == null)
+            {
+                AlgorithmName = AlgorithmNiceHashNames.GetName(DualAlgorithmID());
+            } else
+            {
+                if (mpairs.Algorithm is DualAlgorithm dualAlg)
+                {
+                    AlgorithmName = dualAlg.DualAlgorithmNameCustom;
+                } else
+                {
+                    AlgorithmName = mpairs.Algorithm.AlgorithmNameCustom;
+                }
+
+            }
+
             Speed = 0.0;
             SecondarySpeed = 0.0;
             PowerUsage = 0.0;
         }
+        public AlgorithmType DualAlgorithmID()
+        {
+            if (AlgorithmID == AlgorithmType.Autolykos)
+            {
+                switch (SecondaryAlgorithmID)
+                {
+                    case AlgorithmType.DaggerHashimoto:
+                        return AlgorithmType.AutolykosZil;
+                }
+            }
+
+            return AlgorithmID;
+        }
+
     }
 
     //
@@ -2111,14 +2141,7 @@ namespace NiceHashMiner
 
             foreach (var pair in MiningSetup.MiningPairs)
             {
-                if (pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerBlake2s ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerDecred ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKeccak ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerLbry ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerPascal ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerSia ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerHandshake ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerEaglesong)
+                if (pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosZil)
                 {
                     strDual = "DUAL";
                 }

@@ -61,7 +61,7 @@ namespace NiceHashMiner.Devices
 
         public bool IsEtherumCapable()
         {
-            return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE >= 4293918720;
+            return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE >= 5293918720;
         }
     }
 }

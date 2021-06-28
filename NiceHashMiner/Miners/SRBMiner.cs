@@ -46,6 +46,23 @@ namespace NiceHashMiner.Miners
         private string GetStartCommand(string url, string btcAddress, string worker) {
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string username = GetUsername(btcAddress, worker);
+            url = url.Replace("stratum+tcp://", "");
+            string ethurl = url.Replace("autolykos", "daggerhashimoto").Split(':')[0]; ;
+            string zilurl = url.Split(':')[0];
+
+            if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                var port = "3390";
+                return $" --main-pool-reconnect 2 --disable-cpu --a0-is-zil --multi-algorithm-job-mode 3 " +
+                    $"--algorithm ethash;autolykos2 " +
+                    $"--pool {ethurl}:3353;{zilurl}:3390 " +
+                    $"--pool daggerhashimoto.{Form_Main.myServers[1, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
+                    $"--pool daggerhashimoto.{Form_Main.myServers[2, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
+                    $"--pool daggerhashimoto.{Form_Main.myServers[3, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
+                    $"--pool daggerhashimoto.{Form_Main.myServers[0, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
+                    $"--wallet {username};{username}  --password x;x --api-enable --api-port {ApiPort} " +
+               "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
                 var algo = "randomxmonero";
@@ -70,7 +87,6 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                var algo = "autolykos2";
                 var port = "3390";
                 return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
                + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
@@ -79,6 +95,7 @@ namespace NiceHashMiner.Miners
                + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
                "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
+            
             return "unsupported algo";
 
         }
@@ -101,7 +118,10 @@ namespace NiceHashMiner.Miners
             string port;
             string username = GetUsername(btcAddress, worker);
             url = url.Replace("stratum+tcp://", "");
-
+            if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.AutolykosZil))
+            {
+               // MessageBox.Show("");
+            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
                 algo = "randomxmonero";
@@ -168,7 +188,7 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
 
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
             string ResponseFromSRBMiner;
             try
             {
@@ -197,14 +217,15 @@ namespace NiceHashMiner.Miners
             //Helpers.ConsolePrint("API ResponseFromSRBMiner:", ResponseFromSRBMiner.ToString());
             try
             {
-                int totals = 0;
+                int totalsMain = 0;
+                int totalsSecond = 0;
                 if (resp != null)
                 {
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
-                    //var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
                     int devs = sortedMinerPairs.Count;
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos)) &&
+                        MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
                     {
                         devs = 0;
                         foreach (var mPair in sortedMinerPairs)
@@ -214,7 +235,6 @@ namespace NiceHashMiner.Miners
                                 string token = $"algorithms[0].hashrate.gpu.gpu{mPair.Device.IDByBus}";
                                 var hash = resp.SelectToken(token);
                                 int gpu_hr = (int)Convert.ToInt32(hash, CultureInfo.InvariantCulture.NumberFormat);
-                                //Helpers.ConsolePrint("API hashrate:", gpu_hr.ToString());
                                 mPair.Device.MiningHashrate = gpu_hr;
 
                             } catch (Exception ex)
@@ -224,19 +244,58 @@ namespace NiceHashMiner.Miners
                             devs++;
                         }
 
-                        totals = resp.algorithms[0].hashrate.gpu.total;
+                        totalsMain = resp.algorithms[0].hashrate.gpu.total;
                     }
-                    else if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
+                    if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
-                        totals = resp.algorithms[0].hashrate.cpu.total;
+                        //MessageBox.Show((MiningSetup.CurrentSecondaryAlgorithmType.ToString()));
+                        devs = 0;
                         foreach (var mPair in sortedMinerPairs)
                         {
-                                mPair.Device.MiningHashrate = totals;
+                            try
+                            {
+                                string token0 = $"algorithms[0].hashrate.gpu.gpu{mPair.Device.IDByBus}";
+                                var hash0 = resp.SelectToken(token0);
+                                int gpu_hr0 = (int)Convert.ToInt32(hash0, CultureInfo.InvariantCulture.NumberFormat);
+
+                                string token1 = $"algorithms[1].hashrate.gpu.gpu{mPair.Device.IDByBus}";
+                                var hash1 = resp.SelectToken(token1);
+                                int gpu_hr1 = (int)Convert.ToInt32(hash1, CultureInfo.InvariantCulture.NumberFormat);
+
+                                if (gpu_hr0 > 0)
+                                {
+                                    mPair.Device.MiningHashrate = gpu_hr0;
+                                }
+                                else
+                                {
+                                    mPair.Device.MiningHashrate = gpu_hr1;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("API Exception:", ex.ToString());
+                            }
+                            devs++;
+                        }
+
+                        totalsMain = resp.algorithms[1].hashrate.gpu.total;
+                        totalsSecond = resp.algorithms[0].hashrate.gpu.total;
+
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
+                    {
+                        totalsMain = resp.algorithms[0].hashrate.cpu.total;
+                        foreach (var mPair in sortedMinerPairs)
+                        {
+                                mPair.Device.MiningHashrate = totalsMain;
                         }
                     }
+                    
 
-                    ad.Speed = totals;
-                    if (ad.Speed == 0)
+                    ad.Speed = totalsMain;
+                    ad.SecondarySpeed = totalsSecond;
+
+                    if (ad.Speed + ad.SecondarySpeed == 0)
                     {
                         CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                     }

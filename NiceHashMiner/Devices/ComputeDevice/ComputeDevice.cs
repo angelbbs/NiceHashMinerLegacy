@@ -308,7 +308,7 @@ namespace NiceHashMiner.Devices
             return virtualCoreCount;
         }
 
-        
+
         //********************************************************************************************************************
         // Ambiguous constructor
         protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,
@@ -377,12 +377,6 @@ namespace NiceHashMiner.Devices
                 var setAlgo = GetAlgorithm(copyFromAlgo);
                 if (setAlgo != null)
                 {
-                    /*
-                    MessageBox.Show("BusID: " + copyBenchCDevFrom.BusID.ToString() + " Index: " + copyBenchCDevFrom.Index.ToString() +
-                        " AlgorithmName: " + setAlgo.AlgorithmName + " AlgorithmStringID: " + setAlgo.AlgorithmStringID +
-                        " MinerBaseType: " + setAlgo.MinerBaseType +
-                        " MinerBaseTypeName: " + setAlgo.MinerBaseTypeName + " MinerName: " + setAlgo.MinerName);
-                    */
                     try
                     {
                         string fNameSrc = "temp\\" + copyBenchCDevFrom.Uuid + "_" + setAlgo.AlgorithmStringID + ".tmp";
@@ -402,7 +396,7 @@ namespace NiceHashMiner.Devices
                     {
                         Helpers.ConsolePrint("CopyOverclockSettingsFrom", "Error: " + ex.ToString());
                     }
-                    
+
                 }
             }
         }
@@ -536,13 +530,13 @@ namespace NiceHashMiner.Devices
             foreach (var algo in AlgorithmSettings)
             {
                 // create/setup
-                
+
                 var conf = new AlgorithmConfig
                 {
                     Name = algo.AlgorithmStringID,
                     NiceHashID = algo.NiceHashID,
                     MinerBaseType = algo.MinerBaseType,
-                    MinerName = algo.MinerName,
+                    AlgorithmNameCustom = algo.AlgorithmNameCustom,
                     BenchmarkSpeed = algo.BenchmarkSpeed,
                     ExtraLaunchParameters = algo.ExtraLaunchParameters,
                     Enabled = algo.Enabled,

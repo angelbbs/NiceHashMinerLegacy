@@ -84,7 +84,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 _benchmarkTimeWait = time;
-                commandLine = " --algo=" + algorithm.MinerName +
+                commandLine = " --algo=" + algorithm.AlgorithmName +
                 " --url=" + url + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
                 " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +

@@ -27,6 +27,9 @@ namespace NiceHashMiner.Miners
         string ResponseFromNanominer;
         public string platform = "";
         public string[] devices;
+        public FileStream fs;
+        private int offset = 0;
+        private bool zilRound = false;
 
         public Nanominer() : base("Nanominer")
         {
@@ -38,6 +41,14 @@ namespace NiceHashMiner.Miners
             IsApiReadException = false;
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             ProcessHandle = _Start();
+            
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!File.Exists("miners\\Nanominer\\" + GetLogFileName()));
+            Thread.Sleep(1000);
+            fs = new FileStream("miners\\Nanominer\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            
         }
 
         private string GetStartCommand(string url, string btcAdress, string worker)
@@ -63,22 +74,55 @@ namespace NiceHashMiner.Miners
             string username = GetUsername(btcAdress, worker);
             string rigName = username.Split('.')[1];
             url = url.Replace("stratum+tcp://", "");
+            string cfgFile = "";
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                cfgFile =
+                   String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
+                   + String.Format("protocol = stratum\n")
+                   + String.Format(param) + "\n"
+                   + String.Format("[Ethash]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
+                   + String.Format("wallet = {0}", btcAdress) + "\n"
+                   + String.Format("rigName = \"{0}\"", rigName) + "\n"
+                   + String.Format("pool1 = {0}", url) + "\n"
+                   + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[0, 0]) + "\n"
+                   + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[1, 0]) + "\n"
+                   + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[2, 0]) + "\n"
+                   + String.Format("pool5 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[3, 0]) + "\n";
+            }
+            if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                    File.Delete("miners\\Nanominer\\" + GetLogFileName());
 
-            var cfgFile =
-               String.Format("webPort = {0}", ApiPort) + "\n"
-               + String.Format("mport = 0\n")
-               + String.Format("protocol = stratum\n")
-               + String.Format(param) + "\n"
-               + String.Format("[Ethash]\n")
-               + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
-               + String.Format("wallet = {0}", btcAdress) + "\n"
-               + String.Format("rigName = \"{0}\"", rigName) + "\n"
-               + String.Format("pool1 = {0}", url) + "\n"
-               + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[0, 0]) + "\n"
-               + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[1, 0]) + "\n"
-               + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[2, 0]) + "\n"
-               + String.Format("pool5 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[3, 0]) + "\n";
-
+                cfgFile =
+                   String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
+                   + String.Format("logPath=" + GetLogFileName() + "\n")
+                   + String.Format(param) + "\n"
+                   + String.Format("[autolykos]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
+                   + String.Format("wallet = {0}", btcAdress) + "\n"
+                   + String.Format("rigName = \"{0}\"", rigName) + "\n"
+                   + String.Format("protocol = stratum\n")
+                   + String.Format("pool1 = {0}", url) + "\n"
+                   + String.Format("pool2 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[0, 0]) + "\n"
+                   + String.Format("pool3 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[1, 0]) + "\n"
+                   + String.Format("pool4 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[2, 0]) + "\n"
+                   + String.Format("pool5 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[3, 0]) + "\n"
+                   + String.Format("[zil]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
+                   + String.Format("wallet = {0}", btcAdress) + "\n"
+                   + String.Format("rigName = \"{0}\"", rigName) + "\n"
+                   + String.Format("zilEpoch = 0\n")
+               //    + String.Format("protocol = JSON-RPC\n")
+                   + String.Format("pool1 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[0, 0]) + "\n"
+                   + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[1, 0]) + "\n"
+                   + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[2, 0]) + "\n"
+                   + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[3, 0]) + "\n";
+            }
             try
             {
                 FileStream fs = new FileStream("miners\\Nanominer\\config_nh_" + platform + ".ini", FileMode.Create, FileAccess.Write);
@@ -502,13 +546,14 @@ namespace NiceHashMiner.Miners
 
             return 0;
         }
-
+        
         public override async Task<ApiData> GetSummaryAsync()
         {
             // CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
             CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
-            int dSpeed = 0;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            int dSpeed1 = 0;
+            int dSpeed2 = 0;
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             if (Form_Main.NVIDIA_orderBug)
             {
@@ -527,6 +572,7 @@ namespace NiceHashMiner.Miners
                 ResponseFromNanominer = await Reader.ReadToEndAsync();
                 Reader.Close();
                 Response.Close();
+                //Helpers.ConsolePrint("API", ResponseFromNanominer);
             }
             catch (Exception ex)
             {
@@ -535,21 +581,112 @@ namespace NiceHashMiner.Miners
             }
             try
             {
-                //Helpers.ConsolePrint("API", ResponseFromNanominer);
-                dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
-                if (json == null) return ad;
-                var cSpeed1 = (json.Algorithms[0].Ethash);
-                if (cSpeed1 == null) return ad;
-                var cSpeed = (json.Algorithms[0].Ethash.Total.Hashrate);
-                dSpeed = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
-
-                for (int i = 0; i < sortedMinerPairs.Count; i++)
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
-                    string gpu = devices[i];
-                    string token = $"Algorithms[0].Ethash.GPU{gpu}.Hashrate";
-                    var hash = (string)json.SelectToken(token);
-                    var gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
-                    sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                    dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
+                    if (json == null) return ad;
+                    var cSpeed1 = (json.Algorithms[0].Ethash);
+                    if (cSpeed1 == null) return ad;
+                    var cSpeed = (json.Algorithms[0].Ethash.Total.Hashrate);
+                    dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
+
+                    for (int i = 0; i < sortedMinerPairs.Count; i++)
+                    {
+                        string gpu = devices[i];
+                        string token = $"Algorithms[0].Ethash.GPU{gpu}.Hashrate";
+                        var hash = (string)json.SelectToken(token);
+                        var gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
+                        sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                    }
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                {
+                    dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
+                    if (json == null) return ad;
+                    var cSpeed1 = (json.Algorithms[0].Autolykos);
+                    if (cSpeed1 == null) return ad;
+                    var cSpeed = (json.Algorithms[0].Autolykos.Total.Hashrate);
+                    dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
+
+                    for (int i = 0; i < sortedMinerPairs.Count; i++)
+                    {
+                        string gpu = devices[i];
+                        string token = $"Algorithms[0].Autolykos.GPU{gpu}.Hashrate";
+                        var hash = (string)json.SelectToken(token);
+                        var gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
+                        sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                    }
+                }
+                if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                {
+                    dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
+                    if (json == null) return ad;
+
+                    var cSpeed1 = (json.Algorithms[0].Autolykos.Total.Hashrate);
+                    var cSpeed2 = (json.Algorithms[0].Zilliqa.Total.Hashrate);
+                    dSpeed1 = (int)Convert.ToDouble(cSpeed1, CultureInfo.InvariantCulture.NumberFormat);
+                    dSpeed2 = (int)Convert.ToDouble(cSpeed2, CultureInfo.InvariantCulture.NumberFormat);
+
+                    for (int i = 0; i < sortedMinerPairs.Count; i++)
+                    {
+                        string gpu = devices[i];
+                        string token1 = $"Algorithms[0].Autolykos.GPU{gpu}.Hashrate";
+                        string token2 = $"Algorithms[0].Zilliqa.GPU{gpu}.Hashrate";
+                        var hash1 = (string)json.SelectToken(token1);
+                        var hash2 = (string)json.SelectToken(token2);
+                        var gpu_hr1 = (int)Convert.ToDouble(hash1, CultureInfo.InvariantCulture.NumberFormat);
+                        var gpu_hr2 = (int)Convert.ToDouble(hash2, CultureInfo.InvariantCulture.NumberFormat);
+                        //костыль из-за бага в api nanominer
+                        if (fs.Length > offset)
+                        {
+                            int count = (int)(fs.Length - offset);
+                            byte[] array = new byte[count];
+                            fs.Read(array, 0, count);
+                            offset = (int)fs.Length;
+                            string textFromFile = System.Text.Encoding.Default.GetString(array).Trim();
+                            Helpers.ConsolePrint(MinerTag(), textFromFile);
+
+                            string strStart = "Zilliqa - Total speed:";
+                            if (textFromFile.Contains(strStart) && textFromFile.Contains("H/s"))
+                            {
+                                var speedStart = textFromFile.IndexOf(strStart);
+                                var speed = textFromFile.Substring(speedStart + strStart.Length, 6);
+                                speed = speed.Replace(strStart, "");
+                                speed = speed.Replace(" ", "");
+                                double.TryParse(speed, out var zilSpeed);
+                                if (zilSpeed > 0)
+                                {
+                                    zilRound = true;
+                                    dSpeed1 = 0;
+                                } else
+                                {
+                                    zilRound = false;
+                                    dSpeed2 = 0;
+                                }
+                            }
+                            if (textFromFile.Contains("DAG generated"))
+                            {
+                                zilRound = true;
+                                dSpeed1 = 0;
+                            }
+                            if (textFromFile.Contains("Ergo - SHARE FOUND"))
+                            {
+                                zilRound = false;
+                                dSpeed2 = 0;
+                            }
+                        }
+                        //
+                        if (gpu_hr2 > 0 && zilRound)
+                        {
+                            sortedMinerPairs[i].Device.MiningHashrate = gpu_hr2;
+                            dSpeed1 = 0;
+                        }
+                        else
+                        {
+                            sortedMinerPairs[i].Device.MiningHashrate = gpu_hr1;
+                            dSpeed2 = 0;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -557,8 +694,9 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("API", ex.ToString());
                 return null;
             }
-            ad.Speed = dSpeed;
-            if (ad.Speed == 0)
+            ad.Speed = dSpeed1;
+            ad.SecondarySpeed = dSpeed2;
+            if (ad.Speed + ad.SecondarySpeed == 0)
             {
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
             }
@@ -571,10 +709,143 @@ namespace NiceHashMiner.Miners
             return ad;
 
         }
+        //ethman api тоже не работает
+        /*
+        public bool IsDual()
+        {
+            return (MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE);
+        }
+        private class JsonApiResponse
+        {
+#pragma warning disable IDE1006 // Naming Styles
+            public List<string> result { get; set; }
+            public int id { get; set; }
+            public object error { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
+        }
+        public override async Task<ApiData> GetSummaryAsync()
+        {
+            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
 
+            JsonApiResponse resp = null;
+            try
+            {
+                Helpers.ConsolePrint("ClaymoreMiner API: ", "********* 1");
+                var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}\r\n");
+                var client = new TcpClient("127.0.0.1", ApiPort);
+                Helpers.ConsolePrint("ClaymoreMiner API: ", "********* 2");
+                var nwStream = client.GetStream();
+                Helpers.ConsolePrint("ClaymoreMiner API: ", "********* 3");
+                nwStream.ReadTimeout = 2 * 1000;
+                nwStream.WriteTimeout = 2 * 1000;
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+                Helpers.ConsolePrint("ClaymoreMiner API: ", "********* 4");
+                var bytesToRead = new byte[client.ReceiveBufferSize];
+                var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                Helpers.ConsolePrint("ClaymoreMiner API: ", "********* 5");
+                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
+                client.Close();
+                Helpers.ConsolePrint("ClaymoreMiner API: ", respStr);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
+            }
 
+            if (resp != null && resp.error == null)
+            {
+                if (resp.result != null)
+                {
+                    var speeds = resp.result[3].Split(';');
+                    var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
+
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+
+                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderByDescending(pair => pair.Device.DeviceType)
+                                .ThenBy(pair => pair.Device.IDByBus).ToList();
+                    if (Form_Main.NVIDIA_orderBug)
+                    {
+                        sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+                    }
+                    int dev = 0;
+                    foreach (var speed in speeds)
+                    {
+                        Helpers.ConsolePrint("ClaymoreMiner API: ", "speed: " + speed);
+                        //Helpers.ConsolePrint("ClaymoreMiner API: ", "secondarySpeeds: " + secondarySpeeds.ToString());
+                        double tmpSpeed;
+                        try
+                        {
+                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
+                        }
+                        catch
+                        {
+                            tmpSpeed = 0;
+                        }
+                        Helpers.ConsolePrint("ClaymoreMiner API: ", "tmpSpeed" + tmpSpeed.ToString());
+                        
+                        if (!speed.Contains("off"))
+                        {
+                            sortedMinerPairs[dev].Device.MiningHashrate = tmpSpeed;
+                            dev++;
+                        }
+                        ad.Speed += tmpSpeed;
+                    }
+
+                    foreach (var speed in secondarySpeeds)
+                    {
+                        Helpers.ConsolePrint("ClaymoreMiner API: ", "secondarySpeeds " + secondarySpeeds);
+                        double tmpSpeed;
+                        try
+                        {
+                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
+                        }
+                        catch
+                        {
+                            tmpSpeed = 0;
+                        }
+                        Helpers.ConsolePrint("ClaymoreMiner API: ", "tmpSpeed2" + tmpSpeed.ToString());
+                        ad.SecondarySpeed += tmpSpeed;
+                        if (tmpSpeed > 0)
+                        {
+                            sortedMinerPairs[dev].Device.MiningHashrate = tmpSpeed;
+                        }
+                    }
+
+                    CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                }
+
+                if (ad.Speed + ad.SecondarySpeed == 0)
+                {
+                    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                }
+
+                if (ad.Speed < 0)
+                {
+                    Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
+                    Restart();
+                }
+            }
+
+            if (fs.Length > offset)
+            {
+                int count = (int)(fs.Length - offset);
+                byte[] array = new byte[count];
+                Helpers.ConsolePrint(MinerTag(), "* fs.Length: " + fs.Length.ToString() + "array.Length: " + array.Length.ToString() + " offset: " + offset.ToString() + " count: " + count.ToString());
+                fs.Read(array, 0, count);
+
+                offset = (int)fs.Length;
+                string textFromFile = System.Text.Encoding.Default.GetString(array).Trim();
+                Helpers.ConsolePrint(MinerTag(), textFromFile);
+            }
+            return ad;
+        }
+        */
         protected override void _Stop(MinerStopType willswitch)
         {
+            fs.Close();
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 

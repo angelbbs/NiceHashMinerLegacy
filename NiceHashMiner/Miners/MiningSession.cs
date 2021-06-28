@@ -549,7 +549,7 @@ namespace NiceHashMiner.Miners
                 {
                     currentProfit = device.GetCurrentMostProfitValue;
                     prevStateProfit = device.GetPrevMostProfitValue;
-                   
+
                     Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
                     var a = Math.Max(prevStateProfit, currentProfit);
                     var b = Math.Min(prevStateProfit, currentProfit);
@@ -724,7 +724,7 @@ namespace NiceHashMiner.Miners
                     // start new miners
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
-                        stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType}, ");
+                        stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType} : {toStart.DualAlgorithmType}, ");
                         //toStart.Start(_miningLocation, _btcAdress, _worker);
                         if (ConfigManager.GeneralConfig.ServiceLocation == 4)
                         {
@@ -795,13 +795,15 @@ namespace NiceHashMiner.Miners
                     }
 
                     // set rates
-                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
+                    //if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
+                    if (ad != null)
                     {
                         //ComputeDevice.HashRate = ad.Speed;
+                        NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
                         NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
-                        double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;
-                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
+                        //double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;
+                        groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
                         // Deduct power costs
                         double powerUsage = 0;
                         /*

@@ -31,12 +31,12 @@ namespace NiceHashMiner.Devices
 
         public string GetName()
         {
-            
+
             if (VendorName == "UNKNOWN")
             {
                 VendorName = string.Format(International.GetText("ComputeDevice_UNKNOWN_VENDOR_REPLACE"), VendorID);
             }
-            
+
             //return $"{VendorName} {DeviceName}";
             return $"{DeviceName}";
         }
@@ -50,7 +50,7 @@ namespace NiceHashMiner.Devices
                     "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
                 return false;
             }
-            return DeviceGlobalMemory >= 4293918720 && SM_major >= 3;
+            return DeviceGlobalMemory >= 5293918720 && SM_major >= 3;
         }
     }
 }

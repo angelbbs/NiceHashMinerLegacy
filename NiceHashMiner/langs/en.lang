@@ -31,7 +31,7 @@
         "ListView_Group": "Group",
         "ListView_Device": "Device",
         "ListView_Algorithm": "Algorithm",
-        "ListView_Speed": "Speed",
+        "ListView_Speed": "Speed:",
 
 
         "Form_Main_visit_us": "Visit us @ www.nicehash.com",

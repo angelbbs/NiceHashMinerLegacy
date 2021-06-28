@@ -192,9 +192,17 @@ namespace NiceHashMiner
         public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE)
         {
             string ret;
+
             if (secondarySpeed > 0)
             {
-                ret = FormatSpeedOutput(primarySpeed, "") + "/" + FormatSpeedOutput(secondarySpeed, "") + " ";
+                if (primarySpeed == 0)
+                {
+                    ret = "-- /" + FormatSpeedOutput(secondarySpeed, "");
+                }
+                else
+                {
+                    ret = FormatSpeedOutput(primarySpeed, "") + "/" + FormatSpeedOutput(secondarySpeed, "") + " ";
+                }
             }
             else
             {
@@ -445,16 +453,12 @@ namespace NiceHashMiner
 
         public static AlgorithmType DualAlgoFromAlgos(AlgorithmType primary, AlgorithmType secondary)
         {
-            if (primary == AlgorithmType.DaggerHashimoto || primary == AlgorithmType.DaggerHashimoto3GB || primary == AlgorithmType.DaggerHashimoto4GB)
+            if (primary == AlgorithmType.Autolykos)
             {
                 switch (secondary)
                 {
-                    case AlgorithmType.Decred:
-                        return AlgorithmType.DaggerDecred;
-                    case AlgorithmType.Blake2s:
-                        return AlgorithmType.DaggerBlake2s;
-                    case AlgorithmType.Keccak:
-                        return AlgorithmType.DaggerKeccak;
+                    case AlgorithmType.DaggerHashimoto:
+                        return AlgorithmType.AutolykosZil;
                 }
             }
 
