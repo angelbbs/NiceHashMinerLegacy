@@ -183,7 +183,14 @@ namespace NiceHashMiner.Devices
 
                                 if ((int)wdwIntPtr > 1)
                                 {
-                                    Thread.Sleep(3000);//обязательная пауза
+                                    Thread.Sleep(1000);//обязательная пауза
+                                    waiting.SetText("", International.GetText("MSIAB_Starting") + " 25%");
+                                    Thread.Sleep(1000);//обязательная пауза
+                                    waiting.SetText("", International.GetText("MSIAB_Starting") + " 50%");
+                                    Thread.Sleep(1000);//обязательная пауза
+                                    waiting.SetText("", International.GetText("MSIAB_Starting") + " 75%");
+                                    Thread.Sleep(1000);//обязательная пауза
+                                    waiting.SetText("", International.GetText("MSIAB_Starting") + " 100%");
                                     break;
                                 }
                                 repeats++;
@@ -209,17 +216,25 @@ namespace NiceHashMiner.Devices
                                     //GetWindowPlacement(wdwIntPtr, ref placement);
                                     //ShowWindow(wdwIntPtr, ShowWindowEnum.ForceMinimized);
                                 }
-                                Thread.Sleep(3000);//обязательная пауза
+                                Thread.Sleep(1000);//обязательная пауза
+                                waiting.SetText("", International.GetText("MSIAB_Checking") + " 25%");
+                                Thread.Sleep(1000);//обязательная пауза
+                                waiting.SetText("", International.GetText("MSIAB_Checking") + " 50%");
+                                Thread.Sleep(1000);//обязательная пауза
+                                waiting.SetText("", International.GetText("MSIAB_Checking") + " 75%");
+                                Thread.Sleep(1000);//обязательная пауза
+                                waiting.SetText("", International.GetText("MSIAB_Checking") + " 100%");
                                 P.Exited += new EventHandler(MSIABprocessExited);
                                 P.EnableRaisingEvents = true;
                                 break;
                             }
                             repeats++;
                             Thread.Sleep(1000);
-                        } while (repeats < 5);
+                        } while (repeats < 10);
 
                         if (!meminit)
                         {
+                            Thread.Sleep(200);
                             if (waiting != null) waiting.CloseWaitingBox();
                             MSIAB_starting = false;
                             return false;
@@ -236,7 +251,11 @@ namespace NiceHashMiner.Devices
                         return false;
                     }
                 }
-                if (waiting != null) waiting.CloseWaitingBox();
+                if (waiting != null)
+                {
+                    Thread.Sleep(100);
+                    waiting.CloseWaitingBox();
+                }
             }
             MSIAB_starting = false;
             return true;

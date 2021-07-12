@@ -423,6 +423,7 @@
                 "Form_Settings_checkBox_Allow_remote_management": "Allow remote management",
                 "Form_Settings_checkBox_Send_actual_version_info": "Send actual version info",
                 "Form_Settings_checkBox_Additional_info_about_device": "Additional info about device",
+		"Form_Settings_checkBox_DisplayConnected": "Show which GPU display is connected to",
                 "Form_Settings_checkBox_show_NVdevice_manufacturer": "Show NVIDIA device manufacturer",
                 "Form_Settings_checkBox_show_AMDdevice_manufacturer": "Show AMD device manufacturer",
                "Form_Settings_checkBox_show_device_memsize": "Show amount of device memory",

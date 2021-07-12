@@ -127,7 +127,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public CpuComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount)
+        public CpuComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount, bool monitorconnected = false)
             : base(id,
                 name,
                 true,
@@ -135,7 +135,7 @@ namespace NiceHashMiner.Devices
                 false,
                 DeviceType.CPU,
                 string.Format(International.GetText("ComputeDevice_Short_Name_CPU"), cpuCount),
-                0, "")
+                0, "", monitorconnected)
         {
             group = "";
             Threads = threads;

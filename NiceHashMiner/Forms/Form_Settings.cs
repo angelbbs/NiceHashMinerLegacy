@@ -462,6 +462,7 @@ namespace NiceHashMiner.Forms
             checkBox_Allow_remote_management.Text = International.GetText("Form_Settings_checkBox_Allow_remote_management");
             checkBox_Send_actual_version_info.Text = International.GetText("Form_Settings_checkBox_Send_actual_version_info");
             checkBox_Additional_info_about_device.Text = International.GetText("Form_Settings_checkBox_Additional_info_about_device");
+            checkBox_DisplayConnected.Text = International.GetText("Form_Settings_checkBox_DisplayConnected");
 
             checkBox_show_NVdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_NVdevice_manufacturer");
             checkBox_show_AMDdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_AMDdevice_manufacturer");
@@ -796,6 +797,9 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.BackColor = Form_Main._backColor;
                 checkBox_Additional_info_about_device.ForeColor = Form_Main._textColor;
 
+                checkBox_DisplayConnected.BackColor = Form_Main._backColor;
+                checkBox_DisplayConnected.ForeColor = Form_Main._textColor;
+
                 checkBox_show_NVdevice_manufacturer.BackColor = Form_Main._backColor;
                 checkBox_show_NVdevice_manufacturer.ForeColor = Form_Main._textColor; 
                 checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
@@ -975,6 +979,7 @@ namespace NiceHashMiner.Forms
                 checkbox_current_actual_profitabilities.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_DisplayConnected.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_AMDdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowDeviceMemSize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1079,6 +1084,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Show_profit_with_power_consumption.Checked = ConfigManager.GeneralConfig.DecreasePowerCost;
                 checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
+                checkBox_DisplayConnected.Checked = ConfigManager.GeneralConfig.Show_displayConected;
                 checkBox_show_NVdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_NVdevice_manufacturer;
                 checkBox_show_AMDdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer;
                 checkBox_ShowDeviceMemSize.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceMemSize;
@@ -1238,6 +1244,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
+            ConfigManager.GeneralConfig.Show_displayConected = checkBox_DisplayConnected.Checked;
             ConfigManager.GeneralConfig.Show_NVdevice_manufacturer = checkBox_show_NVdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer = checkBox_show_AMDdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;

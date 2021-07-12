@@ -50,6 +50,7 @@ namespace NiceHashMiner.Algorithms
         /// Hashrate in H/s set by benchmark or user
         /// </summary>
         public virtual double BenchmarkSpeed { get; set; }
+        public virtual double BenchmarkSecondarySpeed { get; set; }
         /// <summary>
         /// Gets the averaged speed for this algorithm in H/s
         /// <para>When multiple devices of the same model are used, this will be set to their averaged hashrate</para>
@@ -182,19 +183,56 @@ namespace NiceHashMiner.Algorithms
                 return ratio;
             }
         }
-
+        public string CurSecondPayingRatio
+        {
+            get
+            {
+                var ratio = International.GetText("BenchmarkRatioRateN_A");
+                if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))//ZIL
+                {
+                    ratio = (paying / 30).ToString("F8");
+                }
+                else if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying2))
+                {
+                    ratio = paying2.ToString("F8");
+                }
+                return ratio;
+            }
+        }
         public virtual string CurPayingRate
         {
             get
             {
+                /*
                 var rate = International.GetText("BenchmarkRatioRateN_A");
-                
+
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
                     var payingRate = BenchmarkSpeed * paying * Mult;
                     rate = payingRate.ToString("F8");
                 }
-                
+                */
+                var rate = International.GetText("BenchmarkRatioRateN_A");
+                var payingRate = 0.0d;
+
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
+                {
+                    payingRate += BenchmarkSpeed * paying * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+
+                if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying2))//ZIL
+                {
+
+                    payingRate += BenchmarkSecondarySpeed * (secPaying2 / 30) * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+                else if (BenchmarkSecondarySpeed > 0 && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying))
+                {
+                    payingRate += BenchmarkSecondarySpeed * secPaying * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+
                 return rate;
             }
             set
@@ -252,6 +290,19 @@ namespace NiceHashMiner.Algorithms
             if (BenchmarkSpeed > 0)
             {
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, NiceHashID);
+            }
+            //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
+            if (!string.IsNullOrEmpty(BenchmarkStatus) && BenchmarkActive)
+            {
+                return BenchmarkStatus;
+            }
+            return International.GetText("BenchmarkSpeedStringNone");
+        }
+        public string SecondaryBenchmarkSpeedString()
+        {
+            if (BenchmarkSecondarySpeed > 0)
+            {
+                return Helpers.FormatDualSpeedOutput(BenchmarkSecondarySpeed, 0, DualNiceHashID);
             }
             //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
             if (!string.IsNullOrEmpty(BenchmarkStatus) && BenchmarkActive)

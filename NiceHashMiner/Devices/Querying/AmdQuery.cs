@@ -204,21 +204,23 @@ namespace NiceHashMiner.Devices.Querying
                         foreach (var manObj in moc)
                         {
                             ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
+                            int.TryParse(SafeGetProperty(manObj, "CurrentRefreshRate"), out var _monitorConnected);
                             PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
                             gpumem = memTmp + gpumemadd‬;
 
-                        }
 
-                        if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
-                        {
-                            if (newAmdDev.DeviceGlobalMemory < gpumem)
+
+                            if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
                             {
-                                Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
-                                newAmdDev.DeviceGlobalMemory = gpumem;
-                                dev._CL_DEVICE_GLOBAL_MEM_SIZE = gpumem;
+                                if (_monitorConnected > 0) newAmdDev.MonitorConnected = true;
+                                if (newAmdDev.DeviceGlobalMemory < gpumem)
+                                {
+                                    Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
+                                    newAmdDev.DeviceGlobalMemory = gpumem;
+                                    dev._CL_DEVICE_GLOBAL_MEM_SIZE = gpumem;
+                                }
                             }
                         }
-
                         //*************
                         var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
                             .DisableDetectionAMD;
@@ -244,6 +246,7 @@ namespace NiceHashMiner.Devices.Querying
                             stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
                             stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
                             stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
+                            stringBuilder.AppendLine($"\t\tMonitor connected: {newAmdDev.MonitorConnected}");
                             stringBuilder.AppendLine($"\t\tManufacturer: {newAmdDev.AMDManufacturer}");
                             stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
                             stringBuilder.AppendLine($"\t\tNewUUID: {newAmdDev.NewUUID}");

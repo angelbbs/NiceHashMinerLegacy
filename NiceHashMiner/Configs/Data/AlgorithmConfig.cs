@@ -10,9 +10,9 @@ namespace NiceHashMiner.Configs.Data
         public AlgorithmType NiceHashID = AlgorithmType.NONE;
         public AlgorithmType SecondaryNiceHashID = AlgorithmType.NONE;
         public MinerBaseType MinerBaseType = MinerBaseType.NONE;
-        public string AlgorithmNameCustom = ""; // probably not needed
+        public string AlgorithmNameCustom = ""; 
         public double BenchmarkSpeed = 0;
-        public double SecondaryBenchmarkSpeed = 0;
+        public double BenchmarkSecondarySpeed = 0;
         public string ExtraLaunchParameters = "";
         public bool Enabled = true;
         public bool Hidden = false;

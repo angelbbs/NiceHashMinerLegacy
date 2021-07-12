@@ -151,6 +151,8 @@ namespace NiceHashMiner.Algorithms
         /// Primary hashrate in H/s set by benchmark or user
         /// <para>If tuning is enabled, returns the hashrate from the most profitable intensity</para>
         /// </summary>
+        /// 
+        /*
         public override double BenchmarkSpeed
         {
             get
@@ -172,12 +174,13 @@ namespace NiceHashMiner.Algorithms
                 return base.BenchmarkSpeed;
             }
         }
-
+        */
         private double _secondaryBenchmarkSpeed;
         /// <summary>
         /// Secondary hashrate in H/s set by benchmark or user
         /// <para>If tuning is enabled, returns the hashrate from the most profitable intensity</para>
         /// </summary>
+        /*
         public double SecondaryBenchmarkSpeed
         {
             get
@@ -200,6 +203,7 @@ namespace NiceHashMiner.Algorithms
             }
             set => _secondaryBenchmarkSpeed = value;
         }
+        */
 
         /// <summary>
         /// Gets the secondary averaged speed for this algorithm in H/s
@@ -210,6 +214,7 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// Indicates whether this algorithm requires a benchmark
         /// </summary>
+        /*
         public override bool BenchmarkNeeded
         {
             get
@@ -229,7 +234,7 @@ namespace NiceHashMiner.Algorithms
                 return false;
             }
         }
-
+        */
         #endregion
 
         #region Power Switching
@@ -274,7 +279,7 @@ namespace NiceHashMiner.Algorithms
             SecondaryAlgorithmName = AlgorithmNiceHashNames.GetName(secondaryNiceHashID);
             AlgorithmStringID = MinerBaseTypeName + "_" + AlgorithmName;
             DualAlgorithmNameCustom = _DualAlgorithmNameCustom;
-            SecondaryBenchmarkSpeed = 0.0d;
+            //SecondaryBenchmarkSpeed = 0.0d;
 
             IntensitySpeeds = new Dictionary<int, double>();
             SecondaryIntensitySpeeds = new Dictionary<int, double>();
@@ -282,7 +287,7 @@ namespace NiceHashMiner.Algorithms
         }
 
         #region Benchmark info
-
+        /*
         public override string CurPayingRate
         {
             get
@@ -311,7 +316,8 @@ namespace NiceHashMiner.Algorithms
                 return rate;
             }
         }
-
+        */
+        /*
         public string SecondaryCurPayingRatio
         {
             get
@@ -328,20 +334,8 @@ namespace NiceHashMiner.Algorithms
                 return ratio;
             }
         }
-        public string SecondaryCurPayingRatioZIL
-        {
-            get
-            {
-                var ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))
-                {
-                    ratio = (paying / 30).ToString("F8");
-                }
-
-                return ratio;
-            }
-        }
-
+        */
+        /*
         public string SecondaryBenchmarkSpeedString()
         {
             const string dcriStatus = " (dcri:{0})";
@@ -358,9 +352,9 @@ namespace NiceHashMiner.Algorithms
 
             return International.GetText("BenchmarkSpeedStringNone");
         }
-
+        */
         #endregion
-
+        /*
         public override void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
         {
             base.UpdateCurProfit(profits);
@@ -383,7 +377,7 @@ namespace NiceHashMiner.Algorithms
 
             SubtractPowerFromProfit();
         }
-
+        */
         #region ClaymoreDual Tuning
 
         public void SetIntensitySpeedsForCurrent(double speed, double secondarySpeed)

@@ -1652,11 +1652,11 @@ public static void CloseChilds(Process parentId)
             {
                 if (iApiData.SecondarySpeed > 0)
                 {
-                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.SecondarySpeed) + "H/s\\b0  Autolykos+\\b Zilliqua\\b\\par}";
+                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.SecondarySpeed) + "H/s\\b0  Autolykos+\\b Zilliqa\\b\\par}";
                 }
                 else
                 {
-                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.Speed) + "H/s Autolykos\\b0 +Zilliqua\\b\\par}";
+                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.Speed) + "H/s Autolykos\\b0 +Zilliqa\\b\\par}";
                 }
             }
 
@@ -1677,7 +1677,7 @@ public static void CloseChilds(Process parentId)
                 // flowLayoutPanelRatesIndex may be OOB, so catch
                 ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
                     .UpdateProfitStats(groupName, deviceStringInfo, speedString, StartMinerTime, rateBtcString, rateCurrencyString, processTag);
-            
+
             }
             catch (Exception ex)
             {

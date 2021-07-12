@@ -757,6 +757,7 @@ namespace NiceHashMiner.Devices
                             Manufacturer = man.Substring(man.Length - 4),
                             PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
                             DeviceID = SafeGetProperty(manObj, "DeviceID"),
+                            CurrentRefreshRate = SafeGetProperty(manObj, "CurrentRefreshRate"),
                             DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
                             Status = SafeGetProperty(manObj, "Status"),
                             InfSection = SafeGetProperty(manObj, "InfSection"),
@@ -768,6 +769,7 @@ namespace NiceHashMiner.Devices
                         stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
                         stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)} ({vidController.Manufacturer})");
                         stringBuilder.AppendLine($"\t\tPNPDeviceID {vidController.PnpDeviceID}");
+                        stringBuilder.AppendLine($"\t\tCurrentRefreshRate {vidController.CurrentRefreshRate}");
                         stringBuilder.AppendLine($"\t\tDeviceID {vidController.DeviceID}");
                         stringBuilder.AppendLine($"\t\tDriverVersion {vidController.DriverVersion}");
                         stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");
@@ -878,7 +880,7 @@ namespace NiceHashMiner.Devices
                         {
                             Available.Devices.Add(
                                 new CpuComputeDevice(0, "CPU0", CpuID.GetCpuName().Trim(), threadsPerCpu, 0,
-                                    ++CpuCount)
+                                    ++CpuCount, false)
                             );
                         }
                         else if (Available.CpusCount > 1)
@@ -1016,6 +1018,7 @@ namespace NiceHashMiner.Devices
                             }
                             string Manufacturer = (cudaDev.pciSubSystemId).ToString("X16").Substring((cudaDev.pciSubSystemId).ToString("X16").Length - 4);
                             cudaDev.CUDAManufacturer = ComputeDevice.GetManufacturer(Manufacturer);
+                            if (cudaDev.HasMonitorConnected > 0) cudaDev.MonitorConnected = true;
                             //bool isOverSM6 = cudaDev.SM_major > 6;
                             var skip = isUnderSM21;
                             var skipOrAdd = skip ? "SKIPED" : "ADDED";

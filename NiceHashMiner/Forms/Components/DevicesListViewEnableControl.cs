@@ -168,7 +168,11 @@ namespace NiceHashMiner.Forms.Components
                 {
                     //continue;
                 }
-                devNum = computeDevice.NameCount; ;
+                devNum = computeDevice.NameCount; 
+                if (computeDevice.MonitorConnected)
+                {
+                    devNum = "> " + devNum;//   > GPU
+                }
                 devInfo = computeDevice.Name;
 
                 if (ConfigManager.GeneralConfig.Additional_info_about_device && computeDevice.DeviceType != DeviceType.CPU &&

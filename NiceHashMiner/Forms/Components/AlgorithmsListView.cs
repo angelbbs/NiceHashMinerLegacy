@@ -250,6 +250,7 @@ namespace NiceHashMiner.Forms.Components
                         name = dualAlg.DualAlgorithmNameCustom;
                         miner = alg.MinerBaseTypeName;
                         secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
+                        //secondarySpeed = alg.SecondaryBenchmarkSpeedString();
                         totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
                         /*
                         if (alg.NiceHashID == AlgorithmType.Autolykos && dualAlg.DualNiceHashID == AlgorithmType.DaggerHashimoto)
@@ -257,7 +258,8 @@ namespace NiceHashMiner.Forms.Components
                             payingRatio = alg.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio / 30;
                         }
                         */
-                        payingRatio = alg.CurPayingRatio + "/" +dualAlg.SecondaryCurPayingRatio;
+                        //payingRatio = alg.CurPayingRatio + "/" +dualAlg.SecondaryCurPayingRatio;
+                        payingRatio = alg.CurPayingRatio + "/" + alg.CurSecondPayingRatio;
                     }
                     else
                     {
@@ -372,7 +374,8 @@ namespace NiceHashMiner.Forms.Components
                             {
                                 if (algorithm is DualAlgorithm dualAlg)
                                 {
-                                    lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
+                                    //lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
+                                    lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + algorithm.CurSecondPayingRatio;
                                 }
                                 else
                                 {
@@ -447,6 +450,7 @@ namespace NiceHashMiner.Forms.Components
                         {
                             //   lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
                             lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() + "/" + dualAlg.SecondaryBenchmarkSpeedString();
+                            //lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() + "/" + algo.SecondaryBenchmarkSpeedString();
                         }
                         else
                         {
@@ -596,8 +600,8 @@ namespace NiceHashMiner.Forms.Components
 
                             if (algorithm is DualAlgorithm dualAlg)
                             {
-                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
-                              //  lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
+                                //lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
+                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + algorithm.CurSecondPayingRatio;
                             }
                             else
                             {
@@ -847,10 +851,13 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                         algorithm.BenchmarkSpeed = 0;
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
+                            algorithm.BenchmarkSecondarySpeed = 0;
+                            /*
                             dualAlgo.SecondaryBenchmarkSpeed = 0;
                             dualAlgo.IntensitySpeeds = new Dictionary<int, double>();
                             dualAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>();
                             dualAlgo.IntensityUpToDate = false;
+                            */
                         }
 
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);

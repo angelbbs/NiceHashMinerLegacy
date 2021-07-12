@@ -15,6 +15,7 @@ namespace NiceHashMiner.Devices
         public string UUID; // init this with the ADL, use PCI_VEN & DEV IDs
         //public ulong DeviceGlobalMemory => _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE;
         public ulong DeviceGlobalMemory;
+        public bool MonitorConnected;
 
         //public bool UseOptimizedVersion { get; private set; }
         private readonly OpenCLDevice _openClSubset = new OpenCLDevice();

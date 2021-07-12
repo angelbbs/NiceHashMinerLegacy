@@ -723,8 +723,6 @@ namespace NiceHashMiner
             var benchmarkThread = new Thread(BenchmarkThreadRoutine, time);
 
             benchmarkThread.Start(commandLine);
-
-
         }
 
         protected virtual Process BenchmarkStartProcess(string commandLine)
@@ -987,13 +985,9 @@ namespace NiceHashMiner
             BenchmarkProcessStatus = status;
             if (BenchmarkAlgorithm is DualAlgorithm dualAlg)
             {
-                if (!dualAlg.TuningEnabled)
-                {
-                    // Tuning will report speed
-                    Helpers.ConsolePrint("BENCHMARK-finish",
-                        "Final Speed: " + Helpers.FormatDualSpeedOutput(dualAlg.BenchmarkSpeed,
-                            dualAlg.SecondaryBenchmarkSpeed, dualAlg.DualNiceHashID));
-                }
+                Helpers.ConsolePrint("BENCHMARK-finish",
+                    "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed,
+                        BenchmarkAlgorithm.BenchmarkSecondarySpeed, dualAlg.DualNiceHashID));
             }
             else
             {
@@ -1069,6 +1063,61 @@ namespace NiceHashMiner
             }
         }
 
+        protected virtual void BenchmarkThreadRoutineSecond(object commandLine)
+        {
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
+            try
+            {
+                Helpers.ConsolePrint("BENCHMARK-routine", "Second Benchmark starts");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+
+                BenchmarkThreadRoutineStartSettup();
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                var exited = BenchmarkHandle.WaitForExit((BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) + 20) * 1000);
+                if (BenchmarkSignalTimedout && !TimeoutStandard)
+                {
+                    throw new Exception("Benchmark timedout");
+                }
+
+                if (BenchmarkException != null)
+                {
+                    throw BenchmarkException;
+                }
+
+                if (BenchmarkSignalQuit)
+                {
+                    throw new Exception("Termined by user request");
+                }
+
+                if (BenchmarkSignalHanged || !exited)
+                {
+                    throw new Exception("Miner is not responding");
+                }
+
+                if (BenchmarkSignalFinnished)
+                {
+                    //break;
+                }
+            }
+            catch (Exception ex)
+            {
+                BenchmarkThreadRoutineCatch(ex);
+            }
+            finally
+            {
+                BenchmarkThreadRoutineFinish();
+            }
+        }
         protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait)
         {
             CleanOldLogs();

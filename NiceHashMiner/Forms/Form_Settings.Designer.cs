@@ -179,6 +179,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.checkBox_DisplayConnected = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1335,6 +1336,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox_DisplayConnected);
             this.groupBox1.Controls.Add(this.checkBox_show_AMDdevice_manufacturer);
             this.groupBox1.Controls.Add(this.checkBox_ShowDeviceMemSize);
             this.groupBox1.Controls.Add(this.checkBox_RunEthlargement);
@@ -1462,7 +1464,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartDriver
             // 
             this.checkBoxRestartDriver.AutoSize = true;
-            this.checkBoxRestartDriver.Location = new System.Drawing.Point(304, 199);
+            this.checkBoxRestartDriver.Location = new System.Drawing.Point(304, 222);
             this.checkBoxRestartDriver.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartDriver.Name = "checkBoxRestartDriver";
             this.checkBoxRestartDriver.Size = new System.Drawing.Size(206, 17);
@@ -1474,7 +1476,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartWindows
             // 
             this.checkBoxRestartWindows.AutoSize = true;
-            this.checkBoxRestartWindows.Location = new System.Drawing.Point(304, 176);
+            this.checkBoxRestartWindows.Location = new System.Drawing.Point(304, 199);
             this.checkBoxRestartWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartWindows.Name = "checkBoxRestartWindows";
             this.checkBoxRestartWindows.Size = new System.Drawing.Size(224, 17);
@@ -1498,7 +1500,7 @@ namespace NiceHashMiner.Forms
             // label_devices_count
             // 
             this.label_devices_count.AutoSize = true;
-            this.label_devices_count.Location = new System.Drawing.Point(301, 134);
+            this.label_devices_count.Location = new System.Drawing.Point(301, 157);
             this.label_devices_count.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_devices_count.Name = "label_devices_count";
             this.label_devices_count.Size = new System.Drawing.Size(107, 13);
@@ -1509,7 +1511,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBox_devices_count.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_devices_count.FormattingEnabled = true;
-            this.comboBox_devices_count.Location = new System.Drawing.Point(446, 131);
+            this.comboBox_devices_count.Location = new System.Drawing.Point(446, 154);
             this.comboBox_devices_count.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_devices_count.Name = "comboBox_devices_count";
             this.comboBox_devices_count.Size = new System.Drawing.Size(41, 21);
@@ -1520,7 +1522,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_ShowFanAsPercent.AutoSize = true;
             this.checkBox_ShowFanAsPercent.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ShowFanAsPercent.Location = new System.Drawing.Point(304, 111);
+            this.checkBox_ShowFanAsPercent.Location = new System.Drawing.Point(304, 134);
             this.checkBox_ShowFanAsPercent.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ShowFanAsPercent.Name = "checkBox_ShowFanAsPercent";
             this.checkBox_ShowFanAsPercent.Size = new System.Drawing.Size(144, 17);
@@ -2175,6 +2177,18 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
+            // checkBox_DisplayConnected
+            // 
+            this.checkBox_DisplayConnected.AutoSize = true;
+            this.checkBox_DisplayConnected.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_DisplayConnected.Location = new System.Drawing.Point(304, 110);
+            this.checkBox_DisplayConnected.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_DisplayConnected.Name = "checkBox_DisplayConnected";
+            this.checkBox_DisplayConnected.Size = new System.Drawing.Size(221, 17);
+            this.checkBox_DisplayConnected.TabIndex = 416;
+            this.checkBox_DisplayConnected.Text = "Show which GPU display is connected to";
+            this.checkBox_DisplayConnected.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2414,5 +2428,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_By_profitability_of_all_devices;
         public System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.CheckBox checkBox_DisplayConnected;
     }
 }

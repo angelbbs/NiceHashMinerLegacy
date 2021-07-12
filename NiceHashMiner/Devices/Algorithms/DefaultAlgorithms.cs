@@ -57,10 +57,6 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.Nanominer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                     {
-                        ExtraLaunchParameters = ""
-                    },
-                    new DualAlgorithm(MinerBaseType.Nanominer, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
-                    {
                         ExtraLaunchParameters = "memTweak=1"
                     }
                 }
@@ -213,6 +209,20 @@ namespace NiceHashMiner.Devices.Algorithms
                             
                  }
             },
+            {
+                MinerBaseType.Nanominer,
+                new List<Algorithm>()
+                {
+                    new Algorithm(MinerBaseType.Nanominer, AlgorithmType.Autolykos, "Autolykos")
+                    {
+                        ExtraLaunchParameters = "memTweak=1"
+                    },
+                    new DualAlgorithm(MinerBaseType.Nanominer, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
+                    {
+                        ExtraLaunchParameters = "memTweak=1"
+                    }
+                }
+            },
         }.ConcatDictList(All, Gpu);
 
         #endregion
@@ -247,6 +257,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.Autolykos, "Autolykos")
+                            {
+                                ExtraLaunchParameters = "--mt 1"
+                            }
                         }
             },
 

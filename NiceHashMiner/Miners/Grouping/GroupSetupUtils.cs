@@ -268,7 +268,8 @@ namespace NiceHashMiner.Miners.Grouping
                 double secondarySpeed = 0;
                 if (algo is DualAlgorithm dualAlgo)
                 {
-                    secondarySpeed = dualAlgo.SecondaryBenchmarkSpeed;
+                    //secondarySpeed = dualAlgo.SecondaryBenchmarkSpeed;
+                    secondarySpeed = algo.BenchmarkSecondarySpeed;
                 }
                 if (BenchmarkSums.ContainsKey(algoID) == false)
                 {

@@ -48,6 +48,7 @@ namespace NiceHashMiner.Miners
 
             //  url = url.Replace(".nicehash.", "-new.nicehash.");
             algo = algo.Replace("daggerhashimoto", "ethash");
+            algo = algo.Replace("autolykos", "autolykos2");
             url = url.Replace("stratum+tcp", "stratum2+tcp");
             LastCommandLine = algo +
      " -o " + url + " -u " + username + " -p x " +
@@ -128,6 +129,18 @@ namespace NiceHashMiner.Miners
             {
                 commandLine = "--algo octopus" +
                  " -o stratum+tcp://cfx.woolypooly.com:3094" + " -u 0x13097ee19fd453AfD6F2ecf155927f2b7380307F.trex" + " -p x " +
+                 " -o " + url + " -u " + username + " -p x " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                  MiningSetup,
+                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                              " -d ";
+                commandLine += GetDevicesCommandString();
+                _benchmarkTimeWait = time;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                commandLine = "--algo autolykos2" +
+                 " -o stratum+tcp://pool.eu.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trex" + " -p x " +
                  " -o " + url + " -u " + username + " -p x " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
@@ -226,6 +239,11 @@ namespace NiceHashMiner.Miners
                     {
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                    {
+                        delay_before_calc_hashrate = 5;
+                        MinerStartDelay = 30;
                     }
 
                     var ad = GetSummaryAsync();

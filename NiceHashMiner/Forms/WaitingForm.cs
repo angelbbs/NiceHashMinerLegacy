@@ -35,9 +35,15 @@ namespace NiceHashMiner.Forms
         }
         public void CloseWaitingBox()
         {
-            _ended = true;
-            System.Threading.Thread.Sleep(200);
-            task1.Dispose();
+            try
+            {
+                _ended = true;
+                System.Threading.Thread.Sleep(200);
+                task1.Dispose();
+            } catch (Exception ex)
+            {
+
+            }
         }
         public void ShowWaitingBox()
         {
