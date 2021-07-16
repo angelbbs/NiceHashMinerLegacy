@@ -137,7 +137,7 @@ namespace NiceHashMiner.Switching
             SmaCheckTimerOnElapsedRun = true;
 
             //if (_smaCheckTimer != null) _smaCheckTimer.Interval = _smaCheckTime * 1000;
-
+            GetTickPeriod();
             var sb = new StringBuilder();
             if (_hasStarted)
             {
@@ -190,7 +190,7 @@ namespace NiceHashMiner.Switching
                         if (i >= ticks || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                         {
                             _lastLegitPaying[algo] = paying;
-                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i} {cTicks} for {algo}");
+                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i}/{ticks} {cTicks} for {algo}");
                             newProfit = true;
                         }
                         else
@@ -213,7 +213,7 @@ namespace NiceHashMiner.Switching
             return updated;
         }
 
-        private static void Randomize()
+        private static void GetTickPeriod()
         {
             // Lock in case this gets called simultaneously
             // Random breaks down when called from multiple threads

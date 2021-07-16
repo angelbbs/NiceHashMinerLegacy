@@ -99,6 +99,7 @@ namespace NiceHashMiner.Stats
         public static bool remoteMiningStart = false;
         public static bool remoteMiningStop = false;
         public static bool remoteUpdateUI = false;
+        private static bool DeviceStatusRunning = false;
 
         private static void LoadCachedSMAData()
         {
@@ -120,11 +121,11 @@ namespace NiceHashMiner.Stats
 
         public static void StartConnection(string address)
         {
-            NHSmaData.InitializeIfNeeded();
-            LoadCachedSMAData();
-            
+          
             try
             {
+                NHSmaData.InitializeIfNeeded();
+                LoadCachedSMAData();
                 _socket = null;
                 _socket = new NiceHashSocket(address);
 
@@ -1135,6 +1136,9 @@ namespace NiceHashMiner.Stats
         }
         public static async void SetDeviceStatus(object state, bool devName = false)
         {
+            Helpers.ConsolePrint("SOCKET", "DeviceStatusRunning: " + DeviceStatusRunning);
+            if (DeviceStatusRunning) return;
+            DeviceStatusRunning = true;
             var devices = ComputeDeviceManager.Available.Devices;
             
             var _computeDevicesResort = ComputeDeviceManager.ReSortDevices(devices);
@@ -1359,6 +1363,7 @@ namespace NiceHashMiner.Stats
                     deviceList.Add(array);
                 }
                 catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
+                DeviceStatusRunning = false;
             }
 
             try
@@ -1380,7 +1385,9 @@ namespace NiceHashMiner.Stats
             catch (Exception ex)
             {
                 throw new Exception($"DeviceStatus_TickNew: {ex.ToString()}");
+                DeviceStatusRunning = false;
             }
+            DeviceStatusRunning = false;
         }
        
 

@@ -538,11 +538,19 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
+                    if (AlgorithmSwitchingManager.newProfit)
+                    {
                         needSwitch = true;
                         Helpers.ConsolePrint(Tag,
                             $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                    } else
+                    {
+                        needSwitch = true;
+                        Helpers.ConsolePrint(Tag,$"Will NOT SWITCH. Switching period has not been exceeded");
+                    }
+
                 }
-            }
+        }
             else
             {
                 foreach (var device in _miningDevices)
