@@ -538,15 +538,22 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    if (AlgorithmSwitchingManager.newProfit)
+                    //if (AlgorithmSwitchingManager.newProfit)
+                    if (true)
                     {
+                        //AlgorithmSwitchingManager.newProfit = false;
                         needSwitch = true;
                         Helpers.ConsolePrint(Tag,
                             $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                     } else
                     {
-                        needSwitch = true;
-                        Helpers.ConsolePrint(Tag,$"Will NOT SWITCH. Switching period has not been exceeded");
+                        needSwitch = false;
+                        Helpers.ConsolePrint(Tag,$"Will NOT SWITCH1. Switching period has not been exceeded");
+                        // RESTORE OLD PROFITS STATE
+                        foreach (var device in _miningDevices)
+                        {
+                            device.RestoreOldProfitsState();
+                        }
                     }
 
                 }
@@ -575,9 +582,24 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
+                        //if (AlgorithmSwitchingManager.newProfit)
+                        if (true)
+                        {
+                            //AlgorithmSwitchingManager.newProfit = false;
                             needSwitch = true;
                             Helpers.ConsolePrint(Tag,
                                 $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                        }
+                        else
+                        {
+                            needSwitch = false;
+                            Helpers.ConsolePrint(Tag, $"Will NOT SWITCH2. Switching period has not been exceeded");
+                            // RESTORE OLD PROFITS STATE
+                            foreach (var device2 in _miningDevices)
+                            {
+                                device2.RestoreOldProfitsState();
+                            }
+                        }
                     }
                 }
             }
@@ -714,6 +736,7 @@ namespace NiceHashMiner.Miners
                         stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmType}, ");
 
                         toStop.Stop();
+                        toStop.StartMinerTime = new DateTime(0);
                         _runningGroupMiners.Remove(toStop.Key);
                         // TODO check if daggerHashimoto and save
                         if (toStop.AlgorithmType == AlgorithmType.DaggerHashimoto)
@@ -732,6 +755,7 @@ namespace NiceHashMiner.Miners
                     // start new miners
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
+                        toStart.StartMinerTime = DateTime.Now;
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType} : {toStart.DualAlgorithmType}, ");
                         //toStart.Start(_miningLocation, _btcAdress, _worker);
                         if (ConfigManager.GeneralConfig.ServiceLocation == 4)

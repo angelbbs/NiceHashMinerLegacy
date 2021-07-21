@@ -114,6 +114,7 @@ namespace NiceHashMiner.Forms
             this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.checkbox_Group_same_devices = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_DisplayConnected = new System.Windows.Forms.CheckBox();
             this.checkBox_show_AMDdevice_manufacturer = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowDeviceMemSize = new System.Windows.Forms.CheckBox();
             this.checkBox_RunEthlargement = new System.Windows.Forms.CheckBox();
@@ -179,7 +180,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBox_DisplayConnected = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1367,6 +1367,18 @@ namespace NiceHashMiner.Forms
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
             // 
+            // checkBox_DisplayConnected
+            // 
+            this.checkBox_DisplayConnected.AutoSize = true;
+            this.checkBox_DisplayConnected.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_DisplayConnected.Location = new System.Drawing.Point(304, 110);
+            this.checkBox_DisplayConnected.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_DisplayConnected.Name = "checkBox_DisplayConnected";
+            this.checkBox_DisplayConnected.Size = new System.Drawing.Size(221, 17);
+            this.checkBox_DisplayConnected.TabIndex = 416;
+            this.checkBox_DisplayConnected.Text = "Show which GPU display is connected to";
+            this.checkBox_DisplayConnected.UseVisualStyleBackColor = true;
+            // 
             // checkBox_show_AMDdevice_manufacturer
             // 
             this.checkBox_show_AMDdevice_manufacturer.AutoSize = true;
@@ -2176,18 +2188,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.Text = "View licence";
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
-            // 
-            // checkBox_DisplayConnected
-            // 
-            this.checkBox_DisplayConnected.AutoSize = true;
-            this.checkBox_DisplayConnected.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_DisplayConnected.Location = new System.Drawing.Point(304, 110);
-            this.checkBox_DisplayConnected.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_DisplayConnected.Name = "checkBox_DisplayConnected";
-            this.checkBox_DisplayConnected.Size = new System.Drawing.Size(221, 17);
-            this.checkBox_DisplayConnected.TabIndex = 416;
-            this.checkBox_DisplayConnected.Text = "Show which GPU display is connected to";
-            this.checkBox_DisplayConnected.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 

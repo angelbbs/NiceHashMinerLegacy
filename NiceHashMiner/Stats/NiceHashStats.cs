@@ -674,13 +674,13 @@ namespace NiceHashMiner.Stats
                                 Helpers.ConsolePrint("NHM_API_info", rig.profitability.ToString());
                                 Helpers.ConsolePrint("NHM_API_info", rig.unpaidAmount.ToString());
                                 */
-                                if (rig.profitability > Form_Main.lastRigProfit.currentProfitAPI * 10 &&
+                                if (rig.profitability > Form_Main.lastRigProfit.currentProfitAPI * 100 &&
                                     Form_Main.lastRigProfit.currentProfitAPI != 0 && rig.profitability != 0)
                                 {
                                     Helpers.ConsolePrint("GetRigProfit too high. Ignoring", (rig.profitability * 1000).ToString());
                                     //Helpers.ConsolePrint("Form_Main.lastRigProfit.currentProfitAPI", (Form_Main.lastRigProfit.currentProfitAPI * 1000).ToString());
                                 }
-                                else if (rig.profitability * 10 < Form_Main.lastRigProfit.currentProfitAPI &&
+                                else if (rig.profitability * 100 < Form_Main.lastRigProfit.currentProfitAPI &&
                                     Form_Main.lastRigProfit.currentProfitAPI != 0 && rig.profitability != 0)
                                 {
                                     Helpers.ConsolePrint("GetRigProfit too low. Ignoring", (rig.profitability * 1000).ToString());
@@ -1192,7 +1192,7 @@ namespace NiceHashMiner.Stats
                         nuuid = $"{type}-{b64Web}";
                     }
                     var deviceName = device.Name;
-                    
+
                     string Manufacturer = "";
                     string GpuRam = "";
 
@@ -1261,7 +1261,12 @@ namespace NiceHashMiner.Stats
                             GpuRam = "";
                         }
                     }
-
+                    /*
+                    if (device.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
+                    {
+                        Manufacturer = "> " + Manufacturer;
+                    }
+                    */
                     if (!devName)
                     {
                         deviceName = "";

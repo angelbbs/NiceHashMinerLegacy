@@ -7,6 +7,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using System.Threading.Tasks;
 using NiceHashMiner.Miners;
 using System.Threading;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Switching
 {
@@ -39,6 +40,7 @@ namespace NiceHashMiner.Switching
         private static readonly Dictionary<AlgorithmType, AlgorithmHistory> _algosHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
 
         private static bool _hasStarted;
+
         public static bool newProfit = true;
         /// <summary>
         /// Currently used normalized profits
@@ -47,11 +49,30 @@ namespace NiceHashMiner.Switching
 
         public AlgorithmSwitchingManager()
         {
-            foreach (var kvp in NHSmaData.FilteredCurrentProfits())
+            var miningDevices = ComputeDeviceManager.Available.Devices;
+            foreach (var device in miningDevices)
             {
-                _algosHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
-                _lastLegitPaying[kvp.Key] = kvp.Value;
+                if (device != null && device.Enabled)
+                {
+                    var devicesAlgos = device.GetAlgorithmSettings();
+                    foreach (var a in devicesAlgos)
+                    {
+                        if (a.Enabled)
+                        {
+                            foreach (var kvp in NHSmaData.FilteredCurrentProfits())
+                            {
+                                if (a.NiceHashID == kvp.Key || a.DualNiceHashID == kvp.Key || a.SecondaryNiceHashID == kvp.Key)
+                                {
+                                    _algosHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
+                                    _lastLegitPaying[kvp.Key] = kvp.Value;
+                                }
+                            }
+                        }
+                    }
+                }
             }
+
+
             /*
             foreach (var kvp in NHSmaData.FilteredCurrentProfits(false))
             {
@@ -116,24 +137,6 @@ namespace NiceHashMiner.Switching
         /// </summary>
         public static void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
-            /*
-            if (SmaCheckTimerOnElapsedRun)
-            {
-                Helpers.ConsolePrint("AlgorithmSwitchingManager", "SmaCheckTimerOnElapsed already running. Restarting");
-                //Thread.CurrentThread.Interrupt();
-                Stop();
-                Thread.Sleep(1000);
-                _smaCheckTimer = null;
-                Thread.Sleep(100);
-                Start();
-                if (_smaCheckTimer != null)
-                {
-                    _smaCheckTimer.Interval = _smaCheckTime * 1000;
-                }
-                SmaCheckTimerOnElapsedRun = false;
-                //return;
-            }
-*/
             SmaCheckTimerOnElapsedRun = true;
 
             //if (_smaCheckTimer != null) _smaCheckTimer.Interval = _smaCheckTime * 1000;
@@ -176,17 +179,17 @@ namespace NiceHashMiner.Switching
             var cTicks = "min";
             if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5) cTicks = "ticks";
 
-
+            int allticks = 0;
             foreach (var algo in history.Keys)
             {
                 NHSmaData.TryGetPaying(algo, out var paying);
                 if (!algo.ToString().Contains("UNUSED"))
                 {
                     history[algo].Add(paying);
-                    if (paying > _lastLegitPaying[algo])
+                    var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
+                    if (paying > _lastLegitPaying[algo] || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                     {
                         updated = true;
-                        var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
                         if (i >= ticks || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                         {
                             _lastLegitPaying[algo] = paying;
@@ -199,13 +202,15 @@ namespace NiceHashMiner.Switching
                                 $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5})," +
                                 $" higher for {i}/{ticks} {cTicks} for {algo}"
                             );
-                            newProfit = false;
                         }
                     }
                     else
                     {
                         // Profit has gone down
+                        updated = true;
                         _lastLegitPaying[algo] = paying;
+                        sb.AppendLine($"\tProfit has gone down: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5})," +
+                            $" less for {i}/{ticks} {cTicks} for {algo}");
                     }
                 }
             }

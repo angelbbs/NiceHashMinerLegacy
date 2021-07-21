@@ -164,6 +164,18 @@ namespace NiceHashMiner.Miners
                                                                DeviceType.AMD) +
                              " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
+            {
+                LastCommandLine = "--algo AUTOLYKOS2 --pool " + url + " --user " + username + " --pass x" +
+                " --pool autolykos." + Form_Main.myServers[1, 0] + ".nicehash.com:3390 " + " --user " + username + " --pass x" +
+                " --pool autolykos." + Form_Main.myServers[2, 0] + ".nicehash.com:3390 " + " --user " + username + " --pass x" +
+                " --pool autolykos." + Form_Main.myServers[3, 0] + ".nicehash.com:3390 " + " --user " + username + " --pass x" +
+                apiBind + " " +
+                             ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                               MiningSetup,
+                                                               DeviceType.AMD) +
+                             " --devices ";
+            }
             LastCommandLine += GetDevicesCommandString() + " ";//
             LastCommandLine = LastCommandLine.Replace("--asm 1", "");
             string sColor = "";
@@ -275,6 +287,15 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--algo ETHASH " +
                 " --pool eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.lolMiner --pass x" +
                 " --pool daggerhashimoto.eu-north.nicehash.com:3353 --user " + username + " --pass x" +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                MiningSetup,
+                                                DeviceType.AMD) +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
+            {
+                CommandLine = "--algo AUTOLYKOS2 " +
+                " --pool pool.eu.woolypooly.com:3100 --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.lolMiner --pass x" +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                 MiningSetup,
                                                 DeviceType.AMD) +
@@ -473,6 +494,10 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 20;
+                }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
@@ -529,6 +554,11 @@ namespace NiceHashMiner.Miners
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
                         delay_before_calc_hashrate = 60;
+                        MinerStartDelay = 20;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                    {
+                        delay_before_calc_hashrate = 30;
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
@@ -672,7 +702,7 @@ namespace NiceHashMiner.Miners
                 {
                     int gpus = resp.Session.Active_GPUs;
                     double totals = resp.Session.Performance_Summary;
-                    if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+                    if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto || MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
                     {
                         mult = 1000000;
                     }

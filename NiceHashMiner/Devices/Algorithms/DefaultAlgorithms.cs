@@ -168,6 +168,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
                             {
                                 ExtraLaunchParameters = ""
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")
+                            {
+                                ExtraLaunchParameters = ""
                             }
                         }
             },

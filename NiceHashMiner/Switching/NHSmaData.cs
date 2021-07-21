@@ -309,12 +309,11 @@ namespace NiceHashMiner.Switching
         {
             CheckInit();
             var dict = new Dictionary<AlgorithmType, double>();
-
             lock (_currentSma)
             {
                 foreach (var kvp in _currentSma)
                 {
-                    //if (_stableAlgorithms.Contains(kvp.Key) == stable)
+                    //if (_stableAlgorithms.Contains(kvp.Key) == Enabled)
                     //{
                         dict[kvp.Key] = kvp.Value.Paying;
                     //}

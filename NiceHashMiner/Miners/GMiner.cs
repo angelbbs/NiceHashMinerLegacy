@@ -31,6 +31,8 @@ namespace NiceHashMiner.Miners
         private const double DevFee = 2.0;
         string  gminer_var = "";
         protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
+        private FileStream fs;
+        private int offset = 0;
 
         public GMiner(AlgorithmType secondaryAlgorithmType) : base("GMiner")
         {
@@ -42,6 +44,9 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker)
         {
+            if (File.Exists("miners\\Gminer\\" + GetLogFileName()))
+                File.Delete("miners\\Gminer\\" + GetLogFileName());
+
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             const string vcp = "msvcp120.dll";
             var vcpPath = WorkingDirectory + vcp;
@@ -58,6 +63,14 @@ namespace NiceHashMiner.Miners
                 }
             }
             ProcessHandle = _Start();
+            /*
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!File.Exists("miners\\Gminer\\" + GetLogFileName()));
+            Thread.Sleep(1000);
+            fs = new FileStream("miners\\Gminer\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            */
         }
 
         protected override void _Stop(MinerStopType willswitch)
@@ -154,7 +167,7 @@ namespace NiceHashMiner.Miners
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
                       + " --server " + algoName + "." + Form_Main.myServers[3, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
-                      + " --api " + ApiPort;
+                      + " --api " + ApiPort + " -l " + GetLogFileName();
             return ret;
         }
         protected override string GetDevicesCommandString()
@@ -694,6 +707,24 @@ namespace NiceHashMiner.Miners
             }
 
                 Thread.Sleep(100);
+            /*
+            //костыль из-за бага в Anti-hacking
+            if (fs.Length > offset)
+            {
+                int count = (int)(fs.Length - offset);
+                byte[] array = new byte[count];
+                fs.Read(array, 0, count);
+                offset = (int)fs.Length;
+                string textFromFile = System.Text.Encoding.Default.GetString(array).Trim();
+                //Helpers.ConsolePrint(MinerTag(), textFromFile);
+                if (textFromFile.Contains("Anti-hacking"))
+                {
+                    Helpers.ConsolePrint(MinerTag(), "GMiner Anti-hacking bug detected.");
+                    ad.Speed = 0;
+                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                }
+            }
+            */
             return ad;
         }
     }
