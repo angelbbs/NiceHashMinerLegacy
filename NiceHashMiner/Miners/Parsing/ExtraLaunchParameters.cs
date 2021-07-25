@@ -546,7 +546,7 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.Nanominer,
                 new List<MinerOption>
                 {
-                    new MinerOption("Nanominer_memTweak", "memTweak=", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Nanominer_memTweak", "memTweak=", "memTweak=", "1", MinerOptionFlagType.NanoMiner, ","),
                 },
                 new List<MinerOption>()
             ),

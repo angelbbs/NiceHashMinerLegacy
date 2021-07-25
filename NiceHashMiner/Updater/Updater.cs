@@ -271,9 +271,12 @@ namespace NiceHashMiner.Updater
                         string name = l.name;
                         if (name.Contains("installer"))
                         {
-                            Form_Main.browser_download_url = url0;
-                            //Form_Main.progName = url0.Substring(url0.LastIndexOfAny(@"/".ToCharArray()) + 1);
-                            Form_Main.progName = "NHML.Fork.Fix." + Form_Main.gitlabVersion.ToString() + ".Setup.exe";
+                            if (GetGITHUBVersion() == 0)
+                            {
+                                Form_Main.browser_download_url = url0;
+                                //Form_Main.progName = url0.Substring(url0.LastIndexOfAny(@"/".ToCharArray()) + 1);
+                                Form_Main.progName = "NHML.Fork.Fix." + Form_Main.gitlabVersion.ToString() + ".Setup.exe";
+                            }
                         }
                         if (name.Contains("iners"))
                         {

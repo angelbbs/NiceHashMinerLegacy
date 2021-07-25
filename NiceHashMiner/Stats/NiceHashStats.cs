@@ -894,7 +894,6 @@ namespace NiceHashMiner.Stats
                         if (!NHSmaData.TryGetPaying(algoKey, out double paying))
                         {
                             Helpers.ConsolePrint("SMA API", "ERROR! Unknown algo: "+ algoKey.ToString());
-                            //payingDict[algoKey] = algo[1].Value<double>();
                         }
 
                         if (paying == 0)
@@ -902,51 +901,30 @@ namespace NiceHashMiner.Stats
                             payingDict[algoKey] = Math.Abs(algo[1].Value<double>());
                         }
 
-                        //if (Math.Abs(algo[1].Value<double>()) != 0 && paying != 0 && !algoKey.ToString().Contains("UNUSED"))
                         if (paying != 0 && !algoKey.ToString().Contains("UNUSED"))
                         {
+                            /*
                             if (paying * treshold < Math.Abs(algo[1].Value<double>()) * mult ||
                                paying / treshold > Math.Abs(algo[1].Value<double>()) * mult)
                             {
-                                //Helpers.ConsolePrint("SMA API", algoKey.ToString() + " - " +
-                                //(paying * treshold).ToString() + " : " + (Math.Abs(algo[1].Value<double>()) * mult).ToString());
                                 Helpers.ConsolePrint("SMA API", "Bug found in " + algoKey.ToString() +
                                     ". Old: " + paying.ToString() +
                                     " New: " + Math.Abs(algo[1].Value<double>()) * mult +
                                     " Change in profitability more than " + (treshold * 100).ToString() + "%. Ignoring");
                             }
                             else
-                            {
+                            */
+                           // {
                                 if (ConfigManager.GeneralConfig.MOPA5 && paying < Math.Abs(algo[1].Value<double>() * mult))
                                 {
-                                    //Helpers.ConsolePrint("SMA API", algoKey.ToString() + " BIGGER - " +
-                                    //(paying).ToString() + " : " + (Math.Abs(algo[1].Value<double>()) * mult).ToString());
                                     payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
                                 }
                                 if (!ConfigManager.GeneralConfig.MOPA5)
                                 {
                                     payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
-                                    //Helpers.ConsolePrint("SMA API", algoKey.ToString() + " - " +
-                                    //(paying).ToString() + " : " + (Math.Abs(algo[1].Value<double>()) * mult).ToString());
                                 }
-                            }
+                            //}
                         }
-                        /*
-                        if (Math.Abs(algo[1].Value<double>()) == 0)
-                        {
-                            Helpers.ConsolePrint("SMA API", "Bug found in " + algoKey.ToString() +
-                                                                ". Old: " + paying.ToString() +
-                                                                " New: " + Math.Abs(algo[1].Value<double>()) * mult +
-                                                                " Zero ignoring");
-                        }
-                        */
-                        /*
-                        if (ConfigManager.GeneralConfig.DaggerOrderMaxPay > 0 && algoKey == AlgorithmType.DaggerHashimoto && Math.Abs(algo[1].Value<double>()) > ConfigManager.GeneralConfig.DaggerOrderMaxPay)
-                        {
-                            Helpers.ConsolePrint("SMA", "Sets DaggerHashimoto to 0");
-                            payingDict[algoKey] = 0;
-                        }
-                        */
                     }
                 }
 

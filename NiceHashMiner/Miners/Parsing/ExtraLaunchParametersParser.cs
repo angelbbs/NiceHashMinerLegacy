@@ -26,28 +26,7 @@ namespace NiceHashMiner.Miners.Parsing
         }
 
         // exception...
-        public static int GetEqmCudaThreadCount(MiningPair pair)
-        {
-            if (pair.CurrentExtraLaunchParameters.Contains("-ct"))
-            {
-                var eqmCudaOptions = new List<MinerOption>
-                {
-                    new MinerOption("CUDA_Solver_Thread", "-ct", "-ct", "1", MinerOptionFlagType.MultiParam, " "),
-                };
-                var parsedStr = Parse(new List<MiningPair>
-                {
-                    pair
-                }, eqmCudaOptions);
-                try
-                {
-                    var threads = int.Parse(parsedStr.Trim().Replace("-ct", "").Trim());
-                    return threads;
-                }
-                catch { }
-            }
-            return 1; // default
-        }
-
+        
         private static bool _prevHasIgnoreParam = false;
         private static int _logCount = 0;
 
@@ -92,7 +71,7 @@ namespace NiceHashMiner.Miners.Parsing
             var isOptionExist = new Dictionary<string, bool>();
             var retVal = "";
             var miningPairs = miningPairsUnsorted.OrderBy(pair => pair.Device.BusID).ToList();
-
+            
             foreach (var pair in miningPairs)
             {
                 if (pair.CurrentExtraLaunchParameters.StartsWith("%"))
@@ -112,8 +91,8 @@ namespace NiceHashMiner.Miners.Parsing
                 return " " + retVal.Trim();
             }
 
-                // init devs options, and defaults
-                foreach (var pair in miningPairs)
+            // init devs options, and defaults
+            foreach (var pair in miningPairs)
             {
                 var defaults = new Dictionary<string, string>();
                 foreach (var option in options)
@@ -138,8 +117,6 @@ namespace NiceHashMiner.Miners.Parsing
                 var parameters = pair.CurrentExtraLaunchParameters.Replace("=", "= ").Split(' ');
 
                 IgnorePrintLogInit();
-
-
                 var currentFlag = MinerOptionTypeNone;
                 var ignoringNextOption = false;
                 foreach (var param in parameters)
@@ -154,23 +131,22 @@ namespace NiceHashMiner.Miners.Parsing
                             if (param.Equals(option.ShortName) || param.Equals(option.LongName))
                             {
                                 isIngored = false;
-                                if (ignoreDcri && option.Type.Equals("ClaymoreDual_dcri"))
+                                if (option.FlagType == MinerOptionFlagType.Uni)
                                 {
-                                    Helpers.ConsolePrint("CDTUNING", "Disabling dcri extra launch param");
-                                    ignoringNextOption = true;
+                                    isOptionExist[option.Type] = true;
+                                    cdevOptions[pair.Device.Uuid][option.Type] = "notNull"; // if Uni param is null it is not present
+                                }
+                                else if (option.FlagType == MinerOptionFlagType.NanoMiner)
+                                {
+                                    currentFlag = option.Type;
+                                    useIfDefaults = true;
                                 }
                                 else
                                 {
-                                    if (option.FlagType == MinerOptionFlagType.Uni) {
-                                        isOptionExist[option.Type] = true;
-                                        cdevOptions[pair.Device.Uuid][option.Type] = "notNull"; // if Uni param is null it is not present
-                                    }
-                                    else
-                                    {
-                                        // Sinlge and Multi param
-                                        currentFlag = option.Type;
-                                    }
+                                    // Sinlge and Multi param
+                                    currentFlag = option.Type;
                                 }
+                                
                             }
                         }
                         if (isIngored)
@@ -211,7 +187,6 @@ namespace NiceHashMiner.Miners.Parsing
                     }
                 }
             }
-
             if (!isAllDefault || useIfDefaults)
             {
                 foreach (var option in options)
@@ -239,6 +214,17 @@ namespace NiceHashMiner.Miners.Parsing
                             retVal += string.Format(mask, option.LongName, string.Join(option.Separator, values));
                             break;
                         }
+                        case MinerOptionFlagType.NanoMiner:
+                            {
+                                var values = miningPairs.Select(pair => cdevOptions[pair.Device.Uuid][option.Type]).ToList();
+                                var mask = " {0} {1}";
+                                if (option.LongName.Contains("="))
+                                {
+                                    mask = " {0}{1}";
+                                }
+                                retVal += string.Format(mask, option.LongName, string.Join(option.Separator, values));
+                                break;
+                            }
                         case MinerOptionFlagType.SingleParam:
                         {
                             var values = new HashSet<string>();
@@ -405,82 +391,7 @@ namespace NiceHashMiner.Miners.Parsing
             {
                // CheckAndSetCpuPairs(setMiningPairs);
             }
-            // ethminer exception
-            if (MinerType.ethminer_OCL == minerType || MinerType.ethminer_CUDA == minerType)
-            {
-                // use if missing compute device for correct mapping
-                // init fakes workaround
-                var cDevsMappings = new List<MiningPair>();
-                {
-                    var id = -1;
-                    var fakeAlgo = new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto");
-                    foreach (var pair in setMiningPairs)
-                    {
-                        while (++id != pair.Device.ID)
-                        {
-                            var fakeCdev = new ComputeDevice(id);
-                            cDevsMappings.Add(new MiningPair(fakeCdev, fakeAlgo));
-                        }
-                        cDevsMappings.Add(pair);
-                    }
-                }
-                // reset setMiningPairs
-                setMiningPairs = cDevsMappings;
-            }
-            // sgminer exception handle intensity types
-            if (MinerType.sgminer == minerType)
-            {
-                // rawIntensity overrides xintensity, xintensity overrides intensity
-                var sgminerIntensities = new List<MinerOption>
-                {
-                    new MinerOption("Intensity", "-I", "--intensity", "d", MinerOptionFlagType.MultiParam,
-                        ","), // default is "d" check if -1 works
-                    new MinerOption("Xintensity", "-X", "--xintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    new MinerOption("Rawintensity", "", "--rawintensity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                };
-                var containsIntensity = new Dictionary<string, bool>
-                {
-                    {"Intensity", false},
-                    {"Xintensity", false},
-                    {"Rawintensity", false},
-                };
-                // check intensity and xintensity, the latter overrides so change accordingly
-                foreach (var cDev in setMiningPairs)
-                {
-                    foreach (var intensityOption in sgminerIntensities)
-                    {
-                        if (!string.IsNullOrEmpty(intensityOption.ShortName) &&
-                            cDev.CurrentExtraLaunchParameters.Contains(intensityOption.ShortName))
-                        {
-                            cDev.CurrentExtraLaunchParameters =
-                                cDev.CurrentExtraLaunchParameters.Replace(intensityOption.ShortName, intensityOption.LongName);
-                            containsIntensity[intensityOption.Type] = true;
-                        }
-                        if (cDev.CurrentExtraLaunchParameters.Contains(intensityOption.LongName))
-                        {
-                            containsIntensity[intensityOption.Type] = true;
-                        }
-                    }
-                }
-                // replace
-                if (containsIntensity["Intensity"] && containsIntensity["Xintensity"])
-                {
-                    LogParser("Sgminer replacing --intensity with --xintensity");
-                    foreach (var cDev in setMiningPairs)
-                    {
-                        cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--intensity", "--xintensity");
-                    }
-                }
-                if (containsIntensity["Xintensity"] && containsIntensity["Rawintensity"])
-                {
-                    LogParser("Sgminer replacing --xintensity with --rawintensity");
-                    foreach (var cDev in setMiningPairs)
-                    {
-                        cDev.CurrentExtraLaunchParameters = cDev.CurrentExtraLaunchParameters.Replace("--xintensity", "--rawintensity");
-                    }
-                }
-            }
-
+                        
             string ret;
             var temp = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions, ignoreDcri);
 

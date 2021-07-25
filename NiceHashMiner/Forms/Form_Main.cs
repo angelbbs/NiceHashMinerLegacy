@@ -330,7 +330,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "40";
+            Text += "40.1";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -1648,7 +1648,7 @@ public static void CloseChilds(Process parentId)
             //хрень. надо поправить
             string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}";
             speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " +speedString + "\\b\\par}";
-            if (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto)
+            if (iApiData.AlgorithmID == AlgorithmType.AutolykosZil || (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto))
             {
                 if (iApiData.SecondarySpeed > 0)
                 {
@@ -1659,7 +1659,6 @@ public static void CloseChilds(Process parentId)
                     speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.Speed) + "H/s Autolykos\\b0 +Zilliqa\\b\\par}";
                 }
             }
-
             var rateBtcString = FormatPayingOutput(paying, power);
             if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
@@ -2071,9 +2070,23 @@ public static void CloseChilds(Process parentId)
             {
 
             }
+
             try
             {
                 foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
+                {
+                    process.Kill();
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            try
+            {
+                foreach (var process in Process.GetProcessesByName("device_detection"))
                 {
                     process.Kill();
                 }

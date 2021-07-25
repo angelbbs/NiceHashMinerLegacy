@@ -45,6 +45,9 @@ namespace NiceHashMiner.Forms.Components
             labelCurentcyPerDayVaue.Text = currencyRateString;
             groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
             groupBoxMinerGroup.BackColor = Form_Main._backColor;
+
+            richTextBoxSpeedValue.ForeColor = Form_Main._foreColor;
+            richTextBoxSpeedValue.BackColor = Form_Main._backColor;
             button_restart.Tag = ProcessTag;
             button_restart.Refresh();
         }

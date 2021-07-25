@@ -307,11 +307,18 @@ namespace NiceHashMiner.Miners
             var username = Globals.GetBitcoinUser();
             var rigName = ConfigManager.GeneralConfig.WorkerName.Trim();
 
-            if (File.Exists("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
-                File.Delete("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
+            try
+            {
+                if (File.Exists("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
+                    File.Delete("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
 
-            if (File.Exists("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini"))
-                File.Delete("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini");
+                if (File.Exists("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini"))
+                    File.Delete("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini");
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
             {
@@ -621,12 +628,23 @@ namespace NiceHashMiner.Miners
             int MinerStartDelay = 20;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            try
+            {
+                if (File.Exists("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
+                    File.Delete("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
+
+                if (File.Exists("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini"))
+                    File.Delete("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini");
+            } catch (Exception ex)
+            {
+
+            }
 
             try
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
-                BenchmarkHandle = BenchmarkStartProcess(" bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
+                BenchmarkHandle = BenchmarkStartProcess(" bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini");
                 //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
