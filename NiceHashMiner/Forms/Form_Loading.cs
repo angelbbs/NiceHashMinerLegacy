@@ -26,9 +26,9 @@ namespace NiceHashMiner
         public Form_Loading(IAfterInitializationCaller initCaller, string loadFormTitle, string startInfoMsg, int totalLoadSteps)
         {
             InitializeComponent();
-            int R = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).R - 10);
-            int G = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).G - 10);
-            int B = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).B - 10);
+            int R = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).R - 15);
+            int G = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).G - 15);
+            int B = Math.Abs(Color.FromArgb(Form_Main._backColor.ToArgb()).B - 15);
 
             //Helpers.ConsolePrint("RGB", "R: " + R.ToString() + " G: " + G.ToString() + " B:" + B.ToString());
             this.BackColor = Color.FromArgb(255, R, G, B);
@@ -42,7 +42,8 @@ namespace NiceHashMiner
             }
             label_LoadingText.Text = loadFormTitle;
             label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
-
+            label_LoadingText.ForeColor = Form_Main._foreColor;
+            label_LoadingText.BackColor = Form_Main._backColor;
             AfterInitCaller = initCaller;
 
             TotalLoadSteps = totalLoadSteps;

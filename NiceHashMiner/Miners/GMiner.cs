@@ -44,9 +44,14 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker)
         {
-            if (File.Exists("miners\\Gminer\\" + GetLogFileName()))
-                File.Delete("miners\\Gminer\\" + GetLogFileName());
-
+            try
+            {
+                if (File.Exists("miners\\Gminer\\" + GetLogFileName()))
+                    File.Delete("miners\\Gminer\\" + GetLogFileName());
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint(MinerTag(), "Log del error: " + ex.Message);
+            }
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             const string vcp = "msvcp120.dll";
             var vcpPath = WorkingDirectory + vcp;
@@ -276,13 +281,13 @@ namespace NiceHashMiner.Miners
                 var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
 
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                Helpers.ConsolePrint("GMINER", "gminer.exe PID: " + pid.ToString());
+                Helpers.ConsolePrint("GMINER", "kill gminer.exe PID: " + pid.ToString());
                 KillProcessAndChildren(pid);
                 ProcessHandle.Kill();
                 ProcessHandle.Close();
             }
             catch { }
-            if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
+            //if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
             
         }
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)

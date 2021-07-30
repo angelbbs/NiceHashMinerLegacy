@@ -208,35 +208,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(label_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(pictureBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(textBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
-            /*
-            toolTip1.SetToolTip(textBox_SwitchMaxSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
-            toolTip1.SetToolTip(label_SwitchMaxSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
-            toolTip1.SetToolTip(pictureBox_SwitchMaxSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
 
-            toolTip1.SetToolTip(textBox_SwitchMinSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
-            toolTip1.SetToolTip(label_SwitchMinSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
-            toolTip1.SetToolTip(pictureBox_SwitchMinSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
-
-            toolTip1.SetToolTip(textBox_MinerRestartDelayMS,
-                International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
-            toolTip1.SetToolTip(label_MinerRestartDelayMS,
-                International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
-            toolTip1.SetToolTip(pictureBox_MinerRestartDelayMS,
-                International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
-
-            toolTip1.SetToolTip(textBox_APIBindPortStart,
-                International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
-            toolTip1.SetToolTip(label_APIBindPortStart,
-                International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
-            toolTip1.SetToolTip(pictureBox_APIBindPortStart,
-                International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
-                */
             toolTip1.SetToolTip(checkBox_DisableDetectionNVIDIA,
                 string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
             toolTip1.SetToolTip(checkBox_DisableDetectionAMD,
@@ -267,12 +239,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(label_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
             toolTip1.SetToolTip(pictureBox_LogMaxFileSize,
                 International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
-            /*
-            toolTip1.SetToolTip(checkBox_NVIDIAP0State,
-                International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
-            toolTip1.SetToolTip(pictureBox_NVIDIAP0State,
-                International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
-                */
+
             toolTip1.SetToolTip(checkBox_RunAtStartup,
                 International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
             toolTip1.SetToolTip(pictureBox_RunAtStartup,
@@ -773,6 +740,11 @@ namespace NiceHashMiner.Forms
                     lbl.BackColor = Form_Main._backColor;
                     lbl.ForeColor = Form_Main._foreColor;
                 }
+                foreach (var lbl in this.tabPageOverClock.Controls.OfType<PictureBox>())
+                {
+                    lbl.BackColor = Form_Main._backColor;
+                    lbl.ForeColor = Form_Main._foreColor;
+                }
 
                 checkBox_BackupBeforeUpdate.BackColor = Form_Main._backColor;
                 checkBox_BackupBeforeUpdate.ForeColor = Form_Main._textColor;
@@ -910,6 +882,7 @@ namespace NiceHashMiner.Forms
                 pictureBox_SwitchProfitabilityThreshold.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox_TimeUnit.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 pictureBox1.Image = NiceHashMiner.Properties.Resources.info_white_18;
+                pictureBox2.Image = NiceHashMiner.Properties.Resources.info_white_18;
 
                 devicesListViewEnableControl1.BackColor = Form_Main._backColor;
                 devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;

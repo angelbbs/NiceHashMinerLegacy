@@ -1077,6 +1077,16 @@ namespace NiceHashMiner
             }
 
             buttonLogo.FlatAppearance.BorderSize = 0;
+            if (ConfigManager.GeneralConfig.ColorProfileIndex == 0 ||
+                ConfigManager.GeneralConfig.ColorProfileIndex == 1 ||
+                ConfigManager.GeneralConfig.ColorProfileIndex == 4 ||
+                ConfigManager.GeneralConfig.ColorProfileIndex == 13)
+            {
+                buttonLogo.Image = Properties.Resources.NHM_logo_xxsmall_light92;
+            } else
+            { 
+                buttonLogo.Image = Properties.Resources.NHM_logo_xxsmall_light92w;
+            }
             devicesListViewEnableControl1.BackColor = SystemColors.ControlLightLight;
 
             buttonBTC_Save.FlatStyle = FlatStyle.Flat;
@@ -1162,6 +1172,9 @@ namespace NiceHashMiner
                 // DevicesListViewEnableControl.listViewDevices.BackColor = _backColor;
                 devicesListViewEnableControl1.BackColor = _backColor;
                 devicesListViewEnableControl1.ForeColor = _foreColor;
+
+                foreach (var lbl in this.Controls.OfType<RichTextBox>()) lbl.BackColor = _backColor;
+                foreach (var lbl in this.Controls.OfType<RichTextBox>()) lbl.ForeColor = _textColor;
             }
 
             this.Update();
@@ -1646,7 +1659,8 @@ public static void CloseChilds(Process parentId)
             speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
                           iApiData.AlgorithmName + apiGetExceptionString;
             //хрень. надо поправить
-            string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}";
+
+            string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
             speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " +speedString + "\\b\\par}";
             if (iApiData.AlgorithmID == AlgorithmType.AutolykosZil || (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto))
             {
@@ -1659,6 +1673,7 @@ public static void CloseChilds(Process parentId)
                     speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.Speed) + "H/s Autolykos\\b0 +Zilliqa\\b\\par}";
                 }
             }
+
             var rateBtcString = FormatPayingOutput(paying, power);
             if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {

@@ -233,6 +233,16 @@ namespace NiceHashMiner.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap NHM_logo_xxsmall_light92w {
+            get {
+                object obj = ResourceManager.GetObject("NHM_logo_xxsmall_light92w", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap NHM_logo_xxsmall92 {
             get {
                 object obj = ResourceManager.GetObject("NHM_logo_xxsmall92", resourceCulture);

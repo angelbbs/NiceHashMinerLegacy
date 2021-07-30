@@ -286,7 +286,7 @@ namespace NiceHashMiner
             this.buttonLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonLogo.FlatAppearance.BorderSize = 0;
             this.buttonLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xxsmall92;
+            this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xxsmall_light92;
             this.buttonLogo.Location = new System.Drawing.Point(632, 3);
             this.buttonLogo.Name = "buttonLogo";
             this.buttonLogo.Size = new System.Drawing.Size(110, 32);

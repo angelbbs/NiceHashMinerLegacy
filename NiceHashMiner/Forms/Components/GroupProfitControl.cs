@@ -4,6 +4,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -23,6 +24,9 @@ namespace NiceHashMiner.Forms.Components
             {
                 toolTip2.SetToolTip(button_restart, "Restar miner");
             }
+            groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
+            groupBoxMinerGroup.BackColor = Form_Main._backColor;
+
         }
 
 
@@ -40,14 +44,16 @@ namespace NiceHashMiner.Forms.Components
             {
                 groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
             }
-            richTextBoxSpeedValue.Rtf = speedString;
+
             labelBTCRateValue.Text = btcRateString;
             labelCurentcyPerDayVaue.Text = currencyRateString;
-            groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
-            groupBoxMinerGroup.BackColor = Form_Main._backColor;
 
-            richTextBoxSpeedValue.ForeColor = Form_Main._foreColor;
+            richTextBoxSpeedValue.Rtf = speedString;
+            richTextBoxSpeedValue.SelectionStart = 0;
+            richTextBoxSpeedValue.SelectionLength = richTextBoxSpeedValue.Text.Length;
+            richTextBoxSpeedValue.SelectionColor = Form_Main._foreColor;
             richTextBoxSpeedValue.BackColor = Form_Main._backColor;
+
             button_restart.Tag = ProcessTag;
             button_restart.Refresh();
         }
