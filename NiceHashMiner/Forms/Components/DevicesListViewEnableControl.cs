@@ -169,7 +169,7 @@ namespace NiceHashMiner.Forms.Components
                     //continue;
                 }
                 devNum = computeDevice.NameCount; 
-                if (computeDevice.MonitorConnected)
+                if (computeDevice.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
                 {
                     devNum = "> " + devNum;//   > GPU
                 }

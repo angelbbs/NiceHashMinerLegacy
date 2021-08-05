@@ -825,6 +825,11 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("API", ex.Message);
                 return null;
             }
+            /*
+            Helpers.ConsolePrint("API*", "MiningSetup.CurrentAlgorithmType: " + MiningSetup.CurrentAlgorithmType +
+                " MiningSetup.CurrentSecondaryAlgorithmTyp: " + MiningSetup.CurrentSecondaryAlgorithmType +
+                " IsInBenchmark: " + IsInBenchmark);
+            */
             try
             {
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))

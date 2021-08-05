@@ -51,6 +51,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             },
             */
+            /*
             {
                 MinerBaseType.Nanominer,
                 new List<Algorithm>()
@@ -61,6 +62,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             },
+            */
             {
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()

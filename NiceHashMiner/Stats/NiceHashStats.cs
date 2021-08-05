@@ -1239,12 +1239,12 @@ namespace NiceHashMiner.Stats
                             GpuRam = "";
                         }
                     }
-                    /*
+                    
                     if (device.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
                     {
                         Manufacturer = "> " + Manufacturer;
                     }
-                    */
+                    
                     if (!devName)
                     {
                         deviceName = "";

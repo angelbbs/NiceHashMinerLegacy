@@ -128,7 +128,7 @@ namespace NiceHashMiner.Miners
                 ApiPort = 4040;
 
                 return $" --algorithm randomx"
-                + $" --pool stratum+tcp://pool.supportxmr.com:3333 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" +
+                + $" --pool stratum+tcp://xmr-eu1.nanopool.org:14444 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" +
                 $" --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))

@@ -43,7 +43,7 @@ namespace NiceHashMiner
             label_LoadingText.Text = loadFormTitle;
             label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
             label_LoadingText.ForeColor = Form_Main._foreColor;
-            label_LoadingText.BackColor = Form_Main._backColor;
+            label_LoadingText.BackColor = this.BackColor;
             AfterInitCaller = initCaller;
 
             TotalLoadSteps = totalLoadSteps;
