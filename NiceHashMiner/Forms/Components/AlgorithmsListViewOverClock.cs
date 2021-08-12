@@ -966,68 +966,74 @@ namespace NiceHashMiner.Forms.Components
                 {
                     string fName = "temp\\" + _computeDevice.Uuid + "_" + _algorithm.AlgorithmStringID + ".tmp";
                     ControlMemoryGpuEntry _abdataTmp = MSIAfterburner.ReadFromFile(_computeDevice.BusID, fName);
-                    //nvidia
-                    if (_computeDevice.DeviceType == DeviceType.NVIDIA)
+                    try
                     {
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK_BOOST))
+                        //nvidia
+                        if (_computeDevice.DeviceType == DeviceType.NVIDIA)
                         {
-                            _abdataTmp.CoreClockBoostCur = _algorithm.gpu_clock;
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK_BOOST))
+                            {
+                                _abdataTmp.CoreClockBoostCur = _algorithm.gpu_clock;
+                            }
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE_BOOST))
+                            {
+                                _abdataTmp.CoreVoltageBoostCur = (int)_algorithm.gpu_voltage;
+                            }
+                            /*
+                            if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
+                            {
+                                macm.GpuEntries[i].Flags = macm.GpuEntries[i].Flags - (int)MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED;
+                            }
+                            */
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK_BOOST))
+                            {
+                                _abdataTmp.MemoryClockBoostCur = _algorithm.mem_clock;
+                            }
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE_BOOST))
+                            {
+                                _abdataTmp.MemoryVoltageBoostCur = (int)_algorithm.mem_voltage;
+                            }
                         }
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE_BOOST))
+                        //amd
+                        if (_computeDevice.DeviceType == DeviceType.AMD)
                         {
-                            _abdataTmp.CoreVoltageBoostCur = (int)_algorithm.gpu_voltage;
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK))
+                            {
+                                _abdataTmp.CoreClockCur = (uint)_algorithm.gpu_clock;
+                            }
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE))
+                            {
+                                _abdataTmp.CoreVoltageCur = (uint)_algorithm.gpu_voltage;
+                            }
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK))
+                            {
+                                _abdataTmp.MemoryClockCur = (uint)_algorithm.mem_clock;
+                            }
+                            if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE))
+                            {
+                                _abdataTmp.MemoryVoltageCur = (uint)_algorithm.mem_voltage;
+                            }
                         }
-                        /*
-                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
-                        {
-                            macm.GpuEntries[i].Flags = macm.GpuEntries[i].Flags - (int)MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED;
-                        }
-                        */
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK_BOOST))
-                        {
-                            _abdataTmp.MemoryClockBoostCur = _algorithm.mem_clock;
-                        }
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE_BOOST))
-                        {
-                            _abdataTmp.MemoryVoltageBoostCur = (int)_algorithm.mem_voltage;
-                        }
-                    }
-                    //amd
-                    if (_computeDevice.DeviceType == DeviceType.AMD)
-                    {
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK))
-                        {
-                            _abdataTmp.CoreClockCur = (uint)_algorithm.gpu_clock;
-                        }
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE))
-                        {
-                            _abdataTmp.CoreVoltageCur = (uint)_algorithm.gpu_voltage;
-                        }
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK))
-                        {
-                            _abdataTmp.MemoryClockCur = (uint)_algorithm.mem_clock;
-                        }
-                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE))
-                        {
-                            _abdataTmp.MemoryVoltageCur = (uint)_algorithm.mem_voltage;
-                        }
-                    }
 
-                    //all
-                    if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED))
-                    {
-                        if (_abdataTmp.FanFlagsCur == MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None)
+                        //all
+                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED))
                         {
-                            _abdataTmp.FanSpeedCur = (uint)_algorithm.fan;
+                            if (_abdataTmp.FanFlagsCur == MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.None)
+                            {
+                                _abdataTmp.FanSpeedCur = (uint)_algorithm.fan;
+                            }
                         }
-                    }
-                    if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT))
+                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT))
+                        {
+                            _abdataTmp.PowerLimitCur = _algorithm.power_limit;
+                        }
+                        if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_LIMIT))
+                        {
+                            _abdataTmp.ThermalLimitCur = _algorithm.thermal_limit;
+                        }
+                    } catch (Exception ex)
                     {
-                        _abdataTmp.PowerLimitCur = _algorithm.power_limit;
-                    }
-                    if (_abdataTmp.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_LIMIT))
-                    {
-                        _abdataTmp.ThermalLimitCur = _algorithm.thermal_limit;
+                        MessageBox.Show(ex.Message, "Error");
                     }
                     MSIAfterburner.SaveDeviceData(_abdataTmp, fName);
                 }

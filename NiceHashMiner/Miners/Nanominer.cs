@@ -37,17 +37,21 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker)
         {
-            IsApiReadException = false;
+            //IsApiReadException = false;
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             ProcessHandle = _Start();
-            
-            do
+            try
             {
+                do
+                {
+                    Thread.Sleep(1000);
+                } while (!File.Exists("miners\\Nanominer\\" + GetLogFileName()));
                 Thread.Sleep(1000);
-            } while (!File.Exists("miners\\Nanominer\\" + GetLogFileName()));
-            Thread.Sleep(1000);
-            fs = new FileStream("miners\\Nanominer\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            
+                fs = new FileStream("miners\\Nanominer\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint(MinerTag(), ex.Message);
+            }
         }
 
         private string GetStartCommand(string url, string btcAdress, string worker)
@@ -77,9 +81,13 @@ namespace NiceHashMiner.Miners
             string cfgFile = "";
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
+                if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                    File.Delete("miners\\Nanominer\\" + GetLogFileName());
+
                 cfgFile =
                    String.Format("webPort = {0}", ApiPort) + "\n"
                    + String.Format("mport = 0\n")
+                   + String.Format("logPath=" + GetLogFileName() + "\n")
                    + String.Format("protocol = stratum\n")
                    + String.Format(param) + "\n"
                    + String.Format("[Ethash]\n")

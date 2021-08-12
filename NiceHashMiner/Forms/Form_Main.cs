@@ -1084,7 +1084,7 @@ namespace NiceHashMiner
             {
                 buttonLogo.Image = Properties.Resources.NHM_logo_xxsmall_light92;
             } else
-            { 
+            {
                 buttonLogo.Image = Properties.Resources.NHM_logo_xxsmall_light92w;
             }
             devicesListViewEnableControl1.BackColor = SystemColors.ControlLightLight;
@@ -2404,7 +2404,6 @@ public static void CloseChilds(Process parentId)
                     //NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
-
             var hasData = NHSmaData.HasData;
             if (!showWarnings)
             {
@@ -2427,7 +2426,6 @@ public static void CloseChilds(Process parentId)
                 }
                 return StartMiningReturnType.IgnoreMsg;
             }
-
             // Check if there are unbenchmakred algorithms
             var isBenchInit = true;
             foreach (var cdev in ComputeDeviceManager.Available.Devices)
@@ -2504,12 +2502,10 @@ public static void CloseChilds(Process parentId)
             ClearRatesAll();
             bool isMining;
             var btcAdress = "";
-
             if (true)
             {
                  btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress_new.Text.Trim();
             }
-
             if (comboBoxLocation.SelectedIndex < 4)
             {
                 isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
@@ -2537,9 +2533,7 @@ public static void CloseChilds(Process parentId)
                         textBoxWorkerName.Text.Trim(), btcAdress);
                 }
             }
-
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
-
             _minerStatsCheck.Start();
 
             NiceHashStats._deviceUpdateTimer.Stop();

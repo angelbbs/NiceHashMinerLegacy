@@ -188,7 +188,7 @@ namespace NiceHashMiner.Miners
                 algo = "ethash";
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --par=" + algo
-                      + " --url tcp://0x9290E50e7CcF1bdC90da8248a2bBaCc5063AeEE1.miniz@eu1.ethermine.org:4444"
+                      + " --url 0x9290E50e7CcF1bdC90da8248a2bBaCc5063AeEE1.miniz@eu1.ethermine.org:4444"
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -214,7 +214,6 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
-                //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
                 benchmarkTimer.Start();
@@ -233,44 +232,10 @@ namespace NiceHashMiner.Miners
                         var imageName = MinerExeName.Replace(".exe", "");
                         // maybe will have to KILL process
                         EndBenchmarkProcces();
-                        //  KillMinerBase(imageName);
-                        if (BenchmarkSignalTimedout)
-                        {
-                            throw new Exception("Benchmark timedout");
-                        }
-
-                        if (BenchmarkException != null)
-                        {
-                            throw BenchmarkException;
-                        }
-
-                        if (BenchmarkSignalQuit)
-                        {
-                            throw new Exception("Termined by user request");
-                        }
-
-                        if (BenchmarkSignalFinnished)
-                        {
-                            break;
-                        }
-
-                        //keepRunning = false;
                         break;
                     }
                     // wait a second due api request
                     Thread.Sleep(1000);
-                    /*
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
-                    {
-                        delay_before_calc_hashrate = 10;
-                        MinerStartDelay = 20;
-                    }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                    {
-                        delay_before_calc_hashrate = 2;
-                        MinerStartDelay = 10;
-                    }
-                    */
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
@@ -406,7 +371,7 @@ namespace NiceHashMiner.Miners
                 var bytesToRead = new byte[client.ReceiveBufferSize];
                 var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                 var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                //Helpers.ConsolePrint("miniZ API:", respStr);
+                Helpers.ConsolePrint("miniZ API:", respStr);
                 if (!respStr.Contains("}]}") && prevSpeed != 0)
                 {
                     client.Close();

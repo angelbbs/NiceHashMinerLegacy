@@ -314,7 +314,7 @@ namespace NiceHashMiner.Miners
             double summspeed = 0.0d;
 
             int delay_before_calc_hashrate = 5;
-            int MinerStartDelay = 20;
+            int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 

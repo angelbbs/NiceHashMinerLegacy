@@ -102,7 +102,6 @@ namespace NiceHashMiner.Miners
             _miningLocation = miningLocation;
             //_miningLocation = Form_Main.myServers[0, 0];
             _switchingManager = new AlgorithmSwitchingManager();
-
             if (!FuncAttached)
             {
                 Helpers.ConsolePrint("MiningSession", "Process attached");
@@ -110,7 +109,6 @@ namespace NiceHashMiner.Miners
 
                 FuncAttached = true;
             }
-
             _btcAdress = btcAdress;
             _worker = worker;
 
@@ -120,7 +118,6 @@ namespace NiceHashMiner.Miners
             {
                 GroupSetupUtils.AvarageSpeeds(_miningDevices);
             }
-
             // init timer stuff
             _preventSleepTimer = new Timer();
             _preventSleepTimer.Elapsed += PreventSleepTimer_Tick;
@@ -136,13 +133,11 @@ namespace NiceHashMiner.Miners
             _isProfitable = true;
             // assume we have internet
             _isConnectedToInternet = true;
-
             if (IsMiningEnabled)
             {
                 _preventSleepTimer.Start();
                 _internetCheckTimer.Start();
             }
-
             AlgorithmSwitchingManager.Stop();
             AlgorithmSwitchingManager.Start();
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
@@ -404,8 +399,15 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    _mainFormRatesComunication.ShowNotProfitable(
-                        International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
+                    if (ConfigManager.GeneralConfig.Force_mining_if_nonprofitable)
+                    {
+                        shouldMine = true;
+                    }
+                    else
+                    {
+                        _mainFormRatesComunication.ShowNotProfitable(
+                            International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
+                    }
                 }
 
                 // return don't group
@@ -516,7 +518,6 @@ namespace NiceHashMiner.Miners
                 AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
                 return;
             }
-
             // check profit threshold
             bool needSwitch = false;
             if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
@@ -545,10 +546,11 @@ namespace NiceHashMiner.Miners
                         needSwitch = true;
                         Helpers.ConsolePrint(Tag,
                             $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
-                    } else
+                    }
+                    else
                     {
                         needSwitch = false;
-                        Helpers.ConsolePrint(Tag,$"Will NOT SWITCH1. Switching period has not been exceeded");
+                        Helpers.ConsolePrint(Tag, $"Will NOT SWITCH1. Switching period has not been exceeded");
                         // RESTORE OLD PROFITS STATE
                         foreach (var device in _miningDevices)
                         {
@@ -557,7 +559,7 @@ namespace NiceHashMiner.Miners
                     }
 
                 }
-        }
+            }
             else
             {
                 foreach (var device in _miningDevices)
@@ -645,7 +647,6 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
-
             {
                 // check which groupMiners should be stopped and which ones should be started and which to keep running
                 var toStopGroupMiners = new Dictionary<string, GroupMiner>();
@@ -711,7 +712,6 @@ namespace NiceHashMiner.Miners
                         }
                     }
                 }
-
                 // check brand new
                 foreach (var kvp in newGroupedMiningPairs)
                 {
@@ -723,13 +723,11 @@ namespace NiceHashMiner.Miners
                         toRunNewGroupMiners[key] = newGroupMiner;
                     }
                 }
-
                 if ((toStopGroupMiners.Values.Count > 0) || (toRunNewGroupMiners.Values.Count > 0))
                 {
                     var stringBuilderPreviousAlgo = new StringBuilder();
                     var stringBuilderCurrentAlgo = new StringBuilder();
                     var stringBuilderNoChangeAlgo = new StringBuilder();
-
                     // stop old miners
                     foreach (var toStop in toStopGroupMiners.Values)
                     {
@@ -767,7 +765,6 @@ namespace NiceHashMiner.Miners
                         }
                         _runningGroupMiners[toStart.Key] = toStart;
                     }
-
                     // which miners dosen't change
                     foreach (var noChange in noChangeGroupMiners.Values)
                         stringBuilderNoChangeAlgo.Append($"{noChange.DevicesInfoString}: {noChange.AlgorithmType}, ");
@@ -782,7 +779,6 @@ namespace NiceHashMiner.Miners
                         Helpers.ConsolePrint(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
                 }
             }
-
             AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
             _mainFormRatesComunication?.ForceMinerStatsUpdate();
         }

@@ -268,6 +268,7 @@ namespace NiceHashMiner
             {
                 var minerBase = MiningSetup.MiningPairs[0].Algorithm.MinerBaseType;
                 var algoType = MiningSetup.MiningPairs[0].Algorithm.NiceHashID;
+                var devtype = MiningSetup.MiningPairs[0].Device.DeviceType;
                 var path = MiningSetup.MinerPath;
                 var reservedPorts = MinersSettingsManager.GetPortsListFor(minerBase, path, algoType);
                 ApiPort = -1; // not set
@@ -294,7 +295,17 @@ namespace NiceHashMiner
                 {
                     ApiPort = MinersApiPortsManager.GetAvaliablePort();
                 }
-
+                /*
+                if (minerBase.ToString().Equals("Nanominer") && devtype == DeviceType.NVIDIA)
+                {
+                    ApiPort = 4051;
+                }
+                if (minerBase.ToString().Equals("Nanominer") && devtype == DeviceType.AMD)
+                {
+                    ApiPort = 4052;
+                }
+                Helpers.ConsolePrint("SetApiPort********************", "ApiPort: " + ApiPort.ToString());
+                */
             }
         }
 

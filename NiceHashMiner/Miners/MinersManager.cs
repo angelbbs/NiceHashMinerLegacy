@@ -51,7 +51,6 @@ namespace NiceHashMiner.Miners
         {
             _curMiningSession = new MiningSession(ComputeDeviceManager.Available.Devices,
                 mainFormRatesComunication, miningLocation, worker, btcAdress);
-
             return _curMiningSession.IsMiningEnabled;
         }
 

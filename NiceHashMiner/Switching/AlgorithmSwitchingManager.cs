@@ -94,7 +94,6 @@ namespace NiceHashMiner.Switching
                 _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
                 _smaCheckTimer.Start();
             }
-            
             SmaCheckNow();
         }
         public static void SmaCheckNow()
@@ -147,7 +146,6 @@ namespace NiceHashMiner.Switching
                 sb.AppendLine("Normalizing profits");
             }
             var stableUpdated = UpdateProfits(_algosHistory, _ticksForStable, sb);
-
             if (!stableUpdated && _hasStarted)
             {
                 sb.AppendLine("No algos affected (either no SMA update or no algos higher");
@@ -161,7 +159,6 @@ namespace NiceHashMiner.Switching
             {
                 _hasStarted = true;
             }
-
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
             //SmaCheckTimerOnElapsedRun = false;
             //new Task(() => SmaCheck(sender, args)).Start();

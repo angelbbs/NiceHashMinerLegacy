@@ -413,7 +413,7 @@ namespace NiceHashMiner.Miners
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
-            int repeats = 0;
+            double repeats = 0.0d;
             double summspeed = 0.0d;
 
             int delay_before_calc_hashrate = 5;
@@ -504,7 +504,6 @@ namespace NiceHashMiner.Miners
                         if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
                         {
                             Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
-
                             ad.Dispose();
                             benchmarkTimer.Stop();
 
