@@ -135,6 +135,7 @@ namespace NiceHashMiner.Configs.Data
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
 
+        public bool CheckingCUDA = false;
         public bool RestartDriverOnCUDA_GPU_Lost = false;
         public bool RestartWindowsOnCUDA_GPU_Lost = false;
         public bool Allow_remote_management = true;
@@ -261,6 +262,7 @@ namespace NiceHashMiner.Configs.Data
             AllowMultipleInstances = false;
             UseIFTTT = false;
             CoolDownCheckEnabled = true;
+            CheckingCUDA = false;
             RestartDriverOnCUDA_GPU_Lost = false;
             RestartWindowsOnCUDA_GPU_Lost = false;
             Allow_remote_management = true;

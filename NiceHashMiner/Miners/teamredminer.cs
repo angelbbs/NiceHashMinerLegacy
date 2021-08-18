@@ -27,6 +27,8 @@ namespace NiceHashMiner.Miners
         Stopwatch _benchmarkTimer = new Stopwatch();
         private int TotalCount = 0;
         private int _benchmarkTimeWait = 180;
+        private double _power = 0.0d;
+        double _powerUsage = 0;
 
         public teamredminer()
             : base("teamredminer")
@@ -229,7 +231,7 @@ namespace NiceHashMiner.Miners
 
             try
             {
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                //if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 30;
                 }
@@ -307,12 +309,13 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
+                        _powerUsage += _power;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             summspeed = Math.Max(ad.Result.Speed, summspeed);
                         }
                         else
@@ -336,6 +339,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = summspeed;
+                BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
             }
             catch (Exception ex)
             {
@@ -382,6 +386,7 @@ namespace NiceHashMiner.Miners
                         //Helpers.ConsolePrint("API: ", cSpeed);
                         double.TryParse(cSpeed, out double devSpeed);
                         sortedMinerPairs[dev].Device.MiningHashrate = devSpeed * 1000000;
+                        _power = sortedMinerPairs[dev].Device.PowerUsage;
                         totalSpeed = totalSpeed + devSpeed * 1000000;
                         ad.Speed = totalSpeed;
                         dev++;

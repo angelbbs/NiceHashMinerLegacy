@@ -25,6 +25,8 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
         private double Total = 0;
         private const int TotalDelim = 2;
+        private double _power = 0.0d;
+        double _powerUsage = 0;
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.ZEnemy;
         public static string apiRequest = "summary";
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -268,12 +270,13 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
+                        _powerUsage += _power;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             summspeed += ad.Result.Speed;
                         }
                         else
@@ -307,6 +310,7 @@ namespace NiceHashMiner.Miners
                 if (BenchmarkAlgorithm.BenchmarkSpeed == 0)
                 {
                     BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                    BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
                 }
             }
             catch (Exception ex)
@@ -358,6 +362,7 @@ namespace NiceHashMiner.Miners
                 {
                     //Helpers.ConsolePrint("API:", dev.dev_id.ToString());
                     sortedMinerPairs[devs].Device.MiningHashrate = (double)dev.hashrate;
+                    _power = sortedMinerPairs[devs].Device.PowerUsage;
                     total = total + (double)dev.hashrate;
                     devs++;
                 }

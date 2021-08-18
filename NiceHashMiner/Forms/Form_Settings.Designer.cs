@@ -180,6 +180,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.checkBoxCheckingCUDA = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1336,6 +1337,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxCheckingCUDA);
             this.groupBox1.Controls.Add(this.checkBox_DisplayConnected);
             this.groupBox1.Controls.Add(this.checkBox_show_AMDdevice_manufacturer);
             this.groupBox1.Controls.Add(this.checkBox_ShowDeviceMemSize);
@@ -1476,7 +1478,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartDriver
             // 
             this.checkBoxRestartDriver.AutoSize = true;
-            this.checkBoxRestartDriver.Location = new System.Drawing.Point(304, 222);
+            this.checkBoxRestartDriver.Location = new System.Drawing.Point(304, 233);
             this.checkBoxRestartDriver.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartDriver.Name = "checkBoxRestartDriver";
             this.checkBoxRestartDriver.Size = new System.Drawing.Size(206, 17);
@@ -1488,7 +1490,7 @@ namespace NiceHashMiner.Forms
             // checkBoxRestartWindows
             // 
             this.checkBoxRestartWindows.AutoSize = true;
-            this.checkBoxRestartWindows.Location = new System.Drawing.Point(304, 199);
+            this.checkBoxRestartWindows.Location = new System.Drawing.Point(304, 210);
             this.checkBoxRestartWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartWindows.Name = "checkBoxRestartWindows";
             this.checkBoxRestartWindows.Size = new System.Drawing.Size(224, 17);
@@ -2189,6 +2191,17 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
+            // checkBoxCheckingCUDA
+            // 
+            this.checkBoxCheckingCUDA.AutoSize = true;
+            this.checkBoxCheckingCUDA.Location = new System.Drawing.Point(304, 187);
+            this.checkBoxCheckingCUDA.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxCheckingCUDA.Name = "checkBoxCheckingCUDA";
+            this.checkBoxCheckingCUDA.Size = new System.Drawing.Size(221, 17);
+            this.checkBoxCheckingCUDA.TabIndex = 417;
+            this.checkBoxCheckingCUDA.Text = "Checking CUDA GPU on program startup";
+            this.checkBoxCheckingCUDA.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2429,5 +2442,6 @@ namespace NiceHashMiner.Forms
         public System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.CheckBox checkBox_DisplayConnected;
+        private System.Windows.Forms.CheckBox checkBoxCheckingCUDA;
     }
 }

@@ -75,7 +75,7 @@ namespace NiceHashMiner.Benchmarking
             }
 
             var power = _powerHelper.Stop();
-
+            /*
             var dualAlgo = _currentAlgorithm as DualAlgorithm;
             if (dualAlgo != null && dualAlgo.TuningEnabled)
             {
@@ -87,6 +87,14 @@ namespace NiceHashMiner.Benchmarking
             else
             {
                 _currentAlgorithm.PowerUsage = power;//**********power
+            }
+            */
+            if (_currentAlgorithm.PowerUsageBenchmark > 0)
+            {
+                _currentAlgorithm.PowerUsage = _currentAlgorithm.PowerUsageBenchmark;//усредненное при бенчмарке
+            } else
+            {
+                _currentAlgorithm.PowerUsage = power;
             }
 
             if (!rebenchSame) _benchmarkForm.RemoveFromStatusCheck(Device, _currentAlgorithm);
@@ -115,11 +123,6 @@ namespace NiceHashMiner.Benchmarking
                 else if (_claymoreZcashStatus != null)
                 {
                     _currentMiner.BenchmarkStart(_claymoreZcashStatus.Time, this);
-                }
-                else if (dualAlgo != null && dualAlgo.TuningEnabled)
-                {
-                    var time = 170;
-                    _currentMiner.BenchmarkStart(time, this);
                 }
             }
             else

@@ -184,8 +184,8 @@ namespace NiceHashMiner.Devices
                             Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
 
                         //сомнительно...
-                        /*
-                        if (result == NvStatus.NVIDIA_DEVICE_NOT_FOUND)
+                        
+                        if (result == NvStatus.NVIDIA_DEVICE_NOT_FOUND && ConfigManager.GeneralConfig.CheckingCUDA)
                         {
                             int check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
                             if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
@@ -213,7 +213,7 @@ namespace NiceHashMiner.Devices
                                 Thread.Sleep(2000);
                             }
                         }
-                        */
+                        
                         return -1;
                         }
                     }

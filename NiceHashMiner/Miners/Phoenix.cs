@@ -37,6 +37,8 @@ namespace NiceHashMiner.Miners
         int count = 0;
         string ResponseFromPhoenix;
         private int _benchmarkTimeWait = 120;
+        private double _power = 0.0d;
+        double _powerUsage = 0;
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
@@ -250,12 +252,13 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
+                        _powerUsage += _power;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 10);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             if (commandLine.ToString().Contains("amd"))
                             {
                                 summspeed = Math.Max(summspeed, ad.Result.Speed);
@@ -304,6 +307,7 @@ namespace NiceHashMiner.Miners
                 {
                     BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
                 }
+                BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
                 BenchmarkThreadRoutineFinish();
             }
         }
@@ -376,6 +380,7 @@ namespace NiceHashMiner.Miners
                         {
                             tmpSpeed = 0;
                         }
+                        _power = sortedMinerPairs[dev].Device.PowerUsage;
                         sortedMinerPairs[dev].Device.MiningHashrate = tmpSpeed * ApiReadMult;
                         dev++;
                         ad.Speed += tmpSpeed;

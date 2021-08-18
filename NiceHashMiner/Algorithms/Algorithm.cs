@@ -102,6 +102,7 @@ namespace NiceHashMiner.Algorithms
         /// Power consumption of this algorithm, in Watts
         /// </summary>
         public virtual double PowerUsage { get; set; }
+        public virtual double PowerUsageBenchmark { get; set; }
         public virtual int gpu_clock { get; set; }
         public virtual int gpu_clock_def { get; set; }
         public virtual int gpu_clock_min { get; set; }

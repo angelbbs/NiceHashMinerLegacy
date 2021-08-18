@@ -313,6 +313,7 @@ namespace NiceHashMiner.Forms
             checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
             checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
 
+            checkBoxCheckingCUDA.Text = International.GetText("Form_Settings_checkBox_CheckingCUDA");
             checkBoxRestartDriver.Text = International.GetText("Form_Settings_checkBox_RestartDriver");
             checkBoxRestartWindows.Text = International.GetText("Form_Settings_checkBox_RestartWindows");
             checkBoxDriverWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
@@ -943,6 +944,7 @@ namespace NiceHashMiner.Forms
                 checkBox_AutoStartMining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AllowMultipleInstances.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxCheckingCUDA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxRestartDriver.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxDriverWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxRestartWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1047,6 +1049,7 @@ namespace NiceHashMiner.Forms
                 checkBox_RunAtStartup.Checked = IsInStartupRegistry();
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
                 checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
+                checkBoxCheckingCUDA.Checked = ConfigManager.GeneralConfig.CheckingCUDA;
                 checkBoxRestartDriver.Checked = ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost;
                 checkBoxDriverWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
                 checkBoxRestartWindows.Checked = ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost;
@@ -1208,6 +1211,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost = checkBoxRestartDriver.Checked;
+            ConfigManager.GeneralConfig.CheckingCUDA = checkBoxCheckingCUDA.Checked;
             ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBoxDriverWarning.Checked;
             ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost = checkBoxRestartWindows.Checked;
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
@@ -2387,12 +2391,14 @@ namespace NiceHashMiner.Forms
                 checkBoxNVMonitoring.Enabled = false;
                 checkBoxRestartWindows.Enabled = false;
                 checkBoxRestartDriver.Enabled = false;
+                checkBoxCheckingCUDA.Enabled = false;
                 checkBox_show_NVdevice_manufacturer.Enabled = false;
             } else
             {
                 checkBoxNVMonitoring.Enabled = true;
                 checkBoxRestartWindows.Enabled = true;
                 checkBoxRestartDriver.Enabled = true;
+                checkBoxCheckingCUDA.Enabled = true;
                 checkBox_show_NVdevice_manufacturer.Enabled = true;
             }
         }

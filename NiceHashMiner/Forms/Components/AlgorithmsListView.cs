@@ -849,6 +849,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     if (lvi.Tag is Algorithm algorithm)
                     {
                         algorithm.BenchmarkSpeed = 0;
+                        algorithm.PowerUsage = 0;
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
                             algorithm.BenchmarkSecondarySpeed = 0;
@@ -884,6 +885,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     if (lvi.Tag is Algorithm algorithm)
                     {
                         algorithm.BenchmarkSpeed = 0;
+                        algorithm.PowerUsage = 0;
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
 

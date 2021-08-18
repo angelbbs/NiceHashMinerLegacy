@@ -23,6 +23,8 @@ namespace NiceHashMiner.Miners
     {
         private int _benchmarkTimeWait = 180;
         private const int TotalDelim = 2;
+        private double _power = 0.0d;
+        double _powerUsage = 0;
         public trex() : base("trex")
         {
         }
@@ -249,12 +251,13 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
+                        _powerUsage += _power;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             summspeed += ad.Result.Speed;
                         }
                         else
@@ -287,6 +290,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
             }
             catch (Exception ex)
             {
@@ -354,6 +358,7 @@ namespace NiceHashMiner.Miners
                     {
                         //Helpers.ConsolePrint(MinerTag(), "API device_id: " + dev.device_id + " gpu_id: " + dev.gpu_id + " gpu_user_id: " + " hashrate: " + dev.hashrate);
                         sortedMinerPairs[devs].Device.MiningHashrate = dev.hashrate;
+                        _power = sortedMinerPairs[devs].Device.PowerUsage;
                         devs++;
                     }
                     //Helpers.ConsolePrint(MinerTag(), "API total: " + respJson.hashrate);

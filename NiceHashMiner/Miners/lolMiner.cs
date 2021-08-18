@@ -29,6 +29,8 @@ namespace NiceHashMiner.Miners
         private readonly int GPUPlatformNumber;
         Stopwatch _benchmarkTimer = new Stopwatch();
         private int _benchmarkTimeWait = 180;
+        private double _power = 0.0d;
+        double _powerUsage = 0;
         public lolMiner()
             : base("lolMiner")
         {
@@ -589,12 +591,13 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
+                        _powerUsage += _power;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                             {
                                 summspeed = Math.Max(summspeed, ad.Result.Speed);
@@ -631,6 +634,7 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                    BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
                 }
             }
             catch (Exception ex)
@@ -726,6 +730,7 @@ namespace NiceHashMiner.Miners
                         }
                         foreach (var mPair in sortedMinerPairs)
                         {
+                            _power = mPair.Device.PowerUsage;
                             mPair.Device.MiningHashrate = hashrates[dev] * mult;
                             dev++;
                         }

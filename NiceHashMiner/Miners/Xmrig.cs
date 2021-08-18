@@ -29,6 +29,8 @@ namespace NiceHashMiner.Miners
         private System.Diagnostics.Process CMDconfigHandle;
         private string platform = "";
         string platform_prefix = "";
+        private double _power = 0.0d;
+        double _powerUsage = 0;
         public Xmrig() : base("Xmrig")
         { }
         public override void Start(string url, string btcAdress, string worker)
@@ -212,6 +214,7 @@ namespace NiceHashMiner.Miners
                     foreach (var dev in sortedMinerPairs)
                     {
                         dev.Device.MiningHashrate = ad.Speed;
+                        _power = dev.Device.PowerUsage;
                     }
 
                     if (ad.Speed == 0)
@@ -327,12 +330,13 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
+                        _powerUsage += _power;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             summspeed += ad.Result.Speed;
                         }
                         else
@@ -356,6 +360,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
             }
             catch (Exception ex)
             {

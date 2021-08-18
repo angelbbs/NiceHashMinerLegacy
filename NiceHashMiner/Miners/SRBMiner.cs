@@ -31,6 +31,8 @@ namespace NiceHashMiner.Miners
         private double speed = 0;
         private double tmp = 0;
         private bool IsInBenchmark = false;
+        private double _power = 0.0d;
+        double _powerUsage = 0;
 
         public SRBMiner() : base("SRBMiner") {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
@@ -236,6 +238,7 @@ namespace NiceHashMiner.Miners
                                 var hash = resp.SelectToken(token);
                                 int gpu_hr = (int)Convert.ToInt32(hash, CultureInfo.InvariantCulture.NumberFormat);
                                 mPair.Device.MiningHashrate = gpu_hr;
+                                _power = mPair.Device.PowerUsage;
 
                             } catch (Exception ex)
                             {
@@ -262,7 +265,8 @@ namespace NiceHashMiner.Miners
                                     string token1 = $"algorithms[1].hashrate.gpu.gpu{mPair.Device.IDByBus}";
                                     var hash1 = resp.SelectToken(token1);
                                     gpu_hr1 = (int)Convert.ToInt32(hash1, CultureInfo.InvariantCulture.NumberFormat);
-                                } else
+                                }
+                                else
                                 {
                                     gpu_hr1 = 0;
                                 }
@@ -274,6 +278,7 @@ namespace NiceHashMiner.Miners
                                 {
                                     mPair.Device.MiningHashrate = gpu_hr1;
                                 }
+                                _power = mPair.Device.PowerUsage;
                             }
                             catch (Exception ex)
                             {
@@ -295,7 +300,8 @@ namespace NiceHashMiner.Miners
                         totalsMain = resp.algorithms[0].hashrate.cpu.total;
                         foreach (var mPair in sortedMinerPairs)
                         {
-                                mPair.Device.MiningHashrate = totalsMain;
+                            mPair.Device.MiningHashrate = totalsMain;
+                            _power = mPair.Device.PowerUsage;
                         }
                     }
                     
@@ -404,12 +410,13 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
+                        _powerUsage += _power;
                         repeats++;
                         double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             summspeed += ad.Result.Speed;
                         }
                         else
@@ -443,6 +450,7 @@ namespace NiceHashMiner.Miners
                     BenchmarkThreadRoutineSecond();
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = BenchmarkSpeed;
+                BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
 
             }
             catch (Exception ex)
@@ -561,12 +569,13 @@ namespace NiceHashMiner.Miners
                         var ad = GetSummaryAsync();
                         if (ad.Result != null && ad.Result.Speed > 0)
                         {
+                            _powerUsage += _power;
                             repeats++;
                             double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                             BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                             if (repeats > delay_before_calc_hashrate)
                             {
-                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
+                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                                 summspeedSecond += ad.Result.Speed;
                             }
                             else
@@ -590,6 +599,7 @@ namespace NiceHashMiner.Miners
                         }
                     }
                     BenchmarkAlgorithm.BenchmarkSecondarySpeed = Math.Round(summspeedSecond / (repeats - delay_before_calc_hashrate), 2);
+                    //BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
                 }
                 catch (Exception ex)
                 {

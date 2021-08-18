@@ -110,7 +110,7 @@ namespace NiceHashMiner.Devices
                                 {
                                     foreach (var sensor in hardware.Sensors)
                                     {
-                                        if (sensor.SensorType == SensorType.Fan)
+                                        if (sensor.SensorType == SensorType.Fan && sensor.Value != null)
                                         {
                                             if ((int)sensor.Value >= 0)
                                             {
