@@ -183,14 +183,18 @@ namespace NiceHashMiner.Devices
 
                                 if ((int)wdwIntPtr > 1)
                                 {
-                                    Thread.Sleep(1000);//обязательная пауза
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 25%");
+                                    waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 50%");
+                                    waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 75%");
+                                    waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 100%");
+                                    waiting.Update();
+                                    Thread.Sleep(1000);//обязательная пауза
                                     break;
                                 }
                                 repeats++;
@@ -216,14 +220,18 @@ namespace NiceHashMiner.Devices
                                     //GetWindowPlacement(wdwIntPtr, ref placement);
                                     //ShowWindow(wdwIntPtr, ShowWindowEnum.ForceMinimized);
                                 }
-                                Thread.Sleep(1000);//обязательная пауза
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 25%");
+                                waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 50%");
+                                waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 75%");
+                                waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 100%");
+                                waiting.Update();
+                                Thread.Sleep(1000);//обязательная пауза
                                 P.Exited += new EventHandler(MSIABprocessExited);
                                 P.EnableRaisingEvents = true;
                                 break;
@@ -382,11 +390,18 @@ namespace NiceHashMiner.Devices
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                 if (busID == _busID)
                 {
-                    macm.ReloadGpuEntry(i);
-                    mahm.ReloadGpuEntry((uint)i);
-                    devData = macm.GpuEntries[i];
-                    found = true;
-                    break;
+                    try
+                    {
+                        macm.ReloadGpuEntry(i);
+                        mahm.ReloadGpuEntry((uint)i);
+                        devData = macm.GpuEntries[i];
+                        found = true;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("MSIAfterburner GetDeviceData", "Error: " + ex.ToString());
+                    }
                 }
             }
             if (!found)
@@ -506,6 +521,87 @@ namespace NiceHashMiner.Devices
                 return;
             }
         }
+
+        public static bool CompareDeviceData(int _busID, string FileName)
+        {
+            CheckMSIAfterburner();
+            if (!Initialized) return false;
+            ControlMemoryGpuEntry dev = new ControlMemoryGpuEntry();
+            int index = -1;
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    /*
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "busID: " + busID.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "_busID: " + _busID.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "i: " + i.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[i].Index: " + macm.GpuEntries[i].Index.ToString());
+                    */
+                    index = macm.GpuEntries[i].Index;
+                    //почему номер карты в MSI AB не всегда равен порядковому номеру карты в shared memory AB?????
+                    //далее плохой костыль...
+                    try
+                    {
+                        macm.ReloadGpuEntry(index);
+                        mahm.ReloadGpuEntry((uint)index);
+                        //break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error? BUG?: " + ex.ToString());
+                        //return false;
+                    } finally
+                    {
+                        index = i;
+                        macm.ReloadGpuEntry(index);
+                        mahm.ReloadGpuEntry((uint)index);
+                    }
+                }
+            }
+            if (index == -1)
+            {
+                if (_busID != -1)
+                {
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error! Device with busID " + _busID.ToString() + " not found!");
+                }
+                return false;
+            }
+
+            try
+            {
+                
+                //byte[] buffer = RawSerialize(macm.GpuEntries[index], (int)macm.Header.GpuEntrySize);
+                byte[] buffer = File.ReadAllBytes(FileName);
+                buffer = ReplaceBytes(buffer, Encoding.ASCII.GetBytes("BUS_"), Encoding.ASCII.GetBytes("BUS_" + _busID.ToString()));
+                dev = RawDeserialize(buffer, macm.GpuEntries[index]);
+
+                if (macm.GpuEntries[index].CoreClockBoostCur == dev.CoreClockBoostCur &&
+                    macm.GpuEntries[index].CoreClockCur == dev.CoreClockCur &&
+                    macm.GpuEntries[index].CoreVoltageBoostCur == dev.CoreVoltageBoostCur &&
+                    macm.GpuEntries[index].CoreVoltageCur == dev.CoreVoltageCur &&
+                    macm.GpuEntries[index].MemoryClockBoostCur == dev.MemoryClockBoostCur &&
+                    macm.GpuEntries[index].MemoryClockCur == dev.MemoryClockCur &&
+                    macm.GpuEntries[index].PowerLimitCur == dev.PowerLimitCur)
+                {
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare OK. busID " + _busID.ToString());
+                    return true;
+                } else
+                {
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare ERROR. busID " + _busID.ToString());
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error: " + ex.ToString());
+                return false;
+            }
+            return false;
+        }
+
         public static void SaveDefaultDeviceData(int _busID, string FileName)
         {
             CheckMSIAfterburner();
@@ -517,9 +613,18 @@ namespace NiceHashMiner.Devices
                 if (busID == _busID)
                 {
                     index = macm.GpuEntries[i].Index;
-                    macm.ReloadGpuEntry(index);
-                    mahm.ReloadGpuEntry((uint)index);
-                    break;
+                    try
+                    {
+                        macm.ReloadGpuEntry(index);
+                        mahm.ReloadGpuEntry((uint)index);
+                        //break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("MSIAfterburner SaveDefaultDeviceData", "Error: " + ex.ToString());
+                        macm.ReloadGpuEntry(i);
+                        mahm.ReloadGpuEntry((uint)i);
+                    }
                 }
             }
             if (index == -1)

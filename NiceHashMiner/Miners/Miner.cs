@@ -2143,12 +2143,28 @@ namespace NiceHashMiner
                         if (dev.Device.Enabled)
                         {
                             string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
-                            Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile: " + fName);
+                            Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
                             MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
+
                             //MSIAfterburner.CommitChanges(dev.Device.ID);
                             //Thread.Sleep(10);
                             MSIAfterburner.CommitChanges();
-                            Thread.Sleep(100);
+                            Thread.Sleep(200);
+                            
+                            for (int i = 0; i < 3; i++)
+                            {
+                                if (MSIAfterburner.CompareDeviceData(dev.Device.BusID, fName))
+                                {
+                                    Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile OK: " + fName);
+                                    break;
+                                }
+                                else
+                                {
+                                    Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile ERROR: " + fName + " Try again");
+                                    Thread.Sleep(500);
+                                }
+                            }
+                            
                         }
                     }
 //                    Thread.Sleep(2000);

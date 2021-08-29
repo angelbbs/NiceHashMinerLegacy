@@ -21,6 +21,7 @@ namespace NiceHashMiner.Devices
         protected int SMMajor;
         protected int SMMinor;
         public readonly bool ShouldRunEthlargement;
+        private int errorcount = 0;
         public override float Load
         {
             get
@@ -182,13 +183,18 @@ namespace NiceHashMiner.Devices
                         {
                             // GPUs without fans are not uncommon, so don't treat as error and just return -1
                             Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
+                            Helpers.ConsolePrint("NVAPI", "_nvmlDevice: " + _nvmlDevice.ToString());
+                            Helpers.ConsolePrint("NVAPI", "_nvHandle: " + _nvHandle.ToString());
 
                         //сомнительно...
                         
                         if (result == NvStatus.NVIDIA_DEVICE_NOT_FOUND && ConfigManager.GeneralConfig.CheckingCUDA)
                         {
+                            Helpers.ConsolePrint("NVAPI", "_nvmlDevice: " + _nvmlDevice.ToString());
+                            Helpers.ConsolePrint("NVAPI", "_nvHandle: " + _nvHandle.ToString());
+                            errorcount++;
                             int check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
-                            if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
+                            if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost && errorcount > 5)
                             {
                                 var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
                                 {
@@ -199,7 +205,7 @@ namespace NiceHashMiner.Devices
                                 Process.Start(onGpusLost);
                                 Thread.Sleep(2000);
                             }
-                            if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost)
+                            if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost && errorcount > 5)
                             {
                                 var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
                                 {

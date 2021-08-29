@@ -317,10 +317,6 @@ namespace NiceHashMiner.Miners
             var username = Globals.GetBitcoinUser();
             var rigName = ConfigManager.GeneralConfig.WorkerName.Trim();
 
-            Helpers.ConsolePrint("BENCH*", "algorithm.NiceHashID: " + algorithm.NiceHashID +
-    " algorithm.DualNiceHashID: " + algorithm.DualNiceHashID +
-    " IsInBenchmark: " + IsInBenchmark);
-
             try
             {
                 if (File.Exists("miners\\Nanominer\\bench_nh_" + platform + GetDevicesCommandString().Trim(' ') + ".ini"))
@@ -845,7 +841,7 @@ namespace NiceHashMiner.Miners
                 ResponseFromNanominer = await Reader.ReadToEndAsync();
                 Reader.Close();
                 Response.Close();
-                Helpers.ConsolePrint("API", ResponseFromNanominer);
+                //Helpers.ConsolePrint("API", ResponseFromNanominer);
             }
             catch (Exception ex)
             {
@@ -853,10 +849,7 @@ namespace NiceHashMiner.Miners
                 return null;
             }
             
-            Helpers.ConsolePrint("API*", "MiningSetup.CurrentAlgorithmType: " + MiningSetup.CurrentAlgorithmType +
-                " MiningSetup.CurrentSecondaryAlgorithmTyp: " + MiningSetup.CurrentSecondaryAlgorithmType +
-                " IsInBenchmark: " + IsInBenchmark);
-            
+           
             try
             {
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))

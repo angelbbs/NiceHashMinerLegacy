@@ -217,7 +217,20 @@ namespace NiceHashMiner.Utils
             catch (Exception e)
             {
                 Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
-                MessageBoxEx.Show(e.Message, "ERROR", 5000);
+                
+                //untested )))
+                /*
+                //MessageBoxEx.Show(e.Message + "\r\n" + "Restart Windows", 20000);
+                Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
+
+                var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                {
+                    WindowStyle = ProcessWindowStyle.Minimized
+                };
+                onGpusLost.Arguments = "1 " + "-777";
+                Helpers.ConsolePrint("ERROR", "UnzipThreadRoutine has encountered an error: " + e.Message);
+                Process.Start(onGpusLost);
+                */
             }
         }
     }

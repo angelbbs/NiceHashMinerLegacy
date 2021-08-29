@@ -284,7 +284,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://cfx.woolypooly.com:3094 -u 0x13097ee19fd453AfD6F2ecf155927f2b7380307F.nbminer " +
+                cmd = $"-a {AlgoName} -o stratum+tcp://cfx.woolypooly.com:3094 -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))

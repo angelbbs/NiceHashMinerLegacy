@@ -103,8 +103,7 @@ namespace NiceHashMiner.Forms
         void ChartData(object sender, EventArgs e)
         {
             if (FormChartMoved || Form_Main.FormMainMoved || Form_Settings.FormSettingsMoved || Form_Benchmark.FormBenchmarkMoved) return;
-            //Thread.Sleep(100);
-            //            Helpers.ConsolePrint("***********", "Form_Main.RigProfits.Count=" + Form_Main.RigProfits.Count.ToString() + " ProfitsCount" + ProfitsCount.ToString());
+
             if (Form_Main.RigProfits.Count <= ProfitsCount)
             {
                 return;
@@ -154,6 +153,10 @@ namespace NiceHashMiner.Forms
             totalRateAll = 0;
             //currentProfitAll = 0;
             currentProfitAllAPI = 0;
+            Helpers.ConsolePrint("ChartData", "totalPowerRate: " + Form_Main.lastRigProfit.totalPowerRate.ToString());
+
+
+            //Helpers.ConsolePrint("***********", (ExchangeRateApi.ConvertToActiveCurrency((MinersManager.GetTotalPowerRate() + Form_Main.PowerAllDevices) * Form_Main._factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()).ToString()));
             for (int i = 0; i < Form_Main.RigProfits.Count; i++)
             {
                 totalRateAll = totalRateAll + Form_Main.RigProfits[i].totalRate * 1000;
@@ -285,6 +288,9 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Series["Series1"].ChartType = SeriesChartType.Spline;
             chartRigProfit.Series["Series2"].Color = Color.Orange;
             chartRigProfit.Series["Series1"].Color = Color.Green;
+
+
+            //chartRigProfit.Series["Series1"].SetCustomProperty("LineTension", "0.9");//0.8 by default
             //chartRigProfit.Series["Series3"].Color = Color.Aqua;
 
             chartRigProfit.ChartAreas[0].AxisX.Minimum = 0;

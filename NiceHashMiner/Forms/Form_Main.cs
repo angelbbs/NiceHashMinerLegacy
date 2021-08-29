@@ -142,6 +142,8 @@ namespace NiceHashMiner
         public static double PowerAllDevices = 0;
         public static bool ProgramClosing = false;
         public static Form_Settings settings;// = new Form_Settings();
+        public static double totalPowerRate = 0.0d;
+        public static double totalPowerRateFiat = 0.0d;
 
         public struct RigProfitList
         {
@@ -149,6 +151,8 @@ namespace NiceHashMiner
             public double totalRate;
             public double currentProfit;
             public double currentProfitAPI;
+            public double currentPower;
+            public double totalPowerRate;
             public double unpaidAmount;
         }
         public static double ChartDataAvail = 0;
@@ -720,7 +724,12 @@ namespace NiceHashMiner
             }
             flowLayoutPanelRates.Visible = true;
 
-            //_loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_FireWall"));
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                this.Update();
+                Thread.Sleep(100);
+                _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_MSI_AB"));
+            }
             new Task(() => Firewall.AddToFirewall()).Start();
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -818,15 +827,12 @@ namespace NiceHashMiner
                     {
                         if (Updater.Updater.GetGITHUBVersion() > 0)
                         {
-                            //Form_Main.miners_url = "https://github.com/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_" +
-            //Form_Main.currentVersion.ToString().Trim() + "/miners.zip";
                             var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.MinersDownloadSetup));
                             SetChildFormCenter(downloadUnzipForm);
                             downloadUnzipForm.ShowDialog();
                         }
                         else if (Updater.Updater.GetGITLABVersion() > 0)
                         {
-                            //Form_Main.miners_url = "https://mark.nl.tab.digital/s/dcSqQD4dxq7TLMW/download";
                             var downloadUnzipForm = new Form_Loading(new MinersDownloader(new DownloadSetup(
             Form_Main.miners_url,
             "miners.zip",
@@ -1220,6 +1226,7 @@ namespace NiceHashMiner
                 Form_Main.lastRigProfit.totalRate = 0;
                 Form_Main.lastRigProfit.currentProfitAPI = 0;
                 Form_Main.lastRigProfit.currentProfit = 0;
+                Form_Main.lastRigProfit.currentPower = 0;
                 Form_Main.lastRigProfit.unpaidAmount = 0;
             } else
             {
@@ -1239,6 +1246,9 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
                 Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
+                Form_Main.lastRigProfit.currentPower = MinersManager.GetTotalPowerRate() + PowerAllDevices;
+                Form_Main.lastRigProfit.totalPowerRate = totalPowerRate;
+                //Form_Main.lastRigProfit.totalPowerRateFiat = totalPowerRateFiat;
 
                 NiceHashStats.GetRigProfit();
             } else
@@ -1246,19 +1256,10 @@ namespace NiceHashMiner
                 Form_Main.lastRigProfit.totalRate = 0;
                 Form_Main.lastRigProfit.currentProfitAPI = 0;
                 Form_Main.lastRigProfit.currentProfit = 0;
+                Form_Main.lastRigProfit.currentPower = 0;
                 Form_Main.lastRigProfit.unpaidAmount = 0;
             }
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
-            if (Form_Main.RigProfits.Count == 2)
-            {
-                /*
-                RigProfits.Clear();
-                Form_Main.lastRigProfit.DateTime = DateTime.Now.AddMinutes(-1);
-                Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
-                Form_Main.lastRigProfit.DateTime = DateTime.Now;
-                Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
-                */
-            }
 
             foreach (var RigProfit in Form_Main.RigProfits)
             {
@@ -1795,8 +1796,8 @@ public static void CloseChilds(Process parentId)
 
                 double totalPower = (TotalPower + (int)ConfigManager.GeneralConfig.PowerMB) / psuE;
                 totalPower = Math.Round(totalPower, 0);
-                var totalPowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 * _factorTimeUnit / 1000;
-                var PowerRateFiat = ExchangeRateApi.GetKwhPriceInBtc() * ExchangeRateApi.GetUsdExchangeRate() * totalPower * 24 * _factorTimeUnit / 1000;
+                totalPowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 * _factorTimeUnit / 1000;
+                totalPowerRateFiat = ExchangeRateApi.GetKwhPriceInBtc() * ExchangeRateApi.GetUsdExchangeRate() * totalPower * 24 * _factorTimeUnit / 1000;
 
                 var powerMB = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 / 1000;
 
