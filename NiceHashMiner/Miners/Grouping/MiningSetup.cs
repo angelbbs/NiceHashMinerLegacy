@@ -1,9 +1,10 @@
-using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Miners.Grouping
 {
-    public class MiningSetup {
+    public class MiningSetup
+    {
         public List<MiningPair> MiningPairs { get; }
         public string MinerPath { get; }
         public string MinerName { get; }
@@ -11,7 +12,8 @@ namespace NiceHashMiner.Miners.Grouping
         public AlgorithmType CurrentSecondaryAlgorithmType { get; }
         public bool IsInit { get; }
 
-        public MiningSetup(List<MiningPair> miningPairs) {
+        public MiningSetup(List<MiningPair> miningPairs)
+        {
             IsInit = false;
             CurrentAlgorithmType = AlgorithmType.NONE;
             if (miningPairs == null || miningPairs.Count <= 0) return;

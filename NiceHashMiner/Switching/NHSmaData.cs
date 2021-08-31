@@ -1,12 +1,12 @@
+using Newtonsoft.Json;
+using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
-using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
 
 namespace NiceHashMiner.Switching
 {
@@ -66,9 +66,9 @@ namespace NiceHashMiner.Switching
 
                     _currentSma[algo] = new NiceHashSma
                     {
-                        Port = (int) algo + 3333,
+                        Port = (int)algo + 3333,
                         Name = algo.ToString().ToLower(),
-                        Algo = (int) algo,
+                        Algo = (int)algo,
                         Paying = paying
                     };
                     //_recentPaying[algo] = new List<double>
@@ -92,7 +92,8 @@ namespace NiceHashMiner.Switching
                             Algo = (int)algo,
                             Paying = paying
                         };
-                    } else
+                    }
+                    else
                     {
                         _currentSma[algo] = new NiceHashSma
                         {
@@ -315,7 +316,7 @@ namespace NiceHashMiner.Switching
                 {
                     //if (_stableAlgorithms.Contains(kvp.Key) == Enabled)
                     //{
-                        dict[kvp.Key] = kvp.Value.Paying;
+                    dict[kvp.Key] = kvp.Value.Paying;
                     //}
                 }
             }

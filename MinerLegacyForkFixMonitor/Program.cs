@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Management;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MinerLegacyForkFixMonitor
@@ -37,15 +35,15 @@ namespace MinerLegacyForkFixMonitor
             Logger.ConfigureWithFile();
             var mainproc = Process.GetCurrentProcess();
             Helpers.ConsolePrint("Monitor", "Start monitoring process ID: " + argv[0]);
-            
+
             foreach (var process in Process.GetProcessesByName("device_detection"))
             {
                 try { process.Kill(); }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
-            
+
             while (true)
             {
                 try
@@ -59,7 +57,7 @@ namespace MinerLegacyForkFixMonitor
                     foreach (var process in Process.GetProcessesByName("miner"))//gmimer
                     {
                         try { process.Kill(); }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }
@@ -70,7 +68,8 @@ namespace MinerLegacyForkFixMonitor
                             var pToKill = Process.GetProcessById(pid);
                             Helpers.ConsolePrint("Monitor", "Killing PID: " + pToKill.ToString());
                             pToKill.Kill();
-                        } catch
+                        }
+                        catch
                         {
 
                         }

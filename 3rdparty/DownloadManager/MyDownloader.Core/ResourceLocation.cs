@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MyDownloader.Core
@@ -9,7 +8,7 @@ namespace MyDownloader.Core
     public class ResourceLocation
     {
         #region Fields
-        
+
         private string url;
         private bool authenticate;
         private string login;
@@ -58,7 +57,7 @@ namespace MyDownloader.Core
             rl.Login = login;
             rl.Password = password;
             return rl;
-        } 
+        }
         #endregion
 
         #region Properties
@@ -66,8 +65,8 @@ namespace MyDownloader.Core
         public string URL
         {
             get { return url; }
-            set 
-            { 
+            set
+            {
                 url = value;
                 BindProtocolProviderType();
             }
@@ -127,10 +126,10 @@ namespace MyDownloader.Core
         {
             provider = null;
 
-            if (! String.IsNullOrEmpty(this.URL))
+            if (!String.IsNullOrEmpty(this.URL))
             {
-                protocolProviderType = ProtocolProviderFactory.GetProviderType(this.URL);                
-            }            
+                protocolProviderType = ProtocolProviderFactory.GetProviderType(this.URL);
+            }
         }
 
         public IProtocolProvider BindProtocolProviderInstance(Downloader downloader)

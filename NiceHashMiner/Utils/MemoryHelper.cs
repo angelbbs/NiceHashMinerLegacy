@@ -13,7 +13,7 @@ namespace NiceHashMiner
                 formatter.Serialize(ms, obj);
                 ms.Position = 0;
 
-                return (T) formatter.Deserialize(ms);
+                return (T)formatter.Deserialize(ms);
             }
         }
     }

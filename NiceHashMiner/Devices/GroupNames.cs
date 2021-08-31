@@ -20,9 +20,9 @@ namespace NiceHashMiner.Devices
             {
                 return "CPU" + id;
             }
-            if ((int) type < Names.Length && (int) type >= 0)
+            if ((int)type < Names.Length && (int)type >= 0)
             {
-                return Names[(int) type];
+                return Names[(int)type];
             }
             return "UnknownGroup";
         }

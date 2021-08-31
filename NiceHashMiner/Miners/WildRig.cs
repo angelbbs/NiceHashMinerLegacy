@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using MyDownloader.Core.Common;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Miners.Parsing;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Miners
@@ -26,11 +19,13 @@ namespace NiceHashMiner.Miners
         private const string _lookForEnd = "60s:";
         private int count = 0;
 
-        public WildRig() : base("WildRig") {
+        public WildRig() : base("WildRig")
+        {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
         }
 
-        public override void Start(string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker)
+        {
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             ProcessHandle = _Start();
         }
@@ -44,7 +39,8 @@ namespace NiceHashMiner.Miners
             return deviceStringCommand;
         }
 
-        private string GetStartCommand(string url, string btcAdress, string worker) {
+        private string GetStartCommand(string url, string btcAdress, string worker)
+        {
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             var algo = "";
             var port = "";
@@ -108,11 +104,13 @@ namespace NiceHashMiner.Miners
             return "oops... strange algo";
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        protected override int GetMaxCooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds()
+        {
             return 60 * 1000 * 5;  // 5 min
         }
 
@@ -121,33 +119,39 @@ namespace NiceHashMiner.Miners
             return await GetSummaryCpuAsync();
         }
 
-        protected override bool IsApiEof(byte third, byte second, byte last) {
+        protected override bool IsApiEof(byte third, byte second, byte last)
+        {
             return third == 0x7d && second == 0xa && last == 0x7d;
         }
 
         #region Benchmark
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
             _benchmarkTimeWait = time;
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
-                + " -l "+ GetLogFileName()+ " --print-time=2";
+                + " -l " + GetLogFileName() + " --print-time=2";
         }
 
-        protected override void BenchmarkThreadRoutine(object CommandLine) {
+        protected override void BenchmarkThreadRoutine(object CommandLine)
+        {
             BenchmarkThreadRoutineAPI(CommandLine, _benchmarkTimeWait);
         }
 
-        protected override void ProcessBenchLinesAlternate(string[] lines) {
+        protected override void ProcessBenchLinesAlternate(string[] lines)
+        {
             var twoSecTotal = 0d;
             var sixtySecTotal = 0d;
             var twoSecCount = 0;
             var sixtySecCount = 0;
-            foreach (var line in lines) {
+            foreach (var line in lines)
+            {
                 BenchLines.Add(line);
                 var lineLowered = line.ToLower();
-                if (lineLowered.Contains(_lookForStart.ToLower())) {
+                if (lineLowered.Contains(_lookForStart.ToLower()))
+                {
                     /*
                     var speeds = Regex.Match(lineLowered, $"{_lookForStart.ToLower()} (.+?) {_lookForEnd.ToLower()}").Groups[1].Value.Split();
                     */
@@ -155,7 +159,7 @@ namespace NiceHashMiner.Miners
                     var speed = lineLowered.Substring(speedStart, lineLowered.Length - speedStart);
                     speed = speed.Replace(_lookForStart, "");
                     speed = speed.Substring(0, speed.IndexOf(_lookForEnd));
-                    if (count >= 8 || (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3) && count>=4 )) //пропустить первые 8
+                    if (count >= 8 || (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3) && count >= 4)) //пропустить первые 8
                     {
                         try
                         {
@@ -188,17 +192,21 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (sixtySecCount > 0 && sixtySecTotal > 0) {
+            if (sixtySecCount > 0 && sixtySecTotal > 0)
+            {
                 // Run iff 60s averages are reported
                 BenchmarkAlgorithm.BenchmarkSpeed = (sixtySecTotal / sixtySecCount) * 1000;
-            } else if (twoSecCount > 0) {
+            }
+            else if (twoSecCount > 0)
+            {
                 // Run iff no 60s averages are reported but 2.5s are
                 BenchmarkAlgorithm.BenchmarkSpeed = (twoSecTotal / twoSecCount) * 1000;
             }
 
         }
 
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
+        {
             CheckOutdata(outdata);
         }
         protected override bool BenchmarkParseLine(string outdata)

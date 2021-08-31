@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Devices.Algorithms
 {
@@ -62,7 +58,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             },
-            
+
             {
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()
@@ -108,7 +104,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
-                            
+
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                                 ExtraLaunchParameters = "--gpu-boost 3"
@@ -121,7 +117,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--gpu-boost 3"
                             }
-                            
+
                         }
             },
             {
@@ -129,6 +125,9 @@ namespace NiceHashMiner.Devices.Algorithms
                     new List<Algorithm>
                     {
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "ZHash")
+                        {
+                        },
+                        new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "KAWPOW")
                         {
                         },
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
@@ -207,12 +206,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
 
                             },
-                            
+
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
 
                             },
-                            
+
                  }
             },
             {
@@ -245,7 +244,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
                 }
             },
-            
+
             { MinerBaseType.CryptoDredge,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),

@@ -1,23 +1,18 @@
-using System;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Miners.Parsing;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Miners.Grouping;
-using System.Globalization;
-using System.Net.Sockets;
-using System.Text;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Net;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
-using System.Linq;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
+using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -34,11 +29,13 @@ namespace NiceHashMiner.Miners
         private double _power = 0.0d;
         double _powerUsage = 0;
 
-        public SRBMiner() : base("SRBMiner") {
+        public SRBMiner() : base("SRBMiner")
+        {
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
         }
 
-        public override void Start(string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker)
+        {
             IsInBenchmark = false;
             //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.SRBMiner;
 
@@ -46,7 +43,8 @@ namespace NiceHashMiner.Miners
             ProcessHandle = _Start();
         }
 
-        private string GetStartCommand(string url, string btcAddress, string worker) {
+        private string GetStartCommand(string url, string btcAddress, string worker)
+        {
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string username = GetUsername(btcAddress, worker);
             url = url.Replace("stratum+tcp://", "");
@@ -55,7 +53,6 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                var port = "3390";
                 return $" --main-pool-reconnect 2 --disable-cpu --a0-is-zil --multi-algorithm-job-mode 3 " +
                     $"--algorithm ethash;autolykos2 " +
                     $"--pool {ethurl}:3353;{zilurl}:3390 " +
@@ -79,7 +76,6 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                var algo = "ethash";
                 var port = "3353";
                 return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
                + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
@@ -98,7 +94,7 @@ namespace NiceHashMiner.Miners
                + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
                "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
-            
+
             return "unsupported algo";
 
         }
@@ -118,15 +114,11 @@ namespace NiceHashMiner.Miners
             IsInBenchmark = true;
             var LastCommandLine = GetStartCommand(url, btcAddress, worker);
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            string algo;
-            string port;
             string username = GetUsername(btcAddress, worker);
             url = url.Replace("stratum+tcp://", "");
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
-                algo = "randomxmonero";
-                port = "3380";
                 ApiPort = 4040;
 
                 return $" --algorithm randomx"
@@ -135,9 +127,6 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                algo = "ethash";
-                port = "3353";
-
                 return $" --disable-cpu --algorithm ethash" +
                     $" --pool stratum+tcp://eu1.ethermine.org:4444" +
                     $" --wallet 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.SRBMiner" +
@@ -146,9 +135,6 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                algo = "autolykos2";
-                port = "3390";
-
                 return $" --disable-cpu --algorithm autolykos2" +
                     $" --pool stratum+tcp://pool.eu.woolypooly.com:3100" +
                     $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
@@ -159,7 +145,8 @@ namespace NiceHashMiner.Miners
             return "unknown";
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             StopDriver();
         }
@@ -216,7 +203,7 @@ namespace NiceHashMiner.Miners
 
             dynamic resp = JsonConvert.DeserializeObject(ResponseFromSRBMiner);
             //Helpers.ConsolePrint("API ResponseFromSRBMiner:", ResponseFromSRBMiner.ToString());
-            
+
             try
             {
                 int totalsMain = 0;
@@ -240,7 +227,8 @@ namespace NiceHashMiner.Miners
                                 mPair.Device.MiningHashrate = gpu_hr;
                                 _power = mPair.Device.PowerUsage;
 
-                            } catch (Exception ex)
+                            }
+                            catch (Exception ex)
                             {
                                 Helpers.ConsolePrint("API Exception:", ex.ToString());
                             }
@@ -290,7 +278,8 @@ namespace NiceHashMiner.Miners
                         {
                             totalsMain = resp.algorithms[1].hashrate.gpu.total;
                             totalsSecond = resp.algorithms[0].hashrate.gpu.total;
-                        } else
+                        }
+                        else
                         {
                             totalsMain = resp.algorithms[0].hashrate.gpu.total;
                         }
@@ -304,7 +293,7 @@ namespace NiceHashMiner.Miners
                             _power = mPair.Device.PowerUsage;
                         }
                     }
-                    
+
                     ad.Speed = totalsMain;
                     ad.SecondarySpeed = totalsSecond;
 
@@ -317,7 +306,8 @@ namespace NiceHashMiner.Miners
                         CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                     }
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("API error", ex.Message);
                 Helpers.ConsolePrint("API error", ex.ToString());
@@ -330,17 +320,19 @@ namespace NiceHashMiner.Miners
             return ad;
         }
 
-        protected override bool IsApiEof(byte third, byte second, byte last) {
+        protected override bool IsApiEof(byte third, byte second, byte last)
+        {
             return third == 0x7d && second == 0xa && last == 0x7d;
         }
 
         #region Benchmark
 
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
-               _benchmarkTimeWait = time;
+            _benchmarkTimeWait = time;
             return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
         }
 
@@ -355,7 +347,7 @@ namespace NiceHashMiner.Miners
 
             int delay_before_calc_hashrate = 10;
             int MinerStartDelay = 10;
-            
+
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
@@ -638,7 +630,7 @@ namespace NiceHashMiner.Miners
                         Helpers.ConsolePrint(MinerTag(), ex.ToString());
                     }
                 }
-                
+
             }
         }
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)

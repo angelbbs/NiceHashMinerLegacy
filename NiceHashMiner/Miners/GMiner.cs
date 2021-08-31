@@ -1,23 +1,20 @@
 using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
+using System.Management;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
 using System.Windows.Forms;
-using System.Net;
-using System.Management;
-using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -29,7 +26,7 @@ namespace NiceHashMiner.Miners
         private const string LookForEnd = "sol/s";
         private const string LookForEndDual = "h/s  ";
         private const double DevFee = 2.0;
-        string  gminer_var = "";
+        string gminer_var = "";
         protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
         private FileStream fs;
         private int offset = 0;
@@ -50,7 +47,8 @@ namespace NiceHashMiner.Miners
             {
                 if (File.Exists("miners\\Gminer\\" + GetLogFileName()))
                     File.Delete("miners\\Gminer\\" + GetLogFileName());
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint(MinerTag(), "Log del error: " + ex.Message);
             }
@@ -88,7 +86,7 @@ namespace NiceHashMiner.Miners
         }
         private string GetStartCommand(string url, string btcAddress, string worker)
         {
-            var algo ="";
+            var algo = "";
             var algoName = "";
             var pers = "";
             var nicehashstratum = "";
@@ -156,7 +154,7 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
                 nicehashstratum = " --proto stratum";
             }
-            
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
                 algo = "kawpow";
@@ -193,7 +191,8 @@ namespace NiceHashMiner.Miners
                 {
                     gminer_var = variables.gminer_var1;
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
-                } else
+                }
+                else
                 {
                     gminer_var = variables.gminer_var2;
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
@@ -258,7 +257,7 @@ namespace NiceHashMiner.Miners
                     var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
 
                     int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                    Helpers.ConsolePrint("BENCHMARK", "gminer.exe PID: "+ pid.ToString());
+                    Helpers.ConsolePrint("BENCHMARK", "gminer.exe PID: " + pid.ToString());
                     KillProcessAndChildren(pid);
                     BenchmarkHandle.Kill();
                     BenchmarkHandle.Close();
@@ -290,7 +289,7 @@ namespace NiceHashMiner.Miners
             }
             catch { }
             //if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
-            
+
         }
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
@@ -311,7 +310,7 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
 
-            
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 ret = " --color 0 --pec --algo BeamHashII" +
@@ -393,7 +392,7 @@ namespace NiceHashMiner.Miners
                 " --server kawpow.eu.nicehash.com:3385 --user " + username + " --pass x --proto stratum" +
                 GetDevicesCommandString();
             }
-            
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckaRooz29)
             {
                 ret = " --color 0 --pec --algo cuckarooz29" +
@@ -427,7 +426,7 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
-                BenchmarkHandle = BenchmarkStartProcess((string) commandLine);
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
                 benchmarkTimer.Start();
@@ -443,7 +442,7 @@ namespace NiceHashMiner.Miners
                         || BenchmarkSignalTimedout
                         || BenchmarkException != null)
                     {
-                         break;
+                        break;
                     }
                     // wait a second due api request
                     Thread.Sleep(1000);
@@ -552,13 +551,15 @@ namespace NiceHashMiner.Miners
                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroom)
             {
                 return GetNumber(outdata, LookForStart, "g/s");
-            } else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW
-                //MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
-                )
+            }
+            else if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
+              MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW
+              //MiningSetup.CurrentAlgorithmType == AlgorithmType.Cuckaroo29BFC ||
+              )
             {
                 return GetNumber(outdata, LookForStart, "h/s");
-            } else
+            }
+            else
             {
                 return GetNumber(outdata, LookForStart, LookForEnd);
             }
@@ -566,7 +567,7 @@ namespace NiceHashMiner.Miners
 
         protected double GetNumberSecond(string outdata)
         {
-                return GetNumber(outdata, LookForStartDual, LookForEndDual);
+            return GetNumber(outdata, LookForStartDual, LookForEndDual);
         }
         protected double GetNumber(string outdata, string lookForStart, string lookForEnd)
         {
@@ -590,7 +591,7 @@ namespace NiceHashMiner.Miners
                     speed = speed.Replace("m", "");
                 }
 
-               // Helpers.ConsolePrint("speed", speed);
+                // Helpers.ConsolePrint("speed", speed);
                 speed = speed.Trim();
                 try
                 {
@@ -640,13 +641,12 @@ namespace NiceHashMiner.Miners
 
 
             ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-            
+
             string ResponseFromGMiner;
             double total = 0;
-            double totalSec = 0;
             try
             {
-                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString()+"/stat");
+                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/stat");
                 WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
                 WR.Timeout = 30 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
@@ -661,7 +661,7 @@ namespace NiceHashMiner.Miners
                 Reader.Close();
                 Response.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -698,10 +698,12 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint("GMiner:", "resp - null");
                 }
 
-            } catch (Exception ex)
+            }
+            catch (Exception)
             {
                 Helpers.ConsolePrint("GMiner API:", "Error JSON parsing");
-            } finally
+            }
+            finally
             {
                 ad.Speed = total;
 
@@ -715,7 +717,7 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-                Thread.Sleep(100);
+            Thread.Sleep(100);
             /*
             //костыль из-за бага в Anti-hacking
             if (fs.Length > offset)

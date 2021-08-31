@@ -1,20 +1,11 @@
 ﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using SystemTimer = System.Timers.Timer;
 using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner.Forms
@@ -52,7 +43,8 @@ namespace NiceHashMiner.Forms
             if (Form_Main.ChartDataAvail > 0)
             {
                 buttonClear.BackgroundImage = Properties.Resources.recycle2;
-            } else
+            }
+            else
             {
                 buttonClear.BackgroundImage = Properties.Resources.recycle1;
             }
@@ -108,7 +100,7 @@ namespace NiceHashMiner.Forms
             {
                 return;
             }
-                if (Form_Main.RigProfits.Count == 0)
+            if (Form_Main.RigProfits.Count == 0)
             {
                 return;
             }
@@ -120,7 +112,7 @@ namespace NiceHashMiner.Forms
                 //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
                 chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
                 chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
-               
+
             }
             else
             {
@@ -166,7 +158,7 @@ namespace NiceHashMiner.Forms
 
             ProfitsCount++;
 
-            var cpAPI =currentProfitAllAPI / totalRateAll;
+            var cpAPI = currentProfitAllAPI / totalRateAll;
             ce = currentProfitAllAPI / (Form_Main.RigProfits.Count);
             cel = totalRateAll / (Form_Main.RigProfits.Count);
             string ces = "";
@@ -201,12 +193,12 @@ namespace NiceHashMiner.Forms
             }
             if (currentProfitAllAPI != 0 && totalRateAll != 0)
             {
-                label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " " + 
+                label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " " +
                     Math.Round((cpAPI * 100), 1).ToString() + "%";
             }
             if (ce != 0)
             {
-                label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " " + ces + " " + CurrencyName; 
+                label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " " + ces + " " + CurrencyName;
             }
             if (cel != 0)
             {
@@ -264,7 +256,8 @@ namespace NiceHashMiner.Forms
             if (ConfigManager.GeneralConfig.ChartFiat)
             {
                 CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            } else
+            }
+            else
             {
                 CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
             }
@@ -320,13 +313,13 @@ namespace NiceHashMiner.Forms
                 ChartData(null, null);
                 chartRigProfit.Series[0].Points[0].AxisLabel = Form_Main.RigProfits[0].DateTime.ToString("dd-MM-yyyy HH:mm:ss");
             }
-            
+
             if (Form_Main.RigProfits.Count != 0)
             {
                 ChartData(null, null);
                 chartRigProfit.Series[0].Points[0].AxisLabel = Form_Main.RigProfits[0].DateTime.ToString("dd-MM-yyyy HH:mm:ss");
             }
-            
+
             chartRigProfit.Show();
         }
 
@@ -503,7 +496,7 @@ namespace NiceHashMiner.Forms
                 MessageBox.Show(International.GetText("Form_Profit_Chart_Warning1"),
         International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            
+
             ConfigManager.GeneralConfig.ChartEnable = checkBox_EnableChart.Checked;
             labelChartDisabled.Visible = !checkBox_EnableChart.Checked;
             chartRigProfit.Enabled = ConfigManager.GeneralConfig.ChartEnable;

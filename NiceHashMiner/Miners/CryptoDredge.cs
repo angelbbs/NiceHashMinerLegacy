@@ -1,22 +1,15 @@
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
-using System.Threading;
-using System.Net;
-using System.IO;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Text;
 using System.Net.Sockets;
-using System.Windows.Forms;
-using NiceHashMiner.Devices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -50,7 +43,7 @@ namespace NiceHashMiner.Miners
             }
             var username = GetUsername(btcAdress, worker);
 
-         //    IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.CryptoDredge;
+            //    IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.CryptoDredge;
 
             var algo = "";
             var apiBind = "";
@@ -102,7 +95,8 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(200);
             foreach (var process in Process.GetProcessesByName("CryptoDredge"))
             {
-                try {
+                try
+                {
                     process.Kill();
                     Thread.Sleep(200);
                     process.Kill();
@@ -125,7 +119,7 @@ namespace NiceHashMiner.Miners
             var algo = "--algo " + MiningSetup.MinerName;
             var commandLine = "";
             _benchmarkTimeWait = time;
-            TotalCount = _benchmarkTimeWait/60;
+            TotalCount = _benchmarkTimeWait / 60;
             /*
             if (File.Exists("miners\\CryptoDredge\\" + GetLogFileName()))
                 File.Delete("miners\\CryptoDredge\\" + GetLogFileName());
@@ -150,7 +144,7 @@ namespace NiceHashMiner.Miners
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-            //    TotalCount = 2;
+                //    TotalCount = 2;
                 Total = 0.0d;
                 return commandLine;
             }
@@ -163,7 +157,7 @@ namespace NiceHashMiner.Miners
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-              //  TotalCount = 2;
+                //  TotalCount = 2;
                 Total = 0.0d;
                 return commandLine;
             }
@@ -178,7 +172,7 @@ namespace NiceHashMiner.Miners
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 2;
+                //   TotalCount = 2;
                 Total = 0.0d;
                 return commandLine;
             }
@@ -192,7 +186,7 @@ namespace NiceHashMiner.Miners
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 3;
+                //   TotalCount = 3;
                 Total = 0.0d;
                 return commandLine;
             }
@@ -206,7 +200,7 @@ namespace NiceHashMiner.Miners
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-             //   TotalCount = 3;
+                //   TotalCount = 3;
                 Total = 0.0d;
                 return commandLine;
             }
@@ -221,7 +215,7 @@ namespace NiceHashMiner.Miners
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
 
-           // TotalCount = 2;
+            // TotalCount = 2;
             Total = 0.0d;
             return commandLine;
         }
@@ -383,9 +377,9 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
             }
-            
-           if (resp != null )
-           {
+
+            if (resp != null)
+            {
                 var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.ID).ToList();
                 if (Form_Main.NVIDIA_orderBug)
                 {
@@ -429,12 +423,12 @@ namespace NiceHashMiner.Miners
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
 
-               if (ad.Speed < 0)
-               {
-                   Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
-                   Restart();
-               }
-           }
+                if (ad.Speed < 0)
+                {
+                    Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
+                    Restart();
+                }
+            }
             return ad;
         }
 

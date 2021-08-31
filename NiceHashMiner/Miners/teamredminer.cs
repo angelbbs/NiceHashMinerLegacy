@@ -1,23 +1,15 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Globalization;
-using System.Net;
-using System.Net.Sockets;
-using System.Windows.Forms;
-using System.Management;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
-using System.Linq;
 
 namespace NiceHashMiner.Miners
 {
@@ -39,13 +31,15 @@ namespace NiceHashMiner.Miners
 
         }
 
-        protected override int GetMaxCooldownTimeInMilliseconds() {
-            return 60*1000;
+        protected override int GetMaxCooldownTimeInMilliseconds()
+        {
+            return 60 * 1000;
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
-        //    Killteamredminer();
+            //    Killteamredminer();
         }
         static int GetWinVer(Version ver)
         {
@@ -149,7 +143,8 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
             var CommandLine = "";
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
             string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
@@ -204,7 +199,7 @@ namespace NiceHashMiner.Miners
             }
 
             CommandLine += GetDevicesCommandString() +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD)+
+                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD) +
                 apiBind;
             TotalCount = (time / 30) * 2;
             return CommandLine;

@@ -9,7 +9,7 @@ namespace HashLib.Crypto.SHA3
         {
         }
     }
-   
+
 
     internal class Keccak256 : Keccak
     {
@@ -49,7 +49,7 @@ namespace HashLib.Crypto.SHA3
         {
             ulong[] data = Converters.ConvertBytesToULongs(a_data, a_index, BlockSize);
 
-            for (int j = 0; j<BlockSize / 8; j++)
+            for (int j = 0; j < BlockSize / 8; j++)
                 m_state[j] ^= data[j];
 
             ulong Aba, Abe, Abi, Abo, Abu;
@@ -121,11 +121,11 @@ namespace HashLib.Crypto.SHA3
             Aso = m_state[23];
             Asu = m_state[24];
 
-            Ca = Aba^Aga^Aka^Ama^Asa;
-            Ce = Abe^Age^Ake^Ame^Ase;
-            Ci = Abi^Agi^Aki^Ami^Asi;
-            Co = Abo^Ago^Ako^Amo^Aso;
-            Cu = Abu^Agu^Aku^Amu^Asu;
+            Ca = Aba ^ Aga ^ Aka ^ Ama ^ Asa;
+            Ce = Abe ^ Age ^ Ake ^ Ame ^ Ase;
+            Ci = Abi ^ Agi ^ Aki ^ Ami ^ Asi;
+            Co = Abo ^ Ago ^ Ako ^ Amo ^ Aso;
+            Cu = Abu ^ Agu ^ Aku ^ Amu ^ Asu;
             Da = Cu ^ (Ce << 1) ^ (Ce >> (64 - 1));
             De = Ca ^ (Ci << 1) ^ (Ci >> (64 - 1));
             Di = Ce ^ (Co << 1) ^ (Co >> (64 - 1));

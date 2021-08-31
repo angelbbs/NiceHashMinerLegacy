@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyDownloader.Core
 {
@@ -39,7 +37,7 @@ namespace MyDownloader.Core
         }
 
         #endregion
-    } 
+    }
     #endregion
 
     #region DownloaderEventArgs
@@ -59,7 +57,7 @@ namespace MyDownloader.Core
             this.downloader = download;
         }
 
-        public DownloaderEventArgs(Downloader download, bool willStart): this(download)
+        public DownloaderEventArgs(Downloader download, bool willStart) : this(download)
         {
             this.willStart = willStart;
         }
@@ -76,10 +74,10 @@ namespace MyDownloader.Core
         public bool WillStart
         {
             get { return willStart; }
-        }	
+        }
 
         #endregion
-    } 
+    }
     #endregion
 
     #region SegmentEventArgs
@@ -110,6 +108,6 @@ namespace MyDownloader.Core
         }
 
         #endregion
-    } 
+    }
     #endregion
 }

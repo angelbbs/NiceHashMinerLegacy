@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NiceHashMiner.Algorithms
 {

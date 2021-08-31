@@ -4,8 +4,8 @@ namespace HashLib
 {
     public static class HashFactory
     {
-      
-       
+
+
 
         public static class Crypto
         {

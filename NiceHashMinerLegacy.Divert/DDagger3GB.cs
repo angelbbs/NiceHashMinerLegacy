@@ -1,22 +1,13 @@
-using System;
-using WinDivertSharp;
-using WinDivertSharp.WinAPI;
-using System.Runtime.InteropServices;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Threading.Tasks;
-using System.Threading;
-using Newtonsoft.Json;
-using System.Net.NetworkInformation;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Security.Principal;
-using System.Management;
-using System.Runtime.ExceptionServices;
-using System.Text.RegularExpressions;
-using System.Linq;
 using HashLib;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using WinDivertSharp;
 
 namespace NiceHashMinerLegacy.Divert
 {
@@ -66,7 +57,7 @@ namespace NiceHashMinerLegacy.Divert
 
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr Dagger3GBDivertStart(List<string> processIdList, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
-            {
+        {
             Divert.Dagger3GBdivert_running = true;
 
             filter = "(!loopback && outbound ? (tcp.DstPort == 3353)" +
@@ -103,25 +94,22 @@ namespace NiceHashMinerLegacy.Divert
         {
             var packet = new WinDivertBuffer();
             var addr = new WinDivertAddress();
-            int np = 1;
             uint readLen = 0;
             List<string> InboundPorts = new List<string>();
 
-        //Span<byte> packetData = null;
+            //Span<byte> packetData = null;
 
             IntPtr recvEvent = IntPtr.Zero;
-            bool modified = false;
             bool result;
-           
+
             do
             {
                 try
                 {
-nextCycle:
+                    nextCycle:
                     if (Divert.Dagger3GBdivert_running)
                     {
                         readLen = 0;
-                        modified = false;
                         PacketPayloadData = null;
                         packet.Dispose();
 
@@ -157,7 +145,7 @@ nextCycle:
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             //******************************
                             if (parse_result.PacketPayloadLength > 20)
-                                {
+                            {
                                 PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 PacketPayloadData = PacketPayloadData.Replace("}{", "}" + (char)10 + "{");
                                 //Helpers.ConsolePrint("WinDivertSharp", "<- " + PacketPayloadData);
@@ -179,7 +167,7 @@ nextCycle:
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch <= MaxEpoch) 
+                                            if (epoch <= MaxEpoch)
                                             {
                                                 Divert.Dagger3GBEpochCount = 0;
                                             }
@@ -216,10 +204,11 @@ nextCycle:
                         */
                         if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
                         {
-                              Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
                         }
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
                     Thread.Sleep(500);

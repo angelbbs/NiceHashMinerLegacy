@@ -4,7 +4,10 @@ using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,9 +16,6 @@ using System.Linq;
 using System.Management;
 using System.Threading;
 using System.Windows.Forms;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
 using SystemTimer = System.Timers.Timer;
 using Timer = System.Windows.Forms.Timer;
 
@@ -27,19 +27,14 @@ namespace NiceHashMiner
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data;
-    using System.Drawing.Drawing2D;
-    using System.Drawing.Text;
     using System.IO;
     using System.IO.MemoryMappedFiles;
     using System.Net;
     using System.Net.Sockets;
     using System.Reflection;
     using System.Runtime.InteropServices;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using System.Text;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
-    using static NiceHashMiner.Devices.ComputeDeviceManager.Query;
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
@@ -201,7 +196,7 @@ namespace NiceHashMiner
                     _foreColor = ConfigManager.GeneralConfig.ColorProfiles.DefaultColor[1];
                     _windowColor = ConfigManager.GeneralConfig.ColorProfiles.DefaultColor[2];
                     _textColor = ConfigManager.GeneralConfig.ColorProfiles.DefaultColor[3];
-                     break;
+                    break;
                 case 1: //gray
                     _backColor = ConfigManager.GeneralConfig.ColorProfiles.Gray[0];
                     _foreColor = ConfigManager.GeneralConfig.ColorProfiles.Gray[1];
@@ -309,7 +304,7 @@ namespace NiceHashMiner
             groupBox1Top = groupBox1.Top;
 
             devicesListViewEnableControl1.Height = 129 + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
-            groupBox1Top += ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1 ;
+            groupBox1Top += ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
             //this.Height += 16;
 
             if (ConfigManager.GeneralConfig.BitcoinAddressNew.Length == 0)
@@ -334,7 +329,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "41";
+            Text += "41.1";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -358,8 +353,8 @@ namespace NiceHashMiner
             }
             else
             {
-               // _emtpyGroupPanelHeight = 59;
-               // _mainFormHeight = 330 - _emtpyGroupPanelHeight;
+                // _emtpyGroupPanelHeight = 59;
+                // _mainFormHeight = 330 - _emtpyGroupPanelHeight;
             }
             //_mainFormHeight = Size.Height;
             AntivirusInstalled = Helpers.AntivirusInstalled();
@@ -405,7 +400,8 @@ namespace NiceHashMiner
             {
                 label_Uptime.Text = International.GetText("Form_Main_Uptime");
                 label_Uptime.Visible = true;
-            } else
+            }
+            else
             {
                 label_Uptime.Visible = false;
             }
@@ -618,7 +614,8 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("CheckGithubDownload: ", e.Error.Message);
                 return;
-            } else
+            }
+            else
             {
                 Helpers.ConsolePrint("CheckGithubDownload", "true");
             }
@@ -660,8 +657,9 @@ namespace NiceHashMiner
             if (!ConfigManager.GeneralConfig.AutoStartMining)
             {
                 buttonStopMining.Enabled = false;
-               // buttonBTC_Clear.Enabled = true;
-            } else
+                // buttonBTC_Clear.Enabled = true;
+            }
+            else
             {
                 buttonStopMining.Text = buttonStopMining.Text + "...";
             }
@@ -754,7 +752,7 @@ namespace NiceHashMiner
                         {
                             var MonitorProc = new Process
                             {
-                                StartInfo = {FileName = "common\\NvidiaGPUGetDataHost.exe"}
+                                StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
                             };
 
                             MonitorProc.StartInfo.UseShellExecute = false;
@@ -771,7 +769,7 @@ namespace NiceHashMiner
                     }
                 }
             }
-                _loadingScreen.SetValueAndMsg(7, "Checking servers locations");
+            _loadingScreen.SetValueAndMsg(7, "Checking servers locations");
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
@@ -817,9 +815,9 @@ namespace NiceHashMiner
 
             if (!MinersExistanceChecker.IsMinersBinsInit())
             {
-                 var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                       International.GetText("Warning_with_Exclamation"),
-                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
+                var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                      International.GetText("Warning_with_Exclamation"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
                 if (result == DialogResult.Yes)
                 {
                     ConfigManager.GeneralConfigFileCommit();
@@ -842,7 +840,8 @@ namespace NiceHashMiner
                             SetChildFormCenter(downloadUnzipForm);
                             downloadUnzipForm.ShowDialog();
                         }
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         Helpers.ConsolePrint("Download miners", ex.ToString());
                     }
@@ -1000,7 +999,7 @@ namespace NiceHashMiner
                 buttonBTC_Clear.Enabled = true;
             }
         }
-            private void AutoStartTimer_Tick(object sender, EventArgs e)
+        private void AutoStartTimer_Tick(object sender, EventArgs e)
         {
             _autostartTimer.Stop();
             _autostartTimer = null;
@@ -1063,7 +1062,8 @@ namespace NiceHashMiner
                     this.Width = ConfigManager.GeneralConfig.FormWidth;
                     //this.Height = ConfigManager.GeneralConfig.FormHeight;
                     this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
-                } else
+                }
+                else
                 {
                     // this.Width = 660; // min width
                 }
@@ -1089,7 +1089,8 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfig.ColorProfileIndex == 13)
             {
                 buttonLogo.Image = Properties.Resources.NHM_logo_xxsmall_light92;
-            } else
+            }
+            else
             {
                 buttonLogo.Image = Properties.Resources.NHM_logo_xxsmall_light92w;
             }
@@ -1155,7 +1156,7 @@ namespace NiceHashMiner
                 }
 
 
-                    foreach (var lbl in this.Controls.OfType<Button>()) lbl.BackColor = _backColor;
+                foreach (var lbl in this.Controls.OfType<Button>()) lbl.BackColor = _backColor;
                 foreach (var lbl in this.Controls.OfType<Button>())
                 {
                     lbl.ForeColor = _textColor;
@@ -1228,7 +1229,8 @@ namespace NiceHashMiner
                 Form_Main.lastRigProfit.currentProfit = 0;
                 Form_Main.lastRigProfit.currentPower = 0;
                 Form_Main.lastRigProfit.unpaidAmount = 0;
-            } else
+            }
+            else
             {
                 NiceHashStats.GetRigProfit();
             }
@@ -1251,7 +1253,8 @@ namespace NiceHashMiner
                 //Form_Main.lastRigProfit.totalPowerRateFiat = totalPowerRateFiat;
 
                 NiceHashStats.GetRigProfit();
-            } else
+            }
+            else
             {
                 Form_Main.lastRigProfit.totalRate = 0;
                 Form_Main.lastRigProfit.currentProfitAPI = 0;
@@ -1391,7 +1394,7 @@ namespace NiceHashMiner
                 {
                     if (File.Exists("TEMP\\github.test")) File.Delete("TEMP\\github.test");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                 }
@@ -1485,11 +1488,11 @@ public static void CloseChilds(Process parentId)
         public bool CheckGithub()
         {
             Helpers.ConsolePrint("GITHUB", "Check new version");
-                Helpers.ConsolePrint("GITHUB", "Current version: " + Form_Main.currentVersion.ToString());
-                Helpers.ConsolePrint("GITHUB", "Current build: " + Form_Main.currentBuild.ToString());
+            Helpers.ConsolePrint("GITHUB", "Current version: " + Form_Main.currentVersion.ToString());
+            Helpers.ConsolePrint("GITHUB", "Current build: " + Form_Main.currentBuild.ToString());
             bool ret = CheckNewVersion();
-                Helpers.ConsolePrint("GITHUB", "GITHUB Version: " + Form_Main.githubVersion.ToString());
-                Helpers.ConsolePrint("GITHUB", "GITHUB Build: " + Form_Main.githubBuild.ToString());
+            Helpers.ConsolePrint("GITHUB", "GITHUB Version: " + Form_Main.githubVersion.ToString());
+            Helpers.ConsolePrint("GITHUB", "GITHUB Build: " + Form_Main.githubBuild.ToString());
             Helpers.ConsolePrint("GITLAB", "GITLAB Version: " + Form_Main.gitlabVersion.ToString());
             //SetVersion(ghv);
             return ret;
@@ -1584,7 +1587,7 @@ public static void CloseChilds(Process parentId)
                     Helpers.ConsolePrint("NICEHASH", "OnGPUsLost.bat error: " + ex.Message);
                 }
             }
-                CheckVideoControllersCount = check > -1;
+            CheckVideoControllersCount = check > -1;
         }
 
         private void InitFlowPanelStart()
@@ -1640,14 +1643,14 @@ public static void CloseChilds(Process parentId)
                 panelHeight = (int)((GroupProfitControl)control).Size.Height * 1.1;
                 groupBox1Height = (int)((visibleGroupCount) * panelHeight - panelHeight / 3.0f);
             }
-           // MiningSession._runningGroupMiners = null;
+            // MiningSession._runningGroupMiners = null;
             groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1Height);
 
             groupBox1.Top = groupBox1Top;
             // set new height
             int newHeight = _mainFormHeight + groupBox1Height - (int)panelHeight / 2;
             //this.MaximumSize = new Size(-1, newHeight);
-           // Form_Main.ActiveForm.MinimumSize.Height = newHeight;
+            // Form_Main.ActiveForm.MinimumSize.Height = newHeight;
             Size = new Size(Size.Width, newHeight + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1);
         }
 
@@ -1662,7 +1665,7 @@ public static void CloseChilds(Process parentId)
             //хрень. надо поправить
 
             string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
-            speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " +speedString + "\\b\\par}";
+            speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + speedString + "\\b\\par}";
             if (iApiData.AlgorithmID == AlgorithmType.AutolykosZil || (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto))
             {
                 if (iApiData.SecondarySpeed > 0)
@@ -1686,7 +1689,7 @@ public static void CloseChilds(Process parentId)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-
+            Helpers.ConsolePrint("*****", "rateCurrencyString: " + rateCurrencyString);
             try
             {
                 // flowLayoutPanelRatesIndex may be OOB, so catch
@@ -1741,15 +1744,15 @@ public static void CloseChilds(Process parentId)
 
             try
             {
-            if (InvokeRequired)
-            {
-                Invoke((Action)HideNotProfitable);
-            }
-            else
-            {
-                label_NotProfitable.Visible = false;
-                label_NotProfitable.Invalidate();
-            }
+                if (InvokeRequired)
+                {
+                    Invoke((Action)HideNotProfitable);
+                }
+                else
+                {
+                    label_NotProfitable.Visible = false;
+                    label_NotProfitable.Invalidate();
+                }
             }
             catch (Exception e)
             {
@@ -1764,8 +1767,8 @@ public static void CloseChilds(Process parentId)
                 new Task(() => MinerStatsCheck_Tick(null, null));
                 // BeginInvoke((Action)(() =>
                 //{
-               // MinerStatsCheck_Tick(null, null);
-               //}));
+                // MinerStatsCheck_Tick(null, null);
+                //}));
             }
             catch (Exception e)
             {
@@ -1798,9 +1801,7 @@ public static void CloseChilds(Process parentId)
                 totalPower = Math.Round(totalPower, 0);
                 totalPowerRate = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 * _factorTimeUnit / 1000;
                 totalPowerRateFiat = ExchangeRateApi.GetKwhPriceInBtc() * ExchangeRateApi.GetUsdExchangeRate() * totalPower * 24 * _factorTimeUnit / 1000;
-
                 var powerMB = ExchangeRateApi.GetKwhPriceInBtc() * totalPower * 24 / 1000;
-
                 double totalPowerRateDec = 0;
                 if (ConfigManager.GeneralConfig.DecreasePowerCost)
                 {
@@ -1811,7 +1812,7 @@ public static void CloseChilds(Process parentId)
                 {
                     if (totalPowerRate != 0)
                     {
-                        powerString = "(-" + (totalPowerRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
+                        powerString = "(-" + (totalPowerRate * 1000).ToString("F5", CultureInfo.InvariantCulture) + ") ";
                     }
                     if (ConfigManager.GeneralConfig.DecreasePowerCost)
                     {
@@ -1821,14 +1822,14 @@ public static void CloseChilds(Process parentId)
                     toolStripStatusLabelBTCDayText.Text = powerString + " " +
                     "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                     toolStripStatusLabelGlobalRateValue.Text =
-                ((totalRate - totalPowerRateDec) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                ((totalRate - totalPowerRateDec) * 1000).ToString("F5", CultureInfo.InvariantCulture);
 
                 }
                 else
                 {
                     if (totalPowerRate != 0)
                     {
-                        powerString = "(-" + (totalPowerRate * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + ") ";
+                        powerString = "(-" + (totalPowerRate).ToString("F5", CultureInfo.InvariantCulture) + ") ";
                     }
                     if (ConfigManager.GeneralConfig.DecreasePowerCost)
                     {
@@ -1837,12 +1838,12 @@ public static void CloseChilds(Process parentId)
                     toolStripStatusLabelBTCDayText.Text = powerString + " " +
                         "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                     toolStripStatusLabelGlobalRateValue.Text =
-                        ((totalRate - totalPowerRateDec) * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                        ((totalRate - totalPowerRateDec)).ToString("F5", CultureInfo.InvariantCulture);
                 }
 
                 if (totalPowerRate != 0)
                 {
-                    powerString = "(-" + ExchangeRateApi.ConvertToActiveCurrency((totalPowerRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                    powerString = "(-" + ExchangeRateApi.ConvertToActiveCurrency((totalPowerRate * ExchangeRateApi.GetUsdExchangeRate()))
                     .ToString("F2", CultureInfo.InvariantCulture) + ") ";
                     if (ConfigManager.GeneralConfig.DecreasePowerCost)
                     {
@@ -1855,7 +1856,7 @@ public static void CloseChilds(Process parentId)
                 }
                 //toolStrip7
                 toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi.ConvertToActiveCurrency(
-                    (totalRate - totalPowerRateDec) * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate())
+                    (totalRate - totalPowerRateDec) * ExchangeRateApi.GetUsdExchangeRate())
                     .ToString("F2", CultureInfo.InvariantCulture);
                 toolStripStatusLabelBalanceText.Text = powerString + (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                     International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString()) + "   " +
@@ -1894,13 +1895,14 @@ public static void CloseChilds(Process parentId)
                 }
 
 
-                    var amountUsd = (balance * ExchangeRateApi.GetUsdExchangeRate());
-                    var amount = ExchangeRateApi.ConvertToActiveCurrency(amountUsd);
+                var amountUsd = (balance * ExchangeRateApi.GetUsdExchangeRate());
+                var amount = ExchangeRateApi.ConvertToActiveCurrency(amountUsd);
 
                 toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
-                    toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
+                toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("Balance update", ex.ToString());
             }
@@ -1909,7 +1911,7 @@ public static void CloseChilds(Process parentId)
 
         private void SmaCallback(object sender, EventArgs e)
         {
-             //Helpers.ConsolePrint("NICEHASH", "SmaCallback");
+            //Helpers.ConsolePrint("NICEHASH", "SmaCallback");
             //_isSmaUpdated = true;
         }
 
@@ -2003,7 +2005,7 @@ public static void CloseChilds(Process parentId)
 
         private void LinkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-                Process.Start(Links.NhmBtcWalletFaqNew);
+            Process.Start(Links.NhmBtcWalletFaqNew);
         }
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -2082,7 +2084,8 @@ public static void CloseChilds(Process parentId)
                         file.Delete();
                     }
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception)
             {
 
             }
@@ -2095,7 +2098,7 @@ public static void CloseChilds(Process parentId)
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -2108,7 +2111,7 @@ public static void CloseChilds(Process parentId)
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -2182,7 +2185,7 @@ public static void CloseChilds(Process parentId)
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             _benchmarkForm = new Form_Benchmark();
-          //  SetChildFormCenter(_benchmarkForm);
+            //  SetChildFormCenter(_benchmarkForm);
             _benchmarkForm.ShowDialog();
             var startMining = _benchmarkForm.StartMining;
             _benchmarkForm = null;
@@ -2303,7 +2306,7 @@ public static void CloseChilds(Process parentId)
                     ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
                     ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
                     ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-                   // ConfigManager.GeneralConfigFileCommit();
+                    // ConfigManager.GeneralConfigFileCommit();
                 }
             }
             ConfigManager.GeneralConfigFileCommit();
@@ -2365,46 +2368,46 @@ public static void CloseChilds(Process parentId)
                 _autostartTimer.Stop();
                 _autostartTimer = null;
             }
-                NiceHashStats._deviceUpdateTimer.Stop();
-                new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
-                NiceHashStats._deviceUpdateTimer.Start();
-                //NiceHashStats.SetDeviceStatus("MINING");
-                if (textBoxBTCAddress_new.Text.Equals(""))
+            NiceHashStats._deviceUpdateTimer.Stop();
+            new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+            NiceHashStats._deviceUpdateTimer.Start();
+            //NiceHashStats.SetDeviceStatus("MINING");
+            if (textBoxBTCAddress_new.Text.Equals(""))
+            {
+                if (showWarnings)
                 {
-                    if (showWarnings)
-                    {
-                        var result = MessageBox.Show(International.GetText("Form_Main_DemoModeMsg"),
-                            International.GetText("Form_Main_DemoModeTitle"),
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    var result = MessageBox.Show(International.GetText("Form_Main_DemoModeMsg"),
+                        International.GetText("Form_Main_DemoModeTitle"),
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                        if (result == DialogResult.Yes)
-                        {
-                            _demoMode = true;
-                            labelDemoMode.Visible = true;
-                            labelDemoMode.Text = International.GetText("Form_Main_DemoModeLabel");
-                        }
-                        else
-                        {
-                            NiceHashStats._deviceUpdateTimer.Stop();
-                            new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
-                            NiceHashStats._deviceUpdateTimer.Start();
-                            //NiceHashStats.SetDeviceStatus("STOPPED");
-                            return StartMiningReturnType.IgnoreMsg;
-                        }
+                    if (result == DialogResult.Yes)
+                    {
+                        _demoMode = true;
+                        labelDemoMode.Visible = true;
+                        labelDemoMode.Text = International.GetText("Form_Main_DemoModeLabel");
                     }
                     else
                     {
+                        NiceHashStats._deviceUpdateTimer.Stop();
+                        new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+                        NiceHashStats._deviceUpdateTimer.Start();
+                        //NiceHashStats.SetDeviceStatus("STOPPED");
                         return StartMiningReturnType.IgnoreMsg;
                     }
                 }
-                else if (!VerifyMiningAddress(true))
+                else
                 {
-                    NiceHashStats._deviceUpdateTimer.Stop();
-                    new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
-                    NiceHashStats._deviceUpdateTimer.Start();
-                    //NiceHashStats.SetDeviceStatus("STOPPED");
                     return StartMiningReturnType.IgnoreMsg;
                 }
+            }
+            else if (!VerifyMiningAddress(true))
+            {
+                NiceHashStats._deviceUpdateTimer.Stop();
+                new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+                NiceHashStats._deviceUpdateTimer.Start();
+                //NiceHashStats.SetDeviceStatus("STOPPED");
+                return StartMiningReturnType.IgnoreMsg;
+            }
             var hasData = NHSmaData.HasData;
             if (!showWarnings)
             {
@@ -2427,15 +2430,12 @@ public static void CloseChilds(Process parentId)
                 }
                 return StartMiningReturnType.IgnoreMsg;
             }
-            // Check if there are unbenchmakred algorithms
-            var isBenchInit = true;
             foreach (var cdev in ComputeDeviceManager.Available.Devices)
             {
                 if (cdev.Enabled)
                 {
                     if (cdev.GetAlgorithmSettings().Where(algo => algo.Enabled).Any(algo => algo.BenchmarkSpeed == 0))
                     {
-                        isBenchInit = false;
                     }
                 }
             }
@@ -2481,8 +2481,8 @@ public static void CloseChilds(Process parentId)
                 }
             }
             */
-                // textBoxBTCAddress.Enabled = false;
-                textBoxBTCAddress_new.Enabled = false;
+            // textBoxBTCAddress.Enabled = false;
+            textBoxBTCAddress_new.Enabled = false;
             textBoxWorkerName.Enabled = false;
             comboBoxLocation.Enabled = false;
             //buttonBenchmark.Enabled = false;
@@ -2505,7 +2505,7 @@ public static void CloseChilds(Process parentId)
             var btcAdress = "";
             if (true)
             {
-                 btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress_new.Text.Trim();
+                btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress_new.Text.Trim();
             }
             if (comboBoxLocation.SelectedIndex < 4)
             {
@@ -2528,7 +2528,8 @@ public static void CloseChilds(Process parentId)
                 {
                     isMining = MinersManager.StartInitialize(this, Form_Main.myServers[0, 0],
                     textBoxWorkerName.Text.Trim(), btcAdress);
-                } else
+                }
+                else
                 {
                     isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[0],
                         textBoxWorkerName.Text.Trim(), btcAdress);
@@ -2686,7 +2687,7 @@ public static void CloseChilds(Process parentId)
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: " + e.ToString());
             }
@@ -2841,9 +2842,10 @@ public static void CloseChilds(Process parentId)
                         gpuList.Add(d);
                     }
                 }
-            } catch (UnauthorizedAccessException u)
+            }
+            catch (UnauthorizedAccessException)
             {
-                Helpers.ConsolePrint("NVML", "Error! UnauthorizedAccessException. devCount="+ devCount.ToString() + " AvailNVGpus=" + ComputeDeviceManager.Available.AvailNVGpus.ToString());
+                Helpers.ConsolePrint("NVML", "Error! UnauthorizedAccessException. devCount=" + devCount.ToString() + " AvailNVGpus=" + ComputeDeviceManager.Available.AvailNVGpus.ToString());
                 try
                 {
                     foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
@@ -2852,13 +2854,13 @@ public static void CloseChilds(Process parentId)
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                 }
                 Thread.Sleep(500);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 if (MemoryMappedFileError > 5)
                 {
@@ -2920,7 +2922,7 @@ public static void CloseChilds(Process parentId)
             MinersManager.StopAllMiners();
             MiningSession.FuncAttached = false;
             textBoxBTCAddress_new.Enabled = true;
-           // textBoxBTCAddress.Enabled = true;
+            // textBoxBTCAddress.Enabled = true;
             textBoxWorkerName.Enabled = true;
             comboBoxLocation.Enabled = true;
             buttonBenchmark.Enabled = true;
@@ -2951,7 +2953,8 @@ public static void CloseChilds(Process parentId)
             if (ConfigManager.GeneralConfig.ServiceLocation == 4 && Enabled == true)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
-            } else
+            }
+            else
             {
                 string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
                 Form_Main.myServers = tmpServers;
@@ -2964,7 +2967,7 @@ public static void CloseChilds(Process parentId)
             if (cmb == null) return;
 
 
-                e.DrawBackground();
+            e.DrawBackground();
 
             // change background color
             var bc = new SolidBrush(_backColor);
@@ -3008,7 +3011,7 @@ public static void CloseChilds(Process parentId)
                 buttonStopMining.ForeColor = buttonStopMining.Enabled == true ? Form_Main._foreColor : Color.Gray;
                 buttonStopMining.BackColor = buttonStopMining.Enabled == true ? Form_Main._backColor : Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             }
-       }
+        }
 
         private void buttonStopMining_Paint(object sender, PaintEventArgs e)
         {
@@ -3055,7 +3058,7 @@ public static void CloseChilds(Process parentId)
         {
             //Form_Main.ActiveForm.Focus();
             buttonBTC_Clear.ForeColor = Form_Main._backColor;
-            var result = MessageBox.Show(dialogClearBTC,"", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+            var result = MessageBox.Show(dialogClearBTC, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
 
                 MessageBoxDefaultButton.Button2);
 
@@ -3072,7 +3075,7 @@ public static void CloseChilds(Process parentId)
 
         private void buttonBTC_Save_Click(object sender, EventArgs e)
         {
-            if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress_new.Text.Trim()) && textBoxBTCAddress_new.Text.Length !=0)
+            if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress_new.Text.Trim()) && textBoxBTCAddress_new.Text.Length != 0)
             {
                 var result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
                     International.GetText("Error_with_Exclamation"),
@@ -3086,7 +3089,8 @@ public static void CloseChilds(Process parentId)
 
                 textBoxBTCAddress_new.Focus();
 
-            } else
+            }
+            else
             {
                 ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
                 buttonBTC_Save.Enabled = false;
@@ -3101,7 +3105,8 @@ public static void CloseChilds(Process parentId)
             {
                 buttonBTC_Clear.Enabled = true;
                 buttonBTC_Save.Enabled = true;
-            } else
+            }
+            else
             {
                 buttonBTC_Save.Enabled = false;
             }

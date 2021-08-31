@@ -19,7 +19,7 @@ namespace NvidiaGPUGetDataHost
 
         public static void ConfigureWithFile()
         {
-            
+
             try
             {
                 if (!Directory.Exists(@"..\\logs"))
@@ -35,12 +35,12 @@ namespace NvidiaGPUGetDataHost
                     eventLog.WriteEntry(ex.ToString(), EventLogEntryType.Information, 101, 1);
                 }
             }
-            
+
             IsInit = true;
             try
             {
-                var h = (Hierarchy) LogManager.GetRepository();
-                    h.Root.Level = Level.Info;
+                var h = (Hierarchy)LogManager.GetRepository();
+                h.Root.Level = Level.Info;
                 //    h.Root.Level = Level.Warn;
                 //    h.Root.Level = Level.Error;
 
@@ -95,7 +95,7 @@ namespace NvidiaGPUGetDataHost
 #if !DEBUG
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 #endif
-                    Logger.Log.Info("[" + grp + "] " + text);
+                Logger.Log.Info("[" + grp + "] " + text);
             }
             catch { }  // Not gonna recursively call here in case something is seriously wrong
         }

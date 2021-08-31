@@ -1,17 +1,16 @@
-﻿using NiceHashMiner.Miners.Grouping;
+﻿using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using NiceHashMiner.Devices;
-using Newtonsoft.Json;
 
 namespace NiceHashMiner.Miners
 {
@@ -129,7 +128,6 @@ namespace NiceHashMiner.Miners
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            int count = 0;
             double tmp = 0;
 
 
@@ -165,7 +163,7 @@ namespace NiceHashMiner.Miners
                     if (speed > 0)
                     {
                         //BenchmarkSignalFinnished = true;
-//                        Helpers.ConsolePrint("BENCHMARK", "BenchmarkAlgorithm.BenchmarkSpeed:" + BenchmarkAlgorithm.BenchmarkSpeed.ToString());
+                        //                        Helpers.ConsolePrint("BENCHMARK", "BenchmarkAlgorithm.BenchmarkSpeed:" + BenchmarkAlgorithm.BenchmarkSpeed.ToString());
                         return true;
                     }
                 }
@@ -330,7 +328,7 @@ namespace NiceHashMiner.Miners
 
         #endregion // Decoupled benchmarking routines
 
-        
+
         public override async Task<ApiData> GetSummaryAsync()
         {
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
@@ -343,7 +341,7 @@ namespace NiceHashMiner.Miners
 
             dataToSend = GetHttpRequestNhmAgentStrin("summary?gpuinfo=1");
             var resp = await GetApiDataAsync(ApiPort, dataToSend, true);
-             
+
             if (resp == null || !resp.Contains("dev_id"))
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " summary is null");
@@ -374,7 +372,7 @@ namespace NiceHashMiner.Miners
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return null;
             }
-            
+
             CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             // check if speed zero
             if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;

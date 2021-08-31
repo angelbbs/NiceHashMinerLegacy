@@ -3,16 +3,10 @@ using NvidiaGPUGetDataHost.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NvidiaGPUGetDataHost
@@ -239,7 +233,8 @@ namespace NvidiaGPUGetDataHost
                             if (ret == nvmlReturn.Success)
                             {
                                 writer.WriteArray<byte>(0, RawSerialize(devCount), 0, Marshal.SizeOf(devCount));
-                            } else
+                            }
+                            else
                             {
                                 writer.WriteArray<byte>(0, RawSerialize(0), 0, Marshal.SizeOf(devCount));
                             }
@@ -305,6 +300,6 @@ namespace NvidiaGPUGetDataHost
                 Logger.ConsolePrint("NvidiaGPUGetDataHost", "Exception: " + ex.ToString());
             }
         }
-        
+
     }
 }

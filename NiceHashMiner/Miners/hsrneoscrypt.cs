@@ -1,15 +1,12 @@
-using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Miners.Parsing;
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
-using System.Threading;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
-using System.Windows.Forms;
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {

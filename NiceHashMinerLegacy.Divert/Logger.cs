@@ -3,8 +3,6 @@ using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
-
-using System;
 using System.IO;
 
 namespace NiceHashMinerLegacy.Divert
@@ -29,10 +27,10 @@ namespace NiceHashMinerLegacy.Divert
             IsInit = true;
             try
             {
-                var h = (Hierarchy) LogManager.GetRepository();
+                var h = (Hierarchy)LogManager.GetRepository();
 
-             //   if (ConfigManager.GeneralConfig.LogToFile)
-                    h.Root.Level = Level.Info;
+                //   if (ConfigManager.GeneralConfig.LogToFile)
+                h.Root.Level = Level.Info;
                 //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 2)
                 //    h.Root.Level = Level.Warn;
                 //else if (ConfigManager.Instance.GeneralConfig.LogLevel == 3)

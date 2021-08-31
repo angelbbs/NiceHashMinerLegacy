@@ -47,7 +47,7 @@ namespace NiceHashMiner
                 while (--j >= 0)
                 {
                     p += 58 * output[j];
-                    output[j] = (byte) (p % 256);
+                    output[j] = (byte)(p % 256);
                     p /= 256;
                 }
                 if (p != 0) throw new Exception("Address too long.");

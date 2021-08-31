@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -36,7 +35,8 @@ namespace NiceHashMiner.Forms.Components
                     {
                         lvi.BackColor = cdvo.Enabled ? SystemColors.ControlLightLight : SystemColors.ControlLightLight;
                         lvi.ForeColor = cdvo.Enabled ? Form_Main._foreColor : DisabledForeColor;
-                    } else
+                    }
+                    else
                     {
                         lvi.BackColor = cdvo.Enabled ? EnabledColor : DisabledColor;
                         lvi.ForeColor = cdvo.Enabled ? Form_Main._foreColor : DisabledForeColor;
@@ -122,7 +122,7 @@ namespace NiceHashMiner.Forms.Components
             this.listViewDevices.ItemCheck += new ItemCheckEventHandler(listViewDevices_ItemCheck);
             IsMining = false;
             BenchmarkCalculation = null;
-          //  listViewDevices.OwnerDraw = true;
+            //  listViewDevices.OwnerDraw = true;
         }
 
         public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter)
@@ -156,7 +156,6 @@ namespace NiceHashMiner.Forms.Components
             listViewDevices.Items.Clear();
             string addInfo = "";
             string Manufacturer = "";
-            string ManufacturerDef = "";
             string GpuRam = "";
             string devNum = "";
             string devInfo = "";
@@ -168,7 +167,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     //continue;
                 }
-                devNum = computeDevice.NameCount; 
+                devNum = computeDevice.NameCount;
                 if (computeDevice.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
                 {
                     devNum = "> " + devNum;//   > GPU
@@ -205,7 +204,8 @@ namespace NiceHashMiner.Forms.Components
                         {
                             GpuRam = "";
                         }
-                    } else
+                    }
+                    else
                     {
                         devInfo = devInfo.Replace(GpuRam, "");
                         GpuRam = "";
@@ -274,7 +274,7 @@ namespace NiceHashMiner.Forms.Components
 
             foreach (var computeDevice in _computeDevices)
             {
-//                Helpers.ConsolePrint("SetComputeDevicesStatus", computeDevice.MiningHashrate.ToString());
+                //                Helpers.ConsolePrint("SetComputeDevicesStatus", computeDevice.MiningHashrate.ToString());
                 string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, 0, (AlgorithmType)computeDevice.AlgorithmID);
                 string cTemp = Math.Truncate(computeDevice.Temp).ToString() + "°C";
                 string cLoad = Math.Truncate(computeDevice.Load).ToString() + "%";
@@ -284,11 +284,13 @@ namespace NiceHashMiner.Forms.Components
                     if (computeDevice.DeviceType == DeviceType.CPU)
                     {
                         cFanSpeed = computeDevice.FanSpeed.ToString();
-                    } else
+                    }
+                    else
                     {
                         cFanSpeed = computeDevice.FanSpeed.ToString() + "%";
                     }
-                } else
+                }
+                else
                 {
                     cFanSpeed = computeDevice.FanSpeedRPM.ToString();
                 }
@@ -329,7 +331,8 @@ namespace NiceHashMiner.Forms.Components
                 catch (Exception e)
                 {
                     Helpers.ConsolePrint("SetComputeDevicesStatus", e.ToString());
-                } finally
+                }
+                finally
                 {
 
                 }
@@ -388,7 +391,8 @@ namespace NiceHashMiner.Forms.Components
                 {
                     e.Graphics.FillRectangle(backBrush, e.Bounds);
                 }
-            } else
+            }
+            else
             {
                 using (SolidBrush backBrush = new SolidBrush(SystemColors.ControlLightLight))
                 {
@@ -411,7 +415,8 @@ namespace NiceHashMiner.Forms.Components
                 listViewDevices.ForeColor = _textColor;
 
                 this.BackColor = _backColor;
-            } else
+            }
+            else
             {
                 foreach (var lbl in this.Controls.OfType<ListView>()) lbl.BackColor = SystemColors.ControlLightLight;
                 listViewDevices.BackColor = SystemColors.ControlLightLight;
@@ -422,11 +427,11 @@ namespace NiceHashMiner.Forms.Components
 
             listViewDevices.Columns[ENABLED].Text = " " + International.GetText("ListView_Device");
 
-                listViewDevices.Columns[HASHRATE].Text = International.GetText("Form_Main_device_hashrate");
-                listViewDevices.Columns[TEMP].Text = International.GetText("Form_Main_device_temp");
-                listViewDevices.Columns[LOAD].Text = International.GetText("Form_Main_device_load");
-                listViewDevices.Columns[FAN].Text = International.GetText("Form_Main_device_fan");
-                listViewDevices.Columns[POWER].Text = International.GetText("Form_Main_device_power");
+            listViewDevices.Columns[HASHRATE].Text = International.GetText("Form_Main_device_hashrate");
+            listViewDevices.Columns[TEMP].Text = International.GetText("Form_Main_device_temp");
+            listViewDevices.Columns[LOAD].Text = International.GetText("Form_Main_device_load");
+            listViewDevices.Columns[FAN].Text = International.GetText("Form_Main_device_fan");
+            listViewDevices.Columns[POWER].Text = International.GetText("Form_Main_device_power");
 
             listViewDevices.Columns[HASHRATE].Width = 0;
             listViewDevices.Columns[TEMP].Width = 0;
@@ -485,7 +490,7 @@ namespace NiceHashMiner.Forms.Components
         }
         public void SaveColumns()
         {
-           // if (listViewDevices.Columns[ENABLED] != null)
+            // if (listViewDevices.Columns[ENABLED] != null)
             if (listViewDevices.Columns[HASHRATE].Width + listViewDevices.Columns[TEMP].Width + listViewDevices.Columns[LOAD].Width + listViewDevices.Columns[FAN].Width + listViewDevices.Columns[POWER].Width > 0)
             {
                 ConfigManager.GeneralConfig.ColumnENABLED = listViewDevices.Columns[ENABLED].Width;
@@ -520,13 +525,11 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
         {
-            int devNumInc = 0;
             string Manufacturer = "";
             if (IsInBenchmark) return;
             if (IsMining) return;
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU)
             {
-                devNumInc = 1;//костыль. при многопроцессорной конфигурации это работать не будет
             }
 
             if (e.Button == MouseButtons.Right)
@@ -661,7 +664,8 @@ namespace NiceHashMiner.Forms.Components
                                 }
                             }
                         }
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         Helpers.ConsolePrint("ListViewDevices_MouseClick", ex.ToString());
                     }
@@ -719,8 +723,8 @@ namespace NiceHashMiner.Forms.Components
                     MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
-                        CDevice.BenchmarkCopyUuid = uuid;
-                        CDevice.CopyOverclockSettingsFrom(copyOverclockCDevFrom, CDevice);
+                    CDevice.BenchmarkCopyUuid = uuid;
+                    CDevice.CopyOverclockSettingsFrom(copyOverclockCDevFrom, CDevice);
 
                     if (_algorithmsListViewOverClock != null)
                     {
@@ -876,20 +880,20 @@ namespace NiceHashMiner.Forms.Components
         private void listViewDevices_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
 
-        //    var with1 = e.Graphics;
-          //  with1.DrawLines(new Pen(Color.Green), new Point[] {/*new Point(e.Bounds.Left, e.Bounds.Top - 1),*/new Point(e.Bounds.Left + e.Bounds.Width, e.Bounds.Top - 1), new Point(e.Bounds.Left + e.Bounds.Width, e.Bounds.Top + e.Bounds.Height)/*,new Point(e.Bounds.Left, e.Bounds.Top + e.Bounds.Height)*/});
-           // e.DrawText();
+            //    var with1 = e.Graphics;
+            //  with1.DrawLines(new Pen(Color.Green), new Point[] {/*new Point(e.Bounds.Left, e.Bounds.Top - 1),*/new Point(e.Bounds.Left + e.Bounds.Width, e.Bounds.Top - 1), new Point(e.Bounds.Left + e.Bounds.Width, e.Bounds.Top + e.Bounds.Height)/*,new Point(e.Bounds.Left, e.Bounds.Top + e.Bounds.Height)*/});
+            // e.DrawText();
 
         }
 
         private void DevicesListViewEnableControl_Leave(object sender, EventArgs e)
         {
-//            listViewDevices.Enabled = false;
+            //            listViewDevices.Enabled = false;
         }
 
         private void listViewDevices_SizeChanged(object sender, EventArgs e)
         {
-         //   ResizeAutoSizeColumn(listViewDevices, 0);
+            //   ResizeAutoSizeColumn(listViewDevices, 0);
         }
 
         private void listViewDevices_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)

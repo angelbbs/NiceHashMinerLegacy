@@ -1,19 +1,16 @@
-using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+using MSI.Afterburner;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Interfaces;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Stats;
-using System.Globalization;
+using System;
 using System.Collections;
-using NiceHashMiner.Miners.Grouping;
-using MSI.Afterburner;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -55,7 +52,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 if (!isListViewEnabled)
                 {
-                  //  return;
+                    //  return;
                 }
                 if (lvi.Tag is Algorithm algorithm)
                 {
@@ -64,12 +61,14 @@ namespace NiceHashMiner.Forms.Components
                         if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
                         {
                             lvi.BackColor = DisabledColor;
-                        } else
+                        }
+                        else
                         {
                             lvi.BackColor = SystemColors.ControlLightLight;
                         }
                         lvi.ForeColor = DisabledForeColor;
-                    } else
+                    }
+                    else
                         if (isListViewEnabled)
                     {
                         lvi.ForeColor = Form_Main._foreColor;
@@ -100,7 +99,7 @@ namespace NiceHashMiner.Forms.Components
 
         private readonly IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultAlgorithmColorSeter();
 
-        
+
         public AlgorithmsListViewOverClock()
         {
             InitializeComponent();
@@ -109,7 +108,7 @@ namespace NiceHashMiner.Forms.Components
 
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += ListViewAlgorithms_ItemSelectionChanged;
-            listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler) ListViewAlgorithms_ItemChecked;
+            listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler)ListViewAlgorithms_ItemChecked;
             if (ConfigManager.GeneralConfig.ABEnableOverclock && MSIAfterburner.Initialized)
             {
                 MSIAfterburner.InitTempFiles();
@@ -128,10 +127,10 @@ namespace NiceHashMiner.Forms.Components
         }
         private static void headerDraw(object sender, DrawListViewColumnHeaderEventArgs e, Color backColor, Color foreColor)
         {
-                using (SolidBrush backBrush = new SolidBrush(backColor))
-                {
-                    e.Graphics.FillRectangle(backBrush, e.Bounds);
-                }
+            using (SolidBrush backBrush = new SolidBrush(backColor))
+            {
+                e.Graphics.FillRectangle(backBrush, e.Bounds);
+            }
 
             using (SolidBrush foreBrush = new SolidBrush(foreColor))
             {
@@ -250,9 +249,9 @@ namespace NiceHashMiner.Forms.Components
                         mem_voltage = dev.MemoryVoltageCur;
                     }
                     power_limit = dev.PowerLimitCur;
-                        fan = dev.FanSpeedCur;
-                        fan_flag = (int)dev.FanFlagsCur;
-                        thermal_limit = dev.ThermalLimitCur;
+                    fan = dev.FanSpeedCur;
+                    fan_flag = (int)dev.FanFlagsCur;
+                    thermal_limit = dev.ThermalLimitCur;
 
                     lvi.SubItems.Add(name);
                     lvi.SubItems.Add(miner);
@@ -270,7 +269,7 @@ namespace NiceHashMiner.Forms.Components
                     lvi.SubItems.Add(gpu_voltage.ToString());
                     lvi.SubItems.Add(mem_voltage.ToString());
                     lvi.SubItems.Add(power_limit.ToString());
-                    
+
                     if (fan_flag == 0)
                     {
                         lvi.SubItems.Add(fan.ToString());
@@ -282,7 +281,7 @@ namespace NiceHashMiner.Forms.Components
 
                     //lvi.SubItems.Add(fan_flag.ToString());
                     lvi.SubItems.Add(thermal_limit.ToString());
-                    
+
                     lvi.Tag = alg;
                     lvi.Checked = alg.Enabled;
                     listViewAlgorithms.Items.Add(lvi);
@@ -290,8 +289,8 @@ namespace NiceHashMiner.Forms.Components
             }
 
             listViewAlgorithms.EndUpdate();
-                isListViewEnabled = isEnabled;
-                listViewAlgorithms.CheckBoxes = isEnabled;
+            isListViewEnabled = isEnabled;
+            listViewAlgorithms.CheckBoxes = isEnabled;
         }
 
         public void RepaintStatus(bool isEnabled, string uuid)
@@ -343,7 +342,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-           // MessageBox.Show(_computeDevice.Name.ToString());
+            // MessageBox.Show(_computeDevice.Name.ToString());
             //ComunicationInterface?.SetCurrentlySelected(e.Item, _computeDevice);
 
         }
@@ -430,10 +429,11 @@ namespace NiceHashMiner.Forms.Components
                             }
                         }
                     }
-                    
+
                     contextMenuStrip1.Show(Cursor.Position);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception)
             {
 
             }
@@ -483,7 +483,7 @@ namespace NiceHashMiner.Forms.Components
             }
 
         }
-        
+
         private void GetDefMinMax()
         {
             if (!MSIAfterburner.Initialized) return;
@@ -579,7 +579,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void listViewAlgorithms_EnabledChanged(object sender, EventArgs e)
         {
-          //  AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Color.Red, Form_Main._textColor);
+            //  AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Color.Red, Form_Main._textColor);
         }
 
         private void listViewAlgorithms_Click(object sender, EventArgs e)
@@ -613,7 +613,8 @@ namespace NiceHashMiner.Forms.Components
             if (e.ColumnIndex == 9)
             {
                 ResizeAutoSizeColumn(listViewAlgorithms, 1);
-            } else
+            }
+            else
             {
                 ResizeAutoSizeColumn(listViewAlgorithms, 9);
             }
@@ -696,7 +697,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void AlgorithmsListViewOverClock_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            
+
         }
 
         private void listViewAlgorithms_MouseDown(object sender, MouseEventArgs e)
@@ -742,7 +743,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 double.TryParse(tb.Text, out valuetb);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -1031,7 +1032,8 @@ namespace NiceHashMiner.Forms.Components
                         {
                             _abdataTmp.ThermalLimitCur = _algorithm.thermal_limit;
                         }
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Error");
                     }
@@ -1045,7 +1047,6 @@ namespace NiceHashMiner.Forms.Components
         private void TextBoxKeyPress(object sender, KeyPressEventArgs e)
         {
             char DecSep = Convert.ToChar(NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator);
-            char minus = (char)45;
             char inputChar = e.KeyChar;
             var text = sender as TextBox;
             int pos = text.SelectionStart;
@@ -1055,7 +1056,7 @@ namespace NiceHashMiner.Forms.Components
             if ((inputChar <= 47 || inputChar >= 58) &&
                 inputChar != 8 &&
                 inputChar != '-' &&
-                inputChar != DecSep) 
+                inputChar != DecSep)
             {
                 e.Handled = true;
             }
@@ -1073,7 +1074,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 e.Handled = true;
             }
-            
+
             if (text.Text.StartsWith(Convert.ToString(DecSep)))
             {
                 // добавление лидирующего ноля
@@ -1092,14 +1093,14 @@ namespace NiceHashMiner.Forms.Components
                 text.Text = "-" + text.Text;
                 text.SelectionStart = text.Text.Length;
             }
-           
+
             _keyPressed = inputChar;
 
             if (text.Text == "-" || text.Text == "0." || text.Text == "-.")
             {
                 _keyPressed = (char)27;
             }
-            
+
             if (inputChar == 13)
             {
                 DisposeTextBox((sender as TextBox), null);

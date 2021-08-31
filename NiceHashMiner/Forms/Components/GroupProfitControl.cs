@@ -1,10 +1,7 @@
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
-using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -40,7 +37,8 @@ namespace NiceHashMiner.Forms.Components
                 groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo) +
                     "  " + International.GetText("Form_Main_Miner") + groupName.Split('-')[0] +
                     "  " + International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
-            } else
+            }
+            else
             {
                 groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
             }
@@ -87,7 +85,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void buttonBTC_restart(object sender, System.EventArgs e)
         {
-           // Form_Main.ActiveForm.Focus();
+            // Form_Main.ActiveForm.Focus();
             Helpers.ConsolePrint("NICEHASH", "Restarting miner: " + button_restart.Tag.ToString());
             MiningSession.RestartMiner(button_restart.Tag.ToString());
             //button_restart.Enabled = false;

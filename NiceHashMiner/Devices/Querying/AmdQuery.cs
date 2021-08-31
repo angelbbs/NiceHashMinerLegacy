@@ -1,16 +1,13 @@
+using ATI.ADL;
+using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.UUID;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using ATI.ADL;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Forms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.UUID;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -289,8 +286,8 @@ namespace NiceHashMiner.Devices.Querying
                 vcd.Name.ToLower().Contains("amd") || vcd.Name.ToLower().Contains("radeon") ||
                 vcd.Name.ToLower().Contains("firepro")).ToList();
             // sort by ram not ideal
-            amdVideoControllers.Sort((a, b) => (int) (a.AdapterRam - b.AdapterRam));
-            amdDevices.Sort((a, b) => (int) (a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
+            amdVideoControllers.Sort((a, b) => (int)(a.AdapterRam - b.AdapterRam));
+            amdDevices.Sort((a, b) => (int)(a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
             var minCount = Math.Min(amdVideoControllers.Count, amdDevices.Count);
 
             for (var i = 0; i < minCount; ++i)
@@ -387,13 +384,13 @@ namespace NiceHashMiner.Devices.Querying
 
                         if (adl2Ret == ADL.ADL_SUCCESS)
                         {
-                            adl2Info = (ADLAdapterInfoArray) Marshal.PtrToStructure(buffer, adl2Info.GetType());
+                            adl2Info = (ADLAdapterInfoArray)Marshal.PtrToStructure(buffer, adl2Info.GetType());
                         }
 
                         if (ADL.ADL_SUCCESS == adlRet)
                         {
                             osAdapterInfoData =
-                                (ADLAdapterInfoArray) Marshal.PtrToStructure(adapterBuffer,
+                                (ADLAdapterInfoArray)Marshal.PtrToStructure(adapterBuffer,
                                     osAdapterInfoData.GetType());
                             var isActive = 0;
 

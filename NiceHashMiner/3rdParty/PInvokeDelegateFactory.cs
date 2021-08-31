@@ -33,13 +33,15 @@ namespace NVIDIA
           new Dictionary<Tuple<DllImportAttribute, Type>, Type>();
 
         public static void CreateDelegate<T>(DllImportAttribute dllImportAttribute,
-          out T newDelegate) where T : class {
+          out T newDelegate) where T : class
+        {
             Type wrapperType;
             Tuple<DllImportAttribute, Type> key =
               new Tuple<DllImportAttribute, Type>(dllImportAttribute, typeof(T));
             wrapperTypes.TryGetValue(key, out wrapperType);
 
-            if (wrapperType == null) {
+            if (wrapperType == null)
+            {
                 wrapperType = CreateWrapperType(typeof(T), dllImportAttribute);
                 wrapperTypes.Add(key, wrapperType);
             }
@@ -50,7 +52,8 @@ namespace NVIDIA
 
 
         private static Type CreateWrapperType(Type delegateType,
-          DllImportAttribute dllImportAttribute) {
+          DllImportAttribute dllImportAttribute)
+        {
 
             TypeBuilder typeBuilder = moduleBuilder.DefineType(
               "PInvokeDelegateFactoryInternalWrapperType" + wrapperTypes.Count);

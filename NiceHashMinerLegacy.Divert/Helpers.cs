@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 //using NiceHashMiner.PInvoke;
-using System.Management;
 //using NiceHashMinerLegacy.Common.Enums;
 using System.Security.Principal;
 
@@ -40,8 +39,8 @@ namespace NiceHashMinerLegacy.Divert
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 #endif
 
-              //  if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
-                    Logger.Log.Info("[" + grp + "] " + text);
+                //  if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
+                Logger.Log.Info("[" + grp + "] " + text);
             }
             catch { }  // Not gonna recursively call here in case something is seriously wrong
         }
@@ -115,7 +114,7 @@ namespace NiceHashMinerLegacy.Divert
             using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32)
                 .OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\"))
             {
-                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int) ndpKey.GetValue("Release"));
+                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int)ndpKey.GetValue("Release"));
             }
         }
 

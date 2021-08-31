@@ -25,30 +25,34 @@ namespace NiceHashMiner.Forms.Components {
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.secondaryFieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
-            this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
-            this.field_PowerUsage = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
             this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.TextBox();
+            this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
+            this.secondaryFieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
+            this.field_PowerUsage = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // groupBoxSelectedAlgorithmSettings
-            //
+            // 
+            this.groupBoxSelectedAlgorithmSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSelectedAlgorithmSettings.Controls.Add(this.flowLayoutPanel1);
             this.groupBoxSelectedAlgorithmSettings.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.groupBoxSelectedAlgorithmSettings.Location = new System.Drawing.Point(3, 3);
+            this.groupBoxSelectedAlgorithmSettings.Margin = new System.Windows.Forms.Padding(3, 3, 3, 1);
             this.groupBoxSelectedAlgorithmSettings.Name = "groupBoxSelectedAlgorithmSettings";
-            this.groupBoxSelectedAlgorithmSettings.Size = new System.Drawing.Size(282, 217);
+            this.groupBoxSelectedAlgorithmSettings.Size = new System.Drawing.Size(282, 210);
             this.groupBoxSelectedAlgorithmSettings.TabIndex = 11;
             this.groupBoxSelectedAlgorithmSettings.TabStop = false;
             this.groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm Settings:";
             this.groupBoxSelectedAlgorithmSettings.UseCompatibleTextRendering = true;
-            //
+            // 
             // flowLayoutPanel1
-            //
+            // 
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.secondaryFieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.field_PowerUsage);
@@ -57,44 +61,11 @@ namespace NiceHashMiner.Forms.Components {
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(276, 198);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(276, 191);
             this.flowLayoutPanel1.TabIndex = 12;
-            //
-            // secondaryFieldBoxBenchmarkSpeed
-            //
-            this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
-            this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
-            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Speed (H/s):";
-            this.secondaryFieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 35);
-            this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
-            this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
-            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
-            //
-            // fieldBoxBenchmarkSpeed
-            //
-            this.fieldBoxBenchmarkSpeed.AutoSize = true;
-            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.fieldBoxBenchmarkSpeed.EntryText = "";
-            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
-            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 3);
-            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
-            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
-            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
-            //
-            // field_PowerUsage
-            //
-            this.field_PowerUsage.AutoSize = true;
-            this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
-            this.field_PowerUsage.EntryText = "";
-            this.field_PowerUsage.LabelText = "Power Usage (W):";
-            this.field_PowerUsage.Location = new System.Drawing.Point(3, 67);
-            this.field_PowerUsage.Name = "field_PowerUsage";
-            this.field_PowerUsage.Size = new System.Drawing.Size(278, 26);
-            this.field_PowerUsage.TabIndex = 15;
-            //
+            // 
             // groupBoxExtraLaunchParameters
-            //
+            // 
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
             this.groupBoxExtraLaunchParameters.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 99);
@@ -104,19 +75,54 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxExtraLaunchParameters.TabStop = false;
             this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
             this.groupBoxExtraLaunchParameters.UseCompatibleTextRendering = true;
-            //
+            // 
             // richTextBoxExtraLaunchParameters
-            //
+            // 
+            this.richTextBoxExtraLaunchParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxExtraLaunchParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
+            this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(6, 16);
             this.richTextBoxExtraLaunchParameters.Multiline = true;
             this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
-            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(264, 65);
+            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(258, 62);
             this.richTextBoxExtraLaunchParameters.TabIndex = 17;
-            //
+            // 
+            // fieldBoxBenchmarkSpeed
+            // 
+            this.fieldBoxBenchmarkSpeed.AutoSize = true;
+            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.fieldBoxBenchmarkSpeed.EntryText = "";
+            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
+            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 3);
+            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
+            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
+            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
+            // 
+            // secondaryFieldBoxBenchmarkSpeed
+            // 
+            this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
+            this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
+            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Speed (H/s):";
+            this.secondaryFieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 35);
+            this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
+            this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
+            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
+            // 
+            // field_PowerUsage
+            // 
+            this.field_PowerUsage.AutoSize = true;
+            this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
+            this.field_PowerUsage.EntryText = "";
+            this.field_PowerUsage.LabelText = "Power Usage (W):";
+            this.field_PowerUsage.Location = new System.Drawing.Point(3, 67);
+            this.field_PowerUsage.Name = "field_PowerUsage";
+            this.field_PowerUsage.Size = new System.Drawing.Size(278, 26);
+            this.field_PowerUsage.TabIndex = 15;
+            // 
             // AlgorithmSettingsControl
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBoxSelectedAlgorithmSettings);

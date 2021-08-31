@@ -1,23 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Properties;
-using NiceHashMinerLegacy.Common.Enums;
-using Timer = System.Windows.Forms.Timer;
-using System.Diagnostics;
-using System.IO;
-using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner.Forms
 {
@@ -102,8 +99,8 @@ namespace NiceHashMiner.Forms
 
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
-               this.BackColor = Form_Main._backColor;
-               this.ForeColor = Form_Main._foreColor;
+                this.BackColor = Form_Main._backColor;
+                this.ForeColor = Form_Main._foreColor;
 
                 foreach (var lbl in this.Controls.OfType<Label>()) lbl.BackColor = Form_Main._backColor;
                 foreach (var lbl in this.Controls.OfType<LinkLabel>()) lbl.LinkColor = Color.LightBlue;
@@ -152,7 +149,7 @@ namespace NiceHashMiner.Forms
                     lbl.FlatAppearance.BorderSize = 1;
                 }
 
-               // Form_Benchmark.ActiveForm.Enabled = true;
+                // Form_Benchmark.ActiveForm.Enabled = true;
 
 
                 foreach (var lbl in this.Controls.OfType<CheckBox>()) lbl.BackColor = Form_Main._backColor;
@@ -170,7 +167,7 @@ namespace NiceHashMiner.Forms
 
             _benchmarkingTimer = new Timer();
             _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
-            _benchmarkingTimer.Interval = 500; 
+            _benchmarkingTimer.Interval = 500;
 
 
             //Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
@@ -296,18 +293,18 @@ namespace NiceHashMiner.Forms
 
         public void AddToStatusCheck(ComputeDevice device, Algorithm algorithm)
         {
-            Invoke((MethodInvoker) delegate
-            {
-                _statusCheckAlgos[device] = algorithm;
-            });
+            Invoke((MethodInvoker)delegate
+           {
+               _statusCheckAlgos[device] = algorithm;
+           });
         }
 
         public void RemoveFromStatusCheck(ComputeDevice device, Algorithm algorithm)
         {
-            Invoke((MethodInvoker) delegate
-            {
-                _statusCheckAlgos.Remove(device);
-            });
+            Invoke((MethodInvoker)delegate
+           {
+               _statusCheckAlgos.Remove(device);
+           });
         }
 
         public void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos)
@@ -325,10 +322,10 @@ namespace NiceHashMiner.Forms
 
         public void SetCurrentStatus(ComputeDevice device, Algorithm algorithm, string status)
         {
-            Invoke((MethodInvoker) delegate
-            {
-                algorithmsListView1.SetSpeedStatus(device, algorithm, status);
-            });
+            Invoke((MethodInvoker)delegate
+           {
+               algorithmsListView1.SetSpeedStatus(device, algorithm, status);
+           });
             //algorithmsListView1.UpdateLvi();
         }
 
@@ -386,7 +383,7 @@ namespace NiceHashMiner.Forms
                             {
                                 lvi.BackColor = SystemColors.ControlLightLight;
                             }
-                           // lvi.BackColor = BenchmarkedColor;
+                            // lvi.BackColor = BenchmarkedColor;
                             lvi.ForeColor = Form_Main._foreColor;
                             break;
                     }
@@ -427,9 +424,10 @@ namespace NiceHashMiner.Forms
                     {
                         percent = International.GetText("Form_Benchmark_BenchmarkProgress");
                         algorithmsListView1.SetSpeedStatus(key, _statusCheckAlgos[key], GetDotsWaitString() + percent);
-                    } else
+                    }
+                    else
                     {
-                        
+
                         percent = _statusCheckAlgos[key].BenchmarkProgressPercent.ToString() + "%";
                         algorithmsListView1.SetSpeedStatus(key, _statusCheckAlgos[key], percent);
                     }
@@ -559,9 +557,9 @@ namespace NiceHashMiner.Forms
                 }
             }
             */
-             if (Form_Main.MiningStarted)   
+            if (Form_Main.MiningStarted)
             {
-                MessageBox.Show(International.GetText("Form_Benchmark_Stop_mining_first"), 
+                MessageBox.Show(International.GetText("Form_Benchmark_Stop_mining_first"),
                     International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -666,7 +664,7 @@ namespace NiceHashMiner.Forms
             {
                 string[] sep = { "/", "." };
                 string toKill = filePath.Split(sep, StringSplitOptions.RemoveEmptyEntries)[1];
-                
+
                 if (toKill != "x64" && toKill != "txt")
                 {
                     Helpers.ConsolePrint("RunCMDAfterBenchmark", "Try kill: " + toKill);
@@ -741,39 +739,39 @@ namespace NiceHashMiner.Forms
         }
         private void EndBenchmark()
         {
-            Invoke((MethodInvoker) delegate
-            {
-                _benchmarkingTimer.Stop();
-                InBenchmark = false;
-                BenchmarkStarted = false;
-                Ethlargement.Stop();
-                Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
+            Invoke((MethodInvoker)delegate
+           {
+               _benchmarkingTimer.Stop();
+               InBenchmark = false;
+               BenchmarkStarted = false;
+               Ethlargement.Stop();
+               Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
 
                 //CopyBenchmarks();
 
                 BenchmarkStoppedGuiSettings();
-                RunCMDAfterBenchmark();
+               RunCMDAfterBenchmark();
                 // check if all ok
                 if (!_hasFailedAlgorithms && StartMining == false)
-                {
-                    MessageBox.Show(
-                        International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
-                        International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
-                        MessageBoxButtons.OK);
-                }
-                else if (StartMining == false)
-                {
-                    if (NiceHashMiner.Miners.lyclMiner.InBenchmark == "Stratum error")
-                    {
-                        MessageBox.Show("One of stratum server maybe down. Try to change location!", "Benchmark error", MessageBoxButtons.OK);
-                    }
-                    else
-                    {
-                        var result = MessageBox.Show(
-                            International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
-                            International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
-                            MessageBoxButtons.OK);
-                    }
+               {
+                   MessageBox.Show(
+                       International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
+                       International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                       MessageBoxButtons.OK);
+               }
+               else if (StartMining == false)
+               {
+                   if (NiceHashMiner.Miners.lyclMiner.InBenchmark == "Stratum error")
+                   {
+                       MessageBox.Show("One of stratum server maybe down. Try to change location!", "Benchmark error", MessageBoxButtons.OK);
+                   }
+                   else
+                   {
+                       var result = MessageBox.Show(
+                           International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
+                           International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                           MessageBoxButtons.OK);
+                   }
                     /*
                     if (result == DialogResult.Retry)
                     {
@@ -783,13 +781,13 @@ namespace NiceHashMiner.Forms
                     */
                     // get unbenchmarked from criteria and disable
                     CalcBenchmarkDevicesAlgorithmQueue();
-                    foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue)
-                    foreach (var algorithm in deviceAlgoQueue.Item2)
-                        algorithm.Enabled = false;
-                }
+                   foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue)
+                       foreach (var algorithm in deviceAlgoQueue.Item2)
+                           algorithm.Enabled = false;
+               }
 
-                if (ExitWhenFinished || StartMining) Close();
-            });
+               if (ExitWhenFinished || StartMining) Close();
+           });
         }
 
         #endregion
@@ -815,8 +813,8 @@ namespace NiceHashMiner.Forms
             Algorithm.BenchmarkActive = false;
             // disable all pending benchmark
             foreach (var cDev in ComputeDeviceManager.Available.Devices)
-            foreach (var algorithm in cDev.GetAlgorithmSettings())
-                algorithm.ClearBenchmarkPending();
+                foreach (var algorithm in cDev.GetAlgorithmSettings())
+                    algorithm.ClearBenchmarkPending();
 
             // save already benchmarked algorithms
             ConfigManager.CommitBenchmarks();

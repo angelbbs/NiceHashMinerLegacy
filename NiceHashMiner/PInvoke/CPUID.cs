@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace NiceHashMiner
 {
@@ -53,17 +51,20 @@ namespace NiceHashMiner
             return coreCount;
         }
 
-        public static int GetNumberOfCores() {
+        public static int GetNumberOfCores()
+        {
             var coreCount = 0;
 
-            foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get()) {
+            foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get())
+            {
                 coreCount += int.Parse(item["NumberOfCores"].ToString());
             }
 
             return coreCount;
         }
 
-        public static bool IsHypeThreadingEnabled() {
+        public static bool IsHypeThreadingEnabled()
+        {
             return GetVirtualCoresCount() > GetNumberOfCores();
         }
 

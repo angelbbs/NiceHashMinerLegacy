@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace MyDownloader.Core
@@ -23,13 +21,13 @@ namespace MyDownloader.Core
         private long start;
         private TimeSpan left = TimeSpan.Zero;
         private int currentTry;
-        
+
         public int CurrentTry
         {
             get { return currentTry; }
             set { currentTry = value; }
         }
-        
+
         public SegmentState State
         {
             get
@@ -123,9 +121,9 @@ namespace MyDownloader.Core
 
         public long Transfered
         {
-            get 
+            get
             {
-                return this.StartPosition - this.InitialStartPosition; 
+                return this.StartPosition - this.InitialStartPosition;
             }
         }
 
@@ -133,7 +131,7 @@ namespace MyDownloader.Core
         {
             get
             {
-                return (this.EndPosition <= 0? 0: this.EndPosition - this.InitialStartPosition);
+                return (this.EndPosition <= 0 ? 0 : this.EndPosition - this.InitialStartPosition);
             }
         }
 
@@ -141,7 +139,7 @@ namespace MyDownloader.Core
         {
             get
             {
-                return (this.EndPosition <= 0? 0: this.EndPosition - this.StartPosition);
+                return (this.EndPosition <= 0 ? 0 : this.EndPosition - this.StartPosition);
             }
         }
 
@@ -150,7 +148,7 @@ namespace MyDownloader.Core
         {
             get
             {
-                return (this.EndPosition <= 0? 0: ((double)Transfered / (double)TotalToTransfer * 100.0f));
+                return (this.EndPosition <= 0 ? 0 : ((double)Transfered / (double)TotalToTransfer * 100.0f));
             }
         }
 

@@ -2,23 +2,19 @@ using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Miners.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Security;
-using System.Windows.Forms;
-using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
-using System.Linq;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Reflection;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms
 {
@@ -68,7 +64,7 @@ namespace NiceHashMiner.Forms
 
             // Initialize toolTip
             InitializeToolTip();
-            
+
             // Initialize tabs
             this.comboBox_ColorProfile.Items.Add("Default");
             this.comboBox_ColorProfile.Items.Add("Gray");
@@ -84,9 +80,9 @@ namespace NiceHashMiner.Forms
             this.comboBox_ColorProfile.Items.Add("DarkViolet");
             this.comboBox_ColorProfile.Items.Add("DarkSlateBlue");
             this.comboBox_ColorProfile.Items.Add("Tan");
-            
+
             InitializeGeneralTab();
-            
+
             // initialization calls
             InitializeDevicesTab();
             // link algorithm list with algorithm settings control
@@ -98,7 +94,7 @@ namespace NiceHashMiner.Forms
             // set first device selected {
             if (ComputeDeviceManager.Available.Devices.Count > 0)
             {
-                
+
                 _selectedComputeDevice = ComputeDeviceManager.Available.Devices[0];
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
                 groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
@@ -106,9 +102,9 @@ namespace NiceHashMiner.Forms
                 // groupBoxAlgorithmSettings.ForeColor = Form_Main._foreColor;
                 //if (_selectedComputeDevice.DeviceType != DeviceType.CPU)
 
-                        algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-                        groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_OverclockSettings"),
-                            _selectedComputeDevice.Name);
+                algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                groupBoxOverClockSettings.Text = string.Format(International.GetText("FormSettings_OverclockSettings"),
+                    _selectedComputeDevice.Name);
 
                 //groupBoxAlgorithmSettings.Text = "";
                 //groupBoxOverClockSettings.Text = "";
@@ -154,14 +150,16 @@ namespace NiceHashMiner.Forms
                 textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto3GBMaxEpoch.ToString();
                 labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
                 Form_Main.DaggerHashimotoMaxEpochUpdated = false;
-            } else
+            }
+            else
             if (Form_Main.DaggerHashimoto4GBVisible && Form_Main.DaggerHashimotoMaxEpochUpdated)
             {
                 textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString();
                 labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch") + "4GB";
                 labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
                 Form_Main.DaggerHashimotoMaxEpochUpdated = false;
-            } else
+            }
+            else
             if (Form_Main.DaggerHashimoto1070Visible && Form_Main.DaggerHashimotoMaxEpochUpdated)
             {
                 textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto1070MaxEpoch.ToString();
@@ -177,7 +175,7 @@ namespace NiceHashMiner.Forms
             }
         }
 
-       #region Initializations
+        #region Initializations
 
         private void InitializeToolTip()
         {
@@ -485,7 +483,7 @@ namespace NiceHashMiner.Forms
             richTextBoxInfo.AppendText("Miner Legacy Fork Fix");
             richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Regular);
             richTextBoxInfo.AppendText(International.GetText("Form_Settings_richTextBoxInfo"));
-            
+
             buttonCheckNewVersion.Text = International.GetText("Form_Settings_Checknow");
             buttonUpdate.Text = International.GetText("Form_Settings_Updatenow");
 
@@ -523,7 +521,7 @@ namespace NiceHashMiner.Forms
             //label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
             //label_SwitchMaxSeconds.Text =
-              //  International.GetText("Form_Settings_General_SwitchMaxSeconds") + ":";
+            //  International.GetText("Form_Settings_General_SwitchMaxSeconds") + ":";
             //label_SwitchMinSeconds.Text = International.GetText("Form_Settings_General_SwitchMinSeconds") + ":";
             //label_APIBindPortStart.Text = International.GetText("Form_Settings_APIBindPortStart") + ":";
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
@@ -548,7 +546,8 @@ namespace NiceHashMiner.Forms
                 }
                 this.Width = ConfigManager.GeneralConfig.SettingsFormWidth;
                 this.Height = ConfigManager.GeneralConfig.SettingsFormHeight;
-            } else
+            }
+            else
             {
                 this.Top = 0;
                 this.Left = 0;
@@ -560,10 +559,10 @@ namespace NiceHashMiner.Forms
             comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
-                  this.BackColor = Form_Main._backColor;
-                 this.ForeColor = Form_Main._foreColor;
-                  this.tabControlGeneral.DisplayStyle = TabStyle.Angled;
-                  this.tabControlGeneral.DisplayStyleProvider.Opacity = 0.8F;
+                this.BackColor = Form_Main._backColor;
+                this.ForeColor = Form_Main._foreColor;
+                this.tabControlGeneral.DisplayStyle = TabStyle.Angled;
+                this.tabControlGeneral.DisplayStyleProvider.Opacity = 0.8F;
 
                 this.tabControlGeneral.DisplayStyleProvider.TextColor = Color.White;
                 this.tabControlGeneral.DisplayStyleProvider.TextColorDisabled = Color.White;
@@ -642,13 +641,13 @@ namespace NiceHashMiner.Forms
                 }
 
                 richTextBoxInfo.BackColor = Form_Main._backColor;
-                    richTextBoxInfo.ForeColor = Form_Main._textColor;
+                richTextBoxInfo.ForeColor = Form_Main._textColor;
                 linkLabelCurrentVersion.BackColor = Form_Main._backColor;
                 linkLabelCurrentVersion.ForeColor = Form_Main._textColor;
                 linkLabelCurrentVersion.LinkColor = Form_Main._textColor;
                 linkLabelCurrentVersion.ActiveLinkColor = Form_Main._textColor;
                 linkLabelCurrentVersion.MouseLeave += (s, e) => linkLabelCurrentVersion.LinkBehavior = LinkBehavior.NeverUnderline;
-                linkLabelCurrentVersion.MouseEnter += (s, e) => linkLabelCurrentVersion.LinkBehavior =LinkBehavior.AlwaysUnderline;
+                linkLabelCurrentVersion.MouseEnter += (s, e) => linkLabelCurrentVersion.LinkBehavior = LinkBehavior.AlwaysUnderline;
                 linkLabelNewVersion2.MouseLeave += (s, e) => linkLabelNewVersion2.LinkBehavior = LinkBehavior.NeverUnderline;
                 linkLabelNewVersion2.MouseEnter += (s, e) => linkLabelNewVersion2.LinkBehavior = LinkBehavior.AlwaysUnderline;
 
@@ -774,7 +773,7 @@ namespace NiceHashMiner.Forms
                 checkBox_DisplayConnected.ForeColor = Form_Main._textColor;
 
                 checkBox_show_NVdevice_manufacturer.BackColor = Form_Main._backColor;
-                checkBox_show_NVdevice_manufacturer.ForeColor = Form_Main._textColor; 
+                checkBox_show_NVdevice_manufacturer.ForeColor = Form_Main._textColor;
                 checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
                 checkBox_show_AMDdevice_manufacturer.ForeColor = Form_Main._textColor;
 
@@ -895,7 +894,8 @@ namespace NiceHashMiner.Forms
                 algorithmsListViewOverClock1.ForeColor = Form_Main._foreColor;
                 tabPageGeneral.BackColor = Form_Main._backColor;
                 tabPageGeneral.ForeColor = Form_Main._foreColor;
-            } else
+            }
+            else
             {
                 devicesListViewEnableControl1.BackColor = SystemColors.ControlLightLight;
                 devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;
@@ -936,7 +936,7 @@ namespace NiceHashMiner.Forms
                 checkBoxNVMonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxAMDmonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_HideMiningWindows.CheckedChanged +=GeneralCheckBoxes_CheckedChanged;
+                checkBox_HideMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AlwaysOnTop.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_StartMiningWhenIdle.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 //checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1153,7 +1153,7 @@ namespace NiceHashMiner.Forms
                 //var oc = tabPageOverClock;
                 //tabControlGeneral.TabPages.Remove(oc);
             }
-      
+
 
         }
 
@@ -1243,13 +1243,14 @@ namespace NiceHashMiner.Forms
             if (checkBox_LogToFile.Checked)
             {
                 textBox_LogMaxFileSize.Enabled = true;
-            } else
+            }
+            else
             {
                 textBox_LogMaxFileSize.Enabled = false;
             }
         }
 
-        
+
         private void checkBox_RunAtStartup_CheckedChanged_1(object sender, EventArgs e)
         {
             _isStartupChanged = true;
@@ -1262,7 +1263,7 @@ namespace NiceHashMiner.Forms
             RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
             try
             {
-                startVal = (string) runKey.GetValue(Application.ProductName);
+                startVal = (string)runKey.GetValue(Application.ProductName);
             }
             catch (Exception e)
             {
@@ -1321,19 +1322,19 @@ namespace NiceHashMiner.Forms
         {
             if (!_isInitFinished) return;
             IsChange = true;
-            ConfigManager.GeneralConfig.Language = (LanguageType) comboBox_Language.SelectedIndex;
+            ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
             ConfigManager.GeneralConfig.ColorProfileIndex = comboBox_ColorProfile.SelectedIndex;
             ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = comboBox_switching_algorithms.SelectedIndex;
             ConfigManager.GeneralConfig.DevicesCountIndex = comboBox_devices_count.SelectedIndex;
             ConfigManager.GeneralConfig.ProgramUpdateIndex = comboBoxCheckforprogramupdatesevery.SelectedIndex;
             ConfigManager.GeneralConfig.ProgramRestartIndex = comboBoxRestartProgram.SelectedIndex;
-            ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
+            ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType)comboBox_TimeUnit.SelectedIndex;
         }
 
         private void ComboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cmbbox = (ComboBox) sender;
-            ConfigManager.GeneralConfig.ForceCPUExtension = (CpuExtensionType) cmbbox.SelectedIndex;
+            var cmbbox = (ComboBox)sender;
+            ConfigManager.GeneralConfig.ForceCPUExtension = (CpuExtensionType)cmbbox.SelectedIndex;
         }
 
         #endregion //Tab General
@@ -1378,7 +1379,7 @@ namespace NiceHashMiner.Forms
             var url = Links.NhmProfitCheck + _selectedComputeDevice.Name;
             foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest())
             {
-                var id = (int) algorithm.NiceHashID;
+                var id = (int)algorithm.NiceHashID;
                 url += "&speed" + id + "=" + ProfitabilityCalculator
                            .GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID)
                            .ToString("F2", CultureInfo.InvariantCulture);
@@ -1391,7 +1392,7 @@ namespace NiceHashMiner.Forms
 
         private void ButtonGPUtuning_Click(object sender, EventArgs e)
         {
-             System.Diagnostics.Process.Start("GPU-Tuning.exe");
+            System.Diagnostics.Process.Start("GPU-Tuning.exe");
         }
 
         #endregion //Tab Device
@@ -1506,7 +1507,7 @@ namespace NiceHashMiner.Forms
             if (IsChangeSaved)
             {
 
-            ConfigManager.GeneralConfigFileCommit();
+                ConfigManager.GeneralConfigFileCommit();
                 ConfigManager.CommitBenchmarks();
                 International.Initialize(ConfigManager.GeneralConfig.Language);
 
@@ -1597,7 +1598,7 @@ namespace NiceHashMiner.Forms
 
         private void textBox_AutoStartMiningDelay_KeyPress(object sender, KeyPressEventArgs e)
         {
-        char number = e.KeyChar;
+            char number = e.KeyChar;
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
@@ -1757,50 +1758,50 @@ namespace NiceHashMiner.Forms
             e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
         }
 
-            private void tabControlGeneral_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
+        private void tabControlGeneral_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
+        {
+            TabPage CurrentTab = tabControlGeneral.TabPages[e.Index];
+            Rectangle ItemRect = tabControlGeneral.GetTabRect(e.Index);
+            SolidBrush FillBrush = new SolidBrush(Color.Red);
+            SolidBrush TextBrush = new SolidBrush(Color.White);
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+            sf.LineAlignment = StringAlignment.Center;
+
+            //If we are currently painting the Selected TabItem we'll
+            //change the brush colors and inflate the rectangle.
+            if (System.Convert.ToBoolean(e.State & DrawItemState.Selected))
             {
-                TabPage CurrentTab = tabControlGeneral.TabPages[e.Index];
-                Rectangle ItemRect = tabControlGeneral.GetTabRect(e.Index);
-                SolidBrush FillBrush = new SolidBrush(Color.Red);
-                SolidBrush TextBrush = new SolidBrush(Color.White);
-                StringFormat sf = new StringFormat();
-                sf.Alignment = StringAlignment.Center;
-                sf.LineAlignment = StringAlignment.Center;
-
-                //If we are currently painting the Selected TabItem we'll
-                //change the brush colors and inflate the rectangle.
-                if (System.Convert.ToBoolean(e.State & DrawItemState.Selected))
-                {
-                    FillBrush.Color = Color.White;
-                    TextBrush.Color = Color.Red;
-                    ItemRect.Inflate(2, 2);
-                }
-
-                //Set up rotation for left and right aligned tabs
-                if (tabControlGeneral.Alignment == TabAlignment.Left || tabControlGeneral.Alignment == TabAlignment.Right)
-                {
-                    float RotateAngle = 90;
-                    if (tabControlGeneral.Alignment == TabAlignment.Left)
-                        RotateAngle = 270;
-                    PointF cp = new PointF(ItemRect.Left + (ItemRect.Width / 2), ItemRect.Top + (ItemRect.Height / 2));
-                    e.Graphics.TranslateTransform(cp.X, cp.Y);
-                    e.Graphics.RotateTransform(RotateAngle);
-                    ItemRect = new Rectangle(-(ItemRect.Height / 2), -(ItemRect.Width / 2), ItemRect.Height, ItemRect.Width);
-                }
-
-                //Next we'll paint the TabItem with our Fill Brush
-                e.Graphics.FillRectangle(FillBrush, ItemRect);
-
-                //Now draw the text.
-                e.Graphics.DrawString(CurrentTab.Text, e.Font, TextBrush, (RectangleF)ItemRect, sf);
-
-                //Reset any Graphics rotation
-                e.Graphics.ResetTransform();
-
-                //Finally, we should Dispose of our brushes.
-                FillBrush.Dispose();
-                TextBrush.Dispose();
+                FillBrush.Color = Color.White;
+                TextBrush.Color = Color.Red;
+                ItemRect.Inflate(2, 2);
             }
+
+            //Set up rotation for left and right aligned tabs
+            if (tabControlGeneral.Alignment == TabAlignment.Left || tabControlGeneral.Alignment == TabAlignment.Right)
+            {
+                float RotateAngle = 90;
+                if (tabControlGeneral.Alignment == TabAlignment.Left)
+                    RotateAngle = 270;
+                PointF cp = new PointF(ItemRect.Left + (ItemRect.Width / 2), ItemRect.Top + (ItemRect.Height / 2));
+                e.Graphics.TranslateTransform(cp.X, cp.Y);
+                e.Graphics.RotateTransform(RotateAngle);
+                ItemRect = new Rectangle(-(ItemRect.Height / 2), -(ItemRect.Width / 2), ItemRect.Height, ItemRect.Width);
+            }
+
+            //Next we'll paint the TabItem with our Fill Brush
+            e.Graphics.FillRectangle(FillBrush, ItemRect);
+
+            //Now draw the text.
+            e.Graphics.DrawString(CurrentTab.Text, e.Font, TextBrush, (RectangleF)ItemRect, sf);
+
+            //Reset any Graphics rotation
+            e.Graphics.ResetTransform();
+
+            //Finally, we should Dispose of our brushes.
+            FillBrush.Dispose();
+            TextBrush.Dispose();
+        }
 
         private void comboBox_ServiceLocation_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -2373,8 +2374,8 @@ namespace NiceHashMiner.Forms
         {
             if (checkBox_AllowMultipleInstances.Checked && checkBox_program_monitoring.Checked)
             {
-                    MessageBox.Show(International.GetText("Form_Settings_uncompatible_options1"),
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(International.GetText("Form_Settings_uncompatible_options1"),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 checkBox_AllowMultipleInstances.Checked = false;
             }
         }
@@ -2393,7 +2394,8 @@ namespace NiceHashMiner.Forms
                 checkBoxRestartDriver.Enabled = false;
                 checkBoxCheckingCUDA.Enabled = false;
                 checkBox_show_NVdevice_manufacturer.Enabled = false;
-            } else
+            }
+            else
             {
                 checkBoxNVMonitoring.Enabled = true;
                 checkBoxRestartWindows.Enabled = true;
@@ -2504,7 +2506,8 @@ namespace NiceHashMiner.Forms
                 {
                     MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
-                } else
+                }
+                else
                 {
                     MSIAfterburner.InitTempFiles();
                 }
@@ -2517,7 +2520,7 @@ namespace NiceHashMiner.Forms
                 if (MSIAfterburner.mahm != null) MSIAfterburner.mahm.Disconnect();
                 MSIAfterburner.macm = null;
                 MSIAfterburner.mahm = null;
-                
+
             }
             oc.Focus();
         }

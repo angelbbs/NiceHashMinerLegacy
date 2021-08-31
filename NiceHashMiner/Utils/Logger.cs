@@ -4,7 +4,6 @@ using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
 using NiceHashMiner.Configs;
-using System;
 using System.IO;
 
 namespace NiceHashMiner
@@ -30,7 +29,7 @@ namespace NiceHashMiner
             IsInit = true;
             try
             {
-                var h = (Hierarchy) LogManager.GetRepository();
+                var h = (Hierarchy)LogManager.GetRepository();
 
                 if (ConfigManager.GeneralConfig.LogToFile)
                     h.Root.Level = Level.Info;

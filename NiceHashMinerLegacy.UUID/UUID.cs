@@ -35,7 +35,7 @@ namespace NiceHashMinerLegacy.UUID
                 Console.WriteLine("NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]");
                 Console.WriteLine(infoToHash);
             }
-//            Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
+            //            Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
             var hexUuid = GetHexUUID(infoToHash);
             return $"{0}-{GetB64UUID(hexUuid)}";
         }
@@ -94,9 +94,9 @@ namespace NiceHashMinerLegacy.UUID
                 //return (string)readValue;
                 return (string)readValue;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-//                Logger.Error("NHM.UUID", $"GetMachineGuid: {e.Message}");
+                //                Logger.Error("NHM.UUID", $"GetMachineGuid: {e.Message}");
             }
             // fallback
             Console.WriteLine("Using cpuID: " + GetCpuID());

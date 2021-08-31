@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MyDownloader.Core.Extensions;
 using MyDownloader.Core;
-using System.IO;
+using MyDownloader.Core.Extensions;
+using System;
 
 namespace MyDownloader.Extension.Protocols
 {
-    public class HttpFtpProtocolExtension: IExtension
+    public class HttpFtpProtocolExtension : IExtension
     {
         internal static IHttpFtpProtocolParameters parameters;
 
@@ -23,7 +20,7 @@ namespace MyDownloader.Extension.Protocols
             get { return new HttpFtpProtocolUIExtension(); }
         }
 
-        public HttpFtpProtocolExtension():
+        public HttpFtpProtocolExtension() :
             this(new HttpFtpProtocolParametersSettingsProxy())
         {
         }

@@ -1,20 +1,17 @@
+using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using NiceHashMiner.Configs;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
     public partial class Form_Loading : Form, IMessageNotifier, IMinerUpdateIndicator
     {
-        public interface IAfterInitializationCaller {
+        public interface IAfterInitializationCaller
+        {
             void AfterLoadComplete();
         }
 
@@ -56,25 +53,30 @@ namespace NiceHashMiner
 
         // download miners constructor
         MinersDownloader _minersDownloader = null;
-        public Form_Loading(MinersDownloader minersDownloader) {
+        public Form_Loading(MinersDownloader minersDownloader)
+        {
             InitializeComponent();
             label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
             _minersDownloader = minersDownloader;
         }
 
-        public void IncreaseLoadCounterAndMessage(string infoMsg) {
+        public void IncreaseLoadCounterAndMessage(string infoMsg)
+        {
             SetInfoMsg(infoMsg);
             IncreaseLoadCounter();
         }
 
-        public void SetProgressMaxValue(int maxValue) {
+        public void SetProgressMaxValue(int maxValue)
+        {
             this.progressBar2.Maximum = maxValue;
         }
-        public void SetInfoMsg(string infoMsg) {
+        public void SetInfoMsg(string infoMsg)
+        {
             this.LoadText.Text = infoMsg;
         }
 
-        public void IncreaseLoadCounter() {
+        public void IncreaseLoadCounter()
+        {
             /*
             LoadCounter++;
             this.progressBar2.Value = LoadCounter;
@@ -88,7 +90,8 @@ namespace NiceHashMiner
             */
         }
 
-        public void FinishLoad() {
+        public void FinishLoad()
+        {
             this.Close();
             this.Dispose();
             AfterInitCaller.AfterLoadComplete();
@@ -99,7 +102,8 @@ namespace NiceHashMiner
             */
         }
 
-        public void SetValueAndMsg(int setValue, string infoMsg) {
+        public void SetValueAndMsg(int setValue, string infoMsg)
+        {
             //SetInfoMsg(infoMsg);
             progressBar2.Maximum = TotalLoadSteps;
             this.LoadText.Text = infoMsg;
@@ -120,26 +124,33 @@ namespace NiceHashMiner
         }
 
         #region IMessageNotifier
-        public void SetMessage(string infoMsg) {
+        public void SetMessage(string infoMsg)
+        {
             SetInfoMsg(infoMsg);
         }
 
-        public void SetMessageAndIncrementStep(string infoMsg) {
+        public void SetMessageAndIncrementStep(string infoMsg)
+        {
             IncreaseLoadCounterAndMessage(infoMsg);
         }
         #endregion //IMessageNotifier
 
         #region IMinerUpdateIndicator
-        public void SetMaxProgressValue(int max) {
-            this.Invoke((MethodInvoker)delegate {
+        public void SetMaxProgressValue(int max)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
                 this.progressBar2.Maximum = max;
                 this.progressBar2.Value = 0;
             });
         }
 
-        public void SetProgressValueAndMsg(int value, string msg) {
-            if (value <= this.progressBar2.Maximum) {
-                this.Invoke((MethodInvoker)delegate {
+        public void SetProgressValueAndMsg(int value, string msg)
+        {
+            if (value <= this.progressBar2.Maximum)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
                     this.progressBar2.Value = value;
                     this.LoadText.Text = msg;
                     this.progressBar2.Invalidate();
@@ -148,17 +159,24 @@ namespace NiceHashMiner
             }
         }
 
-        public void SetTitle(string title) {
-            this.Invoke((MethodInvoker)delegate {
+        public void SetTitle(string title)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
                 label_LoadingText.Text = title;
             });
         }
 
-        public void FinishMsg(bool ok) {
-            this.Invoke((MethodInvoker)delegate {
-                if (ok) {
+        public void FinishMsg(bool ok)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                if (ok)
+                {
                     label_LoadingText.Text = "Init Finished!";
-                } else {
+                }
+                else
+                {
                     label_LoadingText.Text = "Init Failed!";
                 }
                 System.Threading.Thread.Sleep(100);
@@ -169,8 +187,10 @@ namespace NiceHashMiner
         #endregion IMinerUpdateIndicator
 
 
-        private void Form_Loading_Shown(object sender, EventArgs e) {
-            if (_minersDownloader != null) {
+        private void Form_Loading_Shown(object sender, EventArgs e)
+        {
+            if (_minersDownloader != null)
+            {
                 _minersDownloader.Start(this);
             }
         }

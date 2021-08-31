@@ -1,25 +1,19 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Globalization;
-using System.Net;
-using System.Net.Sockets;
-using System.Windows.Forms;
-using System.Management;
+using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
-using Newtonsoft.Json;
-using System.Linq;
-using System.Text.RegularExpressions;
 using static NiceHashMiner.Devices.ComputeDeviceManager;
 
 namespace NiceHashMiner.Miners
@@ -40,11 +34,13 @@ namespace NiceHashMiner.Miners
 
         }
 
-        protected override int GetMaxCooldownTimeInMilliseconds() {
-            return 60*1000;
+        protected override int GetMaxCooldownTimeInMilliseconds()
+        {
+            return 60 * 1000;
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
@@ -71,9 +67,9 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 LastCommandLine = "--coin AUTO144_5 --pool " + url + " --user " + username + " --pass x" +
-                    " --pool zhash." + Form_Main.myServers[1, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
-                    " --pool zhash." + Form_Main.myServers[2, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
-                    " --pool zhash." + Form_Main.myServers[3, 0] + ".nicehash.com:3369 " +" --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[1, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[2, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[3, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
                     apiBind + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
@@ -201,7 +197,8 @@ namespace NiceHashMiner.Miners
         // new decoupled benchmarking routines
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
             var apiBind = " --apiport " + ApiPort;
             var CommandLine = "";
 
@@ -393,7 +390,7 @@ namespace NiceHashMiner.Miners
                                 Helpers.ConsolePrint(MinerTag(), " IDByBus=" + mPair.Device.IDByBus.ToString() + " ID=" + mPair.Device.ID.ToString() + " edevice=" + edevice.ToString() + " edeviceBus=" + edeviceBus.ToString());
                                 if (mPair.Device.IDByBus == edeviceBus)
                                 {
-                                      //  mPair.Device.lolMinerBusID = edevice;
+                                    //  mPair.Device.lolMinerBusID = edevice;
                                 }
                             }
 
@@ -404,7 +401,7 @@ namespace NiceHashMiner.Miners
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -460,7 +457,7 @@ namespace NiceHashMiner.Miners
                     id ++;
                 }
                 */
-                Helpers.ConsolePrint("lolMinerIndexing", "Minind ID: " + id );
+                Helpers.ConsolePrint("lolMinerIndexing", "Minind ID: " + id);
                 {
                     ids.Add(id.ToString());
                 }
@@ -670,7 +667,6 @@ namespace NiceHashMiner.Miners
         {
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             string ResponseFromlolMiner;
-            double total = 0;
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/summary");
@@ -688,7 +684,7 @@ namespace NiceHashMiner.Miners
                 Reader.Close();
                 Response.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -746,7 +742,8 @@ namespace NiceHashMiner.Miners
                         }
                     }
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Helpers.ConsolePrint(MinerTag(), e.ToString());
             }

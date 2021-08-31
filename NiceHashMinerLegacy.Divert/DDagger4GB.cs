@@ -1,22 +1,13 @@
-using System;
-using WinDivertSharp;
-using WinDivertSharp.WinAPI;
-using System.Runtime.InteropServices;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Threading.Tasks;
-using System.Threading;
-using Newtonsoft.Json;
-using System.Net.NetworkInformation;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Security.Principal;
-using System.Management;
-using System.Runtime.ExceptionServices;
-using System.Text.RegularExpressions;
-using System.Linq;
 using HashLib;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using WinDivertSharp;
 
 namespace NiceHashMinerLegacy.Divert
 {
@@ -103,14 +94,12 @@ namespace NiceHashMinerLegacy.Divert
         {
             var packet = new WinDivertBuffer();
             var addr = new WinDivertAddress();
-            int np = 1;
             uint readLen = 0;
             List<string> InboundPorts = new List<string>();
 
             //Span<byte> packetData = null;
 
             IntPtr recvEvent = IntPtr.Zero;
-            bool modified = false;
             bool result;
 
             do
@@ -121,7 +110,6 @@ namespace NiceHashMinerLegacy.Divert
                     if (Divert.Dagger4GBdivert_running)
                     {
                         readLen = 0;
-                        modified = false;
                         PacketPayloadData = null;
                         packet.Dispose();
 
@@ -179,7 +167,7 @@ namespace NiceHashMinerLegacy.Divert
                                             var epoch = Epoch(seedhash);
                                             Helpers.ConsolePrint("WinDivertSharp", "Epoch = " + epoch.ToString());
 
-                                            if (epoch <= MaxEpoch) 
+                                            if (epoch <= MaxEpoch)
                                             {
                                                 Divert.Dagger4GBEpochCount = 0;
                                             }

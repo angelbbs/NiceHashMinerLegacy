@@ -1,17 +1,16 @@
+using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using NiceHashMiner.Configs;
-using System.Net;
-using System.IO;
-using Newtonsoft.Json;
-using System.Threading;
 using System.Diagnostics;
-using NiceHashMiner.Devices;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -116,7 +115,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 -u1 " + user +
-                    $" -o2 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 -u2 " + user  +
+                    $" -o2 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
@@ -134,7 +133,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
             {
                 cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://grincuckatoo31." + Form_Main.myServers[1, 0] + ".nicehash.com:3372 -u1 " + user +
-                    $" -o2 stratum+tcp://grincuckatoo31." + Form_Main.myServers[2, 0] + ".nicehash.com:3372 -u2 " +user +
+                    $" -o2 stratum+tcp://grincuckatoo31." + Form_Main.myServers[2, 0] + ".nicehash.com:3372 -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
@@ -197,7 +196,7 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            _targetBenchIters = Math.Max(1, (int) Math.Floor(time / 20d));
+            _targetBenchIters = Math.Max(1, (int)Math.Floor(time / 20d));
 
             var url = GetServiceUrl(algorithm.NiceHashID);
             var btcAddress = Globals.GetBitcoinUser();
@@ -216,7 +215,8 @@ namespace NiceHashMiner.Miners
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
                     platform = "--platform 1";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
-                } else
+                }
+                else
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
                     platform = "--platform 2";
@@ -430,7 +430,6 @@ namespace NiceHashMiner.Miners
             ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
             string ResponseFromNBMiner;
-            double total = 0;
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/api/v1/status");
@@ -447,7 +446,7 @@ namespace NiceHashMiner.Miners
                 Reader.Close();
                 Response.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

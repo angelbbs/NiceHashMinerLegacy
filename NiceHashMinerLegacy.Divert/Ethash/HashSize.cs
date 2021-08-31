@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HashLib
+﻿namespace HashLib
 {
     public enum HashSize
     {

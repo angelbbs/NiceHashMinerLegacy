@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,7 +14,7 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
         }
-        
+
         private void WaitingForm_Load(object sender, EventArgs e)
         {
             progressBar1.Style = ProgressBarStyle.Marquee;
@@ -40,7 +33,8 @@ namespace NiceHashMiner.Forms
                 _ended = true;
                 System.Threading.Thread.Sleep(200);
                 task1.Dispose();
-            } catch (Exception ex)
+            }
+            catch (Exception)
             {
 
             }

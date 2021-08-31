@@ -37,7 +37,8 @@ namespace NiceHashMiner.Configs
             if (GeneralConfigFile.IsFileExists())
             {
                 fromFile = GeneralConfigFile.ReadFile();
-            } else
+            }
+            else
             {
                 GeneralConfigFile.RestoreFromBackup();
                 fromFile = GeneralConfigFile.ReadFile();

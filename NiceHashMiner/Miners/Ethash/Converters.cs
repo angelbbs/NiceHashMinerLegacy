@@ -467,7 +467,7 @@ namespace HashLib
         }
 
         [Conditional("DEBUG")]
-        private static void Check<I, O>(I[] a_in, int a_in_size, O[] a_result, int a_out_size, int a_index_in, int a_length, 
+        private static void Check<I, O>(I[] a_in, int a_in_size, O[] a_result, int a_out_size, int a_index_in, int a_length,
             int a_index_out)
         {
             Debug.Assert((a_length * a_in_size % a_out_size) == 0);

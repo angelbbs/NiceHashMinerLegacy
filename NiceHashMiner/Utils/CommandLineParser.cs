@@ -21,7 +21,7 @@ namespace NiceHashMiner.Utils
                 // if parsing fails set to default
                 if (int.TryParse(tmpString, out var tmp))
                 {
-                    LangValue = (LanguageType) tmp;
+                    LangValue = (LanguageType)tmp;
                 }
                 else
                 {

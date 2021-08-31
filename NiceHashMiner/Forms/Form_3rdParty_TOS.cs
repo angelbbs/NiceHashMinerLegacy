@@ -1,7 +1,7 @@
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Windows.Forms;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Forms
 {

@@ -1,20 +1,19 @@
-using NiceHashMiner.Configs;
-using NiceHashMiner.Miners.Parsing;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using System.Windows.Forms;
-using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Net;
-using System.IO;
-using System.Threading;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
+using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
+using System.IO;
 using System.Linq;
-using NiceHashMiner.Devices;
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Miners
 {
@@ -146,14 +145,12 @@ namespace NiceHashMiner.Miners
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
             var algo = "cryptonightv7";
             var port = "3363";
-            var variant = " --variant 1 ";
             string username = GetUsername(btcAdress, worker);
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
                 algo = "randomxmonero";
                 port = "3380";
-                variant = "";
                 return $" --algo=rx/0 -o stratum+tcp://xmr-eu1.nanopool.org:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p x {extras} --http-port {ApiPort} --donate-level=1 "
                 + $" -o stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} -u {username}:x {platform}"
                + GetDevicesCommandString().TrimStart();
@@ -390,17 +387,18 @@ namespace NiceHashMiner.Miners
                 if (!lineLowered.Contains(LookForStart)) continue;
                 var speeds = Regex.Match(lineLowered, $"{LookForStart} (.+?) {LookForEnd}").Groups[1].Value.Split();
 
-                try {
-                if (double.TryParse(speeds[1], out var sixtySecSpeed))
+                try
+                {
+                    if (double.TryParse(speeds[1], out var sixtySecSpeed))
                     {
-                    sixtySecTotal += sixtySecSpeed;
-                    ++sixtySecCount;
+                        sixtySecTotal += sixtySecSpeed;
+                        ++sixtySecCount;
                     }
-                else if (double.TryParse(speeds[0], out var twoSecSpeed))
+                    else if (double.TryParse(speeds[0], out var twoSecSpeed))
                     {
-                    // Store 10s data in case 60s is never reached
-                    twoSecTotal += twoSecSpeed;
-                    ++twoSecCount;
+                        // Store 10s data in case 60s is never reached
+                        twoSecTotal += twoSecSpeed;
+                        ++twoSecCount;
                     }
                 }
                 catch

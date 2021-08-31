@@ -1,22 +1,19 @@
+using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
-using System.Threading;
-using System.Net;
 using System.IO;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Net.Sockets;
-using System.Windows.Forms;
-using NiceHashMiner.Devices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -280,8 +277,8 @@ namespace NiceHashMiner.Miners
                             benchmarkTimer.Stop();
 
                             int pid = BenchmarkHandle.Id;
-                                try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
-                                Thread.Sleep(1000);
+                            try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
+                            Thread.Sleep(1000);
 
                             BenchmarkHandle.Kill();
                             BenchmarkHandle.Dispose();
@@ -313,7 +310,7 @@ namespace NiceHashMiner.Miners
         }
         #endregion // Decoupled benchmarking routines
 
-        
+
         private class JsonApiResponse
         {
 #pragma warning disable IDE1006 // Naming Styles

@@ -90,9 +90,9 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
                     File.Delete(FilePathOld);
                 File.Copy(FilePath, FilePathOld, true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-               // Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
+                // Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
             }
         }
 

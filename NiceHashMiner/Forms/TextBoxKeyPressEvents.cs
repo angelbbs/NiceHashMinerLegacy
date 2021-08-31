@@ -37,7 +37,7 @@ namespace NiceHashMiner
                 e.Handled = true;
             }
             // only allow one decimal point
-            if ((e.KeyChar == '.') && (((TextBox) sender).Text.IndexOf('.') > -1))
+            if ((e.KeyChar == '.') && (((TextBox)sender).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
             }

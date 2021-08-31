@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace MyDownloader.Core.Concurrency
@@ -60,7 +58,7 @@ namespace MyDownloader.Core.Concurrency
         #region Fields
         private ReaderWriterLock locker;
         private IDisposable writerReleaser;
-        private IDisposable readerReleaser; 
+        private IDisposable readerReleaser;
         #endregion
 
         #region Constructor
@@ -71,7 +69,7 @@ namespace MyDownloader.Core.Concurrency
 
             writerReleaser = new WriterReleaser(this);
             readerReleaser = new ReaderReleaser(this);
-        } 
+        }
         #endregion
 
         #region Methods
@@ -87,7 +85,7 @@ namespace MyDownloader.Core.Concurrency
             locker.AcquireWriterLock(-1);
 
             return writerReleaser;
-        } 
+        }
         #endregion
     }
 }

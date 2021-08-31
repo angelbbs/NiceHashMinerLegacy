@@ -1,21 +1,12 @@
 using System;
-using WinDivertSharp;
-using WinDivertSharp.WinAPI;
-using System.Runtime.InteropServices;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Threading.Tasks;
-using System.Threading;
-using Newtonsoft.Json;
-using System.Net.NetworkInformation;
 using System.Collections.Generic;
+using System.Net;
 //using PacketDotNet;
-using System.Diagnostics;
-using System.Security.Principal;
-using System.Management;
 using System.Runtime.ExceptionServices;
-using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using WinDivertSharp;
 
 namespace NiceHashMinerLegacy.Divert
 {
@@ -90,23 +81,20 @@ namespace NiceHashMinerLegacy.Divert
         {
             var packet = new WinDivertBuffer();
             var addr = new WinDivertAddress();
-            int np = 1;
             uint readLen = 0;
             List<string> InboundPorts = new List<string>();
 
             IntPtr recvEvent = IntPtr.Zero;
-            bool modified = false;
             bool result;
 
             do
             {
                 try
                 {
-nextCycle:
+                    nextCycle:
                     if (Divert.Testdivert_running)
                     {
                         readLen = 0;
-                        modified = false;
                         PacketPayloadData = null;
                         packet.Dispose();
 
@@ -137,16 +125,16 @@ nextCycle:
                             OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
 
-                        if (addr.Direction == WinDivertDirection.Outbound )
+                        if (addr.Direction == WinDivertDirection.Outbound)
                         {
                             //список соответствия src port и dst ip
-                            if(!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
+                            if (!Divert.CheckSrcPort(InboundPorts, Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString()))
                             {
                                 InboundPorts.Add(Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                 ":" + parse_result.IPv4Header->DstAddr.ToString());
                             }
 
-                            if (OwnerPID.Contains("NiceHashMinerLegacy")  &&
+                            if (OwnerPID.Contains("NiceHashMinerLegacy") &&
                                 (Divert.SwapOrder(parse_result.TcpHeader->DstPort) == 80)
                                 )
                             {
@@ -155,9 +143,8 @@ nextCycle:
                                 Helpers.ConsolePrint("WinDivertSharp",
                                 "(" + OwnerPID.ToString() + ") -> Test connection to (" +
                                 TestIP + ":" + Divert.SwapOrder(TestPort) + ")");
-                               DivertIP = DivertIP_Test;
+                                DivertIP = DivertIP_Test;
                                 DivertPort = Divert.SwapOrder(DivertPort_Test);
-                                modified = true;
                                 goto changeSrcDst;
                             }
                         }
@@ -180,11 +167,10 @@ nextCycle:
                             }
                         }
 
-                        modified = false;
                         goto sendPacket;
 
 
-changeSrcDst:
+                        changeSrcDst:
 
                         if (parse_result.TcpHeader->DstPort == TestPort &&
                                 addr.Direction == WinDivertDirection.Outbound &&
@@ -195,12 +181,12 @@ changeSrcDst:
                                     "Test SrcAdr: " + parse_result.IPv4Header->SrcAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->SrcPort).ToString() +
                                     "  Test DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString() +
                                     " len: " + readLen.ToString());
-                                parse_result.IPv4Header->DstAddr = IPAddress.Parse(DivertIP);
-                                parse_result.TcpHeader->DstPort = DivertPort;
+                            parse_result.IPv4Header->DstAddr = IPAddress.Parse(DivertIP);
+                            parse_result.TcpHeader->DstPort = DivertPort;
                             parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
                             Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " +
                                     "-> New Test port: " + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
-                                   // "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
+                            // "-> New DevFee DstAdr: " + parse_result.IPv4Header->DstAddr.ToString() + ":" + Divert.SwapOrder(parse_result.TcpHeader->DstPort).ToString());
 
                             if (parse_result.PacketPayloadLength > 0)
                             {
@@ -238,7 +224,7 @@ changeSrcDst:
                         }
 
 
-sendPacket:
+                        sendPacket:
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
 
                         parse_result = WinDivert.WinDivertHelperParsePacket(packet, readLen);
@@ -263,10 +249,11 @@ sendPacket:
 
                         if (!WinDivert.WinDivertSend(handle, packet, readLen, ref addr))
                         {
-                              Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
+                            Helpers.ConsolePrint("WinDivertSharp", "(" + OwnerPID.ToString() + ") " + "Write Err: {0}", Marshal.GetLastWin32Error());
                         }
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Helpers.ConsolePrint("WinDivertSharp error: ", e.ToString());
                     Thread.Sleep(300);

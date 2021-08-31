@@ -1,5 +1,5 @@
-using System;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -10,7 +10,7 @@ namespace NiceHashMiner.Configs.Data
         public AlgorithmType NiceHashID = AlgorithmType.NONE;
         public AlgorithmType SecondaryNiceHashID = AlgorithmType.NONE;
         public MinerBaseType MinerBaseType = MinerBaseType.NONE;
-        public string AlgorithmNameCustom = ""; 
+        public string AlgorithmNameCustom = "";
         public double BenchmarkSpeed = 0;
         public double BenchmarkSecondarySpeed = 0;
         public string ExtraLaunchParameters = "";

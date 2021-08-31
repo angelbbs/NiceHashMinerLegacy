@@ -1,25 +1,21 @@
-using NiceHashMiner.Configs;
-using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Miners.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.IO;
 
-namespace NiceHashMiner.Miners {
+namespace NiceHashMiner.Miners
+{
     public class ClaymoreNeoscryptMiner : ClaymoreBaseMiner
     {
         public ClaymoreNeoscryptMiner()
-            : base("ClaymoreNeoscryptMiner") {
+            : base("ClaymoreNeoscryptMiner")
+        {
             LookForStart = "ns - total speed:";
         }
 
-        public override void Start(string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker)
+        {
             string username = GetUsername(btcAdress, worker);
             //url = Globals.GetLocationUrl(AlgorithmType.NeoScrypt, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], NhmConectionType.STRATUM_TCP);
             url = url.Replace("stratum+ssl", "stratum+tcp").Replace("33341", "3341");
@@ -45,7 +41,8 @@ namespace NiceHashMiner.Miners {
         {
             return true;
         }
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
             BenchmarkTimeWait = time;
 
             // network workaround

@@ -1,13 +1,11 @@
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Miners;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Timers;
-using NiceHashMinerLegacy.Common.Enums;
-using System.Threading.Tasks;
-using NiceHashMiner.Miners;
-using System.Threading;
-using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Switching
 {
@@ -84,7 +82,7 @@ namespace NiceHashMiner.Switching
 
         public static void Start()
         {
-            
+
             if (_smaCheckTimer == null)
             {
                 Helpers.ConsolePrint("AlgorithmSwitchingManager", "Start");
@@ -122,11 +120,12 @@ namespace NiceHashMiner.Switching
                             SmaCheck -= (EventHandler<SmaUpdateEventArgs>)d;
                         }
                     }
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Helpers.ConsolePrint("AlgorithmSwitchingManager", ex.ToString());
                 }
-                
+
             }
 
         }
@@ -175,8 +174,6 @@ namespace NiceHashMiner.Switching
             var updated = false;
             var cTicks = "min";
             if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5) cTicks = "ticks";
-
-            int allticks = 0;
             foreach (var algo in history.Keys)
             {
                 NHSmaData.TryGetPaying(algo, out var paying);
@@ -255,9 +252,9 @@ namespace NiceHashMiner.Switching
                 }
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 4)
                 {
-                        //_smaCheckTime = 60;
-                        _ticksForStable = 15;
-                        _ticksForUnstable = 15;
+                    //_smaCheckTime = 60;
+                    _ticksForStable = 15;
+                    _ticksForUnstable = 15;
                 }
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5)
                 {
@@ -268,7 +265,7 @@ namespace NiceHashMiner.Switching
             }
         }
 
-        
+
     }
 
     /// <inheritdoc />

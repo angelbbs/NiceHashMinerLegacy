@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
 using MyDownloader.Core;
 using MyDownloader.Core.UI;
+using System;
+using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace MyDownloader.App.UI
 {
@@ -39,7 +35,7 @@ namespace MyDownloader.App.UI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ResourceLocation ResourceLocation
         {
-            get 
+            get
             {
                 ResourceLocation rl = new ResourceLocation();
                 rl.Authenticate = chkLogin.Checked;
@@ -70,14 +66,14 @@ namespace MyDownloader.App.UI
             }
         }
 
-		public void Clear()
-		{
+        public void Clear()
+        {
             txtURL.Text = string.Empty;
             chkLogin.Checked = false;
             txtPass.Text = string.Empty;
             txtLogin.Text = string.Empty;
             UpdateUI();
-		}
+        }
 
         private void chkLogin_CheckedChanged(object sender, EventArgs e)
         {
@@ -102,7 +98,7 @@ namespace MyDownloader.App.UI
 
         private void Location_Load(object sender, EventArgs e)
         {
-            if (! hasSet)
+            if (!hasSet)
             {
                 txtURL.Text = ClipboardHelper.GetURLOnClipboard();
             }

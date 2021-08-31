@@ -9,7 +9,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
         private static string GetName(string deviceUuid, string old = "")
         {
             // make device name
-            var invalid = new[] {'<', '>', ':', '"', '/', '\\', '|', '?', '*'};
+            var invalid = new[] { '<', '>', ':', '"', '/', '\\', '|', '?', '*' };
             var fileName = BenchmarkPrefix + deviceUuid.Replace(' ', '_');
             foreach (var c in invalid)
             {

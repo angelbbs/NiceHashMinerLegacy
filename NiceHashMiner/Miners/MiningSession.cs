@@ -1,28 +1,24 @@
+using Newtonsoft.Json.Linq;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Grouping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using NiceHashMiner.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
-using Timer = System.Timers.Timer;
-using static NiceHashMiner.Devices.ComputeDeviceManager;
-using System.Threading;
-using System.Globalization;
-using System.Management;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using NiceHashMinerLegacy.Divert;
-using System.Data;
+using System.Globalization;
 using System.IO;
-using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Management;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner.Miners
 {
@@ -36,8 +32,8 @@ namespace NiceHashMiner.Miners
         // session varibles fixed
         public static string _miningLocation;
 
-        public static  string _btcAdress;
-        public static  string _worker;
+        public static string _btcAdress;
+        public static string _worker;
         private List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
 
@@ -213,7 +209,7 @@ namespace NiceHashMiner.Miners
                     //Form_Main.ActiveForm.Focus();//костыль. иначе появляется бордюр у кнопки
                 }
 
-//                _runningGroupMiners = new Dictionary<string, GroupMiner>();
+                //                _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
         }
 
@@ -227,7 +223,8 @@ namespace NiceHashMiner.Miners
                     {
                         groupMiner.End();
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Helpers.ConsolePrint("StopAllMiners", e.ToString());
                 }
@@ -759,7 +756,8 @@ namespace NiceHashMiner.Miners
                         if (ConfigManager.GeneralConfig.ServiceLocation == 4)
                         {
                             toStart.Start(Form_Main.myServers[0, 0], _btcAdress, _worker);
-                        } else
+                        }
+                        else
                         {
                             toStart.Start(_miningLocation, _btcAdress, _worker);
                         }
@@ -852,7 +850,7 @@ namespace NiceHashMiner.Miners
                         {
                             groupMiners.CurrentRate = 0;
                         }
-                            ad = new ApiData(groupMiners.DualAlgorithmType);
+                        ad = new ApiData(groupMiners.DualAlgorithmType);
                     }
                     currentProfit += groupMiners.CurrentRate;
                     // Update GUI

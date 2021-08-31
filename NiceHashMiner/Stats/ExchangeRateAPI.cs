@@ -1,14 +1,12 @@
+using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading;
-using Newtonsoft.Json;
-using NiceHashMiner.Configs;
 
 
 
@@ -31,16 +29,16 @@ namespace NiceHashMiner.Stats
             {
                 try
                 {
-                if (value > 0)
-                {
-                    Interlocked.Exchange(ref _usdBtcRate, value);
-                    Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
-                }
-                if (value > 0 && value < 100)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "BTC rate error: "+value.ToString());
-                    GetNewBTCRate();
-                }
+                    if (value > 0)
+                    {
+                        Interlocked.Exchange(ref _usdBtcRate, value);
+                        Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
+                    }
+                    if (value > 0 && value < 100)
+                    {
+                        Helpers.ConsolePrint("NICEHASH", "BTC rate error: " + value.ToString());
+                        GetNewBTCRate();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -51,7 +49,7 @@ namespace NiceHashMiner.Stats
         }
         public static string ActiveDisplayCurrency = "USD";
 
-     //   private static async void GetNewBTCRate()
+        //   private static async void GetNewBTCRate()
         public static async void GetNewBTCRate()
         {
             string ResponseFromAPI;
@@ -100,7 +98,8 @@ namespace NiceHashMiner.Stats
                     }
 
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("API-error", ex.Message);
             }
@@ -117,7 +116,8 @@ namespace NiceHashMiner.Stats
                 {
                     ExchangesFiat.AddOrUpdate(key, newExchanges[key], (k, v) => newExchanges[k]);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("API-error", ex.Message);
             }
@@ -172,7 +172,7 @@ namespace NiceHashMiner.Stats
             // Race condition not a problem since UsdBtcRate will never update to 0
             if (UsdBtcRate <= 0)
             {
-//                Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
+                //                Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
                 return 0;
             }
             return price / UsdBtcRate;

@@ -1,21 +1,16 @@
 using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Devices;
-using System.Net;
 
 namespace NiceHashMiner.Miners
 {
@@ -38,7 +33,7 @@ namespace NiceHashMiner.Miners
             }
             var username = GetUsername(btcAdress, worker);
 
-           // IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.trex;
+            // IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.trex;
 
             var algo = "";
             var apiBind = "";
@@ -384,7 +379,8 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
                     Restart();
                 }
-            } else
+            }
+            else
             {
                 Thread.Sleep(1);
             }

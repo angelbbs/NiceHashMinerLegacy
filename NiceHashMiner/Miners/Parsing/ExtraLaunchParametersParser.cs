@@ -1,11 +1,10 @@
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Parsing
 {
@@ -26,7 +25,7 @@ namespace NiceHashMiner.Miners.Parsing
         }
 
         // exception...
-        
+
         private static bool _prevHasIgnoreParam = false;
         private static int _logCount = 0;
 
@@ -71,7 +70,7 @@ namespace NiceHashMiner.Miners.Parsing
             var isOptionExist = new Dictionary<string, bool>();
             var retVal = "";
             var miningPairs = miningPairsUnsorted.OrderBy(pair => pair.Device.BusID).ToList();
-            
+
             foreach (var pair in miningPairs)
             {
                 if (pair.CurrentExtraLaunchParameters.StartsWith("%"))
@@ -146,7 +145,7 @@ namespace NiceHashMiner.Miners.Parsing
                                     // Sinlge and Multi param
                                     currentFlag = option.Type;
                                 }
-                                
+
                             }
                         }
                         if (isIngored)
@@ -155,13 +154,15 @@ namespace NiceHashMiner.Miners.Parsing
                             {
                                 // This is a paramater for an ignored option, silently ignore it
                                 ignoringNextOption = false;
-                            } else
+                            }
+                            else
                             {
                                 IgnorePrintLog(param, ignoreParam, ignoreLogOpions);
                             }
                         }
                     }
-                    else if (currentFlag != MinerOptionTypeNone) {
+                    else if (currentFlag != MinerOptionTypeNone)
+                    {
                         isOptionExist[currentFlag] = true;
                         cdevOptions[pair.Device.Uuid][currentFlag] = param;
                         currentFlag = MinerOptionTypeNone;
@@ -204,16 +205,16 @@ namespace NiceHashMiner.Miners.Parsing
                             }
                             break;
                         case MinerOptionFlagType.MultiParam:
-                        {
-                            var values = miningPairs.Select(pair => cdevOptions[pair.Device.Uuid][option.Type]).ToList();
-                            var mask = " {0} {1}";
-                            if (option.LongName.Contains("="))
                             {
-                                mask = " {0}{1}";
+                                var values = miningPairs.Select(pair => cdevOptions[pair.Device.Uuid][option.Type]).ToList();
+                                var mask = " {0} {1}";
+                                if (option.LongName.Contains("="))
+                                {
+                                    mask = " {0}{1}";
+                                }
+                                retVal += string.Format(mask, option.LongName, string.Join(option.Separator, values));
+                                break;
                             }
-                            retVal += string.Format(mask, option.LongName, string.Join(option.Separator, values));
-                            break;
-                        }
                         case MinerOptionFlagType.NanoMiner:
                             {
                                 var values = miningPairs.Select(pair => cdevOptions[pair.Device.Uuid][option.Type]).ToList();
@@ -226,35 +227,35 @@ namespace NiceHashMiner.Miners.Parsing
                                 break;
                             }
                         case MinerOptionFlagType.SingleParam:
-                        {
-                            var values = new HashSet<string>();
-                            foreach (var pair in miningPairs)
                             {
-                                values.Add(cdevOptions[pair.Device.Uuid][option.Type]);
-                            }
-                            var setValue = option.Default;
-                            if (values.Count >= 1)
-                            {
+                                var values = new HashSet<string>();
+                                foreach (var pair in miningPairs)
+                                {
+                                    values.Add(cdevOptions[pair.Device.Uuid][option.Type]);
+                                }
+                                var setValue = option.Default;
+                                if (values.Count >= 1)
+                                {
                                     // Always take first
                                     //setValue = values.First();
                                     setValue = string.Join("", values);
-                            }
-                            var mask = " {0} {1}";
-                            if (option.LongName.Contains("="))
-                            {
-                                mask = " {0}{1}";
-                            }
+                                }
+                                var mask = " {0} {1}";
+                                if (option.LongName.Contains("="))
+                                {
+                                    mask = " {0}{1}";
+                                }
                                 retVal += string.Format(mask, option.LongName, setValue);
-                            break;
-                        }
+                                break;
+                            }
                         case MinerOptionFlagType.DuplicateMultiParam:
-                        {
-                            const string mask = " {0} {1}";
-                            var values = miningPairs.Select(pair =>
-                                string.Format(mask, option.LongName, cdevOptions[pair.Device.Uuid][option.Type])).ToList();
-                            retVal += " " + string.Join(" ", values);
-                            break;
-                        }
+                            {
+                                const string mask = " {0} {1}";
+                                var values = miningPairs.Select(pair =>
+                                    string.Format(mask, option.LongName, cdevOptions[pair.Device.Uuid][option.Type])).ToList();
+                                retVal += " " + string.Join(" ", values);
+                                break;
+                            }
                     }
                 }
             }
@@ -283,7 +284,8 @@ namespace NiceHashMiner.Miners.Parsing
 
         private static MinerType GetMinerType(DeviceType deviceType, MinerBaseType minerBaseType, AlgorithmType algorithmType)
         {
-            if (MinerBaseType.cpuminer == minerBaseType) {
+            if (MinerBaseType.cpuminer == minerBaseType)
+            {
                 return MinerType.cpuminer_opt;
             }
             switch (minerBaseType)
@@ -305,17 +307,17 @@ namespace NiceHashMiner.Miners.Parsing
                 case MinerBaseType.trex:
                     return MinerType.trex;
                 case MinerBaseType.mkxminer:
-                     return MinerType.mkxminer;
+                    return MinerType.mkxminer;
                 case MinerBaseType.Phoenix:
-                     return MinerType.Phoenix;
+                    return MinerType.Phoenix;
                 case MinerBaseType.teamredminer:
-                     return MinerType.teamredminer;
+                    return MinerType.teamredminer;
                 case MinerBaseType.GMiner:
-                     return MinerType.GMiner;
+                    return MinerType.GMiner;
                 case MinerBaseType.lolMiner:
-                     return MinerType.lolMiner;
+                    return MinerType.lolMiner;
                 case MinerBaseType.lolMinerBEAM:
-                     return MinerType.lolMinerBEAM;
+                    return MinerType.lolMinerBEAM;
                 case MinerBaseType.Bminer:
                     return MinerType.Bminer;
                 case MinerBaseType.TTMiner:
@@ -389,9 +391,9 @@ namespace NiceHashMiner.Miners.Parsing
             // CPU exception
             if (deviceType == DeviceType.CPU && minerType != MinerType.Xmrig)
             {
-               // CheckAndSetCpuPairs(setMiningPairs);
+                // CheckAndSetCpuPairs(setMiningPairs);
             }
-                        
+
             string ret;
             var temp = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions, ignoreDcri);
 
@@ -408,8 +410,8 @@ namespace NiceHashMiner.Miners.Parsing
             // temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, true, minerOptionPackage.GeneralOptions);
             //var general = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions, ignoreDcri);
 
-                ret = temp;
-                //ret = general + "  ";
+            ret = temp;
+            //ret = general + "  ";
 
             return ret;
         }
@@ -439,7 +441,7 @@ namespace NiceHashMiner.Miners.Parsing
             // extra thread check
             if (algo.ExtraLaunchParameters.Contains("--threads=") || algo.ExtraLaunchParameters.Contains("-t"))
             {
-                var strings = algo.ExtraLaunchParameters.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                var strings = algo.ExtraLaunchParameters.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var i = -1;
                 for (var curI = 0; curI < strings.Length; ++curI)
                 {
@@ -482,11 +484,11 @@ namespace NiceHashMiner.Miners.Parsing
             var intensities = new List<int>();
             if (algo.ExtraLaunchParameters.Contains("--intensity"))
             {
-                var strings = algo.ExtraLaunchParameters.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var strings = algo.ExtraLaunchParameters.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 var i = strings.FindIndex(a => a == "--intensity") + 1;
                 if (i > -1 && strings.Count > i)
                 {
-                    var intStrings = strings[i].Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                    var intStrings = strings[i].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var intString in intStrings)
                     {
                         if (int.TryParse(intString, out var intensity))

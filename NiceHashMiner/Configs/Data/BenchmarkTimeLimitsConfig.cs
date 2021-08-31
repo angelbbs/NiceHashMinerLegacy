@@ -1,5 +1,5 @@
-using System;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -13,7 +13,7 @@ namespace NiceHashMiner.Configs.Data
     {
         #region CONSTANTS
 
-        [field: NonSerialized] private static readonly int[] DefaultCpuNvidia = {60, 180, 300};
+        [field: NonSerialized] private static readonly int[] DefaultCpuNvidia = { 60, 180, 300 };
         [field: NonSerialized] private static readonly int[] DefaultAmd = { 60, 180, 300 };
         [field: NonSerialized] public static readonly int Size = 3;
 
@@ -58,14 +58,14 @@ namespace NiceHashMiner.Configs.Data
         {
             if (deviceGroupType == DeviceGroupType.CPU)
             {
-                return CPU[(int) benchmarkPerformanceType];
+                return CPU[(int)benchmarkPerformanceType];
             }
             if (deviceGroupType == DeviceGroupType.AMD_OpenCL)
             {
-                return AMD[(int) benchmarkPerformanceType];
+                return AMD[(int)benchmarkPerformanceType];
             }
 
-            return NVIDIA[(int) benchmarkPerformanceType];
+            return NVIDIA[(int)benchmarkPerformanceType];
         }
     }
 }

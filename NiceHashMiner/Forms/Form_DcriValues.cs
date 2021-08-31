@@ -1,8 +1,8 @@
-using System;
-using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Stats;
+using System;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms
 {
@@ -135,7 +135,7 @@ namespace NiceHashMiner.Forms
         {
             foreach (ListViewItem lvi in listView_Intensities.Items)
             {
-                var intensity = (int) lvi.Tag;
+                var intensity = (int)lvi.Tag;
                 _algorithm.IntensityPowers.TryGetValue(intensity, out var power);
 
                 lvi.SubItems[Speed].Text = _algorithm.SpeedStringForIntensity(intensity);
@@ -154,7 +154,7 @@ namespace NiceHashMiner.Forms
         {
             foreach (ListViewItem lvi in listView_Intensities.Items)
             {
-                var intensity = (int) lvi.Tag;
+                var intensity = (int)lvi.Tag;
                 lvi.SubItems[Profit].Text = _algorithm.ProfitForIntensity(intensity).ToString("F8");
             }
         }
@@ -163,7 +163,7 @@ namespace NiceHashMiner.Forms
         {
             foreach (ListViewItem lvi in listView_Intensities.SelectedItems)
             {
-                var intensity = (int) lvi.Tag;
+                var intensity = (int)lvi.Tag;
                 IsChange = true;
                 _algorithm.IntensitySpeeds[intensity] = 0;
                 _algorithm.SecondaryIntensitySpeeds[intensity] = 0;
@@ -201,7 +201,7 @@ namespace NiceHashMiner.Forms
 
         private void ListView_Intensities_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            var intensity = (int) e.Item.Tag;
+            var intensity = (int)e.Item.Tag;
             _currentlySelectedIntensity = intensity;
             _isInitFinished = false;
             field_Speed.EntryText = _algorithm.SpeedForIntensity(intensity).ToString();

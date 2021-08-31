@@ -98,7 +98,7 @@
         Lyra2REv3 = 40,
         MTP = 41,
         CryptoNightR_UNUSED = 42,
-        CuckooCycle  = 43,
+        CuckooCycle = 43,
         GrinCuckarood29 = 44,
         BeamV2 = 45,
         X16RV2 = 46,

@@ -1,19 +1,12 @@
 ﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
-using NiceHashMiner.Utils;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Security.Authentication;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Updater
@@ -37,7 +30,7 @@ namespace NiceHashMiner.Updater
             }
             _autoupdate = autoupdate;
             string fileName = "temp/" + Form_Main.progName;
-            if(!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+            if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
             if (File.Exists(fileName) != true)
             {
                 File.Delete(fileName);
@@ -240,7 +233,8 @@ namespace NiceHashMiner.Updater
                     Form_Main.githubVersion = 0;
                     return 0.0d;
                 }
-            } else
+            }
+            else
             {
                 Helpers.ConsolePrint("GITHUB", "ERROR! Dev github account banned or not found!");
                 Form_Main.githubBuild = 0;
@@ -284,7 +278,7 @@ namespace NiceHashMiner.Updater
                             Form_Main.miners_url = url0;
                         }
                     }
-                    
+
                     return (double)Form_Main.gitlabVersion;
                 }
                 catch (Exception ex2)

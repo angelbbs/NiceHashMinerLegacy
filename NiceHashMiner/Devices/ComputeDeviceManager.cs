@@ -1,9 +1,11 @@
-using ATI.ADL;
+using ManagedCuda.Nvml;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices.Querying;
+using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces;
+using NiceHashMinerLegacy.Common.Enums;
 using NVIDIA.NVAPI;
-using ManagedCuda.Nvml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,16 +13,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
-using NiceHashMiner.Devices.Querying;
-using NiceHashMiner.Forms;
-using NiceHashMinerLegacy.Common.Enums;
-using System.Threading.Tasks;
-using MSI.Afterburner;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Devices
 {
@@ -153,7 +149,7 @@ namespace NiceHashMiner.Devices
 
             public static int GpuCount = 0;
 
-            
+
 
             private static NvidiaSmiDriver GetNvidiaSmiDriver()
             {
@@ -283,67 +279,68 @@ namespace NiceHashMiner.Devices
                     return true;
                 }
                 */
-                    
-                    if (!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")) || !File.Exists(Path.Combine(nvmlRootPath, "nvidia-smi.exe")))
-                    {
-                        nvmlRootPath = GetNVMLFiles();
-                        if (!Directory.Exists(defaultpath))
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(defaultpath);
-                            }
-                            catch (Exception e)
-                            {
-                                Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
-                            }
-                        }
-                        if (File.Exists(nvmlRootPath + "\\nvidia-smi.exe") || !File.Exists(defaultpath + "\\nvidia-smi.exe"))
-                        {
-                            try
-                            {
-                                var copyToPath = defaultpath + "\\nvidia-smi.exe";
-                                File.Copy(nvmlRootPath + "\\nvidia-smi.exe", copyToPath, true);
-                                Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\nvidia-smi.exe"} to {copyToPath} done");
-                            }
-                            catch (Exception e)
-                            {
-                                Helpers.ConsolePrint(Tag, "Copy nvidia-smi.exe failed: " + e.Message);
-                            }
-                        }
-                        if (File.Exists(nvmlRootPath + "\\nvml.dll") || !File.Exists(defaultpath + "\\nvml.dll"))
-                        {
-                            try
-                            {
-                                var copyToPath = defaultpath + "\\nvml.dll";
-                                File.Copy(nvmlRootPath + "\\nvml.dll", copyToPath, true);
-                                Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\\nvml.dll"} to {copyToPath} done");
-                                nvmlRootPath = defaultpath;
-                            }
-                            catch (Exception e)
-                            {
-                                Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                            }
-                        }
-                    }
 
-                    if (File.Exists(defaultpath + "\\nvml.dll"))
+                if (!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")) || !File.Exists(Path.Combine(nvmlRootPath, "nvidia-smi.exe")))
+                {
+                    nvmlRootPath = GetNVMLFiles();
+                    if (!Directory.Exists(defaultpath))
                     {
-                        Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
-                        if (Directory.Exists(nvmlRootPath))
+                        try
                         {
-                            var pathVar = Environment.GetEnvironmentVariable("PATH");
-                            pathVar += ";" + nvmlRootPath;
-                            Environment.SetEnvironmentVariable("PATH", pathVar);
-                            return true;
+                            Directory.CreateDirectory(defaultpath);
                         }
-                    } else
-                    {
-                        Helpers.ConsolePrint(Tag, "Warning! nvml.dll not found!");
-                        return false;
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
+                        }
                     }
-                    
+                    if (File.Exists(nvmlRootPath + "\\nvidia-smi.exe") || !File.Exists(defaultpath + "\\nvidia-smi.exe"))
+                    {
+                        try
+                        {
+                            var copyToPath = defaultpath + "\\nvidia-smi.exe";
+                            File.Copy(nvmlRootPath + "\\nvidia-smi.exe", copyToPath, true);
+                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\nvidia-smi.exe"} to {copyToPath} done");
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "Copy nvidia-smi.exe failed: " + e.Message);
+                        }
+                    }
+                    if (File.Exists(nvmlRootPath + "\\nvml.dll") || !File.Exists(defaultpath + "\\nvml.dll"))
+                    {
+                        try
+                        {
+                            var copyToPath = defaultpath + "\\nvml.dll";
+                            File.Copy(nvmlRootPath + "\\nvml.dll", copyToPath, true);
+                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\\nvml.dll"} to {copyToPath} done");
+                            nvmlRootPath = defaultpath;
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
+                        }
+                    }
+                }
+
+                if (File.Exists(defaultpath + "\\nvml.dll"))
+                {
+                    Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
+                    if (Directory.Exists(nvmlRootPath))
+                    {
+                        var pathVar = Environment.GetEnvironmentVariable("PATH");
+                        pathVar += ";" + nvmlRootPath;
+                        Environment.SetEnvironmentVariable("PATH", pathVar);
+                        return true;
+                    }
+                }
+                else
+                {
+                    Helpers.ConsolePrint(Tag, "Warning! nvml.dll not found!");
                     return false;
+                }
+
+                return false;
             }
 
             private static string GetNVMLFiles()
@@ -420,7 +417,7 @@ namespace NiceHashMiner.Devices
                                     Process.Start(onGpusLost);
                                     Thread.Sleep(2000);
                                 }
-                                MessageBox.Show("NVSMI Error: " + nvmlLoaded + ". Please restart NVIDIA driver","ERROR!");
+                                MessageBox.Show("NVSMI Error: " + nvmlLoaded + ". Please restart NVIDIA driver", "ERROR!");
                             }
                         }
                     }
@@ -555,19 +552,19 @@ namespace NiceHashMiner.Devices
                 }
                 foreach (var dev in Available.Devices)
                 {
-                    Helpers.ConsolePrint("QueryDevices", "ID: " + dev.ID.ToString() + " BusID: " + 
-                        dev.BusID.ToString() + " IDByBus: " + dev.IDByBus + " Index: " + dev.Index + " lolMinerBusID:" + 
+                    Helpers.ConsolePrint("QueryDevices", "ID: " + dev.ID.ToString() + " BusID: " +
+                        dev.BusID.ToString() + " IDByBus: " + dev.IDByBus + " Index: " + dev.Index + " lolMinerBusID:" +
                         dev.lolMinerBusID + " " + dev.Name);
                 }
                 //Available.Devices.FindAll((a) => a.DeviceType == DeviceType.NVIDIA || a.DeviceType == DeviceType.AMD).Sort((x, y) => x.BusID.CompareTo(y.BusID));
-               /*
-                Available.Devices.Sort((x, y) => x.BusID.CompareTo(y.BusID));
+                /*
+                 Available.Devices.Sort((x, y) => x.BusID.CompareTo(y.BusID));
 
-                foreach (var dev in Available.Devices)
-                {
-                    Helpers.ConsolePrint("After sorting", "ID: " + dev.ID.ToString() + " BusID: " + dev.BusID.ToString() + " " + dev.Name);
-                }
-               */
+                 foreach (var dev in Available.Devices)
+                 {
+                     Helpers.ConsolePrint("After sorting", "ID: " + dev.ID.ToString() + " BusID: " + dev.BusID.ToString() + " " + dev.Name);
+                 }
+                */
                 // create AMD bus ordering for Claymore
                 var amdDevices = Available.Devices.FindAll((a) => a.DeviceType == DeviceType.AMD);
                 amdDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
@@ -825,9 +822,9 @@ namespace NiceHashMiner.Devices
                     return AvaliableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("nvidia"));
                 }
 
-                
+
             }
-            
+
 
             private static class Cpu
             {
@@ -918,7 +915,7 @@ namespace NiceHashMiner.Devices
                     return ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 }
 
-                
+
 
                 public static void QueryCudaDevices()
                 {
@@ -994,7 +991,7 @@ namespace NiceHashMiner.Devices
                         {
                             Helpers.ConsolePrint("NVML", e.ToString());
                         }
-                        
+
                         //check id & busid order
                         int oldId = -1;
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
@@ -1006,7 +1003,7 @@ namespace NiceHashMiner.Devices
                             }
                             oldId = (int)cudaDev.DeviceID;
                         }
-                        
+
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
                             // check sm vesrions
@@ -1078,8 +1075,8 @@ namespace NiceHashMiner.Devices
                                 );
                             }
                         }
-                        
-                        
+
+
                         Helpers.ConsolePrint(Tag, stringBuilder.ToString());
                     }
                     Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
@@ -1141,9 +1138,9 @@ namespace NiceHashMiner.Devices
                                 _cudaDevices = null;
                             }
 
-                                if (_cudaDevices == null || _cudaDevices.CudaDevices.Count == 0)
+                            if (_cudaDevices == null || _cudaDevices.CudaDevices.Count == 0)
                                 Helpers.ConsolePrint(Tag,
-                                    "CudaDevicesDetection found no devices("+ _cudaDevices.CudaDevices.Count.ToString()+"). CudaDevicesDetection returned: " +
+                                    "CudaDevicesDetection found no devices(" + _cudaDevices.CudaDevices.Count.ToString() + "). CudaDevicesDetection returned: " +
                                     _queryCudaDevicesString);
                         }
                     }
@@ -1373,8 +1370,8 @@ namespace NiceHashMiner.Devices
             {
                 var compareDev = GetDeviceWithUuid(uuid);
                 return (from dev in Devices
-                    where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType
-                    select GetDeviceWithUuid(dev.Uuid)).ToList();
+                        where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType
+                        select GetDeviceWithUuid(dev.Uuid)).ToList();
             }
 
             public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique)

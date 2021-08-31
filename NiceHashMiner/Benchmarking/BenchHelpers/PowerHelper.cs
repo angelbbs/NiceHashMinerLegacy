@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
+using System;
+using System.Timers;
 
 namespace NiceHashMiner.Benchmarking.BenchHelpers
 {
@@ -54,7 +49,7 @@ namespace NiceHashMiner.Benchmarking.BenchHelpers
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             var power = _device.PowerUsage;
-            if ((_device.Load > LoadThreshold && power > 0 && _calcDelay <=0 ) || _started)
+            if ((_device.Load > LoadThreshold && power > 0 && _calcDelay <= 0) || _started)
             {
                 _powerSum += power;
                 _powerCount++;

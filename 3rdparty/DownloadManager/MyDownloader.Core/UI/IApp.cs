@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MyDownloader.Core.Extensions;
+using System;
 using System.Collections.Generic;
-using MyDownloader.Core.Extensions;
 using System.Windows.Forms;
 namespace MyDownloader.App
 {
-    public interface IApp: IDisposable
+    public interface IApp : IDisposable
     {
         Form MainForm { get; }
 

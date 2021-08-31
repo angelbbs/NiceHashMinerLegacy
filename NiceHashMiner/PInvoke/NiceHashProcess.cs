@@ -281,7 +281,7 @@ namespace NiceHashMiner
                 _bRunning = false;
                 _tHandle.Join();
             }
-            SignalCtrl(thisConsoleId, (uint) Id, CtrlTypes.CTRL_C_EVENT);
+            SignalCtrl(thisConsoleId, (uint)Id, CtrlTypes.CTRL_C_EVENT);
             _pHandle = IntPtr.Zero;
         }
 
@@ -304,7 +304,7 @@ namespace NiceHashMiner
                         {
                             Helpers.ConsolePrint("CThread error: ", e.ToString());
                         }
-                            return;
+                        return;
                     }
                 }
             }

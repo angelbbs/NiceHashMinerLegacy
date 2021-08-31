@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using MyDownloader.Core.Extensions;
-using System.Windows.Forms;
 using MyDownloader.Extension.Protocols.UI;
+using System.Windows.Forms;
 
 namespace MyDownloader.Extension.Protocols
 {

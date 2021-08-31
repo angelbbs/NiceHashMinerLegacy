@@ -1,14 +1,14 @@
 using ManagedCuda.Nvml;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Devices.Algorithms;
+using NiceHashMiner.Forms;
+using NiceHashMinerLegacy.Common.Enums;
 using NVIDIA.NVAPI;
 using System;
-using NiceHashMiner.Devices.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using NiceHashMiner.Forms;
 
 namespace NiceHashMiner.Devices
 {
@@ -42,7 +42,7 @@ namespace NiceHashMiner.Devices
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //Helpers.ConsolePrint("NVML", e.ToString());
                 }
@@ -133,8 +133,8 @@ namespace NiceHashMiner.Devices
                     return -1;
                 }
 
-                
-                    var fan = -1;
+
+                var fan = -1;
 
                 try
                 {
@@ -152,8 +152,8 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint("NVML", e.ToString());
                 }
 
-                    return fan;
-                
+                return fan;
+
             }
         }
 
@@ -166,32 +166,35 @@ namespace NiceHashMiner.Devices
                     return -1;
                 }
 
-                    var fanSpeed = -1;
+                var fanSpeed = -1;
 
-                    // we got the lock
-                    var nvHandle = GetNvPhysicalGpuHandle();
-                    if (!nvHandle.HasValue)
+                // we got the lock
+                var nvHandle = GetNvPhysicalGpuHandle();
+                if (!nvHandle.HasValue)
+                {
+                    Helpers.ConsolePrint("NVAPI", $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
+                    return -1;
+                }
+
+                if (NVAPI.NvAPI_GPU_GetTachReading != null)
+                {
+                    var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
+                    if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                     {
-                        Helpers.ConsolePrint("NVAPI", $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
-                        return -1;
-                    }
-
-                    if (NVAPI.NvAPI_GPU_GetTachReading != null)
-                    {
-                        var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
-                        if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
-                        {
-                            // GPUs without fans are not uncommon, so don't treat as error and just return -1
-                            Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
-                            Helpers.ConsolePrint("NVAPI", "_nvmlDevice: " + _nvmlDevice.ToString());
-                            Helpers.ConsolePrint("NVAPI", "_nvHandle: " + _nvHandle.ToString());
-
+                        // GPUs without fans are not uncommon, so don't treat as error and just return -1
+                        /*
+                        Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
+                        Helpers.ConsolePrint("NVAPI", "_nvmlDevice: " + _nvmlDevice.ToString());
+                        Helpers.ConsolePrint("NVAPI", "_nvHandle: " + _nvHandle.ToString());
+                        */
                         //сомнительно...
-                        
+
                         if (result == NvStatus.NVIDIA_DEVICE_NOT_FOUND && ConfigManager.GeneralConfig.CheckingCUDA)
                         {
+                            /*
                             Helpers.ConsolePrint("NVAPI", "_nvmlDevice: " + _nvmlDevice.ToString());
                             Helpers.ConsolePrint("NVAPI", "_nvHandle: " + _nvHandle.ToString());
+                            */
                             errorcount++;
                             int check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
                             if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost && errorcount > 5)
@@ -219,16 +222,16 @@ namespace NiceHashMiner.Devices
                                 Thread.Sleep(2000);
                             }
                         }
-                        
-                        return -1;
-                        }
-                    }
 
-                    return fanSpeed;
-                
+                        return -1;
+                    }
+                }
+
+                return fanSpeed;
+
             }
         }
-        
+
         public List<NvData> gpuList = new List<NvData>();
         [Serializable]
         public struct NvData
@@ -285,7 +288,7 @@ namespace NiceHashMiner.Devices
 
         public CudaComputeDevice(CudaDevices2 cudaDevice, DeviceGroupType group, int gpuCount,
             NvPhysicalGpuHandle nvHandle, nvmlDevice nvmlHandle)
-            : base((int) cudaDevice.DeviceID,
+            : base((int)cudaDevice.DeviceID,
                 cudaDevice.GetName(),
                 true,
                 group,

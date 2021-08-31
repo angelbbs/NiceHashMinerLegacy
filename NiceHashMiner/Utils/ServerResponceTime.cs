@@ -1,14 +1,9 @@
-﻿using HashLib;
-using Newtonsoft.Json;
-using NiceHashMinerLegacy.Divert;
-using System;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Utils
 {
@@ -77,7 +72,7 @@ namespace NiceHashMiner.Utils
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: " + e.ToString());
             }
@@ -96,7 +91,8 @@ namespace NiceHashMiner.Utils
             {
                 addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[nServer, 0] + ".nicehash.com"));
                 addrl = IPAddress.Parse("0.0.0.0");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("ConnectToServer", ex.ToString());
             }

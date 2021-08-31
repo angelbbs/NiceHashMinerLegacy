@@ -1,11 +1,8 @@
 ﻿//using NHM.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMinerLegacy.UUID
 {
@@ -25,17 +22,17 @@ namespace NiceHashMinerLegacy.UUID
             {
                 System.Guid guid;
                 UuidCreateSequential(out guid);
-               // Console.WriteLine(guid);
-               // Console.WriteLine(GetMACAddress());
+                // Console.WriteLine(guid);
+                // Console.WriteLine(GetMACAddress());
                 var splitted = guid.ToString().Split('-');
                 var last = splitted.LastOrDefault();
                 if (last != null) return last;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-//                Logger.Error("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID: {e.Message}");
+                //                Logger.Error("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID: {e.Message}");
             }
-//            Logger.Warn("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID FALLBACK");
+            //            Logger.Warn("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID FALLBACK");
             return System.Guid.NewGuid().ToString();
         }
         public static string GetMACAddress()

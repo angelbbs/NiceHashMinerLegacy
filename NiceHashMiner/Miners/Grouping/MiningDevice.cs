@@ -1,10 +1,9 @@
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -135,13 +134,13 @@ namespace NiceHashMiner.Miners.Grouping
             }
             foreach (var algo in Algorithms)
             {
-                    if (maxProfit < algo.CurrentProfit)
-                    {
-                        maxProfit = algo.CurrentProfit;
-                        MostProfitableAlgorithmType = algo.DualNiceHashID;
+                if (maxProfit < algo.CurrentProfit)
+                {
+                    maxProfit = algo.CurrentProfit;
+                    MostProfitableAlgorithmType = algo.DualNiceHashID;
                     MostProfitableMinerBaseType = algo.MinerBaseType;
-//                        Helpers.ConsolePrint("PROFIT", "WARNING! Mining nonprofitable");
-                    }
+                    //                        Helpers.ConsolePrint("PROFIT", "WARNING! Mining nonprofitable");
+                }
             }
         }
     }

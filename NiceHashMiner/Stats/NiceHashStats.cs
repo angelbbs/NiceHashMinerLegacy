@@ -1,32 +1,25 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.UUID;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
-using NiceHashMinerLegacy.Common.Enums;
-using WebSocketSharp;
-using System.Timers;
-using System.Threading.Tasks;
-
-using NiceHashMiner.Configs;
-using static NiceHashMiner.Devices.ComputeDeviceManager;
-using NiceHashMinerLegacy.UUID;
-using NiceHashMiner.Miners.Grouping;
-using System.Management;
-using System.Text;
-using System.Runtime.ExceptionServices;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
 using System.Net.Sockets;
-using NiceHashMiner.Algorithms;
-using System.Diagnostics;
+using System.Runtime.ExceptionServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Forms;
+using WebSocketSharp;
 
 namespace NiceHashMiner.Stats
 {
@@ -62,12 +55,12 @@ namespace NiceHashMiner.Stats
             public string method = "miner.status";
             public List<JArray> devices;
         }
-    private class MinerStatusMessage
-    {
-        public string method = "miner.status";
-        [JsonProperty("params")]
-        public List<JToken> param { get; set; }
-    }
+        private class MinerStatusMessage
+        {
+            public string method = "miner.status";
+            [JsonProperty("params")]
+            public List<JToken> param { get; set; }
+        }
 
 
         public class ExchangeRateJson
@@ -86,7 +79,7 @@ namespace NiceHashMiner.Stats
         public static double Balance { get; private set; }
         public static string Version = "";
 
-    public static bool IsAlive => _socket?.IsAlive ?? false;
+        public static bool IsAlive => _socket?.IsAlive ?? false;
 
         public static event EventHandler OnSmaUpdate;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
@@ -121,7 +114,7 @@ namespace NiceHashMiner.Stats
 
         public static void StartConnection(string address)
         {
-          
+
             try
             {
                 NHSmaData.InitializeIfNeeded();
@@ -140,8 +133,8 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("StartConnection", er.ToString());
             }
-            
-    _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
+
+            _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
             _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
             _deviceUpdateTimer.Start();
 
@@ -154,7 +147,7 @@ namespace NiceHashMiner.Stats
         }
         private static void SocketReceive(object sender, MessageEventArgs e)
         {
-           try
+            try
             {
                 if (e.IsText)
                 {
@@ -184,7 +177,7 @@ namespace NiceHashMiner.Stats
                                     var algoKey = (AlgorithmType)algo[0];
                                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                                     {
-                                        Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " ("+ algo[0].ToString() + ") - " + algo[1]);
+                                        Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " (" + algo[0].ToString() + ") - " + algo[1]);
                                     }
                                 }
                                 if (ConfigManager.GeneralConfig.MOPA5)
@@ -208,7 +201,8 @@ namespace NiceHashMiner.Stats
                                 if (Miner.IsRunningNew)
                                 {
                                     Form_Main.smaCount++;
-                                } else
+                                }
+                                else
                                 {
                                     Form_Main.smaCount = 0;
                                 }
@@ -240,7 +234,7 @@ namespace NiceHashMiner.Stats
                             break;
 
                         case "mining.start":
-                             RemoteMiningStart(message.id.Value.ToString(), message.device.Value);
+                            RemoteMiningStart(message.id.Value.ToString(), message.device.Value);
                             break;
                         case "mining.stop":
                             RemoteMiningStop(message.id.Value.ToString(), message.device.Value);
@@ -352,7 +346,7 @@ namespace NiceHashMiner.Stats
                 //await _socket.SendData(cExecutedDisabled);
                 return;
             }
-            Helpers.ConsolePrint("REMOTE", "id: "+id+" device: "+ deviceToSwitch);
+            Helpers.ConsolePrint("REMOTE", "id: " + id + " device: " + deviceToSwitch);
 
             //var cExecutedNotImplemented = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Not implemented in Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".") + "\"]}";
             var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
@@ -369,11 +363,11 @@ namespace NiceHashMiner.Stats
                 return;
             }
             Helpers.ConsolePrint("REMOTE", "Not implemented");
-            var cExecutedNotImplemented = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Not implemented in Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",",".") + "\"]}";
+            var cExecutedNotImplemented = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Not implemented in Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".") + "\"]}";
             //await _socket.SendData(cExecutedNotImplemented);
             return;
         }
-            public static async Task RemoteMiningStart(string id, string device)
+        public static async Task RemoteMiningStart(string id, string device)
         {
             if (!ConfigManager.GeneralConfig.Allow_remote_management)
             {
@@ -393,8 +387,8 @@ namespace NiceHashMiner.Stats
             Thread.Sleep(3000);
             await _socket.SendData(cExecuted);
             Helpers.ConsolePrint("REMOTE", "Mining start. ID:" + id + " Device:" + device);
-           //Thread.Sleep(1000);
-           //await _socket.SendData(cExecuted);
+            //Thread.Sleep(1000);
+            //await _socket.SendData(cExecuted);
         }
         public static async Task RemoteWorkerRename(string id, string worker)
         {
@@ -404,7 +398,7 @@ namespace NiceHashMiner.Stats
                 return;
             }
             Configs.ConfigManager.GeneralConfig.WorkerName = worker;
-           // var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            // var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
             //await _socket.SendData(cExecuted);
             //Helpers.ConsolePrint("REMOTE", "Worker renamed");
             return;
@@ -433,7 +427,7 @@ namespace NiceHashMiner.Stats
             //await _socket.SendData(cExecuted);
         }
 
-        
+
 
         public static bool GetSmaAPICurrent()
         {
@@ -442,16 +436,16 @@ namespace NiceHashMiner.Stats
             try
             {
                 string resp;
-                    resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info", "x");
+                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info", "x");
                 if (resp != null)
                 {
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
-                       // Helpers.ConsolePrint("NHM_API_info", resp);
+                        // Helpers.ConsolePrint("NHM_API_info", resp);
                     }
 
                     dynamic list;
-                        list = JsonConvert.DeserializeObject<RootobjectCurrent>(resp);
+                    list = JsonConvert.DeserializeObject<RootobjectCurrent>(resp);
 
                     ProfitsSMA profdata = new ProfitsSMA();
 
@@ -467,7 +461,7 @@ namespace NiceHashMiner.Stats
                         {
                             if (algo >= 0)
                             {
-                               Algo = (int)algo;
+                                Algo = (int)algo;
                                 var AlgorithmName = AlgorithmNiceHashNames.GetName(algo);
                                 if (AlgorithmName == miningAlgorithms.title)
                                 {
@@ -485,7 +479,7 @@ namespace NiceHashMiner.Stats
                     }
                     outProf = outProf.Remove(outProf.Length - 2) + "]";
 
-                   // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
+                    // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
                     NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
@@ -528,7 +522,7 @@ namespace NiceHashMiner.Stats
                 {
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
-                      //  Helpers.ConsolePrint("NHM_API_info", resp);
+                        //  Helpers.ConsolePrint("NHM_API_info", resp);
                     }
 
                     dynamic list;
@@ -543,17 +537,17 @@ namespace NiceHashMiner.Stats
                     var _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
                     foreach (var algos in list.algos)
                     {
-                                {
-                                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                                    {
-                                        Helpers.ConsolePrint("SMA-DATA-API5m: ", algos.a + " - " +  algos.p);
-                                    }
-                                    outProf = outProf + "  [\n" + "    " + algos.a + ",\n" + "    \"" + algos.p + "\"\n" + "  ],\n";
-                                }
+                        {
+                            if (!ConfigManager.GeneralConfig.NoShowApiInLog)
+                            {
+                                Helpers.ConsolePrint("SMA-DATA-API5m: ", algos.a + " - " + algos.p);
+                            }
+                            outProf = outProf + "  [\n" + "    " + algos.a + ",\n" + "    \"" + algos.p + "\"\n" + "  ],\n";
+                        }
                     }
                     outProf = outProf.Remove(outProf.Length - 2) + "]";
 
-                   //  Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
+                    //  Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
                     NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
@@ -597,7 +591,7 @@ namespace NiceHashMiner.Stats
                 {
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
-                      //  Helpers.ConsolePrint("NHM_API_info", resp);
+                        //  Helpers.ConsolePrint("NHM_API_info", resp);
                     }
 
                     dynamic list;
@@ -622,7 +616,7 @@ namespace NiceHashMiner.Stats
                     }
                     outProf = outProf.Remove(outProf.Length - 2) + "]";
 
-                 //   Helpers.ConsolePrint("SMA-DATA-API24h: ", outProf);
+                    //   Helpers.ConsolePrint("SMA-DATA-API24h: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
                     NiceHashStats.SetAlgorithmRates(smadata, 10, 5);
@@ -691,18 +685,20 @@ namespace NiceHashMiner.Stats
                                     Form_Main.lastRigProfit.currentProfitAPI = rig.profitability;
                                     Helpers.ConsolePrint("GetRigProfit", (rig.profitability * 1000).ToString());
                                 }
-//                                Form_Main.lastRigProfit.unpaidAmount = rig.unpaidAmount;
+                                //                                Form_Main.lastRigProfit.unpaidAmount = rig.unpaidAmount;
                             }
                         }
                         double unpaidAmount = respJson.unpaidAmount;
                         Helpers.ConsolePrint("unpaidAmount", (unpaidAmount * 1000).ToString());
                         SetBalance(unpaidAmount.ToString());
-                    } else
+                    }
+                    else
                     {
                         Form_Main.lastRigProfit.currentProfitAPI = 0;
                         Form_Main.lastRigProfit.unpaidAmount = 0;
                     }
-                } else
+                }
+                else
                 {
                     Form_Main.lastRigProfit.currentProfitAPI = 0;
                     Form_Main.lastRigProfit.unpaidAmount = 0;
@@ -835,8 +831,8 @@ namespace NiceHashMiner.Stats
             //string ghv = GetVersion("");
             //Helpers.ConsolePrint("GITHUB", ghv);
             //SetVersion(ghv);
-           // GetSmaAPICurrent();
-           // OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
+            // GetSmaAPICurrent();
+            // OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
         }
 
         #endregion
@@ -866,10 +862,10 @@ namespace NiceHashMiner.Stats
                 }
 
                 NHSmaData.UpdateSmaPaying(payingDict);
-                
+
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);
-                
+
             }
             catch (Exception e)
             {
@@ -878,8 +874,6 @@ namespace NiceHashMiner.Stats
         }
         public static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 12.0)
         {
-            bool bug = false;
-            bool alg_zero = false;
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();
@@ -888,12 +882,10 @@ namespace NiceHashMiner.Stats
                     foreach (var algo in data)
                     {
                         if (algo == null) return;
-                        bug = false;
-                        alg_zero = false;
                         var algoKey = (AlgorithmType)algo[0].Value<int>();
                         if (!NHSmaData.TryGetPaying(algoKey, out double paying))
                         {
-                            Helpers.ConsolePrint("SMA API", "ERROR! Unknown algo: "+ algoKey.ToString());
+                            Helpers.ConsolePrint("SMA API", "ERROR! Unknown algo: " + algoKey.ToString());
                         }
 
                         if (paying == 0)
@@ -914,25 +906,25 @@ namespace NiceHashMiner.Stats
                             }
                             else
                             */
-                           // {
-                                if (ConfigManager.GeneralConfig.MOPA5 && paying < Math.Abs(algo[1].Value<double>() * mult))
-                                {
-                                    payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
-                                }
-                                if (!ConfigManager.GeneralConfig.MOPA5)
-                                {
-                                    payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
-                                }
+                            // {
+                            if (ConfigManager.GeneralConfig.MOPA5 && paying < Math.Abs(algo[1].Value<double>() * mult))
+                            {
+                                payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
+                            }
+                            if (!ConfigManager.GeneralConfig.MOPA5)
+                            {
+                                payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
+                            }
                             //}
                         }
                     }
                 }
 
                 NHSmaData.UpdateSmaPaying(payingDict);
-                
+
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);
-                
+
             }
             catch (Exception e)
             {
@@ -967,12 +959,12 @@ namespace NiceHashMiner.Stats
         }
         private static void SetBalance(string balance)
         {
-           // Helpers.ConsolePrint("SOCKET", "Received5: " + balance);
+            // Helpers.ConsolePrint("SOCKET", "Received5: " + balance);
             try
             {
                 if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var bal))
                 {
-                  //  Helpers.ConsolePrint("SOCKET", "Received6: " + balance);
+                    //  Helpers.ConsolePrint("SOCKET", "Received6: " + balance);
                     Balance = bal;
                     //OnBalanceUpdate?.Invoke(null, EventArgs.Empty);
                 }
@@ -981,7 +973,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
-         //  Helpers.ConsolePrint("SOCKET", "Received7: " + balance);
+            //  Helpers.ConsolePrint("SOCKET", "Received7: " + balance);
         }
 
         private static void SetExchangeRates(string data)
@@ -1019,8 +1011,8 @@ namespace NiceHashMiner.Stats
 
         public static async Task SetCredentials(string btc, string worker)
         {
-                return;
-                var data = new NicehashCredentials
+            return;
+            var data = new NicehashCredentials
             {
                 btc = btc,
                 worker = worker
@@ -1105,11 +1097,11 @@ namespace NiceHashMiner.Stats
             }
         }
 
-       
+
         public static void DeviceStatus_TickNew(object sender, ElapsedEventArgs e)
         {
             //_socket.ConnectCallback(null, null);
-           // _socket.SendData(sendData);
+            // _socket.SendData(sendData);
             SetDeviceStatus(null);
         }
         public static async void SetDeviceStatus(object state, bool devName = false)
@@ -1118,7 +1110,7 @@ namespace NiceHashMiner.Stats
             if (DeviceStatusRunning) return;
             DeviceStatusRunning = true;
             var devices = ComputeDeviceManager.Available.Devices;
-            
+
             var _computeDevicesResort = ComputeDeviceManager.ReSortDevices(devices);
             var _computeDevices = devices;
 
@@ -1205,7 +1197,7 @@ namespace NiceHashMiner.Stats
                         deviceName = deviceName.Replace(GpuRam, "");
                         GpuRam = "";
                     }
-                    
+
 
                     if (device.DeviceType == DeviceType.AMD)
                     {
@@ -1239,12 +1231,12 @@ namespace NiceHashMiner.Stats
                             GpuRam = "";
                         }
                     }
-                    
+
                     if (device.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
                     {
                         Manufacturer = "> " + Manufacturer;
                     }
-                    
+
                     if (!devName)
                     {
                         deviceName = "";
@@ -1308,7 +1300,8 @@ namespace NiceHashMiner.Stats
                         array.Add((int)Math.Round(device.Temp));
                         array.Add(device.FanSpeedRPM);
                         array.Add((int)Math.Round(device.PowerUsage));
-                    } else
+                    }
+                    else
                     {
                         array.Add((int)Math.Round(deviceResort.Temp));
                         array.Add(deviceResort.FanSpeedRPM);
@@ -1331,7 +1324,8 @@ namespace NiceHashMiner.Stats
                         {
                             array.Add(-1);
                         }
-                    } else
+                    }
+                    else
                     {
                         if (deviceResort.DeviceType != DeviceType.CPU)
                         {
@@ -1372,7 +1366,7 @@ namespace NiceHashMiner.Stats
             }
             DeviceStatusRunning = false;
         }
-       
+
 
         #endregion
 
@@ -1383,7 +1377,7 @@ namespace NiceHashMiner.Stats
             {
                 var activeMinersGroup = MinersManager.GetActiveMinersGroup();
 
-                var wr = (HttpWebRequest) WebRequest.Create(url);
+                var wr = (HttpWebRequest)WebRequest.Create(url);
                 wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
                 if (worker.Length > 64) worker = worker.Substring(0, 64);
                 wr.Headers.Add("NiceHash-Worker-ID", worker);
@@ -1467,7 +1461,8 @@ namespace NiceHashMiner.Stats
             if (Miner.IsRunningNew)
             {
                 return "MINING";
-            } else
+            }
+            else
             {
                 return "STOPPED";
             }
@@ -1548,15 +1543,15 @@ namespace TimerDispose
                     timerInit(timerPeriod);
                 }
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
                 Console.WriteLine("A disposed object accessed");
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 Console.WriteLine("A nulled object accessed");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

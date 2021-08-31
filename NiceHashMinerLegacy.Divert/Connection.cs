@@ -179,9 +179,9 @@ namespace NiceHashMinerLegacy.Divert
         {
             var b = new Byte[2];
             // high weight byte
-            b[0] = (byte) (dwPort >> 8);
+            b[0] = (byte)(dwPort >> 8);
             // low weight byte
-            b[1] = (byte) (dwPort & 255);
+            b[1] = (byte)(dwPort & 255);
 
             return BitConverter.ToUInt16(b, 0);
         }

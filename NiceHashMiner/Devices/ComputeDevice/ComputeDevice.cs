@@ -1,21 +1,18 @@
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
+using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.UUID;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Management;
 using System.Security.Cryptography;
 using System.Text;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Devices.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
 using System.Threading.Tasks;
-using System.Management;
-using System;
-using NiceHashMinerLegacy.UUID;
-using System.Windows.Forms;
-using System.IO;
-using System.Threading;
-using MSI.Afterburner;
 
 namespace NiceHashMiner.Devices
 {
@@ -204,46 +201,46 @@ namespace NiceHashMiner.Devices
 
         public static CPUDevice TryCPUDevice()
         {
-                if (!CpuUtils.IsCpuMiningCapable()) return null;
+            if (!CpuUtils.IsCpuMiningCapable()) return null;
 
-                var cpuDetectResult = QueryCPUDevice();
-                // get all CPUs
-                var cpuCount = CpuID.GetPhysicalProcessorCount();
-                var name = CpuID.GetCpuName().Trim();
-                // get all cores (including virtual - HT can benefit mining)
-                var threadsPerCpu = cpuDetectResult.VirtualCoresCount / cpuCount;
-                // TODO important move this to settings
-                var threadsPerCpuMask = threadsPerCpu;
-                if (threadsPerCpu * cpuCount > 64)
-                {
-                    // set lower
-                    threadsPerCpuMask = 64;
-                }
+            var cpuDetectResult = QueryCPUDevice();
+            // get all CPUs
+            var cpuCount = CpuID.GetPhysicalProcessorCount();
+            var name = CpuID.GetCpuName().Trim();
+            // get all cores (including virtual - HT can benefit mining)
+            var threadsPerCpu = cpuDetectResult.VirtualCoresCount / cpuCount;
+            // TODO important move this to settings
+            var threadsPerCpuMask = threadsPerCpu;
+            if (threadsPerCpu * cpuCount > 64)
+            {
+                // set lower
+                threadsPerCpuMask = 64;
+            }
 
-                List<ulong> affinityMasks = null;
-                // multiple CPUs are identified as a single CPU from nhm perspective, it is the miner plugins job to handle this correctly
-                if (cpuCount > 1)
+            List<ulong> affinityMasks = null;
+            // multiple CPUs are identified as a single CPU from nhm perspective, it is the miner plugins job to handle this correctly
+            if (cpuCount > 1)
+            {
+                name = $"({cpuCount}x){name}";
+                affinityMasks = new List<ulong>();
+                for (var i = 0; i < cpuCount; i++)
                 {
-                    name = $"({cpuCount}x){name}";
-                    affinityMasks = new List<ulong>();
-                    for (var i = 0; i < cpuCount; i++)
-                    {
-                        var affinityMask = CreateAffinityMask(i, threadsPerCpuMask);
-                        affinityMasks.Add(affinityMask);
-                    }
+                    var affinityMask = CreateAffinityMask(i, threadsPerCpuMask);
+                    affinityMasks.Add(affinityMask);
                 }
-                var hashedInfo = $"{0}--{name}--{threadsPerCpu}";
-                foreach (var cpuInfo in cpuDetectResult.CpuInfos)
-                {
-                    hashedInfo += $"{cpuInfo.Family}--{cpuInfo.ModelName}--{cpuInfo.NumberOfCores}--{cpuInfo.PhysicalID}--{cpuInfo.VendorID}";
-                }
-                var uuidHEX = UUID.GetHexUUID(hashedInfo);
-                var uuid = $"CPU-{uuidHEX}";
+            }
+            var hashedInfo = $"{0}--{name}--{threadsPerCpu}";
+            foreach (var cpuInfo in cpuDetectResult.CpuInfos)
+            {
+                hashedInfo += $"{cpuInfo.Family}--{cpuInfo.ModelName}--{cpuInfo.NumberOfCores}--{cpuInfo.PhysicalID}--{cpuInfo.VendorID}";
+            }
+            var uuidHEX = UUID.GetHexUUID(hashedInfo);
+            var uuid = $"CPU-{uuidHEX}";
 
-                // plugin device
-                var bd = new BaseDevice(DeviceType.CPU, uuid, name, 0);
-                var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks);
-                return cpu;
+            // plugin device
+            var bd = new BaseDevice(DeviceType.CPU, uuid, name, 0);
+            var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks);
+            return cpu;
         }
         // maybe this will come in handy
         private static CPUDetectionResult QueryCPUDevice()
@@ -536,7 +533,7 @@ namespace NiceHashMiner.Devices
                     Enabled = algo.Enabled,
                     Hidden = algo.Hidden,
                     LessThreads = algo.LessThreads,
-                    PowerUsage =  algo.PowerUsage
+                    PowerUsage = algo.PowerUsage
                 };
 
                 if (!conf.Hidden)
@@ -668,7 +665,7 @@ namespace NiceHashMiner.Devices
         {
             var sha256 = new SHA256Managed();
             var hash = new StringBuilder();
-            var mixedAttr = id + group + name + (int) deviceGroupType;
+            var mixedAttr = id + group + name + (int)deviceGroupType;
             var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0,
                 Encoding.UTF8.GetByteCount(mixedAttr));
             foreach (var b in hashedBytes)
@@ -689,7 +686,7 @@ namespace NiceHashMiner.Devices
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ComputeDevice) obj);
+            return obj.GetType() == GetType() && Equals((ComputeDevice)obj);
         }
 
         protected bool Equals(ComputeDevice other)
@@ -702,8 +699,8 @@ namespace NiceHashMiner.Devices
             unchecked
             {
                 var hashCode = ID;
-                hashCode = (hashCode * 397) ^ (int) DeviceGroupType;
-                hashCode = (hashCode * 397) ^ (int) DeviceType;
+                hashCode = (hashCode * 397) ^ (int)DeviceGroupType;
+                hashCode = (hashCode * 397) ^ (int)DeviceType;
                 return hashCode;
             }
         }

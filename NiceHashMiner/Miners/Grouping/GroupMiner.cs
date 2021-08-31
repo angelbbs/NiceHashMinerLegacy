@@ -1,7 +1,7 @@
 using NiceHashMiner.Configs;
-using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NiceHashMiner.Miners.Grouping
@@ -70,7 +70,8 @@ namespace NiceHashMiner.Miners.Grouping
                         {
                             DevicesInfoString = "CPU " + ("{ " + string.Join(", ", deviceNames) + " }").Replace("CPU", "");
                         }
-                    } else
+                    }
+                    else
                     {
                         DevicesInfoString = ("{ " + string.Join(", ", deviceNames) + " }");
                     }

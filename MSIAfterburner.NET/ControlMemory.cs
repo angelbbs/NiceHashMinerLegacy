@@ -8,7 +8,6 @@ using MSI.Afterburner.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -44,7 +43,7 @@ namespace MSI.Afterburner
             try
             {
                 this.mmf = new SharedMemory("MACMSharedMemory", Win32API.FileMapAccess.FileMapAllAccess);
-              
+
             }
             catch (FileNotFoundException ex)
             {

@@ -5,9 +5,9 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMinerLegacy.Common.Enums;
 using System.Collections.Generic;
 using System.Threading;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -92,7 +92,8 @@ namespace NiceHashMiner.Benchmarking
             if (_currentAlgorithm.PowerUsageBenchmark > 0)
             {
                 _currentAlgorithm.PowerUsage = _currentAlgorithm.PowerUsageBenchmark;//усредненное при бенчмарке
-            } else
+            }
+            else
             {
                 _currentAlgorithm.PowerUsage = power;
             }

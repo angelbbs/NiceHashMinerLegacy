@@ -1,9 +1,7 @@
+using MyDownloader.Core;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Net;
-using MyDownloader.Core;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -40,7 +38,7 @@ namespace MyDownloader.Extension.Protocols
 
                 if (slashIndex >= 0)
                 {
-                    domain = login.Substring(0, slashIndex );
+                    domain = login.Substring(0, slashIndex);
                     login = login.Substring(slashIndex + 1);
                 }
 
@@ -76,7 +74,7 @@ namespace MyDownloader.Extension.Protocols
             }
 
             WebResponse response = request.GetResponse();
-            
+
             return response.GetResponseStream();
         }
 

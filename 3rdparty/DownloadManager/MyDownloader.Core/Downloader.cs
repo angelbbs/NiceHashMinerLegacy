@@ -1,13 +1,10 @@
+using MyDownloader.Core.Common;
+using MyDownloader.Core.Concurrency;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Diagnostics;
-using System.Collections;
-using System.Net;
-using MyDownloader.Core.Concurrency;
-using MyDownloader.Core.Common;
 
 namespace MyDownloader.Core
 {
@@ -25,7 +22,7 @@ namespace MyDownloader.Core
         private DateTime createdDateTime;
         private Exception lastError;
         private Dictionary<string, object> extentedProperties = new Dictionary<string, object>();
-        
+
         private IProtocolProvider defaultDownloadProvider;
         private ISegmentCalculator segmentCalculator;
         private IMirrorSelector mirrorSelector;
@@ -36,7 +33,7 @@ namespace MyDownloader.Core
 
         private Downloader(
             ResourceLocation rl,
-            ResourceLocation[] mirrors, 
+            ResourceLocation[] mirrors,
             string localFile)
         {
             this.threads = new List<Thread>();
@@ -61,9 +58,9 @@ namespace MyDownloader.Core
 
         public Downloader(
             ResourceLocation rl,
-            ResourceLocation[] mirrors, 
-            string localFile, 
-            int segmentCount):
+            ResourceLocation[] mirrors,
+            string localFile,
+            int segmentCount) :
             this(rl, mirrors, localFile)
         {
             SetState(DownloaderState.NeedToPrepare);
@@ -75,12 +72,12 @@ namespace MyDownloader.Core
 
         public Downloader(
             ResourceLocation rl,
-            ResourceLocation[] mirrors, 
-            string localFile, 
+            ResourceLocation[] mirrors,
+            string localFile,
             List<Segment> segments,
             RemoteFileInfo remoteInfo,
             int requestedSegmentCount,
-            DateTime createdDateTime):
+            DateTime createdDateTime) :
             this(rl, mirrors, localFile)
         {
             if (segments.Count > 0)
@@ -245,7 +242,7 @@ namespace MyDownloader.Core
 
                 return TimeSpan.FromSeconds(missingTransfer / this.Rate);
             }
-        } 
+        }
 
         public List<Segment> Segments
         {
@@ -288,14 +285,14 @@ namespace MyDownloader.Core
         public ISegmentCalculator SegmentCalculator
         {
             get { return segmentCalculator; }
-            set 
+            set
             {
                 if (value == null)
                 {
                     throw new ArgumentNullException("value");
                 }
 
-                segmentCalculator = value; 
+                segmentCalculator = value;
             }
         }
 
@@ -310,7 +307,7 @@ namespace MyDownloader.Core
                 }
 
                 mirrorSelector = value;
-                mirrorSelector.Init(this);                
+                mirrorSelector.Init(this);
             }
         }
 
@@ -406,7 +403,7 @@ namespace MyDownloader.Core
 
         public void WaitForConclusion()
         {
-            if (! IsWorking())
+            if (!IsWorking())
             {
                 if (mainThread != null && mainThread.IsAlive)
                 {
@@ -503,7 +500,7 @@ namespace MyDownloader.Core
                         + fileExitWithoutExt + String.Format("({0})", count++) + ext;
                 }
                 while (File.Exists(newFileName));
-                
+
                 this.localFile = newFileName;
             }
 
@@ -584,8 +581,6 @@ namespace MyDownloader.Core
 
             // allocs the file on disk
             AllocLocalFile();
-
-            long segmentSize;
 
             CalculatedSegment[] calculatedSegments;
 
@@ -706,7 +701,7 @@ namespace MyDownloader.Core
                 {
                     Segments[i].OutputStream = fs;
                     StartSegment(Segments[i]);
-                }                
+                }
 
                 do
                 {
@@ -730,7 +725,7 @@ namespace MyDownloader.Core
                 OnEnding();
             }
 
-            SetState(DownloaderState.Ended); 
+            SetState(DownloaderState.Ended);
         }
 
         private bool RestartFailedSegments()
@@ -746,7 +741,7 @@ namespace MyDownloader.Core
                     Segments[i].CurrentTry < Settings.Default.MaxRetries))
                 {
                     hasErrors = true;
-                    TimeSpan ts =  DateTime.Now - Segments[i].LastErrorDateTime;
+                    TimeSpan ts = DateTime.Now - Segments[i].LastErrorDateTime;
 
                     if (ts.TotalSeconds >= Settings.Default.RetryDelay)
                     {
@@ -832,7 +827,7 @@ namespace MyDownloader.Core
                 OnSegmentStarting(segment);
 
                 if (segment.InputStream == null)
-                {                    
+                {
                     // get the next URL (It can the the main url or some mirror)
                     ResourceLocation location = this.MirrorSelector.GetNextResourceLocation();
                     // get the protocol provider for that mirror
@@ -946,7 +941,7 @@ namespace MyDownloader.Core
                         AddNewSegmentIfNeeded();
                     }
                 }
-                
+
                 // raise the event
                 OnSegmentStoped(segment);
             }

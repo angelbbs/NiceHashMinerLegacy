@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Algorithms
 {
@@ -164,7 +162,7 @@ namespace NiceHashMiner.Algorithms
             power_limit = 0;
             fan = 0;
             thermal_limit = 0;
-    }
+        }
         #region Benchmark info
 
         public string BenchmarkStatus { get; set; }

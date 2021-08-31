@@ -1,11 +1,11 @@
-using NiceHashMiner.Devices;
-using System;
-using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Switching;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -81,7 +81,7 @@ namespace NiceHashMiner.Forms.Components
                 groupBoxExtraLaunchParameters.BackColor = Form_Main._backColor;
                 groupBoxExtraLaunchParameters.ForeColor = Form_Main._foreColor;
 
-            //    pictureBox1.Image = NiceHashMiner.Properties.Resources.info_white_18;
+                //    pictureBox1.Image = NiceHashMiner.Properties.Resources.info_white_18;
                 richTextBoxExtraLaunchParameters.BackColor = Form_Main._backColor;
                 richTextBoxExtraLaunchParameters.ForeColor = Form_Main._foreColor;
             }
@@ -115,7 +115,7 @@ namespace NiceHashMiner.Forms.Components
                     $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
                 ;
 
-                field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage,0));
+                field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage, 0));
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
                 if (algorithm is DualAlgorithm dualAlgo)
@@ -131,7 +131,8 @@ namespace NiceHashMiner.Forms.Components
 
                 Update();
             }
-            else {
+            else
+            {
                 // TODO this should not be null
             }
         }
@@ -151,7 +152,7 @@ namespace NiceHashMiner.Forms.Components
                 if (lvi.Tag is Algorithm algorithm)
                 {
                     fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
-                    field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage,0));
+                    field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage, 0));
                     if (algorithm is DualAlgorithm dualAlgo)
                     {
                         //secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
@@ -187,7 +188,7 @@ namespace NiceHashMiner.Forms.Components
             if (!CanEdit()) return;
             if (double.TryParse(field_PowerUsage.EntryText, out var value))
             {
-                _currentlySelectedAlgorithm.PowerUsage = Math.Round(value,0);
+                _currentlySelectedAlgorithm.PowerUsage = Math.Round(value, 0);
             }
             UpdateSpeedText();
         }
@@ -242,7 +243,8 @@ namespace NiceHashMiner.Forms.Components
                 if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
                 {
                     _currentlySelectedLvi.SubItems[POWER].Text = _currentlySelectedAlgorithm.PowerUsage.ToString() + " Вт";
-                } else
+                }
+                else
                 {
                     _currentlySelectedLvi.SubItems[POWER].Text = _currentlySelectedAlgorithm.PowerUsage.ToString() + " W";
                 }

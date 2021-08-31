@@ -9,13 +9,9 @@
 
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 using NiceHashMiner;
+using System;
+using System.Runtime.InteropServices;
 // ReSharper disable All
 #pragma warning disable
 
@@ -184,30 +180,39 @@ namespace NVIDIA.NVAPI
         #endregion
 
         private static void GetDelegate<T>(uint id, out T newDelegate)
-            where T : class {
+            where T : class
+        {
             IntPtr ptr = nvapi_QueryInterface(id);
-            if (ptr != IntPtr.Zero) {
+            if (ptr != IntPtr.Zero)
+            {
                 newDelegate = Marshal.GetDelegateForFunctionPointer(ptr, typeof(T)) as T;
-            } else {
+            }
+            else
+            {
                 newDelegate = null;
             }
         }
 
-        static NVAPI() {
+        static NVAPI()
+        {
             DllImportAttribute attribute = new DllImportAttribute("nvapi64.dll");
             attribute.CallingConvention = CallingConvention.Cdecl;
             attribute.PreserveSig = true;
             attribute.EntryPoint = "nvapi_QueryInterface";
             PInvokeDelegateFactory.CreateDelegate(attribute, out nvapi_QueryInterface);
 
-            try {
+            try
+            {
                 GetDelegate(0x0150E828, out NvAPI_Initialize);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Helpers.ConsolePrint("NVAPI", e.ToString());
                 return;
             }
 
-            if (NvAPI_Initialize() == NvStatus.OK) {
+            if (NvAPI_Initialize() == NvStatus.OK)
+            {
                 GetDelegate(0x5F608315, out NvAPI_GPU_GetTachReading);
                 GetDelegate(0x60DED2ED, out NvAPI_GPU_GetPStates);
                 GetDelegate(0xE3640A56, out NvAPI_GPU_GetThermalSettings);

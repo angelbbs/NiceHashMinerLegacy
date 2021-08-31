@@ -1,24 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
-using System.Net;
-using System.Net.Sockets;
-using System.Windows.Forms;
-using System.Diagnostics;
-using System.IO;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
-using System.Threading.Tasks;
-using System.Threading;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Switching;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -31,13 +22,16 @@ namespace NiceHashMiner.Miners
 
         public lyclMiner() : base("lyclMiner") { }
 
-        bool benchmarkException {
-            get {
+        bool benchmarkException
+        {
+            get
+            {
                 return MiningSetup.MinerPath == MinerPaths.Data.lyclMiner;
             }
         }
 
-        protected override int GetMaxCooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds()
+        {
             return 60 * 1000 * 12;
         }
 
@@ -85,10 +79,10 @@ namespace NiceHashMiner.Miners
             {
                 string str = textArray[i].ToString();
 
-                if (!str.Contains("DeviceIndex = ") )
-                    {
-                        newconf = newconf + str + "\n";
-                    }
+                if (!str.Contains("DeviceIndex = "))
+                {
+                    newconf = newconf + str + "\n";
+                }
 
                 if (str.Contains("DeviceIndex = ") && str.Contains("BinaryFormat ="))
                 {
@@ -97,45 +91,46 @@ namespace NiceHashMiner.Miners
                     int end1 = str.IndexOf("BinaryFormat");
                     string dev = str.Substring(st1 + 15, end1 - st1 - 17);
 
-                        if (Array.IndexOf(ids, dev) < 0)
-                        {
-                            str = str.Replace("DeviceIndex = \"", "DeviceIndex = \"-255 ");
-                        }
+                    if (Array.IndexOf(ids, dev) < 0)
+                    {
+                        str = str.Replace("DeviceIndex = \"", "DeviceIndex = \"-255 ");
+                    }
 
-                        if (str.Contains("WorkSize ="))
-                        {
-                            int st2 = str.IndexOf("WorkSize = ");
-                            int end2 = str.IndexOf(">");
-                            string work = str.Substring(st2 + 12, end2 - st2 - 12 - 1);
+                    if (str.Contains("WorkSize ="))
+                    {
+                        int st2 = str.IndexOf("WorkSize = ");
+                        int end2 = str.IndexOf(">");
+                        string work = str.Substring(st2 + 12, end2 - st2 - 12 - 1);
 
                         if (k < worksize.Length && Array.IndexOf(ids, dev) >= 0 && worksize[k].Length != 0) //костыль
                         {
                             str = str.Replace(work, worksize[k].Trim());
                             k++;
                         }
-                         newconf = newconf + str + "\n";
+                        newconf = newconf + str + "\n";
 
-                        }
+                    }
 
                 }
             }
 
-                FileStream fs2 = new FileStream("bin\\lyclMiner\\lyclMinerNHML.conf", FileMode.Create, FileAccess.ReadWrite);
-                StreamWriter w2 = new StreamWriter(fs2);
-                w2.Write(newconf);
-                //Thread.Sleep(1000);
+            FileStream fs2 = new FileStream("bin\\lyclMiner\\lyclMinerNHML.conf", FileMode.Create, FileAccess.ReadWrite);
+            StreamWriter w2 = new StreamWriter(fs2);
+            w2.Write(newconf);
+            //Thread.Sleep(1000);
 
-                w2.Flush();
-                //Thread.Sleep(1000);
+            w2.Flush();
+            //Thread.Sleep(1000);
 
-                w2.Close();
-                LastCommandLine = " lyclMinerNHML.conf";
-                Thread.Sleep(100);
+            w2.Close();
+            LastCommandLine = " lyclMinerNHML.conf";
+            Thread.Sleep(100);
             ProcessHandle = _Start();
 
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
@@ -179,8 +174,8 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(250);
             Helpers.ConsolePrint(MinerTag(), "Start bench: " + benchmarkconfigHandle.StartInfo.FileName + benchmarkconfigHandle.StartInfo.Arguments);
 
-            try { benchmarkconfigHandle.Start();  }
-                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+            try { benchmarkconfigHandle.Start(); }
+            catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
 
 
             try
@@ -212,12 +207,13 @@ namespace NiceHashMiner.Miners
             return deviceStringCommand;
         }
 
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
 
             string configfilename = GetLogFileName();
             GenerateConfig(configfilename);
 
-              Thread.Sleep(1000);
+            Thread.Sleep(1000);
 
             Helpers.ConsolePrint("lyclMiner", "Start benchmark after config is generated");
 
@@ -281,7 +277,7 @@ namespace NiceHashMiner.Miners
             }
 
             Helpers.ConsolePrint("lyclMiner.confNEW:", newconf);
-            FileStream fs2 = new FileStream("bin\\lyclMiner\\"+ configfilename, FileMode.Create, FileAccess.ReadWrite);
+            FileStream fs2 = new FileStream("bin\\lyclMiner\\" + configfilename, FileMode.Create, FileAccess.ReadWrite);
             StreamWriter w2 = new StreamWriter(fs2);
             w2.Write(newconf);
             w2.Flush();
@@ -332,7 +328,8 @@ namespace NiceHashMiner.Miners
             return false;
         }
         */
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
+        {
             CheckOutdata(outdata);
         }
 

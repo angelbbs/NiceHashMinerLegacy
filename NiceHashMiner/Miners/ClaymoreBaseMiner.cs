@@ -1,20 +1,20 @@
 using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using System.Diagnostics;
 using System.Threading;
-using NiceHashMiner.Configs;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -213,7 +213,7 @@ namespace NiceHashMiner.Miners
                     if (id < 36)
                     {
                         // CD supports 0-9 and a-z indexes, so 36 GPUs
-                        var idchar = (char) (id + 87); // 10 = 97(a), 11 - 98(b), etc
+                        var idchar = (char)(id + 87); // 10 = 97(a), 11 - 98(b), etc
                         ids.Add(idchar.ToString());
                     }
                     else
@@ -243,7 +243,7 @@ namespace NiceHashMiner.Miners
 
         // benchmark stuff
 
-        
+
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
             BenchmarkSignalQuit = false;
@@ -393,27 +393,28 @@ namespace NiceHashMiner.Miners
                         }
                         File.Delete(WorkingDirectory + latestLogFile);
                     }
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Helpers.ConsolePrint(MinerTag(), ex.ToString());
                 }
                 BenchmarkThreadRoutineFinish();
             }
         }
-        
+
         // stub benchmarks read from file
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             //Helpers.ConsolePrint(MinerTag(), outdata);
             CheckOutdata(outdata);
         }
-        
+
         protected override bool BenchmarkParseLine(string outdata)
         {
             //Helpers.ConsolePrint("BenchmarkParseLine", outdata);
             return true;
         }
-        
+
         protected double GetNumber(string outdata)
         {
             return GetNumber(outdata, LookForStart, LookForEnd);

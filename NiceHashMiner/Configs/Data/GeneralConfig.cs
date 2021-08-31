@@ -1,8 +1,8 @@
+using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -105,7 +105,7 @@ namespace NiceHashMiner.Configs.Data
         public double SwitchProfitabilityThreshold = 0.05; // percent
         public int MinerRestartDelayMS = 500;
 
-//        public BenchmarkTimeLimitsConfig BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+        //        public BenchmarkTimeLimitsConfig BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
 
         // TODO deprecate this
         public DeviceDetectionConfig DeviceDetection = new DeviceDetectionConfig();
@@ -237,7 +237,7 @@ namespace NiceHashMiner.Configs.Data
             HideMiningWindows = false;
             MinimizeToTray = false;
             AlwaysOnTop = false;
-//            BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+            //            BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();
             DisableAMDTempControl = false;
             DisableDefaultOptimizations = false;
@@ -318,7 +318,7 @@ namespace NiceHashMiner.Configs.Data
             ProfitFormHeight = 400;
             ProfitFormTop = 0;
             ProfitFormLeft = 0;
-    }
+        }
 
         public void FixSettingBounds()
         {
@@ -358,15 +358,15 @@ namespace NiceHashMiner.Configs.Data
                 ApiBindPortPoolStart = 5100;
             }
             if (this.ApiBindPortPoolStart <= 4001)  //fix to hsrminer
-                {
-                    this.ApiBindPortPoolStart = 4002;
-                }
-/*
-            if (BenchmarkTimeLimits == null)
             {
-                BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+                this.ApiBindPortPoolStart = 4002;
             }
-*/
+            /*
+                        if (BenchmarkTimeLimits == null)
+                        {
+                            BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+                        }
+            */
             if (DeviceDetection == null)
             {
                 DeviceDetection = new DeviceDetectionConfig();

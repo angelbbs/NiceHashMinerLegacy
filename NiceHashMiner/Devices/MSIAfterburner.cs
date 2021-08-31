@@ -1,6 +1,4 @@
 ﻿using MSI.Afterburner;
-using MSI.Afterburner.Exceptions;
-using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
 using NiceHashMinerLegacy.Common.Enums;
@@ -169,7 +167,7 @@ namespace NiceHashMiner.Devices
                         {
                             P.StartInfo.Arguments = "-m";
                         }
-                            P.Start();
+                        P.Start();
 
                         int repeats = 0;
                         IntPtr wdwIntPtr = new IntPtr();
@@ -243,6 +241,9 @@ namespace NiceHashMiner.Devices
                         if (!meminit)
                         {
                             Thread.Sleep(200);
+                            waiting.SetText("", "");
+                            waiting.Update();
+                            Thread.Sleep(100);
                             if (waiting != null) waiting.CloseWaitingBox();
                             MSIAB_starting = false;
                             return false;
@@ -250,6 +251,9 @@ namespace NiceHashMiner.Devices
                     }
                     catch (Exception ex)
                     {
+                        waiting.SetText("", "");
+                        waiting.Update();
+                        Thread.Sleep(100);
                         if (waiting != null) waiting.CloseWaitingBox();
                         Helpers.ConsolePrint("MSI AB error", "Process exists? Exception on run: " + ex.Message);
                         new Task(() =>
@@ -261,6 +265,9 @@ namespace NiceHashMiner.Devices
                 }
                 if (waiting != null)
                 {
+                    Thread.Sleep(100);
+                    waiting.SetText("", "");
+                    waiting.Update();
                     Thread.Sleep(100);
                     waiting.CloseWaitingBox();
                 }
@@ -318,6 +325,9 @@ namespace NiceHashMiner.Devices
                     }
                 }
             }
+            waiting.SetText("", "");
+            waiting.Update();
+            Thread.Sleep(100);
             waiting.CloseWaitingBox();
             return;
         }
@@ -548,11 +558,12 @@ namespace NiceHashMiner.Devices
                         mahm.ReloadGpuEntry((uint)index);
                         //break;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error? BUG?: " + ex.ToString());
+                        //Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error? BUG?: " + ex.ToString());
                         //return false;
-                    } finally
+                    }
+                    finally
                     {
                         index = i;
                         macm.ReloadGpuEntry(index);
@@ -571,7 +582,7 @@ namespace NiceHashMiner.Devices
 
             try
             {
-                
+
                 //byte[] buffer = RawSerialize(macm.GpuEntries[index], (int)macm.Header.GpuEntrySize);
                 byte[] buffer = File.ReadAllBytes(FileName);
                 buffer = ReplaceBytes(buffer, Encoding.ASCII.GetBytes("BUS_"), Encoding.ASCII.GetBytes("BUS_" + _busID.ToString()));
@@ -587,7 +598,8 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare OK. busID " + _busID.ToString());
                     return true;
-                } else
+                }
+                else
                 {
                     Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare ERROR. busID " + _busID.ToString());
                     return false;
@@ -641,7 +653,8 @@ namespace NiceHashMiner.Devices
             {
                 byte[] buffer = RawSerialize(macm.GpuEntries[index], (int)macm.Header.GpuEntrySize);
                 File.WriteAllBytes(FileName, buffer);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("MSIAfterburner SaveDefaultDeviceData", "Error: " + ex.ToString());
             }
@@ -721,14 +734,16 @@ namespace NiceHashMiner.Devices
                             {
                                 break;
                             }
-                        } else
+                        }
+                        else
                         {
                             Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Error. File not found: " + FileName);
                             return new ControlMemoryGpuEntry();
                         }
                     }
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Error: " + ex.ToString());
             }

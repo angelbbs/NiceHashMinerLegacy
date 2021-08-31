@@ -1,9 +1,7 @@
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Management;
 using System.Security.Principal;
 
 namespace MinerLegacyForkFixMonitor
@@ -35,7 +33,7 @@ namespace MinerLegacyForkFixMonitor
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 #endif
 
-                    Logger.Log.Info("[" + grp + "] " + text);
+                Logger.Log.Info("[" + grp + "] " + text);
             }
             catch { }  // Not gonna recursively call here in case something is seriously wrong
         }

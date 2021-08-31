@@ -1,11 +1,11 @@
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Devices.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Devices.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -382,7 +382,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
             public static string lyclMiner(AlgorithmType algorithmType)
             {
-                if (AlgorithmType.Lyra2REv3 == algorithmType )
+                if (AlgorithmType.Lyra2REv3 == algorithmType)
                 {
                     return Data.lyclMiner;
                 }
@@ -390,7 +390,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
             public static string teamredminer(AlgorithmType algorithmType)
             {
-                if (AlgorithmType.Lyra2z == algorithmType )
+                if (AlgorithmType.Lyra2z == algorithmType)
                 {
                     return Data.teamredminer;
                 }
@@ -403,7 +403,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
             public static string lolMiner(AlgorithmType algorithmType)
             {
-                if (AlgorithmType.ZHash == algorithmType )
+                if (AlgorithmType.ZHash == algorithmType)
                 {
                     return Data.lolMiner;
                 }
@@ -430,10 +430,10 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 var package = GroupAlgorithms.CreateDefaultsForGroup(i);
                 var minerTypePaths = (from type in ConfigurableMiners
-                    where package.ContainsKey(type)
-                    let minerPaths = package[type].Select(algo =>
-                        new MinerPath(algo.NiceHashID, GetPathFor(type, algo.NiceHashID, i, true))).ToList()
-                    select new MinerTypePath(type, minerPaths)).ToList();
+                                      where package.ContainsKey(type)
+                                      let minerPaths = package[type].Select(algo =>
+                                          new MinerPath(algo.NiceHashID, GetPathFor(type, algo.NiceHashID, i, true))).ToList()
+                                      select new MinerTypePath(type, minerPaths)).ToList();
                 if (minerTypePaths.Count > 0)
                 {
                     defaults.Add(new MinerPathPackage(i, minerTypePaths));

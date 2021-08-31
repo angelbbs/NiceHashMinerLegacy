@@ -1,8 +1,8 @@
+using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common.Enums;
 
 
 namespace NiceHashMiner.Forms.Components

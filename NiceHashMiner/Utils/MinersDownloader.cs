@@ -7,9 +7,10 @@ using SharpCompress.Archive;
 using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
-
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Utils
 {
@@ -20,7 +21,7 @@ namespace NiceHashMiner.Utils
         private readonly DownloadSetup _downloadSetup;
 
         private Downloader _downloader;
-        private Timer _timer;
+        private System.Threading.Timer _timer;
         private int _ticksSinceUpdate;
         private long _lastProgress;
         private Thread _unzipThread;
@@ -85,7 +86,7 @@ namespace NiceHashMiner.Utils
                 10,
                 true);
 
-            _timer = new Timer(TmrRefresh_Tick);
+            _timer = new System.Threading.Timer(TmrRefresh_Tick);
             _timer.Change(0, 500);
         }
 
@@ -97,7 +98,7 @@ namespace NiceHashMiner.Utils
             if (!_isDownloadSizeInit)
             {
                 _isDownloadSizeInit = true;
-                _minerUpdateIndicator.SetMaxProgressValue((int) (_downloader.FileSize / 1024));
+                _minerUpdateIndicator.SetMaxProgressValue((int)(_downloader.FileSize / 1024));
             }
 
             if (_downloader.LastError != null)
@@ -109,7 +110,7 @@ namespace NiceHashMiner.Utils
             var percString = _downloader.Progress.ToString("0.00") + "%";
             var labelDownloaded =
                 $"{_downloader.Transfered / 1024d / 1024d:0.00} MB / {_downloader.FileSize / 1024d / 1024d:0.00} MB";
-            _minerUpdateIndicator.SetProgressValueAndMsg((int) (_downloader.Transfered / 1024d),
+            _minerUpdateIndicator.SetProgressValueAndMsg((int)(_downloader.Transfered / 1024d),
                 $"{speedString}   {percString}   {labelDownloaded}");
 
             // Diagnostic stuff
@@ -217,20 +218,26 @@ namespace NiceHashMiner.Utils
             catch (Exception e)
             {
                 Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
-                
-                //untested )))
-                /*
-                //MessageBoxEx.Show(e.Message + "\r\n" + "Restart Windows", 20000);
-                Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
 
-                var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                //untested 
+                var dialogRes = Utils.MessageBoxEx.Show(e.Message + "\r\n Restart Windows?",
+                    "Autoupdate", MessageBoxButtons.YesNo, MessageBoxIcon.Question, 300000);//5min
+                if (dialogRes == System.Windows.Forms.DialogResult.No)
                 {
-                    WindowStyle = ProcessWindowStyle.Minimized
-                };
-                onGpusLost.Arguments = "1 " + "-777";
-                Helpers.ConsolePrint("ERROR", "UnzipThreadRoutine has encountered an error: " + e.Message);
-                Process.Start(onGpusLost);
-                */
+                    var OSrestart = new ProcessStartInfo("shutdown")
+                    {
+                        WindowStyle = ProcessWindowStyle.Minimized
+                    };
+                    OSrestart.Arguments = "-r -f -t 10";
+                    Helpers.ConsolePrint("UnzipThreadRoutine", "Restart Windows");
+                    Process.Start(OSrestart);
+
+                }
+                else
+                {
+                    //Form_Main.MakeRestart(0);
+                }
+
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace HashLib
 {
-    internal class HashBuffer 
+    internal class HashBuffer
     {
         private byte[] m_data;
         private int m_pos;
@@ -32,7 +32,7 @@ namespace HashLib
 
         public byte[] GetBytesZeroPadded()
         {
-            Array.Clear(m_data, m_pos, m_data.Length - m_pos); 
+            Array.Clear(m_data, m_pos, m_data.Length - m_pos);
             m_pos = 0;
             return m_data;
         }

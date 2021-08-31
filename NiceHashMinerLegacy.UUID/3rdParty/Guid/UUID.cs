@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Guid.Providers;
+using System;
 using System.Linq;
 using System.Text;
-using Guid.Providers;
 
 namespace Guid
 {

@@ -1,15 +1,13 @@
 using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using NiceHashMiner.PInvoke;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using NiceHashMiner.PInvoke;
 using System.Management;
-using NiceHashMinerLegacy.Common.Enums;
 using System.Security.Principal;
-using System.Linq;
 
 namespace NiceHashMiner
 {
@@ -119,10 +117,10 @@ namespace NiceHashMiner
         public static uint GetIdleTime()
         {
             var lastInPut = new LASTINPUTINFO();
-            lastInPut.cbSize = (uint) System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
+            lastInPut.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
             GetLastInputInfo(ref lastInPut);
 
-            return ((uint) Environment.TickCount - lastInPut.dwTime);
+            return ((uint)Environment.TickCount - lastInPut.dwTime);
         }
 
         public static void DisableWindowsErrorReporting(bool en)
@@ -141,7 +139,7 @@ namespace NiceHashMiner
                         var o = rk.GetValue("DontShowUI");
                         if (o != null)
                         {
-                            var val = (int) o;
+                            var val = (int)o;
                             ConsolePrint("NICEHASH", "Current DontShowUI value: " + val);
 
                             if (val == 0 && en)
@@ -189,7 +187,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE)
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed = 0, AlgorithmType algo = AlgorithmType.NONE)
         {
             string ret;
 
@@ -240,7 +238,7 @@ namespace NiceHashMiner
             var serial = "";
             foreach (ManagementObject mo in moc)
             {
-                serial = (string) mo["SerialNumber"];
+                serial = (string)mo["SerialNumber"];
             }
 
             return serial;
@@ -315,7 +313,7 @@ namespace NiceHashMiner
             using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32)
                 .OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\"))
             {
-                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int) ndpKey.GetValue("Release"));
+                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int)ndpKey.GetValue("Release"));
             }
         }
 

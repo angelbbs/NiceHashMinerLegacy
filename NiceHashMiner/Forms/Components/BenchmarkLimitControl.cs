@@ -1,6 +1,6 @@
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Windows.Forms;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -43,7 +43,7 @@ namespace NiceHashMiner.Forms.Components
             textBoxQuick.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
             textBoxStandard.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
             textBoxPrecise.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
-            _textBoxes = new[] {textBoxQuick, textBoxStandard, textBoxPrecise};
+            _textBoxes = new[] { textBoxQuick, textBoxStandard, textBoxPrecise };
             //InitLocale();
         }
 
@@ -94,7 +94,7 @@ namespace NiceHashMiner.Forms.Components
             if (_timeLimits == null) return;
             if (int.TryParse(numString, out var value))
             {
-                _timeLimits[(int) type] = value;
+                _timeLimits[(int)type] = value;
             }
         }
     }

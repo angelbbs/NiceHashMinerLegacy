@@ -1,10 +1,9 @@
 using NiceHashMiner.Configs.ConfigJsonFile;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
-using System.Collections.Generic;
-using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Miners
 {

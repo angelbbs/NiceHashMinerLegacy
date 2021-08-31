@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Net.Sockets;
 
 namespace NiceHashMinerLegacy.Divert
 {
@@ -19,11 +17,11 @@ namespace NiceHashMinerLegacy.Divert
         private const int Successfully = 0;
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen,bool sort,
+        private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort,
             IpVersion ipVersion, TcpTableClass tblClass, int reserved);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        private static extern uint GetExtendedUdpTable(IntPtr pTcpTable, ref int dwOutBufLen,bool sort,
+        private static extern uint GetExtendedUdpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort,
             IpVersion ipVersion, UdpTableClass tblClass, int reserved);
 
 
@@ -66,7 +64,7 @@ namespace NiceHashMinerLegacy.Divert
 
         public static Connection[] GetTcpV4Connections()
         {
-            TcpRowOwnerPid[] t = GetTcpConnections < TcpRowOwnerPid>(IpVersion.IPv4);
+            TcpRowOwnerPid[] t = GetTcpConnections<TcpRowOwnerPid>(IpVersion.IPv4);
             Connection[] connectInfo = new Connection[t.Length];
             for (int i = 0; i < t.Length; i++)
             {
@@ -121,7 +119,7 @@ namespace NiceHashMinerLegacy.Divert
 
         private static T[] GetUdpConnections<T>(IpVersion ipVersion)
         {
-           T[] tTable;
+            T[] tTable;
 
             int buffSize = 0;
 
@@ -137,7 +135,7 @@ namespace NiceHashMinerLegacy.Divert
                 while (retVal == ErrorInsufficientBuffer) //buffer should be greater?
                 {
                     buffer = Marshal.ReAllocHGlobal(buffer, new IntPtr(buffSize));
-                    retVal = GetExtendedUdpTable(buffer, ref buffSize, false, ipVersion,UdpTableClass.UdpTableOwnerPid, 0);
+                    retVal = GetExtendedUdpTable(buffer, ref buffSize, false, ipVersion, UdpTableClass.UdpTableOwnerPid, 0);
                 }
 
                 if (retVal != Successfully)

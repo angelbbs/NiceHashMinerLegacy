@@ -1,7 +1,7 @@
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Windows.Forms;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Forms
 {
@@ -71,7 +71,7 @@ namespace NiceHashMiner.Forms
             comboBox_Languages.Items.Clear();
             for (var i = 0; i < lang.Count; i++)
             {
-                comboBox_Languages.Items.Add(lang[(LanguageType) i]);
+                comboBox_Languages.Items.Add(lang[(LanguageType)i]);
             }
 
             comboBox_Languages.SelectedIndex = 0;
@@ -84,7 +84,8 @@ namespace NiceHashMiner.Forms
             {
                 textBox_TOS.Text = TosTextRU;
                 comboBox_Languages.SelectedIndex = 1;
-            } else
+            }
+            else
             {
                 textBox_TOS.Text = TosText;
                 comboBox_Languages.SelectedIndex = 0;
@@ -95,7 +96,7 @@ namespace NiceHashMiner.Forms
 
         private void Button_OK_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.Language = (LanguageType) comboBox_Languages.SelectedIndex;
+            ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Languages.SelectedIndex;
             ConfigManager.GeneralConfigFileCommit();
             Close();
         }

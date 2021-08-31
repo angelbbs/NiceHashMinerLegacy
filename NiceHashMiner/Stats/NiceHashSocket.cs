@@ -1,15 +1,11 @@
 using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.UUID;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using WebSocketSharp;
-
-using NiceHashMinerLegacy.UUID;
-using NiceHashMiner.Configs;
-using SystemTimer = System.Timers.Timer;
-using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner.Stats
 {
@@ -37,7 +33,7 @@ namespace NiceHashMiner.Stats
         private bool _attemptingReconnect;
         public static bool _endConnection = false;
         private bool _connectionAttempted;
-        public  static bool _connectionEstablished;
+        public static bool _connectionEstablished;
         private readonly Random _random = new Random();
         private readonly string _address;
         private readonly string _addressFailover;
@@ -125,7 +121,7 @@ namespace NiceHashMiner.Stats
                     _webSocket = null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -210,7 +206,7 @@ namespace NiceHashMiner.Stats
             }
             _attemptingReconnect = true;
             var sleep = 1;
-            
+
             // More retries on first attempt
             var retries = _connectionEstablished ? 5 : 6;
             if (_connectionEstablished)
@@ -274,7 +270,8 @@ namespace NiceHashMiner.Stats
                 if (_webSocket == null)
                 {
                     _webSocket = new WebSocket(_address);
-                } else
+                }
+                else
                 {
                     _connectionEstablished = false;
                     _restartConnection = true;
@@ -293,7 +290,8 @@ namespace NiceHashMiner.Stats
                 _webSocket.Connect();
                 _connectionEstablished = true;
                 _restartConnection = false;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
@@ -315,7 +313,8 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("UUID", "Unknown CPUId detected. Reseting MachineGuid");
                     Configs.ConfigManager.GeneralConfig.CpuID = CpuID;
                     Configs.ConfigManager.GeneralConfig.MachineGuid = "";
-                } else
+                }
+                else
                 {
                     if (!Configs.ConfigManager.GeneralConfig.CpuID.Equals(CpuID))
                     {
@@ -422,7 +421,8 @@ namespace NiceHashMiner.Stats
                         return true;
                         //return await SendAsync(data);
                     }
-                } else if (_webSocket != null)
+                }
+                else if (_webSocket != null)
                 {
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
                     _webSocket = null;
@@ -439,18 +439,21 @@ namespace NiceHashMiner.Stats
                         Helpers.ConsolePrint("SOCKET", "Socket connection unsuccessfull, will try again on next device update (1min)");
                     }
                     */
-                } else
+                }
+                else
                 {
                     if (!_connectionAttempted)
                     {
                         Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
-                    } else
+                    }
+                    else
                     {
                         Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
                         StartConnection();
                     }
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
@@ -497,7 +500,8 @@ namespace NiceHashMiner.Stats
             {
                 // Don't wait if no connection yet
                 await Task.Delay(sleep * 1000);
-            } else
+            }
+            else
             {
                 // Don't not wait again
                 _connectionEstablished = true;

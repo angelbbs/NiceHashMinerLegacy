@@ -1,31 +1,30 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Management;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
-using System.Net.NetworkInformation;
-using System.Management;
-using NiceHashMiner.Stats;
-using NiceHashMinerLegacy.Divert;
-using NiceHashMiner.Forms.Components;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Switching;
 
 namespace NiceHashMiner
 {
@@ -47,12 +46,14 @@ namespace NiceHashMiner
             if (mpairs == null)
             {
                 AlgorithmName = AlgorithmNiceHashNames.GetName(DualAlgorithmID());
-            } else
+            }
+            else
             {
                 if (mpairs.Algorithm is DualAlgorithm dualAlg)
                 {
                     AlgorithmName = dualAlg.DualAlgorithmNameCustom;
-                } else
+                }
+                else
                 {
                     AlgorithmName = mpairs.Algorithm.AlgorithmNameCustom;
                 }
@@ -163,7 +164,7 @@ namespace NiceHashMiner
         //private const int _MAX_CooldownTimeInMilliseconds = 60 * 1000; // 1 minute max, whole waiting time 75seconds
         public int _maxCooldownTimeInMilliseconds; // = GetMaxCooldownTimeInMilliseconds();
 
-       // protected abstract int GetMaxCooldownTimeInMilliseconds();
+        // protected abstract int GetMaxCooldownTimeInMilliseconds();
         public static Timer _cooldownCheckTimer;
         protected MinerApiReadStatus CurrentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = MinCooldownTimeInMilliseconds;
@@ -426,9 +427,10 @@ namespace NiceHashMiner
         {
             if (worker.Length > 0)
             {
-                    //return btcAdress + "." + worker + "$" + NiceHashSocket.RigID;
-                    return btcAdress + "." + worker + "$" + ConfigManager.GeneralConfig.MachineGuid;
-            } else
+                //return btcAdress + "." + worker + "$" + NiceHashSocket.RigID;
+                return btcAdress + "." + worker + "$" + ConfigManager.GeneralConfig.MachineGuid;
+            }
+            else
             {
 
             }
@@ -450,7 +452,8 @@ namespace NiceHashMiner
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
                 Thread.Sleep(2000);
-            } else
+            }
+            else
             {
                 string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
                 Form_Main.myServers = tmpServers;
@@ -495,7 +498,8 @@ namespace NiceHashMiner
             catch (Exception er)
             {
                 Helpers.ConsolePrint("KillProcessAndChildren", er.ToString());
-            } finally
+            }
+            finally
             {
                 KillAllUsedMinerProcesses();
             }
@@ -761,8 +765,8 @@ namespace NiceHashMiner
             }
             */
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
-                Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
-                benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
+            Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
+            benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
 
             // set sys variables
             if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
@@ -1365,11 +1369,11 @@ namespace NiceHashMiner
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
                 if (MinerDeviceName.Contains("Phoenix"))
                 {
-                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(maxspeed,2);
+                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(maxspeed, 2);
                 }
                 if (MinerDeviceName.Contains("Claymore"))
                 {
-                   //Thread.Sleep(10000);
+                    //Thread.Sleep(10000);
                 }
             }
             catch (Exception ex)
@@ -1460,7 +1464,7 @@ namespace NiceHashMiner
 
         protected abstract bool BenchmarkParseLine(string outdata);
 
-        public static int PingServers( string serv = "")
+        public static int PingServers(string serv = "")
         {
             string[,] myServers = Form_Main.myServers;
             Ping ping = new Ping();
@@ -1499,17 +1503,18 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint("PingServers", server + " out of range");
                         bestServerId = -1;
                     }
-                } catch (PingException)
+                }
+                catch (PingException)
                 {
-                    Helpers.ConsolePrint("PingServers", server + " offline "  + i.ToString());
+                    Helpers.ConsolePrint("PingServers", server + " offline " + i.ToString());
                     myServers[i, 1] = "1";
                     bestServerId = 1;
                 }
                 serverId++;
             }
 
-            string[,] tmpServers = {{ "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }};
-        int pingReplyTimeTmp;
+            string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
+            int pingReplyTimeTmp;
             long bestReplyTimeTmp = 10000;
             int iTmp = 0;
             for (int k = 0; k < 4; k++)
@@ -1696,7 +1701,7 @@ namespace NiceHashMiner
                         }
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
 
-                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2,  MinerDeviceName,
+                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, MinerDeviceName,
                             strPlatform, w, false,
                             false,
                             false, ConfigManager.GeneralConfig.DivertRun,
@@ -1708,7 +1713,8 @@ namespace NiceHashMiner
                             Pid = P.Id,
                             DivertHandle = P.DivertHandle
                         };
-                    } else
+                    }
+                    else
                     {
                         _currentPidData = new MinerPidData
                         {
@@ -1826,7 +1832,7 @@ namespace NiceHashMiner
                     var p = Process.GetProcessById(ProcessHandle.Id);
                     p.Kill();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Helpers.ConsolePrint(MinerTag(), ProcessTag() + "Process not exist.");
                 }
@@ -2093,7 +2099,8 @@ namespace NiceHashMiner
                 try
                 {
                     var p = Process.GetProcessById(ProcessHandle.Id);
-                } catch (Exception ex)
+                }
+                catch (Exception)
                 {
                     CooldownCheck = 100;
                     Helpers.ConsolePrint(MinerTag(), ProcessTag() + "Process not exist. Restart miner");
@@ -2101,7 +2108,7 @@ namespace NiceHashMiner
                     Restart();
                 }
             }
-            
+
             switch (CurrentMinerReadStatus)
             {
                 case MinerApiReadStatus.GOT_READ:
@@ -2138,19 +2145,23 @@ namespace NiceHashMiner
             {
                 if (isBefore)
                 {
+                    WaitingForm waiting = new WaitingForm();
+                    waiting.ShowWaitingBox();
                     foreach (var dev in MiningSetup.MiningPairs)
                     {
                         if (dev.Device.Enabled)
                         {
+                            waiting.SetText("", "Apply OC: " + dev.Device.Name);
+                            waiting.Update();
                             string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
                             Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
                             MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
-
+                            Thread.Sleep(100);
                             //MSIAfterburner.CommitChanges(dev.Device.ID);
                             //Thread.Sleep(10);
                             MSIAfterburner.CommitChanges();
-                            Thread.Sleep(200);
-                            
+                            Thread.Sleep(250);
+
                             for (int i = 0; i < 3; i++)
                             {
                                 if (MSIAfterburner.CompareDeviceData(dev.Device.BusID, fName))
@@ -2164,11 +2175,15 @@ namespace NiceHashMiner
                                     Thread.Sleep(500);
                                 }
                             }
-                            
+
                         }
                     }
-//                    Thread.Sleep(2000);
-  //                  MSIAfterburner.CommitChanges();
+                    waiting.SetText("", "");
+                    waiting.Update();
+                    Thread.Sleep(100);
+                    waiting.CloseWaitingBox();
+                    //                    Thread.Sleep(2000);
+                    //                  MSIAfterburner.CommitChanges();
                 }
                 else
                 {
@@ -2304,7 +2319,7 @@ namespace NiceHashMiner
 
         protected virtual void RunCMDAfterMining(string CMDparam, NiceHashProcess ProcessHandle)
         {
- //           while (ProcessHandle != null)
+            //           while (ProcessHandle != null)
             {
             }
             bool CreateNoWindow = false;

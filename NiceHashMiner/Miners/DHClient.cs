@@ -1,7 +1,5 @@
 ﻿using HashLib;
 using Newtonsoft.Json;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
@@ -10,12 +8,9 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using WinDivertSharp;
 
 namespace NiceHashMiner.Miners
@@ -43,14 +38,14 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: " + e.ToString());
             }
             return "";
         }
 
-        public static bool isClientConnected( TcpClient _tcpClient)
+        public static bool isClientConnected(TcpClient _tcpClient)
         {
             if (_tcpClient == null) return false;
             IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
@@ -86,7 +81,8 @@ namespace NiceHashMiner.Miners
                 {
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Start connection");
                     new Task(() => ConnectToPool()).Start();
-                } else
+                }
+                else
                 {
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "tcpClient != null");
                 }
@@ -116,13 +112,14 @@ namespace NiceHashMiner.Miners
                 //if (tcpClient != null)
 
 
-                    if (DHClient.serverStream != null)
-                    {
-                        serverStream.Close();
-                        DHClient.serverStream = null;
-                    }
+                if (DHClient.serverStream != null)
+                {
+                    serverStream.Close();
+                    DHClient.serverStream = null;
+                }
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("DaggerHashimoto3GB", ex.ToString());
             }
@@ -156,7 +153,7 @@ namespace NiceHashMiner.Miners
                 //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[r1, 0] + ".nicehash.com"));
                 IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com"));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
-Reconnect:
+                Reconnect:
                 serverStream = null;
                 if (tcpClient != null)
                 {
@@ -186,11 +183,13 @@ Reconnect:
                             }
                             tcpClient.Close();
                         }
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Exception: " + ex);
                     }
-                } else
+                }
+                else
                 {
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Already connected");
                     ReadFromServer(serverStream, tcpClient);
@@ -198,12 +197,13 @@ Reconnect:
 
                 if (!Divert.checkConnection3GB)
                 {
-                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Stop connecting");
-                        Thread.Sleep(1000);
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Stop connecting");
+                    Thread.Sleep(1000);
                     break;
-                } else
+                }
+                else
                 {
-                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Need reconnect");
+                    Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Need reconnect");
                     //StopConnection();
                     //checkConnection = false;
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 1");
@@ -237,15 +237,15 @@ Reconnect:
             byte[] s = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             IHash hash = HashFactory.Crypto.SHA3.CreateKeccak256();
             int i;
-                for (i = 0; i < 2048; ++i)
-                {
-                    if (s.SequenceEqual(seedhashArray))
-                        break;
-                    s = hash.ComputeBytes(s).GetBytes();
-                }
-                if (i >= 2048)
-                    throw new Exception("Invalid seedhash.");
-                return i;
+            for (i = 0; i < 2048; ++i)
+            {
+                if (s.SequenceEqual(seedhashArray))
+                    break;
+                s = hash.ComputeBytes(s).GetBytes();
+            }
+            if (i >= 2048)
+                throw new Exception("Invalid seedhash.");
+            return i;
         }
 
         public static void ReadFromServer(Stream serverStream, TcpClient tcpClient) //от пула
@@ -254,8 +254,6 @@ Reconnect:
             bool Epoch3GB = false;
 
             byte[] messagePool = new byte[8192];
-            int np = 0;
-            int poolBytes;
 
             string subscribe = "{\"id\": 1, \"method\": \"mining.subscribe\", \"params\": [\"EthereumMiner/1.0.0\", \"EthereumStratum/1.0.0\"]}" + (char)10;
             string btcAdress = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;

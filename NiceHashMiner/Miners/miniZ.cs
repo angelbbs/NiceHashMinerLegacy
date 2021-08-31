@@ -1,21 +1,19 @@
 using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
 using System.Windows.Forms;
-using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -74,7 +72,7 @@ namespace NiceHashMiner.Miners
                 return 10;
         }
 
-            private string GetStartCommand(string url, string btcAddress, string worker)
+        private string GetStartCommand(string url, string btcAddress, string worker)
         {
             var server = url.Split(':')[0].Replace("stratum+tcp://", "");
             var algo = "";
@@ -102,7 +100,7 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
             }
             string sColor = "";
-            if ( GetWinVer(Environment.OSVersion.Version) < 8)
+            if (GetWinVer(Environment.OSVersion.Version) < 8)
             {
                 sColor = " --nocolor";
             }
@@ -356,10 +354,10 @@ namespace NiceHashMiner.Miners
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
             if (firstStart)
-  //          if (ad.Speed <= 0.0001)
+            //          if (ad.Speed <= 0.0001)
             {
-               Thread.Sleep(5000);
-               ad.Speed = 0;
+                Thread.Sleep(5000);
+                ad.Speed = 0;
                 firstStart = false;
                 return ad;
             }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using MyDownloader.App;
 
 namespace MyDownloader.Core.UI

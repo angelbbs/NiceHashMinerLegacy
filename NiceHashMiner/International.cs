@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
 {
@@ -51,7 +51,7 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
             }
-            
+
             return langs;
         }
 

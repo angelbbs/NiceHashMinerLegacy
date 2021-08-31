@@ -1,16 +1,14 @@
-using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Interfaces;
 using NiceHashMiner.Stats;
-using System.Globalization;
+using NiceHashMinerLegacy.Common.Enums;
+using System;
 using System.Collections;
-using NiceHashMiner.Miners.Grouping;
+using System.Drawing;
+using System.Globalization;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -52,7 +50,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 if (!isListViewEnabled)
                 {
-                  //  return;
+                    //  return;
                 }
                 if (lvi.Tag is Algorithm algorithm)
                 {
@@ -61,7 +59,8 @@ namespace NiceHashMiner.Forms.Components
                         if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
                         {
                             lvi.BackColor = DisabledColor;
-                        } else
+                        }
+                        else
                         {
                             lvi.BackColor = SystemColors.ControlLightLight;
                         }
@@ -81,7 +80,8 @@ namespace NiceHashMiner.Forms.Components
                             {
                                 lvi.BackColor = SystemColors.ControlLightLight;
                             }
-                        } else
+                        }
+                        else
                         {
                             lvi.ForeColor = DisabledForeColor;
                             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
@@ -135,7 +135,7 @@ namespace NiceHashMiner.Forms.Components
 
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += ListViewAlgorithms_ItemSelectionChanged;
-            listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler) ListViewAlgorithms_ItemChecked;
+            listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler)ListViewAlgorithms_ItemChecked;
             IsInBenchmark = false;
         }
         public static void colorListViewHeader(ref ListView list, Color backColor, Color foreColor)
@@ -151,10 +151,10 @@ namespace NiceHashMiner.Forms.Components
         }
         private static void headerDraw(object sender, DrawListViewColumnHeaderEventArgs e, Color backColor, Color foreColor)
         {
-                using (SolidBrush backBrush = new SolidBrush(backColor))
-                {
-                    e.Graphics.FillRectangle(backBrush, e.Bounds);
-                }
+            using (SolidBrush backBrush = new SolidBrush(backColor))
+            {
+                e.Graphics.FillRectangle(backBrush, e.Bounds);
+            }
 
 
             using (SolidBrush foreBrush = new SolidBrush(foreColor))
@@ -314,7 +314,8 @@ namespace NiceHashMiner.Forms.Components
                         {
                             columnHeader6.Text = fiatCurrencyName;
                             lvi.SubItems.Add(rateCurrencyString);
-                        } else
+                        }
+                        else
                         {
                             columnHeader6.Text = btcCurrencyName;
                             lvi.SubItems.Add(WithPowerRate.ToString("F8"));
@@ -352,10 +353,10 @@ namespace NiceHashMiner.Forms.Components
 
             listViewAlgorithms.EndUpdate();
             //Enabled = isEnabled;
-         //   if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
-           // {
-                isListViewEnabled = isEnabled;
-                listViewAlgorithms.CheckBoxes = isEnabled;
+            //   if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
+            // {
+            isListViewEnabled = isEnabled;
+            listViewAlgorithms.CheckBoxes = isEnabled;
             //}
         }
 
@@ -478,10 +479,10 @@ namespace NiceHashMiner.Forms.Components
 
                 //Visible = isEnabled;
                 //Enabled = isEnabled;
-              //  if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
-               // {
+                //  if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
+                // {
 
-               // }
+                // }
             }
         }
 
@@ -497,7 +498,7 @@ namespace NiceHashMiner.Forms.Components
             if (IsInBenchmark)
             {
                 //listViewAlgorithms.CheckBoxes = false;
-                 // e.Item.Checked = !e.Item.Checked;
+                // e.Item.Checked = !e.Item.Checked;
                 //return;
             }
 
@@ -568,7 +569,7 @@ namespace NiceHashMiner.Forms.Components
                             // TODO handle numbers
                             if (algo != null)
                             {
-                                    lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                                lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
                             }
 
                             //    lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
@@ -713,7 +714,8 @@ namespace NiceHashMiner.Forms.Components
 
                     contextMenuStrip1.Show(Cursor.Position);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception)
             {
 
             }
@@ -762,7 +764,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                 {
                     if (lvi.Tag is Algorithm algorithm)
                     {
-                        aName =  algorithm.AlgorithmName;
+                        aName = algorithm.AlgorithmName;
                         mName = algorithm.MinerBaseType;
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
@@ -927,7 +929,8 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                         {
                             lvi.Checked = true;
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                        } else
+                        }
+                        else
                         {
                             lvi.Checked = false;
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
@@ -944,7 +947,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
 
         private void listViewAlgorithms_EnabledChanged(object sender, EventArgs e)
         {
-          //  AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Color.Red, Form_Main._textColor);
+            //  AlgorithmsListView.colorListViewHeader(ref listViewAlgorithms, Color.Red, Form_Main._textColor);
         }
 
         private void listViewAlgorithms_Click(object sender, EventArgs e)
@@ -984,7 +987,8 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                         Form_Main.DaggerHashimotoMaxEpochUpdated = false;
                     }
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint("listViewAlgorithms_Click", ex.ToString());
             }
@@ -1003,7 +1007,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
             if (IsInBenchmark)
             {
                 //listViewAlgorithms.CheckBoxes = false;
-                 //e.Item.Checked = !e.Item.Checked;
+                //e.Item.Checked = !e.Item.Checked;
             }
         }
 
@@ -1022,7 +1026,8 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
             if (e.ColumnIndex == 6)
             {
                 ResizeAutoSizeColumn(listViewAlgorithms, 1);
-            } else
+            }
+            else
             {
                 ResizeAutoSizeColumn(listViewAlgorithms, 6);
             }

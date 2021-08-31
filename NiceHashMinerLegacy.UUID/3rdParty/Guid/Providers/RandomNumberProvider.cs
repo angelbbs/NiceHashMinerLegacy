@@ -1,5 +1,5 @@
-﻿using System;
-using Org.BouncyCastle.Security;
+﻿using Org.BouncyCastle.Security;
+using System;
 
 namespace Guid.Providers
 {

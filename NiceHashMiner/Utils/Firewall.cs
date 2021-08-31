@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 
 namespace NiceHashMiner
@@ -63,7 +61,7 @@ namespace NiceHashMiner
             // foreach (string binPath in relativePaths)
             {
                 var tmpBins = DirSearch("miners");
-                foreach(var kmp in tmpBins)
+                foreach (var kmp in tmpBins)
                 {
                     if (!kmp.Value.Contains("vc_redist") && !kmp.Value.Contains("switch-radeon-gpu") &&
                         !kmp.Value.Contains("EthMan") && !kmp.Value.Contains("OhGodAnETHlargementPill") &&
@@ -71,19 +69,19 @@ namespace NiceHashMiner
                         !kmp.Value.Contains("Restarter")
                         )
                     {
-//                        Helpers.ConsolePrint("Firewall", kmp.Key);
-//                        Helpers.ConsolePrint("Firewall", kmp.Value);
+                        //                        Helpers.ConsolePrint("Firewall", kmp.Key);
+                        //                        Helpers.ConsolePrint("Firewall", kmp.Value);
                         miners.Add(Directory.GetCurrentDirectory() + "\\" + kmp.Key, kmp.Value);
                     }
                 }
             }
 
-                foreach (var miner in miners)
-                {
-                    RemoveFirewallRule(miner.Key, miner.Value);
+            foreach (var miner in miners)
+            {
+                RemoveFirewallRule(miner.Key, miner.Value);
                 Thread.Sleep(1);
-                    AllowFirewallRule(miner.Key, miner.Value);
-                }
+                AllowFirewallRule(miner.Key, miner.Value);
+            }
 
             SetFirewallRule($"advfirewall firewall add rule name=mlff program={Directory.GetCurrentDirectory() + "\\NiceHashMinerLegacy.exe"} protocol=tcp dir=in enable=yes action=allow");
             SetFirewallRule($"advfirewall firewall add rule name=mlff program={Directory.GetCurrentDirectory() + "\\NiceHashMinerLegacy.exe"} protocol=tcp dir=out enable=yes action=allow");

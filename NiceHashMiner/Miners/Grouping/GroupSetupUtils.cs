@@ -1,11 +1,11 @@
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -218,7 +218,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Speed / Count;
                 }
                 return 0;
-            } else
+            }
+            else
             {
                 return Speed;
             }

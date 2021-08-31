@@ -1,19 +1,17 @@
+using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
-using System.Threading;
-using System.Windows.Forms;
-using Newtonsoft.Json;
-using System.Text;
 using System.Net.Sockets;
-using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -94,9 +92,9 @@ namespace NiceHashMiner.Miners
                 "--cu-devices " + devs + " ";
             }
 
-            TotalCount =(time / 5);
+            TotalCount = (time / 5);
 
-            Total =TotalCount;
+            Total = TotalCount;
 
             return commandLine;
         }
@@ -149,7 +147,7 @@ namespace NiceHashMiner.Miners
             return false;
         }
         */
-               protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
             CheckOutdata(outdata);
         }
@@ -217,14 +215,14 @@ namespace NiceHashMiner.Miners
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
-           // var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
-           /*
-            if (elapsedSeconds < 15 && firstStart)
-            {
-                return ad;
-            }
-            firstStart = false;
-            */
+            // var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
+            /*
+             if (elapsedSeconds < 15 && firstStart)
+             {
+                 return ad;
+             }
+             firstStart = false;
+             */
             JsonApiResponse resp = null;
             try
             {
@@ -237,7 +235,7 @@ namespace NiceHashMiner.Miners
                     var bytesToRead = new byte[client.ReceiveBufferSize];
                     var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                     var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                   // Helpers.ConsolePrint(MinerTag(), "respStr: " + respStr);
+                    // Helpers.ConsolePrint(MinerTag(), "respStr: " + respStr);
                     resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 }
             }

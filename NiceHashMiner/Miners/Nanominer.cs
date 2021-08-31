@@ -1,21 +1,21 @@
 using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Management;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
 using System.Windows.Forms;
-using System.Net;
-using System.Management;
-using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -50,7 +50,8 @@ namespace NiceHashMiner.Miners
                 } while (!File.Exists("miners\\Nanominer\\" + GetLogFileName()));
                 Thread.Sleep(1000);
                 fs = new FileStream("miners\\Nanominer\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Helpers.ConsolePrint(MinerTag(), ex.Message);
             }
@@ -74,7 +75,7 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (File.Exists("miners\\Nanominer\\config_nh_" + platform +".ini"))
+            if (File.Exists("miners\\Nanominer\\config_nh_" + platform + ".ini"))
                 File.Delete("miners\\Nanominer\\config_nh_" + platform + ".ini");
 
             string username = GetUsername(btcAdress, worker);
@@ -160,7 +161,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("zilEpoch = 0\n")
-               //    + String.Format("protocol = JSON-RPC\n")
+                   //    + String.Format("protocol = JSON-RPC\n")
                    + String.Format("pool1 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[0, 0]) + "\n"
                    + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[1, 0]) + "\n"
                    + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[2, 0]) + "\n"
@@ -230,7 +231,8 @@ namespace NiceHashMiner.Miners
 
                 }
                 deviceStringCommand += string.Join(",", ids);
-            } else
+            }
+            else
             {
                 foreach (var mPair in sortedMinerPairs)
                 {
@@ -325,7 +327,7 @@ namespace NiceHashMiner.Miners
                 if (File.Exists("miners\\Nanominer\\bench_nh_second_" + platform + GetDevicesCommandString().Trim(' ') + ".ini"))
                     File.Delete("miners\\Nanominer\\bench_nh_second_" + platform + GetDevicesCommandString().Trim(' ') + ".ini");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -443,7 +445,7 @@ namespace NiceHashMiner.Miners
                 {
                     Helpers.ConsolePrint("GetStartCommand", e.ToString());
                 }
-                
+
                 _benchmarkTimeWait = time;
             }
 
@@ -813,7 +815,7 @@ namespace NiceHashMiner.Miners
 
             return 0;
         }
-        
+
         public override async Task<ApiData> GetSummaryAsync()
         {
             // CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
@@ -848,8 +850,8 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("API", ex.Message);
                 return null;
             }
-            
-           
+
+
             try
             {
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
@@ -931,7 +933,8 @@ namespace NiceHashMiner.Miners
                                 {
                                     zilRound = true;
                                     dSpeed1 = 0;
-                                } else
+                                }
+                                else
                                 {
                                     zilRound = false;
                                     dSpeed2 = 0;
@@ -968,7 +971,8 @@ namespace NiceHashMiner.Miners
                     if (ResponseFromNanominer.Contains("Ethash"))
                     {
                         IsZil = true;//second
-                    } else
+                    }
+                    else
                     {
                         IsZil = false;
                     }
@@ -989,7 +993,7 @@ namespace NiceHashMiner.Miners
                         dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
                     }
 
-                        for (int i = 0; i < sortedMinerPairs.Count; i++)
+                    for (int i = 0; i < sortedMinerPairs.Count; i++)
                     {
                         /*
                         string gpu = devices[i];
@@ -1027,7 +1031,7 @@ namespace NiceHashMiner.Miners
             */
             ad.Speed = dSpeed1;
             ad.SecondarySpeed = dSpeed2;
-            
+
             if (ad.Speed + ad.SecondarySpeed == 0)
             {
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;

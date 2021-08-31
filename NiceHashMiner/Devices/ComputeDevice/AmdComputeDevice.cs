@@ -1,12 +1,9 @@
 using ATI.ADL;
-using System;
-using System.Linq;
-using System.Runtime.InteropServices;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Configs;
 using OpenHardwareMonitor.Hardware;
-using NiceHashMiner.Miners.Grouping;
+using System;
 
 namespace NiceHashMiner.Devices
 {

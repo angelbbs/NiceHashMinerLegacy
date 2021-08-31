@@ -7,7 +7,7 @@ namespace NiceHashMinerLegacy.Extensions
     public static class Dictionary
     {
         public static Dictionary<TKey, TValue> ConcatDict<TKey, TValue>(
-            this Dictionary<TKey, TValue> target, 
+            this Dictionary<TKey, TValue> target,
             params Dictionary<TKey, TValue>[] sources)
         {
             return target.ConcatDict(sources.AsEnumerable());

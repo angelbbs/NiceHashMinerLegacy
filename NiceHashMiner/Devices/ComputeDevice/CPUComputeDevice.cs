@@ -1,8 +1,7 @@
-using System;
-using System.Diagnostics;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
 
 namespace NiceHashMiner.Devices
 {
@@ -26,7 +25,7 @@ namespace NiceHashMiner.Devices
                         // if (_cpuCounter != null) return _cpuCounter.NextValue();
                         return ComputeDeviceCPU.CpuReader.GetLoad();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
                     }
@@ -49,7 +48,7 @@ namespace NiceHashMiner.Devices
                     {
                         return ComputeDeviceCPU.CpuReader.GetTemperaturesInCelsius();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
                     }

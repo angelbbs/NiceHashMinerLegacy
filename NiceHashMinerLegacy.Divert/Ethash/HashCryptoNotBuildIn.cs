@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace HashLib
 {
@@ -8,7 +7,7 @@ namespace HashLib
         protected readonly HashBuffer m_buffer;
         protected ulong m_processed_bytes;
 
-        protected BlockHash(int a_hash_size, int a_block_size, int a_buffer_size = -1) 
+        protected BlockHash(int a_hash_size, int a_block_size, int a_buffer_size = -1)
             : base(a_hash_size, a_block_size)
         {
             if (a_buffer_size == -1)

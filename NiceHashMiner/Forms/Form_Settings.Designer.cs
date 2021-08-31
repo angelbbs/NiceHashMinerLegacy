@@ -114,6 +114,7 @@ namespace NiceHashMiner.Forms
             this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.checkbox_Group_same_devices = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxCheckingCUDA = new System.Windows.Forms.CheckBox();
             this.checkBox_DisplayConnected = new System.Windows.Forms.CheckBox();
             this.checkBox_show_AMDdevice_manufacturer = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowDeviceMemSize = new System.Windows.Forms.CheckBox();
@@ -180,7 +181,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBoxCheckingCUDA = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1369,6 +1369,17 @@ namespace NiceHashMiner.Forms
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
             // 
+            // checkBoxCheckingCUDA
+            // 
+            this.checkBoxCheckingCUDA.AutoSize = true;
+            this.checkBoxCheckingCUDA.Location = new System.Drawing.Point(304, 187);
+            this.checkBoxCheckingCUDA.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxCheckingCUDA.Name = "checkBoxCheckingCUDA";
+            this.checkBoxCheckingCUDA.Size = new System.Drawing.Size(221, 17);
+            this.checkBoxCheckingCUDA.TabIndex = 417;
+            this.checkBoxCheckingCUDA.Text = "Checking CUDA GPU on program startup";
+            this.checkBoxCheckingCUDA.UseVisualStyleBackColor = true;
+            // 
             // checkBox_DisplayConnected
             // 
             this.checkBox_DisplayConnected.AutoSize = true;
@@ -1712,7 +1723,7 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
             this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 208);
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 215);
             this.algorithmSettingsControl1.TabIndex = 396;
             // 
             // devicesListViewEnableControl1
@@ -1727,7 +1738,7 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 199);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 198);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
             // tabPageOverClock
@@ -2190,17 +2201,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.Text = "View licence";
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
-            // 
-            // checkBoxCheckingCUDA
-            // 
-            this.checkBoxCheckingCUDA.AutoSize = true;
-            this.checkBoxCheckingCUDA.Location = new System.Drawing.Point(304, 187);
-            this.checkBoxCheckingCUDA.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBoxCheckingCUDA.Name = "checkBoxCheckingCUDA";
-            this.checkBoxCheckingCUDA.Size = new System.Drawing.Size(221, 17);
-            this.checkBoxCheckingCUDA.TabIndex = 417;
-            this.checkBoxCheckingCUDA.Text = "Checking CUDA GPU on program startup";
-            this.checkBoxCheckingCUDA.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 

@@ -1,25 +1,22 @@
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
-using NiceHashMiner.PInvoke;
+using NiceHashMiner.Miners;
+using NiceHashMiner.Stats;
 using NiceHashMiner.Utils;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Threading;
-using System.Windows.Forms;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Configs.Data;
 using System.Reflection;
-using System.Security.Principal;
-using System.ComponentModel;
-using System.Management;
 using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using NiceHashMiner.Miners;
 using System.Security.Permissions;
+using System.Security.Principal;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
@@ -492,7 +489,7 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
                     ConfigManager.GeneralConfig.ForkFixVersion = 34;
                 }
-                
+
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 34.1)
                 {
                     Helpers.ConsolePrint("NICEHASH", "Old version");
@@ -571,6 +568,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     ConfigManager.GeneralConfig.ForkFixVersion = 41;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 41.1)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    ConfigManager.GeneralConfig.ForkFixVersion = 41.1;
+                }
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************
@@ -622,19 +624,19 @@ namespace NiceHashMiner
 
                 //check after install
                 using (var store2 = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
-                    {
-                        store2.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
+                {
+                    store2.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
 
-                        foreach (X509Certificate2 cert in store2.Certificates)
+                    foreach (X509Certificate2 cert in store2.Certificates)
+                    {
+                        if (cert.IssuerName.Name.Contains("Angelbbs"))
                         {
-                            if (cert.IssuerName.Name.Contains("Angelbbs"))
-                            {
-                                Form_Main.CertInstalled = true;
-                                break;
-                            }
+                            Form_Main.CertInstalled = true;
+                            break;
                         }
-                        store2.Close();
                     }
+                    store2.Close();
+                }
 
                 var CMDconfigHandleWD = new Process
                 {
@@ -658,7 +660,7 @@ namespace NiceHashMiner
                 // #2 then parse args
                 var commandLineArgs = new CommandLineParser(argv);
 
-               // Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
+                // Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
 
                 if (!pathSet)
                 {
@@ -686,7 +688,7 @@ namespace NiceHashMiner
                 // check WMI
                 if (Helpers.IsWmiEnabled())
                 {
-                   // if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
+                    // if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
                     {
                         try
                         {
@@ -694,7 +696,8 @@ namespace NiceHashMiner
                             var formmain = new Form_Main();
                             formmain.Hide();
                             Application.Run(formmain);
-                        } catch (Exception e)
+                        }
+                        catch (Exception e)
                         {
                             Helpers.ConsolePrint("NICEHASH", e.Message);
                         }
