@@ -265,13 +265,24 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.trex, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = "--mt 1"
+                            },
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.X16R, "X16R")
+                            {
+                                ExtraLaunchParameters = ""
                             }
                         }
             },
 
             { MinerBaseType.ZEnemy,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.KAWPOW, "KAWPOW"),
+                            new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.KAWPOW, "KAWPOW")
+                            {
+                            },
+                            /*
+                            new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.X16R, "X16R")
+                            {
+                            },
+                            */
                         }
             },
 

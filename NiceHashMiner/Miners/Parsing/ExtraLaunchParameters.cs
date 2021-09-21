@@ -50,6 +50,10 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("trex_lock_cclock", "--lock-cclock", "--lock-cclock", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_lock_cv", "--lock-cv", "--lock-cv", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_pstate", "--pstate", "--pstate", "p0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_fan", "--fan", "--fan", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_fant", "--fan t:", "--fan t:", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_fantm", "--fan tm:", "--fan tm:", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lhr_tune", "--lhr-tune", "--lhr-tune", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.SingleParam)
                 },
@@ -64,7 +68,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("nbminer_DIntensity", "--di", "--secondary-intensity", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_temperature-limit", "--tl", "--temperature-limit", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_temperature-start", "--ts", "--temperature-start", "-1", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("nbminer_lhr", "-lhr", "-lhr", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_lhr", "-lhr", "-lhr", "0.0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_lhr-mode", "-lhr-mode", "-lhr-mode", "0", MinerOptionFlagType.MultiParam, ","),
                      new MinerOption("nbminer_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, "")
                 },
                 new List<MinerOption>()

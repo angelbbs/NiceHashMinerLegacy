@@ -564,7 +564,13 @@ namespace NiceHashMiner.Forms.Components
                         Thread.Sleep(100);
                         ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
                         MSIAfterburner.SaveDeviceData(_abdata, fName);
-                        if (waiting != null) waiting.CloseWaitingBox();
+                        try
+                        {
+                            waiting.CloseWaitingBox();
+                        } catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("ToolStripMenuItemTest_Click", ex.ToString());
+                        }
                     }
                 }
                 SetAlgorithms(_computeDevice, _computeDevice.Enabled);

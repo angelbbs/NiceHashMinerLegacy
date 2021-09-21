@@ -182,16 +182,16 @@ namespace NiceHashMiner.Devices
                                 if ((int)wdwIntPtr > 1)
                                 {
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 25%");
-                                    waiting.Update();
+                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 50%");
-                                    waiting.Update();
+                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 75%");
-                                    waiting.Update();
+                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 100%");
-                                    waiting.Update();
+                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
                                     break;
                                 }
@@ -219,16 +219,16 @@ namespace NiceHashMiner.Devices
                                     //ShowWindow(wdwIntPtr, ShowWindowEnum.ForceMinimized);
                                 }
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 25%");
-                                waiting.Update();
+                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 50%");
-                                waiting.Update();
+                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 75%");
-                                waiting.Update();
+                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 100%");
-                                waiting.Update();
+                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
                                 P.Exited += new EventHandler(MSIABprocessExited);
                                 P.EnableRaisingEvents = true;
@@ -244,7 +244,13 @@ namespace NiceHashMiner.Devices
                             waiting.SetText("", "");
                             waiting.Update();
                             Thread.Sleep(100);
-                            if (waiting != null) waiting.CloseWaitingBox();
+                            try
+                            {
+                                waiting.CloseWaitingBox();
+                            } catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("MSIAfterburnerRUN", ex.ToString());
+                            }
                             MSIAB_starting = false;
                             return false;
                         }
@@ -254,7 +260,14 @@ namespace NiceHashMiner.Devices
                         waiting.SetText("", "");
                         waiting.Update();
                         Thread.Sleep(100);
-                        if (waiting != null) waiting.CloseWaitingBox();
+                        try
+                        {
+                            waiting.CloseWaitingBox();
+                        }
+                        catch (Exception exept)
+                        {
+                            Helpers.ConsolePrint("MSIAfterburnerRUN", exept.ToString());
+                        }
                         Helpers.ConsolePrint("MSI AB error", "Process exists? Exception on run: " + ex.Message);
                         new Task(() =>
                         MessageBox.Show(International.GetText("FormSettings_AB_Error"), "MSI Afterburner error!",
@@ -265,11 +278,18 @@ namespace NiceHashMiner.Devices
                 }
                 if (waiting != null)
                 {
-                    Thread.Sleep(100);
-                    waiting.SetText("", "");
-                    waiting.Update();
-                    Thread.Sleep(100);
-                    waiting.CloseWaitingBox();
+                    try
+                    {
+                        Thread.Sleep(100);
+                        waiting.SetText("", "");
+                        waiting.Update();
+                        Thread.Sleep(100);
+                        waiting.CloseWaitingBox();
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("MSIAfterburnerRUN", ex.ToString());
+                    }
                 }
             }
             MSIAB_starting = false;
@@ -325,10 +345,18 @@ namespace NiceHashMiner.Devices
                     }
                 }
             }
-            waiting.SetText("", "");
-            waiting.Update();
-            Thread.Sleep(100);
-            waiting.CloseWaitingBox();
+            try
+            {
+                Thread.Sleep(100);
+                waiting.SetText("", "");
+                waiting.Update();
+                Thread.Sleep(100);
+                waiting.CloseWaitingBox();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("FirstInitFiles", ex.ToString());
+            }
             return;
         }
         public static void InitTempFiles()
@@ -423,7 +451,7 @@ namespace NiceHashMiner.Devices
             }
             return devData;
         }
-        public static void ResetToDefaults(int _busID, bool commit)
+        public static void ResetToDefaults(int _busID, bool commit = false)
         {
             CheckMSIAfterburner();
             if (!Initialized) return;
@@ -520,7 +548,7 @@ namespace NiceHashMiner.Devices
             }
             if (commit)
             {
-                //macm.CommitChanges();
+                macm.CommitChanges();
             }
             if (index == -1)
             {
@@ -602,6 +630,22 @@ namespace NiceHashMiner.Devices
                 else
                 {
                     Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare ERROR. busID " + _busID.ToString());
+                    /*
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[index].CoreClockBoostCur: " + macm.GpuEntries[index].CoreClockBoostCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "dev.CoreClockBoostCur: " + dev.CoreClockBoostCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[index].CoreClockCur: " + macm.GpuEntries[index].CoreClockCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "dev.CoreClockCur: " + dev.CoreClockCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[index].CoreVoltageBoostCur: " + macm.GpuEntries[index].CoreVoltageBoostCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "dev.CoreVoltageBoostCur: " + dev.CoreVoltageBoostCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[index].CoreVoltageCur: " + macm.GpuEntries[index].CoreVoltageCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "dev.CoreVoltageCur: " + dev.CoreVoltageCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[index].MemoryClockBoostCur: " + macm.GpuEntries[index].MemoryClockBoostCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "dev.MemoryClockBoostCur: " + dev.MemoryClockBoostCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[index].MemoryClockCur: " + macm.GpuEntries[index].MemoryClockCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "dev.MemoryClockCur: " + dev.MemoryClockCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[index].PowerLimitCur: " + macm.GpuEntries[index].PowerLimitCur.ToString());
+                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "dev.PowerLimitCur: " + dev.PowerLimitCur.ToString());
+                    */
                     return false;
                 }
 

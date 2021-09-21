@@ -31,7 +31,7 @@ namespace NiceHashMiner.Forms
             try
             {
                 _ended = true;
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(500);
                 task1.Dispose();
             }
             catch (Exception)

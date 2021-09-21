@@ -20,6 +20,8 @@ namespace NiceHashMiner.Miners
         private const int TotalDelim = 2;
         private double _power = 0.0d;
         double _powerUsage = 0;
+        public FileStream fs;
+        private int offset = 0;
         public trex() : base("trex")
         {
         }
@@ -97,6 +99,18 @@ namespace NiceHashMiner.Miners
                 //_benchmarkTimeWait = 180;
                 _benchmarkTimeWait = time;
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+            {
+                commandLine = "--algo x16r -B " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                  MiningSetup,
+                                  DeviceType.NVIDIA) +
+                                  " --api-bind-http 127.0.0.1:" + ApiPort +
+                              " -d ";
+                commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
+                //_benchmarkTimeWait = 180;
+                _benchmarkTimeWait = time;
+            }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
@@ -167,6 +181,8 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
+
+                Thread.Sleep((int)(MinerID * 50));
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
 
                 var benchmarkTimer = new Stopwatch();
@@ -175,6 +191,29 @@ namespace NiceHashMiner.Miners
 
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 BenchmarkThreadRoutineStartSettup(); //need for benchmark log
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                {
+                    Thread.Sleep(1000);
+                    try
+                    {
+                        if (File.Exists("miners\\t-rex\\" + GetLogFileName()))
+                            File.Delete("miners\\t-rex\\" + GetLogFileName());
+
+                        Thread.Sleep(1000);
+                        do
+                        {
+                            Thread.Sleep(1000);
+                        } while (!File.Exists("miners\\t-rex\\" + GetLogFileName()));
+                        Thread.Sleep(1000);
+                        fs = new FileStream("miners\\t-rex\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint(MinerTag(), ex.Message);
+                    }
+                }
+
                 while (IsActiveProcess(BenchmarkHandle.Id))
                 {
                     if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
@@ -225,6 +264,11 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;
                     }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                    {
+                        delay_before_calc_hashrate = 20;
+                        MinerStartDelay = 20;
+                    }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                     {
@@ -244,7 +288,32 @@ namespace NiceHashMiner.Miners
                     }
 
                     var ad = GetSummaryAsync();
-                    if (ad.Result != null && ad.Result.Speed > 0)
+
+                    double logSpeed = 0.0d;
+                    if (fs.Length > offset && MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                    {
+                        int count = (int)(fs.Length - offset);
+                        byte[] array = new byte[count];
+                        fs.Read(array, 0, count);
+                        offset = (int)fs.Length;
+                        string textFromFile = System.Text.Encoding.Default.GetString(array).Trim();
+                        //Helpers.ConsolePrint(MinerTag(), textFromFile);
+
+                        string strStart = "Total:";
+                        if (textFromFile.Contains(strStart) && textFromFile.Contains("H/s"))
+                        {
+                            var speedStart = textFromFile.IndexOf(strStart);
+                            var speed = textFromFile.Substring(speedStart + strStart.Length, 6);
+                            speed = speed.Replace(strStart, "");
+                            speed = speed.Replace(" ", "");
+                            double.TryParse(speed, out logSpeed);
+                            if (textFromFile.Contains("MH/s")) logSpeed = logSpeed * 1000 * 1000;
+                            if (textFromFile.Contains("GH/s")) logSpeed = logSpeed * 1000 * 1000 * 1000;
+                            Helpers.ConsolePrint("logSpeed", logSpeed.ToString());
+                        }
+                    }
+
+                    if ((ad.Result != null && ad.Result.Speed > 0) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
                     {
                         _powerUsage += _power;
                         repeats++;
@@ -252,12 +321,27 @@ namespace NiceHashMiner.Miners
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
-                            summspeed += ad.Result.Speed;
+                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + logSpeed.ToString() + " power: " + _power.ToString());
+                                summspeed += logSpeed;
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
+                                summspeed += ad.Result.Speed;
+                            }
                         }
                         else
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + logSpeed.ToString());
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                            }
                         }
 
                         if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)

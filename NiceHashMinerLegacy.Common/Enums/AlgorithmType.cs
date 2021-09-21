@@ -88,7 +88,7 @@
         // Tentative
         CryptoNightHeavy_UNUSED = 31,
         Lyra2z = 32,
-        X16R_UNUSED = 33,
+        X16R = 33,
         CryptoNightV8_UNUSED = 34,
         sha256asicboost_UNUSED = 35,
         ZHash = 36,
