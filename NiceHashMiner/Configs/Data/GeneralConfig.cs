@@ -150,6 +150,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Disable_extra_launch_parameter_checking = false;
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
+        public bool with_power = true;
         public bool By_profitability_of_all_devices = true;
         public string MachineGuid = "";
         public string CpuID = "";

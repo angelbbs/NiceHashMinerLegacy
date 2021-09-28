@@ -269,6 +269,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.trex, AlgorithmType.X16R, "X16R")
                             {
                                 ExtraLaunchParameters = ""
+                            },
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16Rv2")
+                            {
+                                ExtraLaunchParameters = ""
                             }
                         }
             },

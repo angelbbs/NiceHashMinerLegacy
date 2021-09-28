@@ -442,6 +442,7 @@ namespace NiceHashMiner.Forms
             checkBox_program_monitoring.Text = International.GetText("Form_Settings_checkBox_program_monitoring");
             checkBox_ShowFanAsPercent.Text = International.GetText("Form_Settings_checkBox_ShowFanAsPercent");
             checkbox_Group_same_devices.Text = International.GetText("Form_Settings_checkbox_Group_same_devices");
+            checkBox_withPower.Text = International.GetText("Form_Settings_checkbox_withPower");
             checkBox_By_profitability_of_all_devices.Text = International.GetText("FormSettings_By_profitability_of_all_devices");
             checkBox_Force_mining_if_nonprofitable.Text = International.GetText("Form_Settings_checkBox_Force_mining_if_nonprofitable");
             checkbox_current_actual_profitabilities.Text = International.GetText("Form_Main_Checkbox_current_actual_profitabilities");
@@ -804,6 +805,9 @@ namespace NiceHashMiner.Forms
                 checkbox_Group_same_devices.BackColor = Form_Main._backColor;
                 checkbox_Group_same_devices.ForeColor = Form_Main._textColor;
 
+                checkBox_withPower.BackColor = Form_Main._backColor;
+                checkBox_withPower.ForeColor = Form_Main._textColor;
+
                 checkBox_By_profitability_of_all_devices.BackColor = Form_Main._backColor;
                 checkBox_By_profitability_of_all_devices.ForeColor = Form_Main._textColor;
 
@@ -967,6 +971,7 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_withPower.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_By_profitability_of_all_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxAutoupdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_BackupBeforeUpdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1072,6 +1077,7 @@ namespace NiceHashMiner.Forms
                 checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
+                checkBox_withPower.Checked = ConfigManager.GeneralConfig.with_power;
                 checkBox_By_profitability_of_all_devices.Checked = ConfigManager.GeneralConfig.By_profitability_of_all_devices;
                 checkBoxAutoupdate.Checked = ConfigManager.GeneralConfig.ProgramAutoUpdate;
                 checkBox_BackupBeforeUpdate.Checked = ConfigManager.GeneralConfig.BackupBeforeUpdate;
@@ -1233,6 +1239,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ProgramMonitoring = checkBox_program_monitoring.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
+            ConfigManager.GeneralConfig.with_power = checkBox_withPower.Checked;
             ConfigManager.GeneralConfig.By_profitability_of_all_devices = checkBox_By_profitability_of_all_devices.Checked;
             ConfigManager.GeneralConfig.ProgramAutoUpdate = checkBoxAutoupdate.Checked;
             ConfigManager.GeneralConfig.BackupBeforeUpdate = checkBox_BackupBeforeUpdate.Checked;

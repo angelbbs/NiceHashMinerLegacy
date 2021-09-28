@@ -1,3 +1,4 @@
+using NiceHashMiner.Configs;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
@@ -323,7 +324,10 @@ namespace NiceHashMiner.Algorithms
             //добавляем CurrentProfitReal и используем его в логах
             //добавляем Treshold и используем его для расчета CurrentProfit, чтоб алгоритмы переключались в зависимости от порога
             // Helpers.ConsolePrint("PROFIT", AlgorithmName + " CurrentProfit: " + CurrentProfit.ToString());
-            SubtractPowerFromProfit();
+            if (ConfigManager.GeneralConfig.with_power)
+            {
+                SubtractPowerFromProfit();
+            }
         }
 
         protected void SubtractPowerFromProfit()

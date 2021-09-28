@@ -758,7 +758,7 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
-            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("t-rex") && (commandLine.ToLower().Contains("x16r")))
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("t-rex") && (commandLine.ToLower().Contains("x16r") || commandLine.ToLower().Contains("x16rv2") ))
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("t-rex.exe", "t-rex.0.19.4.exe");
             }
@@ -1606,7 +1606,7 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("CryptoDredge.exe", "CryptoDredge.0.25.1.exe");
             }
-            if (MiningSetup.MinerPath.ToLower().Contains("t-rex") && (LastCommandLine.ToLower().Contains("x16r")))
+            if (MiningSetup.MinerPath.ToLower().Contains("t-rex") && (LastCommandLine.ToLower().Contains("x16r") || LastCommandLine.ToLower().Contains("x16rv2")))
             {
                 Path = MiningSetup.MinerPath.Replace("t-rex.exe", "t-rex.0.19.4.exe");
             }

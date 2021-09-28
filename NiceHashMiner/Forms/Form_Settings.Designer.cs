@@ -181,6 +181,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.checkBox_withPower = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1241,6 +1242,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Miners
             // 
+            this.groupBox_Miners.Controls.Add(this.checkBox_withPower);
             this.groupBox_Miners.Controls.Add(this.checkBox_By_profitability_of_all_devices);
             this.groupBox_Miners.Controls.Add(this.label_switching_algorithms);
             this.groupBox_Miners.Controls.Add(this.comboBox_switching_algorithms);
@@ -2202,6 +2204,18 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
+            // checkBox_withPower
+            // 
+            this.checkBox_withPower.AutoSize = true;
+            this.checkBox_withPower.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_withPower.Location = new System.Drawing.Point(307, 61);
+            this.checkBox_withPower.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_withPower.Name = "checkBox_withPower";
+            this.checkBox_withPower.Size = new System.Drawing.Size(216, 17);
+            this.checkBox_withPower.TabIndex = 406;
+            this.checkBox_withPower.Text = "Taking into account power consumption";
+            this.checkBox_withPower.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2443,5 +2457,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.CheckBox checkBox_DisplayConnected;
         private System.Windows.Forms.CheckBox checkBoxCheckingCUDA;
+        private System.Windows.Forms.CheckBox checkBox_withPower;
     }
 }

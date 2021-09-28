@@ -87,15 +87,13 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
-                commandLine = "--algo x16rv2" +
-                 " -o stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                 " -o " + url + " -u " + username + " -p x " +
+                commandLine = "--algo x16rv2 -B " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
                                   DeviceType.NVIDIA) +
                                   " --api-bind-http 127.0.0.1:" + ApiPort +
                               " -d ";
-                commandLine += GetDevicesCommandString();
+                commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
                 //_benchmarkTimeWait = 180;
                 _benchmarkTimeWait = time;
             }
@@ -192,7 +190,7 @@ namespace NiceHashMiner.Miners
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 BenchmarkThreadRoutineStartSettup(); //need for benchmark log
 
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
                 {
                     Thread.Sleep(1000);
                     try
@@ -261,8 +259,8 @@ namespace NiceHashMiner.Miners
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
                     {
-                        delay_before_calc_hashrate = 10;
-                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 20;
+                        MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
                     {
@@ -290,7 +288,8 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
 
                     double logSpeed = 0.0d;
-                    if (fs.Length > offset && MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                    if (fs.Length > offset && (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2)))
                     {
                         int count = (int)(fs.Length - offset);
                         byte[] array = new byte[count];
@@ -313,7 +312,8 @@ namespace NiceHashMiner.Miners
                         }
                     }
 
-                    if ((ad.Result != null && ad.Result.Speed > 0) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                    if ((ad.Result != null && ad.Result.Speed > 0) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
                     {
                         _powerUsage += _power;
                         repeats++;
@@ -321,7 +321,7 @@ namespace NiceHashMiner.Miners
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
                             {
                                 Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + logSpeed.ToString() + " power: " + _power.ToString());
                                 summspeed += logSpeed;
@@ -334,7 +334,7 @@ namespace NiceHashMiner.Miners
                         }
                         else
                         {
-                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
                             {
                                 Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + logSpeed.ToString());
                             }

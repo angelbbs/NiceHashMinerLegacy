@@ -431,6 +431,7 @@
                 "Form_Settings_checkBox_sorting_list_of_algorithms": "Sorting list of algorithms",
                 "Form_Settings_checkBox_ShowFanAsPercent": "Show fan rpm as percent",
                 "Form_Settings_checkbox_Group_same_devices": "Group same devices",
+                "Form_Settings_checkbox_withPower": "Taking into account power consumption",
                 "Form_Settings_checkBox_Force_mining_if_nonprofitable": "Force mining if nonprofitable",
                 "Form_Settings_checkBox_Show_profit_with_power_consumption": "Show profit with power consumption",
                 "Form_Settings_checkBox_fiat": "Show profitability of algorithms in fiat currency",
