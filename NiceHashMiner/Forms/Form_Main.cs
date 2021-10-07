@@ -538,12 +538,23 @@ namespace NiceHashMiner
 
         private void IdleCheck_Tick(object sender, EventArgs e)
         {
-            //вместо делегирования будем через таймер на другую форму влиять!
+            if (!ConfigManager.GeneralConfig.StartMiningWhenIdle) return;
+            if (_isManuallyStarted) return;
             buttonChart.Enabled = !Form_RigProfitChartRunning;
 
-            if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
-
             var msIdle = Helpers.GetIdleTime();
+            Helpers.ConsolePrint("NICEHASH", "msIdle: " + msIdle.ToString());
+            if (_minerStatsCheck.Enabled)
+            {
+                if (msIdle < (ConfigManager.GeneralConfig.MinIdleSeconds * 1000) && _isManuallyStarted)
+                {
+                    StopMining();
+                    _isManuallyStarted = false;
+                    Helpers.ConsolePrint("NICEHASH", "Stop from idling mining");
+                }
+            }
+
+            if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
 
             if (_minerStatsCheck.Enabled)
             {
@@ -558,13 +569,6 @@ namespace NiceHashMiner
                 if (_benchmarkForm == null && (msIdle > (ConfigManager.GeneralConfig.MinIdleSeconds * 1000)))
                 {
                     Helpers.ConsolePrint("NICEHASH", "Entering idling state");
-                    /*
-                    if (StartMining(false) != StartMiningReturnType.StartMining)
-                    {
-                        StopMining();
-                    }
-                    */
-                    _isManuallyStarted = true;
                     if (StartMining(true) == StartMiningReturnType.ShowNoMining)
                     {
                         _isManuallyStarted = false;
