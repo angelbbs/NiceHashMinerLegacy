@@ -260,7 +260,19 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                             new Algorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
-                                ExtraLaunchParameters = ""
+                                ExtraLaunchParameters = "--mt 1"
+                            },
+                            new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Autolykos, "DaggerAutolykos")
+                            {
+                                ExtraLaunchParameters = "--mt 1 --lhr-tune 68"
+                            },
+                            new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.KAWPOW, "DaggerKAWPOW")
+                            {
+                                ExtraLaunchParameters = "--mt 1 --lhr-tune 68"
+                            },
+                            new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Octopus, "DaggerOctopus")
+                            {
+                                ExtraLaunchParameters = "--mt 1 --lhr-tune 68"
                             },
                             new Algorithm(MinerBaseType.trex, AlgorithmType.Autolykos, "Autolykos")
                             {
@@ -336,6 +348,15 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                     }
                 }
+            },
+            {
+                MinerBaseType.lolMiner,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            {
+                                ExtraLaunchParameters = "--enablezilcache=1"
+                            }
+                        }
             },
         }.ConcatDictList(All, Gpu);
 

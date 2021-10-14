@@ -38,11 +38,11 @@ namespace NiceHashMiner.Forms.Components {
             // 
             this.groupBoxMinerGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxMinerGroup.Controls.Add(this.richTextBoxSpeedValue);
             this.groupBoxMinerGroup.Controls.Add(this.button_restart);
             this.groupBoxMinerGroup.Controls.Add(this.labelCurentcyPerDayVaue);
             this.groupBoxMinerGroup.Controls.Add(this.labelBTCRateValue);
             this.groupBoxMinerGroup.Controls.Add(this.labelBTCRateIndicator);
+            this.groupBoxMinerGroup.Controls.Add(this.richTextBoxSpeedValue);
             this.groupBoxMinerGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBoxMinerGroup.Location = new System.Drawing.Point(0, 0);
             this.groupBoxMinerGroup.Name = "groupBoxMinerGroup";
@@ -63,7 +63,7 @@ namespace NiceHashMiner.Forms.Components {
             this.richTextBoxSpeedValue.ReadOnly = true;
             this.richTextBoxSpeedValue.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.richTextBoxSpeedValue.ShortcutsEnabled = false;
-            this.richTextBoxSpeedValue.Size = new System.Drawing.Size(278, 18);
+            this.richTextBoxSpeedValue.Size = new System.Drawing.Size(303, 18);
             this.richTextBoxSpeedValue.TabIndex = 115;
             this.richTextBoxSpeedValue.Text = ".";
             this.richTextBoxSpeedValue.WordWrap = false;

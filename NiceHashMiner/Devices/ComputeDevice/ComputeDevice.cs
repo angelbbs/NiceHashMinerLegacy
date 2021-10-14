@@ -65,7 +65,9 @@ namespace NiceHashMiner.Devices
         public string Codename { get; protected set; }
         public string Manufacturer = "UNK";
         public string BenchmarkProgressString = "";
+
         public double MiningHashrate = 0.0d;
+        public double MiningHashrateSecond = 0.0d;
 
         public string InfSection { get; protected set; }
 

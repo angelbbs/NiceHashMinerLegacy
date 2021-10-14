@@ -329,7 +329,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "41.2 beta";
+            Text += "41.3 beta";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -543,7 +543,7 @@ namespace NiceHashMiner
             buttonChart.Enabled = !Form_RigProfitChartRunning;
 
             var msIdle = Helpers.GetIdleTime();
-            Helpers.ConsolePrint("NICEHASH", "msIdle: " + msIdle.ToString());
+            //Helpers.ConsolePrint("NICEHASH", "msIdle: " + msIdle.ToString());
             if (_minerStatsCheck.Enabled)
             {
                 if (msIdle < (ConfigManager.GeneralConfig.MinIdleSeconds * 1000) && _isManuallyStarted)

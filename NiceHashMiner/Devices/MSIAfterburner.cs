@@ -140,6 +140,7 @@ namespace NiceHashMiner.Devices
                     msiabpath), "MSI Afterburner error!",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                         MSIAB_starting = false;
+                        waiting.CloseWaitingBox();
                         return false;
                     }
 
@@ -152,7 +153,6 @@ namespace NiceHashMiner.Devices
                     }
 
                     waiting.SetText("", International.GetText("MSIAB_Starting"));
-                    //waiting.ShowWaitingBox();
                     Process P = new Process();
                     try
                     {
@@ -242,7 +242,7 @@ namespace NiceHashMiner.Devices
                         {
                             Thread.Sleep(200);
                             waiting.SetText("", "");
-                            waiting.Update();
+                            //waiting.Update();
                             Thread.Sleep(100);
                             try
                             {
@@ -258,7 +258,7 @@ namespace NiceHashMiner.Devices
                     catch (Exception ex)
                     {
                         waiting.SetText("", "");
-                        waiting.Update();
+                        //waiting.Update();
                         Thread.Sleep(100);
                         try
                         {
@@ -280,11 +280,13 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        Thread.Sleep(100);
-                        waiting.SetText("", "");
-                        waiting.Update();
-                        Thread.Sleep(100);
                         waiting.CloseWaitingBox();
+                        Thread.Sleep(500);
+                        //waiting.SetText("", "");
+                        //waiting.Update();
+                        //Thread.Sleep(100);
+                        waiting.Dispose();
+                        //
                     }
                     catch (Exception ex)
                     {
@@ -348,9 +350,9 @@ namespace NiceHashMiner.Devices
             try
             {
                 Thread.Sleep(100);
-                waiting.SetText("", "");
-                waiting.Update();
-                Thread.Sleep(100);
+                //waiting.SetText("", "");
+                //waiting.Update();
+                //Thread.Sleep(100);
                 waiting.CloseWaitingBox();
             }
             catch (Exception ex)
@@ -871,34 +873,6 @@ namespace NiceHashMiner.Devices
                     mahm = new HardwareMonitor();
                     mahm.Connect();
                     Initialized = true;
-
-                    for (int i = 0; i < macm.Header.GpuEntryCount; i++)
-                    {
-                        /*
-                        if (macm.GpuEntries[i].GpuId.Contains("DEV_9498"))
-                        {
-                            Helpers.ConsolePrint("MSIAfterburnerInit", "Ahtung!");
-                            break;
-                        }
-                        */
-                        /*
-                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
-                        {
-                            Helpers.ConsolePrint("MSIAfterburnerInit", "GPU"+i.ToString() + " Curve enabled");
-                        }
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.GpuId " + macm.GpuEntries[i].GpuId);
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreClockBoostCur " + macm.GpuEntries[i].CoreClockBoostCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreClockCur " + macm.GpuEntries[i].CoreClockCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreClockDef " + macm.GpuEntries[i].CoreClockDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreClockMax " + macm.GpuEntries[i].CoreClockMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreClockMin " + macm.GpuEntries[i].CoreClockMin.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageBoostCur" + macm.GpuEntries[i].CoreVoltageBoostCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageCur" + macm.GpuEntries[i].CoreVoltageCur.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageDef" + macm.GpuEntries[i].CoreVoltageDef.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageMax" + macm.GpuEntries[i].CoreVoltageMax.ToString());
-                        Helpers.ConsolePrint("MSIAfterburnerInit", "GpuEntries.CoreVoltageMin" + macm.GpuEntries[i].CoreVoltageMin.ToString());
-                        */
-                    }
 
                     FirstInitFiles();
                     break;

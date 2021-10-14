@@ -43,7 +43,7 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.trex,
                 new List<MinerOption>() {
                     new MinerOption("Intensity", "-i", "--intensity", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("trex_mt", "--mt", "--mt", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_mt", "-mt", "--mt", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_pl", "--pl", "--pl", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_mclock", "--mclock", "--mclock", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_cclock", "--cclock", "--cclock", "-1", MinerOptionFlagType.MultiParam, ","),
@@ -53,7 +53,9 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("trex_fan", "--fan", "--fan", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_fant", "--fan t:", "--fan t:", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_fantm", "--fan tm:", "--fan tm:", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("trex_lhr_tune", "--lhr-tune", "--lhr-tune", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lhr_tune", "-lhr-tune", "--lhr-tune", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lhr_autotune", "-lhr-autotune-mode", "--lhr-autotune-mode", null, MinerOptionFlagType.SingleParam),
+                    new MinerOption("trex_lhr-low-power", "-lhr-low-power", "--lhr-low-power", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.SingleParam)
                 },
@@ -180,7 +182,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("TRMeth_4g_alloc_adjust", "", "--eth_4g_alloc_adjust=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMeth_alloc_epoch", "", "--eth_alloc_epoch=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMeth_aggr_mode", "", "--eth_aggr_mode", "", MinerOptionFlagType.Uni, ""),
-                    new MinerOption("TRMeth_eth_config", "", "----eth_config", "B1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMeth_eth_config", "", "--eth_config", "B1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMprog_micro_tune", "", "--prog_micro_tune", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, "")
                 },
                 // TemperatureOptions
@@ -198,6 +201,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("lolMiner_4gallocsize", "", "--4g-alloc-size", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_keepfree", "", "--keepfree", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_zombie-tune", "", "--zombie-tune", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_lhrtune", "", "--lhrtune", "auto", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, "")
                 },
                 // TemperatureOptions

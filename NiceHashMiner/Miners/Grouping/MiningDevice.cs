@@ -123,6 +123,12 @@ namespace NiceHashMiner.Miners.Grouping
             // calculate new profits
             foreach (var algo in Algorithms)
             {
+                if (algo is DualAlgorithm algoDual)
+                {
+//                    Helpers.ConsolePrint("*********", "DUAL");
+                    //algoDual.UpdateCurProfit(profits);
+                }
+  //                  Helpers.ConsolePrint("*********", "algo.NiceHashID: " + algo.NiceHashID + " algo.DualNiceHashID: " + algo.DualNiceHashID);
                 algo.UpdateCurProfit(profits);
             }
 

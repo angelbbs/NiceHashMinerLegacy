@@ -25,6 +25,7 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
         private double _power = 0.0d;
         double _powerUsage = 0;
+        string platform = "";
         public lolMiner()
             : base("lolMiner")
         {
@@ -51,6 +52,20 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
+            var param = "";
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    platform = "nvidia";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
+                }
+                else
+                {
+                    platform = "amd";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
+                }
+            }
             string username = GetUsername(btcAdress, worker);
             //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.lolMiner;
             IsApiReadException = false;
@@ -70,10 +85,7 @@ namespace NiceHashMiner.Miners
                     " --pool zhash." + Form_Main.myServers[1, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
                     " --pool zhash." + Form_Main.myServers[2, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
                     " --pool zhash." + Form_Main.myServers[3, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
-                    apiBind + " " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD) +
+                    apiBind + " " + param +
                               " --devices ";
             }
 
@@ -83,11 +95,8 @@ namespace NiceHashMiner.Miners
                 " --pool beamv2." + Form_Main.myServers[1, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv2." + Form_Main.myServers[2, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv2." + Form_Main.myServers[3, 0] + ".nicehash.com:3378 " + " --user " + username + " --pass x --tls 0" +
-                             apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
@@ -95,11 +104,8 @@ namespace NiceHashMiner.Miners
                 " --pool beamv3." + Form_Main.myServers[1, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv3." + Form_Main.myServers[2, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
                 " --pool beamv3." + Form_Main.myServers[3, 0] + ".nicehash.com:3387 " + " --user " + username + " --pass x --tls 0" +
-                             apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
@@ -108,11 +114,8 @@ namespace NiceHashMiner.Miners
                 " --pool grincuckatoo31." + Form_Main.myServers[1, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo31." + Form_Main.myServers[2, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo31." + Form_Main.myServers[3, 0] + ".nicehash.com:3372 " + " --user " + username + " --pass x" +
-                apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
@@ -120,11 +123,8 @@ namespace NiceHashMiner.Miners
                 " --pool grincuckatoo32." + Form_Main.myServers[1, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo32." + Form_Main.myServers[2, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
                 " --pool grincuckatoo32." + Form_Main.myServers[3, 0] + ".nicehash.com:3383 " + " --user " + username + " --pass x" +
-                apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
             {
@@ -132,11 +132,8 @@ namespace NiceHashMiner.Miners
                 " --pool grincuckarood29." + Form_Main.myServers[1, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
                 " --pool grincuckarood29." + Form_Main.myServers[2, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
                 " --pool grincuckarood29." + Form_Main.myServers[3, 0] + ".nicehash.com:3377 " + " --user " + username + " --pass x" +
-                apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
@@ -144,11 +141,8 @@ namespace NiceHashMiner.Miners
                 " --pool cuckoocycle." + Form_Main.myServers[1, 0] + ".nicehash.com:3376 " + " --user " + username + " --pass x" +
                 " --pool cuckoocycle." + Form_Main.myServers[2, 0] + ".nicehash.com:3376 " + " --user " + username + " --pass x" +
                 " --pool cuckoocycle." + Form_Main.myServers[3, 0] + ".nicehash.com:3376 " + " --user " + username + " --pass x" +
-                apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
@@ -156,11 +150,8 @@ namespace NiceHashMiner.Miners
                 " --pool daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 " --pool daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
                 " --pool daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353 " + " --user " + username + " --pass x" +
-                apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
             {
@@ -168,11 +159,8 @@ namespace NiceHashMiner.Miners
                 " --pool autolykos." + Form_Main.myServers[1, 0] + ".nicehash.com:3390 " + " --user " + username + " --pass x" +
                 " --pool autolykos." + Form_Main.myServers[2, 0] + ".nicehash.com:3390 " + " --user " + username + " --pass x" +
                 " --pool autolykos." + Form_Main.myServers[3, 0] + ".nicehash.com:3390 " + " --user " + username + " --pass x" +
-                apiBind + " " +
-                             ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                               MiningSetup,
-                                                               DeviceType.AMD) +
-                             " --devices ";
+                    apiBind + " " + param +
+                              " --devices ";
             }
             LastCommandLine += GetDevicesCommandString() + " ";//
             LastCommandLine = LastCommandLine.Replace("--asm 1", "");
@@ -201,7 +189,20 @@ namespace NiceHashMiner.Miners
         {
             var apiBind = " --apiport " + ApiPort;
             var CommandLine = "";
-
+            var param = "";
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    platform = "nvidia";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
+                }
+                else
+                {
+                    platform = "amd";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
+                }
+            }
             string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             // demo for benchmark
@@ -213,9 +214,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo BEAM-II " +
                     " --pool beamv2.eu-north.nicehash.com:3378 --user " + username + " --pass x --tls 0" +
-                                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD) +
+                                              param +
                 " --devices ";
             }
 
@@ -225,9 +224,7 @@ namespace NiceHashMiner.Miners
                 " --pool beam-eu.sparkpool.com:2222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
                 " --pool beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
                                               // " --pass x;x;x;x --tls 1;1;0;0 " +
-                                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD) +
+                                              param +
                 " --devices ";
             }
 
@@ -235,9 +232,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo EQUI144_5 --pers BgoldPoW" +
                 " --pool europe.equihash-hub.miningpoolhub.com:20595 --user angelbbs.lol --pass x" +
-                                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD) +
+                                              param +
                 " --devices ";
             }
 
@@ -246,9 +241,7 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--coin MWC-C31 " +
                 " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x " +
                 "--pool grincuckatoo31.eu-north.nicehash.com:3372 --user " + username + " --pass x" +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                MiningSetup,
-                                                DeviceType.AMD) +
+                              param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
@@ -256,9 +249,7 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--coin GRIN-C32" +
                 " --pool grin.2miners.com:3030 --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.lolMiner --pass x" +
                 " --pool grincuckatoo32.eu-north.nicehash.com:3383 --user " + username + " --pass x" +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                MiningSetup,
-                                                DeviceType.AMD) +
+                              param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckarood29)
@@ -266,9 +257,7 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--coin MWC-C29D " +
                 " --pool mwc.2miners.com:1111 --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x" +
                 " --pool grincuckaroo29.eu-north.nicehash.com:3372 --user " + username + " --pass x" +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                MiningSetup,
-                                                DeviceType.AMD) +
+                              param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
@@ -276,9 +265,7 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--algo C29AE " +
                 " --pool ae.2miners.com:4040 --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.lolMiner --pass x" +
                 " --pool cuckoocycle.eu-north.nicehash.com:3376 --user " + username + " --pass x" +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                MiningSetup,
-                                                DeviceType.AMD) +
+                              param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
@@ -286,18 +273,14 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--algo ETHASH " +
                 " --pool eu1.ethermine.org:4444 --user 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.lolMiner --pass x" +
                 " --pool daggerhashimoto.eu-north.nicehash.com:3353 --user " + username + " --pass x" +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                MiningSetup,
-                                                DeviceType.AMD) +
+                              param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
             {
                 CommandLine = "--algo AUTOLYKOS2 " +
                 " --pool pool.eu.woolypooly.com:3100 --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.lolMiner --pass x" +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                MiningSetup,
-                                                DeviceType.AMD) +
+                              param +
                 " --devices ";
             }
             CommandLine += GetDevicesCommandString() + " "; //amd карты перечисляются первыми

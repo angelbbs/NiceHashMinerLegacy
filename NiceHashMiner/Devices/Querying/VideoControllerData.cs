@@ -12,5 +12,6 @@ namespace NiceHashMiner.Devices.Querying
         public ulong AdapterRam { get; set; }
         public string CurrentRefreshRate { get; set; }
         public string Manufacturer { get; internal set; }
+        public string VideoProcessor { get; internal set; }
     }
 }

@@ -29,21 +29,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
                 }
 
-                // disable another gpu
-                //Helpers.ConsolePrint("GPU device", "Name: "+device.Name);
-                /*
-                if (algoSettings.ContainsKey(MinerBaseType.CastXMR) && (!device.Name.Contains("470")
-                    && !device.Name.Contains("480") && !device.Name.Contains("570") && !device.Name.Contains("580") &&
-                        !device.Name.Contains("Vega"))
-                )
-                {
-                    algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType>
-                    {
-                        MinerBaseType.CastXMR
-                    });
-                }
-                */
-
                 // disable by default
                 {
                     var minerBases = new List<MinerBaseType>
@@ -69,13 +54,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             }
                         }
                     }
-                    //if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
-                    //    foreach (var algo in algoSettings[MinerBaseType.Claymore]) {
-                    //        if (algo.NiceHashID == AlgorithmType.CryptoNight) {
-                    //            algo.Enabled = false;
-                    //        }
-                    //    }
-                    //}
+
                 }
             } // END AMD case
 
@@ -302,6 +281,31 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                     if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.NVIDIA &&
                         device.GpuRam > (ulong)(1024 * 1024 * 1024 * 7.4) && Form_Main.GetWinVer(Environment.OSVersion.Version) < 8.0)
+                    {
+                        algo.Enabled = true;
+                        algo.Hidden = false;
+                    }
+                }
+            }
+
+            if (algoSettings.ContainsKey(MinerBaseType.trex))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.trex])
+                {
+                    if (algo.NiceHashID == AlgorithmType.DaggerAutolykos && device.DeviceType == DeviceType.NVIDIA &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 8.4))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                    if (algo.NiceHashID == AlgorithmType.DaggerKAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                        device.GpuRam > (ulong)(1024 * 1024 * 1024 * 10.4))
+                    {
+                        algo.Enabled = true;
+                        algo.Hidden = false;
+                    }
+                    if (algo.NiceHashID == AlgorithmType.DaggerOctopus && device.DeviceType == DeviceType.NVIDIA &&
+                        device.GpuRam > (ulong)(1024 * 1024 * 1024 * 10.4))
                     {
                         algo.Enabled = true;
                         algo.Hidden = false;

@@ -3,6 +3,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections;
@@ -250,16 +251,7 @@ namespace NiceHashMiner.Forms.Components
                         name = dualAlg.DualAlgorithmNameCustom;
                         miner = alg.MinerBaseTypeName;
                         secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
-                        //secondarySpeed = alg.SecondaryBenchmarkSpeedString();
                         totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
-                        /*
-                        if (alg.NiceHashID == AlgorithmType.Autolykos && dualAlg.DualNiceHashID == AlgorithmType.DaggerHashimoto)
-                        {
-                            payingRatio = alg.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio / 30;
-                        }
-                        */
-                        //payingRatio = alg.CurPayingRatio + "/" +dualAlg.SecondaryCurPayingRatio;
-                        payingRatio = alg.CurPayingRatio + "/" + alg.CurSecondPayingRatio;
                     }
                     else
                     {
@@ -271,8 +263,6 @@ namespace NiceHashMiner.Forms.Components
 
                     lvi.SubItems.Add(name);
                     lvi.SubItems.Add(miner);
-
-                    //sub.Tag = alg.Value;
 
                     lvi.SubItems.Add(totalSpeed);
                     //lvi.SubItems.Add(secondarySpeed);
@@ -293,11 +283,14 @@ namespace NiceHashMiner.Forms.Components
                         }
                     }
                     double.TryParse(alg.CurPayingRate, out var valueRate);
+                    double.TryParse(alg.CurSecondPayingRate, out var valueRateSecond);
+
                     double WithPowerRate = 0;
-                    WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * alg.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+                    WithPowerRate = (valueRate + valueRateSecond) - ExchangeRateApi.GetKwhPriceInBtc() * alg.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+
                     if (!ConfigManager.GeneralConfig.DecreasePowerCost)
                     {
-                        WithPowerRate = valueRate;
+                        WithPowerRate = valueRate + valueRateSecond;
                     }
                     string rateCurrencyString = ExchangeRateApi
                              .ConvertToActiveCurrency((WithPowerRate) * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
@@ -331,7 +324,7 @@ namespace NiceHashMiner.Forms.Components
                         else
                         {
                             columnHeader6.Text = btcCurrencyName;
-                            lvi.SubItems.Add(alg.CurPayingRate);
+                            lvi.SubItems.Add(WithPowerRate.ToString("F8"));
                         }
                     }
                     lvi.Tag = alg;
@@ -383,14 +376,15 @@ namespace NiceHashMiner.Forms.Components
                                     lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
                                 }
                                 double.TryParse(algorithm.CurPayingRate, out var valueRate);
-
+                                double.TryParse(algorithm.CurSecondPayingRate, out var valueRateSecond);
                                 double WithPowerRate = 0;
-                                WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+                                WithPowerRate = (valueRate + valueRateSecond) - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
 
                                 if (!ConfigManager.GeneralConfig.DecreasePowerCost)
                                 {
-                                    WithPowerRate = valueRate;
+                                    WithPowerRate = valueRate + valueRateSecond;
                                 }
+
                                 string rateCurrencyString = ExchangeRateApi
                                          .ConvertToActiveCurrency((WithPowerRate) * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture);
@@ -422,7 +416,7 @@ namespace NiceHashMiner.Forms.Components
                                     else
                                     {
                                         columnHeader6.Text = btcCurrencyName;
-                                        lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                                        lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
                                     }
                                 }
                             }

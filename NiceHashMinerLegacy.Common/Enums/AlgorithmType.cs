@@ -8,6 +8,9 @@
     {
         // dual algos for grouping
         AutolykosZil = -73,
+        DaggerOctopus = -17,
+        DaggerKAWPOW = -16,
+        DaggerAutolykos = -15,
         DaggerHashimoto4GB = -12,
         DaggerHandshake = -11,
         DaggerEaglesong = -10,

@@ -758,12 +758,14 @@ namespace NiceHashMiner.Devices
                             DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
                             Status = SafeGetProperty(manObj, "Status"),
                             InfSection = SafeGetProperty(manObj, "InfSection"),
+                            VideoProcessor = SafeGetProperty(manObj, "VideoProcessor"),
                             AdapterRam = memTmp
                         };
 
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
                         stringBuilder.AppendLine($"\t\tName {vidController.Name}");
                         stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
+                        stringBuilder.AppendLine($"\t\tVideoProcessor {vidController.VideoProcessor}");
                         stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)} ({vidController.Manufacturer})");
                         stringBuilder.AppendLine($"\t\tPNPDeviceID {vidController.PnpDeviceID}");
                         stringBuilder.AppendLine($"\t\tCurrentRefreshRate {vidController.CurrentRefreshRate}");

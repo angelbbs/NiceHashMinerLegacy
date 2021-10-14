@@ -74,6 +74,14 @@ namespace NiceHashMiner
                         return AlgorithmType.AutolykosZil;
                 }
             }
+            if (AlgorithmID == AlgorithmType.DaggerHashimoto)
+            {
+                switch (SecondaryAlgorithmID)
+                {
+                    case AlgorithmType.Autolykos:
+                        return AlgorithmType.DaggerAutolykos;
+                }
+            }
 
             return AlgorithmID;
         }
@@ -446,6 +454,7 @@ namespace NiceHashMiner
             foreach (var mPair in sortedMinerPairs)
             {
                 mPair.Device.MiningHashrate = 0;
+                mPair.Device.MiningHashrateSecond = 0;
             }
 
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
@@ -512,6 +521,7 @@ namespace NiceHashMiner
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 pair.Device.MiningHashrate = 0;
+                pair.Device.MiningHashrateSecond = 0;
                 int a = (int)pair.Algorithm.NiceHashID;
                 pair.Device.AlgorithmID = a;
 
@@ -2252,7 +2262,8 @@ namespace NiceHashMiner
 
             foreach (var pair in MiningSetup.MiningPairs)
             {
-                if (pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosZil)
+                if (pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosZil ||
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerAutolykos)
                 {
                     strDual = "DUAL";
                 }

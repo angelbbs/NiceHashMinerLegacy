@@ -275,7 +275,7 @@ namespace NiceHashMiner.Forms.Components
             foreach (var computeDevice in _computeDevices)
             {
                 //                Helpers.ConsolePrint("SetComputeDevicesStatus", computeDevice.MiningHashrate.ToString());
-                string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, 0, (AlgorithmType)computeDevice.AlgorithmID);
+                string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, computeDevice.MiningHashrateSecond, (AlgorithmType)computeDevice.AlgorithmID);
                 string cTemp = Math.Truncate(computeDevice.Temp).ToString() + "°C";
                 string cLoad = Math.Truncate(computeDevice.Load).ToString() + "%";
                 string cFanSpeed = "";

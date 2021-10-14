@@ -22,6 +22,7 @@ namespace NiceHashMiner.Miners
         double _powerUsage = 0;
         public FileStream fs;
         private int offset = 0;
+        private bool _isDual = false;
         public trex() : base("trex")
         {
         }
@@ -49,19 +50,83 @@ namespace NiceHashMiner.Miners
             algo = algo.Replace("daggerhashimoto", "ethash");
             algo = algo.Replace("autolykos", "autolykos2");
             url = url.Replace("stratum+tcp", "stratum2+tcp");
-            LastCommandLine = algo +
-     " -o " + url + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-     " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
-     apiBind +
-     " -d " + GetDevicesCommandString() + " --no-watchdog " +
-     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+            foreach (var mPair in MiningSetup.MiningPairs)
             {
-                LastCommandLine = LastCommandLine.Replace("stratum2", "stratum");
+                if (mPair.Algorithm is DualAlgorithm algoDual)
+                {
+                    _isDual = true;
+                }
             }
+
+            if (!_isDual)
+            {
+                LastCommandLine = algo +
+                " -o " + url + " -u " + username + " -p x " +
+                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
+                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
+                apiBind +
+                " -d " + GetDevicesCommandString() + " --no-watchdog " +
+                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+                {
+                    LastCommandLine = LastCommandLine.Replace("stratum2", "stratum");
+                }
+            }
+            else
+            {
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
+                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
+                {
+                    LastCommandLine = "-a ethash --lhr-algo autolykos2" +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[0, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[1, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[2, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[3, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
+                    apiBind +
+                    " -d " + GetDevicesCommandString() + " --no-watchdog " +
+                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
+                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                {
+                    LastCommandLine = "-a ethash --lhr-algo kawpow" +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[0, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[1, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[2, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[3, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
+                    apiBind +
+                    " -d " + GetDevicesCommandString() + " --no-watchdog " +
+                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
+                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
+                {
+                    LastCommandLine = "-a ethash --lhr-algo octopus" +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[0, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[1, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[2, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[3, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    apiBind +
+                    " -d " + GetDevicesCommandString() + " --no-watchdog " +
+                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+                }
+            }
+
             ProcessHandle = _Start();
         }
 
@@ -85,79 +150,130 @@ namespace NiceHashMiner.Miners
             var commandLine = "";
             url = url.Replace("stratum+tcp", "stratum2+tcp");
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+            foreach (var mPair in MiningSetup.MiningPairs)
             {
-                commandLine = "--algo x16rv2 -B " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) +
-                                  " --api-bind-http 127.0.0.1:" + ApiPort +
-                              " -d ";
-                commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
-                //_benchmarkTimeWait = 180;
-                _benchmarkTimeWait = time;
+                if (mPair.Algorithm is DualAlgorithm algoDual)
+                {
+                    _isDual = true;
+                }
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+            Helpers.ConsolePrint("BENCHMARK", "_isDual: " + _isDual);
+            Helpers.ConsolePrint("BENCHMARK", "CurrentAlgorithmType: " + MiningSetup.CurrentAlgorithmType);
+            Helpers.ConsolePrint("BENCHMARK", "CurrentSecondaryAlgorithmType: " + MiningSetup.CurrentSecondaryAlgorithmType);
+            if (!_isDual)
             {
-                commandLine = "--algo x16r -B " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) +
-                                  " --api-bind-http 127.0.0.1:" + ApiPort +
-                              " -d ";
-                commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
-                //_benchmarkTimeWait = 180;
-                _benchmarkTimeWait = time;
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                {
+                    commandLine = "--algo x16rv2 -B " +
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                      MiningSetup,
+                                      DeviceType.NVIDIA) +
+                                      " --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
+                    //_benchmarkTimeWait = 180;
+                    _benchmarkTimeWait = time;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+                {
+                    commandLine = "--algo x16r -B " +
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                      MiningSetup,
+                                      DeviceType.NVIDIA) +
+                                      " --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
+                    //_benchmarkTimeWait = 180;
+                    _benchmarkTimeWait = time;
+                }
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                {
+                    commandLine = "--algo kawpow" +
+                     " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trex" + " -p x " +
+                     " -o " + url + " -u " + username + " -p x " +
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                      MiningSetup,
+                                      DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString();
+                    _benchmarkTimeWait = time;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                {
+                    commandLine = "--algo ethash" +
+                     " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trex" + " -p x " +
+                     " -o " + url + " -u " + username + " -p x " +
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                      MiningSetup,
+                                      DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString();
+                    _benchmarkTimeWait = time;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+                {
+                    commandLine = "--algo octopus" +
+                     " -o stratum+tcp://cfx.woolypooly.com:3094" + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trex" + " -p x " +
+                     " -o " + url + " -u " + username + " -p x " +
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                      MiningSetup,
+                                      DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString();
+                    _benchmarkTimeWait = time;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                {
+                    commandLine = "--algo autolykos2" +
+                     " -o stratum+tcp://pool.eu.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trex" + " -p x " +
+                     " -o " + url + " -u " + username + " -p x " +
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                      MiningSetup,
+                                      DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString();
+                    _benchmarkTimeWait = time;
+                }
+
+            }
+            else
+            {
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
+                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
+                {
+                    commandLine = "-a ethash --lhr-algo autolykos2" +
+                    " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
+                    " --url2 stratum+tcp://pool.woolypooly.com:3100 --user2 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trexdual --pass2 x " +
+                    " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                    " -d " + GetDevicesCommandString() + 
+                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+                    _benchmarkTimeWait = time;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
+                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                {
+                    commandLine = "-a ethash --lhr-algo kawpow" +
+                    " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
+                    " --url2 stratum+tcp://rvn.2miners.com:6060 --user2 RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trexdual --pass2 x " +
+                    " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                    " -d " + GetDevicesCommandString() +
+                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+                    _benchmarkTimeWait = time;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
+                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
+                {
+                    commandLine = "-a ethash --lhr-algo octopus" +
+                    " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
+                    " --url2 stratum+tcp://cfx.woolypooly.com:3094 --user2 cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trexdual --pass2 x " +
+                    " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                    " -d " + GetDevicesCommandString() +
+                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+                    _benchmarkTimeWait = time;
+                }
             }
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
-            {
-                commandLine = "--algo kawpow" +
-                 " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trex" + " -p x " +
-                 " -o " + url + " -u " + username + " -p x " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
-                              " -d ";
-                commandLine += GetDevicesCommandString();
-                _benchmarkTimeWait = time;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
-            {
-                commandLine = "--algo ethash" +
-                 " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trex" + " -p x " +
-                 " -o " + url + " -u " + username + " -p x " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
-                              " -d ";
-                commandLine += GetDevicesCommandString();
-                _benchmarkTimeWait = time;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
-            {
-                commandLine = "--algo octopus" +
-                 " -o stratum+tcp://cfx.woolypooly.com:3094" + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trex" + " -p x " +
-                 " -o " + url + " -u " + username + " -p x " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
-                              " -d ";
-                commandLine += GetDevicesCommandString();
-                _benchmarkTimeWait = time;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
-            {
-                commandLine = "--algo autolykos2" +
-                 " -o stratum+tcp://pool.eu.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trex" + " -p x " +
-                 " -o " + url + " -u " + username + " -p x " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
-                              " -d ";
-                commandLine += GetDevicesCommandString();
-                _benchmarkTimeWait = time;
-            }
             return commandLine;
         }
 
@@ -169,6 +285,7 @@ namespace NiceHashMiner.Miners
             BenchmarkException = null;
             double repeats = 0.0d;
             double summspeed = 0.0d;
+            double secsummspeed = 0.0d;
 
             int delay_before_calc_hashrate = 10;
             int MinerStartDelay = 10;
@@ -177,6 +294,10 @@ namespace NiceHashMiner.Miners
 
             try
             {
+                if (_isDual)
+                {
+                    _benchmarkTimeWait += 60;
+                }
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
 
@@ -251,6 +372,12 @@ namespace NiceHashMiner.Miners
                     // wait a second due api request
                     Thread.Sleep(1000);
 
+                    if (_isDual)
+                    {
+                        delay_before_calc_hashrate = 15;
+                        MinerStartDelay = 30;
+                    }
+
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
                         delay_before_calc_hashrate = 5;
@@ -288,8 +415,8 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
 
                     double logSpeed = 0.0d;
-                    if (fs.Length > offset && (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2)))
+                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2)) && fs.Length > offset)
                     {
                         int count = (int)(fs.Length - offset);
                         byte[] array = new byte[count];
@@ -328,8 +455,9 @@ namespace NiceHashMiner.Miners
                             }
                             else
                             {
-                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
+                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " SecondSpeed: " + ad.Result.SecondarySpeed + " power: " + _power.ToString());
                                 summspeed += ad.Result.Speed;
+                                secsummspeed += ad.Result.SecondarySpeed;
                             }
                         }
                         else
@@ -369,6 +497,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                BenchmarkAlgorithm.BenchmarkSecondarySpeed = Math.Round(secsummspeed / (repeats - delay_before_calc_hashrate), 2);
                 BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
             }
             catch (Exception ex)
@@ -433,15 +562,30 @@ namespace NiceHashMiner.Miners
                 {
                     dynamic respJson = JsonConvert.DeserializeObject(resp);
                     int devs = 0;
+                    double HashrateSecondTotal = 0.0d;
                     foreach (var dev in respJson.gpus)
                     {
-                        //Helpers.ConsolePrint(MinerTag(), "API device_id: " + dev.device_id + " gpu_id: " + dev.gpu_id + " gpu_user_id: " + " hashrate: " + dev.hashrate);
                         sortedMinerPairs[devs].Device.MiningHashrate = dev.hashrate;
+                        //Helpers.ConsolePrint("********", "API device_id: " + dev.device_id + " gpu_id: " + dev.gpu_id + " gpu_user_id: " + " hashrate1: " + dev.hashrate);
                         _power = sortedMinerPairs[devs].Device.PowerUsage;
                         devs++;
                     }
+
+                    devs = 0;
+                    if (_isDual)
+                    {
+                        foreach (var dev in respJson.dual_stat.gpus)
+                        {
+                            //Helpers.ConsolePrint("********", "API device_id: " + dev.device_id + " gpu_id: " + dev.gpu_id + " gpu_user_id: " + " hashrate: " + dev.hashrate);
+                            sortedMinerPairs[devs].Device.MiningHashrateSecond = dev.hashrate;
+                            HashrateSecondTotal += (double)dev.hashrate;
+
+                            devs++;
+                        }
+                    }
                     //Helpers.ConsolePrint(MinerTag(), "API total: " + respJson.hashrate);
                     ad.Speed = respJson.hashrate;
+                    ad.SecondarySpeed = HashrateSecondTotal;
                 }
                 catch (Exception ex)
                 {

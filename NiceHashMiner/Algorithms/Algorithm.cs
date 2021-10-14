@@ -217,19 +217,7 @@ namespace NiceHashMiner.Algorithms
 
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
-                    payingRate += BenchmarkSpeed * paying * Mult;
-                    rate = payingRate.ToString("F8");
-                }
-
-                if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying2))//ZIL
-                {
-
-                    payingRate += BenchmarkSecondarySpeed * (secPaying2 / 30) * Mult;
-                    rate = payingRate.ToString("F8");
-                }
-                else if (BenchmarkSecondarySpeed > 0 && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying))
-                {
-                    payingRate += BenchmarkSecondarySpeed * secPaying * Mult;
+                    payingRate = BenchmarkSpeed * paying * Mult;
                     rate = payingRate.ToString("F8");
                 }
 
@@ -246,7 +234,37 @@ namespace NiceHashMiner.Algorithms
                 }
             }
         }
+        public virtual string CurSecondPayingRate
+        {
+            get
+            {
+                var rate = International.GetText("BenchmarkRatioRateN_A");
+                var payingRate = 0.0d;
 
+                if ( BenchmarkSecondarySpeed> 0 && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))
+                {
+                    payingRate = BenchmarkSecondarySpeed * paying * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+
+                if (DualNiceHashID == AlgorithmType.AutolykosZil && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying2))
+                {
+                    payingRate = BenchmarkSecondarySpeed * (secPaying2 / 30) * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+                return rate;
+            }
+            set
+            {
+                var rate = International.GetText("BenchmarkRatioRateN_A");
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
+                {
+                    double.TryParse(value, out var valueBench);
+                    var payingRate = valueBench * paying * Mult;
+                    rate = payingRate.ToString("F8");
+                }
+            }
+        }
         #endregion
 
         #region Benchmark methods
@@ -318,9 +336,14 @@ namespace NiceHashMiner.Algorithms
 
         public virtual void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
         {
+            //Helpers.ConsolePrint("*********", "NiceHashID: " + NiceHashID + " DualNiceHashID: " + DualNiceHashID + " SecondaryNiceHashID: " + SecondaryNiceHashID);
+            //Helpers.ConsolePrint("*********", "AvaragedSpeed: " + AvaragedSpeed + " BenchmarkSpeed: " + BenchmarkSpeed + " BenchmarkSecondarySpeed: " + BenchmarkSecondarySpeed);
             profits.TryGetValue(NiceHashID, out var paying);
+            profits.TryGetValue(SecondaryNiceHashID, out var payingSecond);
             CurNhmSmaDataVal = paying;
-            CurrentProfit = CurNhmSmaDataVal * AvaragedSpeed * Mult;
+            CurrentProfit = (CurNhmSmaDataVal * AvaragedSpeed + payingSecond * BenchmarkSecondarySpeed) * Mult;
+            //Helpers.ConsolePrint("*********", "paying: " + paying + " AvaragedSpeed: " + AvaragedSpeed + " payingSecond: " + payingSecond + " BenchmarkSecondarySpeed: " + BenchmarkSecondarySpeed);
+            //Helpers.ConsolePrint("*********", "CurrentProfit: " + CurrentProfit);
             //добавляем CurrentProfitReal и используем его в логах
             //добавляем Treshold и используем его для расчета CurrentProfit, чтоб алгоритмы переключались в зависимости от порога
             // Helpers.ConsolePrint("PROFIT", AlgorithmName + " CurrentProfit: " + CurrentProfit.ToString());

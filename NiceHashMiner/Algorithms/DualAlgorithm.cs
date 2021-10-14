@@ -37,6 +37,14 @@ namespace NiceHashMiner.Algorithms
                             return AlgorithmType.AutolykosZil;
                     }
                 }
+                if (NiceHashID == AlgorithmType.DaggerHashimoto)
+                {
+                    switch (SecondaryNiceHashID)
+                    {
+                        case AlgorithmType.Autolykos:
+                            return AlgorithmType.DaggerAutolykos;
+                    }
+                }
 
                 return NiceHashID;
             }

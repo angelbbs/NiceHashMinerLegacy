@@ -171,18 +171,20 @@ namespace NiceHashMiner
             }
         }
 
-        public static string FormatSpeedOutput(double speed, string separator = " ")
+        public static string FormatSpeedOutput(double speed, string separator = " ", bool _isDual = false)
         {
             string ret;
+            string format = "F3";
+            if (_isDual) format = "F1";
 
             if (speed < 1000)
-                ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + separator;
+                ret = (speed).ToString(format, CultureInfo.InvariantCulture) + separator;
             else if (speed < 100000)
-                ret = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + separator + "k";
+                ret = (speed * 0.001).ToString(format, CultureInfo.InvariantCulture) + separator + "k";
             else if (speed < 100000000)
-                ret = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "M";
+                ret = (speed * 0.000001).ToString(format, CultureInfo.InvariantCulture) + separator + "M";
             else
-                ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "G";
+                ret = (speed * 0.000000001).ToString(format, CultureInfo.InvariantCulture) + separator + "G";
 
             return ret;
         }
@@ -195,11 +197,11 @@ namespace NiceHashMiner
             {
                 if (primarySpeed == 0)
                 {
-                    ret = "-- /" + FormatSpeedOutput(secondarySpeed, "");
+                    ret = "-- /" + FormatSpeedOutput(secondarySpeed, "", true);
                 }
                 else
                 {
-                    ret = FormatSpeedOutput(primarySpeed, "") + "/" + FormatSpeedOutput(secondarySpeed, "") + " ";
+                    ret = FormatSpeedOutput(primarySpeed, "", true) + "/" + FormatSpeedOutput(secondarySpeed, "", true) + " ";
                 }
             }
             else
