@@ -329,7 +329,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "41.3 beta";
+            Text += "42";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;

@@ -221,8 +221,8 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 CommandLine = "--algo BEAM-III " +
-                " --pool beam-eu.sparkpool.com:2222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
-                " --pool beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
+                " --pool beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
+                " --pool asia-beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
                                               // " --pass x;x;x;x --tls 1;1;0;0 " +
                                               param +
                 " --devices ";

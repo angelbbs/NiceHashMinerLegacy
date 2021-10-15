@@ -1,4 +1,5 @@
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -196,7 +197,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
-
+            
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
@@ -233,6 +234,19 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             */
+
+            if (algoSettings.ContainsKey(MinerBaseType.trex))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.trex])
+                {
+                    if (algo.DualNiceHashID == AlgorithmType.X16RV2 && !ConfigManager.GeneralConfig.ShowHiddenAlgos)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
@@ -292,26 +306,27 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.trex])
                 {
-                    if (algo.NiceHashID == AlgorithmType.DaggerAutolykos && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 8.4))
+                    if (algo.DualNiceHashID == AlgorithmType.DaggerAutolykos && device.DeviceType == DeviceType.NVIDIA &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.4))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;
                     }
-                    if (algo.NiceHashID == AlgorithmType.DaggerKAWPOW && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam > (ulong)(1024 * 1024 * 1024 * 10.4))
+                    if (algo.DualNiceHashID == AlgorithmType.DaggerKAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 10.4))
                     {
-                        algo.Enabled = true;
-                        algo.Hidden = false;
+                        algo.Enabled = false;
+                        algo.Hidden = true;
                     }
-                    if (algo.NiceHashID == AlgorithmType.DaggerOctopus && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam > (ulong)(1024 * 1024 * 1024 * 10.4))
+                    if (algo.DualNiceHashID == AlgorithmType.DaggerOctopus && device.DeviceType == DeviceType.NVIDIA &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 10.4))
                     {
-                        algo.Enabled = true;
-                        algo.Hidden = false;
+                        algo.Enabled = false;
+                        algo.Hidden = true;
                     }
                 }
             }
+
             /*
             if (algoSettings.ContainsKey(MinerBaseType.NBMiner))
             {

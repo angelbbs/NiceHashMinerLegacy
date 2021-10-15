@@ -17,6 +17,7 @@ namespace NiceHashMiner.Configs.Data
         public bool NoShowApiInLog;
         public bool NoForceTRexClose;
         public bool UseNegativeProfit = false;
+        public bool ShowHiddenAlgos = false;
         public double DaggerOrderMaxPay = 0;
         public int DaggerHashimoto3GBMaxEpoch = 235;
         public int DaggerHashimoto4GBMaxEpoch = 352;

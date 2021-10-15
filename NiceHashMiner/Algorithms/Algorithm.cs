@@ -336,17 +336,19 @@ namespace NiceHashMiner.Algorithms
 
         public virtual void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
         {
-            //Helpers.ConsolePrint("*********", "NiceHashID: " + NiceHashID + " DualNiceHashID: " + DualNiceHashID + " SecondaryNiceHashID: " + SecondaryNiceHashID);
+            Helpers.ConsolePrint("*********", "NiceHashID: " + NiceHashID + " DualNiceHashID: " + DualNiceHashID + " SecondaryNiceHashID: " + SecondaryNiceHashID);
             //Helpers.ConsolePrint("*********", "AvaragedSpeed: " + AvaragedSpeed + " BenchmarkSpeed: " + BenchmarkSpeed + " BenchmarkSecondarySpeed: " + BenchmarkSecondarySpeed);
             profits.TryGetValue(NiceHashID, out var paying);
             profits.TryGetValue(SecondaryNiceHashID, out var payingSecond);
             CurNhmSmaDataVal = paying;
-            CurrentProfit = (CurNhmSmaDataVal * AvaragedSpeed + payingSecond * BenchmarkSecondarySpeed) * Mult;
-            //Helpers.ConsolePrint("*********", "paying: " + paying + " AvaragedSpeed: " + AvaragedSpeed + " payingSecond: " + payingSecond + " BenchmarkSecondarySpeed: " + BenchmarkSecondarySpeed);
-            //Helpers.ConsolePrint("*********", "CurrentProfit: " + CurrentProfit);
-            //добавляем CurrentProfitReal и используем его в логах
-            //добавляем Treshold и используем его для расчета CurrentProfit, чтоб алгоритмы переключались в зависимости от порога
-            // Helpers.ConsolePrint("PROFIT", AlgorithmName + " CurrentProfit: " + CurrentProfit.ToString());
+            if (DualNiceHashID == AlgorithmType.AutolykosZil)
+            {
+                CurrentProfit = (CurNhmSmaDataVal * AvaragedSpeed + (payingSecond * BenchmarkSecondarySpeed) / 30) * Mult;
+            }
+            else
+            {
+                CurrentProfit = (CurNhmSmaDataVal * AvaragedSpeed + payingSecond * BenchmarkSecondarySpeed) * Mult;
+            }
             if (ConfigManager.GeneralConfig.with_power)
             {
                 SubtractPowerFromProfit();

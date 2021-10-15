@@ -324,7 +324,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --algo BeamHashIII" +
                 " --server beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
-                " --server beam-asia.sparkpool.com:12222 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
+                " --server asia-beam.2miners.com:5252 --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x --ssl 1 " +
                 " --server beamv2.eu.nicehash.com:3378 --user " + username + " --pass x --ssl 0" +
                 " --server beamv2.hk.nicehash.com:3378 --user " + username + " --pass x --ssl 0" +
                 GetDevicesCommandString();

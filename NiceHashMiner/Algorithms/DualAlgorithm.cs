@@ -43,6 +43,10 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.Autolykos:
                             return AlgorithmType.DaggerAutolykos;
+                        case AlgorithmType.KAWPOW:
+                            return AlgorithmType.DaggerKAWPOW;
+                        case AlgorithmType.Octopus:
+                            return AlgorithmType.DaggerOctopus;
                     }
                 }
 

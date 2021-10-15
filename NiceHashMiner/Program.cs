@@ -573,6 +573,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     ConfigManager.GeneralConfig.ForkFixVersion = 41.1;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 42)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    ConfigManager.GeneralConfig.ForkFixVersion = 42;
+                }
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

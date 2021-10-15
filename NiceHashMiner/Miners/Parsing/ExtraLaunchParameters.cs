@@ -577,7 +577,10 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_mt", "--mt", "--mt", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_safe_dag", "--safe_dag", "--safe_dag", "1", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_tfan", "--tfan", "--tfan", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_lhr", "--lhr", "--lhr", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_lhr_tune", "--lhr_tune", "--lhr_tune", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_electricity_cost", "--electricity_cost", "--electricity_cost", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_lhr_autotune", "--lhr_autotune", "--lhr_autotune", "1", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()
             ),
