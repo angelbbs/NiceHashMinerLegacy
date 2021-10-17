@@ -523,6 +523,7 @@ namespace NiceHashMiner.Forms
             foreach (var cdev in ComputeDeviceManager.Available.Devices)
             {
                 cdev.MiningHashrate = 0;
+                cdev.MiningHashrateSecond = 0;
             }
         }
 

@@ -336,8 +336,6 @@ namespace NiceHashMiner.Algorithms
 
         public virtual void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
         {
-            Helpers.ConsolePrint("*********", "NiceHashID: " + NiceHashID + " DualNiceHashID: " + DualNiceHashID + " SecondaryNiceHashID: " + SecondaryNiceHashID);
-            //Helpers.ConsolePrint("*********", "AvaragedSpeed: " + AvaragedSpeed + " BenchmarkSpeed: " + BenchmarkSpeed + " BenchmarkSecondarySpeed: " + BenchmarkSecondarySpeed);
             profits.TryGetValue(NiceHashID, out var paying);
             profits.TryGetValue(SecondaryNiceHashID, out var payingSecond);
             CurNhmSmaDataVal = paying;

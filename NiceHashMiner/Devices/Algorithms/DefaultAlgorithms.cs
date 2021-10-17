@@ -264,15 +264,15 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Autolykos, "DaggerAutolykos")
                             {
-                                ExtraLaunchParameters = "--mt 1 --lhr-tune 68"
+                                ExtraLaunchParameters = "--mt 1 --lhr-tune 30"
                             },
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.KAWPOW, "DaggerKAWPOW")
                             {
-                                ExtraLaunchParameters = "--mt 1 --lhr-tune 68"
+                                ExtraLaunchParameters = "--mt 1 --lhr-tune 30"
                             },
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Octopus, "DaggerOctopus")
                             {
-                                ExtraLaunchParameters = "--mt 1 --lhr-tune 68"
+                                ExtraLaunchParameters = "--mt 1 --lhr-tune 30"
                             },
                             new Algorithm(MinerBaseType.trex, AlgorithmType.Autolykos, "Autolykos")
                             {

@@ -566,7 +566,6 @@ namespace NiceHashMiner.Forms.Components
                                 lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
                             }
 
-                            //    lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
                             double.TryParse(algorithm.CurPayingRate, out var valueRate);
                             var WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
 
@@ -849,13 +848,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                         algorithm.PowerUsage = 0;
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
-                            algorithm.BenchmarkSecondarySpeed = 0;
-                            /*
-                            dualAlgo.SecondaryBenchmarkSpeed = 0;
-                            dualAlgo.IntensitySpeeds = new Dictionary<int, double>();
-                            dualAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>();
-                            dualAlgo.IntensityUpToDate = false;
-                            */
+                            dualAlgo.BenchmarkSecondarySpeed = 0;
                         }
 
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
@@ -883,6 +876,10 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         algorithm.BenchmarkSpeed = 0;
                         algorithm.BenchmarkSecondarySpeed = 0;
+                        if (algorithm is DualAlgorithm dualAlgo)
+                        {
+                            dualAlgo.BenchmarkSecondarySpeed = 0;
+                        }
                         algorithm.PowerUsage = 0;
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();

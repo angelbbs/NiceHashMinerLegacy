@@ -313,13 +313,13 @@ namespace NiceHashMiner.Devices.Algorithms
                         algo.Hidden = true;
                     }
                     if (algo.DualNiceHashID == AlgorithmType.DaggerKAWPOW && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 10.4))
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 9.4))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;
                     }
                     if (algo.DualNiceHashID == AlgorithmType.DaggerOctopus && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 10.4))
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 9.4))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;

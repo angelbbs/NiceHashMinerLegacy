@@ -372,6 +372,7 @@ namespace NiceHashMiner.Miners
                 var bytesToRead = new byte[client.ReceiveBufferSize];
                 var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                 var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                respStr = respStr.Substring(respStr.IndexOf('{'), respStr.Length - respStr.IndexOf('{'));
                 //Helpers.ConsolePrint("miniZ API:", respStr);
                 if (!respStr.Contains("}]}") && prevSpeed != 0)
                 {

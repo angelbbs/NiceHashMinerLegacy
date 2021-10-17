@@ -80,6 +80,10 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.Autolykos:
                         return AlgorithmType.DaggerAutolykos;
+                    case AlgorithmType.KAWPOW:
+                        return AlgorithmType.DaggerKAWPOW;
+                    case AlgorithmType.Octopus:
+                        return AlgorithmType.DaggerOctopus;
                 }
             }
 
@@ -969,6 +973,7 @@ namespace NiceHashMiner
         protected void BenchmarkThreadRoutineCatch(Exception ex)
         {
             BenchmarkAlgorithm.BenchmarkSpeed = 0;
+            BenchmarkAlgorithm.BenchmarkSecondarySpeed = 0;
 
             Helpers.ConsolePrint(MinerTag(), "Benchmark Exception: " + ex.Message);
             Helpers.ConsolePrint(MinerTag(), "Benchmark Exception: " + ex.ToString());
@@ -1224,6 +1229,7 @@ namespace NiceHashMiner
             finally
             {
                 BenchmarkAlgorithm.BenchmarkSpeed = 0;
+                BenchmarkAlgorithm.BenchmarkSecondarySpeed = 0;
                 // find latest log file
                 string latestLogFile = "";
                 var dirInfo = new DirectoryInfo(WorkingDirectory);

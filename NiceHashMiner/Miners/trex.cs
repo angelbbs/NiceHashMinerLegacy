@@ -114,13 +114,13 @@ namespace NiceHashMiner.Miners
                 {
                     LastCommandLine = "-a ethash --lhr-algo octopus" +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[0, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[0, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[1, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[1, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[2, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[2, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://octopus." + Form_Main.myServers[3, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[3, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
                     apiBind +
                     " -d " + GetDevicesCommandString() + " --no-watchdog " +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

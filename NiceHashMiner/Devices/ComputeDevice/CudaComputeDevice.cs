@@ -179,6 +179,11 @@ namespace NiceHashMiner.Devices
                 if (NVAPI.NvAPI_GPU_GetTachReading != null)
                 {
                     var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
+                    /*
+                    Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
+                    Helpers.ConsolePrint("NVAPI", "_nvHandle: " + nvHandle.Value.ToString());
+                    Helpers.ConsolePrint("NVAPI", "fanSpeed: " + fanSpeed.ToString());
+                    */
                     if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                     {
                         // GPUs without fans are not uncommon, so don't treat as error and just return -1
@@ -186,6 +191,7 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
                         Helpers.ConsolePrint("NVAPI", "_nvmlDevice: " + _nvmlDevice.ToString());
                         Helpers.ConsolePrint("NVAPI", "_nvHandle: " + _nvHandle.ToString());
+                        Helpers.ConsolePrint("NVAPI", "fanSpeed: " + fanSpeed.ToString());
                         */
                         //сомнительно...
 
