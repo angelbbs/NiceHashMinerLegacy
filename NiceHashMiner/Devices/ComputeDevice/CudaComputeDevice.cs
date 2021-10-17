@@ -179,6 +179,16 @@ namespace NiceHashMiner.Devices
                 if (NVAPI.NvAPI_GPU_GetTachReading != null)
                 {
                     var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
+                    if (result != NvStatus.OK)
+                    {
+                        var coolersStatus = GetFanCoolersStatus();
+                        if (coolersStatus.Count > 0)
+                        {
+                            uint CurrentLevel = coolersStatus.Items[0].CurrentLevel;
+                            uint CurrentRpm = coolersStatus.Items[0].CurrentRpm;
+                            fanSpeed = (int)CurrentRpm;
+                        }
+                    }
                     /*
                     Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
                     Helpers.ConsolePrint("NVAPI", "_nvHandle: " + nvHandle.Value.ToString());
@@ -231,11 +241,27 @@ namespace NiceHashMiner.Devices
 
                         return -1;
                     }
-                }
-
+                } 
                 return fanSpeed;
 
             }
+
+
+        }
+        private NvFanCoolersStatus GetFanCoolersStatus()
+        {
+            var coolers = new NvFanCoolersStatus();
+            coolers.Version = NVAPI.GPU_FAN_COOLERS_STATUS_VER;
+            coolers.Items =
+              new NvFanCoolersStatusItem[NVAPI.MAX_FAN_COOLERS_STATUS_ITEMS];
+
+            if (!(NVAPI.NvAPI_GPU_ClientFanCoolersGetStatus != null &&
+               NVAPI.NvAPI_GPU_ClientFanCoolersGetStatus(_nvHandle, ref coolers)
+               == NvStatus.OK))
+            {
+                coolers.Count = 0;
+            }
+            return coolers;
         }
 
         public List<NvData> gpuList = new List<NvData>();

@@ -145,6 +145,48 @@ namespace NVIDIA.NVAPI
         public NvSensor[] Sensor;
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvFanCoolersStatus
+    {
+        public uint Version;
+        public uint Count;
+
+        public ulong Reserved1;
+        public ulong Reserved2;
+        public ulong Reserved3;
+        public ulong Reserved4;
+
+        [MarshalAs(UnmanagedType.ByValArray,
+          SizeConst = NVAPI.MAX_FAN_COOLERS_STATUS_ITEMS)]
+        internal NvFanCoolersStatusItem[] Items;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvFanCoolersStatusItem
+    {
+        public uint Type;
+        public uint CurrentRpm;
+        public uint CurrentMinLevel;
+        public uint CurrentMaxLevel;
+        public uint CurrentLevel;
+
+        public uint Reserved1;
+        public uint Reserved2;
+        public uint Reserved3;
+        public uint Reserved4;
+        public uint Reserved5;
+        public uint Reserved6;
+        public uint Reserved7;
+        public uint Reserved8;
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvGPUCoolerLevels
+    {
+        public uint Version;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_COOLER_PER_GPU)]
+        public NvLevel[] Levels;
+    }
+
     #endregion
 
     internal class NVAPI
@@ -153,9 +195,13 @@ namespace NVIDIA.NVAPI
         internal const int MAX_PSTATES_PER_GPU = 8;
         internal const int MAX_COOLER_PER_GPU = 20;
         internal const int MAX_THERMAL_SENSORS_PER_GPU = 3;
+        public const int MAX_FAN_COOLERS_STATUS_ITEMS = 32;
 
         public static readonly uint GPU_PSTATES_VER = (uint)Marshal.SizeOf(typeof(NvPStates)) | 0x10000;
         public static readonly uint GPU_THERMAL_SETTINGS_VER = (uint)Marshal.SizeOf(typeof(NvGPUThermalSettings)) | 0x10000;
+        public static readonly uint GPU_COOLER_LEVELS_VER = (uint) Marshal.SizeOf(typeof(NvGPUCoolerLevels)) | 0x10000;
+        public static readonly uint GPU_FAN_COOLERS_STATUS_VER = (uint) Marshal.SizeOf(typeof(NvFanCoolersStatus)) | 0x10000;
+
 
         #region Delegates
         private delegate IntPtr nvapi_QueryInterfaceDelegate(uint id);
@@ -166,7 +212,7 @@ namespace NVIDIA.NVAPI
         internal delegate NvStatus NvAPI_GPU_GetTachReadingDelegate(NvPhysicalGpuHandle gpuHandle, out int value);
         internal delegate NvStatus NvAPI_GPU_GetPStatesDelegate(NvPhysicalGpuHandle gpuHandle, ref NvPStates nvPStates);
         internal delegate NvStatus NvAPI_GPU_GetThermalSettingsDelegate(NvPhysicalGpuHandle gpuHandle, int sensorIndex, ref NvGPUThermalSettings nvGPUThermalSettings);
-
+        
         private static readonly nvapi_QueryInterfaceDelegate nvapi_QueryInterface;
         private static readonly NvAPI_InitializeDelegate NvAPI_Initialize;
         private static readonly bool available;
@@ -176,6 +222,12 @@ namespace NVIDIA.NVAPI
         internal static readonly NvAPI_GPU_GetTachReadingDelegate NvAPI_GPU_GetTachReading;
         internal static readonly NvAPI_GPU_GetPStatesDelegate NvAPI_GPU_GetPStates;
         internal static readonly NvAPI_GPU_GetThermalSettingsDelegate NvAPI_GPU_GetThermalSettings;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate NvStatus NvAPI_GPU_ClientFanCoolersGetStatusDelegate(
+  NvPhysicalGpuHandle gpuHandle, ref NvFanCoolersStatus fanCoolersStatus);
+        public static readonly NvAPI_GPU_ClientFanCoolersGetStatusDelegate
+  NvAPI_GPU_ClientFanCoolersGetStatus;
 
         #endregion
 
@@ -218,6 +270,7 @@ namespace NVIDIA.NVAPI
                 GetDelegate(0xE3640A56, out NvAPI_GPU_GetThermalSettings);
                 GetDelegate(0xE5AC921F, out NvAPI_EnumPhysicalGPUs);
                 GetDelegate(0x1BE0B8E5, out NvAPI_GPU_GetBusID);
+                GetDelegate(0x35AED5E8, out NvAPI_GPU_ClientFanCoolersGetStatus);
             }
 
             available = true;
