@@ -538,12 +538,11 @@ namespace NiceHashMiner
 
         private void IdleCheck_Tick(object sender, EventArgs e)
         {
+            buttonChart.Enabled = !Form_RigProfitChartRunning;
             if (!ConfigManager.GeneralConfig.StartMiningWhenIdle) return;
             if (_isManuallyStarted) return;
-            buttonChart.Enabled = !Form_RigProfitChartRunning;
 
             var msIdle = Helpers.GetIdleTime();
-            //Helpers.ConsolePrint("NICEHASH", "msIdle: " + msIdle.ToString());
             if (_minerStatsCheck.Enabled)
             {
                 if (msIdle < (ConfigManager.GeneralConfig.MinIdleSeconds * 1000) && _isManuallyStarted)

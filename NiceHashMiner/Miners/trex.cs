@@ -50,6 +50,8 @@ namespace NiceHashMiner.Miners
             algo = algo.Replace("daggerhashimoto", "ethash");
             algo = algo.Replace("autolykos", "autolykos2");
             url = url.Replace("stratum+tcp", "stratum2+tcp");
+            string locations = url.Split('.')[1];
+            //stratum+tcp://octopus.LOCATION.nicehash.com:3389
             foreach (var mPair in MiningSetup.MiningPairs)
             {
                 if (mPair.Algorithm is DualAlgorithm algoDual)
@@ -81,6 +83,8 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     LastCommandLine = "-a ethash --lhr-algo autolykos2" +
+                    " -o stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://autolykos." + locations + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
                     " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[0, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
@@ -97,6 +101,8 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
                     LastCommandLine = "-a ethash --lhr-algo kawpow" +
+                        " -o stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum2+tcp://kawpow." + locations + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
                     " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[0, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
@@ -113,6 +119,8 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
                 {
                     LastCommandLine = "-a ethash --lhr-algo octopus" +
+                        " -o stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353" + " -u " + username + " -p x " +
+                    " --url2 stratum+tcp://octopus." + locations + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
                     " --url2 stratum+tcp://octopus." + Form_Main.myServers[0, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
                     " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +

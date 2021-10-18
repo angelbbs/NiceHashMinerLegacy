@@ -429,6 +429,7 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
+            Form_Main.Form_RigProfitChartRunning = false;
             ConfigManager.GeneralConfigFileCommit();
         }
 
@@ -536,6 +537,11 @@ namespace NiceHashMiner.Forms
             {
                 Helpers.ConsolePrint("chart", er.ToString());
             }
+        }
+
+        private void Form_RigProfitChart_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Form_Main.Form_RigProfitChartRunning = false;
         }
     }
 }

@@ -213,6 +213,7 @@ namespace NiceHashMiner.Forms
             this.Text = "Form_RigProfitChart";
             this.Deactivate += new System.EventHandler(this.Form_RigProfitChart_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_RigProfitChart_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_RigProfitChart_FormClosed);
             this.Shown += new System.EventHandler(this.Form_RigProfitChart_Shown);
             this.ResizeBegin += new System.EventHandler(this.Form_RigProfitChart_ResizeBegin);
             this.ResizeEnd += new System.EventHandler(this.Form_RigProfitChart_ResizeEnd);
