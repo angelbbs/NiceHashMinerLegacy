@@ -116,7 +116,7 @@
     "Form_DcriValues_ToolTip_TuningInterval": "Интервал значений dcri для тюнинга",
     "Form_DcriValues_ToolTip_TuningEnabled": "Если включено, NHML произведёт бенчмарк для всех указанных значений dcri и запишет их скорость.\nNHML будет использовать для майнинга наиболее прибыльные комбинации скоростей.\nЭтот режим игнорирует дополнительный параметр -dcri, если тот указан.",
     "AlgorithmsListView_ContextMenu_OpenDcri": "Настройки тюнинга",
-    "DeviceListView_ContectMenu_CopyTuning": "Скопировать только настройки тюнинга",
+    "DeviceListView_ContectMenu_CopyTuning": "Скопировать только скорости алгоритмов",
 
     "Form_Loading_label_LoadingText": "Загрузка, подождите, пожалуйста…",
 
@@ -534,6 +534,7 @@
 "MSIAB_Starting": "Запуск MSI Afterburner",
 "MSIAB_Checking": "Проверка MSI Afterburner",
 "MSIAB_Closing": "Завершение MSI Afterburner",
+"listViewDevices_ToolTip": "Нажмите правую кнопку мыши на выбранном GPU\r\nдля получения дополнительных функций",
 "Form_Settings_buttonLicence": "Просмотр лицензии"
   }
 }

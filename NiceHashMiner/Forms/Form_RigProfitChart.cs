@@ -145,7 +145,7 @@ namespace NiceHashMiner.Forms
             totalRateAll = 0;
             //currentProfitAll = 0;
             currentProfitAllAPI = 0;
-            Helpers.ConsolePrint("ChartData", "totalPowerRate: " + Form_Main.lastRigProfit.totalPowerRate.ToString());
+//            Helpers.ConsolePrint("ChartData", "totalPowerRate: " + Form_Main.lastRigProfit.totalPowerRate.ToString());
 
 
             //Helpers.ConsolePrint("***********", (ExchangeRateApi.ConvertToActiveCurrency((MinersManager.GetTotalPowerRate() + Form_Main.PowerAllDevices) * Form_Main._factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()).ToString()));
@@ -429,7 +429,6 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
-            Form_Main.Form_RigProfitChartRunning = false;
             ConfigManager.GeneralConfigFileCommit();
         }
 

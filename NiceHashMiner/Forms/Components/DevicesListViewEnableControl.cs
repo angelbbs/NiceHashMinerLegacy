@@ -532,136 +532,142 @@ namespace NiceHashMiner.Forms.Components
             {
             }
 
-            if (e.Button == MouseButtons.Right)
+            Control senderObject = sender as Control;
+            string hoveredControl = senderObject.TopLevelControl.Name;
+
+            if (e.Button == MouseButtons.Right && !hoveredControl.Contains("Form_Main"))
             {
                 if (listViewDevices.FocusedItem.Bounds.Contains(e.Location))
                 {
                     contextMenuStrip1.Items.Clear();
                     try
                     {
-                        var t = Form_Main.settings.tabControlGeneral.SelectedTab;
-
-                        if (IsSettingsCopyEnabled)
+                        string tName = "";
+                        try
                         {
-                            if (listViewDevices.FocusedItem.Tag is ComputeDevice cDevice)
+                            tName = Form_Main.settings.tabControlGeneral.SelectedTab.Name;
+                        } catch (Exception)
+                        {
+                            tName = "Form_Benchmark";
+                        }
+                        if (listViewDevices.FocusedItem.Tag is ComputeDevice cDevice)
+                        {
+                            var sameDevTypes =
+                                ComputeDeviceManager.Available.GetSameDevicesTypeAsDeviceWithUuid(cDevice.Uuid);
+                            if (sameDevTypes.Count > 0)
                             {
-                                var sameDevTypes =
-                                    ComputeDeviceManager.Available.GetSameDevicesTypeAsDeviceWithUuid(cDevice.Uuid);
-                                if (sameDevTypes.Count > 0)
+                                var copyBenchItem = new ToolStripMenuItem();
+                                var copyTuningItem = new ToolStripMenuItem();
+                                var copyOverClockItem = new ToolStripMenuItem();
+                                foreach (var cDev in sameDevTypes)
                                 {
-                                    var copyBenchItem = new ToolStripMenuItem();
-                                    var copyTuningItem = new ToolStripMenuItem();
-                                    var copyOverClockItem = new ToolStripMenuItem();
-                                    foreach (var cDev in sameDevTypes)
+                                    Manufacturer = "";
+                                    if (cDev.Enabled)
                                     {
-                                        Manufacturer = "";
-                                        if (cDev.Enabled)
+                                        string devInfo = cDev.Name;
+                                        string GpuRam = "";
+                                        if (cDev.DeviceType == DeviceType.NVIDIA)
                                         {
-                                            string devInfo = cDev.Name;
-                                            string GpuRam = "";
-                                            if (cDev.DeviceType == DeviceType.NVIDIA)
+                                            if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                                             {
-                                                if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
+                                                devInfo = devInfo.Replace("NVIDIA", "");
+                                                if (!devInfo.Contains(ComputeDevice.GetManufacturer(cDev.Manufacturer)))
                                                 {
-                                                    devInfo = devInfo.Replace("NVIDIA", "");
-                                                    if (!devInfo.Contains(ComputeDevice.GetManufacturer(cDev.Manufacturer)))
-                                                    {
-                                                        Manufacturer = ComputeDevice.GetManufacturer(cDev.Manufacturer);
-                                                    }
+                                                    Manufacturer = ComputeDevice.GetManufacturer(cDev.Manufacturer);
                                                 }
-                                                else
-                                                {
-                                                    devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(cDev.Manufacturer) + " ", "");
-                                                    if (!devInfo.Contains("NVIDIA")) devInfo = "NVIDIA " + devInfo;
-                                                }
-
-                                                GpuRam = (cDev.GpuRam / 1073741824).ToString() + "GB";
-                                                if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
-                                                {
-                                                    if (devInfo.Contains(GpuRam))
-                                                    {
-                                                        GpuRam = "";
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    devInfo = devInfo.Replace(GpuRam, "");
-                                                    GpuRam = "";
-                                                }
-                                            }
-
-                                            if (cDev.DeviceType == DeviceType.AMD)
-                                            {
-                                                if (ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer)
-                                                {
-                                                    if (!devInfo.Contains(ComputeDevice.GetManufacturer(cDev.Manufacturer)))
-                                                    {
-                                                        Manufacturer = ComputeDevice.GetManufacturer(cDev.Manufacturer);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(cDev.Manufacturer) + " ", "");
-                                                }
-
-                                                GpuRam = (cDev.GpuRam / 1073741824).ToString() + "GB";
-                                                if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
-                                                {
-                                                    if (devInfo.Contains(GpuRam))
-                                                    {
-                                                        GpuRam = "";
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    devInfo = devInfo.Replace(GpuRam, "");
-                                                    GpuRam = "";
-                                                }
-                                            }
-
-                                            if (!t.Name.Equals("tabPageOverClock"))
-                                            {
-                                                var copyBenchDropDownItem = new ToolStripMenuItem
-                                                {
-                                                    Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
-                                                    Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
-                                                };
-                                                copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
-                                                copyBenchDropDownItem.Tag = cDev.Uuid;
-                                                copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
-
-                                                var copyTuningDropDownItem = new ToolStripMenuItem
-                                                {
-                                                    Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo
-                                                };
-                                                copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
-                                                copyTuningDropDownItem.Tag = cDev.Uuid;
-                                                copyTuningItem.DropDownItems.Add(copyTuningDropDownItem);
-
-                                                copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopySettings");
-                                                copyTuningItem.Text = International.GetText("DeviceListView_ContectMenu_CopyTuning");
-                                                contextMenuStrip1.Items.Add(copyBenchItem);
-                                                contextMenuStrip1.Items.Add(copyTuningItem);
                                             }
                                             else
                                             {
-                                                if (Form_Main.OverclockEnabled)
+                                                devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(cDev.Manufacturer) + " ", "");
+                                                if (!devInfo.Contains("NVIDIA")) devInfo = "NVIDIA " + devInfo;
+                                            }
+
+                                            GpuRam = (cDev.GpuRam / 1073741824).ToString() + "GB";
+                                            if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                                            {
+                                                if (devInfo.Contains(GpuRam))
                                                 {
-                                                    var copyOverclockDropDownItem = new ToolStripMenuItem
-                                                    {
-                                                        Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
-                                                    };
-                                                    copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
-                                                    copyOverclockDropDownItem.Tag = cDev.Uuid;
-                                                    copyOverClockItem.DropDownItems.Add(copyOverclockDropDownItem);
-                                                    copyOverClockItem.Text = International.GetText("DeviceListView_ContextMenu_CopyOverClock");
-                                                    contextMenuStrip1.Items.Add(copyOverClockItem);
+                                                    GpuRam = "";
                                                 }
+                                            }
+                                            else
+                                            {
+                                                devInfo = devInfo.Replace(GpuRam, "");
+                                                GpuRam = "";
+                                            }
+                                        }
+
+                                        if (cDev.DeviceType == DeviceType.AMD)
+                                        {
+                                            if (ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer)
+                                            {
+                                                if (!devInfo.Contains(ComputeDevice.GetManufacturer(cDev.Manufacturer)))
+                                                {
+                                                    Manufacturer = ComputeDevice.GetManufacturer(cDev.Manufacturer);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(cDev.Manufacturer) + " ", "");
+                                            }
+
+                                            GpuRam = (cDev.GpuRam / 1073741824).ToString() + "GB";
+                                            if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                                            {
+                                                if (devInfo.Contains(GpuRam))
+                                                {
+                                                    GpuRam = "";
+                                                }
+                                            }
+                                            else
+                                            {
+                                                devInfo = devInfo.Replace(GpuRam, "");
+                                                GpuRam = "";
+                                            }
+                                        }
+
+                                        if (!tName.Equals("tabPageOverClock"))
+                                        {
+                                            var copyBenchDropDownItem = new ToolStripMenuItem
+                                            {
+                                                Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
+                                                Checked = cDev.Uuid == cDevice.BenchmarkCopyUuid
+                                            };
+                                            copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
+                                            copyBenchDropDownItem.Tag = cDev.Uuid;
+                                            copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
+
+                                            var copyTuningDropDownItem = new ToolStripMenuItem
+                                            {
+                                                Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo
+                                            };
+                                            copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
+                                            copyTuningDropDownItem.Tag = cDev.Uuid;
+                                            copyTuningItem.DropDownItems.Add(copyTuningDropDownItem);
+
+                                            copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopySettings");
+                                            copyTuningItem.Text = International.GetText("DeviceListView_ContectMenu_CopyTuning");
+                                            contextMenuStrip1.Items.Add(copyBenchItem);
+                                            contextMenuStrip1.Items.Add(copyTuningItem);
+                                        }
+                                        else
+                                        {
+                                            if (Form_Main.OverclockEnabled)
+                                            {
+                                                var copyOverclockDropDownItem = new ToolStripMenuItem
+                                                {
+                                                    Text = (cDev.NameCount).ToString() + " " + Manufacturer + devInfo,
+                                                };
+                                                copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
+                                                copyOverclockDropDownItem.Tag = cDev.Uuid;
+                                                copyOverClockItem.DropDownItems.Add(copyOverclockDropDownItem);
+                                                copyOverClockItem.Text = International.GetText("DeviceListView_ContextMenu_CopyOverClock");
+                                                contextMenuStrip1.Items.Add(copyOverClockItem);
                                             }
                                         }
                                     }
-
                                 }
+
                             }
                         }
                     }
@@ -691,7 +697,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (justTuning)
                     {
-                        CDevice.TuningCopyUuid = uuid;
+                        CDevice.BenchmarkCopyUuid = uuid;
                         CDevice.CopyTuningSettingsFrom(copyBenchCDev);
                     }
                     else
@@ -886,11 +892,6 @@ namespace NiceHashMiner.Forms.Components
 
         }
 
-        private void DevicesListViewEnableControl_Leave(object sender, EventArgs e)
-        {
-            //            listViewDevices.Enabled = false;
-        }
-
         private void listViewDevices_SizeChanged(object sender, EventArgs e)
         {
             //   ResizeAutoSizeColumn(listViewDevices, 0);
@@ -906,6 +907,23 @@ namespace NiceHashMiner.Forms.Components
                 ConfigManager.GeneralConfig.ColumnLOAD = listViewDevices.Columns[LOAD].Width;
                 ConfigManager.GeneralConfig.ColumnFAN = listViewDevices.Columns[FAN].Width;
                 ConfigManager.GeneralConfig.ColumnPOWER = listViewDevices.Columns[POWER].Width;
+            }
+        }
+
+        private void listViewDevices_MouseHover(object sender, EventArgs e)
+        {
+            Control senderObject = sender as Control;
+            string hoveredControl = senderObject.TopLevelControl.Name;
+
+            if (!hoveredControl.Contains("Form_Main"))
+            {
+                ToolTip toolTip1 = new ToolTip();
+                toolTip1.AutoPopDelay = 5000;
+                toolTip1.InitialDelay = 1000;
+                toolTip1.ReshowDelay = 500;
+                // Force the ToolTip text to be displayed whether or not the form is active.
+                toolTip1.ShowAlways = true;
+                toolTip1.SetToolTip(this.listViewDevices, International.GetText("listViewDevices_ToolTip"));
             }
         }
     }

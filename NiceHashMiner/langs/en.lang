@@ -115,7 +115,7 @@
     "Form_DcriValues_ToolTip_TuningInterval": "The interval for dcri values to use for tuning",
     "Form_DcriValues_ToolTip_TuningEnabled": "If enabled, MLFF will benchmark through all listed dcri values and store the speeds.\nMLFF will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
     "AlgorithmsListView_ContextMenu_OpenDcri": "Tuning Settings",
-    "DeviceListView_ContectMenu_CopyTuning": "Copy tuning settings only",
+    "DeviceListView_ContectMenu_CopyTuning": "Copy algorithm speeds only",
 
 
         "Form_Loading_label_LoadingText": "Loading, please wait...",
@@ -540,6 +540,7 @@
 "MSIAB_Starting": "Starting MSI Afterburner",
 "MSIAB_Checking": "Checking MSI Afterburner",
 "MSIAB_Closing": "Closing MSI Afterburner",
+"listViewDevices_ToolTip": "Press right mouse button on\r\nselected GPU for advanced features",
 "FormSettings_By_profitability_of_all_devices": "By profitability of all devices",
 "Form_Settings_buttonLicence": "View licence"
     }

@@ -3,6 +3,7 @@ using NiceHashMiner.Interfaces;
 using NiceHashMiner.Utils;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -50,7 +51,6 @@ namespace NiceHashMiner
             SetInfoMsg(startInfoMsg);
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
-
         // download miners constructor
         MinersDownloader _minersDownloader = null;
         public Form_Loading(MinersDownloader minersDownloader)

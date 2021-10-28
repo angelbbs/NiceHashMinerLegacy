@@ -58,7 +58,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("trex_lhr-low-power", "-lhr-low-power", "--lhr-low-power", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.SingleParam),
-                    new MinerOption("trex-no-new-block-info", "--no-new-block-info", "--no-new-block-info", "", MinerOptionFlagType.SingleParam)
+                    new MinerOption("trex-no-new-block-info", "--no-new-block-info", "--no-new-block-info", "", MinerOptionFlagType.Uni)
                 },
                 new List<MinerOption>()
             ),

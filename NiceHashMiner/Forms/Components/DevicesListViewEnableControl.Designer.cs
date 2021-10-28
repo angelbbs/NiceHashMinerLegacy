@@ -65,6 +65,7 @@ namespace NiceHashMiner.Forms.Components {
             this.listViewDevices.SelectedIndexChanged += new System.EventHandler(this.listViewDevices_SelectedIndexChanged);
             this.listViewDevices.SizeChanged += new System.EventHandler(this.listViewDevices_SizeChanged);
             this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewDevices_MouseClick);
+            this.listViewDevices.MouseHover += new System.EventHandler(this.listViewDevices_MouseHover);
             // 
             // columnHeader0
             // 

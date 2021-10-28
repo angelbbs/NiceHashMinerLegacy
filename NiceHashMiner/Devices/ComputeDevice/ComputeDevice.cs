@@ -426,21 +426,15 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public void CopyTuningSettingsFrom(ComputeDevice copyTuningCDev)
+        public void CopyTuningSettingsFrom(ComputeDevice copyBenchCDev)
         {
-            foreach (var copyFromAlgo in copyTuningCDev.AlgorithmSettings.OfType<DualAlgorithm>())
+            foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
             {
-                if (GetAlgorithm(copyFromAlgo) is DualAlgorithm setAlgo)
+                var setAlgo = GetAlgorithm(copyFromAlgo);
+                if (setAlgo != null)
                 {
-                    setAlgo.IntensitySpeeds = new Dictionary<int, double>(copyFromAlgo.IntensitySpeeds);
-                    setAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>(copyFromAlgo.SecondaryIntensitySpeeds);
-                    setAlgo.TuningStart = copyFromAlgo.TuningStart;
-                    setAlgo.TuningEnd = copyFromAlgo.TuningEnd;
-                    setAlgo.TuningInterval = copyFromAlgo.TuningInterval;
-                    setAlgo.TuningEnabled = copyFromAlgo.TuningEnabled;
-                    setAlgo.IntensityPowers = new Dictionary<int, double>(copyFromAlgo.IntensityPowers);
-                    setAlgo.UseIntensityPowers = copyFromAlgo.UseIntensityPowers;
-                    setAlgo.IntensityUpToDate = false;
+                    setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
+                    setAlgo.BenchmarkSecondarySpeed = copyFromAlgo.BenchmarkSecondarySpeed;
                 }
             }
         }

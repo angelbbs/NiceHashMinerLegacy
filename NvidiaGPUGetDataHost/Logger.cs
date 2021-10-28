@@ -22,9 +22,9 @@ namespace NvidiaGPUGetDataHost
 
             try
             {
-                if (!Directory.Exists(@"..\\logs"))
+                if (!Directory.Exists(@"logs"))
                 {
-                    Directory.CreateDirectory(@"..\\logs");
+                    Directory.CreateDirectory(@"logs");
                 }
             }
             catch (Exception ex)
