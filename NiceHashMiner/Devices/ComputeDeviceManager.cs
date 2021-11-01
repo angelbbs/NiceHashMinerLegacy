@@ -732,6 +732,40 @@ namespace NiceHashMiner.Devices
                     return man;
                 }
 
+                public static bool CheckNvidiaLHR(string dev_)
+                {
+                    bool ret = true;
+                    switch (dev_)
+                    {
+                        case "2503": //GeForce RTX 3060 - GA106-300
+                            ret = false;
+                            break;
+
+                        case "2487": //GeForce RTX 3060 - GA104-???
+                            ret = false;
+                            break;
+
+                        case "2486": //GeForce RTX 3060 Ti - GA104-200
+                            ret = false;
+                            break;
+
+                        case "2484": //GeForce RTX 3070 - GA104-300
+                            ret = false;
+                            break;
+
+                        case "2206": //GeForce RTX 3080 - GA102-200
+                            ret = false;
+                            break;
+
+                        case "2208": //GeForce RTX 3080 Ti - GA102-???
+                            ret = false;
+                            break;
+
+                        default:
+                            break;
+                    }
+                    return ret;
+                }
                 private static void QueryVideoControllers(List<VideoControllerData> avaliableVideoControllers,
                     bool warningsEnabled)
                 {
@@ -759,11 +793,21 @@ namespace NiceHashMiner.Devices
                             Status = SafeGetProperty(manObj, "Status"),
                             InfSection = SafeGetProperty(manObj, "InfSection"),
                             VideoProcessor = SafeGetProperty(manObj, "VideoProcessor"),
-                            AdapterRam = memTmp
+                            AdapterRam = memTmp,
+                            NvidiaLHR = false
                         };
-
+                        //PCI\VEN_10DE&DEV_2504&SUBSYS_250410DE&REV_A1\4&12728395&0&00E2
+                        if (vidController.Name.Contains("RTX 3060") || vidController.Name.Contains("RTX 3070") ||
+                            vidController.Name.Contains("RTX 3080"))
+                        {
+                            vidController.NvidiaLHR = true;
+                            vidController.VEN_ = vidController.PnpDeviceID.Split('&')[0].Split('_')[1];
+                            vidController.DEV_ = vidController.PnpDeviceID.Split('&')[1].Split('_')[1];
+                            vidController.NvidiaLHR = CheckNvidiaLHR(vidController.DEV_);
+                        }
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
                         stringBuilder.AppendLine($"\t\tName {vidController.Name}");
+                        stringBuilder.AppendLine($"\t\tNVIDIA LHR? {vidController.NvidiaLHR}");
                         stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
                         stringBuilder.AppendLine($"\t\tVideoProcessor {vidController.VideoProcessor}");
                         stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)} ({vidController.Manufacturer})");

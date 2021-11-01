@@ -305,15 +305,16 @@ namespace NiceHashMiner.Algorithms
 
         public string BenchmarkSpeedString()
         {
+            if (!string.IsNullOrEmpty(BenchmarkStatus) && BenchmarkActive)
+            {
+                return BenchmarkStatus;
+            }
+
             if (BenchmarkSpeed > 0)
             {
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, NiceHashID);
             }
             //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
-            if (!string.IsNullOrEmpty(BenchmarkStatus) && BenchmarkActive)
-            {
-                return BenchmarkStatus;
-            }
             return International.GetText("BenchmarkSpeedStringNone");
         }
         public string SecondaryBenchmarkSpeedString()

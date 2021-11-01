@@ -26,7 +26,7 @@ namespace NiceHashMiner.Forms
         private static readonly Color BenchmarkedColor = Form_Main._backColor;
         private static readonly Color UnbenchmarkedColor = Color.LightBlue;
 
-        private AlgorithmBenchmarkSettingsType _algorithmOption =
+        public static AlgorithmBenchmarkSettingsType _algorithmOption =
             AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
 
         public static int _bechmarkCurrentIndex = 0;
@@ -752,8 +752,8 @@ namespace NiceHashMiner.Forms
 
                 BenchmarkStoppedGuiSettings();
                RunCMDAfterBenchmark();
-                // check if all ok
-                if (!_hasFailedAlgorithms && StartMining == false)
+               // check if all ok
+               if (!_hasFailedAlgorithms && StartMining == false)
                {
                    MessageBox.Show(
                        International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
@@ -773,18 +773,20 @@ namespace NiceHashMiner.Forms
                            International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
                            MessageBoxButtons.OK);
                    }
-                    /*
-                    if (result == DialogResult.Retry)
-                    {
-                        StartButonClick();
-                        return;
-                    }
-                    */
-                    // get unbenchmarked from criteria and disable
-                    CalcBenchmarkDevicesAlgorithmQueue();
+                   /*
+                   if (result == DialogResult.Retry)
+                   {
+                       StartButonClick();
+                       return;
+                   }
+                   */
+                   // get unbenchmarked from criteria and disable - это ошибка
+                   CalcBenchmarkDevicesAlgorithmQueue();
+                   /*
                    foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue)
                        foreach (var algorithm in deviceAlgoQueue.Item2)
                            algorithm.Enabled = false;
+                   */
                }
 
                if (ExitWhenFinished || StartMining) Close();
