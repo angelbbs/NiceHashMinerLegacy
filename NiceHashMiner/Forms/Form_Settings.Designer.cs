@@ -106,6 +106,7 @@ namespace NiceHashMiner.Forms
             this.radioButtonMOPA2 = new System.Windows.Forms.RadioButton();
             this.radioButtonMOPA1 = new System.Windows.Forms.RadioButton();
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
+            this.checkBox_withPower = new System.Windows.Forms.CheckBox();
             this.checkBox_By_profitability_of_all_devices = new System.Windows.Forms.CheckBox();
             this.label_switching_algorithms = new System.Windows.Forms.Label();
             this.comboBox_switching_algorithms = new System.Windows.Forms.ComboBox();
@@ -181,7 +182,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBox_withPower = new System.Windows.Forms.CheckBox();
+            this.checkBox_show_NVIDIA_LHR = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -1259,6 +1260,18 @@ namespace NiceHashMiner.Forms
             this.groupBox_Miners.TabStop = false;
             this.groupBox_Miners.Text = "Miners:";
             // 
+            // checkBox_withPower
+            // 
+            this.checkBox_withPower.AutoSize = true;
+            this.checkBox_withPower.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_withPower.Location = new System.Drawing.Point(307, 61);
+            this.checkBox_withPower.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_withPower.Name = "checkBox_withPower";
+            this.checkBox_withPower.Size = new System.Drawing.Size(216, 17);
+            this.checkBox_withPower.TabIndex = 406;
+            this.checkBox_withPower.Text = "Taking into account power consumption";
+            this.checkBox_withPower.UseVisualStyleBackColor = true;
+            // 
             // checkBox_By_profitability_of_all_devices
             // 
             this.checkBox_By_profitability_of_all_devices.AutoSize = true;
@@ -1339,6 +1352,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox_show_NVIDIA_LHR);
             this.groupBox1.Controls.Add(this.checkBoxCheckingCUDA);
             this.groupBox1.Controls.Add(this.checkBox_DisplayConnected);
             this.groupBox1.Controls.Add(this.checkBox_show_AMDdevice_manufacturer);
@@ -1374,12 +1388,12 @@ namespace NiceHashMiner.Forms
             // checkBoxCheckingCUDA
             // 
             this.checkBoxCheckingCUDA.AutoSize = true;
-            this.checkBoxCheckingCUDA.Location = new System.Drawing.Point(304, 187);
+            this.checkBoxCheckingCUDA.Location = new System.Drawing.Point(32, 203);
             this.checkBoxCheckingCUDA.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxCheckingCUDA.Name = "checkBoxCheckingCUDA";
-            this.checkBoxCheckingCUDA.Size = new System.Drawing.Size(221, 17);
+            this.checkBoxCheckingCUDA.Size = new System.Drawing.Size(227, 17);
             this.checkBoxCheckingCUDA.TabIndex = 417;
-            this.checkBoxCheckingCUDA.Text = "Checking CUDA GPU on program startup";
+            this.checkBoxCheckingCUDA.Text = "Checking NVIDIA GPU on program startup";
             this.checkBoxCheckingCUDA.UseVisualStyleBackColor = true;
             // 
             // checkBox_DisplayConnected
@@ -1494,9 +1508,9 @@ namespace NiceHashMiner.Forms
             this.checkBoxRestartDriver.Location = new System.Drawing.Point(304, 233);
             this.checkBoxRestartDriver.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartDriver.Name = "checkBoxRestartDriver";
-            this.checkBoxRestartDriver.Size = new System.Drawing.Size(206, 17);
+            this.checkBoxRestartDriver.Size = new System.Drawing.Size(212, 17);
             this.checkBoxRestartDriver.TabIndex = 408;
-            this.checkBoxRestartDriver.Text = "Restart driver when CUDA GPU is lost";
+            this.checkBoxRestartDriver.Text = "Restart driver when NVIDIA GPU is lost";
             this.checkBoxRestartDriver.UseVisualStyleBackColor = true;
             this.checkBoxRestartDriver.CheckedChanged += new System.EventHandler(this.checkBoxRestartDriver_CheckedChanged);
             // 
@@ -1506,9 +1520,9 @@ namespace NiceHashMiner.Forms
             this.checkBoxRestartWindows.Location = new System.Drawing.Point(304, 210);
             this.checkBoxRestartWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxRestartWindows.Name = "checkBoxRestartWindows";
-            this.checkBoxRestartWindows.Size = new System.Drawing.Size(224, 17);
+            this.checkBoxRestartWindows.Size = new System.Drawing.Size(230, 17);
             this.checkBoxRestartWindows.TabIndex = 397;
-            this.checkBoxRestartWindows.Text = "Restart Windows when CUDA GPU is lost";
+            this.checkBoxRestartWindows.Text = "Restart Windows when NVIDIA GPU is lost";
             this.checkBoxRestartWindows.UseVisualStyleBackColor = true;
             this.checkBoxRestartWindows.CheckedChanged += new System.EventHandler(this.checkBoxRestartWindows_CheckedChanged);
             // 
@@ -1527,7 +1541,7 @@ namespace NiceHashMiner.Forms
             // label_devices_count
             // 
             this.label_devices_count.AutoSize = true;
-            this.label_devices_count.Location = new System.Drawing.Point(301, 157);
+            this.label_devices_count.Location = new System.Drawing.Point(301, 181);
             this.label_devices_count.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_devices_count.Name = "label_devices_count";
             this.label_devices_count.Size = new System.Drawing.Size(107, 13);
@@ -1538,7 +1552,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBox_devices_count.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_devices_count.FormattingEnabled = true;
-            this.comboBox_devices_count.Location = new System.Drawing.Point(446, 154);
+            this.comboBox_devices_count.Location = new System.Drawing.Point(446, 178);
             this.comboBox_devices_count.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_devices_count.Name = "comboBox_devices_count";
             this.comboBox_devices_count.Size = new System.Drawing.Size(41, 21);
@@ -2204,17 +2218,17 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // checkBox_withPower
+            // checkBox_show_NVIDIA_LHR
             // 
-            this.checkBox_withPower.AutoSize = true;
-            this.checkBox_withPower.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_withPower.Location = new System.Drawing.Point(307, 61);
-            this.checkBox_withPower.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_withPower.Name = "checkBox_withPower";
-            this.checkBox_withPower.Size = new System.Drawing.Size(216, 17);
-            this.checkBox_withPower.TabIndex = 406;
-            this.checkBox_withPower.Text = "Taking into account power consumption";
-            this.checkBox_withPower.UseVisualStyleBackColor = true;
+            this.checkBox_show_NVIDIA_LHR.AutoSize = true;
+            this.checkBox_show_NVIDIA_LHR.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_show_NVIDIA_LHR.Location = new System.Drawing.Point(304, 157);
+            this.checkBox_show_NVIDIA_LHR.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_show_NVIDIA_LHR.Name = "checkBox_show_NVIDIA_LHR";
+            this.checkBox_show_NVIDIA_LHR.Size = new System.Drawing.Size(142, 17);
+            this.checkBox_show_NVIDIA_LHR.TabIndex = 418;
+            this.checkBox_show_NVIDIA_LHR.Text = "Show NVIDIA LHR label";
+            this.checkBox_show_NVIDIA_LHR.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -2458,5 +2472,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_DisplayConnected;
         private System.Windows.Forms.CheckBox checkBoxCheckingCUDA;
         private System.Windows.Forms.CheckBox checkBox_withPower;
+        private System.Windows.Forms.CheckBox checkBox_show_NVIDIA_LHR;
     }
 }

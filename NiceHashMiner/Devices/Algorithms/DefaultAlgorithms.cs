@@ -200,16 +200,16 @@ namespace NiceHashMiner.Devices.Algorithms
                  {
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
-
+                                ExtraLaunchParameters = "--mt 1 "
                             },
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW")
                             {
-
+                                ExtraLaunchParameters = "--mt 1 "
                             },
 
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
-
+                                ExtraLaunchParameters = "--mt 1 "
                             },
 
                  }

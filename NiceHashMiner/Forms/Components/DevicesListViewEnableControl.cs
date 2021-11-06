@@ -172,7 +172,12 @@ namespace NiceHashMiner.Forms.Components
                 {
                     devNum = "> " + devNum;//   > GPU
                 }
-                devInfo = computeDevice.Name;
+                string NvidiaLHR = "";
+                if (computeDevice.NvidiaLHR)
+                {
+                    NvidiaLHR = "(LHR)";
+                }
+                devInfo = computeDevice.Name + " " + NvidiaLHR;
 
                 if (ConfigManager.GeneralConfig.Additional_info_about_device && computeDevice.DeviceType != DeviceType.CPU &&
                     computeDevice.Uuid.Length >= 8)

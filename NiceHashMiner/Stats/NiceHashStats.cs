@@ -1163,6 +1163,14 @@ namespace NiceHashMiner.Stats
                     }
                     var deviceName = device.Name;
 
+                    string NvidiaLHR = "";
+                    if (device.NvidiaLHR)
+                    {
+                        NvidiaLHR = "(LHR)";
+                    }
+
+                    deviceName = deviceName + " " + NvidiaLHR;
+
                     string Manufacturer = "";
                     string GpuRam = "";
 

@@ -134,7 +134,7 @@ namespace NiceHashMiner.Devices
                 false,
                 DeviceType.CPU,
                 string.Format(International.GetText("ComputeDevice_Short_Name_CPU"), cpuCount),
-                0, "", monitorconnected)
+                0, "", monitorconnected, false)
         {
             group = "";
             Threads = threads;

@@ -626,7 +626,7 @@ namespace NiceHashMiner.Devices
 
             #region Helpers
 
-            private static readonly List<VideoControllerData> AvaliableVideoControllers =
+            public static readonly List<VideoControllerData> AvaliableVideoControllers =
                 new List<VideoControllerData>();
 
             public static class WindowsDisplayAdapters
@@ -1052,8 +1052,16 @@ namespace NiceHashMiner.Devices
 
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
-                            // check sm vesrions
-                            bool isUnderSM21;
+                            foreach (var vc in AvaliableVideoControllers)
+                            {
+                                if (vc.DeviceID.Replace("VideoController", "").Equals((cudaDev.DeviceID + 1).ToString()) &&
+                                    (vc.DEV_ + vc.VEN_).Equals(cudaDev.pciDeviceId.ToString("X")))
+                                {
+                                    cudaDev.NvidiaLHR = vc.NvidiaLHR;
+                                }
+                            }
+                                // check sm vesrions
+                                bool isUnderSM21;
                             {
                                 var isUnderSM2Major = cudaDev.SM_major < 2;
                                 var isUnderSM1Minor = cudaDev.SM_minor < 1;
@@ -1074,6 +1082,7 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine($"\t\tMANUFACTURER: {cudaDev.CUDAManufacturer} ({Manufacturer})");
                             stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
                             stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
+                            stringBuilder.AppendLine($"\t\tNvidiaLHR: {cudaDev.NvidiaLHR}");
                             stringBuilder.AppendLine($"\t\tMonitor: {cudaDev.HasMonitorConnected}");
                             stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
                             stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");

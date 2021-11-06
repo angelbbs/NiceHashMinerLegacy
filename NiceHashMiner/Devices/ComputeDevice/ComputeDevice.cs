@@ -54,6 +54,7 @@ namespace NiceHashMiner.Devices
         public ulong GpuRam;
         public bool IsEtherumCapale;
         public bool MonitorConnected;
+        public bool NvidiaLHR;
         /*
         public static readonly ulong Memory3Gb = 3221225472;
         public static readonly ulong Memory4Gb = 4293918720;
@@ -312,7 +313,7 @@ namespace NiceHashMiner.Devices
         //********************************************************************************************************************
         // Ambiguous constructor
         protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,
-            DeviceType type, string nameCount, ulong gpuRam, string manufacturer, bool monitorconnected)
+            DeviceType type, string nameCount, ulong gpuRam, string manufacturer, bool monitorconnected, bool nvidiaLHR)
         {
             ID = id;
             Name = name;
@@ -324,6 +325,7 @@ namespace NiceHashMiner.Devices
             GpuRam = gpuRam;
             Manufacturer = manufacturer;
             MonitorConnected = monitorconnected;
+            NvidiaLHR = nvidiaLHR;
         }
 
         // Fake dev

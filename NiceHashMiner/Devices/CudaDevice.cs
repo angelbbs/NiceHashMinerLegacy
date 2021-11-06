@@ -20,6 +20,7 @@ namespace NiceHashMiner.Devices
         public string CUDAManufacturer;
         public int HasMonitorConnected;
         public bool MonitorConnected;
+        public bool NvidiaLHR;
         public int SMX;
         public int SM_major;
         public int SM_minor;
