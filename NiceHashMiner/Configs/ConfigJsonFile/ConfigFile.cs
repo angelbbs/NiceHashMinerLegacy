@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Text;
 
 namespace NiceHashMiner.Configs.ConfigJsonFile
 {
@@ -85,7 +86,8 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             try
             {
-                File.WriteAllText(FilePath, JsonConvert.SerializeObject(file, Formatting.Indented));
+                //File.WriteAllText(FilePath, JsonConvert.SerializeObject(file, Formatting.Indented));
+                WriteAllTextWithBackup(FilePath, JsonConvert.SerializeObject(file, Formatting.Indented));
                 if (File.Exists(FilePathOld))
                     File.Delete(FilePathOld);
                 File.Copy(FilePath, FilePathOld, true);
@@ -94,6 +96,29 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             {
                 // Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
             }
+        }
+
+        public static void WriteAllTextWithBackup(string FilePath, string contents)
+        {
+            string path = FilePath;
+            var tempPath = FilePath + "tmp";
+
+            // create the backup name
+            var backup = path + ".backup";
+
+            // delete any existing backups
+            if (File.Exists(backup))
+                File.Delete(backup);
+
+            // get the bytes
+            var data = Encoding.ASCII.GetBytes(contents);
+
+            // write the data to a temp file
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                tempFile.Write(data, 0, data.Length);
+
+            // replace the contents
+            File.Replace(tempPath, path, backup);
         }
 
         public void CreateBackup()

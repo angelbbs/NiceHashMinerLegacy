@@ -428,7 +428,7 @@
 		"Form_Settings_label_restart_nv_lost": "Restart when NVIDIA GPU is lost:",
                 "Form_Settings_checkBox_show_NVdevice_manufacturer": "NVIDIA",
                 "Form_Settings_checkBox_show_NVIDIA_LHR": "Show NVIDIA LHR label",
-		"Form_Settings_checkBox_show_memory_temp": "Show GPU memory temperature if supported",
+		"Form_Settings_checkBox_show_memory_temp": "Show device memory temperature if supported",
                 "Form_Settings_checkBox_show_AMDdevice_manufacturer": "AMD",
                "Form_Settings_checkBox_show_device_memsize": "Show amount of device memory",
                 "Form_Settings_Checkbox_Save_windows_size_and_position": "Save windows size and position",

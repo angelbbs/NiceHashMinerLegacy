@@ -499,7 +499,7 @@
 		"Form_Settings_label_restart_nv_lost": "Перезапуск при потере NVIDIA GPU:",
                 "Form_Settings_checkBox_show_NVdevice_manufacturer": "NVIDIA",
                 "Form_Settings_checkBox_show_NVIDIA_LHR": "Показывать метку NVIDIA LHR",
-		"Form_Settings_checkBox_show_memory_temp": "Показывать температуру памяти GPU, если поддерживается",
+		"Form_Settings_checkBox_show_memory_temp": "Показывать температуру памяти устр., если поддерживается",
                 "Form_Settings_checkBox_show_AMDdevice_manufacturer": "AMD",
                 "Form_Settings_checkBox_show_device_memsize": "Показывать объем памяти устройств",
              "Form_Settings_checkBox_show_device_busId": "Показывать номер шины(busID) устройств",
