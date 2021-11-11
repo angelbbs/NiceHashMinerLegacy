@@ -252,6 +252,7 @@ namespace NiceHashMiner.Forms.Components
                         miner = alg.MinerBaseTypeName;
                         secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
                         totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
+                        payingRatio = alg.CurPayingRatio + "/" + alg.CurSecondPayingRatio;
                     }
                     else
                     {
@@ -563,7 +564,16 @@ namespace NiceHashMiner.Forms.Components
                             // TODO handle numbers
                             if (algo != null)
                             {
-                                lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                                //lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                                if (algo is DualAlgorithm dualAlgo && !algo.BenchmarkSpeedString().Contains("%"))
+                                {
+                                    lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() + "/" + dualAlgo.SecondaryBenchmarkSpeedString();
+                                }
+                                else
+                                {
+                                    lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                                }
+
                             }
 
                             double.TryParse(algorithm.CurPayingRate, out var valueRate);
@@ -846,6 +856,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                         algorithm.BenchmarkSpeed = 0;
                         algorithm.BenchmarkSecondarySpeed = 0;
                         algorithm.PowerUsage = 0;
+                        algorithm.CurrentProfit = 0;
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
                             dualAlgo.BenchmarkSecondarySpeed = 0;
@@ -881,6 +892,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                             dualAlgo.BenchmarkSecondarySpeed = 0;
                         }
                         algorithm.PowerUsage = 0;
+                        algorithm.CurrentProfit = 0;
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
 

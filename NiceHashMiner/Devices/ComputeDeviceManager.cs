@@ -46,7 +46,7 @@ namespace NiceHashMiner.Devices
         //костыль, когда у nvidia порядок карт deviceID не совпадает с порядком busID (1230 - 0123)
         public static List<ComputeDevice> ReSortDevices(List<ComputeDevice> computeDevices)
         {
-            //separate 
+            //separate
             List<ComputeDevice> _computeDevices = computeDevices;
             List<ComputeDevice> _computeDevicesCPU = new List<ComputeDevice>();
             List<ComputeDevice> _computeDevicesAMD = new List<ComputeDevice>();
@@ -742,7 +742,7 @@ namespace NiceHashMiner.Devices
                             break;
 
                         case "2487": //GeForce RTX 3060 - GA104-???
-                            ret = false;
+                            ret = true;
                             break;
 
                         case "2486": //GeForce RTX 3060 Ti - GA104-200

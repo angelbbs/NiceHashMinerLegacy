@@ -82,13 +82,15 @@ namespace ATI.ADL
     /// <returns>return ADL Error Code</returns>
     internal delegate int ADL_Display_DisplayInfo_Get(int adapterIndex, ref int numDisplays, out IntPtr displayInfoArray, int forceDetect);
 
-    internal delegate int ADL_Overdrive5_CurrentActivity_Get(int iAdapterIndex, ref ADLPMActivity activity);
+    internal delegate int ADL_Overdrive5_CurrentActivity_Get(int adapterIndex, ref ADLPMActivity activity);
 
     internal delegate int ADL_Overdrive5_Temperature_Get(int adapterIndex, int thermalControllerIndex, ref ADLTemperature temperature);
 
     internal delegate int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue temperature);
 
-    internal delegate int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int iAdapterIndex, int iPowerType, ref int lpCurrentValue);
+    internal delegate int ADL2_OverdriveN_Temperature_Get(IntPtr context, int adapterIndex, ADLODNTemperatureType temperatureType, ref int temperature);
+
+    internal delegate int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int adapterIndex, int iPowerType, ref int lpCurrentValue);
 
     #endregion Export Delegates
 
@@ -228,6 +230,201 @@ namespace ATI.ADL
         public int Flags;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLFanSpeedInfo
+    {
+        public int Size;
+        public int Flags;
+        public int MinPercent;
+        public int MaxPercent;
+        public int MinRPM;
+        public int MaxRPM;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLSingleSensorData
+    {
+        public bool Supported;
+        public int Value;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLODParameterRange
+    {
+        public int Min;
+        public int Max;
+        public int Step;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLODParameters
+    {
+        public int Size;
+        public int NumberOfPerformanceLevels;
+        public int ActivityReportingSupported;
+        public int DiscretePerformanceLevels;
+        public int Reserved;
+        public ADLODParameterRange EngineClock;
+        public ADLODParameterRange MemoryClock;
+        public ADLODParameterRange Vddc;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLODNPerformanceStatus
+    {
+        public int CoreClock;
+        public int MemoryClock;
+        public int DCEFClock;
+        public int GFXClock;
+        public int UVDClock;
+        public int VCEClock;
+        public int GPUActivityPercent;
+        public int CurrentCorePerformanceLevel;
+        public int CurrentMemoryPerformanceLevel;
+        public int CurrentDCEFPerformanceLevel;
+        public int CurrentGFXPerformanceLevel;
+        public int UVDPerformanceLevel;
+        public int VCEPerformanceLevel;
+        public int CurrentBusSpeed;
+        public int CurrentBusLanes;
+        public int MaximumBusLanes;
+        public int VDDC;
+        public int VDDCI;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLVersionsInfo
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string DriverVersion;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string CatalystVersion;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string CatalystWebLink;
+    }
+
+    internal enum ADLODNCurrentPowerType
+    {
+        TOTAL_POWER = 0,
+        PPT_POWER,
+        SOCKET_POWER,
+        CHIP_POWER,
+    }
+
+    internal enum ADLODNTemperatureType
+    {
+        CORE = 1,
+        MEMORY = 2,
+        VRM_CORE = 3,
+        VRM_MEMORY = 4,
+        LIQUID = 5,
+        PLX = 6,
+        HOTSPOT = 7,
+    }
+
+    internal enum ADLStatus : int
+    {
+        /// <summary>
+        /// All OK, but need to wait.
+        /// </summary>  
+        OK_WAIT = 4,
+
+        /// <summary>
+        /// All OK, but need restart.
+        /// </summary>  
+        OK_RESTART = 3,
+
+        /// <summary>
+        /// All OK but need mode change.
+        /// </summary>
+        OK_MODE_CHANGE = 2,
+
+        /// <summary>
+        /// All OK, but with warning.
+        /// </summary>
+        OK_WARNING = 1,
+
+        /// <summary>
+        /// ADL function completed successfully.
+        /// </summary>
+        OK = 0,
+
+        /// <summary>
+        /// Generic Error. Most likely one or more of the Escape calls to the driver 
+        /// failed!
+        /// </summary>
+        ERR = -1,
+
+        /// <summary>
+        /// ADL not initialized.
+        /// </summary>
+        ERR_NOT_INIT = -2,
+
+        /// <summary>
+        /// One of the parameter passed is invalid.
+        /// </summary>
+        ERR_INVALID_PARAM = -3,
+
+        /// <summary>
+        /// One of the parameter size is invalid.
+        /// </summary>
+        ERR_INVALID_PARAM_SIZE = -4,
+
+        /// <summary>
+        /// Invalid ADL index passed.
+        /// </summary>
+        ERR_INVALID_ADL_IDX = -5,
+
+        /// <summary>
+        /// Invalid controller index passed.
+        /// </summary>
+        ERR_INVALID_CONTROLLER_IDX = -6,
+
+        /// <summary>
+        /// Invalid display index passed.
+        /// </summary>
+        ERR_INVALID_DIPLAY_IDX = -7,
+
+        /// <summary>
+        /// Function not supported by the driver.
+        /// </summary>
+        ERR_NOT_SUPPORTED = -8,
+
+        /// <summary>
+        /// Null Pointer error.
+        /// </summary>
+        ERR_NULL_POINTER = -9,
+
+        /// <summary>
+        /// Call can't be made due to disabled adapter.
+        /// </summary>
+        ERR_DISABLED_ADAPTER = -10,
+
+        /// <summary>
+        /// Invalid Callback.
+        /// </summary>
+        ERR_INVALID_CALLBACK = -11,
+
+        /// <summary>
+        /// Display Resource conflict.
+        /// </summary>
+        ERR_RESOURCE_CONFLICT = -12,
+
+        /// <summary>
+        /// Failed to update some of the values. Can be returned by set request that 
+        /// include multiple values if not all values were successfully committed.
+        /// </summary>
+        ERR_SET_INCOMPLETE = -20,
+
+        /// <summary>
+        /// There's no Linux XDisplay in Linux Console environment. 
+        /// </summary>
+        ERR_NO_XDISPLAY = -21
+    }
+
+
     #endregion Export Struct
 
     #region ADL Class
@@ -259,6 +456,11 @@ namespace ATI.ADL
 
         internal const int ADL_DL_FANCTRL_SPEED_TYPE_PERCENT = 1;
         internal const int ADL_DL_FANCTRL_SPEED_TYPE_RPM = 2;
+        public const int ADL_DL_FANCTRL_SUPPORTS_PERCENT_READ = 1;
+        public const int ADL_DL_FANCTRL_SUPPORTS_PERCENT_WRITE = 2;
+        public const int ADL_DL_FANCTRL_SUPPORTS_RPM_READ = 4;
+        public const int ADL_DL_FANCTRL_SUPPORTS_RPM_WRITE = 8;
+        public const int ADL_DL_FANCTRL_FLAG_USER_DEFINED_SPEED = 1;
         #endregion Internal Constant
 
         #region Class ADLImport
@@ -316,10 +518,13 @@ namespace ATI.ADL
             internal static extern int ADL_Overdrive5_Temperature_Get(int adapterIndex, int thermalControllerIndex, ref ADLTemperature temperature);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_OverdriveN_Temperature_Get(IntPtr context, int adapterIndex, ADLODNTemperatureType temperatureType, ref int temperature);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue fanSpeedValue);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
-            internal static extern int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int iAdapterIndex, int iPowerType, ref int lpCurrentValue);
+            internal static extern int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int adapterIndex, int iPowerType, ref int lpCurrentValue);
 
             #endregion DLLImport
         }
@@ -661,6 +866,27 @@ namespace ATI.ADL
         }
         private static ADL_Overdrive5_Temperature_Get ADL_Overdrive5_Temperature_Get_ = null;
         private static bool ADL_Overdrive5_Temperature_Get_Check = false;
+
+        internal static ADL2_OverdriveN_Temperature_Get ADL2_OverdriveN_Temperature_Get
+        {
+            get
+            {
+                if (!ADL2_OverdriveN_Temperature_Get_Check && null == ADL2_OverdriveN_Temperature_Get_)
+                {
+                    ADL2_OverdriveN_Temperature_Get_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL2_OverdriveN_Temperature_Get"))
+                    {
+                        ADL2_OverdriveN_Temperature_Get_ = ADLImport.ADL2_OverdriveN_Temperature_Get;
+                    }
+                }
+
+                return ADL2_OverdriveN_Temperature_Get_;
+            }
+        }
+
+        private static ADL2_OverdriveN_Temperature_Get ADL2_OverdriveN_Temperature_Get_ = null;
+        private static bool ADL2_OverdriveN_Temperature_Get_Check = false;
+
 
         internal static ADL_Overdrive5_FanSpeed_Get ADL_Overdrive5_FanSpeed_Get
         {

@@ -162,6 +162,7 @@ namespace NiceHashMiner
             public uint fan;
             public uint load;
             public uint temp;
+            public uint tempMem;
         }
         public Form_Main()
         {
@@ -2811,9 +2812,8 @@ public static void CloseChilds(Process parentId)
             uint _fan = 0u;
             uint _load = 0u;
             uint _temp = 0u;
-            //Helpers.ConsolePrint("GetNVMLData", "*********");
-            int size = Marshal.SizeOf(_dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_temp);
-
+            uint _tempMem = 0u;
+            int size = Marshal.SizeOf(_dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_temp) + Marshal.SizeOf(_tempMem);
             try
             {
                 MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("NvidiaGPUGetDataHost");
@@ -2821,10 +2821,10 @@ public static void CloseChilds(Process parentId)
                 {
                     devCount = reader.ReadUInt32(0);
                 }
+                //Helpers.ConsolePrint("******************", "devCount: " + devCount.ToString());
                 NvData d = new NvData();
                 ComputeDeviceManager.CudaDevicesCountFromNVMLHost = (int)devCount;
                 gpuList.Clear();
-
                 for (int dev = 0; dev < devCount; dev++)
                 {
                     using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, size * devCount + Marshal.SizeOf(devCount), MemoryMappedFileAccess.Read))
@@ -2834,14 +2834,19 @@ public static void CloseChilds(Process parentId)
                         _fan = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power));
                         _load = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan));
                         _temp = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load));
-                        //Helpers.ConsolePrint("GetNVMLData", "dev: " + dev.ToString() + " _dev: " + _dev.ToString() +
-                        //" _power: " + _power.ToString() + " _fan: " + _fan.ToString() + " _load: " + _load.ToString() +
-                        //" _temp: " + _temp.ToString());
+                        _tempMem = reader.ReadUInt32(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_temp));
+                        /*
+                        Helpers.ConsolePrint("GetNVMLData", "dev: " + dev.ToString() + " _dev: " + _dev.ToString() +
+                        " _power: " + _power.ToString() + " _fan: " + _fan.ToString() + " _load: " + _load.ToString() +
+                        " _temp: " + _temp.ToString() +
+                        " _tempMem: " + _tempMem.ToString());
+                        */
                         d.nGpu = _dev;
                         d.power = _power;
                         d.fan = _fan;
                         d.load = _load;
                         d.temp = _temp;
+                        d.tempMem = _tempMem;
                         gpuList.Add(d);
                     }
                 }

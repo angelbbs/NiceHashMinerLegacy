@@ -312,7 +312,13 @@ namespace ManagedCuda.Nvml
         /// <summary>
         /// Temperature sensor for the GPU die
         /// </summary>
-        Gpu = 0
+        Gpu = 0,
+        Mem = 1,
+        Board = 2,
+        VR1 = 3,
+        VR2 = 4,
+        VR3 = 5,
+        VR4 = 6
     }
 
     /// <summary>

@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
+using static NVIDIA.NVAPI.NVAPI;
 
 namespace NiceHashMiner.Devices
 {
@@ -79,6 +81,41 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public override float TempMemory
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
+
+                var tempMem = -1;
+                var nvHandle = GetNvPhysicalGpuHandle();
+                if (!nvHandle.HasValue)
+                {
+                    Helpers.ConsolePrint("NVAPI", $"TempMemory nvHandle == null", TimeSpan.FromMinutes(5));
+                    return -1;
+                }
+
+                try
+                {
+                    foreach (var d in Form_Main.gpuList)
+                    {
+                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                        {
+                            return d.tempMem;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("NVML", e.ToString());
+                }
+                return tempMem;
+            }
+        }
+
         private NvPhysicalGpuHandle? _NvPhysicalGpuHandle;
         private NvPhysicalGpuHandle? GetNvPhysicalGpuHandle()
         {
@@ -132,7 +169,6 @@ namespace NiceHashMiner.Devices
                 {
                     return -1;
                 }
-
 
                 var fan = -1;
 
@@ -189,11 +225,6 @@ namespace NiceHashMiner.Devices
                             fanSpeed = (int)CurrentRpm;
                         }
                     }
-                    /*
-                    Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
-                    Helpers.ConsolePrint("NVAPI", "_nvHandle: " + nvHandle.Value.ToString());
-                    Helpers.ConsolePrint("NVAPI", "fanSpeed: " + fanSpeed.ToString());
-                    */
                     if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                     {
                         // GPUs without fans are not uncommon, so don't treat as error and just return -1
@@ -243,11 +274,9 @@ namespace NiceHashMiner.Devices
                     }
                 } 
                 return fanSpeed;
-
             }
-
-
         }
+
         private NvFanCoolersStatus GetFanCoolersStatus()
         {
             var coolers = new NvFanCoolersStatus();
@@ -284,20 +313,6 @@ namespace NiceHashMiner.Devices
                     return -1;
                 }
                 int power = -1;
-
-                //if (ComputeDeviceManager.Query._currentNvidiaSmiDriver.IsLesserVersionThan(ComputeDeviceManager.Query.LastGoodNvidiaCuda111Driver))
-                //{
-                //}
-                /*
-                try
-                {
-                    var p = Process.GetProcessesByName("NvidiaGPUGetDataHost");
-                }
-                catch (Exception ex)
-                {
-                    GC.Collect();
-                }
-                */
 
                 try
                 {

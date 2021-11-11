@@ -162,11 +162,78 @@ namespace NiceHashMiner.Devices
                                 {
                                     foreach (var sensor in hardware.Sensors)
                                     {
-                                        if (sensor.SensorType == SensorType.Temperature)
+                                        if (sensor.SensorType == SensorType.Temperature && sensor.Name == "GPU Core")
                                         {
                                             if ((int)sensor.Value > 0)
                                             {
                                                 return (int)sensor.Value;
+                                            }
+                                            else return -1;
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception er)
+                    {
+                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
+                    }
+                }
+                return -1;
+            }
+        }
+
+        public override float TempMemory
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                {
+                    return -1;
+                }
+                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    var temperature = -1;
+                    if (_adlContext != IntPtr.Zero && ADL.ADL2_OverdriveN_Temperature_Get != null)
+                    {
+                        var result = ADL.ADL2_OverdriveN_Temperature_Get(_adlContext, _adapterIndex2, ADLODNTemperatureType.MEMORY, ref temperature);
+                        if (result == ADL.ADL_SUCCESS)
+                        {
+                            if (temperature > 1000)
+                            {
+                                return -2; //not supported
+                            }
+                            else
+                            {
+                                return temperature;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
+                    try
+                    {
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        {
+                            //hardware.Update();
+                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            {
+                                //hardware.Update();
+                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                if (gpuId == _adapterIndex)
+                                {
+                                    foreach (var sensor in hardware.Sensors)
+                                    {
+                                        if (sensor.SensorType == SensorType.Temperature && sensor.Name == "GPU Memory")
+                                        {
+                                            //Helpers.ConsolePrint("***********mem", sensor.Value.ToString());
+                                            if (sensor.Value > 0 && sensor.Value < 1)
+                                            {
+                                                return (int)(sensor.Value * 1000);
                                             }
                                             else return -1;
                                         }

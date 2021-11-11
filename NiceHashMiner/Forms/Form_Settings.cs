@@ -314,6 +314,15 @@ namespace NiceHashMiner.Forms
             checkBoxCheckingCUDA.Text = International.GetText("Form_Settings_checkBox_CheckingCUDA");
             checkBoxRestartDriver.Text = International.GetText("Form_Settings_checkBox_RestartDriver");
             checkBoxRestartWindows.Text = International.GetText("Form_Settings_checkBox_RestartWindows");
+            if(ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+            {
+                checkBox_show_NVdevice_manufacturer.Location = new Point(checkBox_show_NVdevice_manufacturer.Location.X + 74, checkBox_show_NVdevice_manufacturer.Location.Y); ;
+                checkBox_show_AMDdevice_manufacturer.Location = new Point(checkBox_show_AMDdevice_manufacturer.Location.X + 74, checkBox_show_AMDdevice_manufacturer.Location.Y);
+
+                checkBoxRestartDriver.Location = new Point(checkBoxRestartDriver.Location.X + 26, checkBoxRestartDriver.Location.Y);
+                checkBoxRestartWindows.Location = new Point(checkBoxRestartWindows.Location.X + 26, checkBoxRestartWindows.Location.Y);
+            }
+
             checkBoxDriverWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
 
             checkBoxAutoupdate.Text = International.GetText("Form_Settings_checkBoxAutoupdate");
@@ -432,6 +441,9 @@ namespace NiceHashMiner.Forms
 
             checkBox_show_NVdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_NVdevice_manufacturer");
             checkBox_show_NVIDIA_LHR.Text = International.GetText("Form_Settings_checkBox_show_NVIDIA_LHR");
+            checkBox_Show_memory_temp.Text = International.GetText("Form_Settings_checkBox_show_memory_temp");
+            label_show_manufacturer.Text = International.GetText("Form_Settings_label_show_manufacturer");
+            label_restart_nv_lost.Text = International.GetText("Form_Settings_label_restart_nv_lost");
             checkBox_show_AMDdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_AMDdevice_manufacturer");
             checkBox_ShowDeviceMemSize.Text = International.GetText("Form_Settings_checkBox_show_device_memsize");
             //checkBox_ShowDeviceBusId.Text = International.GetText("Form_Settings_checkBox_show_device_busId");
@@ -778,6 +790,11 @@ namespace NiceHashMiner.Forms
                 checkBox_show_NVdevice_manufacturer.ForeColor = Form_Main._textColor;
                 checkBox_show_NVIDIA_LHR.BackColor = Form_Main._backColor;
                 checkBox_show_NVIDIA_LHR.ForeColor = Form_Main._textColor;
+                label_show_manufacturer.BackColor = Form_Main._backColor;
+                label_show_manufacturer.ForeColor = Form_Main._textColor;
+
+                checkBox_Show_memory_temp.BackColor = Form_Main._backColor;
+                checkBox_Show_memory_temp.ForeColor = Form_Main._textColor;
                 checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
                 checkBox_show_AMDdevice_manufacturer.ForeColor = Form_Main._textColor;
 
@@ -964,6 +981,7 @@ namespace NiceHashMiner.Forms
                 checkBox_DisplayConnected.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVIDIA_LHR.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_Show_memory_temp.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_AMDdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowDeviceMemSize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 //checkBox_ShowDeviceBusId.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1072,6 +1090,7 @@ namespace NiceHashMiner.Forms
                 checkBox_DisplayConnected.Checked = ConfigManager.GeneralConfig.Show_displayConected;
                 checkBox_show_NVdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_NVdevice_manufacturer;
                 checkBox_show_NVIDIA_LHR.Checked = ConfigManager.GeneralConfig.Show_NVIDIA_LHR;
+                checkBox_Show_memory_temp.Checked = ConfigManager.GeneralConfig.Show_memory_temperature;
                 checkBox_show_AMDdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer;
                 checkBox_ShowDeviceMemSize.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceMemSize;
                 //checkBox_ShowDeviceBusId.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceBusId;
@@ -1235,6 +1254,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Show_displayConected = checkBox_DisplayConnected.Checked;
             ConfigManager.GeneralConfig.Show_NVdevice_manufacturer = checkBox_show_NVdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_NVIDIA_LHR = checkBox_show_NVIDIA_LHR.Checked;
+            ConfigManager.GeneralConfig.Show_memory_temperature = checkBox_Show_memory_temp.Checked;
             ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer = checkBox_show_AMDdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;
             //ConfigManager.GeneralConfig.Show_ShowDeviceBusId = checkBox_ShowDeviceBusId.Checked;
