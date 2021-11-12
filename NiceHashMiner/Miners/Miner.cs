@@ -374,7 +374,7 @@ namespace NiceHashMiner
         {
             //new Task(() => Form_Main.checkD()).Start();
             var toRemovePidData = new List<MinerPidData>();
-            Helpers.ConsolePrint(MinerTag(), "Trying to kill all miner processes for this instance:");
+            Helpers.ConsolePrint(MinerTag(), "Trying to close all miner processes for this instance:");
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             string strPlatform = "";
             foreach (var pair in MiningSetup.MiningPairs)
@@ -403,7 +403,7 @@ namespace NiceHashMiner
                     var process = Process.GetProcessById(pidData.Pid);
                     if (pidData.MinerBinPath.Contains(process.ProcessName))
                     {
-                        Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
+                        Helpers.ConsolePrint(MinerTag(), $"Trying to close {ProcessTag(pidData)}");
                         try
                         {
                             if (Form_Main.DivertAvailable)
@@ -412,21 +412,22 @@ namespace NiceHashMiner
                                     (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun,
                                     MinerDeviceName, strPlatform);
                             }
-                            process.Kill();
+                            process.CloseMainWindow();
+                            //process.Kill();
                             process.Close();
                             process.WaitForExit(1000 * 20);
                         }
                         catch (Exception e)
                         {
                             Helpers.ConsolePrint(MinerTag(),
-                                $"Exception killing {ProcessTag(pidData)}, exMsg {e.Message}");
+                                $"Exception closing {ProcessTag(pidData)}, exMsg {e.Message}");
                         }
                     }
                 }
                 catch (Exception e)
                 {
                     toRemovePidData.Add(pidData);
-                    Helpers.ConsolePrint(MinerTag(), $"Nothing to kill {ProcessTag(pidData)}, exMsg {e.Message}");
+                    Helpers.ConsolePrint(MinerTag(), $"Nothing to close {ProcessTag(pidData)}, exMsg {e.Message}");
                 }
             }
 
@@ -577,17 +578,24 @@ namespace NiceHashMiner
                         Helpers.ConsolePrint("Stop_cpu_ccminer_sgminer_nheqminer error: ", e.ToString());
                     }
                 }
-                if (MinerTag().Contains("Phoenix"))
+                //if (MinerTag().Contains("Phoenix") || MinerTag().Contains("trex"))
                 {
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + " SendCtrlC to stop miner");
                     try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
                     Thread.Sleep(1000);
                 }
                 KillProcessAndChildren(pid);
 
-                if (ProcessHandle != null)
+                try
                 {
-                    try { ProcessHandle.Kill(); }
-                    catch { }
+                    if (ProcessHandle != null && Process.GetProcessById(pid) != null)
+                    {
+                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Try force kill miner");
+                        ProcessHandle.Kill(); 
+                    }
+                } catch
+                {
+
                 }
                 //try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
                 if (ProcessHandle != null)
@@ -946,18 +954,33 @@ namespace NiceHashMiner
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try
                 {
-                    Helpers.ConsolePrint("BENCHMARK-end",
-                        $"Trying to kill benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName}");
-                    BenchmarkHandle.Kill();
-                    BenchmarkHandle.Close();
-                    KillAllUsedMinerProcesses();
+                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " SendCtrlC to stop miner");
+                        try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
+                        Thread.Sleep(1000);
+
+                    try
+                    {
+                        int pid = _currentPidData.Pid;
+                        if (BenchmarkHandle != null && Process.GetProcessById(pid) != null)
+                        {
+                            Helpers.ConsolePrint("BENCHMARK-end",
+    $"Trying to kill benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName}");
+                            BenchmarkHandle.Kill();
+                            BenchmarkHandle.Close();
+                            KillAllUsedMinerProcesses();
+                        }
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 catch { }
                 finally
                 {
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
                     Helpers.ConsolePrint("BENCHMARK-end",
-                        $"Benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName} KILLED");
+                        $"Benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName} CLOSED");
                     //BenchmarkHandle = null;
                 }
             }

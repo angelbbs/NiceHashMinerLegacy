@@ -143,7 +143,11 @@ namespace NiceHashMiner.Miners
         {
             foreach (var process in Process.GetProcessesByName(exeName))
             {
-                try { process.Kill(); }
+                try 
+                {
+                    Thread.Sleep(1000);
+                    process.Kill();
+                }
                 catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
             }
         }

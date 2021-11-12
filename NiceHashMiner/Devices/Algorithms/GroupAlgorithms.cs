@@ -312,6 +312,12 @@ namespace NiceHashMiner.Devices.Algorithms
                         algo.Enabled = false;
                         algo.Hidden = true;
                     }
+                    if (algo.DualNiceHashID == AlgorithmType.DaggerAutolykos && device.DeviceType == DeviceType.NVIDIA &&
+                        device.Name.Contains("GTX"))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
                     if (algo.DualNiceHashID == AlgorithmType.DaggerKAWPOW && device.DeviceType == DeviceType.NVIDIA &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 9.4))
                     {

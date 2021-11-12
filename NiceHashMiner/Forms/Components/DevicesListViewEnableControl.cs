@@ -639,8 +639,8 @@ namespace NiceHashMiner.Forms.Components
                                                 GpuRam = "";
                                             }
                                         }
-
-                                        if (!tName.Equals("tabPageOverClock"))
+                                        
+                                        if (!tName.Equals("tabPageOverClock") || hoveredControl.Contains("Form_Benchmark"))
                                         {
                                             var copyBenchDropDownItem = new ToolStripMenuItem
                                             {
