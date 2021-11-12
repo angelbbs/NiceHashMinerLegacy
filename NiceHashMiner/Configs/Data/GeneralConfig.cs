@@ -13,6 +13,7 @@ namespace NiceHashMiner.Configs.Data
         public double ForkFixVersion;
         public string NHMVersion = "3.0.6.5";
         public bool DecreasePowerCost = false;
+        public bool ShowTotalPower = false;
         public bool FiatCurrency = false;
         public bool NoShowApiInLog;
         public bool NoForceTRexClose;

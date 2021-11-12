@@ -937,6 +937,7 @@ namespace NiceHashMiner.Forms.Components
                 toolTip1.ReshowDelay = 500;
                 // Force the ToolTip text to be displayed whether or not the form is active.
                 toolTip1.ShowAlways = true;
+                toolTip1.IsBalloon = true;
                 toolTip1.SetToolTip(this.listViewDevices, International.GetText("listViewDevices_ToolTip"));
             }
         }

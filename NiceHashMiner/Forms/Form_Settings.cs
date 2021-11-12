@@ -460,6 +460,7 @@ namespace NiceHashMiner.Forms
             checkBox_Force_mining_if_nonprofitable.Text = International.GetText("Form_Settings_checkBox_Force_mining_if_nonprofitable");
             checkbox_current_actual_profitabilities.Text = International.GetText("Form_Main_Checkbox_current_actual_profitabilities");
             checkBox_Show_profit_with_power_consumption.Text = International.GetText("Form_Settings_checkBox_Show_profit_with_power_consumption");
+            checkBox_Show_Total_Power.Text = International.GetText("Form_Settings_checkBox_Show_Total_Power");
             checkBox_fiat.Text = International.GetText("Form_Settings_checkBox_fiat");
             checkBox_AlwaysOnTop.Text = International.GetText("Form_Settings_checkBox_AlwaysOnTop");
             label_psu.Text = International.GetText("Form_Settings_label_psu");
@@ -773,6 +774,8 @@ namespace NiceHashMiner.Forms
 
                 checkBox_Show_profit_with_power_consumption.BackColor = Form_Main._backColor;
                 checkBox_Show_profit_with_power_consumption.ForeColor = Form_Main._textColor;
+                checkBox_Show_Total_Power.BackColor = Form_Main._backColor;
+                checkBox_Show_Total_Power.ForeColor = Form_Main._textColor;
 
                 checkBox_Allow_remote_management.BackColor = Form_Main._backColor;
                 checkBox_Allow_remote_management.ForeColor = Form_Main._textColor;
@@ -977,6 +980,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_current_actual_profitabilities.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_Show_Total_Power.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisplayConnected.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1085,6 +1089,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
                 checkbox_current_actual_profitabilities.Checked = ConfigManager.GeneralConfig.Show_current_actual_profitability;
                 checkBox_Show_profit_with_power_consumption.Checked = ConfigManager.GeneralConfig.DecreasePowerCost;
+                checkBox_Show_Total_Power.Checked = ConfigManager.GeneralConfig.ShowTotalPower;
                 checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 checkBox_DisplayConnected.Checked = ConfigManager.GeneralConfig.Show_displayConected;
@@ -1248,7 +1253,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
             ConfigManager.GeneralConfig.Show_current_actual_profitability = checkbox_current_actual_profitabilities.Checked;
-            ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
+            ConfigManager.GeneralConfig.ShowTotalPower = checkBox_Show_Total_Power.Checked;
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
             ConfigManager.GeneralConfig.Show_displayConected = checkBox_DisplayConnected.Checked;

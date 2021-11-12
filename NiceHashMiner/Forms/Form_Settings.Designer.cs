@@ -115,6 +115,9 @@ namespace NiceHashMiner.Forms
             this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.checkbox_Group_same_devices = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_Show_memory_temp = new System.Windows.Forms.CheckBox();
+            this.label_restart_nv_lost = new System.Windows.Forms.Label();
+            this.label_show_manufacturer = new System.Windows.Forms.Label();
             this.checkBox_show_NVIDIA_LHR = new System.Windows.Forms.CheckBox();
             this.checkBoxCheckingCUDA = new System.Windows.Forms.CheckBox();
             this.checkBox_DisplayConnected = new System.Windows.Forms.CheckBox();
@@ -177,15 +180,13 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.label_show_manufacturer = new System.Windows.Forms.Label();
-            this.label_restart_nv_lost = new System.Windows.Forms.Label();
-            this.checkBox_Show_memory_temp = new System.Windows.Forms.CheckBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
             this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
+            this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -332,11 +333,11 @@ namespace NiceHashMiner.Forms
             this.groupBox_Idle.Controls.Add(this.label_MinIdleSeconds);
             this.groupBox_Idle.Controls.Add(this.pictureBox_MinIdleSeconds);
             this.groupBox_Idle.Controls.Add(this.textBox_MinIdleSeconds);
-            this.groupBox_Idle.Location = new System.Drawing.Point(6, 363);
+            this.groupBox_Idle.Location = new System.Drawing.Point(6, 379);
             this.groupBox_Idle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Idle.Name = "groupBox_Idle";
             this.groupBox_Idle.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Idle.Size = new System.Drawing.Size(365, 70);
+            this.groupBox_Idle.Size = new System.Drawing.Size(365, 54);
             this.groupBox_Idle.TabIndex = 392;
             this.groupBox_Idle.TabStop = false;
             this.groupBox_Idle.Text = "Idle:";
@@ -355,7 +356,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_StartMiningWhenIdle
             // 
             this.pictureBox_StartMiningWhenIdle.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_StartMiningWhenIdle.Location = new System.Drawing.Point(171, 18);
+            this.pictureBox_StartMiningWhenIdle.Location = new System.Drawing.Point(141, 19);
             this.pictureBox_StartMiningWhenIdle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_StartMiningWhenIdle.Name = "pictureBox_StartMiningWhenIdle";
             this.pictureBox_StartMiningWhenIdle.Size = new System.Drawing.Size(18, 18);
@@ -366,7 +367,7 @@ namespace NiceHashMiner.Forms
             // label_MinIdleSeconds
             // 
             this.label_MinIdleSeconds.AutoSize = true;
-            this.label_MinIdleSeconds.Location = new System.Drawing.Point(3, 41);
+            this.label_MinIdleSeconds.Location = new System.Drawing.Point(175, 20);
             this.label_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_MinIdleSeconds.Name = "label_MinIdleSeconds";
             this.label_MinIdleSeconds.Size = new System.Drawing.Size(86, 13);
@@ -377,7 +378,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_MinIdleSeconds
             // 
             this.pictureBox_MinIdleSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinIdleSeconds.Location = new System.Drawing.Point(171, 38);
+            this.pictureBox_MinIdleSeconds.Location = new System.Drawing.Point(335, 18);
             this.pictureBox_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinIdleSeconds.Name = "pictureBox_MinIdleSeconds";
             this.pictureBox_MinIdleSeconds.Size = new System.Drawing.Size(18, 18);
@@ -388,7 +389,7 @@ namespace NiceHashMiner.Forms
             // 
             // textBox_MinIdleSeconds
             // 
-            this.textBox_MinIdleSeconds.Location = new System.Drawing.Point(146, 38);
+            this.textBox_MinIdleSeconds.Location = new System.Drawing.Point(310, 16);
             this.textBox_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_MinIdleSeconds.Name = "textBox_MinIdleSeconds";
             this.textBox_MinIdleSeconds.Size = new System.Drawing.Size(21, 20);
@@ -397,6 +398,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.checkBox_Show_Total_Power);
             this.groupBox_Main.Controls.Add(this.checkbox_current_actual_profitabilities);
             this.groupBox_Main.Controls.Add(this.textBoxAddAMD);
             this.groupBox_Main.Controls.Add(this.labelAddAMD);
@@ -420,7 +422,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(365, 216);
+            this.groupBox_Main.Size = new System.Drawing.Size(365, 257);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
@@ -429,7 +431,7 @@ namespace NiceHashMiner.Forms
             // checkbox_current_actual_profitabilities
             // 
             this.checkbox_current_actual_profitabilities.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkbox_current_actual_profitabilities.Location = new System.Drawing.Point(6, 192);
+            this.checkbox_current_actual_profitabilities.Location = new System.Drawing.Point(6, 224);
             this.checkbox_current_actual_profitabilities.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkbox_current_actual_profitabilities.Name = "checkbox_current_actual_profitabilities";
             this.checkbox_current_actual_profitabilities.Size = new System.Drawing.Size(318, 18);
@@ -458,7 +460,7 @@ namespace NiceHashMiner.Forms
             // checkBox_fiat
             // 
             this.checkBox_fiat.AutoSize = true;
-            this.checkBox_fiat.Location = new System.Drawing.Point(6, 149);
+            this.checkBox_fiat.Location = new System.Drawing.Point(6, 181);
             this.checkBox_fiat.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_fiat.Name = "checkBox_fiat";
             this.checkBox_fiat.Size = new System.Drawing.Size(239, 17);
@@ -508,7 +510,7 @@ namespace NiceHashMiner.Forms
             // checkBox_Show_profit_with_power_consumption
             // 
             this.checkBox_Show_profit_with_power_consumption.AutoSize = true;
-            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(6, 126);
+            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(6, 158);
             this.checkBox_Show_profit_with_power_consumption.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Show_profit_with_power_consumption.Name = "checkBox_Show_profit_with_power_consumption";
             this.checkBox_Show_profit_with_power_consumption.Size = new System.Drawing.Size(196, 17);
@@ -520,7 +522,7 @@ namespace NiceHashMiner.Forms
             // checkBox_Force_mining_if_nonprofitable
             // 
             this.checkBox_Force_mining_if_nonprofitable.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Force_mining_if_nonprofitable.Location = new System.Drawing.Point(6, 172);
+            this.checkBox_Force_mining_if_nonprofitable.Location = new System.Drawing.Point(6, 202);
             this.checkBox_Force_mining_if_nonprofitable.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Force_mining_if_nonprofitable.Name = "checkBox_Force_mining_if_nonprofitable";
             this.checkBox_Force_mining_if_nonprofitable.Size = new System.Drawing.Size(318, 18);
@@ -556,9 +558,9 @@ namespace NiceHashMiner.Forms
             this.label_ElectricityCost.Location = new System.Drawing.Point(6, 48);
             this.label_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ElectricityCost.Name = "label_ElectricityCost";
-            this.label_ElectricityCost.Size = new System.Drawing.Size(112, 13);
+            this.label_ElectricityCost.Size = new System.Drawing.Size(105, 13);
             this.label_ElectricityCost.TabIndex = 374;
-            this.label_ElectricityCost.Text = "Electricity Cost (KWh):";
+            this.label_ElectricityCost.Text = "Electricity Cost (kW):";
             this.label_ElectricityCost.Click += new System.EventHandler(this.label_ElectricityCost_Click_1);
             // 
             // pictureBox_TimeUnit
@@ -974,11 +976,11 @@ namespace NiceHashMiner.Forms
             this.groupBox_Logging.Controls.Add(this.textBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.checkBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
-            this.groupBox_Logging.Location = new System.Drawing.Point(6, 304);
+            this.groupBox_Logging.Location = new System.Drawing.Point(6, 328);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Logging.Size = new System.Drawing.Size(365, 53);
+            this.groupBox_Logging.Size = new System.Drawing.Size(365, 45);
             this.groupBox_Logging.TabIndex = 388;
             this.groupBox_Logging.TabStop = false;
             this.groupBox_Logging.Text = "Logging:";
@@ -1033,11 +1035,11 @@ namespace NiceHashMiner.Forms
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(6, 228);
+            this.groupBox_Localization.Location = new System.Drawing.Point(6, 269);
             this.groupBox_Localization.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Localization.Size = new System.Drawing.Size(365, 70);
+            this.groupBox_Localization.Size = new System.Drawing.Size(365, 53);
             this.groupBox_Localization.TabIndex = 385;
             this.groupBox_Localization.TabStop = false;
             this.groupBox_Localization.Text = "Localization:";
@@ -1390,6 +1392,36 @@ namespace NiceHashMiner.Forms
             this.groupBox1.TabIndex = 394;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
+            // 
+            // checkBox_Show_memory_temp
+            // 
+            this.checkBox_Show_memory_temp.AutoSize = true;
+            this.checkBox_Show_memory_temp.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_Show_memory_temp.Location = new System.Drawing.Point(304, 65);
+            this.checkBox_Show_memory_temp.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_Show_memory_temp.Name = "checkBox_Show_memory_temp";
+            this.checkBox_Show_memory_temp.Size = new System.Drawing.Size(244, 17);
+            this.checkBox_Show_memory_temp.TabIndex = 421;
+            this.checkBox_Show_memory_temp.Text = "Show device memory temperature if supported";
+            this.checkBox_Show_memory_temp.UseVisualStyleBackColor = true;
+            // 
+            // label_restart_nv_lost
+            // 
+            this.label_restart_nv_lost.AutoSize = true;
+            this.label_restart_nv_lost.Location = new System.Drawing.Point(301, 204);
+            this.label_restart_nv_lost.Name = "label_restart_nv_lost";
+            this.label_restart_nv_lost.Size = new System.Drawing.Size(167, 13);
+            this.label_restart_nv_lost.TabIndex = 420;
+            this.label_restart_nv_lost.Text = "Restart when NVIDIA GPU is lost:";
+            // 
+            // label_show_manufacturer
+            // 
+            this.label_show_manufacturer.AutoSize = true;
+            this.label_show_manufacturer.Location = new System.Drawing.Point(301, 20);
+            this.label_show_manufacturer.Name = "label_show_manufacturer";
+            this.label_show_manufacturer.Size = new System.Drawing.Size(137, 13);
+            this.label_show_manufacturer.TabIndex = 419;
+            this.label_show_manufacturer.Text = "Show device manufacturer:";
             // 
             // checkBox_show_NVIDIA_LHR
             // 
@@ -2153,36 +2185,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // label_show_manufacturer
-            // 
-            this.label_show_manufacturer.AutoSize = true;
-            this.label_show_manufacturer.Location = new System.Drawing.Point(301, 20);
-            this.label_show_manufacturer.Name = "label_show_manufacturer";
-            this.label_show_manufacturer.Size = new System.Drawing.Size(137, 13);
-            this.label_show_manufacturer.TabIndex = 419;
-            this.label_show_manufacturer.Text = "Show device manufacturer:";
-            // 
-            // label_restart_nv_lost
-            // 
-            this.label_restart_nv_lost.AutoSize = true;
-            this.label_restart_nv_lost.Location = new System.Drawing.Point(301, 204);
-            this.label_restart_nv_lost.Name = "label_restart_nv_lost";
-            this.label_restart_nv_lost.Size = new System.Drawing.Size(167, 13);
-            this.label_restart_nv_lost.TabIndex = 420;
-            this.label_restart_nv_lost.Text = "Restart when NVIDIA GPU is lost:";
-            // 
-            // checkBox_Show_memory_temp
-            // 
-            this.checkBox_Show_memory_temp.AutoSize = true;
-            this.checkBox_Show_memory_temp.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Show_memory_temp.Location = new System.Drawing.Point(304, 65);
-            this.checkBox_Show_memory_temp.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_Show_memory_temp.Name = "checkBox_Show_memory_temp";
-            this.checkBox_Show_memory_temp.Size = new System.Drawing.Size(244, 17);
-            this.checkBox_Show_memory_temp.TabIndex = 421;
-            this.checkBox_Show_memory_temp.Text = "Show device memory temperature if supported";
-            this.checkBox_Show_memory_temp.UseVisualStyleBackColor = true;
-            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2265,6 +2267,17 @@ namespace NiceHashMiner.Forms
             this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
             this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
+            // 
+            // checkBox_Show_Total_Power
+            // 
+            this.checkBox_Show_Total_Power.AutoSize = true;
+            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(6, 135);
+            this.checkBox_Show_Total_Power.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_Show_Total_Power.Name = "checkBox_Show_Total_Power";
+            this.checkBox_Show_Total_Power.Size = new System.Drawing.Size(220, 17);
+            this.checkBox_Show_Total_Power.TabIndex = 386;
+            this.checkBox_Show_Total_Power.Text = "Show total power consumption for uptime";
+            this.checkBox_Show_Total_Power.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -2512,5 +2525,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_Show_memory_temp;
         private System.Windows.Forms.Label label_restart_nv_lost;
         private System.Windows.Forms.Label label_show_manufacturer;
+        private System.Windows.Forms.CheckBox checkBox_Show_Total_Power;
     }
 }

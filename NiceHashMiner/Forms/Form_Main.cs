@@ -139,6 +139,8 @@ namespace NiceHashMiner
         public static Form_Settings settings;// = new Form_Settings();
         public static double totalPowerRate = 0.0d;
         public static double totalPowerRateFiat = 0.0d;
+        public static double TotalPowerConsumption;
+        public static double TotalBTC;
 
         public struct RigProfitList
         {
@@ -431,8 +433,17 @@ namespace NiceHashMiner
             toolStripStatusLabel_power1.Text = International.GetText("Form_Main_Power1");
             toolStripStatusLabel_power2.Text = "-";
             toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
-
-
+            if (ConfigManager.GeneralConfig.ShowTotalPower)
+            {
+                toolStripStatusLabel_power4.Text = International.GetText("Form_Main_Power4");
+                toolStripStatusLabel_power5.Text = "-";
+                toolStripStatusLabel_power6.Text = International.GetText("Form_Main_Power6");
+            } else
+            {
+                toolStripStatusLabel_power4.Text = "";
+                toolStripStatusLabel_power5.Text = "";
+                toolStripStatusLabel_power6.Text = "";
+            }
             devicesListViewEnableControl1.InitLocaleMain();
 
             buttonBenchmark.Text = International.GetText("Form_Main_benchmark");
@@ -1248,6 +1259,9 @@ namespace NiceHashMiner
             Process currentProc = Process.GetCurrentProcess();
             double bytesInUse = currentProc.PrivateMemorySize64;
             Helpers.ConsolePrint("MEMORY", "Mem used: " + Math.Round(bytesInUse / 1048576, 2).ToString() + "MB");
+
+            Helpers.ConsolePrint("POWER", "TotalPowerConsumption: " + TotalPowerConsumption.ToString("F0") + "W");
+            Helpers.ConsolePrint("POWER", "TotalPowerConsumptionCost: " + (TotalPowerConsumption * 0.001 * ConfigManager.GeneralConfig.KwhPrice).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
@@ -1706,7 +1720,7 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("AddRateInfo", ex.ToString());
             }
             //new Task(() => UpdateGlobalRate()).Start();
-            UpdateGlobalRate();
+            //UpdateGlobalRate();
         }
 
         public void ShowNotProfitable(string msg)
@@ -1870,6 +1884,19 @@ public static void CloseChilds(Process parentId)
                 toolStripStatusLabel_power2.Text = totalPower.ToString();
                 toolStripStatusLabel_power3.Text = International.GetText("Form_Main_Power3");
 
+                TotalPowerConsumption = TotalPowerConsumption + totalPower / 3600;
+                TotalBTC = TotalBTC + totalRate / 24 / _factorTimeUnit / 3600;//_factorTimeUnit
+                /*
+                toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi.ConvertToActiveCurrency(
+                    (totalRate - totalPowerRateDec) * ExchangeRateApi.GetUsdExchangeRate())
+                    .ToString("F2", CultureInfo.InvariantCulture);
+                */
+                if (ConfigManager.GeneralConfig.ShowTotalPower)
+                {
+                    toolStripStatusLabel_power4.Text = International.GetText("Form_Main_Power4");
+                    toolStripStatusLabel_power5.Text = (TotalPowerConsumption / 1000).ToString("F1");
+                    toolStripStatusLabel_power6.Text = International.GetText("Form_Main_Power6");
+                }
             }
             catch (ArgumentOutOfRangeException e)
             {
@@ -2767,20 +2794,9 @@ public static void CloseChilds(Process parentId)
                     CheckDagger4GB();
                 }
                 DeviceStatusTimer_FirstTick = true;
-                /*
-                new Task(() => ExchangeCallback()).Start();
-                Thread.Sleep(10);
-                new Task(() => UpdateGlobalRate()).Start();
-                Thread.Sleep(10);
-                */
-
                 ExchangeCallback(null, null);
-
-                //Thread.Sleep(10);
                 UpdateGlobalRate();
-                //new Task(() => UpdateGlobalRate()).Start();
-                //Thread.Sleep(10);
-                //new Task(() => BalanceCallback()).Start();
+
                 GetNVMLData();
 
                 if (needRestart)
@@ -2946,13 +2962,7 @@ public static void CloseChilds(Process parentId)
                 labelDemoMode.Visible = false;
             }
 
-            UpdateGlobalRate();
-            //new Task(() => UpdateGlobalRate()).Start();
-            //toolStripStatusLabel_power1.Text = "";
-            //toolStripStatusLabel_power2.Text = "";
-            //toolStripStatusLabel_power3.Text = "";
-            //devicesListViewEnableControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
-            //devicesListViewEnableControl1.Update();
+            //UpdateGlobalRate();
         }
 
         private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
@@ -3187,6 +3197,30 @@ public static void CloseChilds(Process parentId)
         private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void toolStripStatusLabel_power4_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statusStrip1_MouseHover(object sender, EventArgs e)
+        {
+            string ctooltip = "";
+            ctooltip = International.GetText("Form_Main_TotalLocalProfit") + ExchangeRateApi.ConvertToActiveCurrency(TotalBTC * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
+            ctooltip += "\r\n";
+            if (ConfigManager.GeneralConfig.ShowTotalPower)
+            {
+                ctooltip += string.Format(International.GetText("Form_Main_TotalPowerConsumptionCost"), (TotalPowerConsumption * 0.001 * ConfigManager.GeneralConfig.KwhPrice).ToString("F2"), ExchangeRateApi.ActiveDisplayCurrency);
+                ctooltip += "\r\n";
+            }
+            ToolTip toolTip1 = new ToolTip();
+            toolTip1.AutoPopDelay = 5000;
+            toolTip1.InitialDelay = 1000;
+            toolTip1.ReshowDelay = 500;
+            toolTip1.ShowAlways = true;
+            toolTip1.IsBalloon = true;
+            toolTip1.SetToolTip(this.statusStrip1, ctooltip);
         }
     }
 }

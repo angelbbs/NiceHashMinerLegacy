@@ -45,6 +45,9 @@ namespace NiceHashMiner
             this.toolStripStatusLabel_power1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_power2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_power3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_power4 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_power5 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_power6 = new System.Windows.Forms.ToolStripStatusLabel();
             this.linkLabelCheckStats = new System.Windows.Forms.LinkLabel();
             this.labelWorkerName = new System.Windows.Forms.Label();
             this.textBoxWorkerName = new System.Windows.Forms.TextBox();
@@ -126,13 +129,17 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceDollarValue,
             this.toolStripStatusLabel_power1,
             this.toolStripStatusLabel_power2,
-            this.toolStripStatusLabel_power3});
+            this.toolStripStatusLabel_power3,
+            this.toolStripStatusLabel_power4,
+            this.toolStripStatusLabel_power5,
+            this.toolStripStatusLabel_power6});
             this.statusStrip1.Location = new System.Drawing.Point(0, 293);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(754, 22);
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip1_ItemClicked);
+            this.statusStrip1.MouseHover += new System.EventHandler(this.statusStrip1_MouseHover);
             // 
             // toolStripStatusLabelGlobalRateText
             // 
@@ -210,8 +217,28 @@ namespace NiceHashMiner
             // toolStripStatusLabel_power3
             // 
             this.toolStripStatusLabel_power3.Name = "toolStripStatusLabel_power3";
-            this.toolStripStatusLabel_power3.Size = new System.Drawing.Size(18, 17);
-            this.toolStripStatusLabel_power3.Text = "W";
+            this.toolStripStatusLabel_power3.Size = new System.Drawing.Size(28, 17);
+            this.toolStripStatusLabel_power3.Text = "W.h";
+            // 
+            // toolStripStatusLabel_power4
+            // 
+            this.toolStripStatusLabel_power4.Name = "toolStripStatusLabel_power4";
+            this.toolStripStatusLabel_power4.Size = new System.Drawing.Size(41, 17);
+            this.toolStripStatusLabel_power4.Text = ", Total:";
+            this.toolStripStatusLabel_power4.MouseHover += new System.EventHandler(this.toolStripStatusLabel_power4_MouseHover);
+            // 
+            // toolStripStatusLabel_power5
+            // 
+            this.toolStripStatusLabel_power5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.toolStripStatusLabel_power5.Name = "toolStripStatusLabel_power5";
+            this.toolStripStatusLabel_power5.Size = new System.Drawing.Size(14, 17);
+            this.toolStripStatusLabel_power5.Text = "0";
+            // 
+            // toolStripStatusLabel_power6
+            // 
+            this.toolStripStatusLabel_power6.Name = "toolStripStatusLabel_power6";
+            this.toolStripStatusLabel_power6.Size = new System.Drawing.Size(18, 17);
+            this.toolStripStatusLabel_power6.Text = "W";
             // 
             // linkLabelCheckStats
             // 
@@ -538,6 +565,9 @@ namespace NiceHashMiner
         public System.Windows.Forms.TextBox textBoxWorkerName;
         private System.Windows.Forms.Label label_Uptime;
         public System.Windows.Forms.Button buttonLogo;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power4;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power5;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power6;
     }
 }
 
