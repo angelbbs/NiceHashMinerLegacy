@@ -149,6 +149,7 @@
 
 
     "Form_Settings_General_DebugConsole": "Окно отладки",
+    "FormSettings_changePowerCost": "Пожалуйста, измените стоимость электроэнергии в зависимости от выбранной валюты",
     "Form_Settings_General_AutoStartMining": "Автозапуск майнинга",
     "Form_Settings_General_HideMiningWindows": "Спрятать окна майнинга",
     "Form_Settings_General_MinimizeToTray": "Свернуть в трей",
@@ -324,7 +325,7 @@
     "Form_Main_Power5": "",
     "Form_Main_Power6": "кВт",
     "Form_Main_TotalPowerConsumptionCost": "Всего затрачено на эл.энергию {0} {1}",
-    "Form_Main_TotalLocalProfit": "Всего локальная прибыль ~",
+    "Form_Main_TotalLocalProfit": "Всего локальная прибыль ",
     "FormBenchmark_Benchmark_Step": "Шаг бенчмарка ( {0} / {1} )",
     "FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg": "Все тесты были удачными",
     "FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg": "Не все тесты прошли удачно. Попробуйте перезапустить бенчмарк для алгоритмов, непрошедших его, либо Отмените для отключения этих алгоритмов.",

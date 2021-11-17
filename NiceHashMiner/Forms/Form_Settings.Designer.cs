@@ -38,6 +38,7 @@ namespace NiceHashMiner.Forms
             this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
             this.checkbox_current_actual_profitabilities = new System.Windows.Forms.CheckBox();
             this.textBoxAddAMD = new System.Windows.Forms.TextBox();
             this.labelAddAMD = new System.Windows.Forms.Label();
@@ -186,7 +187,6 @@ namespace NiceHashMiner.Forms
             this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
             this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
-            this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Idle.SuspendLayout();
@@ -427,6 +427,17 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
             this.groupBox_Main.Enter += new System.EventHandler(this.groupBox_Main_Enter);
+            // 
+            // checkBox_Show_Total_Power
+            // 
+            this.checkBox_Show_Total_Power.AutoSize = true;
+            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(6, 135);
+            this.checkBox_Show_Total_Power.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_Show_Total_Power.Name = "checkBox_Show_Total_Power";
+            this.checkBox_Show_Total_Power.Size = new System.Drawing.Size(220, 17);
+            this.checkBox_Show_Total_Power.TabIndex = 386;
+            this.checkBox_Show_Total_Power.Text = "Show total power consumption for uptime";
+            this.checkBox_Show_Total_Power.UseVisualStyleBackColor = true;
             // 
             // checkbox_current_actual_profitabilities
             // 
@@ -1144,7 +1155,7 @@ namespace NiceHashMiner.Forms
             this.currencyConverterCombobox.Sorted = true;
             this.currencyConverterCombobox.TabIndex = 381;
             this.currencyConverterCombobox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.currencyConverterCombobox_DrawItem);
-            this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.CurrencyConverterCombobox_SelectedIndexChanged);
+            this.currencyConverterCombobox.SelectionChangeCommitted += new System.EventHandler(this.currencyConverterCombobox_SelectionChangeCommitted);
             // 
             // label_displayCurrency
             // 
@@ -2267,17 +2278,6 @@ namespace NiceHashMiner.Forms
             this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
             this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
-            // 
-            // checkBox_Show_Total_Power
-            // 
-            this.checkBox_Show_Total_Power.AutoSize = true;
-            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(6, 135);
-            this.checkBox_Show_Total_Power.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_Show_Total_Power.Name = "checkBox_Show_Total_Power";
-            this.checkBox_Show_Total_Power.Size = new System.Drawing.Size(220, 17);
-            this.checkBox_Show_Total_Power.TabIndex = 386;
-            this.checkBox_Show_Total_Power.Text = "Show total power consumption for uptime";
-            this.checkBox_Show_Total_Power.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 

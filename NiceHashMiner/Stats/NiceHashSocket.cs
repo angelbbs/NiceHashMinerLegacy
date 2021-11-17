@@ -3,6 +3,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.UUID;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
@@ -58,14 +59,6 @@ namespace NiceHashMiner.Stats
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
 
-            // TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
-            _login.rig = ApplicationStateManager.RigID;
-
-            if (btc != null) _login.btc = btc;
-            if (worker != null) _login.worker = worker;
-            if (group != null) _login.group = group;
-#endif
             try
             {
                 if (_webSocket == null)
@@ -149,15 +142,6 @@ namespace NiceHashMiner.Stats
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
         public bool SendDataNew(string data, bool recurs = false)
         {
-            //TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
-            // skip sending if no btc set send only login
-            if (CredentialValidators.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
-            {
-                NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Skipping SendData no BTC address");
-                return false;
-            }
-#endif
             try
             {
                 // Make sure connection is open
@@ -171,7 +155,6 @@ namespace NiceHashMiner.Stats
                 {
                     _webSocket = null; //force
                     StartConnectionNew();
-
                 }
                 else
                 {
@@ -402,6 +385,30 @@ namespace NiceHashMiner.Stats
                 return t.Task;
             });
         }
+
+        public static void DropPort(int processId, uint port)
+        {
+            ProcessStartInfo cports;
+
+            cports = new ProcessStartInfo("utils/cports-x64/cports.exe");
+            cports.Arguments = "/close * * * " + port.ToString() + " " + processId.ToString();
+            cports.UseShellExecute = false;
+            cports.RedirectStandardError = false;
+            cports.RedirectStandardOutput = false;
+            cports.CreateNoWindow = true;
+            cports.WindowStyle = ProcessWindowStyle.Hidden;
+
+            try
+            {
+                Process.Start(cports);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("DropPort", ex.Message);
+            }
+            Helpers.ConsolePrint("DropPort", "Drop port " + port.ToString() + " completed");
+        }
+
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
         // public bool SendData(string data, bool recurs = false)
         public async Task<bool> SendData(string data, bool recurs = false)
@@ -425,20 +432,10 @@ namespace NiceHashMiner.Stats
                 else if (_webSocket != null)
                 {
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
+                    DropPort(Process.GetCurrentProcess().Id, 443);
+                    Thread.Sleep(1000);
                     _webSocket = null;
                     StartConnectionNew();
-                    /*
-                  //  if (AttemptReconnect() && !recurs)
-                    if (AttemptReconnect())
-                    {
-                        // Reconnect was successful, send data again (safety to prevent recursion overload)
-                        //SendData(data, true);
-                        await SendData(data, true);
-                    } else
-                    {
-                        Helpers.ConsolePrint("SOCKET", "Socket connection unsuccessfull, will try again on next device update (1min)");
-                    }
-                    */
                 }
                 else
                 {
@@ -456,6 +453,8 @@ namespace NiceHashMiner.Stats
             catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
+                DropPort(Process.GetCurrentProcess().Id, 443);
+                Thread.Sleep(1000);
             }
             return false;
         }
@@ -474,23 +473,10 @@ namespace NiceHashMiner.Stats
                 // no reconnect needed
                 return true;
             }
-
-            //   return false;
-            /*
-            _attemptReconnect = new Timer();
-            _attemptReconnect.Tick += attemptReconnect_Tick;
-            _attemptReconnect.Interval = 10000;
-
-            _attemptReconnect.Start();
-            */
-
-            //  _attemptReconnect = new System.Threading.Timer(DeviceStatus_TickNew, null, DeviceUpdateInterval, DeviceUpdateInterval);
             return false;
         }
         private async void attemptReconnect_Tick()
         {
-            //_attemptReconnect.Stop();
-            //_attemptReconnect = null;
             _attemptingReconnect = true;
             var sleep = _connectionEstablished ? 10 + _random.Next(0, 5) : 1;
             Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep + " seconds");

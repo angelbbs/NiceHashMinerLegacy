@@ -149,6 +149,7 @@
 
 
         "Form_Settings_General_DebugConsole": "Debug Console",
+	"FormSettings_changePowerCost": "Please change the cost of electricity depending on the selected currency",
         "Form_Settings_General_AutoStartMining": "Autostart Mining",
         "Form_Settings_General_HideMiningWindows": "Hide Mining Windows",
         "Form_Settings_General_MinimizeToTray": "Minimize To Tray",
@@ -327,7 +328,7 @@
 	"Form_Main_Power5": "",
 	"Form_Main_Power6": "kW",
 	"Form_Main_TotalPowerConsumptionCost": "Total spent on electric energy {0} {1}",
-	"Form_Main_TotalLocalProfit": "Total local profit ~",
+	"Form_Main_TotalLocalProfit": "Total local profit ",
         "FormBenchmark_Benchmark_Step": "Benchmark step ( {0} / {1} )",
         "FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg": "All benchmarks have been successful",
         "FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg": "Not all benchmarks finished successfully. Retry to re-run the benchmark process against unbenchmarked algos or Cancel to disable unbenchmarked algorithms.",

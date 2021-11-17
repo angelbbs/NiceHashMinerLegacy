@@ -2569,5 +2569,13 @@ namespace NiceHashMiner.Forms
         {
             Process.Start("Help\\How to use MSI Afterburner for overclocking.avi");
         }
+
+        private void currencyConverterCombobox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.KwhPrice > 0)
+            {
+                MessageBox.Show(International.GetText("FormSettings_changePowerCost"), "Next");
+            }
+        }
     }
 }
