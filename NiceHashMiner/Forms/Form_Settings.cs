@@ -329,6 +329,8 @@ namespace NiceHashMiner.Forms
             checkBox_BackupBeforeUpdate.Text = International.GetText("Form_Settings_checkBox_backup_before_update");
             checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
             checkBox_ABMinimize.Text = International.GetText("FormSettings_AB_Minimize");
+            checkBox_ABDefault_mining_stopped.Text = International.GetText("FormSettings_ABDefault_mining_stopped");
+            checkBox_ABDefault_program_closing.Text = International.GetText("FormSettings_ABDefault_program_closing");
             linkLabel3.Text = International.GetText("FormSettings_AB_HowToUse");
             labelCheckforprogramupdatesevery.Text = International.GetText("Form_Settings_labelCheckforprogramupdatesevery");
 
@@ -842,6 +844,10 @@ namespace NiceHashMiner.Forms
 
                 checkBox_ABEnableOverclock.BackColor = Form_Main._backColor;
                 checkBox_ABEnableOverclock.ForeColor = Form_Main._textColor;
+                checkBox_ABDefault_mining_stopped.BackColor = Form_Main._backColor;
+                checkBox_ABDefault_mining_stopped.ForeColor = Form_Main._textColor;
+                checkBox_ABDefault_program_closing.BackColor = Form_Main._backColor;
+                checkBox_ABDefault_program_closing.ForeColor = Form_Main._textColor;
 
                 checkBox_ABMinimize.BackColor = Form_Main._backColor;
                 checkBox_ABMinimize.ForeColor = Form_Main._textColor;
@@ -1004,6 +1010,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABEnableOverclock.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ABDefault_mining_stopped.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ABDefault_program_closing.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABMinimize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
@@ -1113,6 +1121,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
                 checkBox_ABEnableOverclock.Checked = ConfigManager.GeneralConfig.ABEnableOverclock;
+                checkBox_ABDefault_mining_stopped.Checked = ConfigManager.GeneralConfig.ABDefaultMiningStopped;
+                checkBox_ABDefault_program_closing.Checked = ConfigManager.GeneralConfig.ABDefaultProgramClosing;
                 checkBox_ABMinimize.Checked = ConfigManager.GeneralConfig.ABMinimize;
             }
 
@@ -1177,8 +1187,8 @@ namespace NiceHashMiner.Forms
             }
 
             checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
-            //devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
-            //algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_ABDefault_mining_stopped.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_ABDefault_program_closing.Enabled = checkBox_ABEnableOverclock.Checked;
             Form_Main.OverclockEnabled = checkBox_ABEnableOverclock.Checked;
 
             //if (!ConfigManager.GeneralConfig.ShowToolsFolder)
@@ -1277,6 +1287,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
             ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
             ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
+            ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
+            ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;
             ConfigManager.GeneralConfig.ABMinimize = checkBox_ABMinimize.Checked;
             if (checkBox_LogToFile.Checked)
             {
@@ -2516,8 +2528,8 @@ namespace NiceHashMiner.Forms
         private void checkBox_ABEnableOverclock_CheckedChanged(object sender, EventArgs e)
         {
             checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
-            //devicesListViewEnableControl2.Enabled = checkBox_ABEnableOverclock.Checked;
-            //algorithmsListViewOverClock1.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_ABDefault_mining_stopped.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_ABDefault_program_closing.Enabled = checkBox_ABEnableOverclock.Checked;
 
             var oc = tabPageOverClock;
             //tabControlGeneral.TabPages.Remove(oc);
@@ -2532,14 +2544,7 @@ namespace NiceHashMiner.Forms
                     checkBox_ABEnableOverclock.Checked = false;
                     return;
                 }
-                /*
-                for (int i = 2; i <= 10; i++)
-                {
-                    checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock") + str.PadRight(i, '.');
-                    System.Threading.Thread.Sleep(300);
-                    checkBox_ABEnableOverclock.Update();
-                }
-                */
+
                 checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
                 checkBox_ABEnableOverclock.Update();
                 if (!MSIAfterburner.MSIAfterburnerInit())

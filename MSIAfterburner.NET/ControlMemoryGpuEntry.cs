@@ -336,7 +336,7 @@ namespace MSI.Afterburner
         public bool IsMaster => this.isMaster;
 
         public int Index => this.index;
-
+        
         public ControlMemoryGpuEntry()
         {
         }

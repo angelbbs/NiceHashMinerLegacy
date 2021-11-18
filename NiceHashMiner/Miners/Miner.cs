@@ -2194,14 +2194,10 @@ namespace NiceHashMiner
                 {
                     foreach (var dev in MiningSetup.MiningPairs)
                     {
-                        //WaitingForm waiting = new WaitingForm();
-                        //waiting.ShowWaitingBox();
                         if (dev.Device.Enabled)
                         {
                             for (int i = 0; i < 3; i++)
                             {
-                          //      waiting.SetText("", "Apply OC: " + dev.Device.Name);
-                            //    waiting.Update();
                                 string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
                                 Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
                                 MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);

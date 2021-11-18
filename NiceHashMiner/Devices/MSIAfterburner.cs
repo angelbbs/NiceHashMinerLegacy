@@ -453,12 +453,60 @@ namespace NiceHashMiner.Devices
             }
             return devData;
         }
-        public static void ResetToDefaults(int _busID, bool commit = false)
+
+        public static void ResetDef(int _busID)
         {
-            CheckMSIAfterburner();
+            ControlMemoryGpuEntry _abdata = new ControlMemoryGpuEntry();
             if (!Initialized) return;
             macm.ReloadAll();
             mahm.ReloadAll();
+            int index = -1;
+            var devType = new DeviceType();
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    foreach (var dev in Available.Devices)
+                    {
+                        if (dev.BusID == busID)
+                        {
+                            devType = dev.DeviceType;
+                            _abdata = MSIAfterburner.GetDeviceData(dev.BusID);
+
+                            _abdata.MemoryClockCur = _abdata.MemoryClockDef;
+                            _abdata.CoreClockCur = _abdata.CoreClockDef;
+
+                            Thread.Sleep(100);
+                            CommitChanges();
+                            Thread.Sleep(100);
+
+                            macm.GpuEntries[i] = _abdata;
+                            break;
+                        }
+                    }
+                    index = macm.GpuEntries[i].Index;
+                }
+            }
+
+        }
+
+        public static void ResetToDefaults(int _busID, bool commit = false, bool nocheck = true)
+        {
+            if (!nocheck)
+            {
+                CheckMSIAfterburner();
+            }
+            if (!Initialized) return;
+            try
+            {
+                macm.ReloadAll();
+                mahm.ReloadAll();
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner ResetToDefaults", "Error: " + ex.ToString());
+                return;
+            }
             int index = -1;
             var devType = new DeviceType();
             for (int i = 0; i < macm.Header.GpuEntryCount; i++)
@@ -475,7 +523,21 @@ namespace NiceHashMiner.Devices
                         }
                     }
                     index = macm.GpuEntries[i].Index;
-                    //Helpers.ConsolePrint("ResetToDefaults", "MSIAfterburner.ResetToDefaults: " + busID.ToString());
+                    /*
+                    try
+                    {
+                        macm.ReloadGpuEntry(index);
+                        mahm.ReloadGpuEntry((uint)index);
+                        //break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("MSIAfterburner ResetToDefaults", "Error: " + ex.ToString());
+                        macm.ReloadGpuEntry(i);
+                        mahm.ReloadGpuEntry((uint)i);
+                    }
+                    */
+                    //Helpers.ConsolePrint("ResetToDefaults", "MSIAfterburner.ResetToDefaults: " + busID.ToString() + " i: " + i.ToString());
                     if (devType == DeviceType.NVIDIA)
                     {
                         if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK_BOOST))
@@ -505,47 +567,48 @@ namespace NiceHashMiner.Devices
                         {
                             macm.GpuEntries[i].MemoryVoltageBoostCur = macm.GpuEntries[i].MemoryVoltageBoostDef;
                         }
-
-
-                        if (devType == DeviceType.AMD)
-                        {
-                            if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK))
-                            {
-                                macm.GpuEntries[i].CoreClockCur = macm.GpuEntries[i].CoreClockDef;//amd
-                            }
-                            if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE))
-                            {
-                                macm.GpuEntries[i].CoreVoltageCur = macm.GpuEntries[i].CoreVoltageDef;
-                            }
-                            if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK))
-                            {
-                                macm.GpuEntries[i].MemoryClockCur = macm.GpuEntries[i].MemoryClockDef;
-                            }
-                            if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE))
-                            {
-                                macm.GpuEntries[i].MemoryVoltageCur = macm.GpuEntries[i].MemoryVoltageDef;
-                            }
-                        }
-                        //all
-                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT))
-                        {
-                            macm.GpuEntries[i].PowerLimitCur = macm.GpuEntries[i].PowerLimitDef;
-                        }
-
-                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.SHADER_CLOCK))
-                        {
-                            macm.GpuEntries[i].ShaderClockCur = macm.GpuEntries[i].ShaderClockDef;//nvidia not suppored
-                        }
-                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_LIMIT))
-                        {
-                            macm.GpuEntries[i].ThermalLimitCur = macm.GpuEntries[i].ThermalLimitDef;
-                        }
-                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_PRIORITIZE))
-                        {
-                            //macm.GpuEntries[i].thermalPrioritizeCur = macm.GpuEntries[i].thermalPrioritizeDef;
-                        }
-                        break;
                     }
+
+                    if (devType == DeviceType.AMD)
+                    {
+                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK))
+                        {
+                            //Helpers.ConsolePrint("ResetToDefaults", "CoreClockCur: " + macm.GpuEntries[i].CoreClockCur.ToString() + " macm.GpuEntries[i].CoreClockDef: " + macm.GpuEntries[i].CoreClockDef.ToString());
+                            macm.GpuEntries[i].CoreClockCur = macm.GpuEntries[i].CoreClockDef;//amd
+                        }
+                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE))
+                        {
+                            macm.GpuEntries[i].CoreVoltageCur = macm.GpuEntries[i].CoreVoltageDef;
+                        }
+                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK))
+                        {
+                            macm.GpuEntries[i].MemoryClockCur = macm.GpuEntries[i].MemoryClockDef;
+                        }
+                        if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE))
+                        {
+                            macm.GpuEntries[i].MemoryVoltageCur = macm.GpuEntries[i].MemoryVoltageDef;
+                        }
+                    }
+                    //all
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT))
+                    {
+                        macm.GpuEntries[i].PowerLimitCur = macm.GpuEntries[i].PowerLimitDef;
+                    }
+
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.SHADER_CLOCK))
+                    {
+                        macm.GpuEntries[i].ShaderClockCur = macm.GpuEntries[i].ShaderClockDef;//nvidia not suppored
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_LIMIT))
+                    {
+                        macm.GpuEntries[i].ThermalLimitCur = macm.GpuEntries[i].ThermalLimitDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_PRIORITIZE))
+                    {
+                        //macm.GpuEntries[i].thermalPrioritizeCur = macm.GpuEntries[i].thermalPrioritizeDef;
+                    }
+                    break;
+
                 }
             }
             if (commit)
@@ -693,12 +756,12 @@ namespace NiceHashMiner.Devices
                 }
                 return;
             }
-            ResetToDefaults(_busID, false);
+            ResetToDefaults(_busID, false, false);
 
             try
             {
                 byte[] buffer = RawSerialize(macm.GpuEntries[index], (int)macm.Header.GpuEntrySize);
-                File.WriteAllBytes(FileName, buffer);
+                Helpers.WriteAllBytesThrough(FileName, buffer);
             }
             catch (Exception ex)
             {
@@ -713,7 +776,7 @@ namespace NiceHashMiner.Devices
             try
             {
                 byte[] buffer = RawSerialize(abdata, (int)macm.Header.GpuEntrySize);
-                File.WriteAllBytes(FileName, buffer);
+                Helpers.WriteAllBytesThrough(FileName, buffer);
             }
             catch (Exception ex)
             {
@@ -736,7 +799,13 @@ namespace NiceHashMiner.Devices
         }
         public static void CommitChanges()
         {
-            macm.CommitChanges();
+            try
+            {
+                macm.CommitChanges();
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner CommitChanges", "Error: " + ex.ToString());
+            }
         }
         public static void CommitChanges(int _busID)
         {

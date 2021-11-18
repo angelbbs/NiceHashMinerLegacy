@@ -537,6 +537,8 @@
 "FormSettings_ABOverclock_Relative": "Относительные значения",
 "FormSettings_AB_ForceRun": "Принудительный запуск MSI Afterburner при старте",
 "FormSettings_AB_Minimize": "Сворачивать MSI Afterburner",
+"FormSettings_ABDefault_mining_stopped": "Сброс по умолчанию после остановки майнинга",
+"FormSettings_ABDefault_program_closing": "Сброс по умолчанию при закрытии программы",
 "FormSettings_AB_Error": "Ошибка MSI Afterburner. Разгон не работает!",
 "FormSettings_AB_FileNotFound": "Ошибка MSI Afterburner.\r\nФайл {0} не найден.\r\nПожалуйста, установите MSI Afterburner",
 "FormSettings_AB_ValueWarning": "Значение должно быть между {0} и {1}",

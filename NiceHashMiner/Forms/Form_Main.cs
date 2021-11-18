@@ -1395,7 +1395,19 @@ namespace NiceHashMiner
             ProgramClosing = true;
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
-                MSIAfterburner.MSIAfterburnerKill();
+                if (ConfigManager.GeneralConfig.ABDefaultProgramClosing)
+                {
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (cdev.Enabled)
+                        {
+                            MSIAfterburner.ResetToDefaults(cdev.BusID, false, true);
+                            Thread.Sleep(200);
+                            MSIAfterburner.CommitChanges();
+                            Thread.Sleep(200);
+                        }
+                    }
+                }
             }
             StopWinIODriver();
             try
@@ -2099,6 +2111,25 @@ public static void CloseChilds(Process parentId)
                 _deviceStatusTimer.Stop();
                 _deviceStatusTimer.Dispose();
             }
+
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                if (ConfigManager.GeneralConfig.ABDefaultProgramClosing)
+                {
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (cdev.Enabled)
+                        {
+                            Helpers.ConsolePrint("ResetToDefaults", "ResetToDefaults: " + cdev.BusID.ToString() + " " + cdev.Name.ToString());
+                            MSIAfterburner.ResetToDefaults(cdev.BusID, false, true);
+                            Thread.Sleep(200);
+                            MSIAfterburner.CommitChanges();
+                            Thread.Sleep(200);
+                        }
+                    }
+                }
+            }
+
             MinersManager.StopAllMiners();
             if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
             MessageBoxManager.Unregister();
@@ -2945,6 +2976,26 @@ public static void CloseChilds(Process parentId)
 
             MinersManager.StopAllMiners();
             MiningSession.FuncAttached = false;
+
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                if (ConfigManager.GeneralConfig.ABDefaultMiningStopped)
+                {
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (cdev.Enabled)
+                        {
+                            //Helpers.ConsolePrint("ResetToDefaults", "ResetToDefaults: " + cdev.BusID.ToString() + " " + cdev.Name.ToString());
+                            MSIAfterburner.ResetToDefaults(cdev.BusID, false, true);
+                            Thread.Sleep(200);
+                            MSIAfterburner.CommitChanges(cdev.BusID);
+                            Thread.Sleep(200);
+                        }
+                    }
+                    //MSIAfterburner.CommitChanges();
+                }
+            }
+
             textBoxBTCAddress_new.Enabled = true;
             // textBoxBTCAddress.Enabled = true;
             textBoxWorkerName.Enabled = true;
