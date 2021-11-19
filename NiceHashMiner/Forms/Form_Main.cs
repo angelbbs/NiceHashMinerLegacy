@@ -124,6 +124,7 @@ namespace NiceHashMiner
         public static int smaCount = 0;
         private static int ticks = 0;//костыль
         public static double profitabilityFromNH = 0.0d;
+        public static double TotalProfitabilityFromNH = 0.0d;
         public static List<RigProfitList> RigProfits = new List<Form_Main.RigProfitList>();
         public static RigProfitList lastRigProfit = new Form_Main.RigProfitList();
         public static bool Form_RigProfitChartRunning = false;
@@ -141,6 +142,7 @@ namespace NiceHashMiner
         public static double totalPowerRateFiat = 0.0d;
         public static double TotalPowerConsumption;
         public static double TotalBTC;
+        private static ToolTip toolTipStatus = new ToolTip();
 
         public struct RigProfitList
         {
@@ -1051,6 +1053,7 @@ namespace NiceHashMiner
         {
             try
             {
+                if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
                 DirectoryInfo dirInfo = new DirectoryInfo("temp/");
 
                 foreach (FileInfo file in dirInfo.GetFiles())
@@ -1261,15 +1264,20 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("MEMORY", "Mem used: " + Math.Round(bytesInUse / 1048576, 2).ToString() + "MB");
 
             Helpers.ConsolePrint("POWER", "TotalPowerConsumption: " + TotalPowerConsumption.ToString("F0") + "W");
-            Helpers.ConsolePrint("POWER", "TotalPowerConsumptionCost: " + (TotalPowerConsumption * 0.001 * ConfigManager.GeneralConfig.KwhPrice).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
+            if (ConfigManager.GeneralConfig.KwhPrice > 0)
+            {
+                Helpers.ConsolePrint("POWER", "TotalPowerConsumptionCost: " + (TotalPowerConsumption * 0.001 * ConfigManager.GeneralConfig.KwhPrice).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
+            }
+            if (ConfigManager.GeneralConfig.ChartEnable)
+            {
+                Helpers.ConsolePrint("POWER", "TotalActualProfit: " + ExchangeRateApi.ConvertToActiveCurrency(TotalProfitabilityFromNH * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
+            }
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
                 Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
                 Form_Main.lastRigProfit.currentPower = MinersManager.GetTotalPowerRate() + PowerAllDevices;
                 Form_Main.lastRigProfit.totalPowerRate = totalPowerRate;
-                //Form_Main.lastRigProfit.totalPowerRateFiat = totalPowerRateFiat;
-
                 NiceHashStats.GetRigProfit();
             }
             else
@@ -2758,42 +2766,12 @@ public static void CloseChilds(Process parentId)
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
-            string CurrentActualProfitability;
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues)
-            {
-                CurrentActualProfitability = ((profitabilityFromNH) * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) +
-                    " mBTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            }
-            else
-            {
-                CurrentActualProfitability = ((profitabilityFromNH) * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) +
-                    " BTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-
-            }
-
             var rateCurrencyString = ExchangeRateApi
                              .ConvertToActiveCurrency((profitabilityFromNH) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                              .ToString("F2", CultureInfo.InvariantCulture)
                          + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                          International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            /*
-            if (ConfigManager.GeneralConfig.Show_current_actual_profitability)
-            {
-                if (Miner.IsRunningNew)
-                {
-                    labelCAP.Text = International.GetText("Form_Main_current_actual_profitabilities") + ": " + CurrentActualProfitability + "  " + rateCurrencyString;
-                }
-                else
-                {
-                    labelCAP.Text = "";
-                }
-            } else
-            {
-                labelCAP.Text = "";
-            }
-            */
+
             SMAdelayTick++;
 
             try
@@ -2868,7 +2846,7 @@ public static void CloseChilds(Process parentId)
                 {
                     devCount = reader.ReadUInt32(0);
                 }
-                //Helpers.ConsolePrint("******************", "devCount: " + devCount.ToString());
+
                 NvData d = new NvData();
                 ComputeDeviceManager.CudaDevicesCountFromNVMLHost = (int)devCount;
                 gpuList.Clear();
@@ -3260,18 +3238,24 @@ public static void CloseChilds(Process parentId)
             string ctooltip = "";
             ctooltip = International.GetText("Form_Main_TotalLocalProfit") + ExchangeRateApi.ConvertToActiveCurrency(TotalBTC * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
             ctooltip += "\r\n";
+            if (ConfigManager.GeneralConfig.ChartEnable)
+            {
+                ctooltip += International.GetText("Form_Main_TotalActualProfit") + ExchangeRateApi.ConvertToActiveCurrency(TotalProfitabilityFromNH * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
+                ctooltip += "\r\n";
+            }
+
             if (ConfigManager.GeneralConfig.ShowTotalPower)
             {
                 ctooltip += string.Format(International.GetText("Form_Main_TotalPowerConsumptionCost"), (TotalPowerConsumption * 0.001 * ConfigManager.GeneralConfig.KwhPrice).ToString("F2"), ExchangeRateApi.ActiveDisplayCurrency);
                 ctooltip += "\r\n";
             }
-            ToolTip toolTip1 = new ToolTip();
-            toolTip1.AutoPopDelay = 5000;
-            toolTip1.InitialDelay = 1000;
-            toolTip1.ReshowDelay = 500;
-            toolTip1.ShowAlways = true;
-            toolTip1.IsBalloon = true;
-            toolTip1.SetToolTip(this.statusStrip1, ctooltip);
+
+            toolTipStatus.AutoPopDelay = 5000;
+            toolTipStatus.InitialDelay = 1000;
+            toolTipStatus.ReshowDelay = 5000;
+            toolTipStatus.ShowAlways = true;
+            toolTipStatus.IsBalloon = true;
+            toolTipStatus.SetToolTip(this.statusStrip1, ctooltip);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace NiceHashMiner.Miners.Parsing
     public class MinerOptionPackageFile : ConfigFile<MinerOptionPackage>
     {
         public MinerOptionPackageFile(string name)
-            : base(Folders.Internals, $"{name}.json", $"{name}.json")
+            : base(Folders.Temp, $"{name}.json", $"{name}.json")
         { }
     }
 

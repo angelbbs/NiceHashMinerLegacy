@@ -332,6 +332,10 @@ namespace NiceHashMiner.Stats
                     version = "NHML/Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
                 }
                 btc = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;
+                if (btc.IsNullOrEmpty())
+                {
+                    btc = Globals.DemoUser;
+                }
                 worker = Configs.ConfigManager.GeneralConfig.WorkerName;
 
 
@@ -348,7 +352,13 @@ namespace NiceHashMiner.Stats
                 var loginJson = JsonConvert.SerializeObject(login);
                 SendDataNew(loginJson);
                 Thread.Sleep(500);
-                NiceHashStats.SetDeviceStatus("STOPPED", true);
+                if (Form_Main.MiningStarted)
+                {
+                    NiceHashStats.SetDeviceStatus("MINING", true);
+                } else
+                {
+                    NiceHashStats.SetDeviceStatus("STOPPED", true);
+                }
 
                 OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
             }

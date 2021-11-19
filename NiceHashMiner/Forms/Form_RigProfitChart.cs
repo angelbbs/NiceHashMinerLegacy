@@ -145,10 +145,10 @@ namespace NiceHashMiner.Forms
             totalRateAll = 0;
             //currentProfitAll = 0;
             currentProfitAllAPI = 0;
-//            Helpers.ConsolePrint("ChartData", "totalPowerRate: " + Form_Main.lastRigProfit.totalPowerRate.ToString());
+            //            Helpers.ConsolePrint("ChartData", "totalPowerRate: " + Form_Main.lastRigProfit.totalPowerRate.ToString());
 
 
-            //Helpers.ConsolePrint("***********", (ExchangeRateApi.ConvertToActiveCurrency((MinersManager.GetTotalPowerRate() + Form_Main.PowerAllDevices) * Form_Main._factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()).ToString()));
+            //Helpers.ConsolePrint("***********", (Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000 * ExchangeRateApi.GetUsdExchangeRate()).ToString());
             for (int i = 0; i < Form_Main.RigProfits.Count; i++)
             {
                 totalRateAll = totalRateAll + Form_Main.RigProfits[i].totalRate * 1000;
@@ -524,6 +524,7 @@ namespace NiceHashMiner.Forms
             //Form_Main.lastRigProfit.totalRate = 0;
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             ChartData(null, null);
+            Form_Main.TotalProfitabilityFromNH = 0;
 
             this.Close();
             Thread.Sleep(100);

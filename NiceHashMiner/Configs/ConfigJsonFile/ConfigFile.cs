@@ -101,14 +101,21 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
         public static void WriteAllTextWithBackup(string FilePath, string contents)
         {
             string path = FilePath;
-            var tempPath = FilePath + "tmp";
+            var tempPath = FilePath + ".tmp";
 
             // create the backup name
-            var backup = path + ".backup";
+            var backup = FilePath + ".backup";
 
             // delete any existing backups
-            if (File.Exists(backup))
-                File.Delete(backup);
+            try
+            {
+                if (File.Exists(backup))
+                    File.Delete(backup);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
 
             // get the bytes
             var data = Encoding.ASCII.GetBytes(contents);
@@ -117,8 +124,25 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
                 tempFile.Write(data, 0, data.Length);
 
+            //copy file
+            try
+            {
+                if (File.Exists(path)) File.Delete(path);
+                File.Copy(tempPath, path);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
+            
             // replace the contents
-            File.Replace(tempPath, path, backup);
+            try
+            {
+                File.Replace(tempPath, path, backup);
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
         }
 
         public void CreateBackup()

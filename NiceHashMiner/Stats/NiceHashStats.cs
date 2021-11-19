@@ -665,9 +665,11 @@ namespace NiceHashMiner.Stats
                                 /*
                                 Helpers.ConsolePrint("NHM_API_info", rig.rigId.ToString());
                                 Helpers.ConsolePrint("NHM_API_info", rig.name.ToString());
-                                Helpers.ConsolePrint("NHM_API_info", rig.profitability.ToString());
-                                Helpers.ConsolePrint("NHM_API_info", rig.unpaidAmount.ToString());
+                                Helpers.ConsolePrint("NHM_API_info", "rig.profitability: " + rig.profitability.ToString());
+                                Helpers.ConsolePrint("NHM_API_info", "Form_Main.lastRigProfit.currentProfitAPI: " + Form_Main.lastRigProfit.currentProfitAPI.ToString());
+                                Helpers.ConsolePrint("NHM_API_info", "rig.unpaidAmount: " + rig.unpaidAmount.ToString());
                                 */
+
                                 if (rig.profitability > Form_Main.lastRigProfit.currentProfitAPI * 100 &&
                                     Form_Main.lastRigProfit.currentProfitAPI != 0 && rig.profitability != 0)
                                 {
@@ -689,8 +691,19 @@ namespace NiceHashMiner.Stats
                             }
                         }
                         double unpaidAmount = respJson.unpaidAmount;
-                        Helpers.ConsolePrint("unpaidAmount", (unpaidAmount * 1000).ToString());
+                        Helpers.ConsolePrint("Total unpaidAmount", (unpaidAmount * 1000).ToString());
                         SetBalance(unpaidAmount.ToString());
+
+                        if (ConfigManager.GeneralConfig.ChartEnable)
+                        {
+                            Form_Main.TotalProfitabilityFromNH = Form_Main.TotalProfitabilityFromNH + Form_Main.lastRigProfit.currentProfitAPI / 1440;
+                            //Helpers.ConsolePrint("TotalProfitabilityFromNH", (Form_Main.TotalProfitabilityFromNH).ToString());
+                        }
+                        else
+                        {
+                            Form_Main.TotalProfitabilityFromNH = 0;
+                        }
+
                     }
                     else
                     {

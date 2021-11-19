@@ -10,7 +10,6 @@ namespace NiceHashMiner
         public static string[] MiningLocation = { "eu-west", "eu-north", "usa-west", "usa-east", "Auto" };
 
         public static readonly string DemoUser = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";
-        public static readonly string DemoUserNew = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";
 
         // change this if TOS changes
         public static int CurrentTosVer = 4;
@@ -67,7 +66,7 @@ namespace NiceHashMiner
         {
             return BitcoinAddress.ValidateBitcoinAddress(Configs.ConfigManager.GeneralConfig.BitcoinAddressNew.Trim())
                 ? Configs.ConfigManager.GeneralConfig.BitcoinAddressNew.Trim()
-                : DemoUserNew;
+                : DemoUser;
 
         }
     }
