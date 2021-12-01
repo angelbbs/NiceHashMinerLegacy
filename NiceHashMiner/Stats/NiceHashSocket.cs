@@ -443,7 +443,7 @@ namespace NiceHashMiner.Stats
                 {
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
                     DropPort(Process.GetCurrentProcess().Id, 443);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(3000);
                     _webSocket = null;
                     StartConnectionNew();
                 }

@@ -54,6 +54,9 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("trex_fant", "--fan t:", "--fan t:", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_fantm", "--fan tm:", "--fan tm:", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_lhr_tune", "-lhr-tune", "--lhr-tune", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lhr_autotune-step-size", "-lhr-autotune-step-size", "--lhr-autotune-step-size", "0.5", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lhr_autotune-interval", "-lhr-autotune-interval", "--lhr-autotune-interval", "20", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("trex_lhr_dataset-mode", "-dataset-mode", "--dataset-mode", "2", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_lhr_autotune", "-lhr-autotune-mode", "--lhr-autotune-mode", null, MinerOptionFlagType.SingleParam),
                     new MinerOption("trex_lhr-low-power", "-lhr-low-power", "--lhr-low-power", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
@@ -73,6 +76,13 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("nbminer_temperature-start", "--ts", "--temperature-start", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_lhr", "-lhr", "-lhr", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_lhr-mode", "-lhr-mode", "-lhr-mode", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_power-limit", "--power-limit", "--pl", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_cclock", "--cclock", "--cclock", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_mclock", "--mclock", "--mclock", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_lock-cv", "--lock-cv", "--lock-cv", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_fan", "--fan", "--fan", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_log-no-job", "--log-no-job", "--log-no-job", null, MinerOptionFlagType.Uni),
+                    new MinerOption("nbminer_log-cycle", "--log-cycle", "--log-cycle", "30", MinerOptionFlagType.SingleParam),
                      new MinerOption("nbminer_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, "")
                 },
                 new List<MinerOption>()
@@ -203,7 +213,9 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("lolMiner_keepfree", "", "--keepfree", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_zombie-tune", "", "--zombie-tune", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_lhrtune", "", "--lhrtune", "auto", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, "")
+                    new MinerOption("lolMiner_ergo-prebuild", "--ergo-prebuild", "--ergo-prebuild", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("lolMiner_lhrwait", "--lhrwait", "--lhrwait", "0", MinerOptionFlagType.SingleParam, "")
                 },
                 // TemperatureOptions
                 new List<MinerOption>() {
@@ -395,7 +407,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("SRBMiner-threads", "--gpu-threads", "--gpu-threads", "-1", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-worksize", "--gpu-worksize", "--gpu-worksize", "0", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-auto-intensity", "--gpu-auto-intensity", "--gpu-auto-intensity", "0", MinerOptionFlagType.MultiParam, "!"),
-                    new MinerOption("SRBMiner-gpu-boost", "--gpu-boost", "--gpu-boost", "3", MinerOptionFlagType.MultiParam, "!")
+                    new MinerOption("SRBMiner_gpu_autolykos2_preload", "--gpu-autolykos2-preload", "--gpu-autolykos2-preload", "0", MinerOptionFlagType.MultiParam, "!"),
+                    new MinerOption("SRBMiner_gpu_boost", "--gpu-boost", "--gpu-boost", "0", MinerOptionFlagType.MultiParam, "!")
                 },
                 new List<MinerOption>(){ }
              ),
@@ -580,8 +593,13 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_tfan", "--tfan", "--tfan", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_lhr", "--lhr", "--lhr", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_lhr_tune", "--lhr_tune", "--lhr_tune", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_lhr_mode", "--lhr_mode", "--lhr_mode", "1", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_electricity_cost", "--electricity_cost", "--electricity_cost", "0", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_lhr_autotune", "--lhr_autotune", "--lhr_autotune", "1", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_lhr_autotune_step", "--lhr_autotune_step", "--lhr_autotune_step", "0.5", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_watchdog_mode", "--watchdog_mode", "--watchdog_mode", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_min_rig_speed", "--min_rig_speed", "--min_rig_speed", "-1", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_dag_gen_limit", "--dag_gen_limit", "--dag_gen_limit", "0", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()
             ),

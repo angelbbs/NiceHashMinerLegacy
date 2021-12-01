@@ -37,6 +37,16 @@ namespace NiceHashMiner
                 // write the data to a temp file
                 using (var tempFile = File.Create(tempFileName, 4096, FileOptions.WriteThrough))
                     tempFile.Write(buffer, 0, buffer.Length);
+                //copy file
+                try
+                {
+                    if (File.Exists(FileName)) File.Delete(FileName);
+                    File.Copy(tempFileName, FileName);
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("WriteAllBytesThrough", ex.ToString());
+                }
 
                 // replace the contents
                 File.Replace(tempFileName, FileName, tempFileName + ".tmp");

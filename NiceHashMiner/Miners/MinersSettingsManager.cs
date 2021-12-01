@@ -37,8 +37,8 @@ namespace NiceHashMiner.Miners
 
         public static void Init()
         {
-            //ExtraLaunchParameters.InitializePackages();
-            //MinerPaths.InitializePackages();
+            ExtraLaunchParameters.InitializePackages();
+            MinerPaths.InitializePackages();
             InitMinerReservedPortsFile();
             InitMinerSystemVariablesFile();
         }

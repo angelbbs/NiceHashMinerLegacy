@@ -345,7 +345,7 @@ namespace NiceHashMiner.Miners
             double repeats = 0;
             double summspeed = 0.0d;
 
-            int delay_before_calc_hashrate = 10;
+            int delay_before_calc_hashrate = 50;
             int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
@@ -354,6 +354,7 @@ namespace NiceHashMiner.Miners
             {
                 double BenchmarkSpeed = 0.0d;
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
                 var benchmarkTimer = new Stopwatch();
@@ -487,6 +488,7 @@ namespace NiceHashMiner.Miners
         }
         private void BenchmarkThreadRoutineSecond()
         {
+            if (!Form_Main.InBenchmark) return;
             if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 BenchmarkSignalQuit = false;
@@ -561,7 +563,7 @@ namespace NiceHashMiner.Miners
                         var ad = GetSummaryAsync();
                         if (ad.Result != null && ad.Result.Speed > 0)
                         {
-                            _powerUsage += _power;
+                            //_powerUsage += _power;
                             repeats++;
                             double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
                             BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);

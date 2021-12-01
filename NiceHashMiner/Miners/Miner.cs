@@ -784,6 +784,10 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("t-rex.exe", "t-rex.0.19.4.exe");
             }
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("nbminer") && (commandLine.ToLower().Contains("cuckatoo")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
             /*
             if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("gminer") && (commandLine.ToLower().Contains("cuckoocycle")))
             {
@@ -1648,6 +1652,10 @@ namespace NiceHashMiner
             if (MiningSetup.MinerPath.ToLower().Contains("t-rex") && (LastCommandLine.ToLower().Contains("x16r") || LastCommandLine.ToLower().Contains("x16rv2")))
             {
                 Path = MiningSetup.MinerPath.Replace("t-rex.exe", "t-rex.0.19.4.exe");
+            }
+            if (MiningSetup.MinerPath.ToLower().Contains("nbminer") && (LastCommandLine.ToLower().Contains("cuckatoo")))
+            {
+                Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
             /*
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle")))

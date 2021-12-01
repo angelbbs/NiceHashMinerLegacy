@@ -372,7 +372,7 @@ namespace NiceHashMiner.Devices
                         try
                         {
                             string fNameSrc = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
-                            string fNameDst = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".tmp";
+                            string fNameDst = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gputmp";
                             if (!File.Exists(fNameSrc))
                             {
                                 SaveDefaultDeviceData(dev.BusID, fNameSrc);
@@ -400,7 +400,7 @@ namespace NiceHashMiner.Devices
                         try
                         {
                             string fNameDst = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
-                            string fNameSrc = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".tmp";
+                            string fNameSrc = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gputmp";
                             if (!File.Exists(fNameSrc))
                             {
                                 SaveDefaultDeviceData(dev.BusID, fNameSrc);

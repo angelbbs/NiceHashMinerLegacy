@@ -478,7 +478,7 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 20;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                 {
@@ -540,7 +540,7 @@ namespace NiceHashMiner.Miners
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                     {
-                        delay_before_calc_hashrate = 30;
+                        delay_before_calc_hashrate = 50;
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))

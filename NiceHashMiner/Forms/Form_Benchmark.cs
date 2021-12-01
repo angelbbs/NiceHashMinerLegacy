@@ -532,6 +532,7 @@ namespace NiceHashMiner.Forms
         {
             _benchmarkingTimer.Stop();
             InBenchmark = false;
+            Form_Main.InBenchmark = false;
             BenchmarkStarted = false;
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
             //// copy benchmarked
@@ -641,6 +642,7 @@ namespace NiceHashMiner.Forms
         private void StartBenchmark()
         {
             InBenchmark = true;
+            Form_Main.InBenchmark = true;
             BenchmarkStarted = true;
             lock (_runningBenchmarkThreads)
             {
@@ -744,6 +746,7 @@ namespace NiceHashMiner.Forms
            {
                _benchmarkingTimer.Stop();
                InBenchmark = false;
+               Form_Main.InBenchmark = false;
                BenchmarkStarted = false;
                Ethlargement.Stop();
                Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");

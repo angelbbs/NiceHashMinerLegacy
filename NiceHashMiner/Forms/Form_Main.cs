@@ -143,6 +143,7 @@ namespace NiceHashMiner
         public static double TotalPowerConsumption;
         public static double TotalBTC;
         private static ToolTip toolTipStatus = new ToolTip();
+        public static bool InBenchmark = false;
 
         public struct RigProfitList
         {
@@ -812,8 +813,9 @@ namespace NiceHashMiner
             //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
-
-            NiceHashStats.StartConnection(Links.NhmSocketAddress);
+            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
+            Thread.Sleep(3000);
+            //NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
             //NiceHashStats.OnBalanceUpdate += BalanceCallback;
             //NiceHashStats.OnSmaUpdate += SmaCallback;
@@ -3116,7 +3118,8 @@ public static void CloseChilds(Process parentId)
                 ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
                 textBoxBTCAddress_new.Update();
                 NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
-                NiceHashStats.StartConnection(Links.NhmSocketAddress);
+                new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
+                //NiceHashStats.StartConnection(Links.NhmSocketAddress);
             }
         }
 
@@ -3143,7 +3146,8 @@ public static void CloseChilds(Process parentId)
                 buttonBTC_Save.Enabled = false;
             }
             NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
-            NiceHashStats.StartConnection(Links.NhmSocketAddress);
+            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
+            //NiceHashStats.StartConnection(Links.NhmSocketAddress);
         }
 
         private void textBoxBTCAddress_new_TextChanged(object sender, EventArgs e)

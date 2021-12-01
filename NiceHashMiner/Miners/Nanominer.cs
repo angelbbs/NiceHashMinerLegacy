@@ -629,6 +629,7 @@ namespace NiceHashMiner.Miners
         }
         private void BenchmarkThreadRoutineSecond()
         {
+            if (!Form_Main.InBenchmark) return;
             double BenchmarkSpeed = 0.0d;
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;

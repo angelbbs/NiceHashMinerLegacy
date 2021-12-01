@@ -263,7 +263,8 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
+                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA && 
+                        (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4) || device.Name.Contains("RTX 30")))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;

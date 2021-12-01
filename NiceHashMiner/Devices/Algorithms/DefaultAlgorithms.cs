@@ -111,7 +111,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
-                                ExtraLaunchParameters = "--gpu-boost 3"
+                                ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
                             {
@@ -264,15 +264,15 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Autolykos, "DaggerAutolykos")
                             {
-                                ExtraLaunchParameters = "--mt 1 --lhr-tune 30"
+                                ExtraLaunchParameters = "--mt 1"
                             },
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.KAWPOW, "DaggerKAWPOW")
                             {
-                                ExtraLaunchParameters = "--mt 1 --lhr-tune 30"
+                                ExtraLaunchParameters = "--mt 1"
                             },
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Octopus, "DaggerOctopus")
                             {
-                                ExtraLaunchParameters = "--mt 1 --lhr-tune 30"
+                                ExtraLaunchParameters = "--mt 1"
                             },
                             new Algorithm(MinerBaseType.trex, AlgorithmType.Autolykos, "Autolykos")
                             {
@@ -355,6 +355,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                                 ExtraLaunchParameters = "--enablezilcache=1"
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")
+                            {
+                                ExtraLaunchParameters = ""
                             }
                         }
             },

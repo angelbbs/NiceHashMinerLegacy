@@ -222,7 +222,7 @@ namespace NiceHashMiner.Forms.Components
                     uint fan;
                     int fan_flag;
                     int thermal_limit;
-                    string fName = "temp\\" + computeDevice.Uuid + "_" + alg.AlgorithmStringID + ".tmp";
+                    string fName = "temp\\" + computeDevice.Uuid + "_" + alg.AlgorithmStringID + ".gputmp";
                     ControlMemoryGpuEntry dev = MSIAfterburner.ReadFromFile(computeDevice.BusID, fName);
                     //name = alg.AlgorithmName;
                     if (alg is DualAlgorithm dualAlg)
@@ -458,8 +458,8 @@ namespace NiceHashMiner.Forms.Components
             {
                 try
                 {
-                    string fNameSrc = "temp\\" + uuid + "_" + from + ".tmp";
-                    string fNameDst = "temp\\" + uuid + "_" + to + ".tmp";
+                    string fNameSrc = "temp\\" + uuid + "_" + from + ".gputmp";
+                    string fNameDst = "temp\\" + uuid + "_" + to + ".gputmp";
                     if (!File.Exists(fNameSrc))
                     {
                         MSIAfterburner.SaveDefaultDeviceData(_computeDevice.BusID, fNameSrc);
@@ -537,7 +537,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (lvi.Tag is Algorithm algorithm)
                     {
-                        string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".tmp";
+                        string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".gputmp";
                         MSIAfterburner.SaveDeviceData(_abdata, fName);
                     }
                 }
@@ -557,7 +557,7 @@ namespace NiceHashMiner.Forms.Components
                         WaitingForm waiting = new WaitingForm();
                         waiting.SetText("", International.GetText("MSIAB_Checking"));
                         waiting.ShowWaitingBox();
-                        string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".tmp";
+                        string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".gputmp";
                         MSIAfterburner.ApplyFromFile(_computeDevice.BusID, fName);
                         Thread.Sleep(100);
                         MSIAfterburner.CommitChanges(_computeDevice.BusID);
@@ -767,7 +767,7 @@ namespace NiceHashMiner.Forms.Components
                     if (lvi.Tag is Algorithm algorithm)
                     {
                         _algorithm = algorithm;
-                        string fName = "temp\\" + _computeDevice.Uuid + "_" + _algorithm.AlgorithmStringID + ".tmp";
+                        string fName = "temp\\" + _computeDevice.Uuid + "_" + _algorithm.AlgorithmStringID + ".gputmp";
                         ControlMemoryGpuEntry _abdataTmp = MSIAfterburner.ReadFromFile(_computeDevice.BusID, fName);
                         //set current
                         //nvidia
@@ -971,7 +971,7 @@ namespace NiceHashMiner.Forms.Components
                 if (item != null) item.SubItems[_SubItembIndex].Text = tb.Text;
                 if (_algorithm != null)
                 {
-                    string fName = "temp\\" + _computeDevice.Uuid + "_" + _algorithm.AlgorithmStringID + ".tmp";
+                    string fName = "temp\\" + _computeDevice.Uuid + "_" + _algorithm.AlgorithmStringID + ".gputmp";
                     ControlMemoryGpuEntry _abdataTmp = MSIAfterburner.ReadFromFile(_computeDevice.BusID, fName);
                     try
                     {
