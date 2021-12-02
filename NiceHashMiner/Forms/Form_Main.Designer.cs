@@ -68,6 +68,7 @@ namespace NiceHashMiner
             this.textBoxBTCAddress_new = new System.Windows.Forms.TextBox();
             this.buttonBTC_Clear = new System.Windows.Forms.Button();
             this.label_Uptime = new System.Windows.Forms.Label();
+            this.label_NH_ConnectStatus = new System.Windows.Forms.Label();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -242,13 +243,15 @@ namespace NiceHashMiner
             // 
             // linkLabelCheckStats
             // 
+            this.linkLabelCheckStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelCheckStats.AutoSize = true;
-            this.linkLabelCheckStats.Location = new System.Drawing.Point(395, 36);
+            this.linkLabelCheckStats.Location = new System.Drawing.Point(634, 36);
             this.linkLabelCheckStats.Name = "linkLabelCheckStats";
-            this.linkLabelCheckStats.Size = new System.Drawing.Size(113, 13);
+            this.linkLabelCheckStats.Size = new System.Drawing.Size(94, 13);
             this.linkLabelCheckStats.TabIndex = 9;
             this.linkLabelCheckStats.TabStop = true;
-            this.linkLabelCheckStats.Text = "Check my stats online!";
+            this.linkLabelCheckStats.Text = "Check stats online";
+            this.linkLabelCheckStats.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabelCheckStats.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelCheckStats_LinkClicked);
             // 
             // labelWorkerName
@@ -463,6 +466,15 @@ namespace NiceHashMiner
             this.label_Uptime.TabIndex = 115;
             this.label_Uptime.Text = "Uptime:";
             // 
+            // label_NH_ConnectStatus
+            // 
+            this.label_NH_ConnectStatus.AutoSize = true;
+            this.label_NH_ConnectStatus.Location = new System.Drawing.Point(395, 36);
+            this.label_NH_ConnectStatus.Name = "label_NH_ConnectStatus";
+            this.label_NH_ConnectStatus.Size = new System.Drawing.Size(78, 13);
+            this.label_NH_ConnectStatus.TabIndex = 116;
+            this.label_NH_ConnectStatus.Text = "Not connected";
+            // 
             // devicesListViewEnableControl1
             // 
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -485,6 +497,7 @@ namespace NiceHashMiner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 315);
+            this.Controls.Add(this.label_NH_ConnectStatus);
             this.Controls.Add(this.label_Uptime);
             this.Controls.Add(this.buttonBTC_Clear);
             this.Controls.Add(this.buttonBTC_Save);
@@ -568,6 +581,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power4;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power5;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power6;
+        private System.Windows.Forms.Label label_NH_ConnectStatus;
     }
 }
 

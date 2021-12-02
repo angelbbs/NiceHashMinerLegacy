@@ -83,6 +83,7 @@ namespace NiceHashMiner.Stats
                     _restartConnection = true;
                     _webSocket.Close();
                 }
+                Form_Main.NHConnectingInProgress = true;
                 Helpers.ConsolePrint("SOCKET", "Connecting");
                 _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                 _webSocket.OnOpen += ConnectCallback;
@@ -103,6 +104,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
+            Form_Main.NHConnectingInProgress = false;
         }
         public static void StopConnection()
         {
@@ -244,6 +246,7 @@ namespace NiceHashMiner.Stats
 
         public void StartConnection()
         {
+            Form_Main.NHConnectingInProgress = true;
             Helpers.ConsolePrint("SOCKET", "Start connection");
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
@@ -278,6 +281,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
+            Form_Main.NHConnectingInProgress = false;
         }
 
         public void ConnectCallback(object sender, EventArgs e)
@@ -441,6 +445,7 @@ namespace NiceHashMiner.Stats
                 }
                 else if (_webSocket != null)
                 {
+                    Form_Main.NHConnectingInProgress = true;
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
                     DropPort(Process.GetCurrentProcess().Id, 443);
                     Thread.Sleep(3000);

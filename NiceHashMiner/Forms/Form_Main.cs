@@ -41,6 +41,7 @@ namespace NiceHashMiner
         public Timer _minerStatsCheck;
         private Timer _startupTimer;
         private Timer _remoteTimer;
+        private System.Timers.Timer _statusTimer;
         private Timer _autostartTimer;
         private Timer _autostartTimerDelay;
         private Timer _deviceStatusTimer;
@@ -144,6 +145,7 @@ namespace NiceHashMiner
         public static double TotalBTC;
         private static ToolTip toolTipStatus = new ToolTip();
         public static bool InBenchmark = false;
+        public static bool NHConnectingInProgress = false;
 
         public struct RigProfitList
         {
@@ -811,10 +813,12 @@ namespace NiceHashMiner
             //new Task(() => ResetProtocols()).Start();
 
             //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
+            label_NH_ConnectStatus.Update();
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             //NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
             //NiceHashStats.OnBalanceUpdate += BalanceCallback;
@@ -1229,6 +1233,14 @@ namespace NiceHashMiner
             _remoteTimer.Tick += RemoteTimer_Tick;
             _remoteTimer.Interval = 200;
             _remoteTimer.Start();
+
+            //_statusTimer = new Timer();
+            _statusTimer = new System.Timers.Timer();
+            _statusTimer.Elapsed += StatusTimer_Tick;
+            _statusTimer.Interval = 200;
+            _statusTimer.SynchronizingObject = this;
+            _statusTimer.Enabled = true;
+            _statusTimer.Start();
 
             _deviceStatusTimer = new Timer();
             _deviceStatusTimer.Tick += DeviceStatusTimer_Tick;
@@ -2623,6 +2635,44 @@ public static void CloseChilds(Process parentId)
                 _computeDevicesCheckTimer.Start();
             }
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
+        }
+
+        WebSocketSharp.WebSocketState _oldState = WebSocketSharp.WebSocketState.Closed;
+        private void StatusTimer_Tick(object sender, EventArgs e)
+        {
+            if (NiceHashSocket._webSocket != null)
+            {
+                var _curState = NiceHashSocket._webSocket.ReadyState;
+                if (_curState != _oldState)
+                {
+                    _oldState = _curState;
+                    if (_curState == WebSocketSharp.WebSocketState.Closed || _curState == WebSocketSharp.WebSocketState.Closing)
+                    {
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
+                    }
+                    if (_curState == WebSocketSharp.WebSocketState.Connecting || NHConnectingInProgress)
+                    {
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
+                    }
+                    if (_curState == WebSocketSharp.WebSocketState.Open)
+                    {
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected");
+                    }
+                    label_NH_ConnectStatus.Update();
+                }
+            }
+            else
+            {
+                if (NHConnectingInProgress)
+                {
+                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
+                    label_NH_ConnectStatus.Update();
+                }
+                else
+                {
+                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
+                }
+            }
         }
         private void RemoteTimer_Tick(object sender, EventArgs e)
         {
