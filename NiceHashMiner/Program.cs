@@ -176,290 +176,20 @@ namespace NiceHashMiner
                     Logger.ConfigureWithFile();
                 }
 
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 11.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 11.2;
-                }
-
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 12)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 12;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 12.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 12.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 13)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 13;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 13.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 13.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 14)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 14.0;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 14.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 14.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 14.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 14.2;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 15)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 15;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 15.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 15.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 15.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 15.2;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 15.3)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 15.3;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 15.4)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 15.4;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 16)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 16;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 17)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 17;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 18)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 18;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 19)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 19;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 19.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 19.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 19.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 19.2;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 20)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 20;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 20.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 20.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 20.20)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 20.20;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 21)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 21;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 22)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 22;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 22.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 22.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 22.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 22.2;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 23)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 23;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 23.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 23.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 24)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 24;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 24.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 24.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 25)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 25;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 26)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 26;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 27)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 27;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 27.1)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 27.1;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 27.2)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 27.2;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 28)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 28;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 29)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 29;
-                }
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 30)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
-                    if (Directory.Exists("internals"))
-                        Directory.Delete("internals", true);
-                    ConfigManager.GeneralConfig.ForkFixVersion = 30;
-                }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 31)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 31;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 31.1)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 31.1;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 32.0)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
@@ -467,7 +197,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 33.0)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
@@ -475,7 +204,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 33.1)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
@@ -483,7 +211,6 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 34)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
@@ -492,7 +219,6 @@ namespace NiceHashMiner
 
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 34.1)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     //ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
@@ -501,7 +227,6 @@ namespace NiceHashMiner
 
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 35)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     //ConfigManager.GeneralConfig.ShowDriverVersionWarning = true;
@@ -509,68 +234,58 @@ namespace NiceHashMiner
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 35.1)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 35.1;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 36)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 36;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 37)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 37;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 37.1)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 37.1;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 38)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 38;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 39)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 39;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 40)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 40;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 40.1)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     if (Directory.Exists("internals"))
                         Directory.Delete("internals", true);
                     ConfigManager.GeneralConfig.ForkFixVersion = 40.1;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 41)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     ConfigManager.GeneralConfig.ForkFixVersion = 41;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 41.1)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Old version");
                     ConfigManager.GeneralConfig.ForkFixVersion = 41.1;
                 }
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 42)
@@ -582,6 +297,11 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     ConfigManager.GeneralConfig.ForkFixVersion = 42.1;
+                }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 43)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    ConfigManager.GeneralConfig.ForkFixVersion = 43;
                 }
                 //**
                 //Thread.Sleep(100);

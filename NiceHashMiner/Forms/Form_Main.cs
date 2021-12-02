@@ -320,6 +320,9 @@ namespace NiceHashMiner
                 buttonBTC_Clear.Enabled = false;
                 buttonBTC_Save.Enabled = false;
             }
+            Helpers.ConsolePrint("NICEHASH", "Windows version " + GetWinVer(Environment.OSVersion.Version) + 
+                " (" + Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() +
+                " build: " + Environment.OSVersion.Version.Build.ToString() + ")");
             Helpers.ConsolePrint("NICEHASH", "Start query RAM");
             comboBoxLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.comboBoxLocation.DrawItem += new DrawItemEventHandler(comboBoxLocation_DrawItem);
@@ -337,7 +340,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "42.1";
+            Text += "43";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -2097,8 +2100,11 @@ public static void CloseChilds(Process parentId)
                 return 8;
             else if (ver.Major == 6 & ver.Minor == 3)
                 return 8.1;
-            else
+            else if (ver.Major == 10)
                 return 10;
+            else if (ver.Build >= 22000)
+                return 11;
+            else return -1;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
