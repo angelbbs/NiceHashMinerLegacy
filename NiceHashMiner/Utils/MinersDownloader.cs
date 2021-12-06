@@ -83,7 +83,7 @@ namespace NiceHashMiner.Utils
                 location,
                 mirrors,
                 _downloadSetup.BinsZipLocation,
-                10,
+                5,
                 true);
 
             _timer = new System.Threading.Timer(TmrRefresh_Tick);
@@ -121,8 +121,22 @@ namespace NiceHashMiner.Utils
             }
             else if (_ticksSinceUpdate > 20)
             {
-                Helpers.ConsolePrint("MinersDownloader", "Maximum ticks reached, retrying");
                 _ticksSinceUpdate = 0;
+                    Helpers.ConsolePrint("MinersDownloader", "Maximum ticks reached, switching to mirror and restart");
+                    try
+                    {
+                        if (File.Exists("configs//download_from_mirror.flag"))
+                        {
+                            File.Delete("configs//download_from_mirror.flag");
+                        }
+                        File.Create("configs//download_from_mirror.flag");
+                        Form_Main.MakeRestart(0);
+                    }
+                    catch
+                    {
+
+                    }
+                    Updater.Updater.GetGITLABVersion();
             }
             else
             {
@@ -170,6 +184,7 @@ namespace NiceHashMiner.Utils
 
         private void UnzipThreadRoutine()
         {
+            Forms.Form_Benchmark.RunCMDAfterBenchmark();
             try
             {
                 if (File.Exists(_downloadSetup.BinsZipLocation))
@@ -222,7 +237,7 @@ namespace NiceHashMiner.Utils
                 //untested 
                 var dialogRes = Utils.MessageBoxEx.Show(e.Message + "\r\n Restart Windows?",
                     "Autoupdate", MessageBoxButtons.YesNo, MessageBoxIcon.Question, 300000);//5min
-                if (dialogRes == System.Windows.Forms.DialogResult.No)
+                if (dialogRes == System.Windows.Forms.DialogResult.Yes)
                 {
                     var OSrestart = new ProcessStartInfo("shutdown")
                     {
@@ -235,7 +250,8 @@ namespace NiceHashMiner.Utils
                 }
                 else
                 {
-                    //Form_Main.MakeRestart(0);
+                    MessageBox.Show("Error!");
+                    Form_Main.MakeRestart(0);
                 }
 
             }

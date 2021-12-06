@@ -657,9 +657,21 @@ namespace NiceHashMiner.Devices
                         case "1002":
                             man = "AMD";
                             break;
+                        case "1025":
+                            man = "Acer";
+                            break;
                         case "1043":
                             man = "ASUS";
                             break;
+                        case "103C":
+                            man = "HP";
+                            break;
+                        case "17AA":
+                            man = "Lenovo";
+                            break;
+                                            case "1849":
+                    man = "ASRock";
+                    break;
                         case "196D":
                             man = "Club 3D";
                             break;
@@ -797,12 +809,14 @@ namespace NiceHashMiner.Devices
                             NvidiaLHR = false
                         };
                         //PCI\VEN_10DE&DEV_2504&SUBSYS_250410DE&REV_A1\4&12728395&0&00E2
-                        if (vidController.Name.Contains("RTX 3060") || vidController.Name.Contains("RTX 3070") ||
-                            vidController.Name.Contains("RTX 3080"))
+                        vidController.VEN_ = vidController.PnpDeviceID.Split('&')[0].Split('_')[1];
+                        vidController.DEV_ = vidController.PnpDeviceID.Split('&')[1].Split('_')[1];
+
+                        if (vidController.Name.Contains("3050") || vidController.Name.Contains("3060") ||
+                            vidController.Name.Contains("3070") ||
+                            vidController.Name.Contains("3080"))
                         {
                             vidController.NvidiaLHR = true;
-                            vidController.VEN_ = vidController.PnpDeviceID.Split('&')[0].Split('_')[1];
-                            vidController.DEV_ = vidController.PnpDeviceID.Split('&')[1].Split('_')[1];
                             vidController.NvidiaLHR = CheckNvidiaLHR(vidController.DEV_);
                         }
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
@@ -825,7 +839,7 @@ namespace NiceHashMiner.Devices
                             allVideoContollersOK = false;
                         }
 
-                        avaliableVideoControllers.Add(vidController);
+                        AvaliableVideoControllers.Add(vidController);
 
                         if (vidController.DriverVersion.Contains("4.6079"))
                         {
@@ -843,7 +857,7 @@ namespace NiceHashMiner.Devices
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
                         {
                             var msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
-                            foreach (var vc in avaliableVideoControllers)
+                            foreach (var vc in AvaliableVideoControllers)
                             {
                                 if (!vc.Status.ToLower().Equals("ok"))
                                 {
@@ -1054,10 +1068,11 @@ namespace NiceHashMiner.Devices
                         {
                             foreach (var vc in AvaliableVideoControllers)
                             {
-                                if (vc.DeviceID.Replace("VideoController", "").Equals((cudaDev.DeviceID + 1).ToString()) &&
-                                    (vc.DEV_ + vc.VEN_).Equals(cudaDev.pciDeviceId.ToString("X")))
+                                if ((vc.DEV_ + vc.VEN_).Equals(cudaDev.pciDeviceId.ToString("X")))
                                 {
                                     cudaDev.NvidiaLHR = vc.NvidiaLHR;
+                                    int.TryParse(vc.CurrentRefreshRate, out var refRate);
+                                    cudaDev.HasMonitorConnected = refRate;
                                 }
                             }
                                 // check sm vesrions
@@ -1424,8 +1439,14 @@ namespace NiceHashMiner.Devices
             public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUuid(string uuid)
             {
                 var compareDev = GetDeviceWithUuid(uuid);
+                if (ConfigManager.GeneralConfig.StrongDeviceName)
+                {
+                    return (from dev in Devices
+                            where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType && compareDev.Name == dev.Name
+                        select GetDeviceWithUuid(dev.Uuid)).ToList();
+                }
                 return (from dev in Devices
-                        where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType
+                        where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType 
                         select GetDeviceWithUuid(dev.Uuid)).ToList();
             }
 

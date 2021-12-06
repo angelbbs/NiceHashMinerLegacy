@@ -15,7 +15,7 @@ namespace NiceHashMiner.Configs.Data
         public bool DecreasePowerCost = false;
         public bool ShowTotalPower = false;
         public bool FiatCurrency = false;
-        public bool NoShowApiInLog;
+        public bool NoShowApiInLog = true;
         public bool NoForceTRexClose;
         public bool UseNegativeProfit = false;
         public bool ShowHiddenAlgos = false;
@@ -143,7 +143,7 @@ namespace NiceHashMiner.Configs.Data
         public bool RestartDriverOnCUDA_GPU_Lost = false;
         public bool RestartWindowsOnCUDA_GPU_Lost = false;
         public bool Allow_remote_management = true;
-        public bool Send_actual_version_info = false;
+        public bool Send_actual_version_info = true;
         public bool Force_mining_if_nonprofitable = true;
         public bool Additional_info_about_device = false;
         public bool Show_NVdevice_manufacturer = true;
@@ -156,6 +156,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Disable_extra_launch_parameter_checking = false;
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
+        public bool StrongDeviceName = true;
         public bool with_power = true;
         public bool By_profitability_of_all_devices = true;
         public string MachineGuid = "";

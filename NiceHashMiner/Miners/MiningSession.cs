@@ -444,7 +444,7 @@ namespace NiceHashMiner.Miners
             foreach (var device in _miningDevices)
             {
                 var stringBuilderDevice = new StringBuilder();
-                stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
+                stringBuilderDevice.AppendLine($"\tProfits for busID {device.Device.BusID} ({device.Device.GetFullName()}):");
 
                 foreach (var algo in device.Algorithms)
                 {
@@ -457,6 +457,7 @@ namespace NiceHashMiner.Miners
                         Form_Main.DaggerHashimoto4GBEnabled = true;
                     }
                     smaTmp = smaTmp + algo.CurNhmSmaDataVal;
+                    /*
                     stringBuilderDevice.AppendLine(
                         $"\tPROFIT = {Math.Round(algo.CurrentProfit, 10).ToString(DoubleFormat).PadRight(17)}" +
                             $"\tSPEED = {Math.Round(algo.AvaragedSpeed, 3).ToString().PadRight(13)}" +
@@ -464,6 +465,14 @@ namespace NiceHashMiner.Miners
                             $"\t{algo.AlgorithmStringID.PadRight(28)}" +
                             $"\t less than {device.GetMostProfitableString()} {(((device.GetCurrentMostProfitValue - algo.CurrentProfit) / device.GetCurrentMostProfitValue) * 100):0.00}%"
                         );
+                    */
+                    stringBuilderDevice.AppendLine(
+    $"\tPROFIT = {Math.Round(algo.CurrentProfit, 6).ToString("F9")}" +
+        $"\tSPEED = {Math.Round(algo.AvaragedSpeed, 3).ToString()}" +
+        $"\tNHSMA = {algo.CurNhmSmaDataVal.ToString("F6")}" +
+        $"\t{algo.AlgorithmStringID}" +
+        $"\t < {device.GetMostProfitableString()} {(((device.GetCurrentMostProfitValue - algo.CurrentProfit) / device.GetCurrentMostProfitValue) * 100):0.00}%"
+    );
                     if (algo is DualAlgorithm dualAlg)
                     {
                         stringBuilderDevice.AppendLine(

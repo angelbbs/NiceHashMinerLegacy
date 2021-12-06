@@ -151,7 +151,10 @@ namespace NiceHashMiner.Stats
             {
                 if (e.IsText)
                 {
-                    Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
+                    if (!e.Data.Contains("exchange_rates"))
+                    {
+                        Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
+                    }
                     dynamic message = JsonConvert.DeserializeObject(e.Data);
                     // Helpers.ConsolePrint("SOCKET", "Received1: " + e.Data);
                     switch (message.method.Value)
@@ -177,7 +180,7 @@ namespace NiceHashMiner.Stats
                                     var algoKey = (AlgorithmType)algo[0];
                                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                                     {
-                                        Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " (" + algo[0].ToString() + ") - " + algo[1]);
+                                        //Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " (" + algo[0].ToString() + ") - " + algo[1]);
                                     }
                                 }
                                 if (ConfigManager.GeneralConfig.MOPA5)
@@ -185,7 +188,23 @@ namespace NiceHashMiner.Stats
                                     ClearAlgorithmRates();
                                 }
 
-                                SetAlgorithmRates(message.data);
+                                double tmp = 0.0d;
+                                JArray data = message.data;
+                                foreach (var algo in data)
+                                {
+                                    if (algo == null) return;
+                                    var algoKeyTmp = (AlgorithmType)algo[0].Value<int>();
+                                    double.TryParse((string)algo[1], out var payingTmp);
+                                    tmp = tmp + payingTmp;
+                                }
+                                if (tmp == 0)
+                                {
+                                    Helpers.ConsolePrint("SMA WS", "All algos zero!");
+                                    return;
+                                } else
+                                {
+                                    SetAlgorithmRates(message.data);
+                                }
                                 GetSmaAPI();
                                 /*
                                 if (AlgorithmSwitchingManager._smaCheckTimer != null)

@@ -340,7 +340,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "43";
+            Text += "43.1";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -849,7 +849,7 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfigFileCommit();
                     try
                     {
-                        if (Updater.Updater.GetGITHUBVersion() > 0)
+                        if (Updater.Updater.GetGITHUBVersion() > 0 && !File.Exists("configs//download_from_mirror.flag"))
                         {
                             var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.MinersDownloadSetup));
                             SetChildFormCenter(downloadUnzipForm);
@@ -861,7 +861,14 @@ namespace NiceHashMiner
             Form_Main.miners_url,
             "miners.zip",
             "miners")));
-
+                            try
+                            {
+                                if (File.Exists("configs//download_from_mirror.flag"))
+                                {
+                                    File.Delete("configs//download_from_mirror.flag");
+                                }
+                            } catch
+                            { }
                             Helpers.ConsolePrint("Download miners", Form_Main.miners_url);
                             SetChildFormCenter(downloadUnzipForm);
                             downloadUnzipForm.ShowDialog();
@@ -1191,6 +1198,7 @@ namespace NiceHashMiner
                     lbl.FlatAppearance.BorderColor = _textColor;
                     lbl.FlatAppearance.BorderSize = 1;
                 }
+
                 this.Enabled = true;
                 buttonLogo.FlatAppearance.BorderSize = 0;
 

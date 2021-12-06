@@ -554,6 +554,7 @@
 "FormSettings_AB_FileNotFound": "MSI Afterburner error.\r\nFile {0} not found.\r\nPlease install MSI Afterburner",
 "FormSettings_AB_ValueWarning": "Value must be between {0} and {1}",
 "FormSettings_AB_HowToUse": "How to use MSI Afterburner for overclocking",
+"FormSettings_NoSameDevices": "There are no same devices",
 "MSIAB_Starting": "Starting MSI Afterburner",
 "MSIAB_Checking": "Checking MSI Afterburner",
 "MSIAB_Closing": "Closing MSI Afterburner",

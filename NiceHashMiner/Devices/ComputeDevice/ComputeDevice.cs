@@ -376,6 +376,7 @@ namespace NiceHashMiner.Devices
         //}
         public void CopyOverclockSettingsFrom(ComputeDevice copyBenchCDevFrom, ComputeDevice copyBenchCDevTo)
         {
+            Helpers.ConsolePrint("CopyOverclockSettingsFrom", "copy from: " + copyBenchCDevFrom.Name + " to: " + copyBenchCDevTo.Name);
             foreach (var copyFromAlgo in copyBenchCDevFrom.AlgorithmSettings)
             {
                 var setAlgo = GetAlgorithm(copyFromAlgo);
@@ -383,10 +384,12 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        string fNameSrc = "temp\\" + copyBenchCDevFrom.Uuid + "_" + setAlgo.AlgorithmStringID + ".tmp";
-                        string fNameDst = "temp\\" + copyBenchCDevTo.Uuid + "_" + setAlgo.AlgorithmStringID + ".tmp";
+                        string fNameSrc = "temp\\" + copyBenchCDevFrom.Uuid + "_" + setAlgo.AlgorithmStringID + ".gputmp";
+                        string fNameDst = "temp\\" + copyBenchCDevTo.Uuid + "_" + setAlgo.AlgorithmStringID + ".gputmp";
+                        Helpers.ConsolePrint("CopyOverclockSettingsFrom", "copy file from: " + fNameSrc + " to: " + fNameDst);
                         if (!File.Exists(fNameSrc))
                         {
+                            Helpers.ConsolePrint("CopyOverclockSettingsFrom", "File not exist: " + fNameSrc);
                             MSIAfterburner.SaveDefaultDeviceData(copyBenchCDevFrom.BusID, fNameSrc);
                         }
                         if (File.Exists(fNameDst)) File.Delete(fNameDst);
@@ -720,8 +723,23 @@ namespace NiceHashMiner.Devices
                 case "1002":
                     man = "AMD";
                     break;
+                case "1025":
+                    man = "Acer";
+                    break;
                 case "1043":
                     man = "ASUS";
+                    break;
+                case "103C":
+                    man = "HP";
+                    break;
+                case "1569":
+                    man = "Palit";
+                    break;
+                case "17AA":
+                    man = "Lenovo";
+                    break;
+                case "1849":
+                    man = "ASRock";
                     break;
                 case "196D":
                     man = "Club 3D";
@@ -762,6 +780,9 @@ namespace NiceHashMiner.Devices
                 case "1682":
                     man = "XFX";
                     break;
+                case "1EAE":
+                    man = "XFX";
+                    break;
                 case "107D":
                     man = "Leadtek";
                     break;
@@ -771,8 +792,14 @@ namespace NiceHashMiner.Devices
                 case "10DE":
                     man = "NVIDIA";
                     break;
+                case "152D":
+                    man = "Quanta";
+                    break;
                 case "154B":
                     man = "PNY";
+                    break;
+                case "196E":
+                    man = "PNY";//??
                     break;
                 case "19DA":
                     man = "Zotac";

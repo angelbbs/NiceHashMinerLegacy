@@ -303,6 +303,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Old version");
                     ConfigManager.GeneralConfig.ForkFixVersion = 43;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 43.1)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Old version");
+                    ConfigManager.GeneralConfig.ForkFixVersion = 43.1;
+                }
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************
