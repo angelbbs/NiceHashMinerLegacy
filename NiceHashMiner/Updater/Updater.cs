@@ -143,7 +143,6 @@ namespace NiceHashMiner.Updater
                 CMDconfigHandleBackup.StartInfo.Arguments = "a -tzip -mx3 -ssw -r -y -x!backup backup\\backup_" + fname + ".zip";
                 CMDconfigHandleBackup.StartInfo.UseShellExecute = false;
                 CMDconfigHandleBackup.StartInfo.CreateNoWindow = false;
-                //CMDconfigHandleBackup.Exited += new EventHandler(CMDconfigHandleBackup_Exited);
                 CMDconfigHandleBackup.Start();
                 CMDconfigHandleBackup.WaitForExit();
                 Helpers.ConsolePrint("BACKUP", "Error code: " + CMDconfigHandleBackup.ExitCode);

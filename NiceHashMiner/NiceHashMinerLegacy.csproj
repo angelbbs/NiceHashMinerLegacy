@@ -571,6 +571,9 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>del Newtonsoft.Json.xml /Q
+del miners.zip /Q
+del miners(1).zip /Q
+del miners(2).zip /Q
 del cpuid.lib /Q
 del cpuid.ilk /Q
 del cpuid.exp /Q

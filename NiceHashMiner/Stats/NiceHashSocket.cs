@@ -3,7 +3,9 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.UUID;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
@@ -400,12 +402,12 @@ namespace NiceHashMiner.Stats
             });
         }
 
-        public static void DropPort(int processId, uint port)
+        public static void DropIPPort(int processId, string IP, uint port)
         {
             ProcessStartInfo cports;
 
             cports = new ProcessStartInfo("utils/cports-x64/cports.exe");
-            cports.Arguments = "/close * * * " + port.ToString() + " " + processId.ToString();
+            cports.Arguments = "/close * * " + IP + " " + port.ToString() + " " + processId.ToString();
             cports.UseShellExecute = false;
             cports.RedirectStandardError = false;
             cports.RedirectStandardOutput = false;
@@ -418,15 +420,29 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("DropPort", ex.Message);
+                Helpers.ConsolePrint("DropIPPort", ex.Message);
             }
-            Helpers.ConsolePrint("DropPort", "Drop port " + port.ToString() + " completed");
+            Helpers.ConsolePrint("DropIPPort", "Drop port " + IP + ":" + port.ToString() + " completed");
         }
 
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
         // public bool SendData(string data, bool recurs = false)
         public async Task<bool> SendData(string data, bool recurs = false)
         {
+            List<string> IPsList = new List<string>();
+            var heserver = Dns.GetHostEntry("nicehash.com");
+            try
+            {
+                foreach (IPAddress curAdd in heserver.AddressList)
+                {
+                    IPsList.Add(curAdd.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("WinDivertSharp", ex.ToString());
+            }
+
             try
             {
                 if (_webSocket != null && IsAlive)
@@ -447,7 +463,10 @@ namespace NiceHashMiner.Stats
                 {
                     Form_Main.NHConnectingInProgress = true;
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
-                    DropPort(Process.GetCurrentProcess().Id, 443);
+                    foreach (var ip in IPsList)
+                    {
+                        DropIPPort(Process.GetCurrentProcess().Id, ip, 443);
+                    }
                     Thread.Sleep(3000);
                     _webSocket = null;
                     StartConnectionNew();
@@ -468,7 +487,10 @@ namespace NiceHashMiner.Stats
             catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
-                DropPort(Process.GetCurrentProcess().Id, 443);
+                foreach (var ip in IPsList)
+                {
+                    DropIPPort(Process.GetCurrentProcess().Id, ip, 443);
+                }
                 Thread.Sleep(1000);
             }
             return false;

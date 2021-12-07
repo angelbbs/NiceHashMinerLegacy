@@ -1588,12 +1588,6 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void CurrencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selected = currencyConverterCombobox.SelectedItem.ToString();
-            ConfigManager.GeneralConfig.DisplayCurrency = selected;
-        }
-
         #endregion Form Callbacks
 
         private void TabControlGeneral_Selected(object sender, TabControlEventArgs e)
@@ -2274,9 +2268,6 @@ namespace NiceHashMiner.Forms
             }
 
         }
-        private void CMDconfigHandleBackup_Exited(object sender, System.EventArgs e)
-        {
-        }
 
         private void checkBox_AlwaysOnTop_CheckedChanged(object sender, EventArgs e)
         {
@@ -2581,6 +2572,12 @@ namespace NiceHashMiner.Forms
             {
                 MessageBox.Show(International.GetText("FormSettings_changePowerCost"), "Next");
             }
+        }
+
+        private void currencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selected = currencyConverterCombobox.SelectedItem.ToString();
+            ConfigManager.GeneralConfig.DisplayCurrency = selected;
         }
     }
 }

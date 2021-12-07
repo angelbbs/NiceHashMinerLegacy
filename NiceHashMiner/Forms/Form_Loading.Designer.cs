@@ -46,6 +46,8 @@ namespace NiceHashMiner
             // 
             // label_LoadingText
             // 
+            this.label_LoadingText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label_LoadingText.AutoSize = true;
             this.label_LoadingText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label_LoadingText.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -54,6 +56,7 @@ namespace NiceHashMiner
             this.label_LoadingText.Size = new System.Drawing.Size(136, 13);
             this.label_LoadingText.TabIndex = 0;
             this.label_LoadingText.Text = "Loading, please wait...";
+            this.label_LoadingText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // progressBar2
             // 

@@ -63,11 +63,11 @@ namespace NiceHashMiner.Utils
             {
                 Helpers.ConsolePrint("MinersDownloader", e.Message);
             }
-            Download();
+            Download(_downloadSetup.BinsDownloadUrl);
         }
 
         // #2 download the file
-        private void Download()
+        private void Download(string downloadURL)
         {
             _lastProgress = 0;
             _ticksSinceUpdate = 0;
@@ -75,15 +75,15 @@ namespace NiceHashMiner.Utils
             _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));
 
             DownloadManager.Instance.DownloadEnded += DownloadCompleted;
-
-            var location = ResourceLocation.FromURL(_downloadSetup.BinsDownloadUrl);
+             
+            var location = ResourceLocation.FromURL(downloadURL);
             var mirrors = new ResourceLocation[0];
 
             _downloader = DownloadManager.Instance.Add(
                 location,
                 mirrors,
                 _downloadSetup.BinsZipLocation,
-                5,
+                1,
                 true);
 
             _timer = new System.Threading.Timer(TmrRefresh_Tick);
@@ -116,33 +116,66 @@ namespace NiceHashMiner.Utils
             // Diagnostic stuff
             if (_downloader.Transfered > _lastProgress)
             {
+                _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));
                 _ticksSinceUpdate = 0;
                 _lastProgress = _downloader.Transfered;
             }
-            else if (_ticksSinceUpdate > 20)
+            else if (_ticksSinceUpdate > 60)//0.5 min
             {
                 _ticksSinceUpdate = 0;
-                    Helpers.ConsolePrint("MinersDownloader", "Maximum ticks reached, switching to mirror and restart");
-                    try
-                    {
-                        if (File.Exists("configs//download_from_mirror.flag"))
-                        {
-                            File.Delete("configs//download_from_mirror.flag");
-                        }
-                        File.Create("configs//download_from_mirror.flag");
-                        Form_Main.MakeRestart(0);
-                    }
-                    catch
-                    {
+                Helpers.ConsolePrint("MinersDownloader", "Maximum ticks reached");
+                Helpers.ConsolePrint("MinersDownloader", "DownloadManager.Instance.Downloads.Count: " + DownloadManager.Instance.Downloads.Count.ToString());
+                for (int d = 0; d < DownloadManager.Instance.Downloads.Count; d++)
+                {
+                    DownloadManager.Instance.RemoveDownload(d);
+                }
+                _downloader = null;
+                DownloadManager.Instance.ClearEnded();
 
+                Download(Form_Main.miners_url);
+                _minerUpdateIndicator.SetTitle("Restarting downloading from mirror..");
+
+                try
+                {
+                    if (File.Exists(_downloadSetup.BinsZipLocation))
+                    {
+                        File.Delete(_downloadSetup.BinsZipLocation);
                     }
-                    Updater.Updater.GetGITLABVersion();
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("MinersDownloader", ex.ToString());
+                }
+                return;
             }
             else
             {
                 Helpers.ConsolePrint("MinersDownloader", "No progress in ticks " + _ticksSinceUpdate);
+                _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_DownloadingWaiting"));
                 _ticksSinceUpdate++;
             }
+        }
+        public static void DropPort(int processId, uint port)
+        {
+            ProcessStartInfo cports;
+
+            cports = new ProcessStartInfo("utils/cports-x64/cports.exe");
+            cports.Arguments = "/close * * * " + port.ToString() + " " + processId.ToString();
+            cports.UseShellExecute = false;
+            cports.RedirectStandardError = false;
+            cports.RedirectStandardOutput = false;
+            cports.CreateNoWindow = true;
+            cports.WindowStyle = ProcessWindowStyle.Hidden;
+
+            try
+            {
+                Process.Start(cports);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("DropPort", ex.Message);
+            }
+            Helpers.ConsolePrint("DropPort", "Drop port " + port.ToString() + " completed");
         }
 
         // The event that will trigger when the WebClient is completed
@@ -233,7 +266,8 @@ namespace NiceHashMiner.Utils
             catch (Exception e)
             {
                 Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
-
+                
+                /*
                 //untested 
                 var dialogRes = Utils.MessageBoxEx.Show(e.Message + "\r\n Restart Windows?",
                     "Autoupdate", MessageBoxButtons.YesNo, MessageBoxIcon.Question, 300000);//5min
@@ -253,7 +287,7 @@ namespace NiceHashMiner.Utils
                     MessageBox.Show("Error!");
                     Form_Main.MakeRestart(0);
                 }
-
+                */
             }
         }
     }

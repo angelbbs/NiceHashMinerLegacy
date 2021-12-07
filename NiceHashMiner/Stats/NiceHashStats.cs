@@ -1010,6 +1010,7 @@ namespace NiceHashMiner.Stats
 
         private static void SetExchangeRates(string data)
         {
+            Helpers.ConsolePrint("SetExchangeRates", data);
             try
             {
                 var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
