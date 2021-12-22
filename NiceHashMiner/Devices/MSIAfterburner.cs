@@ -550,9 +550,6 @@ namespace NiceHashMiner.Devices
                             macm.GpuEntries[i].CoreVoltageBoostCur = macm.GpuEntries[i].CoreVoltageBoostDef;
                         }
 
-                        macm.GpuEntries[i].FanFlagsCur = macm.GpuEntries[i].FanFlagsDef;
-                        //macm.GpuEntries[i].FanSpeedCur = macm.GpuEntries[i].FanSpeedDef;//auto
-
                         if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED))
                         {
                             macm.GpuEntries[i].Flags = macm.GpuEntries[i].Flags - (int)MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED;
@@ -606,6 +603,11 @@ namespace NiceHashMiner.Devices
                     if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_PRIORITIZE))
                     {
                         //macm.GpuEntries[i].thermalPrioritizeCur = macm.GpuEntries[i].thermalPrioritizeDef;
+                    }
+                    if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED))
+                    {
+                        macm.GpuEntries[i].FanFlagsCur = macm.GpuEntries[i].FanFlagsDef;
+                        macm.GpuEntries[i].FanSpeedCur = macm.GpuEntries[i].FanSpeedDef;//auto
                     }
                     break;
 
@@ -687,7 +689,9 @@ namespace NiceHashMiner.Devices
                     macm.GpuEntries[index].CoreVoltageCur == dev.CoreVoltageCur &&
                     macm.GpuEntries[index].MemoryClockBoostCur == dev.MemoryClockBoostCur &&
                     macm.GpuEntries[index].MemoryClockCur == dev.MemoryClockCur &&
-                    macm.GpuEntries[index].PowerLimitCur == dev.PowerLimitCur)
+                    macm.GpuEntries[index].PowerLimitCur == dev.PowerLimitCur &&
+                    macm.GpuEntries[index].FanSpeedCur == dev.FanSpeedCur &&
+                    macm.GpuEntries[index].ThermalLimitCur == dev.ThermalLimitCur)
                 {
                     Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare OK. busID " + _busID.ToString());
                     return true;

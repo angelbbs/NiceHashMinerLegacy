@@ -231,6 +231,8 @@ namespace NiceHashMiner.Forms.Components
                         devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(computeDevice.Manufacturer) + " ", "");
                     }
 
+                    devInfo = devInfo.Replace("NVIDIA ", "");
+
                     GpuRam = (computeDevice.GpuRam / 1073741824).ToString() + "GB";
                     if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
                     {

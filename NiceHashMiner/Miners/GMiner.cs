@@ -173,6 +173,7 @@ namespace NiceHashMiner.Miners
                       + " --server " + algoName + "." + Form_Main.myServers[3, 0] + ".nicehash.com" + nicehashstratum
                       + " --user " + username + " --pass x --port " + url.Split(':')[1] + ssl
                       + " --api " + ApiPort + " -l " + GetLogFileName();
+                     // + " --dev_fee_ssl 0 --api " + ApiPort + " -l " + GetLogFileName();
             return ret;
         }
         protected override string GetDevicesCommandString()

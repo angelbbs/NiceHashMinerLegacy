@@ -1197,7 +1197,7 @@ namespace NiceHashMiner.Stats
                     var deviceName = device.Name;
 
                     string NvidiaLHR = "";
-                    if (device.NvidiaLHR)
+                    if (device.NvidiaLHR && device.DeviceType == DeviceType.NVIDIA)
                     {
                         NvidiaLHR = "(LHR)";
                     }
@@ -1207,18 +1207,21 @@ namespace NiceHashMiner.Stats
                     string Manufacturer = "";
                     string GpuRam = "";
 
-                    if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
+                    if (device.DeviceType == DeviceType.NVIDIA)
                     {
-                        deviceName = deviceName.Replace("NVIDIA", "");
-                        if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                        if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                         {
-                            Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                            deviceName = deviceName.Replace("NVIDIA", "");
+                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            {
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                            }
                         }
-                    }
-                    else
-                    {
-                        deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
-                        if (!deviceName.Contains("NVIDIA")) deviceName = "NVIDIA " + deviceName;
+                        else
+                        {
+                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                            if (!deviceName.Contains("NVIDIA")) deviceName = "NVIDIA " + deviceName;
+                        }
                     }
 
                     GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";

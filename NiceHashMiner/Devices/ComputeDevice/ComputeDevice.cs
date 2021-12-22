@@ -323,7 +323,7 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = ethereumCapable;
             DeviceType = type;
             NameCount = nameCount;
-            GpuRam = gpuRam;
+            GpuRam = gpuRam + 1024 * 1024 * 100;//add 100MB
             Manufacturer = manufacturer;
             MonitorConnected = monitorconnected;
             NvidiaLHR = nvidiaLHR;
@@ -726,6 +726,9 @@ namespace NiceHashMiner.Devices
                 case "1025":
                     man = "Acer";
                     break;
+                case "1028":
+                    man = "Dell";
+                    break;
                 case "1043":
                     man = "ASUS";
                     break;
@@ -743,6 +746,9 @@ namespace NiceHashMiner.Devices
                     break;
                 case "196D":
                     man = "Club 3D";
+                    break;
+                case "196E":
+                    man = "PNY";
                     break;
                 case "1092":
                     man = "Diamond Multimedia";
@@ -798,9 +804,6 @@ namespace NiceHashMiner.Devices
                 case "154B":
                     man = "PNY";
                     break;
-                case "196E":
-                    man = "PNY";//??
-                    break;
                 case "19DA":
                     man = "Zotac";
                     break;
@@ -810,6 +813,16 @@ namespace NiceHashMiner.Devices
                 case "1B4C":
                     man = "KFA2";
                     break;
+                /*
+case "2319":
+man = "???";
+break;
+*/
+                /*
+case "4D50":
+man = "???";
+break;
+*/
                 case "3842":
                     man = "EVGA";
                     break;

@@ -660,6 +660,9 @@ namespace NiceHashMiner.Devices
                         case "1025":
                             man = "Acer";
                             break;
+                        case "1028":
+                            man = "Dell";
+                            break;
                         case "1043":
                             man = "ASUS";
                             break;
@@ -669,11 +672,14 @@ namespace NiceHashMiner.Devices
                         case "17AA":
                             man = "Lenovo";
                             break;
-                                            case "1849":
-                    man = "ASRock";
-                    break;
+                        case "1849":
+                            man = "ASRock";
+                            break;
                         case "196D":
                             man = "Club 3D";
+                            break;
+                        case "196E":
+                            man = "PNY";
                             break;
                         case "1092":
                             man = "Diamond Multimedia";
@@ -723,6 +729,9 @@ namespace NiceHashMiner.Devices
                         case "154B":
                             man = "PNY";
                             break;
+                        case "1569":
+                            man = "Palit";
+                            break;
                         case "19DA":
                             man = "Zotac";
                             break;
@@ -735,6 +744,17 @@ namespace NiceHashMiner.Devices
                         case "3842":
                             man = "EVGA";
                             break;
+
+                        /*
+                    case "2319":
+                        man = "???";
+                        break;
+                        */
+                        /*
+case "4d50":
+man = "???";
+break;
+*/
                         case "7377":
                             man = "Colorful";
                             break;

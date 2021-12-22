@@ -1,4 +1,5 @@
 using NiceHashMiner.Configs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -34,12 +35,18 @@ namespace NiceHashMiner.Miners
         {
             var port = ConfigManager.GeneralConfig.ApiBindPortPoolStart;
             var newPortEnd = port + 3000;
-            for (; port < newPortEnd; ++port)
+            try
             {
-                if (MinersSettingsManager.AllReservedPorts.Contains(port) == false && IsPortAvaliable(port) && UsedPorts.Add(port))
+                for (; port < newPortEnd; ++port)
                 {
-                    break;
+                    if (MinersSettingsManager.AllReservedPorts.Contains(port) == false && IsPortAvaliable(port) && UsedPorts.Add(port))
+                    {
+                        break;
+                    }
                 }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetAvaliablePort", ex.ToString());
             }
             return port;
         }

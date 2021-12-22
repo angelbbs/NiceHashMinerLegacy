@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Management.Automation;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -22,11 +23,12 @@ namespace NiceHashMiner.Utils
 
         private Downloader _downloader;
         private System.Threading.Timer _timer;
-        private int _ticksSinceUpdate;
-        private long _lastProgress;
+        private int _ticksSinceUpdate = 0;
+        private long _lastProgress = 0;
         private Thread _unzipThread;
 
         private bool _isDownloadSizeInit;
+        private string _downloadURL;
 
         private IMinerUpdateIndicator _minerUpdateIndicator;
 
@@ -46,7 +48,7 @@ namespace NiceHashMiner.Utils
         public void Start(IMinerUpdateIndicator minerUpdateIndicator)
         {
             _minerUpdateIndicator = minerUpdateIndicator;
-
+            _ticksSinceUpdate = 0;
             // if something not right delete previous and download new
             try
             {
@@ -66,16 +68,19 @@ namespace NiceHashMiner.Utils
             Download(_downloadSetup.BinsDownloadUrl);
         }
 
+        private bool _Download = false;
         // #2 download the file
         private void Download(string downloadURL)
         {
+            Helpers.ConsolePrint("MinersDownloader", "Start download");
+            _downloadURL = downloadURL;
             _lastProgress = 0;
             _ticksSinceUpdate = 0;
 
             _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));
 
             DownloadManager.Instance.DownloadEnded += DownloadCompleted;
-             
+
             var location = ResourceLocation.FromURL(downloadURL);
             var mirrors = new ResourceLocation[0];
 
@@ -92,6 +97,7 @@ namespace NiceHashMiner.Utils
 
         #region Download delegates
 
+        private string title = International.GetText("MinersDownloadManager_Title_Downloading");
         private void TmrRefresh_Tick(object stateInfo)
         {
             if (_downloader == null || _downloader.State != DownloaderState.Working) return;
@@ -110,13 +116,13 @@ namespace NiceHashMiner.Utils
             var percString = _downloader.Progress.ToString("0.00") + "%";
             var labelDownloaded =
                 $"{_downloader.Transfered / 1024d / 1024d:0.00} MB / {_downloader.FileSize / 1024d / 1024d:0.00} MB";
+            _minerUpdateIndicator.SetTitle(title);
             _minerUpdateIndicator.SetProgressValueAndMsg((int)(_downloader.Transfered / 1024d),
                 $"{speedString}   {percString}   {labelDownloaded}");
 
             // Diagnostic stuff
             if (_downloader.Transfered > _lastProgress)
             {
-                _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));
                 _ticksSinceUpdate = 0;
                 _lastProgress = _downloader.Transfered;
             }
@@ -124,7 +130,6 @@ namespace NiceHashMiner.Utils
             {
                 _ticksSinceUpdate = 0;
                 Helpers.ConsolePrint("MinersDownloader", "Maximum ticks reached");
-                Helpers.ConsolePrint("MinersDownloader", "DownloadManager.Instance.Downloads.Count: " + DownloadManager.Instance.Downloads.Count.ToString());
                 for (int d = 0; d < DownloadManager.Instance.Downloads.Count; d++)
                 {
                     DownloadManager.Instance.RemoveDownload(d);
@@ -155,27 +160,38 @@ namespace NiceHashMiner.Utils
                 _ticksSinceUpdate++;
             }
         }
-        public static void DropPort(int processId, uint port)
+
+        public static void MinersEmergencyDownloading(string mpath)
         {
-            ProcessStartInfo cports;
-
-            cports = new ProcessStartInfo("utils/cports-x64/cports.exe");
-            cports.Arguments = "/close * * * " + port.ToString() + " " + processId.ToString();
-            cports.UseShellExecute = false;
-            cports.RedirectStandardError = false;
-            cports.RedirectStandardOutput = false;
-            cports.CreateNoWindow = true;
-            cports.WindowStyle = ProcessWindowStyle.Hidden;
-
+            Helpers.ConsolePrint("*******", "Start MinersEmergencyDownloading");
             try
             {
-                Process.Start(cports);
+                if (File.Exists("miners.zip")) File.Delete("miners.zip");
+
+                var cports = new Process
+                {
+                    StartInfo =
+                        {
+                            FileName = "powershell.exe",
+                            UseShellExecute = true,
+                            Arguments = "-file common\\MinersEmergencyDownloading.ps1 \"" + mpath + "\"",
+                            RedirectStandardError = false,
+                            RedirectStandardOutput = false,
+                            CreateNoWindow = false,
+                            WindowStyle = ProcessWindowStyle.Normal
+                }
+                };
+                cports.Start();
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("DropPort", ex.Message);
+                Helpers.ConsolePrint("MinersEmergencyDownloading", ex.ToString());
             }
-            Helpers.ConsolePrint("DropPort", "Drop port " + port.ToString() + " completed");
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!File.Exists("miners.zip"));
         }
 
         // The event that will trigger when the WebClient is completed
@@ -188,6 +204,7 @@ namespace NiceHashMiner.Utils
                 if (_downloader.State == DownloaderState.EndedWithError)
                 {
                     Helpers.ConsolePrint("MinersDownloader", _downloader.LastError.Message);
+                    MinersEmergencyDownloading(_downloadURL);
                 }
                 else if (_downloader.State == DownloaderState.Ended)
                 {
@@ -203,9 +220,10 @@ namespace NiceHashMiner.Utils
 
         #endregion Download delegates
 
-
+        private bool _UnzipStart = false;
         private void UnzipStart()
         {
+            if (_UnzipStart) return;
             try
             {
                 _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Settup"));
@@ -217,7 +235,10 @@ namespace NiceHashMiner.Utils
 
         private void UnzipThreadRoutine()
         {
+            _UnzipStart = true;
             Forms.Form_Benchmark.RunCMDAfterBenchmark();
+
+            IArchive archive = ArchiveFactory.Create(ArchiveType.Zip);
             try
             {
                 if (File.Exists(_downloadSetup.BinsZipLocation))
@@ -227,7 +248,7 @@ namespace NiceHashMiner.Utils
 
                     // if using other formats as zip are returning 0
                     var fileArchive = new FileInfo(_downloadSetup.BinsZipLocation);
-                    var archive = ArchiveFactory.Open(_downloadSetup.BinsZipLocation);
+                    archive = ArchiveFactory.Open(_downloadSetup.BinsZipLocation);
                     _minerUpdateIndicator.SetMaxProgressValue(100);
                     long sizeCount = 0;
                     foreach (var entry in archive.Entries)
@@ -266,7 +287,11 @@ namespace NiceHashMiner.Utils
             catch (Exception e)
             {
                 Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
-                
+                archive.Dispose();
+
+                MinersEmergencyDownloading(_downloadURL);
+
+                //Form_Main.MakeRestart(0);
                 /*
                 //untested 
                 var dialogRes = Utils.MessageBoxEx.Show(e.Message + "\r\n Restart Windows?",
@@ -288,6 +313,9 @@ namespace NiceHashMiner.Utils
                     Form_Main.MakeRestart(0);
                 }
                 */
+            } finally
+            {
+                _UnzipStart = false;
             }
         }
     }

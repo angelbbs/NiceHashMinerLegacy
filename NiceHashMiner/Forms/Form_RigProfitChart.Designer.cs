@@ -45,6 +45,7 @@ namespace NiceHashMiner.Forms
             this.label_Total_local_profit = new System.Windows.Forms.Label();
             this.buttonClear = new System.Windows.Forms.Button();
             this.labelChartDisabled = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.chartRigProfit)).BeginInit();
             this.SuspendLayout();
             // 
@@ -188,11 +189,19 @@ namespace NiceHashMiner.Forms
             this.labelChartDisabled.TabIndex = 12;
             this.labelChartDisabled.Text = "Profitability chart disabled";
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(252, 91);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(286, 23);
+            this.progressBar1.TabIndex = 13;
+            // 
             // Form_RigProfitChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 351);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.labelChartDisabled);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.label_Total_local_profit);
@@ -236,5 +245,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label label_Total_local_profit;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Label labelChartDisabled;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

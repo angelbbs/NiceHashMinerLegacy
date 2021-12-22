@@ -33,6 +33,7 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             chartRigProfit.Hide();
             InitializeColorProfile();
+            progressBar1.Visible = false;
             Text = International.GetText("Form_Main_chart");
             checkBox_StartChartWithProgram.Checked = ConfigManager.GeneralConfig.StartChartWithProgram;
             checkBox_Chart_Fiat.Checked = ConfigManager.GeneralConfig.ChartFiat;
@@ -76,7 +77,8 @@ namespace NiceHashMiner.Forms
                 //chartRigProfit.Series["Series1"].
                 chartRigProfit.ChartAreas[0].BackColor = Form_Main._backColor;
                 //chartRigProfit.ChartAreas[0].fo = Form_Main._textColor;
-
+                progressBar1.BackColor = Form_Main._backColor; 
+                progressBar1.ForeColor = Form_Main._foreColor; 
 
             }
             else
@@ -308,11 +310,18 @@ namespace NiceHashMiner.Forms
             _updateTimer.Interval = 1000 * 1;
             _updateTimer.Start();
 
+            progressBar1.Visible = true;
+            progressBar1.Maximum = Form_Main.RigProfits.Count - 1;
             for (int i = 0; i < Form_Main.RigProfits.Count; i++)
             {
+                progressBar1.Value = i;
+                progressBar1.Update();
+                this.Update();
+                Thread.Sleep(1);
                 ChartData(null, null);
                 chartRigProfit.Series[0].Points[0].AxisLabel = Form_Main.RigProfits[0].DateTime.ToString("dd-MM-yyyy HH:mm:ss");
             }
+            progressBar1.Visible = false;
 
             if (Form_Main.RigProfits.Count != 0)
             {
