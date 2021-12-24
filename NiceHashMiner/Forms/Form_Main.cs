@@ -340,7 +340,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "43.1";
+            Text += "43.2";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -3007,7 +3007,6 @@ public static void CloseChilds(Process parentId)
             _minerStatsCheck.Stop();
             //_smaMinerCheck.Stop();
             _computeDevicesCheckTimer?.Stop();
-
             // Disable IFTTT notification before label call
             _isNotProfitable = false;
 

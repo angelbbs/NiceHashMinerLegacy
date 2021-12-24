@@ -183,39 +183,9 @@ namespace NiceHashMiner.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap NHM_help_50px {
-            get {
-                object obj = ResourceManager.GetObject("NHM_help_50px", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap NHM_logo_small_2021 {
-            get {
-                object obj = ResourceManager.GetObject("NHM_logo_small_2021", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap NHM_logo_xsmall_light {
             get {
                 object obj = ResourceManager.GetObject("NHM_logo_xsmall_light", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap NHM_logo_xsmall_light2020 {
-            get {
-                object obj = ResourceManager.GetObject("NHM_logo_xsmall_light2020", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

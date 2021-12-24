@@ -578,6 +578,7 @@ namespace NiceHashMiner.Miners
                         if (repeats > delay_before_calc_hashrate)
                         {
                             Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
+                            /*
                             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                             {
                                 summspeed = Math.Max(summspeed, ad.Result.Speed);
@@ -586,6 +587,8 @@ namespace NiceHashMiner.Miners
                             {
                                 summspeed += ad.Result.Speed;
                             }
+                            */
+                            summspeed += ad.Result.Speed;
                         }
                         else
                         {
@@ -607,6 +610,8 @@ namespace NiceHashMiner.Miners
 
                     }
                 }
+                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                /*
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
                     BenchmarkAlgorithm.BenchmarkSpeed = summspeed;
@@ -616,6 +621,7 @@ namespace NiceHashMiner.Miners
                     BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
                     BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
                 }
+                */
             }
             catch (Exception ex)
             {

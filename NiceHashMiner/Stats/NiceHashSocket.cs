@@ -321,6 +321,11 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("UUID", "Unknown MachineGuid detected. Reseting MachineGuid");
                     Configs.ConfigManager.GeneralConfig.MachineGuid = rig;
                 }
+                if (Configs.ConfigManager.GeneralConfig.MachineGuid.Contains("+"))
+                {
+                    Helpers.ConsolePrint("UUID", "(+) in MachineGuid detected. Reseting MachineGuid");
+                    Configs.ConfigManager.GeneralConfig.MachineGuid = rig;
+                }
 
                 if (!Configs.ConfigManager.GeneralConfig.MachineGuid.Equals(rig))
                 {

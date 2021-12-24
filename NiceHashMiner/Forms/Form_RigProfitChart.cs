@@ -249,12 +249,7 @@ namespace NiceHashMiner.Forms
                     // this.Width = 660; // min width
                 }
             }
-            /*
-            string rateCurrencyString = ExchangeRateApi
-         .ConvertToActiveCurrency(ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)
-         .ToString("F2", CultureInfo.InvariantCulture);
 
-            */
             if (ConfigManager.GeneralConfig.ChartFiat)
             {
                 CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -317,7 +312,7 @@ namespace NiceHashMiner.Forms
                 progressBar1.Value = i;
                 progressBar1.Update();
                 this.Update();
-                Thread.Sleep(1);
+                //Thread.Sleep(1);
                 ChartData(null, null);
                 chartRigProfit.Series[0].Points[0].AxisLabel = Form_Main.RigProfits[0].DateTime.ToString("dd-MM-yyyy HH:mm:ss");
             }

@@ -133,11 +133,12 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("StartConnection", er.ToString());
             }
-
-            _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
-            _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
-            _deviceUpdateTimer.Start();
-
+            finally
+            {
+                _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
+                _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
+                _deviceUpdateTimer.Start();
+            }
         }
 
         #region Socket Callbacks

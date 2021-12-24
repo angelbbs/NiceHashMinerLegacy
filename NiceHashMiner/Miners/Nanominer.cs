@@ -193,6 +193,10 @@ namespace NiceHashMiner.Miners
             Helpers.ConsolePrint("NanominerIndexing", "platform: " + platform);
             int dev = 0;
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
+            if (Form_Main.NVIDIA_orderBug)
+            {
+                sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            }
             devices = new string[sortedMinerPairs.Count];
             if (platform.Contains("amd"))
             {
@@ -654,19 +658,7 @@ namespace NiceHashMiner.Miners
             }
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            /*
-            try
-            {
-                if (File.Exists("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini"))
-                    File.Delete("miners\\Nanominer\\bench_nh" + GetDevicesCommandString().Trim(' ') + ".ini");
 
-                if (File.Exists("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini"))
-                    File.Delete("miners\\Nanominer\\bench_nh_second" + GetDevicesCommandString().Trim(' ') + ".ini");
-            } catch (Exception ex)
-            {
-
-            }
-            */
             try
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
@@ -770,56 +762,8 @@ namespace NiceHashMiner.Miners
             return true;
         }
 
-        protected double GetNumber(string outdata)
-        {
-            return GetNumber(outdata, "Total speed: ", "H/s, Total shares");
-        }
-
-        protected double GetNumber(string outdata, string lookForStart, string lookForEnd)
-        {
-            try
-            {
-                double mult = 1;
-                var speedStart = outdata.IndexOf(lookForStart.ToLower());
-                var speed = outdata.Substring(speedStart, outdata.Length - speedStart);
-                speed = speed.Replace(lookForStart.ToLower(), "");
-                speed = speed.Substring(0, speed.IndexOf(lookForEnd.ToLower()));
-                if (speed.Contains("k"))
-                {
-                    mult = 1000;
-                    speed = speed.Replace("k", "");
-                }
-                else if (speed.Contains("m"))
-                {
-                    mult = 1000000;
-                    speed = speed.Replace("m", "");
-                }
-
-                //Helpers.ConsolePrint("speed", speed);
-                speed = speed.Trim();
-                try
-                {
-                    return double.Parse(speed, CultureInfo.InvariantCulture) * mult;
-                }
-                catch
-                {
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("GetNumber",
-                    ex.Message + " | args => " + outdata + " | " + lookForEnd + " | " + lookForStart);
-                MessageBox.Show("Unsupported miner version - " + MiningSetup.MinerPath,
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return 0;
-        }
-
         public override async Task<ApiData> GetSummaryAsync()
         {
-            // CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
             CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
             int dSpeed1 = 0;
             int dSpeed2 = 0;
@@ -855,6 +799,7 @@ namespace NiceHashMiner.Miners
 
             try
             {
+                int i = 0;
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
                 {
                     dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
@@ -863,7 +808,18 @@ namespace NiceHashMiner.Miners
                     if (cSpeed1 == null) return ad;
                     var cSpeed = (json.Algorithms[0].Ethash.Total.Hashrate);
                     dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
-
+                    
+                    foreach (var mPair in sortedMinerPairs)
+                    {
+                        string gpu = mPair.Device.lolMinerBusID.ToString();
+                        string token = $"Algorithms[0].Ethash.GPU{gpu}.Hashrate";
+                        var hash = (string)json.SelectToken(token);
+                        gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
+                        sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                        //Helpers.ConsolePrint("API", "dev: " + i.ToString() + " hr: " + gpu_hr.ToString());
+                        i++;
+                    }
+                    /*
                     for (int i = 0; i < sortedMinerPairs.Count; i++)
                     {
                         string gpu = devices[i];
@@ -871,7 +827,9 @@ namespace NiceHashMiner.Miners
                         var hash = (string)json.SelectToken(token);
                         gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
                         sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                        Helpers.ConsolePrint("API", "dev: " + i.ToString() + " hr: " + gpu_hr.ToString());
                     }
+                    */
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
                 {
@@ -882,14 +840,15 @@ namespace NiceHashMiner.Miners
                     var cSpeed = (json.Algorithms[0].Autolykos.Total.Hashrate);
                     dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
 
-                    for (int i = 0; i < sortedMinerPairs.Count; i++)
+                    foreach (var mPair in sortedMinerPairs)
                     {
-                        string gpu = devices[i];
+                        string gpu = mPair.Device.lolMinerBusID.ToString();
                         string token = $"Algorithms[0].Autolykos.GPU{gpu}.Hashrate";
                         var hash = (string)json.SelectToken(token);
                         gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
                         sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
                         _power = sortedMinerPairs[i].Device.PowerUsage;
+                        i++;
                     }
                 }
                 //dual mining
@@ -903,9 +862,9 @@ namespace NiceHashMiner.Miners
                     dSpeed1 = (int)Convert.ToDouble(cSpeed1, CultureInfo.InvariantCulture.NumberFormat);
                     dSpeed2 = (int)Convert.ToDouble(cSpeed2, CultureInfo.InvariantCulture.NumberFormat);
 
-                    for (int i = 0; i < sortedMinerPairs.Count; i++)
+                    foreach (var mPair in sortedMinerPairs)
                     {
-                        string gpu = devices[i];
+                        string gpu = mPair.Device.lolMinerBusID.ToString();
                         string token1 = $"Algorithms[0].Autolykos.GPU{gpu}.Hashrate";
                         string token2 = $"Algorithms[0].Zilliqa.GPU{gpu}.Hashrate";
                         var hash1 = (string)json.SelectToken(token1);
@@ -964,6 +923,7 @@ namespace NiceHashMiner.Miners
                             dSpeed2 = 0;
                         }
                         _power = sortedMinerPairs[i].Device.PowerUsage;
+                        i++;
                     }
                 }
                 //dual benchmark
@@ -994,25 +954,11 @@ namespace NiceHashMiner.Miners
                         dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
                     }
 
-                    for (int i = 0; i < sortedMinerPairs.Count; i++)
+                    foreach (var mPair in sortedMinerPairs)
                     {
-                        /*
-                        string gpu = devices[i];
-                        string token = "";
-                        if (IsZil)
-                        {
-                            token = $"Algorithms[0].Ethash.GPU{gpu}.Hashrate";
-                        }
-                        else
-                        {
-                            token = $"Algorithms[0].Autolykos.GPU{gpu}.Hashrate";
-                        }
-                        var hash = (string)json.SelectToken(token);
-                        Helpers.ConsolePrint("hash", hash);
-                        gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
-                        sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
-                        */
+                        string gpu = mPair.Device.lolMinerBusID.ToString();
                         _power = sortedMinerPairs[i].Device.PowerUsage;
+                        i++;
                     }
                 }
             }
@@ -1021,15 +967,7 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("API", ex.ToString());
                 return null;
             }
-            /*
-            if (IsZil)
-            {
-                ad.Speed = gpu_hr;
-            } else
-            {
-                ad.SecondarySpeed = gpu_hr;
-            }
-            */
+
             ad.Speed = dSpeed1;
             ad.SecondarySpeed = dSpeed2;
 
