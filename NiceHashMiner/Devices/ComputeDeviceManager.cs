@@ -790,7 +790,7 @@ break;
                             break;
 
                         case "2208": //GeForce RTX 3080 Ti - GA102-???
-                            ret = false;
+                            ret = true;
                             break;
 
                         default:
