@@ -607,7 +607,12 @@ namespace NiceHashMiner.Devices
                     if (macm.GpuEntries[i].Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED))
                     {
                         macm.GpuEntries[i].FanFlagsCur = macm.GpuEntries[i].FanFlagsDef;
-                        macm.GpuEntries[i].FanSpeedCur = macm.GpuEntries[i].FanSpeedDef;//auto
+                        //https://github.com/angelbbs/NiceHashMinerLegacy/issues/146
+                        //вероятно то, что флаг установлен в auto и нельзя менять настройки вентилятора. Надо проверить
+                        if (macm.GpuEntries[i].FanFlagsCur != MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.AUTO)
+                        {
+                            macm.GpuEntries[i].FanSpeedCur = macm.GpuEntries[i].FanSpeedDef;//auto
+                        }
                     }
                     break;
 
