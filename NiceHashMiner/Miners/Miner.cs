@@ -788,12 +788,7 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
-            /*
-            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("gminer") && (commandLine.ToLower().Contains("cuckoocycle")))
-            {
-                benchmarkHandle.StartInfo.FileName = MiningSetup.MinerPath.Replace("miner.exe", "miner234.exe");
-            }
-            */
+
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
             Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
             benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;

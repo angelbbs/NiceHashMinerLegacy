@@ -443,7 +443,7 @@ namespace NiceHashMiner.Forms.Components
                     {
                         var MSIABDEFAULT = new ToolStripMenuItem
                         {
-                            Text = "Reset to default"
+                            Text = International.GetText("DeviceListView_ContextMenu_ResetToDefault")
                         };
                         MSIABDEFAULT.Click += ToolStripMenuItemDefault_Click;
                         contextMenuStrip1.Items.Add(MSIABDEFAULT);

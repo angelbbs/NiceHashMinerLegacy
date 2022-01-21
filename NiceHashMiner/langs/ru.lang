@@ -355,6 +355,7 @@
     "DeviceListView_ContextMenu_CopyOverClock": "Скопировать настройки разгона из",
     "DeviceListView_ContextMenu_GetValues": "Получить настройки из MSI Afterburner",
     "DeviceListView_ContextMenu_TestValues": "Проверить настройки MSI Afterburner",
+    "DeviceListView_ContextMenu_ResetToDefault": "Сброс к значению по умолчанию",
     "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg": "Вы уверены, что хотите скопировать настройки из {0} в {1}?",
     "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title": "Подтверждение копирования настроек",
     "FormSettings_AlgorithmsSettings": "Настройки алгоритма для {0}:",

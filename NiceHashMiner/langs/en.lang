@@ -358,6 +358,7 @@
         "DeviceListView_ContextMenu_CopyOverClock": "Copy overclock setings from",
         "DeviceListView_ContextMenu_GetValues": "Get settings from MSI Afterburner",
         "DeviceListView_ContextMenu_TestValues": "Check MSI Afterburner settings",
+	"DeviceListView_ContextMenu_ResetToDefault": "Reset to default",
         "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg": "Are you sure you want to copy settings from {0} to {1}?",
         "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title": "Confirm Settings Copy",
         "FormSettings_AlgorithmsSettings": "Algorithm settings for {0} :",
