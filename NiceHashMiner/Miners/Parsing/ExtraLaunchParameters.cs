@@ -83,6 +83,9 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("nbminer_fan", "--fan", "--fan", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_log-no-job", "--log-no-job", "--log-no-job", null, MinerOptionFlagType.Uni),
                     new MinerOption("nbminer_log-cycle", "--log-cycle", "--log-cycle", "30", MinerOptionFlagType.SingleParam),
+                    new MinerOption("nbminer_log-cycle", "--lrv", "--lhr-reduce-value", "-1", MinerOptionFlagType.SingleParam),
+                    new MinerOption("nbminer_log-cycle", "--lrt", "--lhr-reduce-time", "-1", MinerOptionFlagType.SingleParam),
+                    new MinerOption("nbminer_log-cycle", "--lrl", "--lhr-reduce-limit", "-1", MinerOptionFlagType.SingleParam),
                      new MinerOption("nbminer_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, "")
                 },
                 new List<MinerOption>()

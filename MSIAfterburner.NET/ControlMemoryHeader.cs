@@ -57,6 +57,7 @@ namespace MSI.Afterburner
 
         public string GetVersionText() => (this.macmHeader.version >> 16).ToString() + "." + (object)(short)this.macmHeader.version;
 
+        internal void SetCommandNone() => this.macmHeader.command = MACM_SHARED_MEMORY_COMMAND.None;
         internal void SetCommandFlush() => this.macmHeader.command = MACM_SHARED_MEMORY_COMMAND.FLUSH;
 
         internal void SetCommandInit() => this.macmHeader.command = MACM_SHARED_MEMORY_COMMAND.INIT;

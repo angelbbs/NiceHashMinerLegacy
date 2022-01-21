@@ -257,9 +257,18 @@ namespace NiceHashMiner.Forms.Components
                     lvi.SubItems.Add(miner);
 
                     if (dev.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED) &&
-                        _computeDevice.DeviceType == DeviceType.NVIDIA)
+                        _computeDevice.DeviceType == DeviceType.NVIDIA && dev.CurveLockIndex == 0)
                     {
                         lvi.SubItems.Add("Curve");
+                    }
+                    else if (dev.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED) &&
+                        _computeDevice.DeviceType == DeviceType.NVIDIA && dev.CurveLockIndex !=0)
+                    {
+                        lvi.SubItems.Add("CurveLock");
+                    }
+                    else if (_computeDevice.DeviceType == DeviceType.NVIDIA && dev.CurveLockIndex != 0)
+                    {
+                        lvi.SubItems.Add("Lock");
                     }
                     else
                     {
@@ -430,6 +439,16 @@ namespace NiceHashMiner.Forms.Components
                         }
                     }
 
+                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                    {
+                        var MSIABDEFAULT = new ToolStripMenuItem
+                        {
+                            Text = "Reset to default"
+                        };
+                        MSIABDEFAULT.Click += ToolStripMenuItemDefault_Click;
+                        contextMenuStrip1.Items.Add(MSIABDEFAULT);
+                    }
+
                     contextMenuStrip1.Show(Cursor.Position);
                 }
             }
@@ -554,25 +573,53 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (lvi.Tag is Algorithm algorithm)
                     {
-                        WaitingForm waiting = new WaitingForm();
-                        waiting.SetText("", International.GetText("MSIAB_Checking"));
-                        waiting.ShowWaitingBox();
                         string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".gputmp";
                         MSIAfterburner.ApplyFromFile(_computeDevice.BusID, fName);
-                        Thread.Sleep(100);
                         MSIAfterburner.CommitChanges(_computeDevice.BusID);
-                        Thread.Sleep(100);
                         ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
                         MSIAfterburner.SaveDeviceData(_abdata, fName);
-                        try
-                        {
-                            waiting.CloseWaitingBox();
-                        } catch (Exception ex)
-                        {
-                            Helpers.ConsolePrint("ToolStripMenuItemTest_Click", ex.ToString());
-                        }
                     }
                 }
+                SetAlgorithms(_computeDevice, _computeDevice.Enabled);
+                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+            }
+        }
+
+        private void ToolStripMenuItemDefault_Click(object sender, EventArgs e)
+        {
+            if (!MSIAfterburner.Initialized) return;
+            if (_computeDevice != null)
+            {
+                MSIAfterburner.ResetToDefaults(_computeDevice.BusID, "", "", true);
+                MSIAfterburner.CommitChanges(_computeDevice.BusID);
+                MSIAfterburner.ResetCurveLock(_computeDevice.BusID, false);//check lock
+                if (MSIAfterburner.locked)
+                {
+                    Thread.Sleep(4000);
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (cdev.Enabled)
+                        {
+                            if (MSIAfterburner.ResetCurveLock(cdev.BusID, true))//unlock
+                            {
+                                MSIAfterburner.CommitChanges(false);
+                            }
+                        }
+                    }
+                    MSIAfterburner.locked = false;
+                    MSIAfterburner.Flush();
+                }
+
+                ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        string fName = "temp\\" + _computeDevice.Uuid + "_" + algorithm.AlgorithmStringID + ".gputmp";
+                        MSIAfterburner.SaveDeviceData(_abdata, fName);
+                    }
+                }
+
                 SetAlgorithms(_computeDevice, _computeDevice.Enabled);
                 RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
             }

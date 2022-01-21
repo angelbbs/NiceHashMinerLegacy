@@ -20,13 +20,11 @@ namespace MSI.Afterburner
         //public fixed byte vfPoints[SharedMemory.MACM_SHARED_MEMORY_VF_CURVE_POINTS_MAX * 4 * 3];//960
         public byte[] vfPoints;//960
         //voltage/frequency points array
-        public uint dwLockIndex;
-        //index of locked point + 1 or zero if locking is disabled
-
+        //2112
         public uint dwPowerTuples;
         //number of tuples in power/frequency curve
         //MACM_SHARED_MEMORY_POWER_TUPLE_ENTRY powerTuples[MACM_SHARED_MEMORY_VF_CURVE_TUPLES_MAX];
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1120)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1120)]//неправильно
         //public fixed byte powerTuples[SharedMemory.MACM_SHARED_MEMORY_VF_CURVE_TUPLES_MAX * 4 * 4];//1120
         public byte[] powerTuples;//1120
         //power/frequency tuples array
@@ -34,10 +32,11 @@ namespace MSI.Afterburner
         public uint dwThermalTuples;
         //number of tuples in thermal/frequency curve
         //MACM_SHARED_MEMORY_THERMAL_TUPLE_ENTRY thermalTuples[MACM_SHARED_MEMORY_VF_CURVE_TUPLES_MAX];
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1120)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 984)]//неправильно
         //public fixed byte thermalTuples[SharedMemory.MACM_SHARED_MEMORY_VF_CURVE_TUPLES_MAX * 4 * 4];//1120
         public byte[] thermalTuples;//1120
         //thermal/frequency tuples array
-
+        //public uint dwLockIndex;
+        //index of locked point + 1 or zero if locking is disabled
     }
 }

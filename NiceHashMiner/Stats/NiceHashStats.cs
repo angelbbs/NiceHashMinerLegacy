@@ -117,14 +117,16 @@ namespace NiceHashMiner.Stats
 
             try
             {
+                _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
+                _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
+                _deviceUpdateTimer.Start();
+
                 NHSmaData.InitializeIfNeeded();
                 LoadCachedSMAData();
                 _socket = null;
                 _socket = new NiceHashSocket(address);
 
-                //_socket.OnConnectionEstablished += SocketOnOnConnectionEstablished;
                 _socket.OnDataReceived += SocketOnOnDataReceived;
-                //   _socket.OnConnectionLost += SocketOnOnConnectionLost;
 
                 Helpers.ConsolePrint("SOCKET-address:", address);
                 _socket.StartConnectionNew();
@@ -133,12 +135,14 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("StartConnection", er.ToString());
             }
+            /*
             finally
             {
                 _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
                 _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
                 _deviceUpdateTimer.Start();
             }
+            */
         }
 
         #region Socket Callbacks
@@ -1166,96 +1170,65 @@ namespace NiceHashMiner.Stats
 
             var deviceList = new JArray();
             //foreach (var device in _computeDevices)
-            for (int dev = 0; dev < _computeDevices.Count; dev++)
+            try
             {
-                var device = _computeDevices[dev];
-                var deviceResort = _computeDevicesResort[dev];
-
-                try
+                for (int dev = 0; dev < _computeDevices.Count; dev++)
                 {
-                    int status = 0;
-                    if (device.DeviceType == DeviceType.CPU)
-                    {
-                        type = "1";
-                        status = 8;
-                        b64Web = UUID.GetB64UUID(device.NewUuid);
-                        nuuid = $"{type}-{b64Web}";
-                    }
-                    if (device.DeviceType == DeviceType.NVIDIA)
-                    {
-                        type = "2";
-                        status = 16;
-                        b64Web = UUID.GetB64UUID(device.Uuid);
-                        nuuid = $"{type}-{b64Web}";
-                    }
-                    if (device.DeviceType == DeviceType.AMD)
-                    {
-                        type = "3";
-                        status = 24;
-                        b64Web = UUID.GetB64UUID(device.Uuid);
-                        nuuid = $"{type}-{b64Web}";
-                    }
-                    var deviceName = device.Name;
+                    var device = _computeDevices[dev];
+                    var deviceResort = _computeDevicesResort[dev];
 
-                    string NvidiaLHR = "";
-                    if (device.NvidiaLHR && device.DeviceType == DeviceType.NVIDIA)
+                    try
                     {
-                        NvidiaLHR = "(LHR)";
-                    }
-
-                    deviceName = deviceName + " " + NvidiaLHR;
-
-                    string Manufacturer = "";
-                    string GpuRam = "";
-
-                    if (device.DeviceType == DeviceType.NVIDIA)
-                    {
-                        if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
+                        int status = 0;
+                        if (device.DeviceType == DeviceType.CPU)
                         {
-                            deviceName = deviceName.Replace("NVIDIA", "");
-                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            type = "1";
+                            status = 8;
+                            b64Web = UUID.GetB64UUID(device.NewUuid);
+                            nuuid = $"{type}-{b64Web}";
+                        }
+                        if (device.DeviceType == DeviceType.NVIDIA)
+                        {
+                            type = "2";
+                            status = 16;
+                            b64Web = UUID.GetB64UUID(device.Uuid);
+                            nuuid = $"{type}-{b64Web}";
+                        }
+                        if (device.DeviceType == DeviceType.AMD)
+                        {
+                            type = "3";
+                            status = 24;
+                            b64Web = UUID.GetB64UUID(device.Uuid);
+                            nuuid = $"{type}-{b64Web}";
+                        }
+                        var deviceName = device.Name;
+
+                        string NvidiaLHR = "";
+                        if (device.NvidiaLHR && device.DeviceType == DeviceType.NVIDIA)
+                        {
+                            NvidiaLHR = "(LHR)";
+                        }
+
+                        deviceName = deviceName + " " + NvidiaLHR;
+
+                        string Manufacturer = "";
+                        string GpuRam = "";
+
+                        if (device.DeviceType == DeviceType.NVIDIA)
+                        {
+                            if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
                             {
-                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                                deviceName = deviceName.Replace("NVIDIA", "");
+                                if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                                {
+                                    Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                                }
                             }
-                        }
-                        else
-                        {
-                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
-                            if (!deviceName.Contains("NVIDIA")) deviceName = "NVIDIA " + deviceName;
-                        }
-                    }
-
-                    GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
-                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
-                    {
-                        if (deviceName.Contains(GpuRam))
-                        {
-                            GpuRam = "";
-                        }
-                        else
-                        {
-                            deviceName = deviceName + " " + GpuRam;
-                        }
-                    }
-                    else
-                    {
-                        deviceName = deviceName.Replace(GpuRam, "");
-                        GpuRam = "";
-                    }
-
-
-                    if (device.DeviceType == DeviceType.AMD)
-                    {
-                        if (ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer)
-                        {
-                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            else
                             {
-                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                                deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                                if (!deviceName.Contains("NVIDIA")) deviceName = "NVIDIA " + deviceName;
                             }
-                        }
-                        else
-                        {
-                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
                         }
 
                         GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
@@ -1275,121 +1248,151 @@ namespace NiceHashMiner.Stats
                             deviceName = deviceName.Replace(GpuRam, "");
                             GpuRam = "";
                         }
-                    }
 
-                    if (device.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
-                    {
-                        Manufacturer = "> " + Manufacturer;
-                    }
 
-                    if (!devName)
-                    {
-                        deviceName = "";
-                        Manufacturer = "";
-                    }
+                        if (device.DeviceType == DeviceType.AMD)
+                        {
+                            if (ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer)
+                            {
+                                if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                                {
+                                    Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                                }
+                            }
+                            else
+                            {
+                                deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                            }
 
-                    /*
-                    if (rigStatus != "PENDING")
-                    {
-                        deviceName = "";
-                    }
-                    */
-                    var array = new JArray
+                            GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
+                            if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
+                            {
+                                if (deviceName.Contains(GpuRam))
+                                {
+                                    GpuRam = "";
+                                }
+                                else
+                                {
+                                    deviceName = deviceName + " " + GpuRam;
+                                }
+                            }
+                            else
+                            {
+                                deviceName = deviceName.Replace(GpuRam, "");
+                                GpuRam = "";
+                            }
+                        }
+
+                        if (device.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
+                        {
+                            Manufacturer = "> " + Manufacturer;
+                        }
+
+                        if (!devName)
+                        {
+                            deviceName = "";
+                            Manufacturer = "";
+                        }
+
+                        /*
+                        if (rigStatus != "PENDING")
+                        {
+                            deviceName = "";
+                        }
+                        */
+                        var array = new JArray
                     {
                         Manufacturer + deviceName,
                         nuuid
                     };
 
-                    int rigs = 0;
-                    if (rigStatus == "STOPPED")
-                    {
-                        rigs = 0;
-                    }
-                    if (rigStatus == "MINING")
-                    {
-                        rigs = 1;
-                    }
-                    if (rigStatus == "PENDING")
-                    {
-                        rigs = 0;
-                    }
-                    if (device.Enabled)
-                    {
-                        status = status + rigs + Convert.ToInt32(device.Enabled);
-                        //status = status + Convert.ToInt32(Miner.IsRunningNew) + Convert.ToInt32(device.Enabled);
-
-                    }
-                    //var status = 9;
-                    array.Add(status);
-
-                    array.Add((int)Math.Round(device.Load));
-
-
-                    var speedsJson = new JArray();
-
-                    HashRate = device.MiningHashrate;
-
-                    if (rigs == 1 & device.AlgorithmID > 0)
-                    {
-                        speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
-                    }
-                    if (rigs == 1 & (device.AlgorithmID == -9) || device.AlgorithmID == -12) //dagger 3-4
-                    {
-                        speedsJson.Add(new JArray(20, HashRate)); //  номер алгоритма, хешрейт
-                    }
-
-                    array.Add(speedsJson);
-                    // Hardware monitoring
-                    if (!Form_Main.NVIDIA_orderBug)
-                    {
-                        array.Add((int)Math.Round(device.Temp));
-                        array.Add(device.FanSpeedRPM);
-                        array.Add((int)Math.Round(device.PowerUsage));
-                    }
-                    else
-                    {
-                        array.Add((int)Math.Round(deviceResort.Temp));
-                        array.Add(deviceResort.FanSpeedRPM);
-                        array.Add((int)Math.Round(deviceResort.PowerUsage));
-                    }
-                    // Power mode
-                    array.Add(-1);
-
-                    // Intensity mode
-                    array.Add(0);
-
-                    //fan speen percent
-                    if (!Form_Main.NVIDIA_orderBug)
-                    {
-                        if (device.DeviceType != DeviceType.CPU)
+                        int rigs = 0;
+                        if (rigStatus == "STOPPED")
                         {
-                            array.Add(device.FanSpeed);
+                            rigs = 0;
+                        }
+                        if (rigStatus == "MINING")
+                        {
+                            rigs = 1;
+                        }
+                        if (rigStatus == "PENDING")
+                        {
+                            rigs = 0;
+                        }
+                        if (device.Enabled)
+                        {
+                            status = status + rigs + Convert.ToInt32(device.Enabled);
+                            //status = status + Convert.ToInt32(Miner.IsRunningNew) + Convert.ToInt32(device.Enabled);
+
+                        }
+                        //var status = 9;
+                        array.Add(status);
+
+                        array.Add((int)Math.Round(device.Load));
+
+
+                        var speedsJson = new JArray();
+
+                        HashRate = device.MiningHashrate;
+
+                        if (rigs == 1 & device.AlgorithmID > 0)
+                        {
+                            speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
+                        }
+                        if (rigs == 1 & (device.AlgorithmID == -9) || device.AlgorithmID == -12) //dagger 3-4
+                        {
+                            speedsJson.Add(new JArray(20, HashRate)); //  номер алгоритма, хешрейт
+                        }
+
+                        array.Add(speedsJson);
+                        // Hardware monitoring
+                        if (!Form_Main.NVIDIA_orderBug)
+                        {
+                            array.Add((int)Math.Round(device.Temp));
+                            array.Add(device.FanSpeedRPM);
+                            array.Add((int)Math.Round(device.PowerUsage));
                         }
                         else
                         {
-                            array.Add(-1);
+                            array.Add((int)Math.Round(deviceResort.Temp));
+                            array.Add(deviceResort.FanSpeedRPM);
+                            array.Add((int)Math.Round(deviceResort.PowerUsage));
                         }
-                    }
-                    else
-                    {
-                        if (deviceResort.DeviceType != DeviceType.CPU)
+                        // Power mode
+                        array.Add(-1);
+
+                        // Intensity mode
+                        array.Add(0);
+
+                        //fan speen percent
+                        if (!Form_Main.NVIDIA_orderBug)
                         {
-                            array.Add(deviceResort.FanSpeed);
+                            if (device.DeviceType != DeviceType.CPU)
+                            {
+                                array.Add(device.FanSpeed);
+                            }
+                            else
+                            {
+                                array.Add(-1);
+                            }
                         }
                         else
                         {
-                            array.Add(-1);
+                            if (deviceResort.DeviceType != DeviceType.CPU)
+                            {
+                                array.Add(deviceResort.FanSpeed);
+                            }
+                            else
+                            {
+                                array.Add(-1);
+                            }
                         }
-                    }
 
-                    deviceList.Add(array);
+                        deviceList.Add(array);
+                    }
+                    catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
+                    DeviceStatusRunning = false;
                 }
-                catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
-                DeviceStatusRunning = false;
-            }
-
-            try
-            {
                 paramList.Add(deviceList);
 
                 var data = new MinerStatusMessage
@@ -1404,10 +1407,10 @@ namespace NiceHashMiner.Stats
                     //Helpers.ConsolePrint("SetDeviceStatus", "sendData -> " + sendData);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex2)
             {
-                throw new Exception($"DeviceStatus_TickNew: {ex.ToString()}");
-                DeviceStatusRunning = false;
+                Helpers.ConsolePrint("SetDeviceStatus", ex2.ToString());
+                //DeviceStatusRunning = false;
             }
             DeviceStatusRunning = false;
         }

@@ -56,12 +56,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\Debug\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="ControlMemory.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.cs" />
     <Compile Include="MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.cs" />
     <Compile Include="MACM_SHARED_MEMORY_GPU_ENTRY.cs" />

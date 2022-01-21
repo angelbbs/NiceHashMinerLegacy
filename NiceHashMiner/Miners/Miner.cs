@@ -2204,17 +2204,13 @@ namespace NiceHashMiner
                     {
                         if (dev.Device.Enabled)
                         {
-                            for (int i = 0; i < 3; i++)
+                            for (int i = 0; i < 1; i++)
                             {
                                 string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
                                 Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
                                 MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
-                                Thread.Sleep(100);
-                                //MSIAfterburner.CommitChanges(dev.Device.ID);
-                                //Thread.Sleep(10);
-                                MSIAfterburner.CommitChanges();
-                                Thread.Sleep(100);
-
+                                MSIAfterburner.CommitChanges(false);
+                                /*
                                 if (MSIAfterburner.CompareDeviceData(dev.Device.BusID, fName))
                                 {
                                     Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ApplyFromFile OK: " + fName);
@@ -2227,40 +2223,18 @@ namespace NiceHashMiner
                                     //MSIAfterburner.MSIAfterburnerRUN(false);//restart
                                     Thread.Sleep(500);
                                 }
+                                */
                             }
 
                         }
-                        /*
-                        try
-                        {
-                            waiting.SetText("", "");
-                            waiting.Update();
-                            Thread.Sleep(100);
-                            waiting.CloseWaitingBox();
-                        }
-                        catch (Exception ex)
-                        {
-                            Helpers.ConsolePrint("RunCMDBeforeOrAfterMining", ex.ToString());
-                        }
-                        */
                     }
-
-                    //                    Thread.Sleep(2000);
-                    //                  MSIAfterburner.CommitChanges();
+                    MSIAfterburner.Flush();
                 }
                 else
                 {
-                    /*
-                    foreach (var dev in MiningSetup.MiningPairs)
-                    {
-                        MSIAfterburner.ResetToDefaults(dev.Device.BusID, true);
-                        Helpers.ConsolePrint(MinerTag(), "MSIAfterburner.ResetToDefaults: " + dev.Device.ID.ToString());
-                    }
-                    MSIAfterburner.CommitChanges();
-                    Thread.Sleep(2000);
-                    MSIAfterburner.CommitChanges();
-                    */
+
                 }
+                Thread.Sleep(2000);
             }
 
             bool CreateNoWindow = false;

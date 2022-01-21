@@ -35,10 +35,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the core clock speed.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the core clock speed.");
+                }
+                //                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the core clock speed.");
                 if (value < this.CoreClockMin || value > this.CoreClockMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.coreClockCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "CoreClockCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.coreClockCur = value;
+                }
             }
         }
 
@@ -54,10 +63,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.SHADER_CLOCK) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.SHADER_CLOCK)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the shader clock speed.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the shader clock speed.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the shader clock speed.");
                 if (value < this.ShaderClockMin || value > this.ShaderClockMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.shaderClockCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "shaderClockCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.shaderClockCur = value;
+                }
             }
         }
 
@@ -73,10 +91,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the memory clock speed.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the memory clock speed.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the memory clock speed.");
                 if (value < this.MemoryClockMin || value > this.MemoryClockMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.memoryClockCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "memoryClockCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.memoryClockCur = value;
+                }
             }
         }
 
@@ -92,12 +119,27 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.FAN_SPEED)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the fan speed.");
+                {
+                    //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the fan speed.");
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the fan speed.");
+                }
+                    //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the fan speed.");
                 if (this.FanFlagsCur == MACM_SHARED_MEMORY_GPU_ENTRY_FAN_FLAG.AUTO)
-                    throw new MACMFanControlNotManual();
+                {
+                    //throw new MACMFanControlNotManual();
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "Fan is currently set to auto.  Cannot set fan speed.");
+                }
+                //throw new MACMFanControlNotManual();
                 if (value < this.FanSpeedMin || value > this.FanSpeedMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.fanSpeedCur = value;
+                {
+                    //throw new ArgumentOutOfRangeException();
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "fanSpeedCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.fanSpeedCur = value;
+                }
             }
         }
 
@@ -121,10 +163,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the core voltage.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the core voltage.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the core voltage.");
                 if (value < this.CoreVoltageMin || value > this.CoreVoltageMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.coreVoltageCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "coreVoltageCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.coreVoltageCur = value;
+                }
             }
         }
 
@@ -140,10 +191,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the memory voltage.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the memory voltage.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the memory voltage.");
                 if (value < this.MemoryVoltageMin || value > this.MemoryVoltageMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.memoryVoltageCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "memoryVoltageCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.memoryVoltageCur = value;
+                }
             }
         }
 
@@ -159,10 +219,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.AUX_VOLTAGE) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.AUX_VOLTAGE)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the auxilary voltage.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the auxilary voltage.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the auxilary voltage.");
                 if (value < this.AuxVoltageMin || value > this.AuxVoltageMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.auxVoltageCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "auxVoltageCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.auxVoltageCur = value;
+                }
             }
         }
 
@@ -178,10 +247,18 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE_BOOST) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_VOLTAGE_BOOST)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support core voltage boost.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support core voltage boost.");
+                }
+                    //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support core voltage boost.");
                 if (value < this.CoreVoltageBoostMin || value > this.CoreVoltageBoostMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.coreVoltageBoostCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "coreVoltageBoostCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                {
+                    this.macmGpuEntry.coreVoltageBoostCur = value;
+                }
             }
         }
 
@@ -197,10 +274,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE_BOOST) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_VOLTAGE_BOOST)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support memory voltage boost.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support memory voltage boost.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support memory voltage boost.");
                 if (value < this.MemoryVoltageBoostMin || value > this.MemoryVoltageBoostMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.memoryVoltageBoostCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "memoryVoltageBoostCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.memoryVoltageBoostCur = value;
+                }
             }
         }
 
@@ -216,10 +302,18 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.AUX_VOLTAGE_BOOST) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.AUX_VOLTAGE_BOOST)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support auxilary voltage boost.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support auxilary voltage boost.");
+                }
+                    //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support auxilary voltage boost.");
                 if (value < this.AuxVoltageBoostMin || value > this.AuxVoltageBoostMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.auxVoltageBoostCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "auxVoltageBoostCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                {
+                    this.macmGpuEntry.auxVoltageBoostCur = value;
+                }
             }
         }
 
@@ -235,10 +329,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.POWER_LIMIT)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support power limits.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support power limits.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support power limits.");
                 if (value < this.PowerLimitMin || value > this.PowerLimitMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.powerLimitCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "powerLimitCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.powerLimitCur = value;
+                }
             }
         }
 
@@ -254,10 +357,18 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK_BOOST) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.CORE_CLOCK_BOOST)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support core clock boost.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support core clock boost.");
+                }
+                    //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support core clock boost.");
                 if (value < this.CoreClockBoostMin || value > this.CoreClockBoostMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.coreClockBoostCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "coreClockBoostCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                {
+                    this.macmGpuEntry.coreClockBoostCur = value;
+                }
             }
         }
 
@@ -273,10 +384,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK_BOOST) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MEMORY_CLOCK_BOOST)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support memory clock boost.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support memory clock boost.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support memory clock boost.");
                 if (value < this.MemoryClockBoostMin || value > this.MemoryClockBoostMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.memoryClockBoostCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "memoryClockBoostCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.memoryClockBoostCur = value;
+                }
             }
         }
 
@@ -292,10 +412,19 @@ namespace MSI.Afterburner
             set
             {
                 if ((this.Flags & MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_LIMIT) != MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.THERMAL_LIMIT)
-                    throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the thermal limit.");
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "GPU " + (object)this.Index + " does not support changing the thermal limit.");
+                }
+                //throw new MACMFeatureNotSupported("GPU " + (object)this.Index + " does not support changing the thermal limit.");
                 if (value < this.ThermalLimitMin || value > this.ThermalLimitMax)
-                    throw new ArgumentOutOfRangeException();
-                this.macmGpuEntry.thermalLimitCur = value;
+                {
+                    Helpers.ConsolePrint("ControlMemoryGpuEntry", "thermalLimitCur ArgumentOutOfRangeException");
+                }
+                //throw new ArgumentOutOfRangeException();
+                else
+                {
+                    this.macmGpuEntry.thermalLimitCur = value;
+                }
             }
         }
 
@@ -316,7 +445,48 @@ namespace MSI.Afterburner
         public int Aux2VoltageBoostMax => this.macmGpuEntry.Aux2VoltageBoostMax;
         public int Aux2VoltageBoostDef => this.macmGpuEntry.Aux2VoltageBoostDef;
 
-        public MACM_SHARED_MEMORY_VF_CURVE vfCurve => this.macmGpuEntry.vfCurve;
+        //public MACM_SHARED_MEMORY_VF_CURVE vfCurve => this.macmGpuEntry.vfCurve;
+        
+        /*
+        public MACM_SHARED_MEMORY_VF_CURVE vfCurve
+        {
+            get
+            {
+                return this.macmGpuEntry.vfCurve;
+            }
+            set
+            {
+                this.macmGpuEntry.vfCurve = value;
+            }
+        }
+        */
+        public MACM_SHARED_MEMORY_VF_CURVE vfCurve
+        {
+            get => this.macmGpuEntry.vfCurve;
+            set => this.macmGpuEntry.vfCurve = value;
+        }
+
+        public uint CurveLockIndex
+        {
+            get => this.macmGpuEntry.curveLockIndex;
+            set
+            {
+                this.macmGpuEntry.curveLockIndex = value;
+            }
+        }
+        /*
+        public uint CurveLockIndex
+        {
+            get => this.macmGpuEntry.curveLockIndex;
+            set => this.macmGpuEntry.curveLockIndex = value;
+        }
+        */
+        public unsafe void ClearCurve() 
+        {
+            MACM_SHARED_MEMORY_VF_CURVE curve = new MACM_SHARED_MEMORY_VF_CURVE();
+            this.vfCurve = curve;
+           // this.macmGpuEntry.vfCurve.dwLockIndex = 0x12;//не применяется
+        }
 
         //public unsafe char GpuId => this.macmGpuEntry.szGpuId[SharedMemory.MAX_PATH];
         public string GpuId => new string(this.macmGpuEntry.szGpuId).TrimEnd(new char[1]);

@@ -66,17 +66,6 @@ namespace NiceHashMiner.Stats
                 if (_webSocket == null)
                 {
                     _webSocket = new WebSocket(Links.NhmSocketAddress);
-                    /*
-                    if (!isFailover)
-                    {
-                        _webSocket = new WebSocket(Links.NhmSocketAddress);
-                    }
-                    else
-                    {
-                        _webSocket = new WebSocket(Links.NhmSocketAddressFailover);
-                    }
-                    isFailover = !isFailover;
-                    */
                 }
                 else
                 {
@@ -97,7 +86,7 @@ namespace NiceHashMiner.Stats
                 _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
                 _webSocket.EnableRedirection = true;
                 _webSocket.Connect();
-                Helpers.ConsolePrint("SOCKET", "Connected");
+                Helpers.ConsolePrint("SOCKET", "Connected?");
                 _connectionEstablished = true;
                 _restartConnection = false;
                 _endConnection = true;
@@ -244,8 +233,6 @@ namespace NiceHashMiner.Stats
             return false;
         }
 
-        //****************************************************************************************************************
-
         public void StartConnection()
         {
             Form_Main.NHConnectingInProgress = true;
@@ -266,7 +253,6 @@ namespace NiceHashMiner.Stats
                     _webSocket.Close();
                 }
 
-                //_webSocket.OnOpen += Login;
                 _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                 _webSocket.OnOpen += ConnectCallback;
                 _webSocket.OnMessage += ReceiveCallback;
@@ -435,9 +421,11 @@ namespace NiceHashMiner.Stats
         public async Task<bool> SendData(string data, bool recurs = false)
         {
             List<string> IPsList = new List<string>();
-            var heserver = Dns.GetHostEntry("nicehash.com");
+            IPHostEntry heserver;
+            
             try
             {
+                heserver = Dns.GetHostEntry("nicehash.com");
                 foreach (IPAddress curAdd in heserver.AddressList)
                 {
                     IPsList.Add(curAdd.ToString());

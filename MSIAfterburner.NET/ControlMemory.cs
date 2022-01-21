@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -69,7 +70,7 @@ namespace MSI.Afterburner
             GC.Collect();
         }
 
-        public void CommitChanges()
+        public void CommitChanges(bool flush = true)
         {
             this.ReloadHeader();
             for (int index = 0; (long)index < (long)this.header.GpuEntryCount; ++index)
@@ -77,18 +78,37 @@ namespace MSI.Afterburner
                 long offset = (long)this.header.HeaderSize + (long)this.header.GpuEntrySize * (long)index;
                 this.mmf.Write((object)this.gpuEntries[index].macmGpuEntry, offset);
             }
+            if (flush)
+            {
+                this.header.SetCommandFlush();
+                Thread.Sleep(10);
+                this.mmf.Write((object)this.header.macmHeader, 0L);
+            }
+        }
+
+        public void Flush()
+        {
             this.header.SetCommandFlush();
+            Thread.Sleep(10);
             this.mmf.Write((object)this.header.macmHeader, 0L);
         }
 
         public void CommitChanges(int gpuIndex)
         {
+            var val1 = this.gpuEntries[gpuIndex].macmGpuEntry;
+            byte[] buffer0 = RawSerialize(this.GpuEntries[gpuIndex], (int)this.Header.GpuEntrySize);
+
             this.ReloadHeader();
+
             if (gpuIndex < 0 || (long)gpuIndex > (long)(this.header.GpuEntryCount - 1U))
-                throw new ArgumentOutOfRangeException();
+            {
+                Helpers.ConsolePrint("CommitChanges", "ArgumentOutOfRangeException");
+            }
+            //throw new ArgumentOutOfRangeException();
             long offset = (long)this.header.HeaderSize + (long)this.header.GpuEntrySize * (long)gpuIndex;
             this.mmf.Write((object)this.gpuEntries[gpuIndex].macmGpuEntry, offset);
             this.header.SetCommandFlush();
+            Thread.Sleep(10);
             this.mmf.Write((object)this.header.macmHeader, 0L);
         }
 
@@ -207,6 +227,16 @@ namespace MSI.Afterburner
             int length = Marshal.SizeOf(anything);
             IntPtr num = Marshal.AllocHGlobal(length);
             Marshal.StructureToPtr(anything, num, false);
+            byte[] destination = new byte[length];
+            Marshal.Copy(num, destination, 0, length);
+            Marshal.FreeHGlobal(num);
+            return destination;
+        }
+
+        public static byte[] RawSerialize(ControlMemoryGpuEntry obj, int length)
+        {
+            IntPtr num = Marshal.AllocHGlobal(length);
+            Marshal.StructureToPtr(obj, num, false);
             byte[] destination = new byte[length];
             Marshal.Copy(num, destination, 0, length);
             Marshal.FreeHGlobal(num);

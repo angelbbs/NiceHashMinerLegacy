@@ -34,7 +34,7 @@ namespace MSI.Afterburner
             this.AllocationGranularity = lpSystemInfo.dwAllocationGranularity;
         }
 
-        public void Write(object obj, long offset)
+        public unsafe void Write(object obj, long offset)
         {
             IntPtr lpBaseAddress = IntPtr.Zero;
             MACM_SHARED_MEMORY_GPU_ENTRY gpuEntry = new MACM_SHARED_MEMORY_GPU_ENTRY();

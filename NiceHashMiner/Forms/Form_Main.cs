@@ -1427,12 +1427,36 @@ namespace NiceHashMiner
                     {
                         if (cdev.Enabled)
                         {
-                            MSIAfterburner.ResetToDefaults(cdev.BusID, false, true);
-                            Thread.Sleep(200);
-                            MSIAfterburner.CommitChanges();
-                            Thread.Sleep(200);
+                            MSIAfterburner.ResetToDefaults(cdev.BusID, cdev.Uuid, ((AlgorithmType)cdev.AlgorithmID).ToString(), false);
+                            MSIAfterburner.CommitChanges(false);
                         }
                     }
+                    MSIAfterburner.Flush();
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (cdev.Enabled)
+                        {
+                            MSIAfterburner.ResetCurveLock(cdev.BusID, false);//check lock
+                        }
+                    }
+
+                    if (MSIAfterburner.locked)
+                    {
+                        Thread.Sleep(4000);
+                        foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                        {
+                            if (cdev.Enabled)
+                            {
+                                if (MSIAfterburner.ResetCurveLock(cdev.BusID, true))//unlock
+                                {
+                                    MSIAfterburner.CommitChanges(false);
+                                }
+                            }
+                        }
+                        MSIAfterburner.locked = false;
+                        MSIAfterburner.Flush();
+                    }
+                    Thread.Sleep(2000);
                 }
             }
             StopWinIODriver();
@@ -2149,13 +2173,36 @@ public static void CloseChilds(Process parentId)
                     {
                         if (cdev.Enabled)
                         {
-                            Helpers.ConsolePrint("ResetToDefaults", "ResetToDefaults: " + cdev.BusID.ToString() + " " + cdev.Name.ToString());
-                            MSIAfterburner.ResetToDefaults(cdev.BusID, false, true);
-                            Thread.Sleep(200);
-                            MSIAfterburner.CommitChanges();
-                            Thread.Sleep(200);
+                            MSIAfterburner.ResetToDefaults(cdev.BusID, cdev.Uuid, ((AlgorithmType)cdev.AlgorithmID).ToString(), false);
+                            MSIAfterburner.CommitChanges(false);
                         }
                     }
+                    MSIAfterburner.Flush();
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (cdev.Enabled)
+                        {
+                            MSIAfterburner.ResetCurveLock(cdev.BusID, false);//check lock
+                        }
+                    }
+
+                    if (MSIAfterburner.locked)
+                    {
+                        Thread.Sleep(4000);
+                        foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                        {
+                            if (cdev.Enabled)
+                            {
+                                if (MSIAfterburner.ResetCurveLock(cdev.BusID, true))//unlock
+                                {
+                                    MSIAfterburner.CommitChanges(false);
+                                }
+                            }
+                        }
+                        MSIAfterburner.locked = false;
+                        MSIAfterburner.Flush();
+                    }
+                    Thread.Sleep(2000);
                 }
             }
 
@@ -3002,7 +3049,7 @@ public static void CloseChilds(Process parentId)
             AlgorithmSwitchingManager.Stop();
             NiceHashStats._deviceUpdateTimer.Stop();
             new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
-            NiceHashStats._deviceUpdateTimer.Stop();
+            NiceHashStats._deviceUpdateTimer.Start();
             //NiceHashStats.SetDeviceStatus("PENDING");
             _minerStatsCheck.Stop();
             //_smaMinerCheck.Stop();
@@ -3021,14 +3068,36 @@ public static void CloseChilds(Process parentId)
                     {
                         if (cdev.Enabled)
                         {
-                            //Helpers.ConsolePrint("ResetToDefaults", "ResetToDefaults: " + cdev.BusID.ToString() + " " + cdev.Name.ToString());
-                            MSIAfterburner.ResetToDefaults(cdev.BusID, false, true);
-                            Thread.Sleep(200);
-                            MSIAfterburner.CommitChanges(cdev.BusID);
-                            Thread.Sleep(200);
+                            MSIAfterburner.ResetToDefaults(cdev.BusID, cdev.Uuid, ((AlgorithmType)cdev.AlgorithmID).ToString(), false);
+                            MSIAfterburner.CommitChanges(false);
                         }
                     }
-                    //MSIAfterburner.CommitChanges();
+                    MSIAfterburner.Flush();
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (cdev.Enabled)
+                        {
+                            MSIAfterburner.ResetCurveLock(cdev.BusID, false);//check lock
+                        }
+                    }
+                    
+                    if (MSIAfterburner.locked)
+                    {
+                        Thread.Sleep(4000);
+                        foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                        {
+                            if (cdev.Enabled)
+                            {
+                                if (MSIAfterburner.ResetCurveLock(cdev.BusID, true))//unlock
+                                {
+                                    MSIAfterburner.CommitChanges(false);
+                                }
+                            }
+                        }
+                        MSIAfterburner.locked = false;
+                        MSIAfterburner.Flush();
+                    }
+                    Thread.Sleep(2000);
                 }
             }
 
@@ -3037,7 +3106,20 @@ public static void CloseChilds(Process parentId)
             textBoxWorkerName.Enabled = true;
             comboBoxLocation.Enabled = true;
             buttonBenchmark.Enabled = true;
-            buttonStartMining.Enabled = true;
+            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            {
+                if (ConfigManager.GeneralConfig.ABDefaultMiningStopped)
+                {
+                    new Task(() => ButtonDelay()).Start();
+                } else
+                {
+                    buttonStartMining.Enabled = true;
+                }
+            } else
+            {
+                buttonStartMining.Enabled = true;
+            }
+
             buttonSettings.Enabled = true;
             devicesListViewEnableControl1.IsMining = false;
             buttonStopMining.Enabled = false;
@@ -3050,6 +3132,13 @@ public static void CloseChilds(Process parentId)
             }
 
             //UpdateGlobalRate();
+        }
+
+        private void ButtonDelay()
+        {
+            Helpers.ConsolePrint("buttonStartMining.Enabled", "1");
+            Thread.Sleep(5000);
+            buttonStartMining.Enabled = true;
         }
 
         private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)

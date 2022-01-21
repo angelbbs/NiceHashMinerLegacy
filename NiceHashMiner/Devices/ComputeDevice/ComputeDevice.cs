@@ -765,6 +765,9 @@ namespace NiceHashMiner.Devices
                 case "1787":
                     man = "HIS";
                     break;
+                case "1642":
+                    man = "Bitland";
+                    break;
                 case "16F3":
                     man = "Jetway";
                     break;
@@ -804,18 +807,28 @@ namespace NiceHashMiner.Devices
                 case "154B":
                     man = "PNY";
                     break;
+                case "1558":
+                    man = "Clevo(Kapok)";
+                    break;
                 case "19DA":
                     man = "Zotac";
                     break;
                 case "19F1":
                     man = "BFG";
                     break;
+                case "1A58":
+                    man = "Razer";
+                    break;
                 case "1B4C":
                     man = "KFA2";
                     break;
+                case "1B0A":
+                    man = "Pegatron";
+                    break;
+
                 /*
 case "2319":
-man = "???";
+man = "Tronsmart???";
 break;
 */
                 /*

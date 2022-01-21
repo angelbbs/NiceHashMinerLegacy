@@ -13,7 +13,7 @@ namespace MSI.Afterburner
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct MACM_SHARED_MEMORY_GPU_ENTRY
     {
-        public MACM_SHARED_MEMORY_GPU_ENTRY_FLAG flags;
+        public MACM_SHARED_MEMORY_GPU_ENTRY_FLAG flags;//8byte
         public uint coreClockCur;
         public uint coreClockMin;
         public uint coreClockMax;
@@ -91,9 +91,15 @@ namespace MSI.Afterburner
         public MACM_SHARED_MEMORY_VF_CURVE vfCurve;
         //voltage/frequency curve and nested power/frequency and thermal/frequency curves
 
+        public uint curveLockIndex; //0x0D20
+        //index of locked point + 1 or zero if locking is disabled
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 138)]
+        public char[] unknown1;//0x0D22
+
         //public fixed byte szGpuId[SharedMemory.MAX_PATH];//260
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 260)]
-        public char[] szGpuId;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 258)]//396
+        public char[] szGpuId; //0x0DAC
 
         //GPU identifier represented in VEN_%04X&DEV_%04X&SUBSYS_%08X&REV_%02X&BUS_%d&DEV_%d&FN_%d format
         //(e.g. VEN_10DE&DEV_0A20&SUBSYS_071510DE&BUS_1&DEV_0&FN_0)
