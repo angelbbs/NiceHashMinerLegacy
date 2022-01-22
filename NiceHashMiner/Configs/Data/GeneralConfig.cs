@@ -29,6 +29,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Show_current_actual_profitability = true;
         public bool DivertRun = true;
         public bool ShowUptime = true;
+        public bool DisableTooltips = false;
         public bool ProgramMonitoring = true;
         public string BitcoinAddressNew = "";
         public string WorkerName = "worker1";

@@ -931,6 +931,10 @@ namespace NiceHashMiner.Forms.Components
 
         private void listViewDevices_MouseHover(object sender, EventArgs e)
         {
+            if (ConfigManager.GeneralConfig.DisableTooltips)
+            {
+                return;
+            }
             Control senderObject = sender as Control;
             string hoveredControl = senderObject.TopLevelControl.Name;
 

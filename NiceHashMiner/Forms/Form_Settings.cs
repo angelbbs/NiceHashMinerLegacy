@@ -63,7 +63,10 @@ namespace NiceHashMiner.Forms
             InitializeFormTranslations();
 
             // Initialize toolTip
-            InitializeToolTip();
+            if (!ConfigManager.GeneralConfig.DisableTooltips)
+            {
+                InitializeToolTip();
+            }
 
             // Initialize tabs
             this.comboBox_ColorProfile.Items.Add("Default");
@@ -454,6 +457,7 @@ namespace NiceHashMiner.Forms
             Checkbox_Save_windows_size_and_position.Text = International.GetText("Form_Settings_Checkbox_Save_windows_size_and_position");
             checkBox_sorting_list_of_algorithms.Text = International.GetText("Form_Settings_checkBox_sorting_list_of_algorithms");
             checkBox_ShowUptime.Text = International.GetText("Form_Settings_checkBox_ShowUptime");
+            checkBox_DisableTooltips.Text = International.GetText("Form_Settings_checkBox_DisableToltips");
             checkBox_program_monitoring.Text = International.GetText("Form_Settings_checkBox_program_monitoring");
             checkBox_ShowFanAsPercent.Text = International.GetText("Form_Settings_checkBox_ShowFanAsPercent");
             checkbox_Group_same_devices.Text = International.GetText("Form_Settings_checkbox_Group_same_devices");
@@ -821,6 +825,9 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowUptime.BackColor = Form_Main._backColor;
                 checkBox_ShowUptime.ForeColor = Form_Main._textColor;
 
+                checkBox_DisableTooltips.BackColor = Form_Main._backColor;
+                checkBox_DisableTooltips.ForeColor = Form_Main._textColor;
+
                 checkBox_program_monitoring.BackColor = Form_Main._backColor;
                 checkBox_program_monitoring.ForeColor = Form_Main._textColor;
 
@@ -999,6 +1006,7 @@ namespace NiceHashMiner.Forms
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_sorting_list_of_algorithms.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowUptime.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_DisableTooltips.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_program_monitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1110,6 +1118,7 @@ namespace NiceHashMiner.Forms
                 checkbox_Use_OpenHardwareMonitor.Checked = ConfigManager.GeneralConfig.Use_OpenHardwareMonitor;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
                 checkBox_ShowUptime.Checked = ConfigManager.GeneralConfig.ShowUptime;
+                checkBox_DisableTooltips.Checked = ConfigManager.GeneralConfig.DisableTooltips;
                 checkBox_program_monitoring.Checked = ConfigManager.GeneralConfig.ProgramMonitoring;
                 checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
@@ -1277,6 +1286,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
             ConfigManager.GeneralConfig.ShowUptime = checkBox_ShowUptime.Checked;
+            ConfigManager.GeneralConfig.DisableTooltips = checkBox_DisableTooltips.Checked;
             ConfigManager.GeneralConfig.ProgramMonitoring = checkBox_program_monitoring.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
@@ -1450,7 +1460,10 @@ namespace NiceHashMiner.Forms
 
         private void ToolTip1_Popup(object sender, PopupEventArgs e)
         {
-            toolTip1.ToolTipTitle = International.GetText("Form_Settings_ToolTip_Explaination");
+            if (!ConfigManager.GeneralConfig.DisableTooltips)
+            {
+                toolTip1.ToolTipTitle = International.GetText("Form_Settings_ToolTip_Explaination");
+            }
         }
 
         #region Form Buttons

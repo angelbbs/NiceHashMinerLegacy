@@ -401,9 +401,11 @@ namespace NiceHashMiner
                 }
             }
 
-
-            toolTip1.SetToolTip(buttonBTC_Clear, "Clear");
-            toolTip1.SetToolTip(buttonBTC_Save, "Save");
+            if (!ConfigManager.GeneralConfig.DisableTooltips)
+            {
+                toolTip1.SetToolTip(buttonBTC_Clear, "Clear");
+                toolTip1.SetToolTip(buttonBTC_Save, "Save");
+            }
 
             labelBitcoinAddressNew.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
@@ -2041,7 +2043,10 @@ public static void CloseChilds(Process parentId)
             }
             try
             {
-                toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
+                if (!ConfigManager.GeneralConfig.DisableTooltips)
+                {
+                    toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
+                }
             }
             catch (Exception ex)
             {
@@ -3136,7 +3141,6 @@ public static void CloseChilds(Process parentId)
 
         private void ButtonDelay()
         {
-            Helpers.ConsolePrint("buttonStartMining.Enabled", "1");
             Thread.Sleep(5000);
             buttonStartMining.Enabled = true;
         }
@@ -3384,6 +3388,10 @@ public static void CloseChilds(Process parentId)
 
         private void statusStrip1_MouseHover(object sender, EventArgs e)
         {
+            if (ConfigManager.GeneralConfig.DisableTooltips)
+            {
+                return;
+            }
             string ctooltip = "";
             ctooltip = International.GetText("Form_Main_TotalLocalProfit") + ExchangeRateApi.ConvertToActiveCurrency(TotalBTC * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
             ctooltip += "\r\n";
