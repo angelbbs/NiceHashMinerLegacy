@@ -176,10 +176,10 @@ namespace NiceHashMiner
                     Logger.ConfigureWithFile();
                 }
 
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 43.2)
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 43.3)
                 {
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
-                    ConfigManager.GeneralConfig.ForkFixVersion = 43.2;
+                    ConfigManager.GeneralConfig.ForkFixVersion = 43.3;
                 }
                 //**
                 //Thread.Sleep(100);
