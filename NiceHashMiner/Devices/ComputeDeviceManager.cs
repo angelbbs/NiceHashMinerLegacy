@@ -13,6 +13,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -842,6 +844,9 @@ break;
                         //PCI\VEN_10DE&DEV_2504&SUBSYS_250410DE&REV_A1\4&12728395&0&00E2
                         vidController.VEN_ = vidController.PnpDeviceID.Split('&')[0].Split('_')[1];
                         vidController.DEV_ = vidController.PnpDeviceID.Split('&')[1].Split('_')[1];
+                        vidController.SUBSYS_ = vidController.PnpDeviceID.Split('&')[2].Split('_')[1];
+                        vidController.REV_ = vidController.PnpDeviceID.Split('&')[3].Split('_')[1];
+                        vidController.fakeID_ = vidController.PnpDeviceID.Split('&')[4]; 
 
                         if (vidController.Name.Contains("3050") || vidController.Name.Contains("3060") ||
                             vidController.Name.Contains("3070") ||
@@ -1104,6 +1109,14 @@ break;
                                     cudaDev.NvidiaLHR = vc.NvidiaLHR;
                                     int.TryParse(vc.CurrentRefreshRate, out var refRate);
                                     cudaDev.HasMonitorConnected = refRate;
+                                    //check empty uuid
+                                    if (!cudaDev.UUID.Contains("GPU-"))
+                                    {
+                                        string fakeUUID = GetFakeUuid((int)cudaDev.DeviceID, vc.SUBSYS_, vc.fakeID_, DeviceGroupType.NVIDIA_6_x);
+                                        cudaDev.UUID = fakeUUID;
+                                        Helpers.ConsolePrint("QueryCudaDevices", "Empty UUID for Device ID: " + cudaDev.DeviceID.ToString() + "Using Fake UUID: " + fakeUUID);
+                                    }
+                                    //idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
                                 }
                             }
                                 // check sm vesrions
@@ -1165,12 +1178,17 @@ break;
                                 if (nvmlInit)
                                 {
                                     var ret = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(cudaDev.UUID, ref nvmlHandle);
+                                    if (ret != nvmlReturn.Success)
+                                    {
+                                        ret = NvmlNativeMethods.nvmlDeviceGetHandleByIndex(cudaDev.DeviceID, ref nvmlHandle);
+                                    }
                                     stringBuilder.AppendLine(
                                         "\t\tNVML HANDLE: " +
                                         $"{(ret == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
                                 }
 
-                                idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
+                                idHandles.TryGetValue((int)cudaDev.DeviceID, out var handle);
+
                                 Available.Devices.Add(
                                     new CudaComputeDevice(cudaDev, group, ++GpuCount, handle, nvmlHandle)
                                 );
@@ -1181,6 +1199,25 @@ break;
                         Helpers.ConsolePrint(Tag, stringBuilder.ToString());
                     }
                     Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
+                }
+                private static string GetFakeUuid(int id, string group, string name, DeviceGroupType deviceGroupType)
+                {
+                    var sha256 = new SHA256Managed();
+                    var hash = new StringBuilder();
+                    var mixedAttr = id + group + name + (int)deviceGroupType;
+                    var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0,
+                        Encoding.UTF8.GetByteCount(mixedAttr));
+                    foreach (var b in hashedBytes)
+                    {
+                        hash.Append(b.ToString("x2"));
+                    }
+
+                    hash = hash.Remove(32, hash.Length - 32);
+                    hash = hash.Insert(8, "-");
+                    hash = hash.Insert(13, "-");
+                    hash = hash.Insert(18, "-");
+                    hash = hash.Insert(23, "-");
+                    return "GPU-" + hash;
                 }
 
                 private static List<CudaDevices2> _CudaDeviceList = new List<CudaDevices2>();
