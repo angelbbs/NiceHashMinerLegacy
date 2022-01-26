@@ -820,6 +820,7 @@ break;
                     var moc = new ManagementObjectSearcher("root\\CIMV2",
                         "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
                     var allVideoContollersOK = true;
+                    int _id = 0;
                     foreach (var manObj in moc)
                     {
                         //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
@@ -828,6 +829,7 @@ break;
                         //PCI\VEN_1002&DEV_67DF&SUBSYS_2379148C&REV_EF\4&18803EC9&0&00E4
                         var vidController = new VideoControllerData
                         {
+                            ID = _id,
                             Name = SafeGetProperty(manObj, "Name"),
                             Description = SafeGetProperty(manObj, "Description"),
                             Manufacturer = man.Substring(man.Length - 4),
@@ -841,6 +843,7 @@ break;
                             AdapterRam = memTmp,
                             NvidiaLHR = false
                         };
+                        _id++;
                         //PCI\VEN_10DE&DEV_2504&SUBSYS_250410DE&REV_A1\4&12728395&0&00E2
                         vidController.VEN_ = vidController.PnpDeviceID.Split('&')[0].Split('_')[1];
                         vidController.DEV_ = vidController.PnpDeviceID.Split('&')[1].Split('_')[1];
@@ -856,6 +859,7 @@ break;
                             vidController.NvidiaLHR = CheckNvidiaLHR(vidController.DEV_);
                         }
                         stringBuilder.AppendLine("\tWin32_VideoController detected:");
+                        stringBuilder.AppendLine($"\t\tID {vidController.ID}");
                         stringBuilder.AppendLine($"\t\tName {vidController.Name}");
                         stringBuilder.AppendLine($"\t\tNVIDIA LHR? {vidController.NvidiaLHR}");
                         stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
@@ -1102,10 +1106,13 @@ break;
 
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
+                            Helpers.ConsolePrint("QueryCudaDevices", "cudaDev.DeviceID: " + (cudaDev.DeviceID).ToString());
                             foreach (var vc in AvaliableVideoControllers)
                             {
-                                if ((vc.DEV_ + vc.VEN_).Equals(cudaDev.pciDeviceId.ToString("X")))
+                                Helpers.ConsolePrint("QueryCudaDevices", "vc.ID: " + vc.ID);
+                                if (vc.ID == cudaDev.DeviceID)
                                 {
+                                    Helpers.ConsolePrint("QueryCudaDevices", vc.DEV_ + vc.VEN_ + " ?= " + cudaDev.pciDeviceId.ToString("X"));
                                     cudaDev.NvidiaLHR = vc.NvidiaLHR;
                                     int.TryParse(vc.CurrentRefreshRate, out var refRate);
                                     cudaDev.HasMonitorConnected = refRate;
@@ -1135,7 +1142,8 @@ break;
                             const string isDisabledGroupStr = ""; // TODO remove
                             var etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
                             stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                            stringBuilder.AppendLine($"\t\tID: {cudaDev.DeviceID}");
+                            stringBuilder.AppendLine($"\t\tDeviceID: {cudaDev.DeviceID}");
+                            stringBuilder.AppendLine($"\t\tpciDeviceId: {cudaDev.pciDeviceId}");
                             stringBuilder.AppendLine($"\t\tpciBusID: {cudaDev.pciBusID}");
                             stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
                             stringBuilder.AppendLine($"\t\tMANUFACTURER: {cudaDev.CUDAManufacturer} ({Manufacturer})");
