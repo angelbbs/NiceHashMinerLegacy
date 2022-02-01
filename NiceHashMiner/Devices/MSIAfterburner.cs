@@ -819,6 +819,7 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint("MSIAfterburner SaveDefaultDeviceData", "Error: " + ex.ToString());
                         macm.ReloadGpuEntry(i);
                         mahm.ReloadGpuEntry((uint)i);
+                        return;
                     }
                 }
             }

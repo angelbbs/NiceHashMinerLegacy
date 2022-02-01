@@ -99,6 +99,13 @@ namespace NiceHashMiner.Miners
                 pers = " --pers auto ";
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
+            {
+                algo = "125_4";
+                algoName = "zelhash";
+                pers = " --pers auto ";
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 algo = "BeamHashII";
@@ -311,6 +318,13 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
+            {
+                ret = " --color 0 --pec --pers auto --algo 125_4" +
+                " --server flux.2miners.com --user t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.gminer --pass x --port 9090 " +
+                " --server zelhash.eu-north" + ".nicehash.com --user " + username + " --pass x --port 3391" +
+                GetDevicesCommandString();
+            }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
@@ -455,6 +469,11 @@ namespace NiceHashMiner.Miners
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 10;

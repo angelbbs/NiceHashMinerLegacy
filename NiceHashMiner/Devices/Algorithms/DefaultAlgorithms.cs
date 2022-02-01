@@ -127,6 +127,9 @@ namespace NiceHashMiner.Devices.Algorithms
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "ZHash")
                         {
                         },
+                        new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZelHash, "ZelHash")
+                        {
+                        },
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "KAWPOW")
                         {
                         },
@@ -310,6 +313,9 @@ namespace NiceHashMiner.Devices.Algorithms
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
                             },
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZelHash, "ZelHash")
+                            {
+                            },
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
@@ -345,6 +351,9 @@ namespace NiceHashMiner.Devices.Algorithms
                     },
 
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "KAWPOW")
+                    {
+                    },
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZelHash, "ZelHash")
                     {
                     }
                 }

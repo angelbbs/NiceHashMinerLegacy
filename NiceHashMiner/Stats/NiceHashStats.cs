@@ -957,6 +957,9 @@ namespace NiceHashMiner.Stats
                     }
                 }
 
+                //testing
+                //payingDict[AlgorithmType.ZelHash] = 12345;
+
                 NHSmaData.UpdateSmaPaying(payingDict);
 
                 Thread.Sleep(10);

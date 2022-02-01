@@ -115,7 +115,8 @@
         BeamV3 = 54,
         CuckaRooz29 = 55,
         Octopus = 56,
-        Autolykos = 57
+        Autolykos = 57,
+        ZelHash = 58
         #endregion // NiceHashAPI
     }
 }

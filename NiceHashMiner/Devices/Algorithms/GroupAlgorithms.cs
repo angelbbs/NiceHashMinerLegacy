@@ -174,6 +174,31 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
+
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.GMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.ZelHash && 
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.lolMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.ZelHash &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
             //************* отключение алгоритмов, если отсутствует дополнительный файл майнера
             string minerfilename = "";
 
@@ -390,6 +415,24 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.CuckooCycle
                     });
             }
+
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.GMiner])
+                {
+                    if (algo.DualNiceHashID == AlgorithmType.BeamV3 && device.DeviceType == DeviceType.NVIDIA &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                        algo.BenchmarkSpeed = 0;
+                        algo.BenchmarkSecondarySpeed = 0;
+                    }
+                }
+            }
+
+
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>

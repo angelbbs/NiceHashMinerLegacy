@@ -84,6 +84,12 @@ namespace NiceHashMiner.Miners
                 algoName = "zhash";
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
+            {
+                algo = "125,4";
+                algoName = "zelhash";
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 algo = "150,5,3";
@@ -102,7 +108,7 @@ namespace NiceHashMiner.Miners
             string sColor = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
             {
-                sColor = " --nocolor";
+                //sColor = " --nocolor";
             }
 
 
@@ -158,10 +164,19 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --pers auto --par=" + algo
                       + " --url GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.miniz" + ".nhmlff" + "@btg.2miners.com:4040 -p x"
-                      + " --url 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + ".nhmlff" + "@equihash144.eu.mine.zpool.ca:2144 -p c=BTC"
                       + " --url " + username + "@" + algoName + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + stratumPort
+                      + " --pass=x" + " --telemetry=" + ApiPort;
+                _benchmarkTimeWait = time;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
+            {
+                algo = "125,4";
+                algoName = "zelhash";
+                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
+                      + " --smart-pers --par=" + algo
+                      + " --url t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.miniz" + "@flux.2miners.com:9090 -p x"
+                      + " --url " + username + "@" + algoName + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + stratumPort
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -174,11 +189,7 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --pers auto --par=" + algo
                       + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.2miners.com:5252"
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@beam.f2pool.com:5000"
-                      //+ " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9." + worker + "@beam-eu.sparkpool.com:2222"
                       + " --url " + username + "@" + algoName + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + stratumPort
-                      + " --url " + username + "@" + algoName + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + stratumPort
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }

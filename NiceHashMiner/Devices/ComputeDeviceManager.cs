@@ -674,6 +674,9 @@ namespace NiceHashMiner.Devices
                         case "17AA":
                             man = "Lenovo";
                             break;
+                        case "1816":
+                            man = "Directed Electronics";
+                            break;
                         case "1849":
                             man = "ASRock";
                             break;

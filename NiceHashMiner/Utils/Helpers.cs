@@ -245,6 +245,7 @@ namespace NiceHashMiner
             switch (algo)
             {
                 case AlgorithmType.ZHash:
+                case AlgorithmType.ZelHash:
                 case AlgorithmType.BeamV2:
                 case AlgorithmType.BeamV3:
                     unit = "Sol/s ";

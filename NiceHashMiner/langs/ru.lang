@@ -118,7 +118,7 @@
     "AlgorithmsListView_ContextMenu_OpenDcri": "Настройки тюнинга",
     "DeviceListView_ContectMenu_CopyTuning": "Скопировать только скорости алгоритмов",
 
-    "Form_Loading_label_LoadingText": "Загрузка, подождите, пожалуйста…",
+    "Form_Loading_label_LoadingText": "Загрузка, подождите пожалуйста…",
 
 
     "DriverVersionConfirmationDialog_title": "Рекомендуется обновление драйвера AMD",
