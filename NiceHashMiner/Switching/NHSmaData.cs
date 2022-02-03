@@ -160,6 +160,7 @@ namespace NiceHashMiner.Switching
                         {
                             if (average)
                             {
+                                //Helpers.ConsolePrint("UpdateSmaPaying", algo.ToString() + " " + _currentSma[algo].Paying.ToString() + " " + newSma[algo].ToString());
                                 if (_currentSma[algo].Paying > 0 && newSma[algo] > 0)
                                 {
                                     _currentSma[algo].Paying = (_currentSma[algo].Paying + newSma[algo]) / 2;

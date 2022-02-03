@@ -507,13 +507,19 @@ namespace NiceHashMiner.Stats
                                 int rigsCount = (int)((int)Convert.ToDouble(orders.rigsCount, CultureInfo.InvariantCulture.NumberFormat));
                                 if (rigsCount > 0)
                                 {
-                                    activeOrders++;
-                                    price = price + (double)Convert.ToDouble(orders.price, CultureInfo.InvariantCulture.NumberFormat) / priceFactor * 1000000000;
+                                    double limit = (double)Convert.ToDouble(orders.limit, CultureInfo.InvariantCulture.NumberFormat);
+                                    double payingSpeed = (double)Convert.ToDouble(orders.payingSpeed, CultureInfo.InvariantCulture.NumberFormat);
+                                    if (limit == 0.0d || limit > payingSpeed)
+                                    {
+                                        activeOrders++;
+                                        price = price + (double)Convert.ToDouble(orders.price, CultureInfo.InvariantCulture.NumberFormat) / priceFactor * 1000000000;
+                                    }
                                 }
                             }
                         }
 
                         maxpay = price / activeOrders;
+                        //Helpers.ConsolePrint("GetSmaAPIOrder: " + a, maxpay.ToString());
                         Algo = (int)algo;
                         var AlgorithmName = AlgorithmNiceHashNames.GetName(algo);
                         outProf = outProf + "  [\n" + "    " + Algo + ",\n" + "    " + maxpay.ToString() + "\n" + "  ],\n";
@@ -521,7 +527,7 @@ namespace NiceHashMiner.Stats
                 }
                 outProf = outProf.Remove(outProf.Length - 2) + "]";
                 JArray smadata = (JArray.Parse(outProf));
-                NiceHashStats.SetAlgorithmRates(smadata, 1, 15);
+                NiceHashStats.SetAlgorithmRates(smadata, 1, 15, true);
                 return true;
             }
             catch (Exception ex)
