@@ -446,6 +446,7 @@ namespace NiceHashMiner.Forms
 
             checkBox_show_NVdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_NVdevice_manufacturer");
             checkBox_show_NVIDIA_LHR.Text = International.GetText("Form_Settings_checkBox_show_NVIDIA_LHR");
+            checkBox_orderPrice.Text = International.GetText("Form_Settings_checkBox_orderPrice");
             checkBox_Show_memory_temp.Text = International.GetText("Form_Settings_checkBox_show_memory_temp");
             label_show_manufacturer.Text = International.GetText("Form_Settings_label_show_manufacturer");
             label_restart_nv_lost.Text = International.GetText("Form_Settings_label_restart_nv_lost");
@@ -802,6 +803,9 @@ namespace NiceHashMiner.Forms
                 label_show_manufacturer.BackColor = Form_Main._backColor;
                 label_show_manufacturer.ForeColor = Form_Main._textColor;
 
+                checkBox_orderPrice.BackColor = Form_Main._backColor;
+                checkBox_orderPrice.ForeColor = Form_Main._textColor;
+
                 checkBox_Show_memory_temp.BackColor = Form_Main._backColor;
                 checkBox_Show_memory_temp.ForeColor = Form_Main._textColor;
                 checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
@@ -998,6 +1002,7 @@ namespace NiceHashMiner.Forms
                 checkBox_DisplayConnected.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVIDIA_LHR.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_orderPrice.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_memory_temp.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_AMDdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowDeviceMemSize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1111,6 +1116,7 @@ namespace NiceHashMiner.Forms
                 checkBox_DisplayConnected.Checked = ConfigManager.GeneralConfig.Show_displayConected;
                 checkBox_show_NVdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_NVdevice_manufacturer;
                 checkBox_show_NVIDIA_LHR.Checked = ConfigManager.GeneralConfig.Show_NVIDIA_LHR;
+                checkBox_orderPrice.Checked = ConfigManager.GeneralConfig.Use_orders_price;
                 checkBox_Show_memory_temp.Checked = ConfigManager.GeneralConfig.Show_memory_temperature;
                 checkBox_show_AMDdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer;
                 checkBox_ShowDeviceMemSize.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceMemSize;
@@ -1277,7 +1283,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;
             ConfigManager.GeneralConfig.Show_displayConected = checkBox_DisplayConnected.Checked;
             ConfigManager.GeneralConfig.Show_NVdevice_manufacturer = checkBox_show_NVdevice_manufacturer.Checked;
-            ConfigManager.GeneralConfig.Show_NVIDIA_LHR = checkBox_show_NVIDIA_LHR.Checked;
+            ConfigManager.GeneralConfig.Use_orders_price = checkBox_orderPrice.Checked;
             ConfigManager.GeneralConfig.Show_memory_temperature = checkBox_Show_memory_temp.Checked;
             ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer = checkBox_show_AMDdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;
@@ -2591,6 +2597,15 @@ namespace NiceHashMiner.Forms
         {
             var selected = currencyConverterCombobox.SelectedItem.ToString();
             ConfigManager.GeneralConfig.DisplayCurrency = selected;
+        }
+
+        private void checkBox_orderPrice_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!ConfigManager.GeneralConfig.Use_orders_price && checkBox_orderPrice.Checked)
+            {
+                MessageBox.Show(International.GetText("Form_Settings_checkBox_orderPrice_Warning1"),
+        International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

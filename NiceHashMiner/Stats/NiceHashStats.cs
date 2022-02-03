@@ -33,7 +33,6 @@ namespace NiceHashMiner.Stats
         }
     }
 
-    //internal static class NiceHashStats
     internal class NiceHashStats
     {
         #region JSON Models
@@ -93,6 +92,9 @@ namespace NiceHashMiner.Stats
         public static bool remoteMiningStop = false;
         public static bool remoteUpdateUI = false;
         private static bool DeviceStatusRunning = false;
+
+        private static List<AlgorithmType> smaAlgos = new List<AlgorithmType>();
+        private static List<string> markets = new List<string>();
 
         private static void LoadCachedSMAData()
         {
@@ -183,6 +185,10 @@ namespace NiceHashMiner.Stats
                                 foreach (var algo in message.data)
                                 {
                                     var algoKey = (AlgorithmType)algo[0];
+                                    if (!smaAlgos.Contains(algoKey))
+                                    {
+                                        smaAlgos.Add(algoKey);
+                                    }
                                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                                     {
                                         //Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " (" + algo[0].ToString() + ") - " + algo[1]);
@@ -210,18 +216,14 @@ namespace NiceHashMiner.Stats
                                 {
                                     SetAlgorithmRates(message.data);
                                 }
+                                
                                 GetSmaAPI();
-                                /*
-                                if (AlgorithmSwitchingManager._smaCheckTimer != null)
+
+                                if (ConfigManager.GeneralConfig.Use_orders_price)
                                 {
-                                    AlgorithmSwitchingManager._smaCheckTimer.Stop();
-                                    Thread.Sleep(1000);
-                                    //AlgorithmSwitchingManager._smaCheckTimer.Dispose();
-                                    AlgorithmSwitchingManager._smaCheckTimer = null;
-                                    Thread.Sleep(1000);
-                                    AlgorithmSwitchingManager.Start();//************************
+                                    GetSmaAPIOrder();
                                 }
-                                */
+
                                 if (Miner.IsRunningNew)
                                 {
                                     Form_Main.smaCount++;
@@ -249,6 +251,13 @@ namespace NiceHashMiner.Stats
 
                                 break;
                             }
+
+                        case "markets":
+                            foreach (string market in message.data)
+                            {
+                                markets.Add(market);
+                            }
+                            break;
 
                         case "balance":
                             SetBalance(message.value.Value);
@@ -451,7 +460,78 @@ namespace NiceHashMiner.Stats
             //await _socket.SendData(cExecuted);
         }
 
+        public static bool GetSmaAPIOrder()
+        {
+            Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPIOrder");
 
+            try
+            {
+                ProfitsSMA profdata = new ProfitsSMA();
+                List<ProfitsSMA> profdata2 = new List<ProfitsSMA>();
+                string outProf = "[\n";
+                var _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+                int Algo = 0;
+                foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
+                {
+                    if (smaAlgos.Contains(algo) && !algo.ToString().ToUpper().Contains("UNUSED") && !algo.ToString().ToUpper().Contains("RANDOMX"))
+                    {
+                        if (algo == AlgorithmType.Keccak || algo == AlgorithmType.Lyra2REv2 || algo == AlgorithmType.Decred ||
+                            algo == AlgorithmType.Blake2s)
+                        {
+                            continue;
+                        }
+                        string a = algo.ToString().ToUpper();
+                        //Helpers.ConsolePrint("GetSmaAPIOrder: ", a);
+                        string resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/hashpower/orderBook?algorithm=" + a, "x");
+                        //Helpers.ConsolePrint("GetSmaAPIOrder: ", resp);
+                        dynamic json = JsonConvert.DeserializeObject(resp);
+                        if (json == null) return false;
+                        var stats = json.stats;
+                        if (stats == null) return false;
+                        string token;
+                        double maxpay = 0.0d;
+                        int activeOrders = 0;
+                        double price = 0.0d;
+                        foreach (string _market in markets)
+                        {
+                            token = _market;
+                            if (!resp.Contains("\"" + _market + "\""))
+                            {
+                                continue;
+                            }
+                            dynamic market = stats.SelectToken(token);
+                            double priceFactor = (double)Convert.ToDouble(market.priceFactor, CultureInfo.InvariantCulture.NumberFormat);
+
+                            foreach (var orders in market.orders)
+                            {
+                                int rigsCount = (int)((int)Convert.ToDouble(orders.rigsCount, CultureInfo.InvariantCulture.NumberFormat));
+                                if (rigsCount > 0)
+                                {
+                                    activeOrders++;
+                                    price = price + (double)Convert.ToDouble(orders.price, CultureInfo.InvariantCulture.NumberFormat) / priceFactor * 1000000000;
+                                }
+                            }
+                        }
+
+                        maxpay = price / activeOrders;
+                        Algo = (int)algo;
+                        var AlgorithmName = AlgorithmNiceHashNames.GetName(algo);
+                        outProf = outProf + "  [\n" + "    " + Algo + ",\n" + "    " + maxpay.ToString() + "\n" + "  ],\n";
+                    }
+                }
+                outProf = outProf.Remove(outProf.Length - 2) + "]";
+                JArray smadata = (JArray.Parse(outProf));
+                NiceHashStats.SetAlgorithmRates(smadata, 1, 15);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetSmaAPIOrder", ex.Message);
+                Helpers.ConsolePrint("GetSmaAPIOrder", "GetSmaAPIOrder fatal ERROR");
+                return false;
+            }
+            return false;
+        }
 
         public static bool GetSmaAPICurrent()
         {
@@ -754,7 +834,6 @@ namespace NiceHashMiner.Stats
         [HandleProcessCorruptedStateExceptions]
         public static bool GetSmaAPI()
         {
-
             try
             {
                 if (ConfigManager.GeneralConfig.MOPA2)
@@ -909,7 +988,7 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", e.Message);
             }
         }
-        public static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 12.0)
+        public static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 12.0, bool average = false)
         {
             try
             {
@@ -960,7 +1039,7 @@ namespace NiceHashMiner.Stats
                 //testing
                 //payingDict[AlgorithmType.ZelHash] = 12345;
 
-                NHSmaData.UpdateSmaPaying(payingDict);
+                NHSmaData.UpdateSmaPaying(payingDict, average);
 
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);

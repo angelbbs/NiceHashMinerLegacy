@@ -75,18 +75,30 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (File.Exists("miners\\Nanominer\\config_nh_" + platform + ".ini"))
-                File.Delete("miners\\Nanominer\\config_nh_" + platform + ".ini");
-
+            try
+            {
+                if (File.Exists("miners\\Nanominer\\config_nh_" + platform + ".ini"))
+                    File.Delete("miners\\Nanominer\\config_nh_" + platform + ".ini");
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+            }
             string username = GetUsername(btcAdress, worker);
             string rigName = username.Split('.')[1];
             url = url.Replace("stratum+tcp://", "");
             string cfgFile = "";
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
-                    File.Delete("miners\\Nanominer\\" + GetLogFileName());
-
+                try
+                {
+                    if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                        File.Delete("miners\\Nanominer\\" + GetLogFileName());
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                }
                 cfgFile =
                    String.Format("webPort = {0}", ApiPort) + "\n"
                    + String.Format("mport = 0\n")
@@ -105,9 +117,15 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
-                    File.Delete("miners\\Nanominer\\" + GetLogFileName());
-
+                try
+                {
+                    if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                        File.Delete("miners\\Nanominer\\" + GetLogFileName());
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                }
                 cfgFile =
                    String.Format("webPort = {0}", ApiPort) + "\n"
                    + String.Format("mport = 0\n")
@@ -138,9 +156,15 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
-                    File.Delete("miners\\Nanominer\\" + GetLogFileName());
-
+                try
+                {
+                    if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                        File.Delete("miners\\Nanominer\\" + GetLogFileName());
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                }
                 cfgFile =
                    String.Format("webPort = {0}", ApiPort) + "\n"
                    + String.Format("mport = 0\n")

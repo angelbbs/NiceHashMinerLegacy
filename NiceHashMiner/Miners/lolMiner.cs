@@ -89,6 +89,16 @@ namespace NiceHashMiner.Miners
                               " --devices ";
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
+            {
+                LastCommandLine = "--coin ZEL --pool " + url + " --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[1, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[2, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
+                    " --pool zhash." + Form_Main.myServers[3, 0] + ".nicehash.com:3369 " + " --user " + username + " --pass x" +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV2)
             {
                 LastCommandLine = "--algo BEAM-II --pool " + url + " --user " + username + " --pass x --tls 0" +
@@ -232,6 +242,13 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo EQUI144_5 --pers BgoldPoW" +
                 " --pool europe.equihash-hub.miningpoolhub.com:20595 --user angelbbs.lol --pass x" +
+                                              param +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
+            {
+                CommandLine = "--coin ZEL" +
+                " --pool flux.2miners.com:9090 --user t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.lol --pass x" +
                                               param +
                 " --devices ";
             }
@@ -480,6 +497,10 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
@@ -547,6 +568,11 @@ namespace NiceHashMiner.Miners
                     {
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 30;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
+                    {
+                        delay_before_calc_hashrate = 50;
+                        MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
                     {

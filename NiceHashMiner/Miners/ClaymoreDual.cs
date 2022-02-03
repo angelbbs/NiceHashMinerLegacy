@@ -75,17 +75,22 @@ namespace NiceHashMiner.Miners
                     dpoolsFile = "dpoolsAMD" + GetLogFileName().Replace("_log", "");
                 }
             }
+            try
+            {
+                if (File.Exists("miners\\claymore_dual\\epools.txt"))
+                    File.Delete("miners\\claymore_dual\\epools.txt");
+                if (File.Exists("miners\\claymore_dual\\dpools.txt"))
+                    File.Delete("miners\\claymore_dual\\dpools.txt");
 
-            if (File.Exists("miners\\claymore_dual\\epools.txt"))
-                File.Delete("miners\\claymore_dual\\epools.txt");
-            if (File.Exists("miners\\claymore_dual\\dpools.txt"))
-                File.Delete("miners\\claymore_dual\\dpools.txt");
-
-            if (File.Exists("miners\\claymore_dual\\" + epoolsFile))
-                File.Delete("miners\\claymore_dual\\" + epoolsFile);
-            if (File.Exists("miners\\claymore_dual\\" + dpoolsFile))
-                File.Delete("miners\\claymore_dual\\" + dpoolsFile);
-
+                if (File.Exists("miners\\claymore_dual\\" + epoolsFile))
+                    File.Delete("miners\\claymore_dual\\" + epoolsFile);
+                if (File.Exists("miners\\claymore_dual\\" + dpoolsFile))
+                    File.Delete("miners\\claymore_dual\\" + dpoolsFile);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetStartBenchmarkCommand", ex.ToString());
+            }
             Thread.Sleep(200);
 
             String epools = String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[1, 0], username) + "\n"
@@ -314,17 +319,21 @@ namespace NiceHashMiner.Miners
                     dpoolsFile = "dpoolsAMD" + GetLogFileName().Replace("_log", "");
                 }
             }
+            try
+            {
+                if (File.Exists("miners\\claymore_dual\\epools.txt"))
+                    File.Delete("miners\\claymore_dual\\epools.txt");
+                if (File.Exists("miners\\claymore_dual\\dpools.txt"))
+                    File.Delete("miners\\claymore_dual\\dpools.txt");
 
-            if (File.Exists("miners\\claymore_dual\\epools.txt"))
-                File.Delete("miners\\claymore_dual\\epools.txt");
-            if (File.Exists("miners\\claymore_dual\\dpools.txt"))
-                File.Delete("miners\\claymore_dual\\dpools.txt");
-
-            if (File.Exists("miners\\claymore_dual\\" + epoolsFile))
-                File.Delete("miners\\claymore_dual\\" + epoolsFile);
-            if (File.Exists("miners\\claymore_dual\\" + dpoolsFile))
-                File.Delete("miners\\claymore_dual\\" + dpoolsFile);
-
+                if (File.Exists("miners\\claymore_dual\\" + epoolsFile))
+                    File.Delete("miners\\claymore_dual\\" + epoolsFile);
+                if (File.Exists("miners\\claymore_dual\\" + dpoolsFile))
+                    File.Delete("miners\\claymore_dual\\" + dpoolsFile);
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetStartBenchmarkCommand", ex.ToString());
+            }
             Thread.Sleep(200);
 
             String epools = String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[0, 0], username) + "\n"

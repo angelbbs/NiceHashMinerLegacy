@@ -239,7 +239,7 @@ namespace NiceHashMiner.Forms.Components
             if (_currentlySelectedLvi != null)
             {
                 _currentlySelectedLvi.SubItems[SPEED].Text = speedString;
-                _currentlySelectedLvi.SubItems[RATE].Text = rate;
+                //_currentlySelectedLvi.SubItems[RATE].Text = rate;
                 if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
                 {
                     _currentlySelectedLvi.SubItems[POWER].Text = _currentlySelectedAlgorithm.PowerUsage.ToString() + " Вт";

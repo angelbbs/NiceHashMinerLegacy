@@ -27,7 +27,7 @@ namespace NiceHashMiner.Switching
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
 
         // Global list of SMA data, should be accessed with a lock since callbacks/timers update it
-        private static Dictionary<AlgorithmType, NiceHashSma> _currentSma;
+        public static Dictionary<AlgorithmType, NiceHashSma> _currentSma;
         // Global list of stable algorithms, should be accessed with a lock
         private static HashSet<AlgorithmType> _stableAlgorithms;
 
@@ -147,7 +147,7 @@ namespace NiceHashMiner.Switching
         /// Change SMA profits to new values
         /// </summary>
         /// <param name="newSma">Algorithm/profit dictionary with new values</param>
-        public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma)
+        public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma, bool average = false)
         {
             CheckInit();
             lock (_currentSma)
@@ -158,7 +158,25 @@ namespace NiceHashMiner.Switching
                     {
                         if (_currentSma.ContainsKey(algo))
                         {
-                            _currentSma[algo].Paying = newSma[algo];
+                            if (average)
+                            {
+                                if (_currentSma[algo].Paying > 0 && newSma[algo] > 0)
+                                {
+                                    _currentSma[algo].Paying = (_currentSma[algo].Paying + newSma[algo]) / 2;
+                                }
+                                if (_currentSma[algo].Paying <= 0 && newSma[algo] > 0)
+                                {
+                                    _currentSma[algo].Paying = newSma[algo];
+                                }
+                                if (_currentSma[algo].Paying > 0 && newSma[algo] <= 0)
+                                {
+                                    //nothing
+                                }
+                            }
+                            else
+                            {
+                                _currentSma[algo].Paying = newSma[algo];
+                            }
                         }
 
                     }

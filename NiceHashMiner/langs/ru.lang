@@ -443,6 +443,8 @@
                 "Form_Settings_radioButtonMOPA3": "Средняя прибыльн. за 5 мин.",
                 "Form_Settings_radioButtonMOPA4": "Средняя прибыльность за 24 часа",
                 "Form_Settings_radioButtonMOPA5": "Наибольшая прибыльность по всем методам",
+		"Form_Settings_checkBox_orderPrice": "Использовать цену ордеров",
+		"Form_Settings_checkBox_orderPrice_Warning1": "Включение использования цен ордеров приведет к увеличению потребления интернет-трафика",
                 "Form_Settings_groupBox1": "Устройства",
                 "Form_Settings_label_switching_algorithms": "Переключать алгоритмы",
                 "Form_Settings_comboBox_switching_algorithms1": "через 1 мин",

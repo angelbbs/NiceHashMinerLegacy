@@ -102,6 +102,7 @@ namespace NiceHashMiner.Forms
             this.label_displayCurrency = new System.Windows.Forms.Label();
             this.tabPageAdvanced1 = new System.Windows.Forms.TabPage();
             this.groupBoxMOPA = new System.Windows.Forms.GroupBox();
+            this.checkBox_orderPrice = new System.Windows.Forms.CheckBox();
             this.radioButtonMOPA5 = new System.Windows.Forms.RadioButton();
             this.radioButtonMOPA4 = new System.Windows.Forms.RadioButton();
             this.radioButtonMOPA3 = new System.Windows.Forms.RadioButton();
@@ -1200,6 +1201,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBoxMOPA
             // 
+            this.groupBoxMOPA.Controls.Add(this.checkBox_orderPrice);
             this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA5);
             this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA4);
             this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA3);
@@ -1209,10 +1211,23 @@ namespace NiceHashMiner.Forms
             this.groupBoxMOPA.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxMOPA.Name = "groupBoxMOPA";
             this.groupBoxMOPA.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxMOPA.Size = new System.Drawing.Size(658, 68);
+            this.groupBoxMOPA.Size = new System.Drawing.Size(658, 96);
             this.groupBoxMOPA.TabIndex = 396;
             this.groupBoxMOPA.TabStop = false;
             this.groupBoxMOPA.Text = "Method of obtaining profitability of algorithms:";
+            // 
+            // checkBox_orderPrice
+            // 
+            this.checkBox_orderPrice.AutoSize = true;
+            this.checkBox_orderPrice.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_orderPrice.Location = new System.Drawing.Point(10, 71);
+            this.checkBox_orderPrice.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_orderPrice.Name = "checkBox_orderPrice";
+            this.checkBox_orderPrice.Size = new System.Drawing.Size(116, 17);
+            this.checkBox_orderPrice.TabIndex = 419;
+            this.checkBox_orderPrice.Text = "Use the order price";
+            this.checkBox_orderPrice.UseVisualStyleBackColor = true;
+            this.checkBox_orderPrice.CheckedChanged += new System.EventHandler(this.checkBox_orderPrice_CheckedChanged);
             // 
             // radioButtonMOPA5
             // 
@@ -1412,11 +1427,11 @@ namespace NiceHashMiner.Forms
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionNVIDIA);
             this.groupBox1.Controls.Add(this.pictureBox_DisableDetectionNVIDIA);
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionAMD);
-            this.groupBox1.Location = new System.Drawing.Point(9, 177);
+            this.groupBox1.Location = new System.Drawing.Point(7, 205);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox1.Size = new System.Drawing.Size(658, 308);
+            this.groupBox1.Size = new System.Drawing.Size(658, 280);
             this.groupBox1.TabIndex = 394;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
@@ -2576,5 +2591,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_ABDefault_program_closing;
         private System.Windows.Forms.CheckBox checkBox_ABDefault_mining_stopped;
         private System.Windows.Forms.CheckBox checkBox_DisableTooltips;
+        private System.Windows.Forms.CheckBox checkBox_orderPrice;
     }
 }

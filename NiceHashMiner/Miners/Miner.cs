@@ -953,9 +953,16 @@ namespace NiceHashMiner
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
                 try
                 {
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " SendCtrlC to stop miner");
-                        try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
-                        Thread.Sleep(1000);
+                    Helpers.ConsolePrint(MinerTag(), ProcessTag() + " SendCtrlC to stop miner");
+                    try
+                    {
+                        ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("BENCHMARK-end", $"algorithm {BenchmarkAlgorithm.AlgorithmName} : " + ex.ToString());
+                    }
+                    Thread.Sleep(1000);
 
                     try
                     {

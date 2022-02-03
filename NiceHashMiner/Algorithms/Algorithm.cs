@@ -212,7 +212,8 @@ namespace NiceHashMiner.Algorithms
                     rate = payingRate.ToString("F8");
                 }
                 */
-                var rate = International.GetText("BenchmarkRatioRateN_A");
+                //var rate = International.GetText("BenchmarkRatioRateN_A");
+                var rate = "0.00";
                 var payingRate = 0.0d;
 
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))

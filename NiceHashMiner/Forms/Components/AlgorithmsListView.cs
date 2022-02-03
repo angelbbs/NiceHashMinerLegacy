@@ -581,11 +581,11 @@ namespace NiceHashMiner.Forms.Components
 
                             if (ConfigManager.GeneralConfig.DecreasePowerCost)
                             {
-                                lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
+                                //lvi.SubItems[RATE].Text = WithPowerRate.ToString("F8");
                             }
                             else
                             {
-                                lvi.SubItems[RATE].Text = algo.CurPayingRate;
+                                //lvi.SubItems[RATE].Text = algo.CurPayingRate;
                             }
                             //lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
                             algorithm.PowerUsage = Math.Round(algorithm.PowerUsage, 0);

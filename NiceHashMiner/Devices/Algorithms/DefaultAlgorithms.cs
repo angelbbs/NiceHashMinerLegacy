@@ -153,6 +153,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.ZelHash, "ZelHash")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.BeamV3, "BeamV3")
                             {
                                 ExtraLaunchParameters = ""

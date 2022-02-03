@@ -30,10 +30,17 @@ namespace NiceHashMiner.Updater
             }
             _autoupdate = autoupdate;
             string fileName = "temp/" + Form_Main.progName;
-            if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
-            if (File.Exists(fileName) != true)
+            try
             {
-                File.Delete(fileName);
+                if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+                if (File.Exists(fileName) != true)
+                {
+                    File.Delete(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Downloader", ex.ToString());
             }
             Helpers.ConsolePrint("Updater", "Try download " + Form_Main.browser_download_url);
             try
@@ -132,14 +139,19 @@ namespace NiceHashMiner.Updater
                     FileName = "utils\\7z.exe"
                 }
                 };
-
-                if (Directory.Exists("backup"))
+                try
                 {
-                    var dirInfo = new DirectoryInfo("backup");
-                    foreach (var file in dirInfo.GetFiles()) file.Delete();
-                    dirInfo.Delete();
+                    if (Directory.Exists("backup"))
+                    {
+                        var dirInfo = new DirectoryInfo("backup");
+                        foreach (var file in dirInfo.GetFiles()) file.Delete();
+                        dirInfo.Delete();
+                    }
                 }
-
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("CreateBackup", ex.ToString());
+                }
                 CMDconfigHandleBackup.StartInfo.Arguments = "a -tzip -mx3 -ssw -r -y -x!backup backup\\backup_" + fname + ".zip";
                 CMDconfigHandleBackup.StartInfo.UseShellExecute = false;
                 CMDconfigHandleBackup.StartInfo.CreateNoWindow = false;

@@ -461,6 +461,8 @@
                 "Form_Settings_radioButtonMOPA3": "5 minutes avg profitability",
                 "Form_Settings_radioButtonMOPA4": "24 hours avg profitability",
                 "Form_Settings_radioButtonMOPA5": "Highest profitability by all methods",
+		"Form_Settings_checkBox_orderPrice": "Use the order price",
+		"Form_Settings_checkBox_orderPrice_Warning1": "Enabling the use of order prices will lead to an increase in Internet traffic consumption",
                 "Form_Settings_groupBox1": "Devices:",
                 "Form_Settings_label_switching_algorithms": "Switching algorithms",
                 "Form_Settings_comboBox_switching_algorithms1": "after 1 min",

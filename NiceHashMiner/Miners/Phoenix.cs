@@ -58,10 +58,15 @@ namespace NiceHashMiner.Miners
                     platform = " -amd ";
                 }
             }
-
-            if (File.Exists("miners\\phoenix\\epools.txt"))
-                File.Delete("miners\\phoenix\\epools.txt");
-
+            try
+            {
+                if (File.Exists("miners\\phoenix\\epools.txt"))
+                    File.Delete("miners\\phoenix\\epools.txt");
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+            }
 
             Thread.Sleep(200);
 
@@ -108,10 +113,15 @@ namespace NiceHashMiner.Miners
                     platform = " -amd ";
                 }
             }
-
-            if (File.Exists("miners\\phoenix\\epools.txt"))
-                File.Delete("miners\\phoenix\\epools.txt");
-
+            try
+            {
+                if (File.Exists("miners\\phoenix\\epools.txt"))
+                    File.Delete("miners\\phoenix\\epools.txt");
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+            }
             Thread.Sleep(200);
 
             return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"

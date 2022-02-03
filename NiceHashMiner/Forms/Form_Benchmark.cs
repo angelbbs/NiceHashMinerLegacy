@@ -219,7 +219,7 @@ namespace NiceHashMiner.Forms
             {
                 UpdateListView_timer = new Timer();
                 UpdateListView_timer.Tick += UpdateLvi_Tick;
-                UpdateListView_timer.Interval = 10000;
+                UpdateListView_timer.Interval = 200;
                 UpdateListView_timer.Start();
             }
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;

@@ -149,6 +149,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Additional_info_about_device = false;
         public bool Show_NVdevice_manufacturer = true;
         public bool Show_NVIDIA_LHR = true;
+        public bool Use_orders_price = false;
         public bool Show_memory_temperature = true;
         public bool Show_AMDdevice_manufacturer = true;
         public bool Show_ShowDeviceMemSize = true;
