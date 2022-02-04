@@ -1109,6 +1109,9 @@ break;
 
                         foreach (var cudaDev in _cudaDevices.CudaDevices.OrderBy(i => i.pciBusID))
                         {
+                            NvPhysicalGpuHandle handle = new NvPhysicalGpuHandle();
+                            idHandles.TryGetValue(cudaDev.pciBusID, out handle);
+
                             Helpers.ConsolePrint("QueryCudaDevices", "cudaDev.DeviceID: " + (cudaDev.DeviceID).ToString());
                             foreach (var vc in AvaliableVideoControllers)
                             {
@@ -1122,6 +1125,7 @@ break;
                                     //check empty uuid
                                     if (!cudaDev.UUID.Contains("GPU-"))
                                     {
+                                        idHandles.TryGetValue((int)cudaDev.DeviceID, out handle);
                                         string fakeUUID = GetFakeUuid((int)cudaDev.DeviceID, vc.SUBSYS_, vc.fakeID_, DeviceGroupType.NVIDIA_6_x);
                                         cudaDev.UUID = fakeUUID;
                                         Helpers.ConsolePrint("QueryCudaDevices", "Empty UUID for Device ID: " + cudaDev.DeviceID.ToString() + "Using Fake UUID: " + fakeUUID);
@@ -1198,7 +1202,8 @@ break;
                                         $"{(ret == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
                                 }
 
-                                idHandles.TryGetValue((int)cudaDev.DeviceID, out var handle);
+                                //idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
+                                //idHandles.TryGetValue((int)cudaDev.DeviceID, out var handle);
 
                                 Available.Devices.Add(
                                     new CudaComputeDevice(cudaDev, group, ++GpuCount, handle, nvmlHandle)
