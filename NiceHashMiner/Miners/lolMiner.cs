@@ -715,8 +715,32 @@ namespace NiceHashMiner.Miners
                 int mult = 1;
                 if (resp != null)
                 {
-                    int gpus = resp.Session.Active_GPUs;
-                    double totals = resp.Session.Performance_Summary;
+                    int Num_Workers = resp.Num_Workers;
+                    if (Num_Workers == 0) return null;
+                    int Num_Algorithms = resp.Num_Algorithms;
+                    //Helpers.ConsolePrint("API: ", "Num_Workers: " + Num_Workers.ToString());
+                    //Helpers.ConsolePrint("API: ", "Num_Algorithms: " + Num_Algorithms.ToString());
+                    double[] Total_Performance = new double[Num_Algorithms];
+                    double[] hashrates = new double[Num_Workers];
+                    double totals = 0.0d;
+                    for (int alg = 0; alg < Num_Algorithms; alg++)
+                    {
+                        Total_Performance[alg] = resp.Algorithms[alg].Total_Performance * resp.Algorithms[alg].Performance_Factor;
+                        string Algorithm = resp.Algorithms[alg].Algorithm;
+                        //Helpers.ConsolePrint("API: ", "Algorithm: " + resp.Algorithms[alg].Algorithm);
+                        //Helpers.ConsolePrint("API: ", "Total_Performance: " + Total_Performance[alg].ToString());
+                        //if (Algorithm.Equals("Ethash"))
+                        {
+                            totals = Total_Performance[alg];
+                        }
+                        for (int w = 0; w < Num_Workers; w++)
+                        {
+                            hashrates[w] = resp.Algorithms[alg].Worker_Performance[w] * resp.Algorithms[alg].Performance_Factor;
+                            //Helpers.ConsolePrint("API: ", "hashrates: " + hashrates[w].ToString());
+                        }
+                    }
+
+                    /*
                     if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto || MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
                     {
                         mult = 1000000;
@@ -725,14 +749,10 @@ namespace NiceHashMiner.Miners
                     {
                         mult = 1;
                     }
-                    ad.Speed = totals * mult;
-                    if (gpus > 0)
+                    */
+                    ad.Speed = totals;
+                    if (Num_Workers > 0)
                     {
-                        double[] hashrates = new double[gpus];
-                        for (var i = 0; i < gpus; i++)
-                        {
-                            hashrates[i] = resp.GPUs[i].Performance;
-                        }
                         int dev = 0;
                         var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
                         if (Form_Main.NVIDIA_orderBug)
@@ -742,10 +762,9 @@ namespace NiceHashMiner.Miners
                         foreach (var mPair in sortedMinerPairs)
                         {
                             _power = mPair.Device.PowerUsage;
-                            mPair.Device.MiningHashrate = hashrates[dev] * mult;
+                            mPair.Device.MiningHashrate = hashrates[dev];
                             dev++;
                         }
-
 
                         if (ad.Speed == 0)
                         {
@@ -756,6 +775,7 @@ namespace NiceHashMiner.Miners
                             CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                         }
                     }
+                    
                 }
             }
             catch (Exception e)

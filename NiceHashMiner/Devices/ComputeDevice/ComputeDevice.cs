@@ -777,6 +777,9 @@ namespace NiceHashMiner.Devices
                 case "1462":
                     man = "MSI";
                     break;
+                case "1BFD":
+                    man = "EeeTOP";
+                    break;
                 case "1DA2":
                     man = "Sapphire";
                     break;

@@ -495,6 +495,8 @@ namespace NiceHashMiner.Stats
                         foreach (string _market in markets)
                         {
                             token = _market;
+                            //локация не влияет на прибыльность. найс платит по среднему со всех рынков
+                            //if (!resp.Contains("\"" + _market + "\"") || !_market.ToUpper().Contains(Form_Main.myServers[0, 0].Split('-')[0].ToUpper()))
                             if (!resp.Contains("\"" + _market + "\""))
                             {
                                 continue;
@@ -519,7 +521,7 @@ namespace NiceHashMiner.Stats
                         }
 
                         maxpay = price / activeOrders;
-                        //Helpers.ConsolePrint("GetSmaAPIOrder: " + a, maxpay.ToString());
+                        Helpers.ConsolePrint("GetSmaAPIOrder: " + a, maxpay.ToString());
                         Algo = (int)algo;
                         var AlgorithmName = AlgorithmNiceHashNames.GetName(algo);
                         outProf = outProf + "  [\n" + "    " + Algo + ",\n" + "    " + maxpay.ToString() + "\n" + "  ],\n";

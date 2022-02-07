@@ -710,6 +710,9 @@ namespace NiceHashMiner.Devices
                         case "1462":
                             man = "MSI";
                             break;
+                        case "1BFD":
+                            man = "EeeTOP";
+                            break;
                         case "1DA2":
                             man = "Sapphire";
                             break;
@@ -1115,8 +1118,23 @@ break;
                             Helpers.ConsolePrint("QueryCudaDevices", "cudaDev.DeviceID: " + (cudaDev.DeviceID).ToString());
                             foreach (var vc in AvaliableVideoControllers)
                             {
-                                Helpers.ConsolePrint("QueryCudaDevices", "vc.ID: " + vc.ID);
-                                if (vc.ID == cudaDev.DeviceID)
+                                bool _equals = false;
+                                //Helpers.ConsolePrint("QueryCudaDevices", "vc.ID: " + vc.ID);
+                                if (string.IsNullOrEmpty(vc.DEV_ + vc.VEN_))
+                                {
+                                    Helpers.ConsolePrint("QueryCudaDevices", "Empty VEN_&DEV_");
+                                    if (vc.ID == cudaDev.DeviceID)
+                                    {
+                                        _equals = true;
+                                    }
+                                } else
+                                {
+                                    if ((vc.DEV_ + vc.VEN_).Equals(cudaDev.pciDeviceId.ToString("X")))
+                                    {
+                                        _equals = true;
+                                    }
+                                }
+                                if (_equals)
                                 {
                                     Helpers.ConsolePrint("QueryCudaDevices", vc.DEV_ + vc.VEN_ + " ?= " + cudaDev.pciDeviceId.ToString("X"));
                                     cudaDev.NvidiaLHR = vc.NvidiaLHR;
