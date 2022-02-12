@@ -108,7 +108,7 @@ namespace NiceHashMiner.Miners
             string sColor = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
             {
-                //sColor = " --nocolor";
+                sColor = " --nocolour";
             }
 
 

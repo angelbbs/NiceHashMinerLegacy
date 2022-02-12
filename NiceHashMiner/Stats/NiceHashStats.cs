@@ -1288,16 +1288,23 @@ namespace NiceHashMiner.Stats
                         }
 
                         array.Add(speedsJson);
+                        
+                        //костыль для amd
+                        float TempMemory = device.TempMemory;
+                        float TempMemoryResort = deviceResort.TempMemory;
+                        if (TempMemory < 0) TempMemory = 0;
+                        if (TempMemoryResort < 0) TempMemoryResort = 0;
+
                         // Hardware monitoring
                         if (!Form_Main.NVIDIA_orderBug)
                         {
-                            array.Add(Math.Round(device.TempMemory * 65536 + Math.Round(device.Temp)));
+                            array.Add(Math.Round(TempMemory * 65536 + Math.Round(device.Temp)));
                             array.Add(device.FanSpeedRPM);
                             array.Add((int)Math.Round(device.PowerUsage));
                         }
                         else
                         {
-                            array.Add(Math.Round(deviceResort.TempMemory * 65536 + Math.Round(deviceResort.Temp)));
+                            array.Add(Math.Round(TempMemoryResort * 65536 + Math.Round(deviceResort.Temp)));
                             array.Add(deviceResort.FanSpeedRPM);
                             array.Add((int)Math.Round(deviceResort.PowerUsage));
                         }

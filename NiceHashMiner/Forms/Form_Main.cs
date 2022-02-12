@@ -159,6 +159,7 @@ namespace NiceHashMiner
         }
         public static double ChartDataAvail = 0;
         public static int MemoryMappedFileError = 0;
+        public static int NVMLDriverError = 0;
 
         public static List<NvData> gpuList = new List<NvData>();
         [Serializable]
@@ -771,6 +772,18 @@ namespace NiceHashMiner
             {
                 if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
                 {
+                    try
+                    {
+                        foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
+                        {
+                            process.Kill();
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    Thread.Sleep(200);
                     //if (ComputeDeviceManager.Query._currentNvidiaSmiDriver.IsLesserVersionThan(ComputeDeviceManager.Query.LastGoodNvidiaCuda111Driver))
                     {
                         if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
@@ -824,16 +837,7 @@ namespace NiceHashMiner
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
             Thread.Sleep(1000);
-            //NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
-            //NiceHashStats.OnBalanceUpdate += BalanceCallback;
-            //NiceHashStats.OnSmaUpdate += SmaCallback;
-            //NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
-            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            //NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
-            //NiceHashStats.OnVersionBurn += VersionBurnCallback;
-            //NiceHashStats.OnExchangeUpdate += ExchangeCallback;
-            //NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
 
             _loadingScreen.SetValueAndMsg(11, International.GetText("Form_Main_loadtext_GetBTCRate"));
@@ -907,11 +911,6 @@ namespace NiceHashMiner
             _loadingScreen.SetValueAndMsg(13, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
             Thread.Sleep(300);
-            if (_loadingScreen != null)
-            {
-                _loadingScreen.FinishLoad();
-            }
-
 
             _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
             _autostartTimerDelay = new Timer();
@@ -919,14 +918,18 @@ namespace NiceHashMiner
             _autostartTimerDelay.Interval = 1000;
             _autostartTimerDelay.Start();
 
+            Thread.Sleep(200);//костыль для очередности запуска таймеров
+
             _autostartTimer = new Timer();
             _autostartTimer.Tick += AutoStartTimer_Tick;
             _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
             _autostartTimer.Start();
 
-            //Form_Main.ActiveForm.TopMost = true;
-            //this.TopMost = true;
-            //this.TopMost = false;
+            if (_loadingScreen != null)
+            {
+                _loadingScreen.FinishLoad();
+            }
+
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
 
         }
@@ -2458,13 +2461,17 @@ public static void CloseChilds(Process parentId)
         // Minimize to system tray if MinimizeToTray is set to true
         private void Form1_Resize(object sender, EventArgs e)
         {
-
-            foreach (var control in flowLayoutPanelRates.Controls)
+            try
             {
-                ((GroupProfitControl)control).Width = this.Width - 145;
-            }
-            //((GroupProfitControl)control).Width = 520;
+                foreach (var control in flowLayoutPanelRates.Controls)
+                {
+                    ((GroupProfitControl)control).Width = this.Width - 145;
+                }
+                //((GroupProfitControl)control).Width = 520;
+            } catch
+            {
 
+            }
 
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
@@ -2499,17 +2506,23 @@ public static void CloseChilds(Process parentId)
 
         public StartMiningReturnType StartMining(bool showWarnings)
         {
-            MiningStarted = true;
-            if (_autostartTimerDelay != null)
+            try
             {
-                _autostartTimerDelay.Stop();
-                _autostartTimerDelay = null;
-                buttonStopMining.Text = International.GetText("Form_Main_stop");
-            }
-            if (_autostartTimer != null)
+                MiningStarted = true;
+                if (_autostartTimerDelay != null)
+                {
+                    _autostartTimerDelay.Stop();
+                    _autostartTimerDelay = null;
+                    buttonStopMining.Text = International.GetText("Form_Main_stop");
+                }
+                if (_autostartTimer != null)
+                {
+                    _autostartTimer.Stop();
+                    _autostartTimer = null;
+                }
+            } catch (Exception ex)
             {
-                _autostartTimer.Stop();
-                _autostartTimer = null;
+                Helpers.ConsolePrint("StartMining", ex.ToString());
             }
             NiceHashStats._deviceUpdateTimer.Stop();
             new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
@@ -2573,6 +2586,7 @@ public static void CloseChilds(Process parentId)
                 }
                 return StartMiningReturnType.IgnoreMsg;
             }
+            /*
             foreach (var cdev in ComputeDeviceManager.Available.Devices)
             {
                 if (cdev.Enabled)
@@ -2582,6 +2596,8 @@ public static void CloseChilds(Process parentId)
                     }
                 }
             }
+            */
+
             // Check if the user has run benchmark first
             /*
             if (!isBenchInit)
@@ -2657,16 +2673,6 @@ public static void CloseChilds(Process parentId)
             }
             else
             {
-                /*
-                var ml = Miner.PingServers();
-                if (ml < 0)
-                {
-                    ml = Miner.PingServers("daggerhashimoto");
-                }
-                */
-                //int ml = NiceHashMiner.Utils.ServerResponceTime.GetBestServer();
-
-                //isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[0],
                 if (ConfigManager.GeneralConfig.ServiceLocation == 4)
                 {
                     isMining = MinersManager.StartInitialize(this, Form_Main.myServers[0, 0],
@@ -2934,6 +2940,26 @@ public static void CloseChilds(Process parentId)
                 Helpers.ConsolePrint("DeviceStatusTimer_Tick error: ", ex.ToString());
                 Thread.Sleep(500);
             }
+            if (NVMLDriverError > 10)
+            {
+                NVMLDriverError = 0;
+                try
+                {
+                    var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                    {
+                        WindowStyle = ProcessWindowStyle.Minimized
+                    };
+                    onGpusLost.Arguments = "2 " + "_NVML";
+                    Helpers.ConsolePrint("ERROR", "Restart driver due NVML error");
+                    Form_Benchmark.RunCMDAfterBenchmark();
+                    Thread.Sleep(1000);
+                    Process.Start(onGpusLost);
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("DeviceStatusTimer_Tick error: ", ex.ToString());
+                }
+            }
         }
 
         private void GetNVMLData()
@@ -3009,7 +3035,7 @@ public static void CloseChilds(Process parentId)
                 if (MemoryMappedFileError > 5)
                 {
                     MemoryMappedFileError = 0;
-                    Helpers.ConsolePrint("NVML", "Error! MemoryMappedFile not found");
+                    Helpers.ConsolePrint("NVML", "Error! MemoryMappedFile not found " + NVMLDriverError.ToString());
                     if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
                     {
                         var MonitorProc = new Process
@@ -3022,6 +3048,7 @@ public static void CloseChilds(Process parentId)
                         if (MonitorProc.Start())
                         {
                             Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
+                            NVMLDriverError++;
                         }
                         else
                         {
