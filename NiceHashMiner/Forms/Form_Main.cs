@@ -736,15 +736,11 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
-            //new Task(() => CheckGithubDownload()).Start();
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_MSI_AB"));
-                //new Task(() => MSIAfterburner.MSIAfterburnerRUN()).Start();
-
                 MSIAfterburner.MSIAfterburnerRUN();
-
             }
             flowLayoutPanelRates.Visible = true;
 
@@ -784,25 +780,23 @@ namespace NiceHashMiner
 
                     }
                     Thread.Sleep(200);
-                    //if (ComputeDeviceManager.Query._currentNvidiaSmiDriver.IsLesserVersionThan(ComputeDeviceManager.Query.LastGoodNvidiaCuda111Driver))
-                    {
-                        if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
-                        {
-                            var MonitorProc = new Process
-                            {
-                                StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
-                            };
 
-                            MonitorProc.StartInfo.UseShellExecute = false;
-                            MonitorProc.StartInfo.CreateNoWindow = true;
-                            if (MonitorProc.Start())
-                            {
-                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
-                            }
-                            else
-                            {
-                                Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
-                            }
+                    if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
+                    {
+                        var MonitorProc = new Process
+                        {
+                            StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
+                        };
+
+                        MonitorProc.StartInfo.UseShellExecute = false;
+                        MonitorProc.StartInfo.CreateNoWindow = true;
+                        if (MonitorProc.Start())
+                        {
+                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
                         }
                     }
                 }
@@ -811,32 +805,22 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
-                //NiceHashMiner.Utils.ServerResponceTime.GetBestServer();
             }
 
             _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
-            /*
-            if (ConfigManager.GeneralConfig.NVIDIAP0State)
-            {
-                //_loadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
-                _loadingScreen.SetValueAndMsg(7, International.GetText("Form_Main_loadtext_NVIDIAP0State"));
-                Helpers.SetNvidiaP0State();
-            }
-            */
-            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
+
             _loadingScreen.SetValueAndMsg(9, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             //new Task(() => CheckUpdates()).Start();
             CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
 
-            //_loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
             label_NH_ConnectStatus.Update();
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
 
 
@@ -855,7 +839,6 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfigFileCommit();
                     try
                     {
-                        //if (Updater.Updater.GetGITHUBVersion() > 0 && !File.Exists("configs//download_from_mirror.flag"))
                         if (Updater.Updater.GetGITHUBVersion() > 0)
                         {
                             var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.MinersDownloadSetup));
@@ -890,7 +873,6 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 _loadingScreen.SetValueAndMsg(12, "Check MSI Afterburner");
-                //MSIAfterburner.CheckMSIAfterburner();
                 int countab = 0;
                 do
                 {

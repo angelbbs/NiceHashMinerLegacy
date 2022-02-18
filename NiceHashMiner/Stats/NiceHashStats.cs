@@ -362,10 +362,12 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("REMOTE", "Remote management disabled");
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Remote management disabled\"]}";
+                //await _socket.SendData(cExecutedDisabled);
                 return;
             }
             Helpers.ConsolePrint("REMOTE", "Not implemented");
-            var cExecutedNotImplemented = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Not implemented in Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".") + "\"]}";
+            var cExecutedNotImplemented = "{\"method\":\"executed\",\"params\":[" + id + ",-3,\"Not implemented in Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".") + "\"]}";
+            //await _socket.SendData(cExecutedNotImplemented);
             return;
         }
         public static async Task RemoteMiningStart(string id, string device)
@@ -1088,15 +1090,188 @@ namespace NiceHashMiner.Stats
         {
             SetDeviceStatus(null);
         }
+
+        #region Device
+        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+
+        public class Root
+        {
+            public List<Device> devices { get; set; }
+            public int id { get; set; }
+            public object error { get; set; }
+        }
+        public class Device
+        {
+            public int device_id { get; set; }
+            public string name { get; set; }
+            public int gpgpu_type { get; set; }
+            public string subvendor { get; set; }
+            public Details details { get; set; }
+            public string uuid { get; set; }
+            public int gpu_temp { get; set; }
+            public int gpu_load { get; set; }
+            public int gpu_load_memctrl { get; set; }
+            public int gpu_power_mode { get; set; }
+            public double gpu_power_usage { get; set; }
+            public double gpu_power_limit_current { get; set; }
+            public double gpu_power_limit_min { get; set; }
+            public double gpu_power_limit_max { get; set; }
+            public double gpu_power_limit_default { get; set; }
+            public double gpu_tdp_current { get; set; }
+            public int gpu_clock_core_max { get; set; }
+            public int gpu_clock_core { get; set; }
+            public int gpu_clock_memory { get; set; }
+            public int gpu_clock_memory_default { get; set; }
+            public int gpu_fan_speed { get; set; }
+            public int gpu_fan_speed_rpm { get; set; }
+            public object gpu_memory_free { get; set; }
+            public object gpu_memory_used { get; set; }
+            public int intensity { get; set; }
+            public int hw_errors { get; set; }
+            public int hw_errors_success { get; set; }
+            public KernelTimes kernel_times { get; set; }
+            public OcData oc_data { get; set; }
+            public List<Fan> fans { get; set; }
+            public bool too_hot { get; set; }
+            public int __vram_temp { get; set; }
+            public int __hotspot_temp { get; set; }
+            public Smartfan smartfan { get; set; }
+            public OcLimits oc_limits { get; set; }
+            public int gpu_mvolt_core { get; set; }
+            public GpuMemoryTimings gpu_memory_timings { get; set; }
+            public bool optimize_locked { get; set; }
+        }
+        public class Details
+        {
+            public int cuda_id { get; set; }
+            public int sm_major { get; set; }
+            public int sm_minor { get; set; }
+            public int bus_id { get; set; }
+            public bool sli { get; set; }
+            public int bus_slot_id { get; set; }
+            public string ram_maker { get; set; }
+            public string pci_ident { get; set; }
+            public bool is_enterprise { get; set; }
+        }
+
+        public class KernelTimes
+        {
+            public int avg { get; set; }
+            public int min { get; set; }
+            public int max { get; set; }
+            public int umed { get; set; }
+        }
+
+        public class Mt
+        {
+        }
+
+        public class OcData
+        {
+            public int core_clock_delta { get; set; }
+            public int memory_clock_delta { get; set; }
+            public int power_limit_watts { get; set; }
+            public int power_limit_tdp { get; set; }
+            public int core_clock_limit { get; set; }
+            public List<object> core_uvolt { get; set; }
+            public List<object> vfc { get; set; }
+            public Mt mt { get; set; }
+        }
+
+        public class Fan
+        {
+            public int current_level { get; set; }
+            public int current_rpm { get; set; }
+            public int max_level { get; set; }
+            public int min_level { get; set; }
+            public bool is_auto { get; set; }
+            public int max_rpm { get; set; }
+        }
+
+        public class Smartfan
+        {
+            public int mode { get; set; }
+            public int fixed_speed { get; set; }
+            public int target_gpu { get; set; }
+            public int target_vram { get; set; }
+            public int start_level { get; set; }
+            public int override_level_min { get; set; }
+            public int override_level_max { get; set; }
+            public int decrease_k { get; set; }
+            public int increase_k { get; set; }
+            public int increase_n_gpu { get; set; }
+            public int increase_n_vram { get; set; }
+        }
+
+        public class OcLimits
+        {
+            public int core_delta_min { get; set; }
+            public int core_delta_max { get; set; }
+            public int vram_delta_min { get; set; }
+            public int vram_delta_max { get; set; }
+            public int tdp_min { get; set; }
+            public int tdp_max { get; set; }
+        }
+
+        public class Timings
+        {
+            public int RC { get; set; }
+            public int RFC { get; set; }
+            public int RAS { get; set; }
+            public int RP { get; set; }
+            public int CFG0_R0 { get; set; }
+            public int CL { get; set; }
+            public int WL { get; set; }
+            public int RD_RCD { get; set; }
+            public int WR_RCD { get; set; }
+            public int CFG1_R0 { get; set; }
+            public int RPRE { get; set; }
+            public int WPRE { get; set; }
+            public int CDLR { get; set; }
+            public int WR { get; set; }
+            public int W2R_BUS { get; set; }
+            public int R2W_BUS { get; set; }
+            public int PDEX { get; set; }
+            public int PDEN2PDEX { get; set; }
+            public int FAW { get; set; }
+            public int AOND { get; set; }
+            public int CCDL { get; set; }
+            public int CCDS { get; set; }
+            public int REFRESH_LO { get; set; }
+            public int REFRESH { get; set; }
+            public int RRD { get; set; }
+            public int DELAY0 { get; set; }
+            public int CFG4_R0 { get; set; }
+            public int ADR_MIN { get; set; }
+            public int CFG5_R0 { get; set; }
+            public int WRCRC { get; set; }
+            public int CFG5_R1 { get; set; }
+            public int OFFSET0 { get; set; }
+            public int DELAY0_MSB { get; set; }
+            public int OFFSET1 { get; set; }
+            public int OFFSET2 { get; set; }
+            public int DELAY01 { get; set; }
+        }
+
+        public class GpuMemoryTimings
+        {
+            public bool bEditable { get; set; }
+            public Timings timings { get; set; }
+        }
+
+        #endregion
+
+
+
         public static async void SetDeviceStatus(object state, bool devName = false)
         {
             Helpers.ConsolePrint("SOCKET", "DeviceStatusRunning: " + DeviceStatusRunning);
             if (DeviceStatusRunning) return;
             DeviceStatusRunning = true;
-            var devices = ComputeDeviceManager.Available.Devices;
+            var devicesOld = ComputeDeviceManager.Available.Devices;
 
-            var _computeDevicesResort = ComputeDeviceManager.ReSortDevices(devices);
-            var _computeDevices = devices;
+            var _computeDevicesResort = ComputeDeviceManager.ReSortDevices(devicesOld);
+            var _computeDevices = devicesOld;
 
             var rigStatus = CalcRigStatusString();
             var activeIDs = MinersManager.GetActiveMinersIndexes();
@@ -1113,7 +1288,12 @@ namespace NiceHashMiner.Stats
                 rigStatus
             };
 
+            Root devicesDataRootEx = new Root();
+            devicesDataRootEx.id = 1;
+            devicesDataRootEx.devices = new List<Device>();
+
             var deviceList = new JArray();
+            var devices = new JArray();
             try
             {
                 for (int dev = 0; dev < _computeDevices.Count; dev++)
@@ -1238,15 +1418,51 @@ namespace NiceHashMiner.Stats
                             Manufacturer = "";
                         }
 
+                        //**********не работает
+                        var deviceEx = new Device();
+
+                        var details = new Details();
+                        var kernel_times = new KernelTimes();
+                        var oc_data = new OcData();
+                        var fans = new List<Fan>();
+                        var smartfan = new Smartfan();
+                        var oc_limits = new OcLimits();
+                        var gpu_memory_timings = new GpuMemoryTimings();
+
+                        deviceEx.device_id = dev;
+                        deviceEx.name = deviceName;
+                        deviceEx.gpgpu_type = 1;
+                        deviceEx.subvendor = "10de";
+                        deviceEx.__hotspot_temp = 54;
+                        deviceEx.__vram_temp = 55;
+                        deviceEx.uuid = "GPU-338e79dd-29a3-0744-0e26-3683d42fcc70";
+                        deviceEx.gpu_fan_speed = 56;
+                        deviceEx.gpu_fan_speed_rpm = 1256;
+                        deviceEx.gpu_load = 57;
+                        deviceEx.gpu_load_memctrl = 58;
+                        deviceEx.gpu_power_usage = 59;
+                        deviceEx.gpu_temp = 60;
+
+                        deviceEx.details = details;
+                        deviceEx.kernel_times = kernel_times;
+                        deviceEx.oc_data = oc_data;
+                        deviceEx.fans = fans;
+                        deviceEx.smartfan = smartfan;
+                        deviceEx.oc_limits = oc_limits;
+                        deviceEx.gpu_memory_timings = gpu_memory_timings;
+                        devicesDataRootEx.devices.Add(deviceEx);
+                        //***********
+
                         //В оригинальном NH при второй отправке данных вместо названия 
                         //устройства (Manufacturer + deviceName) = null
                         //Вместо nuuid используется порядковый номер устройства (string). Без проверки на уникальность!!! 
                         //{"method":"miner.status","params":["STOPPED",[["","0",
                         //Оставим как правильно
                         //{"method":"miner.status","params":["STOPPED",[["Intel(R) Core(TM) i7-3630QM CPU @ 2.40GHz","1-YBxRn6UfL1O7dUk6NNR5EA",
-                        var array = new JArray
+                    var array = new JArray
                     {
                         Manufacturer + deviceName,
+                        //dev.ToString()
                         nuuid
                     };
 
@@ -1271,7 +1487,7 @@ namespace NiceHashMiner.Stats
                         array.Add(status);
 
                         array.Add((int)Math.Round(device.Load));
-                        //int memload = 69;
+                        int memload = -1;
                         //array.Add(memload * 65536 + Math.Round(device.Load));//Загрузка контроллера памяти? Кому это надо?
 
                         var speedsJson = new JArray();
@@ -1337,6 +1553,17 @@ namespace NiceHashMiner.Stats
                                 array.Add(-1);
                             }
                         }
+
+                        int memTemp = (int)device.TempMemory + 128;
+//                        array.Add("V=1;CCC=13;CVC=650;MCC=4352;MCS=3802;MCD=550;MT=" + memTemp.ToString() +"; PLTDP=90;PLW=162;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                        //array.Add("V=1;CCC=13;CVC=650;MCC=4352;MCS=3802;MCD=550;MT=" + memTemp.ToString() +"; PLTDP=90;PLW=162;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                        //array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +"; PLTDP=90;PLW=162;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+
+                        //нагрузку надо посмотреть
+                  //тут вместо hotspot появляется vram
+                        //array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +";PLTDP=0;PLW=0;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                        //array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +";KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                        array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +";KTUMED=-2;OP=-2;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
                         deviceList.Add(array);
                     }
                     catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
@@ -1349,11 +1576,15 @@ namespace NiceHashMiner.Stats
                     param = paramList
                 };
                 var sendData = JsonConvert.SerializeObject(data);
-
+                //var sendDataEx = JsonConvert.SerializeObject(devicesDataRootEx);
+                //sendData = File.ReadAllText("q2.json");//*************
+                //var sendData2 = File.ReadAllText("q1.json");//*************
                 if (_socket != null)
                 {
                     await _socket.SendData(sendData);
-                    //Helpers.ConsolePrint("SetDeviceStatus", "sendData -> " + sendData);
+                   // await _socket.SendData(sendData2);
+                    //await _socket.SendData(sendDataEx);
+                    //Helpers.ConsolePrint("SetDeviceStatus", "sendDataEx -> " + sendDataEx);
                 }
             }
             catch (Exception ex2)
@@ -1363,6 +1594,41 @@ namespace NiceHashMiner.Stats
             DeviceStatusRunning = false;
         }
 
+        //nhqm wss
+        //{"devices":
+        // [{"device_id":0,"name":"GeForce RTX 3060","gpgpu_type":1,"subvendor":"10de",
+        //    "details":
+        //     {"cuda_id":0,"sm_major":8,"sm_minor":6,"bus_id":3,"sli":false,"bus_slot_id":3,"ram_maker":"Samsung",
+        //      "pci_ident":"VEN_10DE&DEV_2504&SUBSYS_250410DE&REV_A1","is_enterprise":false},
+        //    "uuid":"GPU-338e79dd-29a3-0744-0e26-3683d42fcc70","gpu_temp":20,"gpu_load":0,"gpu_load_memctrl":0,"gpu_power_mode":-1,
+        //    "gpu_power_usage":17.0,"gpu_power_limit_current":119.0,"gpu_power_limit_min":100.0,"gpu_power_limit_max":180.0,
+        //    "gpu_power_limit_default":170.0,"gpu_tdp_current":70.0,"gpu_clock_core_max":2100,"gpu_clock_core":209,
+        //    "gpu_clock_memory":8701,"gpu_clock_memory_default":7301,"gpu_fan_speed":32,"gpu_fan_speed_rpm":-2,
+        //    "gpu_memory_free":12632858624,"gpu_memory_used":252043264,"intensity":1,"hw_errors":0,"hw_errors_success":1,
+        //    "kernel_times":
+        //     {"avg":99711,"min":39966,"max":809697,"umed":77999},
+        //    "oc_data":
+        //     {"core_clock_delta":0,"memory_clock_delta":1400,"power_limit_watts":119,"power_limit_tdp":70,"core_clock_limit":0,
+        //      "core_uvolt":[],"vfc":[],"mt":{}},
+        //    "fans":
+        //      [{"current_level":32,"current_rpm":1349,"max_level":100,"min_level":30,"is_auto":false,"max_rpm":3100},
+        //       {"current_level":32,"current_rpm":1350,"max_level":100,"min_level":30,"is_auto":false,"max_rpm":3100}],
+        //    "too_hot":false,"__vram_temp":19,"__hotspot_temp":30,
+        //    "smartfan":
+        //      {"mode":0,"fixed_speed":100,"target_gpu":60,"target_vram":90,"start_level":75,"override_level_min":-1,
+        //       "override_level_max":-1,"decrease_k":200,"increase_k":2000,"increase_n_gpu":-3,"increase_n_vram":0},
+        //    "oc_limits":
+        //      {"core_delta_min":-1000,"core_delta_max":1000,"vram_delta_min":-1000,"vram_delta_max":3000,"tdp_min":59,
+        //       "tdp_max":106},
+        //    "gpu_mvolt_core":668,
+        //    "gpu_memory_timings":
+        //      {"bEditable":false,
+        //       "timings":
+        //         {"RC":6,"RFC":13,"RAS":4,"RP":2,"CFG0_R0":0,"CL":9,"WL":5,"RD_RCD":2,"WR_RCD":1,"CFG1_R0":13,"RPRE":1,"WPRE":1,
+        //          "CDLR":3,"WR":4,"W2R_BUS":7,"R2W_BUS":7,"PDEX":12,"PDEN2PDEX":2,"FAW":8,"AOND":0,"CCDL":2,"CCDS":2,
+        //          "REFRESH_LO":5,"REFRESH":4,"RRD":2,"DELAY0":20,"CFG4_R0":28,"ADR_MIN":3,"CFG5_R0":0,"WRCRC":16,"CFG5_R1":0,
+        //          "OFFSET0":39,"DELAY0_MSB":0,"OFFSET1":10,"OFFSET2":7,"DELAY01":3}},
+        //    "optimize_locked":false}
 
         #endregion
 
