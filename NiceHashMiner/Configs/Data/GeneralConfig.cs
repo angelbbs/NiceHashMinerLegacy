@@ -140,6 +140,7 @@ namespace NiceHashMiner.Configs.Data
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
 
+        public bool QM_mode = false;
         public bool CheckingCUDA = false;
         public bool RestartDriverOnCUDA_GPU_Lost = false;
         public bool RestartWindowsOnCUDA_GPU_Lost = false;

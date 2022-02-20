@@ -51,7 +51,32 @@ namespace NiceHashMiner.Devices
                 return load;
             }
         }
-
+        public override float MemLoad
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
+                int load = -1;
+                try
+                {
+                    foreach (var d in Form_Main.gpuList)
+                    {
+                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                        {
+                            return d.loadMem;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    //Helpers.ConsolePrint("NVML", e.ToString());
+                }
+                return load;
+            }
+        }
 
         public override float Temp
         {

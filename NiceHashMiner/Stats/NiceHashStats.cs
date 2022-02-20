@@ -1419,6 +1419,7 @@ namespace NiceHashMiner.Stats
                         }
 
                         //**********не работает
+                        /*
                         var deviceEx = new Device();
 
                         var details = new Details();
@@ -1451,6 +1452,7 @@ namespace NiceHashMiner.Stats
                         deviceEx.oc_limits = oc_limits;
                         deviceEx.gpu_memory_timings = gpu_memory_timings;
                         devicesDataRootEx.devices.Add(deviceEx);
+                        */
                         //***********
 
                         //В оригинальном NH при второй отправке данных вместо названия 
@@ -1486,9 +1488,14 @@ namespace NiceHashMiner.Stats
                         }
                         array.Add(status);
 
-                        array.Add((int)Math.Round(device.Load));
-                        int memload = -1;
-                        //array.Add(memload * 65536 + Math.Round(device.Load));//Загрузка контроллера памяти? Кому это надо?
+                        //Если ADL2_New_QueryPMLogData_Get отдает ERR_NOT_SUPPORTED = -8, то MSI AB всё-равно рисует
+                        //график загрузки контроллера памяти на AMD, что есть чудо! И этих данных нет в mahm.
+                        //Походу, MSI AB просто рисует фейковый график в этом случае.
+                        //Helpers.ConsolePrint("********", MSIAfterburner.GetDeviceMemoryLoad(device.BusID).Data.ToString());
+
+                        //array.Add((int)Math.Round(device.Load));
+                        int memload = (int)Math.Round(device.MemLoad);
+                        array.Add(memload << 16 | (int)Math.Round(device.Load));//Загрузка контроллера памяти? Кому это надо?
 
                         var speedsJson = new JArray();
 
@@ -1554,16 +1561,11 @@ namespace NiceHashMiner.Stats
                             }
                         }
 
-                        int memTemp = (int)device.TempMemory + 128;
-//                        array.Add("V=1;CCC=13;CVC=650;MCC=4352;MCS=3802;MCD=550;MT=" + memTemp.ToString() +"; PLTDP=90;PLW=162;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
-                        //array.Add("V=1;CCC=13;CVC=650;MCC=4352;MCS=3802;MCD=550;MT=" + memTemp.ToString() +"; PLTDP=90;PLW=162;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
-                        //array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +"; PLTDP=90;PLW=162;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
-
-                        //нагрузку надо посмотреть
-                  //тут вместо hotspot появляется vram
-                        //array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +";PLTDP=0;PLW=0;KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
-                        //array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +";KTUMED=0;OP=0;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
-                        array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() +";KTUMED=-2;OP=-2;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                        if (ConfigManager.GeneralConfig.QM_mode)
+                        {
+                            int memTemp = (int)device.TempMemory + 128;
+                            array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() + ";KTUMED=-2;OP=-2;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                        }
                         deviceList.Add(array);
                     }
                     catch (Exception ex) { Helpers.ConsolePrint("SOCKET", ex.ToString()); }
@@ -1593,42 +1595,6 @@ namespace NiceHashMiner.Stats
             }
             DeviceStatusRunning = false;
         }
-
-        //nhqm wss
-        //{"devices":
-        // [{"device_id":0,"name":"GeForce RTX 3060","gpgpu_type":1,"subvendor":"10de",
-        //    "details":
-        //     {"cuda_id":0,"sm_major":8,"sm_minor":6,"bus_id":3,"sli":false,"bus_slot_id":3,"ram_maker":"Samsung",
-        //      "pci_ident":"VEN_10DE&DEV_2504&SUBSYS_250410DE&REV_A1","is_enterprise":false},
-        //    "uuid":"GPU-338e79dd-29a3-0744-0e26-3683d42fcc70","gpu_temp":20,"gpu_load":0,"gpu_load_memctrl":0,"gpu_power_mode":-1,
-        //    "gpu_power_usage":17.0,"gpu_power_limit_current":119.0,"gpu_power_limit_min":100.0,"gpu_power_limit_max":180.0,
-        //    "gpu_power_limit_default":170.0,"gpu_tdp_current":70.0,"gpu_clock_core_max":2100,"gpu_clock_core":209,
-        //    "gpu_clock_memory":8701,"gpu_clock_memory_default":7301,"gpu_fan_speed":32,"gpu_fan_speed_rpm":-2,
-        //    "gpu_memory_free":12632858624,"gpu_memory_used":252043264,"intensity":1,"hw_errors":0,"hw_errors_success":1,
-        //    "kernel_times":
-        //     {"avg":99711,"min":39966,"max":809697,"umed":77999},
-        //    "oc_data":
-        //     {"core_clock_delta":0,"memory_clock_delta":1400,"power_limit_watts":119,"power_limit_tdp":70,"core_clock_limit":0,
-        //      "core_uvolt":[],"vfc":[],"mt":{}},
-        //    "fans":
-        //      [{"current_level":32,"current_rpm":1349,"max_level":100,"min_level":30,"is_auto":false,"max_rpm":3100},
-        //       {"current_level":32,"current_rpm":1350,"max_level":100,"min_level":30,"is_auto":false,"max_rpm":3100}],
-        //    "too_hot":false,"__vram_temp":19,"__hotspot_temp":30,
-        //    "smartfan":
-        //      {"mode":0,"fixed_speed":100,"target_gpu":60,"target_vram":90,"start_level":75,"override_level_min":-1,
-        //       "override_level_max":-1,"decrease_k":200,"increase_k":2000,"increase_n_gpu":-3,"increase_n_vram":0},
-        //    "oc_limits":
-        //      {"core_delta_min":-1000,"core_delta_max":1000,"vram_delta_min":-1000,"vram_delta_max":3000,"tdp_min":59,
-        //       "tdp_max":106},
-        //    "gpu_mvolt_core":668,
-        //    "gpu_memory_timings":
-        //      {"bEditable":false,
-        //       "timings":
-        //         {"RC":6,"RFC":13,"RAS":4,"RP":2,"CFG0_R0":0,"CL":9,"WL":5,"RD_RCD":2,"WR_RCD":1,"CFG1_R0":13,"RPRE":1,"WPRE":1,
-        //          "CDLR":3,"WR":4,"W2R_BUS":7,"R2W_BUS":7,"PDEX":12,"PDEN2PDEX":2,"FAW":8,"AOND":0,"CCDL":2,"CCDS":2,
-        //          "REFRESH_LO":5,"REFRESH":4,"RRD":2,"DELAY0":20,"CFG4_R0":28,"ADR_MIN":3,"CFG5_R0":0,"WRCRC":16,"CFG5_R1":0,
-        //          "OFFSET0":39,"DELAY0_MSB":0,"OFFSET1":10,"OFFSET2":7,"DELAY01":3}},
-        //    "optimize_locked":false}
 
         #endregion
 

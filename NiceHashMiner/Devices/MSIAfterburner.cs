@@ -454,6 +454,45 @@ namespace NiceHashMiner.Devices
             return devData;
         }
 
+        //MSI AB не отдает данные о загрузке контроллера памяти для AMD. Их нет в MONITORING_SOURCE_ID
+        /*
+        public static HardwareMonitorEntry GetDeviceMemoryLoad(int _busID)
+        {
+            CheckMSIAfterburner();
+            if (!Initialized) return new HardwareMonitorEntry();
+            bool found = false;
+            mahm.ReloadHeader();
+            var devData = new HardwareMonitorEntry();
+            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            {
+                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                if (busID == _busID)
+                {
+                    try
+                    {
+                        macm.ReloadGpuEntry(i);
+                        mahm.ReloadGpuEntry((uint)i);
+                        devData = mahm.GetEntry((uint)i, MONITORING_SOURCE_ID.UNK1);
+                        found = true;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("MSIAfterburner GetDeviceData", "Error: " + ex.ToString());
+                    }
+                }
+            }
+            if (!found)
+            {
+                if (_busID != -1)
+                {
+                    Helpers.ConsolePrint("MSIAfterburner GetDeviceMemoryLoad", "Error! Device with busID " + _busID.ToString() + " not found!");
+                }
+            }
+            return devData;
+        }
+        */
+
         public static void ResetDef(int _busID)
         {
             ControlMemoryGpuEntry _abdata = new ControlMemoryGpuEntry();

@@ -4,6 +4,7 @@ using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using OpenHardwareMonitor.Hardware;
 using System;
+using System.Runtime.InteropServices;
 
 namespace NiceHashMiner.Devices
 {
@@ -303,6 +304,28 @@ namespace NiceHashMiner.Devices
                     }
                 }
                 return -1;
+            }
+        }
+
+        public override float MemLoad
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                {
+                    return 0;
+                }
+                var aDLPMLogDataOutput = new ADLPMLogDataOutput();
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                if (result == ADL.ADL_SUCCESS)
+                    {
+                    int i = (int)ADLSensorType.PMLOG_INFO_ACTIVITY_MEM;
+                    if (i < aDLPMLogDataOutput.sensors.Length && aDLPMLogDataOutput.sensors[i].supported != 0)
+                    {
+                        return aDLPMLogDataOutput.sensors[i].value;
+                    }
+                }
+                return 0;
             }
         }
 

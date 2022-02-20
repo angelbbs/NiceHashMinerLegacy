@@ -317,6 +317,7 @@ namespace NiceHashMiner.Forms
             checkBoxCheckingCUDA.Text = International.GetText("Form_Settings_checkBox_CheckingCUDA");
             checkBoxRestartDriver.Text = International.GetText("Form_Settings_checkBox_RestartDriver");
             checkBoxRestartWindows.Text = International.GetText("Form_Settings_checkBox_RestartWindows");
+            checkBox_QM_mode.Text = International.GetText("Form_Settings_checkBox_QM_mode");
             if(ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
                 checkBox_show_NVdevice_manufacturer.Location = new Point(checkBox_show_NVdevice_manufacturer.Location.X + 74, checkBox_show_NVdevice_manufacturer.Location.Y); ;
@@ -992,6 +993,7 @@ namespace NiceHashMiner.Forms
                 checkBoxRestartDriver.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxDriverWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxRestartWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_QM_mode.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1105,6 +1107,7 @@ namespace NiceHashMiner.Forms
                 checkBoxRestartDriver.Checked = ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost;
                 checkBoxDriverWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
                 checkBoxRestartWindows.Checked = ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost;
+                checkBox_QM_mode.Checked = ConfigManager.GeneralConfig.QM_mode;
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
@@ -1274,6 +1277,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.CheckingCUDA = checkBoxCheckingCUDA.Checked;
             ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBoxDriverWarning.Checked;
             ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost = checkBoxRestartWindows.Checked;
+            ConfigManager.GeneralConfig.QM_mode = checkBox_QM_mode.Checked;
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;

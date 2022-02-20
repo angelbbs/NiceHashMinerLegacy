@@ -320,20 +320,48 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("UUID", "Using old MachineGuid from config");
                     rig = Configs.ConfigManager.GeneralConfig.MachineGuid;
                 }
-                string version = "";
+                string version = "NHM/" + ConfigManager.GeneralConfig.NHMVersion;
                 string versionAdd = "";
 
-                protocol = 4;//nhqm 4
+                if (ConfigManager.GeneralConfig.QM_mode)
+                {
+                    protocol = 4;//nhqm 4
+                } else
+                {
+                    protocol = 3;
+                }
 
                 if (ConfigManager.GeneralConfig.Send_actual_version_info)
                 {
                     version = "Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString().Replace(",", ".");
-                    versionAdd = "/It's not NHQM_v0.5.2.0";//иначе кабинет падает или не работает ))))
-                    //найсовые программеры привязали строку "NHQM_v0.5.2.0" к протоколу. 
-                    //без нее не показывается в кабинете потребление карт и температура памяти
-                    //дебилы
-                    version = version + "\r" + versionAdd;
                 }
+                if (ConfigManager.GeneralConfig.QM_mode)
+                {
+                    //versionAdd = "/NHQM _v9.0.0.0";//риги еще не подключены 
+                    //versionAdd = "/NHQM_ 9.0.0.0";//риги еще не подключены 
+                    //versionAdd = "/NHQM_ vqqqq 9.0.0.0";//риги еще не подключены 
+                    //versionAdd = "/NHQM_v 0.0.0.0";//обычный режим 
+                    //versionAdd = "/NHQM_v9.0.0.0 mode";//обычный режим  
+
+                    //versionAdd = "/NHQM_v 9.0.0.0";//работает 
+
+                    versionAdd = "//Rig manager mode NHQM_v9.0.0.0";//работает, причём строка не показывается в менеджере ригов ))
+
+                    //versionAdd = "/NHQM_v9.0.0.0";//работает 
+                    //versionAdd = "/NHQM_v0.5.2.0";//работает 
+
+                    //найсовые программеры привязали строку "NHQM_vX.X.X.X" к протоколу авторизации. WTF?
+                    //Версия протокола(protocol) ни на что не влияет..
+
+                    //без этого говна не показывается в кабинете потребление карт и температура памяти
+                }
+                else
+                {
+                    versionAdd = "";
+                }
+
+                version = version + "\r" + versionAdd;
+
                 btc = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;
                 if (btc.IsNullOrEmpty())
                 {
@@ -353,10 +381,6 @@ namespace NiceHashMiner.Stats
 
                 };
                 var loginJson = JsonConvert.SerializeObject(login);
-                //loginJson = "{\"method\":\"login\",\"version\":[\"NHQM_v0.5.2.0\",\"Excavator_v1.7.3b_Build_961\"],\"protocol\":4,\"btc\":\"3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ\",\"worker\":\"myExcavator1\",\"rig\":\"0-H4207vOeJ062hqwhKGYqkA\",\"group\":\"\"}";//*************
-                //loginJson = "{\"method\":\"login\",\"version\":[\"NHQM_v0.5.2.0\",\"Excavator_v1.7.3b_Build_961\"],\"protocol\":4,\"btc\":\"3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ\",\"worker\":\"worker02\",\"group\":\"\",\"rig\":\"0-HgaPFxnqIlqsPZDqXC_KyA\"}";
-                //              {"method":"login","version":"NHML/Fork Fix 44","protocol":3,"btc":"3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ","worker":"worker1","group":"","rig":"0-HgaPFxnqIlqsPZDqXC_KyA"}
-
 
                 SendDataNew(loginJson);
                 Thread.Sleep(500);
@@ -433,7 +457,7 @@ namespace NiceHashMiner.Stats
         {
             List<string> IPsList = new List<string>();
             IPHostEntry heserver;
-            
+
             try
             {
                 heserver = Dns.GetHostEntry("nicehash.com");
@@ -499,7 +523,6 @@ namespace NiceHashMiner.Stats
             }
             return false;
         }
-
         private bool AttemptReconnect()
         {
             attemptReconnect_Tick();

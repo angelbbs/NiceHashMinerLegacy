@@ -91,10 +91,80 @@ namespace ATI.ADL
     internal delegate int ADL2_OverdriveN_Temperature_Get(IntPtr context, int adapterIndex, ADLODNTemperatureType temperatureType, ref int temperature);
 
     internal delegate int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int adapterIndex, int iPowerType, ref int lpCurrentValue);
+    
+    internal delegate int ADL2_New_QueryPMLogData_Get(IntPtr context, int adapterIndex, ref ADLPMLogDataOutput aDLPMLogDataOutput);
 
     #endregion Export Delegates
 
     #region Export Struct
+
+    #region ADLSensorType
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLSingleSensorData
+    {
+        public int supported;
+        public int value;
+    }
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLPMLogDataOutput
+    {
+        public int size;
+        internal const int ADL_PMLOG_MAX_SENSORS = 256;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ADL_PMLOG_MAX_SENSORS)]
+        public ADLSingleSensorData[] sensors;
+    }
+
+    public enum ADLSensorType
+    {
+        SENSOR_MAXTYPES = 0,
+        PMLOG_CLK_GFXCLK = 1,
+        PMLOG_CLK_MEMCLK = 2,
+        PMLOG_CLK_SOCCLK = 3,
+        PMLOG_CLK_UVDCLK1 = 4,
+        PMLOG_CLK_UVDCLK2 = 5,
+        PMLOG_CLK_VCECLK = 6,
+        PMLOG_CLK_VCNCLK = 7,
+        PMLOG_TEMPERATURE_EDGE = 8,
+        PMLOG_TEMPERATURE_MEM = 9,
+        PMLOG_TEMPERATURE_VRVDDC = 10,
+        PMLOG_TEMPERATURE_VRMVDD = 11,
+        PMLOG_TEMPERATURE_LIQUID = 12,
+        PMLOG_TEMPERATURE_PLX = 13,
+        PMLOG_FAN_RPM = 14,
+        PMLOG_FAN_PERCENTAGE = 15,
+        PMLOG_SOC_VOLTAGE = 16,
+        PMLOG_SOC_POWER = 17,
+        PMLOG_SOC_CURRENT = 18,
+        PMLOG_INFO_ACTIVITY_GFX = 19,
+        PMLOG_INFO_ACTIVITY_MEM = 20,
+        PMLOG_GFX_VOLTAGE = 21,
+        PMLOG_MEM_VOLTAGE = 22,
+        PMLOG_ASIC_POWER = 23,
+        PMLOG_TEMPERATURE_VRSOC = 24,
+        PMLOG_TEMPERATURE_VRMVDD0 = 25,
+        PMLOG_TEMPERATURE_VRMVDD1 = 26,
+        PMLOG_TEMPERATURE_HOTSPOT = 27,
+        PMLOG_TEMPERATURE_GFX = 28,
+        PMLOG_TEMPERATURE_SOC = 29,
+        PMLOG_GFX_POWER = 30,
+        PMLOG_GFX_CURRENT = 31,
+        PMLOG_TEMPERATURE_CPU = 32,
+        PMLOG_CPU_POWER = 33,
+        PMLOG_CLK_CPUCLK = 34,
+        PMLOG_THROTTLER_STATUS = 35,
+        PMLOG_CLK_VCN1CLK1 = 36,
+        PMLOG_CLK_VCN1CLK2 = 37,
+        PMLOG_SMART_POWERSHIFT_CPU = 38,
+        PMLOG_SMART_POWERSHIFT_DGPU = 39,
+        PMLOG_BUS_SPEED = 40,
+        PMLOG_BUS_LANES = 41,
+        PMLOG_TEMPERATURE_LIQUID0 = 42,
+        PMLOG_TEMPERATURE_LIQUID1 = 43,
+        PMLOG_CLK_FCLK = 44,
+        PMLOG_THROTTLER_STATUS_CPU = 45,
+        PMLOG_MAX_SENSORS_REAL
+    }
+    #endregion
 
     #region ADLAdapterInfo
     /// <summary> ADLAdapterInfo Structure</summary>
@@ -239,13 +309,6 @@ namespace ATI.ADL
         public int MaxPercent;
         public int MinRPM;
         public int MaxRPM;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct ADLSingleSensorData
-    {
-        public bool Supported;
-        public int Value;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -526,6 +589,8 @@ namespace ATI.ADL
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int adapterIndex, int iPowerType, ref int lpCurrentValue);
 
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_New_QueryPMLogData_Get(IntPtr context, int adapterIndex, ref ADLPMLogDataOutput aDLPMLogDataOutput);
             #endregion DLLImport
         }
         #endregion Class ADLImport
@@ -905,6 +970,26 @@ namespace ATI.ADL
         }
         private static ADL_Overdrive5_FanSpeed_Get ADL_Overdrive5_FanSpeed_Get_ = null;
         private static bool ADL_Overdrive5_FanSpeed_Get_Check = false;
+
+        internal static ADL2_New_QueryPMLogData_Get ADL2_New_QueryPMLogData_Get
+        {
+            get
+            {
+                if (!ADL2_New_QueryPMLogData_Get_Check && null == ADL2_New_QueryPMLogData_Get_)
+                {
+                    ADL2_New_QueryPMLogData_Get_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL2_New_QueryPMLogData_Get"))
+                    {
+                        ADL2_New_QueryPMLogData_Get_ = ADLImport.ADL2_New_QueryPMLogData_Get;
+                    }
+                }
+
+                return ADL2_New_QueryPMLogData_Get_;
+            }
+        }
+
+        private static ADL2_New_QueryPMLogData_Get ADL2_New_QueryPMLogData_Get_ = null;
+        private static bool ADL2_New_QueryPMLogData_Get_Check = false;
 
         internal static ADL2_Overdrive6_CurrentPower_Get ADL2_Overdrive6_CurrentPower_Get
         {

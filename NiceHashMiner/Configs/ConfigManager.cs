@@ -127,6 +127,8 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.ColorProfileIndex != _generalConfigBackup.ColorProfileIndex
                    || GeneralConfig.DevicesCountIndex != _generalConfigBackup.DevicesCountIndex
                    || GeneralConfig.ProgramMonitoring != _generalConfigBackup.ProgramMonitoring
+                   || GeneralConfig.QM_mode != _generalConfigBackup.QM_mode
+                   || GeneralConfig.Send_actual_version_info != _generalConfigBackup.Send_actual_version_info
                    || GeneralConfig.Use_OpenHardwareMonitor != _generalConfigBackup.Use_OpenHardwareMonitor
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
                    || GeneralConfig.RestartDriverOnCUDA_GPU_Lost != _generalConfigBackup.RestartDriverOnCUDA_GPU_Lost

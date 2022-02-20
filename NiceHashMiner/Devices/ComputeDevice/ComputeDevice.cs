@@ -82,6 +82,7 @@ namespace NiceHashMiner.Devices
         public int AlgorithmID { get; set; }
 
         public virtual float Load => -1;
+        public virtual float MemLoad => 0;
         public virtual float Temp => -1;
         public virtual float TempMemory => -1;
         public virtual int FanSpeed => -1;
