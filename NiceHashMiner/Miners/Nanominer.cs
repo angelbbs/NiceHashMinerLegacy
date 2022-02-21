@@ -404,7 +404,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
                    + String.Format("wallet = 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt") + "\n"
                    + String.Format("rigName = Nanominer") + "\n"
-                   + String.Format("pool1 = pool.eu.woolypooly.com:3100") + "\n";
+                   + String.Format("pool1 = pool.woolypooly.com:3100") + "\n";
 
                 try
                 {
@@ -434,7 +434,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
                    + String.Format("wallet = 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt") + "\n"
                    + String.Format("rigName = NanominerZil") + "\n"
-                   + String.Format("pool1 = pool.eu.woolypooly.com:3100") + "\n";
+                   + String.Format("pool1 = pool.woolypooly.com:3100") + "\n";
 
                 try
                 {
@@ -832,7 +832,7 @@ namespace NiceHashMiner.Miners
                     if (cSpeed1 == null) return ad;
                     var cSpeed = (json.Algorithms[0].Ethash.Total.Hashrate);
                     dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
-                    
+
                     foreach (var mPair in sortedMinerPairs)
                     {
                         string gpu = mPair.Device.lolMinerBusID.ToString();
@@ -1078,7 +1078,7 @@ namespace NiceHashMiner.Miners
                             tmpSpeed = 0;
                         }
                         Helpers.ConsolePrint("API: ", "tmpSpeed" + tmpSpeed.ToString());
-                        
+
                         if (!speed.Contains("off"))
                         {
                             sortedMinerPairs[dev].Device.MiningHashrate = tmpSpeed;

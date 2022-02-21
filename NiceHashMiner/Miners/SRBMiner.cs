@@ -136,7 +136,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
                 return $" --disable-cpu --algorithm autolykos2" +
-                    $" --pool stratum+tcp://pool.eu.woolypooly.com:3100" +
+                    $" --pool stratum+tcp://pool.woolypooly.com:3100" +
                     $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;

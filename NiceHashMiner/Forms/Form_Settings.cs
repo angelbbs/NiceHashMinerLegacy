@@ -458,7 +458,6 @@ namespace NiceHashMiner.Forms
             checkbox_Use_OpenHardwareMonitor.Text = International.GetText("Form_Settings_checkbox_Use_OpenHardwareMonitor");
             Checkbox_Save_windows_size_and_position.Text = International.GetText("Form_Settings_Checkbox_Save_windows_size_and_position");
             checkBox_sorting_list_of_algorithms.Text = International.GetText("Form_Settings_checkBox_sorting_list_of_algorithms");
-            checkBox_ShowUptime.Text = International.GetText("Form_Settings_checkBox_ShowUptime");
             checkBox_DisableTooltips.Text = International.GetText("Form_Settings_checkBox_DisableToltips");
             checkBox_program_monitoring.Text = International.GetText("Form_Settings_checkBox_program_monitoring");
             checkBox_ShowFanAsPercent.Text = International.GetText("Form_Settings_checkBox_ShowFanAsPercent");
@@ -827,9 +826,6 @@ namespace NiceHashMiner.Forms
                 checkBox_sorting_list_of_algorithms.BackColor = Form_Main._backColor;
                 checkBox_sorting_list_of_algorithms.ForeColor = Form_Main._textColor;
 
-                checkBox_ShowUptime.BackColor = Form_Main._backColor;
-                checkBox_ShowUptime.ForeColor = Form_Main._textColor;
-
                 checkBox_DisableTooltips.BackColor = Form_Main._backColor;
                 checkBox_DisableTooltips.ForeColor = Form_Main._textColor;
 
@@ -1012,7 +1008,6 @@ namespace NiceHashMiner.Forms
                 checkbox_Use_OpenHardwareMonitor.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 Checkbox_Save_windows_size_and_position.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_sorting_list_of_algorithms.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_ShowUptime.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableTooltips.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_program_monitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1126,7 +1121,6 @@ namespace NiceHashMiner.Forms
                 //checkBox_ShowDeviceBusId.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceBusId;
                 checkbox_Use_OpenHardwareMonitor.Checked = ConfigManager.GeneralConfig.Use_OpenHardwareMonitor;
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
-                checkBox_ShowUptime.Checked = ConfigManager.GeneralConfig.ShowUptime;
                 checkBox_DisableTooltips.Checked = ConfigManager.GeneralConfig.DisableTooltips;
                 checkBox_program_monitoring.Checked = ConfigManager.GeneralConfig.ProgramMonitoring;
                 checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
@@ -1295,7 +1289,6 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Use_OpenHardwareMonitor = checkbox_Use_OpenHardwareMonitor.Checked;
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
-            ConfigManager.GeneralConfig.ShowUptime = checkBox_ShowUptime.Checked;
             ConfigManager.GeneralConfig.DisableTooltips = checkBox_DisableTooltips.Checked;
             ConfigManager.GeneralConfig.ProgramMonitoring = checkBox_program_monitoring.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;

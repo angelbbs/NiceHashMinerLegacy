@@ -284,12 +284,12 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://cfx.woolypooly.com:3094 -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.nbminer " +
+                cmd = $"-a {AlgoName} -o stratum+tcp://pool.woolypooly.com:3094 -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://pool.eu.woolypooly.com:3100 -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.nbminer " +
+                cmd = $"-a {AlgoName} -o stratum+tcp://pool.woolypooly.com:3100 -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;

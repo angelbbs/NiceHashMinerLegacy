@@ -195,7 +195,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
                 CommandLine = sc + " -a autolykos2" +
-                 " -o stratum+tcp://pool.eu.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
+                 " -o stratum+tcp://pool.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
             }
 
             CommandLine += GetDevicesCommandString() +

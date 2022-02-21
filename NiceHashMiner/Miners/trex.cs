@@ -143,7 +143,7 @@ namespace NiceHashMiner.Miners
         {
             foreach (var process in Process.GetProcessesByName(exeName))
             {
-                try 
+                try
                 {
                     Thread.Sleep(1000);
                     process.Kill();
@@ -226,8 +226,8 @@ namespace NiceHashMiner.Miners
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
                 {
                     commandLine = "--algo octopus" +
-                     " -o stratum+tcp://cfx.woolypooly.com:3094" + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trex" + " -p x " +
-                     " -o " + url + " -u " + username + " -p x " +
+                     " -o stratum+tcp://pool.woolypooly.com:3094" + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trex" + " -p x " +
+                     " -o stratum2+tcp://octopus.eu-west.nicehash.com:3389 -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
                                       DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
@@ -238,7 +238,7 @@ namespace NiceHashMiner.Miners
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     commandLine = "--algo autolykos2" +
-                     " -o stratum+tcp://pool.eu.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trex" + " -p x " +
+                     " -o stratum+tcp://pool.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trex" + " -p x " +
                      " -o " + url + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
@@ -258,7 +258,7 @@ namespace NiceHashMiner.Miners
                     " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
                     " --url2 stratum+tcp://pool.woolypooly.com:3100 --user2 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trexdual --pass2 x " +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
-                    " -d " + GetDevicesCommandString() + 
+                    " -d " + GetDevicesCommandString() +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
                     _benchmarkTimeWait = time;
                 }
@@ -278,7 +278,7 @@ namespace NiceHashMiner.Miners
                 {
                     commandLine = "-a ethash --lhr-algo octopus" +
                     " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
-                    " --url2 stratum+tcp://cfx.woolypooly.com:3094 --user2 cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trexdual --pass2 x " +
+                    " --url2 stratum+tcp://pool.woolypooly.com:3094 --user2 cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trexdual --pass2 x " +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                     " -d " + GetDevicesCommandString() +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

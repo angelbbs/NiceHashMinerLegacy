@@ -296,7 +296,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
             {
                 CommandLine = "--algo AUTOLYKOS2 " +
-                " --pool pool.eu.woolypooly.com:3100 --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.lolMiner --pass x" +
+                " --pool pool.woolypooly.com:3100 --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -775,7 +775,7 @@ namespace NiceHashMiner.Miners
                             CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                         }
                     }
-                    
+
                 }
             }
             catch (Exception e)

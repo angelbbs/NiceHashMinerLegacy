@@ -357,10 +357,10 @@ namespace NiceHashMiner.Stats
                 }
                 else
                 {
-                    versionAdd = "";
+                    versionAdd = "/NHML";
                 }
 
-                version = version + "\r" + versionAdd;
+                version = version + versionAdd;
 
                 btc = Configs.ConfigManager.GeneralConfig.BitcoinAddressNew;
                 if (btc.IsNullOrEmpty())
