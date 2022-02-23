@@ -38,6 +38,7 @@ namespace NiceHashMiner.Devices
         // UUID now used for saving
         public string Uuid { get; protected set; }
         public string NewUuid { get; protected set; }
+        public string DevUuid { get; set; }
 
         // used for Claymore indexing
         public int BusID { get; protected set; } = -1;

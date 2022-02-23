@@ -407,6 +407,7 @@ namespace NiceHashMiner
             {
                 toolTip1.SetToolTip(buttonBTC_Clear, "Clear");
                 toolTip1.SetToolTip(buttonBTC_Save, "Save");
+                toolTip1.SetToolTip(buttonChangeWorkerName, "Save worker name");
             }
 
             labelBitcoinAddressNew.Text = International.GetText("BitcoinAddress") + ":";
@@ -816,7 +817,7 @@ namespace NiceHashMiner
             CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
 
-            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
+            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
             label_NH_ConnectStatus.Update();
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
@@ -1117,6 +1118,10 @@ namespace NiceHashMiner
             buttonBTC_Clear.FlatStyle = FlatStyle.Flat;
             buttonBTC_Clear.FlatAppearance.BorderSize = 0;
             buttonBTC_Clear.FlatAppearance.MouseOverBackColor = _backColor;
+            buttonChangeWorkerName.FlatStyle = FlatStyle.Flat;
+            buttonChangeWorkerName.FlatAppearance.BorderSize = 0;
+            buttonChangeWorkerName.FlatAppearance.MouseOverBackColor = _backColor;
+            buttonChangeWorkerName.Enabled = false;
 
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
@@ -1190,6 +1195,10 @@ namespace NiceHashMiner
                 buttonBTC_Clear.FlatStyle = FlatStyle.Flat;
                 buttonBTC_Clear.FlatAppearance.BorderSize = 0;
                 buttonBTC_Clear.UseVisualStyleBackColor = false;
+
+                buttonChangeWorkerName.FlatStyle = FlatStyle.Flat;
+                buttonChangeWorkerName.FlatAppearance.BorderSize = 0;
+                buttonChangeWorkerName.UseVisualStyleBackColor = false;
 
                 foreach (var lbl in this.Controls.OfType<CheckBox>()) lbl.BackColor = _backColor;
                 // DevicesListViewEnableControl.listViewDevices.BackColor = _backColor;
@@ -2137,6 +2146,8 @@ public static void CloseChilds(Process parentId)
             devicesListViewEnableControl1.SaveColumns();
             if (this != null)
             {
+                ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text;
+
                 if (ConfigManager.GeneralConfig.Save_windows_size_and_position)
                 {
                     ConfigManager.GeneralConfig.FormWidth = this.Width;
@@ -2707,6 +2718,7 @@ public static void CloseChilds(Process parentId)
                     if (_curState == WebSocketSharp.WebSocketState.Connecting || NHConnectingInProgress)
                     {
                         label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
+                        textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
                     }
                     if (_curState == WebSocketSharp.WebSocketState.Open)
                     {
@@ -3432,6 +3444,21 @@ public static void CloseChilds(Process parentId)
             toolTipStatus.ShowAlways = true;
             toolTipStatus.IsBalloon = true;
             toolTipStatus.SetToolTip(this.statusStrip1, ctooltip);
+        }
+
+        private void buttonChangeWorkerName_Click(object sender, EventArgs e)
+        {
+            buttonChangeWorkerName.Enabled = false;
+            ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text;
+            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
+        }
+
+        private void textBoxWorkerName_TextChanged(object sender, EventArgs e)
+        {
+            if (!ConfigManager.GeneralConfig.WorkerName.Trim().Equals(textBoxWorkerName.Text.Trim()))
+            {
+                buttonChangeWorkerName.Enabled = true;
+            }
         }
     }
 }

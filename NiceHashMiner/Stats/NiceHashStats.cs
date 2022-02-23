@@ -264,15 +264,16 @@ namespace NiceHashMiner.Stats
                             RemoteMiningStop(message.id.Value.ToString(), message.device.Value);
                             break;
                         case "mining.set.username":
-                            RemoteMiningNotImplemented(message.id.Value.ToString());
+                            RemoteSetUsername(message.id.Value.ToString());
                             break;
                         case "mining.set.worker":
-                            RemoteMiningNotImplemented(message.id.Value.ToString());
-                            //RemoteWorkerRename(message.id.Value.ToString(), message.worker);
+                            RemoteSetWorker(message.id.Value.ToString(), message.worker.Value);
                             break;
                         case "mining.set.group":
                             RemoteMiningNotImplemented(message.id.Value.ToString());
                             break;
+                        //Received: {"method":"mining.disable","id":38019,"device":"3-mMpW1bZrwFK66tGss0WQmA"}
+                        //{"method":"mining.disable","id":90934,"device":"3-+BYFhtXwHVS-1+4YlNHOKw"}
                         case "mining.enable":
                             RemoteMiningEnable(message.id.Value.ToString(), message.device.Value.ToString(), true);
                             break;
@@ -351,6 +352,40 @@ namespace NiceHashMiner.Stats
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Remote management disabled\"]}";
                 return;
             }
+
+            var _computeDevicesResort = ComputeDeviceManager.ReSortDevices(ComputeDeviceManager.Available.Devices);
+            var _computeDevices = ComputeDeviceManager.Available.Devices;
+            bool miningStarted = Form_Main.MiningStarted;
+
+            if (!Form_Main.NVIDIA_orderBug)
+            {
+                foreach (var dev in _computeDevices)
+                {
+                    if (deviceToSwitch.Equals(dev.DevUuid))
+                    {
+                        dev.Enabled = Enabled;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var dev in _computeDevicesResort)
+                {
+                    if (deviceToSwitch.Equals(dev.DevUuid))
+                    {
+                        dev.Enabled = Enabled;
+                    }
+                }
+            }
+
+            if (miningStarted)
+            {
+                MinersManager.StopAllMiners();
+                remoteMiningStop = true;
+                Thread.Sleep(2000);
+                remoteMiningStart = true;
+            }
+
             Helpers.ConsolePrint("REMOTE", "id: " + id + " device: " + deviceToSwitch);
             var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
             await _socket.SendData(cExecuted);
@@ -410,6 +445,39 @@ namespace NiceHashMiner.Stats
             Thread.Sleep(2000);
             await _socket.SendData(cExecuted);
             Helpers.ConsolePrint("REMOTE", "Mining stop. ID:" + id + " Device:" + device);
+        }
+        public static async Task RemoteSetWorker(string id, string worker)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-999,\"Remote management disabled\"]}";
+                return;
+            }
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            await _socket.SendData(cExecuted);
+            ConfigManager.GeneralConfig.WorkerName = worker;
+            _socket.StartConnectionNew();
+        }
+        public static async Task RemoteSetUsername(string id)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-1,\"Remote management disabled\"]}";
+                return;
+            }
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            if (!Miner.IsRunningNew)
+            {
+                await _socket.SendData(cExecuted);
+                Helpers.ConsolePrint("REMOTE", "Already stopped");
+                return;
+            }
+            remoteMiningStop = true;
+            Thread.Sleep(2000);
+            await _socket.SendData(cExecuted);
+            //Helpers.ConsolePrint("REMOTE", "Mining stop. ID:" + id + " Device:" + device);
         }
 
         public static bool GetSmaAPIOrder()
@@ -791,7 +859,6 @@ namespace NiceHashMiner.Stats
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("SOCKET", ex.Message);
-
             }
             return true;
         }
@@ -817,7 +884,7 @@ namespace NiceHashMiner.Stats
                     else
                     {
                         Helpers.ConsolePrint("SOCKET", "Using default SMA");
-                        dynamic defsma = "[[5,\"5.999963193e-07\"],[36,\"659.5557431\"],[42,\"33.73843367\"],[8,\"0.008899999201\"],[38,\"721.326346\"],[32,\"0.0002005014359\"],[24,\"5.666958028\"],[33,\"0.001290840303\"],[30,\"1.14051987\"],[37,\"100.0002035\"],[7,\"4.999946511e-06\"],[45,\"1324.211344\"],[22,\"0.3053852139\"],[34,\"2.787742099\"],[39,\"47716.02121\"],[44,\"7123.200162\"],[40,\"0.0006006972195\"],[20,\"0.001430123323\"],[23,\"6.561117697e-07\"],[43,\"5731.578685\"],[21,\"9.782149555e-11\"],[14,\"4.644947288e-05\"],[29,\"0.0001507043319\"],[28,\"9.999998266e-08\"],[31,\"0\"]]";
+                        dynamic defsma = "[[50,\"16972.60766\"],[21,\"8.8998528e-09\"],[5,\"1.102001358e-07\"],[52,\"0.001248413077\"],[47,\"0.6922037679\"],[51,\"9.33e-08\"],[32,\"0.0002891\"],[20,\"0.0009621858322\"],[46,\"0.0001368625895\"],[56,\"0.0007271773409\"],[8,\"0.01201994833\"],[24,\"1.07489113\"],[43,\"3900.324439\"],[23,\"8.291841085e-08\"],[58,\"828.4841407\"],[48,\"2.9e-08\"],[36,\"280.0879146\"],[14,\"1.101334961e-06\"],[28,\"1.998259289e-08\"],[57,\"0.0002707835249\"],[54,\"1022.282717\"],[33,\"0.0001339187621\"],[42,\"3.594285714\"],[39,\"8339.393939\"]]";
                         JArray smadata = (JArray.Parse(defsma));
                         SetAlgorithmRates(smadata);
                     }
@@ -827,7 +894,7 @@ namespace NiceHashMiner.Stats
                 {
                     FileStream fs3 = new FileStream("configs\\balance.dat", FileMode.Open, FileAccess.Read);
                     StreamReader w3 = new StreamReader(fs3);
-                    String fakeSMA3 = w3.ReadToEnd();
+                    string fakeSMA3 = w3.ReadToEnd();
                     dynamic message3 = JsonConvert.DeserializeObject(fakeSMA3);
                     //Helpers.ConsolePrint("SOCKET-oldSMA", "Received: " + fakeSMA3);
                     Helpers.ConsolePrint("SOCKET", "Using previous balance");
@@ -842,7 +909,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", ex.Message);
                 Helpers.ConsolePrint("SOCKET", "Using default SMA");
-                dynamic defsma = "[[5,\"0.00031031\"],[7,\"0.00401\"],[8,\"0.26617936\"],[14,\"0.00677556\"],[20,\"0.00833567\"],[21,\"0.00005065\"],[22,\"352.1073569\"],[23,\"0.00064179\"],[24,\"620.89332464\"],[25,\"0.00009207\"],[26,\"0.01044116\"],[27,\"0.00005085\"],[28,\"0.00003251\"],[29,\"0.00778864\"]]";
+                dynamic defsma = "[[50,\"16972.60766\"],[21,\"8.8998528e-09\"],[5,\"1.102001358e-07\"],[52,\"0.001248413077\"],[47,\"0.6922037679\"],[51,\"9.33e-08\"],[32,\"0.0002891\"],[20,\"0.0009621858322\"],[46,\"0.0001368625895\"],[56,\"0.0007271773409\"],[8,\"0.01201994833\"],[24,\"1.07489113\"],[43,\"3900.324439\"],[23,\"8.291841085e-08\"],[58,\"828.4841407\"],[48,\"2.9e-08\"],[36,\"280.0879146\"],[14,\"1.101334961e-06\"],[28,\"1.998259289e-08\"],[57,\"0.0002707835249\"],[54,\"1022.282717\"],[33,\"0.0001339187621\"],[42,\"3.594285714\"],[39,\"8339.393939\"]]";
                 JArray smadata = (JArray.Parse(defsma));
                 SetAlgorithmRates(smadata);
                 Helpers.ConsolePrint("OLDSMA", ex.ToString());
@@ -1093,7 +1160,7 @@ namespace NiceHashMiner.Stats
 
         #region Device
         // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-
+        //Используется в OC Tune
         public class Root
         {
             public List<Device> devices { get; set; }
@@ -1261,8 +1328,6 @@ namespace NiceHashMiner.Stats
 
         #endregion
 
-
-
         public static async void SetDeviceStatus(object state, bool devName = false)
         {
             Helpers.ConsolePrint("SOCKET", "DeviceStatusRunning: " + DeviceStatusRunning);
@@ -1288,9 +1353,9 @@ namespace NiceHashMiner.Stats
                 rigStatus
             };
 
-            Root devicesDataRootEx = new Root();
-            devicesDataRootEx.id = 1;
-            devicesDataRootEx.devices = new List<Device>();
+            //Root devicesDataRootEx = new Root();
+            //devicesDataRootEx.id = 1;
+            //devicesDataRootEx.devices = new List<Device>();
 
             var deviceList = new JArray();
             var devices = new JArray();
@@ -1325,6 +1390,7 @@ namespace NiceHashMiner.Stats
                             b64Web = UUID.GetB64UUID(device.Uuid);
                             nuuid = $"{type}-{b64Web}";
                         }
+                        device.DevUuid = nuuid;
                         var deviceName = device.Name;
 
                         string NvidiaLHR = "";
@@ -1564,7 +1630,8 @@ namespace NiceHashMiner.Stats
                         if (ConfigManager.GeneralConfig.QM_mode)
                         {
                             int memTemp = (int)device.TempMemory + 128;
-                            array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() + ";KTUMED=-2;OP=-2;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                            //array.Add("V=1;CCC=0;CVC=0;MCC=0;MCS=0;MCD=0;MT=" + memTemp.ToString() + ";KTUMED=-2;OP=-2;OPA=EfficientLow:12,Efficient:11,High:3,Medium:2,Lite:1;");
+                            array.Add("V=1;MT=" + memTemp.ToString() + ";OP=-1;OPA=Manual:0;");
                         }
                         deviceList.Add(array);
                     }
@@ -1579,8 +1646,6 @@ namespace NiceHashMiner.Stats
                 };
                 var sendData = JsonConvert.SerializeObject(data);
                 //var sendDataEx = JsonConvert.SerializeObject(devicesDataRootEx);
-                //sendData = File.ReadAllText("q2.json");//*************
-                //var sendData2 = File.ReadAllText("q1.json");//*************
                 if (_socket != null)
                 {
                     await _socket.SendData(sendData);
@@ -1692,75 +1757,6 @@ namespace TimerDispose
 
         private System.Threading.Timer timer;
 
-        public TimerOwner()
-        {
-            timerInit(dueTime);
-        }
-
-        byte[] dummy = new byte[100000];
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="dueTime">Pass dueTime for the first time, then TimerPeriod will be passed automatically</param>
-        private void timerInit(int dueTime)
-        {
-
-            timer = new System.Threading.Timer(timerCallback,
-                timerCanceller,     //this is the trick, it will be kept in the heap until it is consumed by the callback
-                dueTime,
-                Timeout.Infinite
-            );
-
-        }
-
-        private void timerCallback(object state)
-        {
-            try
-            {
-                //First exit if the timer was stoped before calling callback. This info is saved in state
-                var canceller = (TimerCanceller)state;
-                /*
-                if (canceller.Cancelled)
-                {
-                    return; //
-                }
-                */
-                //Your logic goes here. Please take care ! the callback might have already been called before stoping the timer
-                //and we might be already here after intending of stoping the timer. In most cases it is fine but try not to consume
-                //an object of this class because it might be already disposed. If you have to do that, hopefully it will be catched by
-                //the ObjectDisposedException below
-
-
-
-
-                dummy[1] = 50;  //just messing up with the object after it might be disposed/nulled
-
-                //Yes, we need to check again. Read above note
-                if (canceller.Cancelled)
-                {
-                    //Dispose any resource that might have been initialized above
-                    return; //
-                }
-
-                if (timerPeriod != Timeout.Infinite)
-                {
-                    timerInit(timerPeriod);
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                Console.WriteLine("A disposed object accessed");
-            }
-            catch (NullReferenceException)
-            {
-                Console.WriteLine("A nulled object accessed");
-            }
-            catch (Exception)
-            {
-
-            }
-        }
 
         public void releaseTimer()
         {
@@ -1772,7 +1768,6 @@ namespace TimerDispose
         public void Dispose()
         {
             releaseTimer();
-            dummy = null;   //for testing
             GC.SuppressFinalize(this);
         }
     }

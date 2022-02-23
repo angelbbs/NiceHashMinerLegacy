@@ -936,6 +936,7 @@ break;
             {
                 public static void QueryCpus()
                 {
+                    if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU) return;
                     Helpers.ConsolePrint(Tag, "QueryCpus START");
                     // get all CPUs
                     Available.CpusCount = CpuID.GetPhysicalProcessorCount();

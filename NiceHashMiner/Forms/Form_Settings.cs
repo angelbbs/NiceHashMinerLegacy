@@ -318,7 +318,7 @@ namespace NiceHashMiner.Forms
             checkBoxRestartDriver.Text = International.GetText("Form_Settings_checkBox_RestartDriver");
             checkBoxRestartWindows.Text = International.GetText("Form_Settings_checkBox_RestartWindows");
             checkBox_QM_mode.Text = International.GetText("Form_Settings_checkBox_QM_mode");
-            if(ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
                 checkBox_show_NVdevice_manufacturer.Location = new Point(checkBox_show_NVdevice_manufacturer.Location.X + 74, checkBox_show_NVdevice_manufacturer.Location.Y); ;
                 checkBox_show_AMDdevice_manufacturer.Location = new Point(checkBox_show_AMDdevice_manufacturer.Location.X + 74, checkBox_show_AMDdevice_manufacturer.Location.Y);

@@ -337,6 +337,7 @@ namespace NiceHashMiner.Forms.Components
                         {
                             listViewDevices.Items[index].SubItems[1].Text = cHashrate.Contains("0.00") ? "--" : cHashrate;
                         }
+                        listViewDevices.Items[index].Checked = computeDevice.Enabled;
                         listViewDevices.Items[index].SubItems[2].Text = cTemp.Contains("-1") ? "--" : cTemp;
                         listViewDevices.Items[index].SubItems[3].Text = cLoad.Contains("-1") ? "--" : cLoad;
                         listViewDevices.Items[index].SubItems[4].Text = cFanSpeed.Contains("-1") ? "--" : cFanSpeed;

@@ -687,6 +687,7 @@ namespace NiceHashMiner.Miners.Parsing
 
         public static void InitializePackages()
         {
+            return;
             foreach (var pack in Defaults)
             {
                 var packageName = $"MinerOptionPackage_{pack.Name}";

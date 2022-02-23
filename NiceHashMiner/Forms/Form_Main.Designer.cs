@@ -69,6 +69,7 @@ namespace NiceHashMiner
             this.buttonBTC_Clear = new System.Windows.Forms.Button();
             this.label_Uptime = new System.Windows.Forms.Label();
             this.label_NH_ConnectStatus = new System.Windows.Forms.Label();
+            this.buttonChangeWorkerName = new System.Windows.Forms.Button();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -267,8 +268,9 @@ namespace NiceHashMiner
             // 
             this.textBoxWorkerName.Location = new System.Drawing.Point(107, 59);
             this.textBoxWorkerName.Name = "textBoxWorkerName";
-            this.textBoxWorkerName.Size = new System.Drawing.Size(105, 20);
+            this.textBoxWorkerName.Size = new System.Drawing.Size(76, 20);
             this.textBoxWorkerName.TabIndex = 2;
+            this.textBoxWorkerName.TextChanged += new System.EventHandler(this.textBoxWorkerName_TextChanged);
             this.textBoxWorkerName.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
             // 
             // buttonStopMining
@@ -460,7 +462,7 @@ namespace NiceHashMiner
             // label_Uptime
             // 
             this.label_Uptime.AutoSize = true;
-            this.label_Uptime.Location = new System.Drawing.Point(220, 62);
+            this.label_Uptime.Location = new System.Drawing.Point(216, 62);
             this.label_Uptime.Name = "label_Uptime";
             this.label_Uptime.Size = new System.Drawing.Size(43, 13);
             this.label_Uptime.TabIndex = 115;
@@ -474,6 +476,20 @@ namespace NiceHashMiner
             this.label_NH_ConnectStatus.Size = new System.Drawing.Size(78, 13);
             this.label_NH_ConnectStatus.TabIndex = 116;
             this.label_NH_ConnectStatus.Text = "Not connected";
+            // 
+            // buttonChangeWorkerName
+            // 
+            this.buttonChangeWorkerName.FlatAppearance.BorderSize = 0;
+            this.buttonChangeWorkerName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonChangeWorkerName.Image = global::NiceHashMiner.Properties.Resources.Ok_normal;
+            this.buttonChangeWorkerName.Location = new System.Drawing.Point(189, 59);
+            this.buttonChangeWorkerName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonChangeWorkerName.Name = "buttonChangeWorkerName";
+            this.buttonChangeWorkerName.Size = new System.Drawing.Size(20, 20);
+            this.buttonChangeWorkerName.TabIndex = 117;
+            this.toolTip1.SetToolTip(this.buttonChangeWorkerName, "Save");
+            this.buttonChangeWorkerName.UseVisualStyleBackColor = false;
+            this.buttonChangeWorkerName.Click += new System.EventHandler(this.buttonChangeWorkerName_Click);
             // 
             // devicesListViewEnableControl1
             // 
@@ -497,6 +513,7 @@ namespace NiceHashMiner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 315);
+            this.Controls.Add(this.buttonChangeWorkerName);
             this.Controls.Add(this.label_NH_ConnectStatus);
             this.Controls.Add(this.label_Uptime);
             this.Controls.Add(this.buttonBTC_Clear);
@@ -582,6 +599,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power5;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power6;
         private System.Windows.Forms.Label label_NH_ConnectStatus;
+        private System.Windows.Forms.Button buttonChangeWorkerName;
     }
 }
 

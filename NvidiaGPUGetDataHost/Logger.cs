@@ -3,7 +3,6 @@ using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
-//using NiceHashMiner.Configs;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -98,26 +97,6 @@ namespace NvidiaGPUGetDataHost
                 Logger.Log.Info("[" + grp + "] " + text);
             }
             catch { }  // Not gonna recursively call here in case something is seriously wrong
-        }
-
-        public static void ConsolePrint(string grp, string text, params object[] arg)
-        {
-            ConsolePrint(grp, string.Format(text, arg));
-        }
-
-        public static void ConsolePrint(string grp, string text, object arg0)
-        {
-            ConsolePrint(grp, string.Format(text, arg0));
-        }
-
-        public static void ConsolePrint(string grp, string text, object arg0, object arg1)
-        {
-            ConsolePrint(grp, string.Format(text, arg0, arg1));
-        }
-
-        public static void ConsolePrint(string grp, string text, object arg0, object arg1, object arg2)
-        {
-            ConsolePrint(grp, string.Format(text, arg0, arg1, arg2));
         }
     }
 }
