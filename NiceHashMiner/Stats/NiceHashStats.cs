@@ -502,7 +502,7 @@ namespace NiceHashMiner.Stats
                         }
                         string a = algo.ToString().ToUpper();
                         //Helpers.ConsolePrint("GetSmaAPIOrder: ", a);
-                        string resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/hashpower/orderBook?algorithm=" + a, "x");
+                        string resp = NiceHashStats.GetNiceHashApiData(Links.NhmHashpower + a, "x");
                         //Helpers.ConsolePrint("GetSmaAPIOrder: ", resp);
                         dynamic json = JsonConvert.DeserializeObject(resp);
                         if (json == null) return false;
@@ -568,7 +568,7 @@ namespace NiceHashMiner.Stats
             try
             {
                 string resp;
-                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info", "x");
+                resp = NiceHashStats.GetNiceHashApiData(Links.NhmSimplemultialgo, "x");
                 if (resp != null)
                 {
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
@@ -640,7 +640,7 @@ namespace NiceHashMiner.Stats
             try
             {
                 string resp;
-                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/public/stats/global/current", "x");
+                resp = NiceHashStats.GetNiceHashApiData(Links.NhmCurrent, "x");
                 if (resp != null)
                 {
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
@@ -702,7 +702,7 @@ namespace NiceHashMiner.Stats
             try
             {
                 string resp;
-                resp = NiceHashStats.GetNiceHashApiData("https://api2.nicehash.com/main/api/v2/public/stats/global/24h", "x");
+                resp = NiceHashStats.GetNiceHashApiData(Links.Nhm24h, "x");
                 if (resp != null)
                 {
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
@@ -762,7 +762,7 @@ namespace NiceHashMiner.Stats
             {
                 if (ConfigManager.GeneralConfig.ChartEnable)
                 {
-                    string apistr = "https://api2.nicehash.com/main/api/v2/mining/external/" + Globals.GetBitcoinUser() + "/rigs2?sort=NAME&page=0";
+                    string apistr = Links.NhmExternal + Globals.GetBitcoinUser() + "/rigs2?sort=NAME&page=0";
                     string resp;
                     Helpers.ConsolePrint("NHM_API_info", "Trying GetRigProfit");
                     resp = NiceHashStats.GetNiceHashApiData(apistr, "");

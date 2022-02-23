@@ -14,7 +14,7 @@ namespace NiceHashMiner.Stats
 {
     internal static class ExchangeRateApi
     {
-        private const string ApiUrl = "https://api.nicehash.com/api?method=nicehash.service.info";
+        private static string ApiUrl = Links.ApiUrl;
 
         private static readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
         private static double _usdBtcRate = -1;
@@ -55,7 +55,7 @@ namespace NiceHashMiner.Stats
             string ResponseFromAPI;
             try
             {
-                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("https://api2.nicehash.com/main/api/v2/exchangeRate/list/");
+                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(Links.exchangeRateList);
                 WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
                 WR.Timeout = 30 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;

@@ -1429,30 +1429,6 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void ButtonSelectedProfit_Click(object sender, EventArgs e)
-        {
-            if (_selectedComputeDevice == null)
-            {
-                MessageBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
-                    International.GetText("Warning_with_Exclamation"),
-                    MessageBoxButtons.OK);
-                return;
-            }
-
-            var url = Links.NhmProfitCheck + _selectedComputeDevice.Name;
-            foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest())
-            {
-                var id = (int)algorithm.NiceHashID;
-                url += "&speed" + id + "=" + ProfitabilityCalculator
-                           .GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID)
-                           .ToString("F2", CultureInfo.InvariantCulture);
-            }
-
-            url += "&nhmver=" + Application.ProductVersion; // Add version info
-            url += "&cost=1&power=1"; // Set default power and cost to 1
-            System.Diagnostics.Process.Start(url);
-        }
-
         private void ButtonGPUtuning_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("GPU-Tuning.exe");
@@ -2178,17 +2154,17 @@ namespace NiceHashMiner.Forms
         {
             if (Form_Main.githubVersion > 0)
             {
-                System.Diagnostics.Process.Start("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+                System.Diagnostics.Process.Start(Links.githubReleases);
             }
             if (Form_Main.githubVersion <= 0 && Form_Main.gitlabVersion > 0)
             {
-                System.Diagnostics.Process.Start("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
+                System.Diagnostics.Process.Start(Links.gitlabReleases);
             }
         }
 
         private void linkLabelCurrentVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+            System.Diagnostics.Process.Start(Links.githubReleases);
         }
 
         private void linkLabelCurrentVersion_MouseEnter(object sender, EventArgs e)
@@ -2391,7 +2367,7 @@ namespace NiceHashMiner.Forms
 
         private void buttonCheckNiceHashStatus_Click(object sender, EventArgs e)
         {
-            Process.Start("https://status.nicehash.com/");
+            Process.Start(Links.StatusNicehash);
         }
 
         private void button3_Click(object sender, EventArgs e)

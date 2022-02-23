@@ -2,40 +2,35 @@ namespace NiceHashMiner
 {
     public static class Links
     {
-        public const string VisitUrl = "https://www.nicehash.com";
+        public static string VisitUrl => CheckDNS("https://www.nicehash.com");
+        public static string VisitUrlNew => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/releases/");
+        public static string CheckStatsNew => CheckDNS("https://nicehash.com/my/miner/");
+        public static string StatusNicehash => CheckDNS("https://status.nicehash.com/");
+        public static string NhmHelp => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/");
+        public static string NhmNoDevHelp => CheckDNS("https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev");
+        public static string NhmBtcWalletFaqNew => CheckDNS("https://www.nicehash.com/support");
+        public static string NhmSocketAddress => CheckDNS("wss://nhmws.nicehash.com/v3/nhml");
+        public static string NhmHashpower => CheckDNS("https://api2.nicehash.com/main/api/v2/hashpower/orderBook?algorithm=");
+        public static string NhmSimplemultialgo => CheckDNS("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info");
+        public static string NhmCurrent => CheckDNS("https://api2.nicehash.com/main/api/v2/public/stats/global/current");
+        public static string Nhm24h => CheckDNS("https://api2.nicehash.com/main/api/v2/public/stats/global/24");
+        public static string NhmExternal => CheckDNS("https://api2.nicehash.com/main/api/v2/mining/external/");
+        public static string ApiUrl => CheckDNS("https://api.nicehash.com/api?method=nicehash.service.info");//?
+        public static string exchangeRateList => CheckDNS("https://api2.nicehash.com/main/api/v2/exchangeRate/list/");
+        public static string miningStats => CheckDNS("https://www.nicehash.com/my/mining/stats/");
+        public static string githubReleases => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+        public static string githubLatestRelease => CheckDNS("https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest");
+        public static string gitlabReleases => CheckDNS("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
+        public static string gitlabRepositoryTags => CheckDNS("https://gitlab.com/api/v4/projects/26404146/repository/tags");
+        public static string gitlabLastRelease => CheckDNS("https://gitlab.com/api/v4/projects/26404146/releases/");//?
+        public static string githubDownload => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_");
 
-        // add version
-        public const string VisitUrlNew = "https://github.com/angelbbs/NiceHashMinerLegacy/releases/";
-
-        // add btc adress as parameter
-        public const string CheckStats = "https://old.nicehash.com/index.jsp?p=miners&addr=";
-        public const string CheckStatsNew = "https://nicehash.com/my/miner/";
-
-        // help and faq
-        public const string NhmHelp = "https://github.com/angelbbs/NiceHashMinerLegacy/";
-        public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev";
-
-        // faq
-        public const string NhmBtcWalletFaq = "https://old.nicehash.com/help/how-to-create-the-bitcoin-addresswallet";
-        public const string NhmBtcWalletFaqNew = "https://www.nicehash.com/support";
-        public const string NhmPayingFaq = "https://old.nicehash.com/help/when-and-how-do-you-get-paid";
-        public const string NhmPayingFaqNew = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
-
-        // API
-        // btc adress as parameter
-        public const string NhmApiStats = "https://api.nicehash.com/api?method=stats.provider&addr=";
-        public const string NhmApiInfo = "https://api.nicehash.com/api?method=simplemultialgo.info";
-        public const string NhmApiVersion = "https://api.nicehash.com/nicehashminer?method=version&legacy";
-        //public static string NHM_API_stats_provider_workers = "https://api.nicehash.com/api?method=stats.provider.workers&addr=";
-
-        // device profits
-        public const string NhmProfitCheck = "https://api.nicehash.com/p=calc&name=";
-
-        // SMA Socket
-        public const string NhmSocketAddress = "wss://nhmws.nicehash.com/v3/nhml";
-        public const string NhmSocketAddressFailover = "wss://nhmws.nicehash.net/v3/nhml";
-        //public const string NhmSocketAddress = "https://nhmws.nicehash.com/v3/nhml";
-        public const string NhmSocketAddress_new = "https://nhmws-new.nicehash.com/v3/nhml";
-        public static string NhmSocketAddress_old = "wss://api.nicehash.com/v2/nhm";
+        //dns over https
+        public static string CheckDNS(string domain)
+        {
+            Helpers.ConsolePrint("******", domain);
+            return domain;
+        }
     }
+
 }

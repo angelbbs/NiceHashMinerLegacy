@@ -209,8 +209,7 @@ namespace NiceHashMiner.Updater
         public static double GetGITHUBVersion()
         {
             //github
-            string url = "https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest";
-            //string url = "https://api.github.com/repos/angelbbs/nhmlff_update/releases/latest";
+            string url = Links.githubLatestRelease;
             string tagname = "";
             string r1 = GetGitHubAPIData(url);
             if (r1 != null & !r1.Contains("(404)"))
@@ -256,7 +255,7 @@ namespace NiceHashMiner.Updater
         public static double GetGITLABVersion()
         {
             //gitlab
-            string url = "https://gitlab.com/api/v4/projects/26404146/repository/tags";
+            string url = Links.gitlabRepositoryTags;
             string r2 = GetGitHubAPIData(url);
             if (r2 != null & !r2.Contains("(404)"))
             {
@@ -267,7 +266,7 @@ namespace NiceHashMiner.Updater
                     Double.TryParse(tag.Replace("Fork_Fix_", "").ToString(), out Form_Main.gitlabVersion);
                     Helpers.ConsolePrint("GITLAB", tag);
 
-                    url = "https://gitlab.com/api/v4/projects/26404146/releases/" + tag;
+                    url = Links.gitlabLastRelease + tag;
                     string r3 = GetGitHubAPIData(url);
                     dynamic gitlabjson2 = JsonConvert.DeserializeObject(r3, Globals.JsonSettings);
                     int count = gitlabjson2.assets.count;

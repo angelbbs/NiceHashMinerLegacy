@@ -618,7 +618,7 @@ namespace NiceHashMiner
             }
         }
 
-        private bool CheckGithubDownload()
+        private bool CheckGithubDownload()//unused
         {
             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
             try
@@ -635,19 +635,6 @@ namespace NiceHashMiner
             }
 
             return true;
-        }
-        static void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                Helpers.ConsolePrint("CheckGithubDownload: ", e.Error.Message);
-                return;
-            }
-            else
-            {
-                Helpers.ConsolePrint("CheckGithubDownload", "true");
-            }
-            return;
         }
 
         private void CheckUpdates()
@@ -1788,7 +1775,6 @@ public static void CloseChilds(Process parentId)
             {
                 if (!_isNotProfitable)
                 {
-                    Ifttt.PostToIfttt("nicehash", msg);
                     _isNotProfitable = true;
                 }
             }
@@ -1814,7 +1800,6 @@ public static void CloseChilds(Process parentId)
             {
                 if (_isNotProfitable)
                 {
-                    Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
                     _isNotProfitable = false;
                 }
             }
@@ -2086,7 +2071,7 @@ public static void CloseChilds(Process parentId)
             {
                 if (textBoxBTCAddress_new.Text.Trim().Substring(0, 1) == "3")
                 {
-                    Process.Start("https://www.nicehash.com/my/mining/stats");//internal wallet
+                    Process.Start(Links.miningStats);//internal wallet
                 }
                 else
                 {
