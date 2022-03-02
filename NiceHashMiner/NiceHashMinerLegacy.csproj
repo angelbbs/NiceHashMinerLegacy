@@ -124,9 +124,31 @@
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Cake.Powershell.1.0.1\lib\net46\System.Management.Automation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.3.0\lib\net462\System.Reflection.TypeExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.XmlDocument, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XmlDocument.4.3.0\lib\net46\System.Xml.XmlDocument.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="websocket-sharp">
+      <HintPath>..\3rdparty\websocket-sharp\bin\Debug\websocket-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="WinDivertSharp, Version=1.4.3.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Debug\WinDivertSharp.dll</HintPath>
@@ -157,6 +179,12 @@
     <Compile Include="Forms\Components\AlgorithmsListViewOverClock.Designer.cs">
       <DependentUpon>AlgorithmsListViewOverClock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_Downloading.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Downloading.Designer.cs">
+      <DependentUpon>Form_Downloading.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_RigProfitChart.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,12 +198,6 @@
       <DependentUpon>WaitingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
-    <Compile Include="Forms\Form_DcriValues.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_DcriValues.Designer.cs">
-      <DependentUpon>Form_DcriValues.cs</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Miners\ClaymoreNeoscryptMiner.cs" />
     <Compile Include="Miners\CryptoDredge.cs" />
@@ -376,8 +398,6 @@
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\CommandLineParser.cs" />
     <Compile Include="Utils\DownloadSetup.cs" />
-    <Compile Include="Utils\MinersDownloader.cs" />
-    <Compile Include="Utils\MinersDownloadManager.cs" />
     <Compile Include="Utils\MinersExistanceChecker.cs" />
     <Compile Include="Utils\ServerResponceTime.cs" />
     <Compile Include="variables.cs" />
@@ -417,8 +437,8 @@
     <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_DcriValues.resx">
-      <DependentUpon>Form_DcriValues.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Downloading.resx">
+      <DependentUpon>Form_Downloading.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_RigProfitChart.resx">
       <DependentUpon>Form_RigProfitChart.cs</DependentUpon>
@@ -468,6 +488,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\dnscache.json" />
     <None Include="ssl-certificate.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -528,10 +549,6 @@
     <ProjectReference Include="..\3rdparty\managedCuda\Nvml\Nvml.csproj">
       <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
       <Name>Nvml</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
-      <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
-      <Name>websocket-sharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\CustomTabControl\CustomTabControl.csproj">
       <Project>{4DBFE2CF-45E4-4594-8E6A-5EBC2EEF85AE}</Project>

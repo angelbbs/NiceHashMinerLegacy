@@ -280,7 +280,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 CommandLine = "--algo C29AE " +
-                " --pool ae.2miners.com:4040 --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.lolMiner --pass x" +
+                " --pool ae.2miners.com:4040 --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.lolMiner --pass x" +
                 " --pool cuckoocycle.eu-north.nicehash.com:3376 --user " + username + " --pass x" +
                               param +
                 " --devices ";

@@ -14,7 +14,7 @@ namespace NiceHashMiner.Stats
 {
     internal static class ExchangeRateApi
     {
-        private static string ApiUrl = Links.ApiUrl;
+        //private static string ApiUrl = Links.ApiUrl;
 
         private static readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
         private static double _usdBtcRate = -1;

@@ -1,35 +1,250 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NiceHashMiner.Stats;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Cache;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
+
 namespace NiceHashMiner
 {
     public static class Links
     {
-        public static string VisitUrl => CheckDNS("https://www.nicehash.com");
-        public static string VisitUrlNew => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/releases/");
-        public static string CheckStatsNew => CheckDNS("https://nicehash.com/my/miner/");
-        public static string StatusNicehash => CheckDNS("https://status.nicehash.com/");
-        public static string NhmHelp => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/");
-        public static string NhmNoDevHelp => CheckDNS("https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev");
-        public static string NhmBtcWalletFaqNew => CheckDNS("https://www.nicehash.com/support");
-        public static string NhmSocketAddress => CheckDNS("wss://nhmws.nicehash.com/v3/nhml");
-        public static string NhmHashpower => CheckDNS("https://api2.nicehash.com/main/api/v2/hashpower/orderBook?algorithm=");
-        public static string NhmSimplemultialgo => CheckDNS("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info");
-        public static string NhmCurrent => CheckDNS("https://api2.nicehash.com/main/api/v2/public/stats/global/current");
-        public static string Nhm24h => CheckDNS("https://api2.nicehash.com/main/api/v2/public/stats/global/24");
-        public static string NhmExternal => CheckDNS("https://api2.nicehash.com/main/api/v2/mining/external/");
-        public static string ApiUrl => CheckDNS("https://api.nicehash.com/api?method=nicehash.service.info");//?
-        public static string exchangeRateList => CheckDNS("https://api2.nicehash.com/main/api/v2/exchangeRate/list/");
-        public static string miningStats => CheckDNS("https://www.nicehash.com/my/mining/stats/");
-        public static string githubReleases => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
-        public static string githubLatestRelease => CheckDNS("https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest");
-        public static string gitlabReleases => CheckDNS("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
+        public static string VisitUrl = ("https://www.nicehash.com");
+        public static string VisitUrlNew = ("https://github.com/angelbbs/NiceHashMinerLegacy/releases/");
+        public static string CheckStatsNew = ("https://nicehash.com/my/miner/");
+        public static string StatusNicehash = ("https://status.nicehash.com/");
+        public static string NhmHelp = ("https://github.com/angelbbs/NiceHashMinerLegacy/");
+        public static string NhmNoDevHelp = ("https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev");
+        public static string NhmBtcWalletFaqNew = ("https://www.nicehash.com/support");
+        public static string NhmSocketAddress = ("wss://nhmws.nicehash.com/v3/nhml");
+        public static string NhmHashpower = ("https://api2.nicehash.com/main/api/v2/hashpower/orderBook?algorithm=");
+        public static string NhmSimplemultialgo = ("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info");
+        public static string NhmCurrent = ("https://api2.nicehash.com/main/api/v2/public/stats/global/current");
+        public static string Nhm24h = ("https://api2.nicehash.com/main/api/v2/public/stats/global/24");
+        public static string NhmExternal = ("https://api2.nicehash.com/main/api/v2/mining/external/");
+        public static string ApiUrl = ("https://api.nicehash.com/api?method=nicehash.service.info");//?
+        public static string exchangeRateList = ("https://api2.nicehash.com/main/api/v2/exchangeRate/list/");
+        public static string miningStats = ("https://www.nicehash.com/my/mining/stats/");
+        public static string githubReleases = ("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
+        public static string githubLatestRelease => CheckDNS("https://api.github.com0/repos/angelbbs/NiceHashMinerLegacy/releases/latest");
+        public static string githubDownload => CheckDNS("https://github.com0/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_");
+        public static string gitlabReleases = ("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
         public static string gitlabRepositoryTags => CheckDNS("https://gitlab.com/api/v4/projects/26404146/repository/tags");
         public static string gitlabLastRelease => CheckDNS("https://gitlab.com/api/v4/projects/26404146/releases/");//?
-        public static string githubDownload => CheckDNS("https://github.com/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_");
-
-        //dns over https
+        
+        //dns cache
         public static string CheckDNS(string domain)
         {
-            Helpers.ConsolePrint("******", domain);
-            return domain;
+            /*
+            Uri test = new Uri(domain);
+            var r = test.LocalPath;
+            var l = test.Host;
+            var p = domain.Split(':')[0];
+            string doh = p + "://" + internal_get_ip_from_dns(l, "cloudflare-dns.com") + r;
+            Helpers.ConsolePrint("CheckDNS", "********" + doh);
+            return doh;
+            */
+            bool resolveError = false;
+
+            string domainName = new Uri(domain).Host;
+            var prefix = domain.Split(':')[0] + "://";
+            var path = new Uri(domain).LocalPath;
+            if (NiceHashSocket.IsIPAddress(domainName))
+            {
+                return domain;
+            }
+            List<string> ResolvedIPsList = new List<string>();
+            var heserver = GetHostEntry(domainName);
+            if (heserver == null)
+            {
+                resolveError = true;
+                Helpers.ConsolePrint("CheckDNS", "******** Resolve error " + domainName);
+            }
+            else
+            {
+                foreach (IPAddress curAdd in heserver.AddressList)
+                {
+                    ResolvedIPsList.Add(curAdd.ToString());
+                }
+                //resolveError = true;//tesing
+            }
+            if (!File.Exists("configs\\dnscache.json"))
+            {
+                File.WriteAllBytes("configs\\dnscache.json", Properties.Resources.dnscache);
+            }
+            DNSCache file = null;
+            file = JsonConvert.DeserializeObject<DNSCache>(File.ReadAllText("configs\\dnscache.json"), Globals.JsonSettings);
+            
+            List<IPList> _domains = file.domains;
+            var _ipList = new IPList();
+            _ipList.domainName = domainName;
+            if (_domains.Exists(item => item.domainName == domainName))
+            {
+                Helpers.ConsolePrint("CheckDNS", "******** Exist " + domainName);
+                foreach (var d in _domains)
+                {
+                    if (d.domainName.Equals(domainName))
+                    {
+                        _ipList.IPs = d.IPs;
+                    }
+                }
+
+                if (resolveError)
+                {
+                    Random random = new Random((int)DateTime.Now.Ticks);
+                    string ip = _ipList.IPs[random.Next(_ipList.IPs.Count)].ToString();
+                    Helpers.ConsolePrint("CheckDNS", "******** Return: " + prefix + ip + path);
+                    return prefix + ip + path;
+                }
+                foreach (string _ip in ResolvedIPsList)
+                {
+                    if (!_ipList.IPs.Contains(_ip))//обновляем
+                    {
+                        _ipList.Updated = DateTime.Now;
+                        _ipList.IPs = ResolvedIPsList;
+                        _ipList.domainName = domainName;
+                        int index = _domains.IndexOf(_domains.Where(n => n.domainName == domainName).FirstOrDefault());
+                        _domains[index] = _ipList;
+                    }
+                }
+            }
+            else
+            {
+                if (!resolveError)
+                {
+                    var ips = new List<string>();
+                    _ipList.Updated = DateTime.Now;
+                    _ipList.IPs = ResolvedIPsList;
+                    _ipList.domainName = domainName;
+                    _domains.Add(_ipList);
+                } else
+                {
+                    return domain;
+                }
+            }
+
+            var _DNSCache = new DNSCache
+            {
+                TimeCached = DateTime.Now,
+                domains = _domains
+            };
+            var s = JsonConvert.SerializeObject(_DNSCache, Formatting.Indented);
+            File.WriteAllText("configs\\dnscache.json", s);
+            return prefix + domainName + path;
+        }
+
+        public static IPHostEntry GetHostEntry(string host)
+        {
+            IPHostEntry ret = null;
+            try
+            {
+                return Dns.GetHostEntry(host);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Links", "GetHostEntry " + host + ": " + ex.ToString());
+            }
+            return ret;
+        }
+        private class DNSCache
+        {
+            public DateTime TimeCached; //last time
+            public List<IPList> domains;
+        }
+        private class IPList
+        {
+            public DateTime Updated;
+            public string domainName;
+            public List<string> IPs;
+        }
+
+
+        [DataContractAttribute]
+        internal class cf_response
+        {
+            [DataMemberAttribute]
+            internal int Status;
+            [DataMemberAttribute]
+            internal cf_question[] Question;
+            [DataMemberAttribute]
+            internal cf_answer[] Answer;
+        }
+        [DataContractAttribute]
+        internal class cf_question
+        {
+            [DataMemberAttribute]
+            internal string name;
+            [DataMemberAttribute]
+            internal int type;
+        }
+        [DataContractAttribute]
+        internal class cf_answer
+        {
+            [DataMemberAttribute]
+            internal string name;
+            [DataMemberAttribute]
+            internal int type;
+            [DataMemberAttribute]
+            internal int TTL;
+            [DataMemberAttribute]
+            internal string data;
+        }
+
+
+        //DoH сервера тормозят, глючат и в итоге не имеет смысла их использовать
+        private static string internal_get_ip_from_dns(string dns_name, string dns_server_addr)
+        {
+            try
+            {
+                string requestUriString = "https://" + dns_server_addr + "/dns-query?name=" + dns_name;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                HttpWebRequest httpWebRequest = WebRequest.Create(requestUriString) as HttpWebRequest;
+                httpWebRequest.Host = "cloudflare-dns.com";
+                httpWebRequest.Headers.Set(HttpRequestHeader.CacheControl, "max-age=0, no-cache, no-store");
+                httpWebRequest.CachePolicy = (RequestCachePolicy)new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+                httpWebRequest.Accept = "application/dns-json";
+                httpWebRequest.Timeout = 30000;
+                using (StreamReader streamReader = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
+                {
+                    string end = streamReader.ReadToEnd();
+                    cf_response cfResponse1 = new cf_response();
+                    MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(end));
+                    cf_response cfResponse2 = new DataContractJsonSerializer(cfResponse1.GetType()).ReadObject((Stream)memoryStream) as cf_response;
+                    memoryStream.Close();
+                    if (cfResponse2.Status != 0)
+                        throw new Exception("Response status code=" + cfResponse2.Status.ToString());
+                    if (cfResponse2.Answer == null || cfResponse2.Answer.Length == 0)
+                        throw new Exception("No answer");
+                    List<IPAddress> ipAddressList = new List<IPAddress>();
+                    foreach (cf_answer cfAnswer in cfResponse2.Answer)
+                    {
+                        try
+                        {
+                            IPAddress ipAddress = IPAddress.Parse(cfAnswer.data);
+                            ipAddressList.Add(ipAddress);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    IPAddress[] array = ipAddressList.ToArray();
+                    Random random = new Random((int)DateTime.Now.Ticks);
+                    string str = array[random.Next(array.Length)].ToString();
+                    Helpers.ConsolePrint("dnsoverhttps", "Resolved DNS over HTTPS " + dns_name + " to: " + str);
+                    return str;
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("dnsoverhttps", "Failed to get DNS res. for " + dns_name + " error: " + ex.Message);
+            }
+            return (string)null;
         }
     }
 

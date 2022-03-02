@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Stats;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -14,7 +16,11 @@ namespace NiceHashMiner.Updater
     public static class Updater
     {
         private static bool _autoupdate;
-        public static void Downloader(bool autoupdate)
+        public static string DownloadedMinersLocation = "temp/miners.zip";
+        public static void Downloader(bool autoupdate)//надо добавить код и проверить на отключение сети и сброс соединения
+            //добавить host
+            //а потом, при FATAL, загрузка с моего сервера
+            //потом в майнерах ResolvedIP, как резервный пул
         {
             if (ConfigManager.GeneralConfig.BackupBeforeUpdate)
             {
@@ -63,6 +69,82 @@ namespace NiceHashMiner.Updater
                 Helpers.ConsolePrint("Updater error: ", er.Message);
             }
         }
+
+        public static void EmergencyDownloader(string url, bool ssl = true)
+        {
+            string link = Links.CheckDNS(url);
+            string host = new Uri(url).Host;
+
+            try
+            {
+                if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+                if (File.Exists(DownloadedMinersLocation))
+                {
+                    File.Delete(DownloadedMinersLocation);
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("EmergencyDownloader", ex.ToString());
+            }
+
+            Helpers.ConsolePrint("EmergencyDownloader", "Try download " + link);
+            try
+            {
+                if (ssl)
+                {
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                }
+                else
+                {
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)0;
+                }
+
+                Form_Downloading form = new Form_Downloading();
+                form.Show();
+                form.progressBarDownloading.Maximum = 100;
+                form.progressBarDownloading.Value = 0;
+                form.Update();
+                Form_Main._deviceStatusTimer.Stop();
+
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadFileCompleted += ((sender, args) =>
+                    {
+                        if (args.Error == null)
+                        {
+                            form.client_EmergencyDownloadFileCompleted(sender, args);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Helpers.ConsolePrint("EmergencyDownloader error: ", args.Error.ToString());
+                                wc.DownloadFileTaskAsync(new Uri(link), DownloadedMinersLocation);
+                                    //.ContinueWith(t => t.Exception.Message);
+                            } catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("EmergencyDownloader error: ", ex.Message);
+                            }
+                        }
+                    });
+                    wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(form.client_EmergencyDownloadProgressChanged);
+                    wc.Headers.Add("Host", host);
+                    wc.UseDefaultCredentials = false;
+                    wc.DownloadFileTaskAsync(new Uri(link), DownloadedMinersLocation);
+                      //.ContinueWith(t => t.Exception.Message);
+                }
+            }
+            catch (WebException er)
+            {
+                if (!ConfigManager.GeneralConfig.ProgramAutoUpdate && !_autoupdate)
+                {
+                    //MessageBox.Show(er.Message + " Response: " + er.Response);
+                }
+                Helpers.ConsolePrint("EmergencyDownloader error: ", er.Message);
+            }
+        }
+
         static void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (ConfigManager.GeneralConfig.ProgramAutoUpdate && _autoupdate)
@@ -211,7 +293,7 @@ namespace NiceHashMiner.Updater
             //github
             string url = Links.githubLatestRelease;
             string tagname = "";
-            string r1 = GetGitHubAPIData(url);
+            string r1 = GetGitHubAPIData(url, "api.github.com");
             if (r1 != null & !r1.Contains("(404)"))
             {
                 try
@@ -233,6 +315,7 @@ namespace NiceHashMiner.Updater
                     }
                     tagname = nhjson.tag_name;
                     Double.TryParse(tagname.Replace("Fork_Fix_", "").ToString(), out Form_Main.githubVersion);
+                    Form_Main.miners_url = "https://github.com/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_" + Form_Main.githubVersion + "/miners.zip";
                     return (double)Form_Main.githubVersion;
                 }
                 catch (Exception ex)
@@ -255,8 +338,9 @@ namespace NiceHashMiner.Updater
         public static double GetGITLABVersion()
         {
             //gitlab
+            Helpers.ConsolePrint("GITLAB", "Start check gitlab");
             string url = Links.gitlabRepositoryTags;
-            string r2 = GetGitHubAPIData(url);
+            string r2 = GetGitHubAPIData(url, "gitlab.com");
             if (r2 != null & !r2.Contains("(404)"))
             {
                 try
@@ -267,7 +351,7 @@ namespace NiceHashMiner.Updater
                     Helpers.ConsolePrint("GITLAB", tag);
 
                     url = Links.gitlabLastRelease + tag;
-                    string r3 = GetGitHubAPIData(url);
+                    string r3 = GetGitHubAPIData(url, "gitlab.com");
                     dynamic gitlabjson2 = JsonConvert.DeserializeObject(r3, Globals.JsonSettings);
                     int count = gitlabjson2.assets.count;
                     foreach (var l in gitlabjson2.assets.links)
@@ -308,7 +392,7 @@ namespace NiceHashMiner.Updater
                 return 0.0d;
             }
         }
-        public static string GetGitHubAPIData(string URL)
+        public static string GetGitHubAPIData(string URL, string host)
         {
             string ResponseFromServer;
             try
@@ -318,6 +402,7 @@ namespace NiceHashMiner.Updater
                 WR.UserAgent = "NiceHashMinerLegacy/" + Application.ProductVersion;
                 WR.Timeout = 10 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
+                WR.Host = host;
                 //idHTTP1.IOHandler:= IdSSLIOHandlerSocket1;
                 // ServicePointManager.SecurityProtocol = (SecurityProtocolType)SslProtocols.Tls12;
                 Thread.Sleep(200);
@@ -338,6 +423,38 @@ namespace NiceHashMiner.Updater
                 return ex.Message;
             }
             return ResponseFromServer;
+        }
+        public static void MinersEmergencyDownloading(string mpath)
+        {
+            Helpers.ConsolePrint("*******", "Start MinersEmergencyDownloading");
+            try
+            {
+                if (File.Exists("miners.zip")) File.Delete("miners.zip");
+
+                var cports = new Process
+                {
+                    StartInfo =
+                        {
+                            FileName = "powershell.exe",
+                            UseShellExecute = true,
+                            Arguments = "-file common\\MinersEmergencyDownloading.ps1 \"" + mpath + "\"",
+                            RedirectStandardError = false,
+                            RedirectStandardOutput = false,
+                            CreateNoWindow = false,
+                            WindowStyle = ProcessWindowStyle.Normal
+                }
+                };
+                cports.Start();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MinersEmergencyDownloading", ex.ToString());
+            }
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!File.Exists("miners.zip"));
         }
     }
 }

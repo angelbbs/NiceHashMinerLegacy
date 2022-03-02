@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
@@ -55,7 +56,19 @@ namespace NiceHashMiner.Stats
         }
 
         //****************************************************************************************************************
-
+        public static bool IsIPAddress(string ipAddress)
+        {
+            System.Net.IPAddress address;
+            bool isIPAddres = false;
+            if (System.Net.IPAddress.TryParse(ipAddress, out address))
+            {
+                if (address.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    isIPAddres = true;
+                }
+            }
+            return isIPAddres;
+        }
         public void StartConnectionNew(string btc = null, string worker = null, string group = null)
         {
             NHSmaData.InitializeIfNeeded();
@@ -66,6 +79,12 @@ namespace NiceHashMiner.Stats
                 if (_webSocket == null)
                 {
                     _webSocket = new WebSocket(Links.NhmSocketAddress);
+                    string link = Links.CheckDNS(Links.NhmSocketAddress);
+                    string ResolvedIP = new Uri(link).Host;
+                    if (IsIPAddress(ResolvedIP))
+                    {
+                        _webSocket.ResolvedIP = ResolvedIP;
+                    }
                 }
                 else
                 {
@@ -245,6 +264,11 @@ namespace NiceHashMiner.Stats
                 if (_webSocket == null)
                 {
                     _webSocket = new WebSocket(_address);
+                    string ResolvedIP = Links.CheckDNS(_address);
+                    if (IsIPAddress(ResolvedIP))
+                    {
+                        _webSocket.ResolvedIP = ResolvedIP;
+                    }
                 }
                 else
                 {

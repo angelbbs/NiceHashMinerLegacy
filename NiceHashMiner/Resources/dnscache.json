@@ -1,0 +1,42 @@
+{
+  "TimeCached": "2022-03-03T00:31:16.3933416+03:00",
+  "domains": [
+    {
+      "Updated": "0001-01-01T00:00:00",
+      "domainName": "api2.nicehash.com",
+      "IPs": [
+        "104.17.255.46",
+        "104.17.254.46"
+      ]
+    },
+    {
+      "Updated": "0001-01-01T00:00:00",
+      "domainName": "github.com",
+      "IPs": [
+        "140.82.121.3"
+      ]
+    },
+    {
+      "Updated": "0001-01-01T00:00:00",
+      "domainName": "api.github.com",
+      "IPs": [
+        "140.82.121.5"
+      ]
+    },
+    {
+      "Updated": "0001-01-01T00:00:00",
+      "domainName": "gitlab.com",
+      "IPs": [
+        "172.65.251.78"
+      ]
+    },
+    {
+      "Updated": "0001-01-01T00:00:00",
+      "domainName": "nhmws.nicehash.com",
+      "IPs": [
+        "104.17.255.46",
+        "104.17.254.46"
+      ]
+    }
+  ]
+}

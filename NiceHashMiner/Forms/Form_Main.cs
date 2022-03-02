@@ -42,9 +42,9 @@ namespace NiceHashMiner
         private Timer _startupTimer;
         private Timer _remoteTimer;
         private System.Timers.Timer _statusTimer;
-        private Timer _autostartTimer;
-        private Timer _autostartTimerDelay;
-        private Timer _deviceStatusTimer;
+        public static Timer _autostartTimer;
+        public static Timer _autostartTimerDelay;
+        public static Timer _deviceStatusTimer;
         private Timer _updateTimer;
         private int _updateTimerCount;
         private int _updateTimerRestartProgramCount;
@@ -146,6 +146,7 @@ namespace NiceHashMiner
         private static ToolTip toolTipStatus = new ToolTip();
         public static bool InBenchmark = false;
         public static bool NHConnectingInProgress = false;
+        public static bool DownloadingInProgress = false;
 
         public struct RigProfitList
         {
@@ -811,12 +812,23 @@ namespace NiceHashMiner
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
             Thread.Sleep(500);
 
-
-
-            _loadingScreen.SetValueAndMsg(11, International.GetText("Form_Main_loadtext_GetBTCRate"));
+            _loadingScreen.SetValueAndMsg(11, International.GetText("Form_Main_loadtext_CheckMiners"));
             Thread.Sleep(10);
 
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
+
+            _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
+            _autostartTimerDelay = new Timer();
+            _autostartTimerDelay.Tick += AutoStartTimer_TickDelay;
+            _autostartTimerDelay.Interval = 1000;
+            _autostartTimerDelay.Start();
+
+            Thread.Sleep(200);//костыль для очередности запуска таймеров
+
+            _autostartTimer = new Timer();
+            _autostartTimer.Tick += AutoStartTimer_Tick;
+            _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
+            _autostartTimer.Start();
 
             if (!MinersExistanceChecker.IsMinersBinsInit())
             {
@@ -825,31 +837,39 @@ namespace NiceHashMiner
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
                 if (result == DialogResult.Yes)
                 {
+                    DownloadingInProgress = true;
+                    _autostartTimerDelay.Stop();
+                    _autostartTimer.Stop();
+                    //buttonStartMining.Enabled = false;
+                    //buttonStopMining.Enabled = false;
+
+                    //в таймере надо восстанавливать кнопки
+
                     ConfigManager.GeneralConfigFileCommit();
                     try
                     {
                         if (Updater.Updater.GetGITHUBVersion() > 0)
                         {
-                            var downloadUnzipForm = new Form_Loading(new MinersDownloader(MinersDownloadManager.MinersDownloadSetup));
-                            SetChildFormCenter(downloadUnzipForm);
-                            downloadUnzipForm.ShowDialog();
+                            Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
                         }
                         else if (Updater.Updater.GetGITLABVersion() > 0)
                         {
-                            var downloadUnzipForm = new Form_Loading(new MinersDownloader(new DownloadSetup(
-            Form_Main.miners_url,
-            "miners.zip",
-            "miners")));
-                            Helpers.ConsolePrint("Download miners", Form_Main.miners_url);
-                            SetChildFormCenter(downloadUnzipForm);
-                            downloadUnzipForm.ShowDialog();
+                            Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
                         }
                     }
                     catch (Exception ex)
                     {
                         Helpers.ConsolePrint("Download miners", ex.ToString());
                     }
-
+                    //блокировка формы блокирует всё
+                    /*
+                    do
+                    {
+                        Thread.Sleep(1);
+                    } while (DownloadingInProgress);
+                    _autostartTimerDelay.Start();
+                    _autostartTimer.Start();
+                    */
                 }
             }
             else
@@ -882,19 +902,6 @@ namespace NiceHashMiner
             _loadingScreen.SetValueAndMsg(13, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
             Thread.Sleep(300);
-
-            _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
-            _autostartTimerDelay = new Timer();
-            _autostartTimerDelay.Tick += AutoStartTimer_TickDelay;
-            _autostartTimerDelay.Interval = 1000;
-            _autostartTimerDelay.Start();
-
-            Thread.Sleep(200);//костыль для очередности запуска таймеров
-
-            _autostartTimer = new Timer();
-            _autostartTimer.Tick += AutoStartTimer_Tick;
-            _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
-            _autostartTimer.Start();
 
             if (_loadingScreen != null)
             {
@@ -2307,6 +2314,8 @@ public static void CloseChilds(Process parentId)
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
+
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             _benchmarkForm = new Form_Benchmark();
@@ -2325,6 +2334,7 @@ public static void CloseChilds(Process parentId)
 
         private void ButtonSettings_Click(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
             settings = new Form_Settings();
             try
             {
@@ -2352,6 +2362,8 @@ public static void CloseChilds(Process parentId)
 
         private void ButtonStartMining_Click(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
+
             _isManuallyStarted = true;
             if (StartMining(true) == StartMiningReturnType.ShowNoMining)
             {
@@ -2366,6 +2378,8 @@ public static void CloseChilds(Process parentId)
 
         private void ButtonStopMining_Click(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
+
             Divert.checkConnection3GB = false;
             Divert.checkConnection4GB = false;
             firstRun = true;
@@ -2402,6 +2416,8 @@ public static void CloseChilds(Process parentId)
         //public delegate void InvokeDelegate();
         private void ButtonChart_Click(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
+
             var chart = new Form_RigProfitChart();
             try
             {
@@ -3270,7 +3286,8 @@ public static void CloseChilds(Process parentId)
 
         private void buttonBTC_Clear_Click(object sender, EventArgs e)
         {
-            //Form_Main.ActiveForm.Focus();
+            if (DownloadingInProgress) return;
+
             buttonBTC_Clear.ForeColor = Form_Main._backColor;
             var result = MessageBox.Show(dialogClearBTC, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
 
@@ -3290,6 +3307,8 @@ public static void CloseChilds(Process parentId)
 
         private void buttonBTC_Save_Click(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
+
             if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress_new.Text.Trim()) && textBoxBTCAddress_new.Text.Length != 0)
             {
                 var result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
@@ -3433,6 +3452,8 @@ public static void CloseChilds(Process parentId)
 
         private void buttonChangeWorkerName_Click(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
+
             buttonChangeWorkerName.Enabled = false;
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text;
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();

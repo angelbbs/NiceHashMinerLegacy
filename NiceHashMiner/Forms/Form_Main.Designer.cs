@@ -64,12 +64,12 @@ namespace NiceHashMiner
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.buttonBTC_Save = new System.Windows.Forms.Button();
+            this.buttonChangeWorkerName = new System.Windows.Forms.Button();
             this.labelBitcoinAddressNew = new System.Windows.Forms.Label();
             this.textBoxBTCAddress_new = new System.Windows.Forms.TextBox();
             this.buttonBTC_Clear = new System.Windows.Forms.Button();
             this.label_Uptime = new System.Windows.Forms.Label();
             this.label_NH_ConnectStatus = new System.Windows.Forms.Label();
-            this.buttonChangeWorkerName = new System.Windows.Forms.Button();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -424,6 +424,20 @@ namespace NiceHashMiner
             this.buttonBTC_Save.MouseLeave += new System.EventHandler(this.buttonBTC_Save_MouseLeave);
             this.buttonBTC_Save.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonBTC_Save_MouseMove);
             // 
+            // buttonChangeWorkerName
+            // 
+            this.buttonChangeWorkerName.FlatAppearance.BorderSize = 0;
+            this.buttonChangeWorkerName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonChangeWorkerName.Image = global::NiceHashMiner.Properties.Resources.Ok_normal;
+            this.buttonChangeWorkerName.Location = new System.Drawing.Point(189, 59);
+            this.buttonChangeWorkerName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonChangeWorkerName.Name = "buttonChangeWorkerName";
+            this.buttonChangeWorkerName.Size = new System.Drawing.Size(20, 20);
+            this.buttonChangeWorkerName.TabIndex = 117;
+            this.toolTip1.SetToolTip(this.buttonChangeWorkerName, "Save");
+            this.buttonChangeWorkerName.UseVisualStyleBackColor = false;
+            this.buttonChangeWorkerName.Click += new System.EventHandler(this.buttonChangeWorkerName_Click);
+            // 
             // labelBitcoinAddressNew
             // 
             this.labelBitcoinAddressNew.AutoSize = true;
@@ -476,20 +490,6 @@ namespace NiceHashMiner
             this.label_NH_ConnectStatus.Size = new System.Drawing.Size(78, 13);
             this.label_NH_ConnectStatus.TabIndex = 116;
             this.label_NH_ConnectStatus.Text = "Not connected";
-            // 
-            // buttonChangeWorkerName
-            // 
-            this.buttonChangeWorkerName.FlatAppearance.BorderSize = 0;
-            this.buttonChangeWorkerName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonChangeWorkerName.Image = global::NiceHashMiner.Properties.Resources.Ok_normal;
-            this.buttonChangeWorkerName.Location = new System.Drawing.Point(189, 59);
-            this.buttonChangeWorkerName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonChangeWorkerName.Name = "buttonChangeWorkerName";
-            this.buttonChangeWorkerName.Size = new System.Drawing.Size(20, 20);
-            this.buttonChangeWorkerName.TabIndex = 117;
-            this.toolTip1.SetToolTip(this.buttonChangeWorkerName, "Save");
-            this.buttonChangeWorkerName.UseVisualStyleBackColor = false;
-            this.buttonChangeWorkerName.Click += new System.EventHandler(this.buttonChangeWorkerName_Click);
             // 
             // devicesListViewEnableControl1
             // 
@@ -567,7 +567,6 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceBTCValue;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceBTCCode;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGlobalRateText;
-        private System.Windows.Forms.Button buttonStopMining;
         private System.Windows.Forms.Button buttonBenchmark;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBTCDayText;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBTCDayValue;
@@ -583,7 +582,6 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label labelBitcoinAddressNew;
         private System.Windows.Forms.TextBox textBoxBTCAddress_new;
-        private System.Windows.Forms.Button buttonStartMining;
         private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceDollarValue;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power1;
@@ -600,6 +598,8 @@ namespace NiceHashMiner
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_power6;
         private System.Windows.Forms.Label label_NH_ConnectStatus;
         private System.Windows.Forms.Button buttonChangeWorkerName;
+        public System.Windows.Forms.Button buttonStopMining;
+        public System.Windows.Forms.Button buttonStartMining;
     }
 }
 

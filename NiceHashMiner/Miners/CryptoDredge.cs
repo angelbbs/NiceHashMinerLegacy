@@ -196,7 +196,7 @@ namespace NiceHashMiner.Miners
                 algo = "--algo aeternity";
                 commandLine = algo +
                 " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://ae.f2pool.com:7898" + " -u ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM." + ConfigManager.GeneralConfig.WorkerName.Trim() + " -p x " +
+                " -o stratum+tcp://ae.f2pool.com:7898" + " -u ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE." + ConfigManager.GeneralConfig.WorkerName.Trim() + " -p x " +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

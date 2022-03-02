@@ -387,7 +387,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 ret = " --color 0 --pec --algo aeternity" +
-                " --server ae.2miners.com:4040 --user ak_2f9AMwztStKs5roPmT592wTbUEeTyqRgYVZNrc5TyZfr94m7fM.gminer --pass x --ssl 0" +
+                " --server ae.2miners.com:4040 --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.gminer --pass x --ssl 0" +
                 " --server cuckoocycle.eu.nicehash.com:3376 --user " + username + " --pass x --ssl 0" +
                 " --server cuckoocycle.hk.nicehash.com:3376 --user " + username + " --pass x --ssl 0" +
                 GetDevicesCommandString();

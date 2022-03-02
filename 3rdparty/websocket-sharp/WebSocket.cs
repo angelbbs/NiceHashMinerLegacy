@@ -117,6 +117,7 @@ namespace WebSocketSharp
         private Uri _uri;
         private const string _version = "13";
         private TimeSpan _waitTime;
+        private string _resolvedIP;
 
         #endregion
 
@@ -842,6 +843,12 @@ namespace WebSocketSharp
                 }
             }
         }
+
+        public string ResolvedIP
+        {
+            set => this._resolvedIP = value;
+        }
+
 
         #endregion
 
@@ -2316,7 +2323,13 @@ namespace WebSocketSharp
             }
             else
             {
-                _tcpClient = new TcpClient(_uri.DnsSafeHost, _uri.Port);
+                if (_resolvedIP == null)
+                {
+                    _tcpClient = new TcpClient(_uri.DnsSafeHost, _uri.Port);
+                } else
+                {
+                    _tcpClient = new TcpClient(_resolvedIP, _uri.Port);
+                }
                 _stream = _tcpClient.GetStream();
             }
 

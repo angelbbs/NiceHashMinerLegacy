@@ -51,14 +51,6 @@ namespace NiceHashMiner
             SetInfoMsg(startInfoMsg);
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
         }
-        // download miners constructor
-        MinersDownloader _minersDownloader = null;
-        public Form_Loading(MinersDownloader minersDownloader)
-        {
-            InitializeComponent();
-            label_LoadingText.Location = new Point((this.Size.Width - label_LoadingText.Size.Width) / 2, label_LoadingText.Location.Y);
-            _minersDownloader = minersDownloader;
-        }
 
         public void IncreaseLoadCounterAndMessage(string infoMsg)
         {
@@ -189,10 +181,6 @@ namespace NiceHashMiner
 
         private void Form_Loading_Shown(object sender, EventArgs e)
         {
-            if (_minersDownloader != null)
-            {
-                _minersDownloader.Start(this);
-            }
         }
         protected override CreateParams CreateParams
         {
