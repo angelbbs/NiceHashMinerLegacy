@@ -109,8 +109,6 @@ namespace NiceHashMiner.Miners
             try
             {
                 Thread.Sleep(200);
-                //if (tcpClient != null)
-
 
                 if (DHClient4gb.serverStream != null)
                 {
@@ -145,7 +143,8 @@ namespace NiceHashMiner.Miners
             {
                 Random r = new Random();
                 int r1 = r.Next(0, 3);
-                IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com"));
+                //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com"));
+                IPAddress addr = IPAddress.Parse(Links.CheckDNS("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com", true));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
 
                 serverStream = null;
@@ -198,7 +197,6 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     Helpers.ConsolePrint("DaggerHashimoto4GB", "Disconnected. Need reconnect");
-                    //StopConnection();
                     Divert.checkConnection3GB = false;
                     Thread.Sleep(5000);
                     Divert.checkConnection3GB = true;

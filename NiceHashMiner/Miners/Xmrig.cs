@@ -5,6 +5,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -38,30 +39,6 @@ namespace NiceHashMiner.Miners
 
             ProcessHandle = _Start();
         }
-        /*
-        private string GetStartCommand(string url, string btcAdress, string worker)
-        {
-            var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
-            return $" -o {url} -u {btcAdress}.{worker}:x --nicehash {extras} --api-port {ApiPort}";
-        }
-        */
-        public void FreeMem()
-        {
-
-            EmptyWorkingSet(Process.GetCurrentProcess().Handle);
-            foreach (Process process in Process.GetProcesses())
-            {
-                try
-                {
-                    EmptyWorkingSet(process.Handle);
-                }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint(MinerTag(), ex.Message);
-                }
-            }
-
-        }
 
         protected override string GetDevicesCommandString()
         {
@@ -78,6 +55,8 @@ namespace NiceHashMiner.Miners
 
         private string GetStartCommand(string url, string btcAdress, string worker)
         {
+            string _resolvedStratumIP = "";
+
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
             var algo = "cryptonightv7";
             var port = "3363";
@@ -107,12 +86,14 @@ namespace NiceHashMiner.Miners
                 port = "3380";
                 variant = "";
                 url = url.Replace("randomx", "randomxmonero");
-                return $" --algo=rx/0 -o {url} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
-               + $" -o stratum+tcp://{algo}.{Form_Main.myServers[1, 0]}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{Form_Main.myServers[2, 0]}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{Form_Main.myServers[3, 0]}.nicehash.com:{port} -u {username} -p x "
-               + $" -o stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} -u {username} -p x {platform}"
-               + GetDevicesCommandString().TrimStart();
+
+                List<string> ResolvedServers = MiningSession.GetResolvedServers(algo);
+
+                return $" --algo=rx/0 -o {Links.CheckDNS(url)}:{port} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
+               + $" -o {ResolvedServers[1]}:{port} -u {username} -p x "
+               + $" -o {ResolvedServers[2]}:{port} -u {username} -p x "
+               + $" -o {ResolvedServers[0]}:{port} -u {username} -p x "
+               + platform + " " + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";
         }
@@ -143,7 +124,7 @@ namespace NiceHashMiner.Miners
             }
 
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
-            var algo = "cryptonightv7";
+            var algo = "";
             var port = "3363";
             string username = GetUsername(btcAdress, worker);
 
@@ -151,7 +132,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "randomxmonero";
                 port = "3380";
-                return $" --algo=rx/0 -o stratum+tcp://xmr-eu1.nanopool.org:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p x {extras} --http-port {ApiPort} --donate-level=1 "
+                return $" --algo=rx/0 -o {Links.CheckDNS("stratum+tcp://xmr-eu1.nanopool.org")}:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p x {extras} --http-port {ApiPort} --donate-level=1 "
                 + $" -o stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} -u {username}:x {platform}"
                + GetDevicesCommandString().TrimStart();
             }

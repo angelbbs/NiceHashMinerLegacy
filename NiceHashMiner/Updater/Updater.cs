@@ -17,11 +17,13 @@ namespace NiceHashMiner.Updater
     {
         private static bool _autoupdate;
         public static string DownloadedMinersLocation = "temp/miners.zip";
-        public static void Downloader(bool autoupdate)//надо добавить код и проверить на отключение сети и сброс соединения
-            //добавить host
-            //а потом, при FATAL, загрузка с моего сервера
+        public static void Downloader(bool autoupdate)
+            //при FATAL, загрузка с моего сервера
             //потом в майнерах ResolvedIP, как резервный пул
         {
+            string link = Links.CheckDNS(Form_Main.browser_download_url);
+            string host = new Uri(Form_Main.browser_download_url).Host;
+
             if (ConfigManager.GeneralConfig.BackupBeforeUpdate)
             {
                 CreateBackup();
@@ -48,17 +50,38 @@ namespace NiceHashMiner.Updater
             {
                 Helpers.ConsolePrint("Downloader", ex.ToString());
             }
-            Helpers.ConsolePrint("Updater", "Try download " + Form_Main.browser_download_url);
+
+            Helpers.ConsolePrint("Updater", "Try download " + link);
             try
             {
-                //ServicePointManager.SecurityProtocol = (SecurityProtocolType)SslProtocols.None;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                WebClient client = new WebClient();
-                client.UseDefaultCredentials = false;
-                client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-                client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-
-                client.DownloadFileAsync(new Uri(Form_Main.browser_download_url), "temp/" + Form_Main.progName);
+                
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadFileCompleted += ((sender, args) =>
+                    {
+                        if (args.Error == null)
+                        {
+                            client_DownloadFileCompleted(sender, args);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Helpers.ConsolePrint("Updater error: ", args.Error.ToString());
+                                wc.DownloadFileTaskAsync(new Uri(link), "temp/" + Form_Main.progName);
+                            }
+                            catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("Updater error: ", ex.Message);
+                            }
+                        }
+                    });
+                    wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                    wc.Headers.Add("Host", host);
+                    wc.UseDefaultCredentials = false;
+                    wc.DownloadFileTaskAsync(new Uri(link), "temp/" + Form_Main.progName);
+                }
             }
             catch (WebException er)
             {

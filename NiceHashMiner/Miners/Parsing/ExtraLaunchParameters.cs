@@ -62,7 +62,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex_reconnect-on-fail-shares", "--reconnect-on-fail-shares", "--reconnect-on-fail-shares", "", MinerOptionFlagType.SingleParam),
-                    new MinerOption("trex-no-new-block-info", "--no-new-block-info", "--no-new-block-info", "", MinerOptionFlagType.Uni)
+                    new MinerOption("trex-no-new-block-info", "--no-new-block-info", "--no-new-block-info", "", MinerOptionFlagType.Uni),
                 },
                 new List<MinerOption>()
             ),
@@ -687,7 +687,6 @@ namespace NiceHashMiner.Miners.Parsing
 
         public static void InitializePackages()
         {
-            return;
             foreach (var pack in Defaults)
             {
                 var packageName = $"MinerOptionPackage_{pack.Name}";

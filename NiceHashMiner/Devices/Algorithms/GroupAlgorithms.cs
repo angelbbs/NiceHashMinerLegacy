@@ -28,22 +28,6 @@ namespace NiceHashMiner.Devices.Algorithms
             }
 
             Helpers.ConsolePrint("GPU MEMORY: ", device.GpuRam.ToString() + " bytes - " + device.Name);
-            if (algoSettings.ContainsKey(MinerBaseType.miniZ))
-            {
-                var miniZAlgos = algoSettings[MinerBaseType.miniZ];
-
-                int miniZBeamV2_Index = miniZAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.BeamV2);
-
-                if (miniZBeamV2_Index > -1)
-                {
-                    if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7))
-                    {
-                        miniZAlgos[miniZBeamV2_Index].ExtraLaunchParameters = " --mode=3";
-                    }
-                }
-
-            }
-
 
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
             {
@@ -97,7 +81,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.GrinCuckaroo29
+                        //AlgorithmType.GrinCuckaroo29
                     });
             }
 
@@ -105,7 +89,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.GrinCuckaroo29
+                        //AlgorithmType.GrinCuckaroo29
                     });
             }
 
@@ -113,14 +97,14 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.Cuckaroom
+                        //AlgorithmType.Cuckaroom
                     });
             }
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.CuckaRooz29
+                        //AlgorithmType.CuckaRooz29
                     });
             }
 
@@ -143,7 +127,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.Cuckaroom
+                        //AlgorithmType.Cuckaroom
                     });
             }
 
@@ -151,7 +135,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.GrinCuckarood29
+                        //AlgorithmType.GrinCuckarood29
                     });
             }
 
@@ -251,6 +235,17 @@ namespace NiceHashMiner.Devices.Algorithms
                 foreach (var algo in algoSettings[MinerBaseType.trex])
                 {
                     if (algo.DualNiceHashID == AlgorithmType.X16RV2 && !ConfigManager.GeneralConfig.ShowHiddenAlgos)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.trex))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.trex])
+                {
+                    if (algo.DualNiceHashID == AlgorithmType.X16R && !ConfigManager.GeneralConfig.ShowHiddenAlgos)
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;
@@ -467,6 +462,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
 
+            /*
             if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.lolMiner])
@@ -543,7 +539,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.MTP
                     });
             }
-
+            */
             return algoSettings;
         }
 

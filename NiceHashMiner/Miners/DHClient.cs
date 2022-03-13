@@ -109,9 +109,6 @@ namespace NiceHashMiner.Miners
             try
             {
                 Thread.Sleep(200);
-                //if (tcpClient != null)
-
-
                 if (DHClient.serverStream != null)
                 {
                     serverStream.Close();
@@ -134,8 +131,6 @@ namespace NiceHashMiner.Miners
             }
             WinDivert.WinDivertClose(DivertHandle);
 
-            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
             Divert.checkConnection3GB = true;
             Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool()");
             new Task(() => ConnectToPool()).Start();
@@ -143,15 +138,13 @@ namespace NiceHashMiner.Miners
 
         public static void ConnectToPool()
         {
-            //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-            //NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
             LingerOption lingerOption = new LingerOption(true, 0);
             while (Divert.checkConnection3GB)
             {
                 Random r = new Random();
                 int r1 = r.Next(0, 3);
-                //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[r1, 0] + ".nicehash.com"));
-                IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com"));
+//                IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com"));
+                IPAddress addr = IPAddress.Parse(Links.CheckDNS("daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com", true));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
                 Reconnect:
                 serverStream = null;
@@ -204,8 +197,6 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. Need reconnect");
-                    //StopConnection();
-                    //checkConnection = false;
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 1");
                     Thread.Sleep(5000);
                     goto Reconnect;
@@ -215,11 +206,9 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint("DaggerHashimoto3GB", "ConnectToPool() 3");
                     //Form_Main.MakeRestart(0);
                 }
-
                 Thread.Sleep(5 * 1000);
             }
             Helpers.ConsolePrint("DaggerHashimoto3GB", "Disconnected. End connection");
-
         }
 
         public static byte[] StringToByteArray(String hex)
@@ -288,7 +277,6 @@ namespace NiceHashMiner.Miners
             {
                 Thread.Sleep(100);
                 int serverBytes;
-                //if (serverStream.CanRead)
 
                 try
                 {
@@ -359,13 +347,11 @@ namespace NiceHashMiner.Miners
                                         Divert.DaggerHashimoto3GBProfit = true;
                                         Divert.DaggerHashimoto3GBForce = true;
                                         Thread.Sleep(2000);//wait for stop
-
                                     }
                                     else
                                     {
 
                                     }
-
                                 }
                             }
 

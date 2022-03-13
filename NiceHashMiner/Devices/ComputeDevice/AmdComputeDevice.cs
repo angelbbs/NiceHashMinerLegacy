@@ -368,9 +368,12 @@ namespace NiceHashMiner.Devices
                                     {
                                         if (sensor.SensorType == SensorType.Power)
                                         {
-                                            if ((int)sensor.Value >= 0)
+                                            if (sensor.Value.HasValue)
                                             {
-                                                return (int)sensor.Value + addAMD;
+                                                if ((int)sensor.Value >= 0)
+                                                {
+                                                    return (int)sensor.Value + addAMD;
+                                                }
                                             }
                                         }
                                     }

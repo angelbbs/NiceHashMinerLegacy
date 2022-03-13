@@ -88,7 +88,16 @@ namespace NiceHashMiner.Miners
         {
 
         }
-
+        public static List<string> GetResolvedServers(string algo)
+        {
+            List<string> ResolvedServers = new List<string>();
+            for (int i = 0; i < Form_Main.myServers.Length / 2 - 1; i++)
+            {
+                string _server = Links.CheckDNS($"stratum+tcp://{algo}.{Form_Main.myServers[i, 0]}.nicehash.com", false);
+                ResolvedServers.Add(_server);
+            }
+            return ResolvedServers;
+        }
         public MiningSession(List<ComputeDevice> devices,
             IMainFormRatesComunication mainFormRatesComunication,
             string miningLocation, string worker, string btcAdress)

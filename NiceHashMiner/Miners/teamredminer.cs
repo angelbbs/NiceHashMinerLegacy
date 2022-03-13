@@ -68,7 +68,7 @@ namespace NiceHashMiner.Miners
 
             var algo = "";
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
-
+            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
             {
@@ -82,14 +82,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = " -a x16rv2";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
-            {
-                algo = " -a cuckarood29_grin";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.MTP))
-            {
-                algo = " -a mtp --allow_all_devices";
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 algo = " -a ethash";
@@ -108,12 +101,11 @@ namespace NiceHashMiner.Miners
                 sc = variables.TRMiner_add1;
             }
 
-            LastCommandLine = sc + " --watchdog_script " + algo + " -o " + url +
+            LastCommandLine = sc + " --watchdog_script " + algo + " -o " + Links.CheckDNS(url) +
                               " -u " + username + " -p x " +
-                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                               " -o stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                               ResolvedServers[1] + ":" + port + " -u " + username + " -p x" +
+                               ResolvedServers[2] + ":" + port + " -u " + username + " -p x" +
+                               ResolvedServers[0] + ":" + port + " -u " + username + " -p x" +
                               apiBind +
                               " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
@@ -166,26 +158,21 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 CommandLine = sc + " -a x16rv2" +
-                " --url stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
+                " --url " + Links.CheckDNS("stratum+tcp://x16rv2.na.mine.zpool.ca:3637") + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                 " -d ";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
-            {
-                CommandLine = sc + " -a cuckarood29_grin" +
-                " --url stratum+tcp://mwc.2miners.com:1111" + " --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.teamred" + " -p x " +
-                " -d ";
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
             {
                 CommandLine = sc + " -a lyra2rev3" +
-                " --url stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550" + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
+                " --url " + Links.CheckDNS("stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550") + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                  " -d ";
             }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 CommandLine = sc + " -a ethash --eth_no_ramp_up" +
-                 " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.teamred" + " -p x -d ";
+                 " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505.teamred" + " -p x -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
@@ -195,7 +182,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
                 CommandLine = sc + " -a autolykos2" +
-                 " -o stratum+tcp://pool.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
+                 " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
             }
 
             CommandLine += GetDevicesCommandString() +

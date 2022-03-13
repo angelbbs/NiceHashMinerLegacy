@@ -70,10 +70,11 @@ namespace NiceHashMiner.Miners
 
             Thread.Sleep(200);
 
-            var epools = String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[1, 0], username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[2, 0], username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[3, 0], username) + "\n"
-               + String.Format("POOL: daggerhashimoto.{0}.nicehash.com:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", Form_Main.myServers[0, 0], username) + "\n";
+            List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
+
+            var epools = String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[1].Replace("stratum+tcp://", ""), username) + "\n"
+               + String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[2].Replace("stratum+tcp://", ""), username) + "\n"
+               + String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[0].Replace("stratum+tcp://", ""), username) + "\n";
             try
             {
                 FileStream fs = new FileStream("miners\\phoenix\\epools.txt", FileMode.Create, FileAccess.Write);
@@ -91,11 +92,11 @@ namespace NiceHashMiner.Miners
             if (platform == " -amd ")
             {
                 return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                       + $" -pool {url} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
+                       + $" -pool {Links.CheckDNS(url)} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
                        ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             }
             return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-       + $" -pool {url} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
+       + $" -pool {Links.CheckDNS(url)} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
        ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
         }
 
@@ -125,7 +126,7 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(200);
 
             return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                   + $" -pool {url} -wal {btcAdress} -cdmport  127.0.0.1:{ApiPort} -pass x " +
+                   + $" -pool {Links.CheckDNS(url)} -wal {btcAdress} -cdmport  127.0.0.1:{ApiPort} -pass x " +
                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
 
         }
@@ -169,11 +170,11 @@ namespace NiceHashMiner.Miners
             string ret = "";
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
             {
-                ret = GetStartBenchmarkCommand("stratum+tcp://eu1.ethermine.org:4444", "0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.Phoenix", "");
+                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://eth.2miners.com:2020"), "0x266b27bd794d1A65ab76842ED85B067B415CD505.Phoenix", "");
             }
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto4GB)
             {
-                ret = GetStartBenchmarkCommand("stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565", "angelbbs.Phoenix4", "") + " -proto 1";
+                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565"), "angelbbs.Phoenix4", "") + " -proto 1";
             }
             return ret;
         }

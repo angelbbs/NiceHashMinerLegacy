@@ -208,7 +208,7 @@ namespace NiceHashMiner.Stats
                                 {
                                     SetAlgorithmRates(message.data);
                                 }
-                                
+
                                 GetSmaAPI();
 
                                 if (ConfigManager.GeneralConfig.Use_orders_price)
@@ -495,11 +495,6 @@ namespace NiceHashMiner.Stats
                 {
                     if (smaAlgos.Contains(algo) && !algo.ToString().ToUpper().Contains("UNUSED") && !algo.ToString().ToUpper().Contains("RANDOMX"))
                     {
-                        if (algo == AlgorithmType.Keccak || algo == AlgorithmType.Lyra2REv2 || algo == AlgorithmType.Decred ||
-                            algo == AlgorithmType.Blake2s)
-                        {
-                            continue;
-                        }
                         string a = algo.ToString().ToUpper();
                         //Helpers.ConsolePrint("GetSmaAPIOrder: ", a);
                         string resp = NiceHashStats.GetNiceHashApiData(Links.NhmHashpower + a, "x");
@@ -1036,7 +1031,7 @@ namespace NiceHashMiner.Stats
 
         private static void SetExchangeRates(string data)
         {
-            Helpers.ConsolePrint("SetExchangeRates", data);
+            //Helpers.ConsolePrint("SetExchangeRates", data);
             try
             {
                 var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
@@ -1521,9 +1516,9 @@ namespace NiceHashMiner.Stats
                         */
                         //***********
 
-                        //В оригинальном NH при второй отправке данных вместо названия 
+                        //В оригинальном NH при второй отправке данных вместо названия
                         //устройства (Manufacturer + deviceName) = null
-                        //Вместо nuuid используется порядковый номер устройства (string). Без проверки на уникальность!!! 
+                        //Вместо nuuid используется порядковый номер устройства (string). Без проверки на уникальность!!!
                         //{"method":"miner.status","params":["STOPPED",[["","0",
                         //Оставим как правильно
                         //{"method":"miner.status","params":["STOPPED",[["Intel(R) Core(TM) i7-3630QM CPU @ 2.40GHz","1-YBxRn6UfL1O7dUk6NNR5EA",
@@ -1577,7 +1572,7 @@ namespace NiceHashMiner.Stats
                         }
 
                         array.Add(speedsJson);
-                        
+
                         //костыль для amd
                         float TempMemory = device.TempMemory;
                         float TempMemoryResort = deviceResort.TempMemory;
@@ -1665,46 +1660,20 @@ namespace NiceHashMiner.Stats
 
         public static string GetNiceHashApiData(string url, string worker)
         {
+            string link = Links.CheckDNS(url);
+            string host = new Uri(url).Host;
             var responseFromServer = "";
+
             try
             {
                 var activeMinersGroup = MinersManager.GetActiveMinersGroup();
 
-                var wr = (HttpWebRequest)WebRequest.Create(url);
+                var wr = (HttpWebRequest)WebRequest.Create(link);
                 wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
                 if (worker.Length > 64) worker = worker.Substring(0, 64);
                 wr.Headers.Add("NiceHash-Worker-ID", worker);
                 wr.Headers.Add("NHM-Active-Miners-Group", activeMinersGroup);
-                wr.Timeout = 5 * 1000;
-                var response = wr.GetResponse();
-                var ss = response.GetResponseStream();
-                if (ss != null)
-                {
-                    ss.ReadTimeout = 3 * 1000;
-                    var reader = new StreamReader(ss);
-                    responseFromServer = reader.ReadToEnd();
-                    if (responseFromServer.Length == 0 || responseFromServer[0] != '{')
-                        throw new Exception("Not JSON!");
-                    reader.Close();
-                }
-                response.Close();
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NICEHASH", ex.Message);
-                return null;
-            }
-            return responseFromServer;
-        }
-        public static string GetNiceHashApiDataNew(string url, string worker)
-        {
-            var responseFromServer = "";
-            try
-            {
-                var activeMinersGroup = MinersManager.GetActiveMinersGroup();
-
-                var wr = (HttpWebRequest)WebRequest.Create(url);
-                wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
+                wr.Host = host;
                 wr.Timeout = 5 * 1000;
                 var response = wr.GetResponse();
                 var ss = response.GetResponseStream();

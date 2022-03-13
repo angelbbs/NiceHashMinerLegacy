@@ -6,6 +6,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -45,56 +46,63 @@ namespace NiceHashMiner.Miners
 
         private string GetStartCommand(string url, string btcAddress, string worker)
         {
-            var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            string username = GetUsername(btcAddress, worker);
-            url = url.Replace("stratum+tcp://", "");
-            string ethurl = url.Replace("autolykos", "daggerhashimoto").Split(':')[0]; ;
-            string zilurl = url.Split(':')[0];
+            try
+            {
+                var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+                string username = GetUsername(btcAddress, worker);
+                string ethurl = url.Replace("autolykos", "daggerhashimoto").Split(':')[1]; ;
+                string autolykosurl = url.Split(':')[1];
 
-            if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
-            {
-                return $" --main-pool-reconnect 2 --disable-cpu --a0-is-zil --multi-algorithm-job-mode 3 " +
-                    $"--algorithm ethash;autolykos2 " +
-                    $"--pool {ethurl}:3353;{zilurl}:3390 " +
-                    $"--pool daggerhashimoto.{Form_Main.myServers[1, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
-                    $"--pool daggerhashimoto.{Form_Main.myServers[2, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
-                    $"--pool daggerhashimoto.{Form_Main.myServers[3, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
-                    $"--pool daggerhashimoto.{Form_Main.myServers[0, 0]}.nicehash.com:3353;autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:3390 " +
-                    $"--wallet {username};{username}  --password x;x --api-enable --api-port {ApiPort} " +
-               "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
-            {
-                var algo = "randomxmonero";
-                var port = "3380";
-                url = url.Replace("randomx", "randomxmonero");
-                return $" --algorithm randomx --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} "
-               + $" --pool stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} ";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
-            {
-                var port = "3353";
-                return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
-               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://daggerhashimoto.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
-               "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
-            {
-                var port = "3390";
-                return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {url} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
-               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[1, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[2, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[3, 0]}.nicehash.com:{port} --wallet {username} --nicehash true "
-               + $" --pool stratum+tcp://autolykos.{Form_Main.myServers[0, 0]}.nicehash.com:{port} --wallet {username} --nicehash true " +
-               "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-            }
+                List<string> ResolvedServersZil = MiningSession.GetResolvedServers("daggerhashimoto");
+                List<string> ResolvedServersAutolykos = MiningSession.GetResolvedServers("autolykos");
 
+                if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                {
+                    return $" --main-pool-reconnect 2 --disable-cpu --a0-is-zil --multi-algorithm-job-mode 3 " +
+                        $"--algorithm ethash;autolykos2 " +
+                        $"--pool {Links.CheckDNS(ethurl)}:3353;{Links.CheckDNS(autolykosurl)}:3390 " +
+                        $"--pool {ResolvedServersZil[1]}:3353;{ResolvedServersAutolykos[1]}:3390 " +
+                        $"--pool {ResolvedServersZil[2]}:3353;{ResolvedServersAutolykos[2]}:3390 " +
+                        $"--pool {ResolvedServersZil[0]}:3353;{ResolvedServersAutolykos[0]}:3390 " +
+                        $"--wallet {username};{username}  --password x;x --api-enable --api-port {ApiPort} " +
+                   "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
+                {
+                    var algo = "randomxmonero";
+                    var port = "3380";
+                    url = url.Replace("randomx", "randomxmonero");
+                    List<string> ResolvedServers = MiningSession.GetResolvedServers(algo);
+                    return $" --algorithm randomx --pool {Links.CheckDNS(url)}:{port} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
+                   + $" --pool {ResolvedServers[1]}:{port} --wallet {username} "
+                   + $" --pool {ResolvedServers[2]}:{port} --wallet {username} "
+                   + $" --pool {ResolvedServers[0]}:{port} --wallet {username} ";
+
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                {
+                    var port = "3353";
+                    List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
+                    return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {Links.CheckDNS(url)}:{port} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+                   + $" --pool {ResolvedServers[1]}:{port} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[2]}:{port} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[0]}:{port} --wallet {username} --nicehash true "
+                   + "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                {
+                    var port = "3390";
+                    List<string> ResolvedServers = MiningSession.GetResolvedServers("autolykos");
+                    return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {Links.CheckDNS(url)}:{port} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+                   + $" --pool {ResolvedServers[1]}:{port} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[2]}:{port} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[0]}:{port} --wallet {username} --nicehash true "
+                   + "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+            }
             return "unsupported algo";
 
         }
@@ -122,21 +130,21 @@ namespace NiceHashMiner.Miners
                 ApiPort = 4040;
 
                 return $" --algorithm randomx"
-                + $" --pool stratum+tcp://xmr-eu1.nanopool.org:14444 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" +
+                + $" --pool {Links.CheckDNS("stratum+tcp://xmr-eu1.nanopool.org")}:14444 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" +
                 $" --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 return $" --disable-cpu --algorithm ethash" +
-                    $" --pool stratum+tcp://eu1.ethermine.org:4444" +
-                    $" --wallet 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.SRBMiner" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://eth.2miners.com")}:2020" +
+                    $" --wallet 0x266b27bd794d1A65ab76842ED85B067B415CD505.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
                 return $" --disable-cpu --algorithm autolykos2" +
-                    $" --pool stratum+tcp://pool.woolypooly.com:3100" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://pool.woolypooly.com")}:3100" +
                     $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
@@ -345,7 +353,7 @@ namespace NiceHashMiner.Miners
             double repeats = 0;
             double summspeed = 0.0d;
 
-            int delay_before_calc_hashrate = 50;
+            int delay_before_calc_hashrate = 10;
             int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
@@ -507,7 +515,7 @@ namespace NiceHashMiner.Miners
                 {
                     var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                     string secondcommandLine = $" --disable-cpu --algorithm ethash" +
-                    $" --pool stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://us-east.ethash-hub.miningpoolhub.com")}:20565" +
                     $" --wallet angelbbs.SRBMiner --nicehash true" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;

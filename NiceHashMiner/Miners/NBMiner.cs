@@ -43,12 +43,6 @@ namespace NiceHashMiner.Miners
             {
                 switch (MiningSetup.CurrentAlgorithmType)
                 {
-                    case AlgorithmType.GrinCuckaroo29:
-                        return "cuckaroo";
-                    case AlgorithmType.GrinCuckarood29:
-                        return "cuckarood";
-                    case AlgorithmType.Cuckaroom:
-                        return "cuckaroom";
                     case AlgorithmType.GrinCuckatoo31:
                         return "cuckatoo";
                     case AlgorithmType.GrinCuckatoo32:
@@ -112,73 +106,63 @@ namespace NiceHashMiner.Miners
                 }
             }
 
+            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 -u1 " + user +
-                    $" -o2 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1].Replace("stratum+tcp://", "nicehash+tcp://") + ":3353" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2].Replace("stratum+tcp://", "nicehash+tcp://") + ":3353" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
-            {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://grincuckaroo29." + Form_Main.myServers[1, 0] + ".nicehash.com:3371 -u1 " + user +
-                    $" -o2 stratum+tcp://grincuckaroo29." + Form_Main.myServers[2, 0] + ".nicehash.com:3371 -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
-            {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 nicehash+tcp://grincuckarood29." + Form_Main.myServers[1, 0] + ".nicehash.com:3377 -u1 " + user +
-                    $" -o2 stratum+tcp://grincuckarood29." + Form_Main.myServers[2, 0] + ".nicehash.com:3377 -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://grincuckatoo31." + Form_Main.myServers[1, 0] + ".nicehash.com:3372 -u1 " + user +
-                    $" -o2 stratum+tcp://grincuckatoo31." + Form_Main.myServers[2, 0] + ".nicehash.com:3372 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1] + ":3372" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":3372" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://grincuckatoo32." + Form_Main.myServers[1, 0] + ".nicehash.com:3383 -u1 " + user +
-                    $" -o2 stratum+tcp://grincuckatoo32." + Form_Main.myServers[2, 0] + ".nicehash.com:3383 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1] + ":3383" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":3383" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://cuckoocycle." + Form_Main.myServers[1, 0] + ".nicehash.com:3376 -u1 " + user +
-                    $" -o2 stratum+tcp://cuckoocycle." + Form_Main.myServers[2, 0] + ".nicehash.com:3376 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1] + ":3376" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":3376" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            /*
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
-            {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://cuckaroo29bfc." + Form_Main.myServers[1, 0] + ".nicehash.com:3386 -u1 " + user +
-                    $" -o2 stratum+tcp://cuckaroo29bfc." + Form_Main.myServers[2, 0] + ".nicehash.com:3386 -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            */
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://kawpow." + Form_Main.myServers[1, 0] + ".nicehash.com:3385 -u1 " + user +
-                    $" -o2 stratum+tcp://kawpow." + Form_Main.myServers[2, 0] + ".nicehash.com:3385 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1] + ":3385" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":3385" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://beamv3." + Form_Main.myServers[1, 0] + ".nicehash.com:3387 -u1 " + user +
-                    $" -o2 stratum+tcp://beamv3." + Form_Main.myServers[2, 0] + ".nicehash.com:3387 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1] + ":3387" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":3387" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://octopus." + Form_Main.myServers[1, 0] + ".nicehash.com:3389 -u1 " + user +
-                    $" -o2 stratum+tcp://octopus." + Form_Main.myServers[2, 0] + ".nicehash.com:3389 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1] + ":3389" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":3389" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                cmd = $"-a {AlgoName} -o {url} -u {user} -o1 stratum+tcp://autolykos." + Form_Main.myServers[1, 0] + ".nicehash.com:3390 -u1 " + user +
-                    $" -o2 stratum+tcp://autolykos." + Form_Main.myServers[2, 0] + ".nicehash.com:3390 -u2 " + user +
+                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
+                    $" -o1 " + ResolvedServers[1] + ":3390" + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":3390" + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
@@ -227,75 +211,48 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                cmd = $"-a {AlgoName} -o ethproxy+tcp://eu1.ethermine.org:4444 -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner -o1 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353 -u1 " + username +
-                    $" -o2 nicehash+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353 -u2 " + username +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckaroo29))
-            {
-                //cmd = $"-a {AlgoName} -o stratum+tcp://grin.sparkpool.com:6666 -u angelbbs@mail.ru.{worker} -o1 stratum+tcp://grincuckaroo29." + Form_Main.myServers[0, 0] + nhsuff + ".nicehash.com:3371 -u1 " + username +
-                cmd = $"-a {AlgoName} -o stratum+tcp://grincuckaroo29." + Form_Main.myServers[0, 0] + ".nicehash.com:3371 -u " + username +
-                    $" -o1 stratum+tcp://grincuckaroo29." + Form_Main.myServers[1, 0] + ".nicehash.com:3371 -u1 " + username +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckarood29))
-            {
-                cmd = $"-a {AlgoName} -o stratum+tcp://grincuckarood29." + Form_Main.myServers[0, 0] + ".nicehash.com:3377 -u " + username +
-                    $" -o1 stratum+tcp://grincuckarood29." + Form_Main.myServers[1, 0] + ".nicehash.com:3377 -u1 " + username +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner" +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://mwc.2miners.com:1111 -u 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.nbminer -o1 stratum+tcp://grincuckatoo31." + Form_Main.myServers[0, 0] + ".nicehash.com:3372 -u1 " + username +
-                    $" -o2 stratum+tcp://grincuckatoo31." + Form_Main.myServers[1, 0] + ".nicehash.com:3372 -u2 " + username +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://mwc.2miners.com:1111") + " -u 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.nbminer" +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://grin.2miners.com:3030 -u grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.nbminer -o1 stratum+tcp://grincuckatoo32." + Form_Main.myServers[0, 0] + ".nicehash.com:3383 -u1 " + username +
-                    $" -o2 stratum+tcp://grincuckatoo32." + Form_Main.myServers[1, 0] + ".nicehash.com:3383 -u2 " + username +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030") + " -u grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.nbminer" +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://ae.2miners.com:4040 -u ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.nbminer -o1 stratum+tcp://cuckoocycle." + Form_Main.myServers[0, 0] + ".nicehash.com:3376 -u1 " + username +
-                    $" -o2 stratum+tcp://cuckoocycle." + Form_Main.myServers[1, 0] + ".nicehash.com:3376 -u2 " + username +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040") + " -u ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.nbminer" +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            /*
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Cuckaroo29BFC))
-            {
-                cmd = $"-a {AlgoName} -o stratum+tcp://bfc.f2pool.com:4900 -u angelbbs.nbminer -o1 stratum+tcp://cuckaroo29bfc." + Form_Main.myServers[0, 0] + ".nicehash.com:3386 -u1 " + username +
-                    $" -o2 stratum+tcp://cuckaroo29bfc." + Form_Main.myServers[1, 0] + ".nicehash.com:3386 -u2 " + username +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            */
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://rvn.2miners.com:6060 -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.nbminer " +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
             {
-                cmd = $"-a {AlgoName} -o stratum+ssl://beam.2miners.com:5252 -u 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.nbminer " +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+ssl://beam.2miners.com:5252") + " -u 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://pool.woolypooly.com:3094 -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.nbminer " +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3094") + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                cmd = $"-a {AlgoName} -o stratum+tcp://pool.woolypooly.com:3100 -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.nbminer " +
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.nbminer " +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
             _benchmarkTimeWait = time;
             return cmd;
-            // return GetStartCommand(url, btc, worker);
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
@@ -499,11 +456,5 @@ namespace NiceHashMiner.Miners
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
-        /*
-        protected override bool BenchmarkParseLine(string outdata)
-        {
-            return false;
-        }
-        */
     }
 }

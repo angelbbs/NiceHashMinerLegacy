@@ -60,6 +60,9 @@ namespace NiceHashMiner.Utils
 
         public static string DNStoIP(string IPName)
         {
+            string ret = Links.CheckDNS("stratum+tcp://" + IPName, true).Replace("stratum+tcp://", "");
+            return ret;
+            /*
             try
             {
                 var ASCII = new System.Text.ASCIIEncoding();
@@ -77,6 +80,7 @@ namespace NiceHashMiner.Utils
                 //Console.WriteLine("Exception: " + e.ToString());
             }
             return "";
+            */
         }
 
         public static int ConnectToServer(int s)

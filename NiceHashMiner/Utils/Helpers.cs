@@ -246,17 +246,12 @@ namespace NiceHashMiner
             {
                 case AlgorithmType.ZHash:
                 case AlgorithmType.ZelHash:
-                case AlgorithmType.BeamV2:
                 case AlgorithmType.BeamV3:
                     unit = "Sol/s ";
                     break;
-                case AlgorithmType.GrinCuckarood29:
-                case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
                 case AlgorithmType.GrinCuckatoo32:
                 case AlgorithmType.CuckooCycle:
-                case AlgorithmType.CuckaRooz29:
-                case AlgorithmType.Cuckaroom:
                     unit = "G/s ";
                     break;
                 default:

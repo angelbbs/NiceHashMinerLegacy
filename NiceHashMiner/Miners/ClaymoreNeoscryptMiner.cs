@@ -2,6 +2,7 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NiceHashMiner.Miners
@@ -17,16 +18,14 @@ namespace NiceHashMiner.Miners
         public override void Start(string url, string btcAdress, string worker)
         {
             string username = GetUsername(btcAdress, worker);
-            //url = Globals.GetLocationUrl(AlgorithmType.NeoScrypt, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], NhmConectionType.STRATUM_TCP);
             url = url.Replace("stratum+ssl", "stratum+tcp").Replace("33341", "3341");
-            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -pool " + url +
+            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -pool " + Links.CheckDNS(url) +
                                   " -wal " + username + " -psw x -dbg -1 -ftime 10 -retrydelay 5";
-            string nhsuff = "";
 
-            String epools = String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[0, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[1, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[2, 0], nhsuff, username) + "\n"
-               + String.Format("POOL: stratum+tcp://neoscrypt.{0}{1}.nicehash.com:3341, WALLET: {2}, PSW: x", Form_Main.myServers[3, 0], nhsuff, username) + "\n";
+            List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
+            String epools = String.Format("POOL: {0}:3341, WALLET: {1}, PSW: x", ResolvedServers[1], username) + "\n"
+               + String.Format("POOL: {0}:3341, WALLET: {1}, PSW: x", ResolvedServers[2], username) + "\n"
+               + String.Format("POOL: {0}:3341, WALLET: {1}, PSW: x", ResolvedServers[0], username) + "\n";
 
             FileStream fs = new FileStream("miners\\claymore_neoscrypt\\pools.txt", FileMode.Create, FileAccess.Write);
             StreamWriter w = new StreamWriter(fs);
@@ -52,7 +51,7 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
 
-            return $" {GetDevicesCommandString()} -mport -{ApiPort} -pool stratum+tcp://neoscrypt.eu.mine.zpool.ca:4233 -wal 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -psw c=BTC -logfile {GetLogFileName()}";
+            return $" {GetDevicesCommandString()} -mport -{ApiPort} -pool " + Links.CheckDNS("stratum+tcp://neoscrypt.eu.mine.zpool.ca") + ":4233 -wal 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -psw c=BTC -logfile " + GetLogFileName();
         }
 
     }

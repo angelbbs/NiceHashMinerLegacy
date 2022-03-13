@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,14 +33,14 @@ namespace NiceHashMiner
         public static string exchangeRateList = ("https://api2.nicehash.com/main/api/v2/exchangeRate/list/");
         public static string miningStats = ("https://www.nicehash.com/my/mining/stats/");
         public static string githubReleases = ("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
-        public static string githubLatestRelease => CheckDNS("https://api.github.com0/repos/angelbbs/NiceHashMinerLegacy/releases/latest");
+        public static string githubLatestRelease => CheckDNS("https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest");
         public static string githubDownload => CheckDNS("https://github.com0/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_");
         public static string gitlabReleases = ("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
         public static string gitlabRepositoryTags => CheckDNS("https://gitlab.com/api/v4/projects/26404146/repository/tags");
         public static string gitlabLastRelease => CheckDNS("https://gitlab.com/api/v4/projects/26404146/releases/");//?
         
         //dns cache
-        public static string CheckDNS(string domain)
+        public static string CheckDNS(string domain, bool forceIP = false)
         {
             /*
             Uri test = new Uri(domain);
@@ -51,94 +52,154 @@ namespace NiceHashMiner
             return doh;
             */
             bool resolveError = false;
+            string domainName = "";
+            string prefix = "";
+            string path = "";
+            string port = ":" + new Uri(domain).Port.ToString();
+            if (port.Contains("-") || 
+                (port.Contains("443") && domain.Contains("https")) ||
+                (port.Contains("80") && domain.Equals("http")) 
+                )//костыль. Uri("https://...").Port по умолчанию 443
+            {
+                port = "";
+            }
 
-            string domainName = new Uri(domain).Host;
-            var prefix = domain.Split(':')[0] + "://";
-            var path = new Uri(domain).LocalPath;
-            if (NiceHashSocket.IsIPAddress(domainName))
+            try
             {
-                return domain;
-            }
-            List<string> ResolvedIPsList = new List<string>();
-            var heserver = GetHostEntry(domainName);
-            if (heserver == null)
-            {
-                resolveError = true;
-                Helpers.ConsolePrint("CheckDNS", "******** Resolve error " + domainName);
-            }
-            else
-            {
-                foreach (IPAddress curAdd in heserver.AddressList)
-                {
-                    ResolvedIPsList.Add(curAdd.ToString());
-                }
-                //resolveError = true;//tesing
-            }
-            if (!File.Exists("configs\\dnscache.json"))
-            {
-                File.WriteAllBytes("configs\\dnscache.json", Properties.Resources.dnscache);
-            }
-            DNSCache file = null;
-            file = JsonConvert.DeserializeObject<DNSCache>(File.ReadAllText("configs\\dnscache.json"), Globals.JsonSettings);
-            
-            List<IPList> _domains = file.domains;
-            var _ipList = new IPList();
-            _ipList.domainName = domainName;
-            if (_domains.Exists(item => item.domainName == domainName))
-            {
-                Helpers.ConsolePrint("CheckDNS", "******** Exist " + domainName);
-                foreach (var d in _domains)
-                {
-                    if (d.domainName.Equals(domainName))
-                    {
-                        _ipList.IPs = d.IPs;
-                    }
-                }
+                domainName = new Uri(domain).Host;
+                prefix = domain.Split(':')[0] + "://";
 
-                if (resolveError)
+                if (new Uri(domain).LocalPath.Length > 1 || new Uri(domain).Query.Length > 1)
                 {
-                    Random random = new Random((int)DateTime.Now.Ticks);
-                    string ip = _ipList.IPs[random.Next(_ipList.IPs.Count)].ToString();
-                    Helpers.ConsolePrint("CheckDNS", "******** Return: " + prefix + ip + path);
-                    return prefix + ip + path;
-                }
-                foreach (string _ip in ResolvedIPsList)
-                {
-                    if (!_ipList.IPs.Contains(_ip))//обновляем
-                    {
-                        _ipList.Updated = DateTime.Now;
-                        _ipList.IPs = ResolvedIPsList;
-                        _ipList.domainName = domainName;
-                        int index = _domains.IndexOf(_domains.Where(n => n.domainName == domainName).FirstOrDefault());
-                        _domains[index] = _ipList;
-                    }
-                }
-            }
-            else
-            {
-                if (!resolveError)
-                {
-                    var ips = new List<string>();
-                    _ipList.Updated = DateTime.Now;
-                    _ipList.IPs = ResolvedIPsList;
-                    _ipList.domainName = domainName;
-                    _domains.Add(_ipList);
-                } else
+                    path = new Uri(domain).LocalPath + new Uri(domain).Query;
+                } 
+
+                if (NiceHashSocket.IsIPAddress(domainName))
                 {
                     return domain;
                 }
-            }
+                List<string> ResolvedIPsList = new List<string>();
+                var heserver = GetHostEntry(domainName);
+                if (heserver == null)
+                {
+                    resolveError = true;
+                    Helpers.ConsolePrint("CheckDNS", "******** Resolve error " + domainName);
+                }
+                else
+                {
+                    
+                    foreach (IPAddress curAdd in heserver.AddressList)
+                    {
+                        ResolvedIPsList.Add(curAdd.ToString());
+                    }
+                    
+                    //resolveError = true;//tesing
+                }
+                if (!File.Exists("configs\\dnscache.json"))
+                {
+                    File.WriteAllBytes("configs\\dnscache.json", Properties.Resources.dnscache);
+                }
+                DNSCache file = null;
+                try
+                {
+                    file = JsonConvert.DeserializeObject<DNSCache>(File.ReadAllText("configs\\dnscache.json"), Globals.JsonSettings);
+                } catch (Exception)
+                {
+                    File.WriteAllBytes("configs\\dnscache.json", Properties.Resources.dnscache);
+                }
+                file = JsonConvert.DeserializeObject<DNSCache>(File.ReadAllText("configs\\dnscache.json"), Globals.JsonSettings);
 
-            var _DNSCache = new DNSCache
+                List<IPList> _domains = file.domains;
+                var _ipList = new IPList();
+                _ipList.domainName = domainName;
+                if (_domains.Exists(item => item.domainName == domainName))
+                {
+                    //Helpers.ConsolePrint("CheckDNS", "******** Exist " + domainName);
+                    foreach (var d in _domains)
+                    {
+                        if (d.domainName.Equals(domainName))
+                        {
+                            _ipList.IPs = d.IPs;
+                        }
+                    }
+
+                    if (resolveError || forceIP)
+                    {
+                        Random random = new Random((int)DateTime.Now.Ticks);
+                        string ip = _ipList.IPs[random.Next(_ipList.IPs.Count)].ToString();
+                        if (resolveError)
+                        {
+                            Helpers.ConsolePrint("CheckDNS", "******** Return dnscache (" + domainName + "): " + prefix + ip + path);
+                        }
+                        return prefix + ip + path + port;
+                    }
+                    foreach (string _ip in ResolvedIPsList)
+                    {
+                        if (!_ipList.IPs.Contains(_ip))//обновляем
+                        {
+                            _ipList.Updated = DateTime.Now;
+                            _ipList.IPs = ResolvedIPsList;
+                            _ipList.domainName = domainName;
+                            int index = _domains.IndexOf(_domains.Where(n => n.domainName == domainName).FirstOrDefault());
+                            _domains[index] = _ipList;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!resolveError)
+                    {
+                        var ips = new List<string>();
+                        _ipList.Updated = DateTime.Now;
+                        _ipList.IPs = ResolvedIPsList;
+                        _ipList.domainName = domainName;
+                        _domains.Add(_ipList);
+                    }
+                    else
+                    {
+                        return domain;
+                    }
+                }
+
+                var _DNSCache = new DNSCache
+                {
+                    TimeCached = DateTime.Now,
+                    domains = _domains
+                };
+                var s = JsonConvert.SerializeObject(_DNSCache, Formatting.Indented);
+                File.WriteAllText("configs\\dnscache.json", s);
+            } catch (Exception ex)
             {
-                TimeCached = DateTime.Now,
-                domains = _domains
-            };
-            var s = JsonConvert.SerializeObject(_DNSCache, Formatting.Indented);
-            File.WriteAllText("configs\\dnscache.json", s);
-            return prefix + domainName + path;
+                Helpers.ConsolePrint("CheckDNS", ex.ToString());
+            }
+            return prefix + domainName + path + port;
         }
 
+        public static void GetResolvedIP()
+        {
+            //возврат IP сервера, который будет использоваться в failover майнеров
+            //****************
+            CheckDNS("https://nicehash.com");
+            List<string> algos = Enum.GetNames(typeof(AlgorithmType)).ToList();
+            Array algosN = Enum.GetValues(typeof(AlgorithmType));
+
+            for (int an = 8; an < 100; an++)
+            {
+                if (!an.ToString().Equals(((AlgorithmType)an).ToString()) && !((AlgorithmType)an).ToString().Contains("UNUSED"))
+                {
+                    foreach (var location in Globals.MiningLocation)
+                    {
+                        if (!location.Contains("Auto"))
+                        {
+                            string algo = ((AlgorithmType)an).ToString().ToLower().Replace("randomx", "randomxmonero");
+                            string domain = "stratum+tcp://" + algo + "." + location + ".nicehash.com";
+                            CheckDNS(domain);
+                        }
+                    }
+                }
+
+            }
+        }
         public static IPHostEntry GetHostEntry(string host)
         {
             IPHostEntry ret = null;

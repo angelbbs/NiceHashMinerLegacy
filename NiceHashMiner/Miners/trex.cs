@@ -5,6 +5,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -60,14 +61,20 @@ namespace NiceHashMiner.Miners
                 }
             }
 
+            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
+            List<string> ResolvedServersEth = MiningSession.GetResolvedServers("daggerhashimoto");
+            List<string> ResolvedServersAutolykos = MiningSession.GetResolvedServers("autolykos");
+            List<string> ResolvedServersKAWPOW = MiningSession.GetResolvedServers("kawpow");
+            List<string> ResolvedServersOctopus = MiningSession.GetResolvedServers("octopus");
+
             if (!_isDual)
             {
                 LastCommandLine = algo +
-                " -o " + url + " -u " + username + " -p x " +
-                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum2+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
+                " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[1] + ":" + port + " " + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[2] + ":" + port + " " + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[0] + ":" + port + " " + " -u " + username + " -p x " +
+
                 apiBind +
                 " -d " + GetDevicesCommandString() + " --no-watchdog " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -83,16 +90,14 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     LastCommandLine = "-a ethash --lhr-algo autolykos2" +
-                    " -o stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://autolykos." + locations + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[0, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[1, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[2, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://autolykos." + Form_Main.myServers[3, 0] + ".nicehash.com:3390" + " --user2 " + username + " --pass2 x " +
+                    " -o " + Links.CheckDNS("stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353") + " -u " + username + " -p x " +
+                    " --url2 " + Links.CheckDNS("stratum2+tcp://autolykos." + locations + ".nicehash.com:3390") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[0] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersAutolykos[0] + ":3390" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[1] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersAutolykos[1] + ":3390" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[2] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersAutolykos[2] + ":3390" + " --user2 " + username + " --pass2 x " +
                     apiBind +
                     " -d " + GetDevicesCommandString() + " --no-watchdog " +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -101,16 +106,14 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
                     LastCommandLine = "-a ethash --lhr-algo kawpow" +
-                        " -o stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://kawpow." + locations + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[0, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[1, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[2, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum2+tcp://kawpow." + Form_Main.myServers[3, 0] + ".nicehash.com:3385" + " --user2 " + username + " --pass2 x " +
+                    " -o " + Links.CheckDNS("stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353") + " -u " + username + " -p x " +
+                    " --url2 " + Links.CheckDNS("stratum2+tcp://kawpow." + locations + ".nicehash.com:3385") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[1] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersKAWPOW[0] + ":3385" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[2] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersKAWPOW[1] + ":3385" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[0] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersKAWPOW[2] + ":3385" + " --user2 " + username + " --pass2 x " +
                     apiBind +
                     " -d " + GetDevicesCommandString() + " --no-watchdog " +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -119,16 +122,14 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
                 {
                     LastCommandLine = "-a ethash --lhr-algo octopus" +
-                        " -o stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum+tcp://octopus." + locations + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[0, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[0, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[1, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[1, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[2, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[2, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
-                    " -o stratum2+tcp://daggerhashimoto." + Form_Main.myServers[3, 0] + ".nicehash.com:3353" + " -u " + username + " -p x " +
-                    " --url2 stratum+tcp://octopus." + Form_Main.myServers[3, 0] + ".nicehash.com:3389" + " --user2 " + username + " --pass2 x " +
+                    " -o " + Links.CheckDNS("stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353") + " -u " + username + " -p x " +
+                    " --url2 " + Links.CheckDNS("stratum+tcp://octopus." + locations + ".nicehash.com:3389") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[1] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersOctopus[0] + ":3389" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[2] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersOctopus[1] + ":3389" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[0] + ":3353" + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersOctopus[2] + ":3389" + " --user2 " + username + " --pass2 x " +
                     apiBind +
                     " -d " + GetDevicesCommandString() + " --no-watchdog " +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -202,8 +203,8 @@ namespace NiceHashMiner.Miners
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
                     commandLine = "--algo kawpow" +
-                     " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trex" + " -p x " +
-                     " -o " + url + " -u " + username + " -p x " +
+                     " -o " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX" + " -p x -w trex" +
+                     " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
                                       DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
@@ -214,8 +215,8 @@ namespace NiceHashMiner.Miners
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
                     commandLine = "--algo ethash" +
-                     " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trex" + " -p x " +
-                     " -o " + url + " -u " + username + " -p x " +
+                     " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trex" +
+                     " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
                                       DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
@@ -226,8 +227,8 @@ namespace NiceHashMiner.Miners
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
                 {
                     commandLine = "--algo octopus" +
-                     " -o stratum+tcp://pool.woolypooly.com:3094" + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trex" + " -p x " +
-                     " -o stratum2+tcp://octopus.eu-west.nicehash.com:3389 -u " + username + " -p x " +
+                     " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3094") + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd" + " -p x -w trex" +
+                     " -o " + Links.CheckDNS("stratum2+tcp://octopus.eu-west.nicehash.com:3389") + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
                                       DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
@@ -238,8 +239,8 @@ namespace NiceHashMiner.Miners
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     commandLine = "--algo autolykos2" +
-                     " -o stratum+tcp://pool.woolypooly.com:3100" + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trex" + " -p x " +
-                     " -o " + url + " -u " + username + " -p x " +
+                     " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt" + " -p x -w trex" +
+                     " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
                                       DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
@@ -255,8 +256,8 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     commandLine = "-a ethash --lhr-algo autolykos2" +
-                    " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
-                    " --url2 stratum+tcp://pool.woolypooly.com:3100 --user2 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trexdual --pass2 x " +
+                    " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
+                    " --url2 " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " --user2 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trexdual --pass2 x" +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                     " -d " + GetDevicesCommandString() +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -266,8 +267,8 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
                     commandLine = "-a ethash --lhr-algo kawpow" +
-                    " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
-                    " --url2 stratum+tcp://rvn.2miners.com:6060 --user2 RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trexdual --pass2 x " +
+                    " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
+                    " --url2 " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060") + " --user2 RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trexdual --pass2 x" +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                     " -d " + GetDevicesCommandString() +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -277,8 +278,8 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
                 {
                     commandLine = "-a ethash --lhr-algo octopus" +
-                    " -o stratum+tcp://eu1.ethermine.org:4444" + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.trexdual" + " -p x " +
-                    " --url2 stratum+tcp://pool.woolypooly.com:3094 --user2 cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trexdual --pass2 x " +
+                    " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
+                    " --url2 " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3094") + " --user2 cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trexdual --pass2 x" +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                     " -d " + GetDevicesCommandString() +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

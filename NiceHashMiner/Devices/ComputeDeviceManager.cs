@@ -380,6 +380,7 @@ namespace NiceHashMiner.Devices
 
             public static void QueryDevices(IMessageNotifier messageNotifier)
             {
+                SetValueAndMsg(11, International.GetText("Compute_Device_Query_Manager_VideoControllers"));
                 WindowsDisplayAdapters.QueryVideoControllers();
                 Helpers.ConsolePrint(Tag, "HasNvidiaVideoController: " + WindowsDisplayAdapters.HasNvidiaVideoController());
                 if (WindowsDisplayAdapters.HasNvidiaVideoController())
@@ -440,24 +441,19 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    SetValueAndMsg(2, International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
+                    SetValueAndMsg(12, International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
                     Nvidia.QueryCudaDevices();
                 }
-                // OpenCL and AMD
+
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
-                    //SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
                 }
                 else
                 {
-                    // #3 OpenCL
-                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
-                    SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
+                    SetValueAndMsg(13, International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
                     OpenCL.QueryOpenCLDevices();
-                    // #4 AMD query AMD from OpenCL devices, get serial and add devices
-                    //ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
-                    SetValueAndMsg(3, International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+                    SetValueAndMsg(14, International.GetText("Compute_Device_Query_Manager_AMD_Query"));
                     var amd = new AmdQuery(AvaliableVideoControllers);
                     AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
                 }

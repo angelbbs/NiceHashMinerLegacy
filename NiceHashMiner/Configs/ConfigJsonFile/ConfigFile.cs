@@ -114,7 +114,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
 
             // get the bytes
@@ -132,16 +132,16 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
-            
+
             // replace the contents
             try
             {
                 File.Replace(tempPath, path, backup);
             } catch (Exception ex)
             {
-                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
         }
 

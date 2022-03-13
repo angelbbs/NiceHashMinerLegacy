@@ -803,6 +803,8 @@ namespace NiceHashMiner
                     benchmarkHandle.StartInfo.EnvironmentVariables[envName] = envValue;
                 }
             }
+            //string cl = Directory.GetCurrentDirectory() + "\\" + benchmarkHandle.StartInfo.FileName;
+            //benchmarkHandle.StartInfo.FileName = cl;
 
             benchmarkHandle.StartInfo.Arguments = commandLine;
             benchmarkHandle.StartInfo.UseShellExecute = false;

@@ -5,6 +5,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -51,14 +52,13 @@ namespace NiceHashMiner.Miners
             algo = "--algo=" + MiningSetup.MinerName;
             apiBind = " --api-bind-http=" + ApiPort;
 
+            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             LastCommandLine = algo +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --userpass=" + username + ":x" + apiBind +
+                " --url=" + Links.CheckDNS(url) + " --userpass=" + username + ":x" +
+                " --url=" + ResolvedServers[1] + ":" + port + " " + " --userpass=" + username + ":x" +
+                " --url=" + ResolvedServers[2] + ":" + port + " " + " --userpass=" + username + ":x" +
+                " --url=" + ResolvedServers[0] + ":" + port + " " + " --userpass=" + username + ":x" +
+                apiBind +
                 " --devices " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
             ProcessHandle = _Start();
@@ -86,13 +86,8 @@ namespace NiceHashMiner.Miners
             {
                 _benchmarkTimeWait = 180;
                 commandLine = " --algo=" + algorithm.AlgorithmName +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://x16r.eu.mine.zpool.ca:3636" + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
+                " --url=" + Links.CheckDNS(url) + " --userpass=" + username + ":x" +
+                " --url=" + Links.CheckDNS("stratum+tcp://x16r.eu.mine.zpool.ca:3636") + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
                               timeLimit + " --api-bind-http=" + ApiPort + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
@@ -104,13 +99,8 @@ namespace NiceHashMiner.Miners
             {
                 _benchmarkTimeWait = time;
                 commandLine = " --algo=" + algorithm.AlgorithmName +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " " + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " --userpass=" + username + ":x" +
-                " --url=" + url + " --userpass=" + username + ":x" +
-                " --url=stratum+tcp://x16rv2.na.mine.zpool.ca:3637" + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
+                " --url=" + Links.CheckDNS(url) + " --userpass=" + username + ":x" +
+                " --url=" + Links.CheckDNS("stratum+tcp://x16rv2.na.mine.zpool.ca:3637") + " --userpass=1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2:c=BTC " +
                               timeLimit + " --api-bind-http=" + ApiPort + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,
@@ -121,12 +111,8 @@ namespace NiceHashMiner.Miners
             {
                 _benchmarkTimeWait = time;
                 commandLine = " -a kawpow" +
-                " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.Z-Enemy" +
-                " -o " + url + " -u " + username + " -p x" +
-                " -o stratum+tcp://" + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                " -o stratum+tcp://" + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                " -o stratum+tcp://" + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
-                " -o stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " -u " + username + " -p x" +
+                " -o " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.Z-Enemy" +
+                " -o " + Links.CheckDNS(url) + " -u " + username + " -p x" +
                               timeLimit + " --api-bind-http=" + ApiPort + " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                   MiningSetup,

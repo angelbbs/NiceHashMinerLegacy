@@ -47,7 +47,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             },
             */
-            
+
             {
                 MinerBaseType.Nanominer,
                 new List<Algorithm>()
@@ -107,15 +107,15 @@ namespace NiceHashMiner.Devices.Algorithms
 
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
-                                ExtraLaunchParameters = "--gpu-boost 3"
+                                //ExtraLaunchParameters = "--gpu-boost 3"
                             },
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
-                                ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
+                                //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
                             {
-                                ExtraLaunchParameters = "--gpu-boost 3"
+                                //ExtraLaunchParameters = "--gpu-boost 3"
                             }
 
                         }

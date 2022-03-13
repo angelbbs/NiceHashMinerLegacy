@@ -386,6 +386,7 @@
     "ComputeDevice_UNKNOWN_VENDOR_REPLACE": "V_ID_{0}",
     "ComputeDevice_Get_With_UUID_NONE": "НЕТ",
     "Form_Main_x64_Support_Only": "Miner Legacy Fork Fix поддерживает только платформы x64. Вы не сможете использовать Miner Legacy Fork Fix на x86",
+    "Compute_Device_Query_Manager_VideoControllers": "Проверка GPU",
     "Compute_Device_Query_Manager_CUDA_Query": "Проверка устройств NVIDIA",
     "Compute_Device_Query_Manager_OpenCL_Query": "Проверка устройств OpenCL",
     "Compute_Device_Query_Manager_AMD_Query": "Проверка GPU AMD OpenCL",

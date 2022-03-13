@@ -686,6 +686,7 @@ namespace NiceHashMiner
 
             // Internals Init
             // TODO add loading step
+            //_loadingScreen.SetValueAndMsg(3, "Init...");
             MinersSettingsManager.Init();
 
             if (!Helpers.Is45NetOrHigher())
@@ -708,19 +709,20 @@ namespace NiceHashMiner
                 return;
             }
 
+
             _loadingScreen.Show();
-            _loadingScreen.SetValueAndMsg(1, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
             // Query Available ComputeDevices
-            _loadingScreen.SetValueAndMsg(2, International.GetText("Form_Main_loadtext_CPU"));
-            ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//step 2,3
+            _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_CPU"));
+            ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//10-15
 
             _isDeviceDetectionInitialized = true;
 
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
-            _loadingScreen.SetValueAndMsg(4, International.GetText("Form_Main_loadtext_SaveConfig"));
+            _loadingScreen.SetValueAndMsg(15, International.GetText("Form_Main_loadtext_SaveConfig"));
 
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
@@ -729,17 +731,19 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
-                _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_MSI_AB"));
+                _loadingScreen.SetValueAndMsg(20, International.GetText("Form_Main_loadtext_MSI_AB"));
                 MSIAfterburner.MSIAfterburnerRUN();
             }
             flowLayoutPanelRates.Visible = true;
 
+            /*
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 this.Update();
                 Thread.Sleep(100);
-                _loadingScreen.SetValueAndMsg(6, International.GetText("Form_Main_loadtext_MSI_AB"));
+                _loadingScreen.SetValueAndMsg(19, International.GetText("Form_Main_loadtext_MSI_AB"));
             }
+            */
             new Task(() => Firewall.AddToFirewall()).Start();
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -791,28 +795,51 @@ namespace NiceHashMiner
                     }
                 }
             }
-            _loadingScreen.SetValueAndMsg(7, "Checking servers locations");
+            _loadingScreen.SetValueAndMsg(30, "Checking servers locations");
+            //****************
+            Links.CheckDNS("https://nicehash.com");
+            List<string> algos = Enum.GetNames(typeof(AlgorithmType)).ToList();
+            Array algosN = Enum.GetValues(typeof(AlgorithmType));
+
+            int locations = 0;
+            foreach (var location in Globals.MiningLocation)
+            {
+                if (location.Contains("Auto")) continue;
+                for (int an = 8; an < (int)Enum.GetValues(typeof(AlgorithmType)).Cast<AlgorithmType>().Max(); an++)
+                {
+                    if (!an.ToString().Equals(((AlgorithmType)an).ToString()) && !((AlgorithmType)an).ToString().Contains("UNUSED"))
+                    {
+                        string algo = ((AlgorithmType)an).ToString().ToLower();
+                        algo = algo.Replace("randomx", "randomxmonero");
+                        string domain = "stratum+tcp://" + algo + "." + location + ".nicehash.com";
+                        _loadingScreen.SetValueAndMsg(30 + locations, "Checking servers locations" + ": " + location + ".nicehash.com");
+                        Links.CheckDNS(domain);
+                    }
+                }
+                locations = locations + 5;
+            }
+
             if (ConfigManager.GeneralConfig.ServiceLocation == 4)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
             }
 
-            _loadingScreen.SetValueAndMsg(8, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
+            _loadingScreen.SetValueAndMsg(55, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
-            _loadingScreen.SetValueAndMsg(9, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
+            _loadingScreen.SetValueAndMsg(65, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             //new Task(() => CheckUpdates()).Start();
             CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
 
             label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
             label_NH_ConnectStatus.Update();
-            _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            _loadingScreen.SetValueAndMsg(75, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
             Thread.Sleep(500);
 
-            _loadingScreen.SetValueAndMsg(11, International.GetText("Form_Main_loadtext_CheckMiners"));
+            _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_CheckMiners"));
             Thread.Sleep(10);
 
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
@@ -881,7 +908,7 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
-                _loadingScreen.SetValueAndMsg(12, "Check MSI Afterburner");
+                _loadingScreen.SetValueAndMsg(95, "Check MSI Afterburner");
                 int countab = 0;
                 do
                 {
@@ -899,7 +926,7 @@ namespace NiceHashMiner
 
             }
 
-            _loadingScreen.SetValueAndMsg(13, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
+            _loadingScreen.SetValueAndMsg(100, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
             Thread.Sleep(300);
 
@@ -1206,7 +1233,7 @@ namespace NiceHashMiner
             this.Update();
             this.Refresh();
             // general loading indicator
-            const int totalLoadSteps = 13;
+            const int totalLoadSteps = 100;
 
             _loadingScreen = new Form_Loading(this,
                 International.GetText("Form_Loading_label_LoadingText"),
@@ -1262,6 +1289,7 @@ namespace NiceHashMiner
                 NiceHashStats.GetRigProfit();
             }
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
+            _loadingScreen.SetValueAndMsg(1, "Starting...");
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
@@ -1327,22 +1355,6 @@ namespace NiceHashMiner
 
             if (_updateTimerCount >= period)
             {
-                /*
-                if (ConfigManager.GeneralConfig.PeriodicalReconnect)
-                {
-                    try
-                    {
-                        if (NiceHashSocket._webSocket != null)
-                        {
-                            Helpers.ConsolePrint("SOCKET", "Periodical reconnect");
-                            NiceHashSocket._webSocket.Close();
-                        }
-                    } catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("SOCKET", "Periodical reconnect error: " + ex.ToString());
-                    }
-                }
-                */
                 _updateTimerCount = 0;
                 bool newver = false;
                 try
@@ -1558,6 +1570,7 @@ public static void CloseChilds(Process parentId)
         */
         public bool CheckGithub()
         {
+            //Form_Main.currentVersion = 0;//testing проверка загрузки программы
             Helpers.ConsolePrint("GITHUB", "Check new version");
             Helpers.ConsolePrint("GITHUB", "Current version: " + Form_Main.currentVersion.ToString());
             Helpers.ConsolePrint("GITHUB", "Current build: " + Form_Main.currentBuild.ToString());

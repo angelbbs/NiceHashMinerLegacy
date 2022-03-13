@@ -90,6 +90,7 @@ namespace NiceHashMiner.Miners
             string cfgFile = "";
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
+                List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
                 try
                 {
                     if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
@@ -109,14 +110,14 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
-                   + String.Format("pool1 = {0}", url) + "\n"
-                   + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[0, 0]) + "\n"
-                   + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[1, 0]) + "\n"
-                   + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[2, 0]) + "\n"
-                   + String.Format("pool5 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[3, 0]) + "\n";
+                   + String.Format("pool1 = {0}", Links.CheckDNS(url).Replace("stratum+tcp://", "")) + ":3353\n"
+                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":3353\n"
+                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":3353\n"
+                   + String.Format("pool4 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":3353\n";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
+                List<string> ResolvedServers = MiningSession.GetResolvedServers("autolykos");
                 try
                 {
                     if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
@@ -136,11 +137,10 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + String.Format("pool1 = {0}", url) + "\n"
-                   + String.Format("pool2 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[0, 0]) + "\n"
-                   + String.Format("pool3 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[1, 0]) + "\n"
-                   + String.Format("pool4 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[2, 0]) + "\n"
-                   + String.Format("pool5 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[3, 0]) + "\n";
+                   + String.Format("pool1 = {0}", Links.CheckDNS(url).Replace("stratum+tcp://", "")) + ":3390\n"
+                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":3390\n"
+                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":3390\n"
+                   + String.Format("pool4 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":3390\n";
             }
             try
             {
@@ -156,6 +156,8 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
+                List<string> ResolvedServersZil = MiningSession.GetResolvedServers("daggerhashimoto");
+                List<string> ResolvedServersAutolykos = MiningSession.GetResolvedServers("autolykos");
                 try
                 {
                     if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
@@ -175,21 +177,19 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + String.Format("pool1 = {0}", url) + "\n"
-                   + String.Format("pool2 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[0, 0]) + "\n"
-                   + String.Format("pool3 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[1, 0]) + "\n"
-                   + String.Format("pool4 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[2, 0]) + "\n"
-                   + String.Format("pool5 = autolykos.{0}.nicehash.com:3390", Form_Main.myServers[3, 0]) + "\n"
-                   + String.Format("[zil]\n")
+                   + String.Format("pool1 = {0}", Links.CheckDNS(url).Replace("stratum+tcp://", "")) + ":3390\n"
+                   + String.Format("pool2 = {0}", ResolvedServersAutolykos[1].Replace("stratum+tcp://", "")) + ":3390\n"
+                   + String.Format("pool3 = {0}", ResolvedServersAutolykos[2].Replace("stratum+tcp://", "")) + ":3390\n"
+                   + String.Format("pool4 = {0}", ResolvedServersAutolykos[0].Replace("stratum+tcp://", "")) + ":3390\n"
+                + String.Format("[zil]\n")
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("zilEpoch = 0\n")
                    //    + String.Format("protocol = JSON-RPC\n")
-                   + String.Format("pool1 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[0, 0]) + "\n"
-                   + String.Format("pool2 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[1, 0]) + "\n"
-                   + String.Format("pool3 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[2, 0]) + "\n"
-                   + String.Format("pool4 = daggerhashimoto.{0}.nicehash.com:3353", Form_Main.myServers[3, 0]) + "\n";
+                   + String.Format("pool2 = {0}", ResolvedServersZil[1].Replace("stratum+tcp://", "")) + ":3353\n"
+                   + String.Format("pool3 = {0}", ResolvedServersZil[2].Replace("stratum+tcp://", "")) + ":3353\n"
+                   + String.Format("pool4 = {0}", ResolvedServersZil[0].Replace("stratum+tcp://", "")) + ":3353\n";
             }
             try
             {
@@ -371,9 +371,9 @@ namespace NiceHashMiner.Miners
                    + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).TrimStart(' ') + (char)10
                    + String.Format("[Ethash]\n")
                    + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
-                   + String.Format("wallet = 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1") + "\n"
+                   + String.Format("wallet = 0x266b27bd794d1A65ab76842ED85B067B415CD505") + "\n"
                    + String.Format("rigName = Nanominer") + "\n"
-                   + String.Format("pool1 = eu1.ethermine.org:4444") + "\n";
+                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "")) + "\n";
 
                 try
                 {
@@ -404,7 +404,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
                    + String.Format("wallet = 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt") + "\n"
                    + String.Format("rigName = Nanominer") + "\n"
-                   + String.Format("pool1 = pool.woolypooly.com:3100") + "\n";
+                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100").Replace("stratum+tcp://", "")) + "\n";
 
                 try
                 {
@@ -434,7 +434,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
                    + String.Format("wallet = 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt") + "\n"
                    + String.Format("rigName = NanominerZil") + "\n"
-                   + String.Format("pool1 = pool.woolypooly.com:3100") + "\n";
+                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100").Replace("stratum+tcp://", "")) + "\n";
 
                 try
                 {
@@ -459,7 +459,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
                    + String.Format("wallet = angelbbs") + "\n"
                    + String.Format("rigName = NanominerZil") + "\n"
-                   + String.Format("pool1 = us-east.ethash-hub.miningpoolhub.com:20565") + "\n";
+                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565").Replace("stratum+tcp://", "")) + "\n";
 
                 try
                 {

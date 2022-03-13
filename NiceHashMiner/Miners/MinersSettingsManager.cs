@@ -152,7 +152,8 @@ namespace NiceHashMiner.Miners
                         MinerPaths.Data.lyclMiner,
                         MinerPaths.Data.ClaymoreNeoscryptMiner,
                         MinerPaths.Data.WildRig,
-                        MinerPaths.Data.GMiner
+                        MinerPaths.Data.GMiner,
+                        MinerPaths.Data.NBMiner
                     };
                     foreach (var minerPath in minerPaths)
                     {

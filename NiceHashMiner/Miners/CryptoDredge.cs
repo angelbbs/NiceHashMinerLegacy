@@ -4,6 +4,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
@@ -25,7 +26,6 @@ namespace NiceHashMiner.Miners
         double speed = 0;
         int count = 0;
         private int _benchmarkTimeWait = 180;
-        private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.CryptoDredge;
         private double _power = 0.0d;
         double _powerUsage = 0;
 
@@ -58,21 +58,13 @@ namespace NiceHashMiner.Miners
                 algo = "--algo kawpow";
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
-            {
-                algo = "--algo aeternity";
-                //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.CryptoDredge;
-                //IsApiReadException = true; //0.18.0 api broken
-            }
-            string nhsuff = "";
-
+            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             LastCommandLine = algo +
-                " -o " + url + " -u " + username + " -p x " +
-                " -o " + alg + "." + Form_Main.myServers[1, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + alg + "." + Form_Main.myServers[2, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + alg + "." + Form_Main.myServers[3, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + alg + "." + Form_Main.myServers[0, 0] + nhsuff + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + url + " -u " + username + " -p x " +
+                " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[1] + ":" + port + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[2] + ":" + port + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[0] + ":" + port + " -u " + username + " -p x " +
+                " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -120,27 +112,13 @@ namespace NiceHashMiner.Miners
             var commandLine = "";
             _benchmarkTimeWait = time;
             TotalCount = _benchmarkTimeWait / 60;
-            /*
-            if (File.Exists("miners\\CryptoDredge\\" + GetLogFileName()))
-                File.Delete("miners\\CryptoDredge\\" + GetLogFileName());
-            */
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-            {
-                commandLine = "--algo x16rv2" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://x16rv2.eu.mine.zpool.ca:3637" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-                //   TotalCount = 3;
-                Total = 0.0d;
-                return commandLine;
-            }
+
+            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 commandLine = "--algo kawpow" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.CryptoDredge" + " -p x" +
+                " -o " + Links.CheckDNS("stratum+tcp://rvn.2miners.com") + ":6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.CryptoDredge" + " -p x" +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -149,26 +127,10 @@ namespace NiceHashMiner.Miners
                 return commandLine;
             }
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
-            {
-                commandLine = "--algo lyra2v3" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-                //  TotalCount = 2;
-                Total = 0.0d;
-                return commandLine;
-            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NeoScrypt))
             {
                 commandLine = "--algo neoscrypt --retry-pause 5" +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://neoscrypt.na.mine.zpool.ca:4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " + //no support for failover pools?
-                " -o stratum+tcp://neoscrypt.jp.mine.zpool.ca:4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " -o stratum+tcp://neoscrypt.sea.mine.zpool.ca:4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " -o stratum+tcp://neoscrypt.eu.mine.zpool.ca:4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
+                " -o " + Links.CheckDNS("stratum+tcp://neoscrypt.eu.mine.zpool.ca") + ":4233" + " -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -176,44 +138,6 @@ namespace NiceHashMiner.Miners
                 Total = 0.0d;
                 return commandLine;
             }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.MTP))
-            {
-                algo = "--algo mtp";
-                commandLine = algo +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://xzc.2miners.com:8080" + " -u aMGfYX8ARy4wKE57fPxkEBcnNuHegDBweE." + ConfigManager.GeneralConfig.WorkerName.Trim() + " -p x " +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-                //   TotalCount = 3;
-                Total = 0.0d;
-                return commandLine;
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
-            {
-                algo = "--algo aeternity";
-                commandLine = algo +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o stratum+tcp://ae.f2pool.com:7898" + " -u ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE." + ConfigManager.GeneralConfig.WorkerName.Trim() + " -p x " +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-                //   TotalCount = 3;
-                Total = 0.0d;
-                return commandLine;
-            }
-            commandLine = algo +
-                " -o " + url + " -u " + username + " -p x " +
-                " --url=stratum+tcp://" + alg + "." + Form_Main.myServers[0, 0] + ".nicehash.com:" + port + " " + " -u " + username + " -p x " +
-                " -o " + alg + "." + Form_Main.myServers[3, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + alg + "." + Form_Main.myServers[2, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + alg + "." + Form_Main.myServers[1, 0] + ".nicehash.com:" + port + " -u " + username + " -p x " +
-                " -o " + url + " -u " + username + " -p x " +
-                apiBind +
-                " -d " + GetDevicesCommandString() + " " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
 
             // TotalCount = 2;
             Total = 0.0d;
