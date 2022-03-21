@@ -175,31 +175,6 @@ namespace NiceHashMiner
             return prefix + domainName + path + port;
         }
 
-        public static void GetResolvedIP()
-        {
-            //возврат IP сервера, который будет использоваться в failover майнеров
-            //****************
-            CheckDNS("https://nicehash.com");
-            List<string> algos = Enum.GetNames(typeof(AlgorithmType)).ToList();
-            Array algosN = Enum.GetValues(typeof(AlgorithmType));
-
-            for (int an = 8; an < 100; an++)
-            {
-                if (!an.ToString().Equals(((AlgorithmType)an).ToString()) && !((AlgorithmType)an).ToString().Contains("UNUSED"))
-                {
-                    foreach (var location in Globals.MiningLocation)
-                    {
-                        if (!location.Contains("Auto"))
-                        {
-                            string algo = ((AlgorithmType)an).ToString().ToLower().Replace("randomx", "randomxmonero");
-                            string domain = "stratum+tcp://" + algo + "." + location + ".nicehash.com";
-                            CheckDNS(domain);
-                        }
-                    }
-                }
-
-            }
-        }
         public static IPHostEntry GetHostEntry(string host)
         {
             IPHostEntry ret = null;

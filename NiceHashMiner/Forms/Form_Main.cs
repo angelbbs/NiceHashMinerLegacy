@@ -343,7 +343,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "44";
+            Text += "45";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -795,7 +795,7 @@ namespace NiceHashMiner
                     }
                 }
             }
-            _loadingScreen.SetValueAndMsg(30, "Checking servers locations");
+            _loadingScreen.SetValueAndMsg(30, "Checking server: nicehash.com");
             //****************
             Links.CheckDNS("https://nicehash.com");
             List<string> algos = Enum.GetNames(typeof(AlgorithmType)).ToList();
@@ -812,7 +812,7 @@ namespace NiceHashMiner
                         string algo = ((AlgorithmType)an).ToString().ToLower();
                         algo = algo.Replace("randomx", "randomxmonero");
                         string domain = "stratum+tcp://" + algo + "." + location + ".nicehash.com";
-                        _loadingScreen.SetValueAndMsg(30 + locations, "Checking servers locations" + ": " + location + ".nicehash.com");
+                        _loadingScreen.SetValueAndMsg(30 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location + ".nicehash.com");
                         Links.CheckDNS(domain);
                     }
                 }

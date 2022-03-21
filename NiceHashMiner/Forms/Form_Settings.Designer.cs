@@ -38,7 +38,6 @@ namespace NiceHashMiner.Forms
             this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
-            this.checkBox_QM_mode = new System.Windows.Forms.CheckBox();
             this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
             this.checkbox_current_actual_profitabilities = new System.Windows.Forms.CheckBox();
             this.textBoxAddAMD = new System.Windows.Forms.TextBox();
@@ -60,6 +59,7 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBox_QM_mode = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableTooltips = new System.Windows.Forms.CheckBox();
             this.labelRestartProgram = new System.Windows.Forms.Label();
             this.comboBoxRestartProgram = new System.Windows.Forms.ComboBox();
@@ -432,17 +432,6 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.Text = "Main:";
             this.groupBox_Main.Enter += new System.EventHandler(this.groupBox_Main_Enter);
             // 
-            // checkBox_QM_mode
-            // 
-            this.checkBox_QM_mode.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_QM_mode.Location = new System.Drawing.Point(7, 272);
-            this.checkBox_QM_mode.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_QM_mode.Name = "checkBox_QM_mode";
-            this.checkBox_QM_mode.Size = new System.Drawing.Size(277, 18);
-            this.checkBox_QM_mode.TabIndex = 387;
-            this.checkBox_QM_mode.Text = "Rig Manager QM mode (partially)";
-            this.checkBox_QM_mode.UseVisualStyleBackColor = true;
-            // 
             // checkBox_Show_Total_Power
             // 
             this.checkBox_Show_Total_Power.AutoSize = true;
@@ -693,6 +682,17 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
+            // 
+            // checkBox_QM_mode
+            // 
+            this.checkBox_QM_mode.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_QM_mode.Location = new System.Drawing.Point(7, 272);
+            this.checkBox_QM_mode.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_QM_mode.Name = "checkBox_QM_mode";
+            this.checkBox_QM_mode.Size = new System.Drawing.Size(277, 18);
+            this.checkBox_QM_mode.TabIndex = 387;
+            this.checkBox_QM_mode.Text = "Rig Manager QM mode (partially)";
+            this.checkBox_QM_mode.UseVisualStyleBackColor = true;
             // 
             // checkBox_DisableTooltips
             // 

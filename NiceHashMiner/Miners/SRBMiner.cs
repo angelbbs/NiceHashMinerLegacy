@@ -50,7 +50,7 @@ namespace NiceHashMiner.Miners
             {
                 var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 string username = GetUsername(btcAddress, worker);
-                string ethurl = url.Replace("autolykos", "daggerhashimoto").Split(':')[1]; ;
+                string ethurl = url.Replace("autolykos", "daggerhashimoto").Split(':')[1]; 
                 string autolykosurl = url.Split(':')[1];
 
                 List<string> ResolvedServersZil = MiningSession.GetResolvedServers("daggerhashimoto");
@@ -60,10 +60,9 @@ namespace NiceHashMiner.Miners
                 {
                     return $" --main-pool-reconnect 2 --disable-cpu --a0-is-zil --multi-algorithm-job-mode 3 " +
                         $"--algorithm ethash;autolykos2 " +
-                        $"--pool {Links.CheckDNS(ethurl)}:3353;{Links.CheckDNS(autolykosurl)}:3390 " +
+                        $"--pool {ResolvedServersZil[0]}:3353;{ResolvedServersAutolykos[0]}:3390 " +
                         $"--pool {ResolvedServersZil[1]}:3353;{ResolvedServersAutolykos[1]}:3390 " +
                         $"--pool {ResolvedServersZil[2]}:3353;{ResolvedServersAutolykos[2]}:3390 " +
-                        $"--pool {ResolvedServersZil[0]}:3353;{ResolvedServersAutolykos[0]}:3390 " +
                         $"--wallet {username};{username}  --password x;x --api-enable --api-port {ApiPort} " +
                    "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -73,7 +72,7 @@ namespace NiceHashMiner.Miners
                     var port = "3380";
                     url = url.Replace("randomx", "randomxmonero");
                     List<string> ResolvedServers = MiningSession.GetResolvedServers(algo);
-                    return $" --algorithm randomx --pool {Links.CheckDNS(url)}:{port} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
+                    return $" --algorithm randomx --pool {Links.CheckDNS(url)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
                    + $" --pool {ResolvedServers[1]}:{port} --wallet {username} "
                    + $" --pool {ResolvedServers[2]}:{port} --wallet {username} "
                    + $" --pool {ResolvedServers[0]}:{port} --wallet {username} ";
@@ -83,7 +82,7 @@ namespace NiceHashMiner.Miners
                 {
                     var port = "3353";
                     List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
-                    return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {Links.CheckDNS(url)}:{port} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+                    return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {Links.CheckDNS(url)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
                    + $" --pool {ResolvedServers[1]}:{port} --wallet {username} --nicehash true "
                    + $" --pool {ResolvedServers[2]}:{port} --wallet {username} --nicehash true "
                    + $" --pool {ResolvedServers[0]}:{port} --wallet {username} --nicehash true "
@@ -93,7 +92,7 @@ namespace NiceHashMiner.Miners
                 {
                     var port = "3390";
                     List<string> ResolvedServers = MiningSession.GetResolvedServers("autolykos");
-                    return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {Links.CheckDNS(url)}:{port} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+                    return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {Links.CheckDNS(url)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
                    + $" --pool {ResolvedServers[1]}:{port} --wallet {username} --nicehash true "
                    + $" --pool {ResolvedServers[2]}:{port} --wallet {username} --nicehash true "
                    + $" --pool {ResolvedServers[0]}:{port} --wallet {username} --nicehash true "

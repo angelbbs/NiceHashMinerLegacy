@@ -109,10 +109,10 @@ namespace NiceHashMiner.Miners
             List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             var ret = GetDevicesCommandString()
                       + sColor + " --pers auto --par=" + algo
-                      + " --url " + username + "@" + Links.CheckDNS(url).Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + url.Split(':')[1]
-                      + " --url " + username + "@" + ResolvedServers[2].Replace("stratum+tcp://", "") + url.Split(':')[1]
-                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + url.Split(':')[1]
+                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
+                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
+                      + " --url " + username + "@" + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
+                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
                       + " --pass=x" + " --telemetry=" + ApiPort;
 
             return ret;

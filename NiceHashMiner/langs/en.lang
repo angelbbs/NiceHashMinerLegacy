@@ -67,6 +67,7 @@
         "Form_Main_loadtext_SetWindowsErrorReporting": "Setting Windows error reporting...",
         "Form_Main_loadtext_NVIDIAP0State": "Changing all supported NVIDIA GPUs to P0 state...",
         "Form_Main_loadtext_Check_VC_redistributable": "Check Visual C++ redistributable…",
+	"Form_Main_loadtext_Checking_servers_locations": "Checking server",
 
     "Form_Main_device_hashrate": "Speed",
     "Form_Main_device_temp": "Temp",

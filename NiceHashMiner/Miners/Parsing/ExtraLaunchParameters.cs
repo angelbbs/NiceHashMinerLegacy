@@ -545,6 +545,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Phoenix_mvddc", "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_daglim", "-daglim", "-daglim", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_rxboost", "-rxboost", "-rxboost", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Phoenix_lhr", "-lhr", "-lhr", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Phoenix_minrigspeed", "-minrigspeed", "-minrigspeed", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("Phoenix_gsi", "-gsi", "-gsi", "", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("Phoenix_log", "-log", "-log", "", MinerOptionFlagType.SingleParam, ""),

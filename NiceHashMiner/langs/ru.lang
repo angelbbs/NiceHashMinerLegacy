@@ -67,6 +67,7 @@
     "Form_Main_loadtext_SetWindowsErrorReporting": "Установка отчета об ошибках Windows…",
     "Form_Main_loadtext_NVIDIAP0State": "Изменение всех поддерживаемых NVIDIA GPU в статус P0…",
     "Form_Main_loadtext_Check_VC_redistributable": "Проверка распространяемого пакета Visual C++…",
+    "Form_Main_loadtext_Checking_servers_locations": "Проверка сервера",
 
     "Form_Main_device_hashrate": "Скорость",
     "Form_Main_device_temp": "Температура",
