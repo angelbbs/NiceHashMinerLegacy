@@ -63,7 +63,7 @@ namespace NiceHashMiner.Forms
 
             double current = Math.Round((double)e.BytesReceived / 1000000, 2);
             double total = Math.Round((double)e.TotalBytesToReceive / 1000000, 2);
-            LoadText.Text = current.ToString("F2") + "MB / " + total.ToString("F2") + "MB" + "   " + International.GetText("MinersDownloadManager_DownloadAverageSpeed") + averageSpeed.ToString("F0") + " KB/s";
+            LoadText.Text = current.ToString("F2") + "MB / " + total.ToString("F2") + "MB" + "   " + International.GetText("MinersDownloadManager_DownloadAverageSpeed") + " " + averageSpeed.ToString("F0") + " KB/s";
 
             progressBarDownloading.Value = (int)e.BytesReceived / 100;
 

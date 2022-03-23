@@ -865,15 +865,16 @@ namespace NiceHashMiner
                 if (result == DialogResult.Yes)
                 {
                     DownloadingInProgress = true;
-                    _autostartTimerDelay.Stop();
-                    _autostartTimer.Stop();
-                    //buttonStartMining.Enabled = false;
-                    //buttonStopMining.Enabled = false;
-
-                    //в таймере надо восстанавливать кнопки
-
                     ConfigManager.GeneralConfigFileCommit();
                     try
+                    {
+                        _autostartTimerDelay.Stop();
+                        _autostartTimer.Stop();
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("Download miners", ex.ToString());
+                    } finally
                     {
                         if (Updater.Updater.GetGITHUBVersion() > 0)
                         {
@@ -883,10 +884,6 @@ namespace NiceHashMiner
                         {
                             Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("Download miners", ex.ToString());
                     }
                     //блокировка формы блокирует всё
                     /*
