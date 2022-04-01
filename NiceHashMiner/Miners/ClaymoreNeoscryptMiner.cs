@@ -17,15 +17,15 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker)
         {
+            List<string> ResolvedServers = MiningSession.GetResolvedServers("neoscrypt");
             string username = GetUsername(btcAdress, worker);
             url = url.Replace("stratum+ssl", "stratum+tcp").Replace("33341", "3341");
-            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -pool " + Links.CheckDNS(url) +
+            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -pool " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") +
                                   " -wal " + username + " -psw x -dbg -1 -ftime 10 -retrydelay 5";
 
-            List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
-            String epools = String.Format("POOL: {0}:3341, WALLET: {1}, PSW: x", ResolvedServers[1], username) + "\n"
-               + String.Format("POOL: {0}:3341, WALLET: {1}, PSW: x", ResolvedServers[2], username) + "\n"
-               + String.Format("POOL: {0}:3341, WALLET: {1}, PSW: x", ResolvedServers[0], username) + "\n";
+            String epools = String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x", ResolvedServers[1], (ResolvedServers[1].Contains("auto") ? "9200" : "3341"), username) + "\n"
+               + String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x", ResolvedServers[2], (ResolvedServers[2].Contains("auto") ? "9200" : "3341"), username) + "\n"
+               + String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x", ResolvedServers[3], (ResolvedServers[3].Contains("auto") ? "9200" : "3341"), username) + "\n";
 
             FileStream fs = new FileStream("miners\\claymore_neoscrypt\\pools.txt", FileMode.Create, FileAccess.Write);
             StreamWriter w = new StreamWriter(fs);

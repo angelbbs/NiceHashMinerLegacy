@@ -191,7 +191,7 @@ namespace NiceHashMiner.Devices.Algorithms
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto4GB, "DaggerHashimoto4GB")
                             }
             },
-                        {
+            {
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()
                 {
@@ -249,6 +249,16 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
 
+                }
+            },
+            {
+                MinerBaseType.Phoenix,
+                new List<Algorithm>()
+                {
+                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
+                    {
+    //                    ExtraLaunchParameters = "-rvram -1 "
+                    }
                 }
             },
 

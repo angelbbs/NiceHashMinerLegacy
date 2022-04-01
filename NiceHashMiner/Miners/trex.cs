@@ -66,14 +66,38 @@ namespace NiceHashMiner.Miners
             List<string> ResolvedServersAutolykos = MiningSession.GetResolvedServers("autolykos");
             List<string> ResolvedServersKAWPOW = MiningSession.GetResolvedServers("kawpow");
             List<string> ResolvedServersOctopus = MiningSession.GetResolvedServers("octopus");
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                port = "3353";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            {
+                port = "3390";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                port = "3385";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
+            {
+                port = "3389";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
+            {
+                port = "3366";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+            {
+                port = "3379";
+            }
 
             if (!_isDual)
             {
                 LastCommandLine = algo +
-                " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[1] + ":" + port + " " + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[2] + ":" + port + " " + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[0] + ":" + port + " " + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
 
                 apiBind +
                 " -d " + GetDevicesCommandString() + " --no-watchdog " +
@@ -90,14 +114,14 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     LastCommandLine = "-a ethash --lhr-algo autolykos2" +
-                    " -o " + Links.CheckDNS("stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353") + " -u " + username + " -p x " +
-                    " --url2 " + Links.CheckDNS("stratum2+tcp://autolykos." + locations + ".nicehash.com:3390") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[0] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersAutolykos[0] + ":3390" + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[1] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersAutolykos[1] + ":3390" + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[2] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersAutolykos[2] + ":3390" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersAutolykos[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersAutolykos[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersAutolykos[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersAutolykos[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
                     apiBind +
                     " -d " + GetDevicesCommandString() + " --no-watchdog " +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -106,14 +130,14 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
                     LastCommandLine = "-a ethash --lhr-algo kawpow" +
-                    " -o " + Links.CheckDNS("stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353") + " -u " + username + " -p x " +
-                    " --url2 " + Links.CheckDNS("stratum2+tcp://kawpow." + locations + ".nicehash.com:3385") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[1] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersKAWPOW[0] + ":3385" + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[2] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersKAWPOW[1] + ":3385" + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[0] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersKAWPOW[2] + ":3385" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersKAWPOW[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersKAWPOW[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersKAWPOW[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersKAWPOW[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
                     apiBind +
                     " -d " + GetDevicesCommandString() + " --no-watchdog " +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -122,14 +146,14 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
                 {
                     LastCommandLine = "-a ethash --lhr-algo octopus" +
-                    " -o " + Links.CheckDNS("stratum2+tcp://daggerhashimoto." + locations + ".nicehash.com:3353") + " -u " + username + " -p x " +
-                    " --url2 " + Links.CheckDNS("stratum+tcp://octopus." + locations + ".nicehash.com:3389") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[1] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersOctopus[0] + ":3389" + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[2] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersOctopus[1] + ":3389" + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[0] + ":3353" + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersOctopus[2] + ":3389" + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersOctopus[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersOctopus[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersOctopus[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
+                    " -o " + ResolvedServersEth[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
+                    " --url2 " + ResolvedServersOctopus[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
                     apiBind +
                     " -d " + GetDevicesCommandString() + " --no-watchdog " +
                     ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
@@ -228,7 +252,6 @@ namespace NiceHashMiner.Miners
                 {
                     commandLine = "--algo octopus" +
                      " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3094") + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd" + " -p x -w trex" +
-                     " -o " + Links.CheckDNS("stratum2+tcp://octopus.eu-west.nicehash.com:3389") + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
                                       DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +

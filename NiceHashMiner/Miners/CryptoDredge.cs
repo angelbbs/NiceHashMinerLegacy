@@ -48,22 +48,25 @@ namespace NiceHashMiner.Miners
             var algo = "";
             var apiBind = "";
             string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
-            string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
+            //string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
+            string port = "3341"; //neoscrypt
             algo = "--algo " + MiningSetup.MinerName;
             apiBind = " --api-bind 127.0.0.1:" + ApiPort;
             IsApiReadException = false;
 
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 algo = "--algo kawpow";
+                port = "3385";
             }
 
             List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             LastCommandLine = algo +
-                " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[1] + ":" + port + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[2] + ":" + port + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[0] + ":" + port + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
+                " -o " + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
                 " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
@@ -103,10 +106,6 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
-            string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
-            string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
-            var username = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             var apiBind = " --api-bind 127.0.0.1:" + ApiPort;
             var algo = "--algo " + MiningSetup.MinerName;
             var commandLine = "";

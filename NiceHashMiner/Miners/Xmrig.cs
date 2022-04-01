@@ -89,21 +89,16 @@ namespace NiceHashMiner.Miners
 
                 List<string> ResolvedServers = MiningSession.GetResolvedServers(algo);
 
-                return $" --algo=rx/0 -o {Links.CheckDNS(url)}:{port} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
-               + $" -o {ResolvedServers[1]}:{port} -u {username} -p x "
-               + $" -o {ResolvedServers[2]}:{port} -u {username} -p x "
-               + $" -o {ResolvedServers[0]}:{port} -u {username} -p x "
+                return $" --algo=rx/0 -o {ResolvedServers[0]}:{(ResolvedServers[0].Contains("auto.") ? "9200" : port)} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
+               + $" -o {ResolvedServers[1]}:{(ResolvedServers[1].Contains("auto.") ? "9200" : port)} -u {username} -p x "
+               + $" -o {ResolvedServers[2]}:{(ResolvedServers[2].Contains("auto.") ? "9200" : port)} -u {username} -p x "
+               + $" -o {ResolvedServers[3]}:{(ResolvedServers[3].Contains("auto.") ? "9200" : port)} -u {username} -p x "
                + platform + " " + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";
         }
         private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
         {
-            if (url.Contains("Auto"))
-            {
-                url = url.Replace("Auto", "eu");
-            }
-
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
@@ -133,7 +128,7 @@ namespace NiceHashMiner.Miners
                 algo = "randomxmonero";
                 port = "3380";
                 return $" --algo=rx/0 -o {Links.CheckDNS("stratum+tcp://xmr-eu1.nanopool.org")}:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p x {extras} --http-port {ApiPort} --donate-level=1 "
-                + $" -o stratum+tcp://{algo}.{Form_Main.myServers[0, 0]}.nicehash.com:{port} -u {username}:x {platform}"
+                + $" {platform}"
                + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";

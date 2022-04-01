@@ -51,13 +51,13 @@ namespace NiceHashMiner.Miners
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             algo = "--algo=" + MiningSetup.MinerName;
             apiBind = " --api-bind-http=" + ApiPort;
-
+            //kawpow only
             List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             LastCommandLine = algo +
-                " --url=" + Links.CheckDNS(url) + " --userpass=" + username + ":x" +
-                " --url=" + ResolvedServers[1] + ":" + port + " " + " --userpass=" + username + ":x" +
-                " --url=" + ResolvedServers[2] + ":" + port + " " + " --userpass=" + username + ":x" +
-                " --url=" + ResolvedServers[0] + ":" + port + " " + " --userpass=" + username + ":x" +
+                " --url=" + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
+                " --url=" + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
+                " --url=" + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
+                " --url=" + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
                 apiBind +
                 " --devices " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

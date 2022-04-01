@@ -115,7 +115,7 @@ namespace NiceHashMiner
         public static bool DivertAvailable = true;
         private static string dialogClearBTC = "You want to delete BTC address?";
         public static string[,] myServers = {
-            { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }};
+            { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" }};
         internal static bool DeviceStatusTimer_FirstTick = false;
         public static Computer thisComputer;
         public static DateTime StartTime = new DateTime();
@@ -736,14 +736,6 @@ namespace NiceHashMiner
             }
             flowLayoutPanelRates.Visible = true;
 
-            /*
-            if (ConfigManager.GeneralConfig.ABEnableOverclock)
-            {
-                this.Update();
-                Thread.Sleep(100);
-                _loadingScreen.SetValueAndMsg(19, International.GetText("Form_Main_loadtext_MSI_AB"));
-            }
-            */
             new Task(() => Firewall.AddToFirewall()).Start();
             _minerStatsCheck = new Timer();
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -804,27 +796,24 @@ namespace NiceHashMiner
             int locations = 0;
             foreach (var location in Globals.MiningLocation)
             {
-                if (location.Contains("Auto")) continue;
+                //if (location.Contains("Auto")) continue;
                 for (int an = 8; an < (int)Enum.GetValues(typeof(AlgorithmType)).Cast<AlgorithmType>().Max(); an++)
                 {
                     if (!an.ToString().Equals(((AlgorithmType)an).ToString()) && !((AlgorithmType)an).ToString().Contains("UNUSED"))
                     {
                         string algo = ((AlgorithmType)an).ToString().ToLower();
                         algo = algo.Replace("randomx", "randomxmonero");
-                        string domain = "stratum+tcp://" + algo + "." + location + ".nicehash.com";
-                        _loadingScreen.SetValueAndMsg(30 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location + ".nicehash.com");
+                        string domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower() + ".nicehash.com";
+                        _loadingScreen.SetValueAndMsg(30 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location.ToLower() + ".nicehash.com");
                         Links.CheckDNS(domain);
                     }
                 }
                 locations = locations + 5;
             }
 
-            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
-            {
-                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
-            }
+            new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
 
-            _loadingScreen.SetValueAndMsg(55, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
+            _loadingScreen.SetValueAndMsg(60, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
             _loadingScreen.SetValueAndMsg(65, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
@@ -859,22 +848,47 @@ namespace NiceHashMiner
 
             if (!MinersExistanceChecker.IsMinersBinsInit())
             {
+                try
+                {
+                    if (_autostartTimerDelay != null)
+                    {
+                        _autostartTimerDelay.Stop();
+                    }
+                    if (_autostartTimer != null)
+                    {
+                        _autostartTimer.Stop();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("Download miners", ex.ToString());
+                }
+
                 var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                      International.GetText("Warning_with_Exclamation"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
+                  International.GetText("Warning_with_Exclamation"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
+
                 if (result == DialogResult.Yes)
                 {
                     DownloadingInProgress = true;
                     ConfigManager.GeneralConfigFileCommit();
+                    /*
                     try
                     {
-                        _autostartTimerDelay.Stop();
-                        _autostartTimer.Stop();
+                        if (_autostartTimerDelay != null)
+                        {
+                            _autostartTimerDelay.Stop();
+                        }
+                        if (_autostartTimer != null)
+                        {
+                            _autostartTimer.Stop();
+                        }
                     }
                     catch (Exception ex)
                     {
                         Helpers.ConsolePrint("Download miners", ex.ToString());
                     } finally
+                    */
                     {
                         if (Updater.Updater.GetGITHUBVersion() > 0)
                         {
@@ -3190,13 +3204,13 @@ public static void CloseChilds(Process parentId)
         private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-            if (ConfigManager.GeneralConfig.ServiceLocation == 4 && Enabled == true)
+            if (Enabled == true)
             {
                 new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
             }
             else
             {
-                string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
+                string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" } };
                 Form_Main.myServers = tmpServers;
             }
         }

@@ -26,6 +26,7 @@ namespace NiceHashMiner.Miners
         private double _power = 0.0d;
         double _powerUsage = 0;
         string platform = "";
+        int addTime = 0;
         public lolMiner()
             : base("lolMiner")
         {
@@ -74,83 +75,89 @@ namespace NiceHashMiner.Miners
             string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
 
-            //var algo = "";
-            //url = url.Replace("stratum+tcp://", "");
             var apiBind = " --apiport " + ApiPort;
 
             List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
-                LastCommandLine = "--coin AUTO144_5 --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                    " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3369 " + " --user " + username + " --pass x" +
-                    " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3369 " + " --user " + username + " --pass x" +
-                    " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3369 " + " --user " + username + " --pass x" +
+                LastCommandLine = "--coin AUTO144_5" +
+                    " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3369") + " --user " + username + " --pass x" +
+                    " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3369") + " --user " + username + " --pass x" +
+                    " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3369") + " --user " + username + " --pass x" +
+                    " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3369") + " --user " + username + " --pass x" +
                     apiBind + " " + param +
                               " --devices ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
             {
-                LastCommandLine = "--coin ZEL --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                    " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3391 " + " --user " + username + " --pass x" +
-                    " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3391 " + " --user " + username + " --pass x" +
-                    " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3391 " + " --user " + username + " --pass x" +
+                LastCommandLine = "--coin ZEL" +
+                    " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3391") + " --user " + username + " --pass x" +
+                    " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3391") + " --user " + username + " --pass x" +
+                    " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3391") + " --user " + username + " --pass x" +
+                    " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3391") + " --user " + username + " --pass x" +
                     apiBind + " " + param +
                               " --devices ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
-                LastCommandLine = "--algo BEAM-III --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3387 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3387 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3387 " + " --user " + username + " --pass x --tls 0" +
+                LastCommandLine = "--algo BEAM-III" +
+                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3387") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3387") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3387") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3387") + " --user " + username + " --pass x --tls 0" +
                     apiBind + " " + param +
                               " --devices ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
-                LastCommandLine = "--coin MWC-C31 --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3372 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3372 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3372 " + " --user " + username + " --pass x --tls 0" +
+                LastCommandLine = "--coin MWC-C31" +
+                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
                     apiBind + " " + param +
                               " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
-                LastCommandLine = "--coin GRIN-C32 --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3383 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3383 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3383 " + " --user " + username + " --pass x --tls 0" +
+                LastCommandLine = "--coin GRIN-C32" +
+                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
                     apiBind + " " + param +
                               " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
-                LastCommandLine = "--algo C29AE --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3376 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3376 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3376 " + " --user " + username + " --pass x --tls 0" +
+                LastCommandLine = "--algo C29AE" +
+                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3376") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3376") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3376") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3376") + " --user " + username + " --pass x --tls 0" +
                     apiBind + " " + param +
                               " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
-                LastCommandLine = "--algo ETHASH --ethstratum=ETHV1 --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3353 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3353 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3353 " + " --user " + username + " --pass x --tls 0" +
+                LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + " --worker " + worker + "$" + ConfigManager.GeneralConfig.MachineGuid +
+                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " --user " + btcAdress + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " --user " + btcAdress + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " --user " + btcAdress + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + " --user " + btcAdress + " --pass x --tls 0" +
                     apiBind + " " + param +
                               " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
             {
-                LastCommandLine = "--algo AUTOLYKOS2 --pool " + Links.CheckDNS(url).Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3390 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":3390 " + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":3390 " + " --user " + username + " --pass x --tls 0" +
+                LastCommandLine = "--algo AUTOLYKOS2" +
+                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3390") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3390") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3390") + " --user " + username + " --pass x --tls 0" +
+                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3390") + " --user " + username + " --pass x --tls 0" +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -193,6 +200,10 @@ namespace NiceHashMiner.Miners
                     platform = "amd";
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
                 }
+                if (pair.Device.NvidiaLHR && MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+                {
+                    addTime = 180;
+                }
             }
             string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
@@ -228,7 +239,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--coin MWC-C31 " +
                 " --pool " + Links.CheckDNS("stratum+tcp://mwc.2miners.com:1111").Replace("stratum+tcp://", "") + " --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x " +
-                "--pool " + Links.CheckDNS("stratum+tcp://grincuckatoo31.eu-north.nicehash.com:3372").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                "--pool " + Links.CheckDNS("stratum+tcp://grincuckatoo31.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                               param +
                 " --devices ";
             }
@@ -236,7 +247,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--coin GRIN-C32" +
                 " --pool " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030").Replace("stratum+tcp://", "") + " --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.lolMiner --pass x" +
-                " --pool " + Links.CheckDNS("stratum+tcp://grincuckatoo32.eu-north.nicehash.com:3383").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --pool " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                               param +
                 " --devices ";
             }
@@ -245,7 +256,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo C29AE " +
                 " --pool " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.lolMiner --pass x" +
-                " --pool " + Links.CheckDNS("stratum+tcp://cuckoocycle.eu-north.nicehash.com:3376").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --pool " + Links.CheckDNS("stratum+tcp://cuckoocycle.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                               param +
                 " --devices ";
             }
@@ -253,7 +264,7 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo ETHASH " +
                 " --pool " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.lolMiner --pass x" +
-                " --pool " + Links.CheckDNS("stratum+tcp://daggerhashimoto.eu-north.nicehash.com:3353").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --pool " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                               param +
                 " --devices ";
             }
@@ -265,7 +276,7 @@ namespace NiceHashMiner.Miners
                 " --devices ";
             }
             CommandLine += GetDevicesCommandString() + " "; //amd карты перечисляются первыми
-            _benchmarkTimeWait = time;
+            _benchmarkTimeWait = time + addTime;
             CommandLine = CommandLine.Replace("--asm 1", "");
             string sColor = "";
             //if (GetWinVer(Environment.OSVersion.Version) < 8)
@@ -520,7 +531,7 @@ namespace NiceHashMiner.Miners
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
-                        delay_before_calc_hashrate = 60;
+                        delay_before_calc_hashrate = 60 + addTime;
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))

@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Utils;
+﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Utils;
 using SharpCompress.Archive;
 using SharpCompress.Common;
 using System;
@@ -84,7 +85,20 @@ namespace NiceHashMiner.Forms
             Thread.Sleep(200);
             Form_Main._autostartTimerDelay.Start();
             Thread.Sleep(200);//костыль для очередности запуска таймеров
-            Form_Main._autostartTimer.Start();
+
+            if (ConfigManager.GeneralConfig.AutoStartMining)
+            {
+                try
+                {
+                    if (Form_Main._autostartTimer != null)
+                    {
+                        Form_Main._autostartTimer.Start();
+                    }
+                } catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("client_EmergencyDownloadFileCompleted", ex.ToString());
+                }
+            }
 
             Form_Main._deviceStatusTimer.Start();
             Form_Main.DownloadingInProgress = false;

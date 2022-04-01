@@ -77,28 +77,33 @@ namespace NiceHashMiner.Miners
             var server = url.Split(':')[0].Replace("stratum+tcp://", "");
             var algo = "";
             var algoName = "";
+            string port = "";
             string username = GetUsername(btcAddress, worker);
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 algo = "144,5";
                 algoName = "zhash";
+                port = "3369";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
             {
                 algo = "125,4";
                 algoName = "zelhash";
+                port = "3391";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 algo = "beam3";
                 algoName = "beamv3";
+                port = "3387";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 algo = "ethash";
                 algoName = "daggerhashimoto";
+                port = "3353";
             }
             string sColor = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
@@ -109,10 +114,10 @@ namespace NiceHashMiner.Miners
             List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             var ret = GetDevicesCommandString()
                       + sColor + " --pers auto --par=" + algo
-                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
-                      + " --url " + username + "@" + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
-                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + url.Split(':')[1]
+                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port)
+                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port)
+                      + " --url " + username + "@" + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port)
+                      + " --url " + username + "@" + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port)
                       + " --pass=x" + " --telemetry=" + ApiPort;
 
             return ret;
@@ -159,7 +164,7 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --pers auto --par=" + algo
                       + " --url GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.miniz@" + Links.CheckDNS("stratum+tcp://btg.2miners.com:4040").Replace("stratum+tcp://", "") + " -p x"
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3369"
+                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3369")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -172,7 +177,7 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --smart-pers --par=" + algo
                       + " --url t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.miniz@" + Links.CheckDNS("stratum+tcp://flux.2miners.com:9090").Replace("stratum+tcp://", "") + " -p x"
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3391"
+                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3391")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -186,7 +191,7 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --pers auto --par=" + algo
                       + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@" + Links.CheckDNS("stratum+tcp://beam.2miners.com:5252").Replace("stratum+tcp://", "") 
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3387"
+                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3387")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -198,7 +203,7 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --par=" + algo
                       + " --url 0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "")
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":3353"
+                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }

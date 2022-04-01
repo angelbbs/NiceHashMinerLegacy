@@ -82,12 +82,14 @@ namespace NiceHashMiner.Miners
             var pers = "";
             var nicehashstratum = "";
             var ssl = "";
+            string port = "";
             string username = GetUsername(btcAddress, worker);
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 algo = "144_5";
                 algoName = "zhash";
                 pers = " --pers auto ";
+                port = "3369";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
@@ -95,6 +97,7 @@ namespace NiceHashMiner.Miners
                 algo = "125_4";
                 algoName = "zelhash";
                 pers = " --pers auto ";
+                port = "3391";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
@@ -102,28 +105,33 @@ namespace NiceHashMiner.Miners
                 algo = "BeamHashIII";
                 algoName = "beamv3";
                 ssl = " --ssl_verification 0";
+                port = "3387";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
             {
                 algo = "grin31";
                 algoName = "grincuckatoo31";
+                port = "3372";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 algo = "grin32";
                 algoName = "grincuckatoo32";
                 ssl = " --ssl_verification 0";
+                port = "3383";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 algo = "aeternity";
                 algoName = "cuckoocycle";
+                port = "3376";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 algo = "ethash";
                 algoName = "daggerhashimoto";
                 nicehashstratum = " --proto stratum";
+                port = "3353";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
@@ -132,18 +140,22 @@ namespace NiceHashMiner.Miners
                 algoName = "kawpow";
                 ssl = " --ssl 0";
                 nicehashstratum = " --proto stratum";
+                port = "3385";
             }
 
             List<string> ResolvedServers = MiningSession.GetResolvedServers(algoName);
             var ret = GetDevicesCommandString()
-                      + " --algo " + algo + pers + " --server " + Links.CheckDNS(url).Split(':')[0].Replace("stratum+tcp://", "") + nicehashstratum
-                      + " --user " + username + " --pass x --port " + url.Split(':')[1]
-                      + " --server " + ResolvedServers[1].Replace("stratum+tcp://", "") + nicehashstratum
-                      + " --user " + username + " --pass x --port " + url.Split(':')[1]
-                      + " --server " + ResolvedServers[2].Replace("stratum+tcp://", "") + nicehashstratum
-                      + " --user " + username + " --pass x --port " + url.Split(':')[1]
-                      + " --server " + ResolvedServers[0].Replace("stratum+tcp://", "") + nicehashstratum
-                      + " --user " + username + " --pass x --port " + url.Split(':')[1]
+                      //+ " --algo " + algo + pers + " --server " + Links.CheckDNS(url).Split(':')[0].Replace("stratum+tcp://", "") + nicehashstratum
+                      //+ " --user " + username + " --pass x --port " + url.Split(':')[1]
+                      + " --algo " + algo + pers
+                      + " -s " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + nicehashstratum
+                      + " -u " + username + " -p x"
+                      + " -s " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + nicehashstratum
+                      + " -u " + username + " -p x"
+                      + " -s " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + nicehashstratum
+                      + " -u " + username + " -p x"
+                      + " -s " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + nicehashstratum
+                      + " -u " + username + " -p x"
                       + " --api " + ApiPort + " -l " + GetLogFileName();
             return ret;
         }
@@ -277,7 +289,7 @@ namespace NiceHashMiner.Miners
                 ret = " --color 0 --pec --pers auto --algo 144_5" +
                 " --server " + Links.CheckDNS("stratum+tcp://btg.2miners.com").Replace("stratum+tcp://", "") + " --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.gminer --pass x --port 4040 " +
                 " --server " + Links.CheckDNS("stratum+tcp://equihash144.eu.mine.zpool.ca").Replace("stratum+tcp://", "") + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 --pass c=BTC --port 2144 " +
-                " --server " + Links.CheckDNS("stratum+tcp://zhash.eu-north.nicehash.com").Replace("stratum+tcp://", "") + " --user " + username + " --pass x --port 3369" +
+                " --server " + Links.CheckDNS("stratum+tcp://zhash.auto.nicehash.com").Replace("stratum+tcp://", "") + " --user " + username + " --pass x --port 9200" +
                 GetDevicesCommandString();
             }
 
@@ -285,7 +297,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --pers auto --algo 125_4" +
                 " --server " + Links.CheckDNS("stratum+tcp://flux.2miners.com").Replace("stratum+tcp://", "") + " --user t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.gminer --pass x --port 9090 " +
-                " --server " + Links.CheckDNS("stratum+tcp://zelhash.eu-north.nicehash.com").Replace("stratum+tcp://", "") + " --user " + username + " --pass x --port 3391" +
+                " --server " + Links.CheckDNS("stratum+tcp://zelhash.auto.nicehash.com").Replace("stratum+tcp://", "") + " --user " + username + " --pass x --port 9200" +
                 GetDevicesCommandString();
             }
 
@@ -293,7 +305,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --algo BeamHashIII" +
                 " --server " + Links.CheckDNS("stratum+ssl://beam.2miners.com:5252") + " --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x " +
-                " --server " + Links.CheckDNS("stratum+tcp://beamv3.eu-north.nicehash.com:3378") + " --user " + username + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://beamv3.auto.nicehash.com:9200") + " --user " + username + " --pass x" +
                 GetDevicesCommandString();
             }
 
@@ -301,35 +313,35 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --algo grin31" +
                 " --server " + Links.CheckDNS("stratum+tcp://mwc.2miners.com:1111").Replace("stratum+tcp://", "") + " --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.gminer --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo31.eu-north.nicehash.com:3372").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo31.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 ret = " --color 0 --pec --algo grin32" +
                 " --server " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030").Replace("stratum+tcp://", "") + " --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.gminer --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo32.eu-north.nicehash.com:3383").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 ret = " --color 0 --pec --algo aeternity" +
                 " --server " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.gminer --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://cuckoocycle.eu-north.nicehash.com:3376").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://cuckoocycle.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 ret = " --color 0 --pec --algo ethash" +
                 " --server " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://daggerhashimoto.eu-north.nicehash.com:3353").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
                 ret = " --color 0 --pec --algo kawpow" +
                 " --server " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060").Replace("stratum+tcp://", "") + " --user RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.GMiner --pass x " +
-                " --server " + Links.CheckDNS("stratum+tcp://kawpow.eu-north.nicehash.com:3385").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://kawpow.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                 GetDevicesCommandString();
             }
 

@@ -3,6 +3,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -117,6 +118,7 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 return;
             }
+
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             var locationUrl = Globals.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);

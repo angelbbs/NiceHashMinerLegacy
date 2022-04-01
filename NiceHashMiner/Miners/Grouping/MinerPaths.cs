@@ -370,49 +370,6 @@ namespace NiceHashMiner.Miners.Grouping
                 }
                 return Data.None; // should not happen
             }
-            public static string CastXMR(AlgorithmType algorithmType)
-            {
-                /*
-                if (AlgorithmType.CryptoNightV7 == algorithmType || AlgorithmType.CryptoNightHeavy == algorithmType || AlgorithmType.CryptoNightV8 == algorithmType )
-                {
-                    return Data.CastXMR;
-                }
-                */
-                return Data.CastXMR;
-            }
-            public static string lyclMiner(AlgorithmType algorithmType)
-            {
-                if (AlgorithmType.Lyra2REv3 == algorithmType)
-                {
-                    return Data.lyclMiner;
-                }
-                return Data.lyclMiner;
-            }
-            public static string teamredminer(AlgorithmType algorithmType)
-            {
-                if (AlgorithmType.Lyra2z == algorithmType)
-                {
-                    return Data.teamredminer;
-                }
-
-                if (AlgorithmType.Lyra2REv3 == algorithmType)
-                {
-                    return Data.teamredminer;
-                }
-                return Data.teamredminer;
-            }
-            public static string lolMiner(AlgorithmType algorithmType)
-            {
-                if (AlgorithmType.ZHash == algorithmType)
-                {
-                    return Data.lolMiner;
-                }
-                if (AlgorithmType.GrinCuckatoo31 == algorithmType)
-                {
-                    return Data.lolMiner;
-                }
-                return Data.lolMiner;
-            }
         }
 
         private static readonly List<MinerPathPackage> MinerPathPackages = new List<MinerPathPackage>();

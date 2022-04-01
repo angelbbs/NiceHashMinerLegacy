@@ -808,6 +808,8 @@ break;
                             ret = true;
                             break;
 
+                        //RTX 3060 Ti [2414]
+
                         default:
                             break;
                     }
@@ -816,105 +818,120 @@ break;
                 private static void QueryVideoControllers(List<VideoControllerData> avaliableVideoControllers,
                     bool warningsEnabled)
                 {
-                    var stringBuilder = new StringBuilder();
-                    stringBuilder.AppendLine("");
-                    stringBuilder.AppendLine("QueryVideoControllers: ");
-                    var moc = new ManagementObjectSearcher("root\\CIMV2",
-                        "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
-                    var allVideoContollersOK = true;
-                    int _id = 0;
-                    foreach (var manObj in moc)
+                    try
                     {
-                        //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
-                        ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
-                        var man = SafeGetProperty(manObj, "PNPDeviceID").Split('&')[2];
-                        //PCI\VEN_1002&DEV_67DF&SUBSYS_2379148C&REV_EF\4&18803EC9&0&00E4
-                        var vidController = new VideoControllerData
+                        var stringBuilder = new StringBuilder();
+                        stringBuilder.AppendLine("");
+                        stringBuilder.AppendLine("QueryVideoControllers: ");
+                        var moc = new ManagementObjectSearcher("root\\CIMV2",
+                            "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
+                        var allVideoContollersOK = true;
+                        int _id = 0;
+                        foreach (var manObj in moc)
                         {
-                            ID = _id,
-                            Name = SafeGetProperty(manObj, "Name"),
-                            Description = SafeGetProperty(manObj, "Description"),
-                            Manufacturer = man.Substring(man.Length - 4),
-                            PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
-                            DeviceID = SafeGetProperty(manObj, "DeviceID"),
-                            CurrentRefreshRate = SafeGetProperty(manObj, "CurrentRefreshRate"),
-                            DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
-                            Status = SafeGetProperty(manObj, "Status"),
-                            InfSection = SafeGetProperty(manObj, "InfSection"),
-                            VideoProcessor = SafeGetProperty(manObj, "VideoProcessor"),
-                            AdapterRam = memTmp,
-                            NvidiaLHR = false
-                        };
-                        _id++;
-                        //PCI\VEN_10DE&DEV_2504&SUBSYS_250410DE&REV_A1\4&12728395&0&00E2
-                        vidController.VEN_ = vidController.PnpDeviceID.Split('&')[0].Split('_')[1];
-                        vidController.DEV_ = vidController.PnpDeviceID.Split('&')[1].Split('_')[1];
-                        vidController.SUBSYS_ = vidController.PnpDeviceID.Split('&')[2].Split('_')[1];
-                        vidController.REV_ = vidController.PnpDeviceID.Split('&')[3].Split('_')[1];
-                        vidController.fakeID_ = vidController.PnpDeviceID.Split('&')[4]; 
-
-                        if (vidController.Name.Contains("3050") || vidController.Name.Contains("3060") ||
-                            vidController.Name.Contains("3070") ||
-                            vidController.Name.Contains("3080"))
-                        {
-                            vidController.NvidiaLHR = true;
-                            vidController.NvidiaLHR = CheckNvidiaLHR(vidController.DEV_);
-                        }
-                        stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                        stringBuilder.AppendLine($"\t\tID {vidController.ID}");
-                        stringBuilder.AppendLine($"\t\tName {vidController.Name}");
-                        stringBuilder.AppendLine($"\t\tNVIDIA LHR? {vidController.NvidiaLHR}");
-                        stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
-                        stringBuilder.AppendLine($"\t\tVideoProcessor {vidController.VideoProcessor}");
-                        stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)} ({vidController.Manufacturer})");
-                        stringBuilder.AppendLine($"\t\tPNPDeviceID {vidController.PnpDeviceID}");
-                        stringBuilder.AppendLine($"\t\tCurrentRefreshRate {vidController.CurrentRefreshRate}");
-                        stringBuilder.AppendLine($"\t\tDeviceID {vidController.DeviceID}");
-                        stringBuilder.AppendLine($"\t\tDriverVersion {vidController.DriverVersion}");
-                        stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");
-                        stringBuilder.AppendLine($"\t\tInfSection {vidController.InfSection}");
-                        stringBuilder.AppendLine($"\t\tAdapterRAM {vidController.AdapterRam}");
-
-                        // check if controller ok
-                        if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
-                        {
-                            allVideoContollersOK = false;
-                        }
-
-                        AvaliableVideoControllers.Add(vidController);
-
-                        if (vidController.DriverVersion.Contains("4.6079"))
-                        {
-                            MessageBox.Show("Unsupported NVIDIA driver version 460.79\r " +
-                                "Please revert to previous drivers or install newest",
-    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                    }
-                    Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-
-                    if (warningsEnabled)
-                    {
-                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
-                        {
-                            var msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
-                            foreach (var vc in AvaliableVideoControllers)
+                            ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
+                            var man = SafeGetProperty(manObj, "PNPDeviceID").Split('&')[2];
+                            var vidController = new VideoControllerData
                             {
-                                if (!vc.Status.ToLower().Equals("ok"))
+                                ID = _id,
+                                Name = SafeGetProperty(manObj, "Name"),
+                                Description = SafeGetProperty(manObj, "Description"),
+                                Manufacturer = man.Substring(man.Length - 4),
+                                PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
+                                DeviceID = SafeGetProperty(manObj, "DeviceID"),
+                                CurrentRefreshRate = SafeGetProperty(manObj, "CurrentRefreshRate"),
+                                DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
+                                Status = SafeGetProperty(manObj, "Status"),
+                                InfSection = SafeGetProperty(manObj, "InfSection"),
+                                VideoProcessor = SafeGetProperty(manObj, "VideoProcessor"),
+                                AdapterRam = memTmp,
+                                NvidiaLHR = false
+                            };
+                            _id++;
+                            vidController.VEN_ = "0000";
+                            vidController.DEV_ = "0000";
+                            vidController.SUBSYS_ = "0000";
+                            vidController.REV_ = "REV_A1";
+                            vidController.fakeID_ = "fakeID";
+                            try
+                            {
+                                vidController.VEN_ = vidController.PnpDeviceID.Split('&')[0].Split('_')[1];
+                                vidController.DEV_ = vidController.PnpDeviceID.Split('&')[1].Split('_')[1];
+                                vidController.SUBSYS_ = vidController.PnpDeviceID.Split('&')[2].Split('_')[1];
+                                vidController.REV_ = vidController.PnpDeviceID.Split('&')[3].Split('_')[1];
+                                vidController.fakeID_ = vidController.PnpDeviceID.Split('&')[4];
+                            } catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("QueryVideoControllers", ex.ToString());
+                            }
+
+                            if (vidController.Name.Contains("3050") || vidController.Name.Contains("3060") ||
+                                vidController.Name.Contains("3070") ||
+                                vidController.Name.Contains("3080"))
+                            {
+                                vidController.NvidiaLHR = true;
+                                vidController.NvidiaLHR = CheckNvidiaLHR(vidController.DEV_);
+                            }
+                            stringBuilder.AppendLine("\tWin32_VideoController detected:");
+                            stringBuilder.AppendLine($"\t\tID {vidController.ID}");
+                            stringBuilder.AppendLine($"\t\tName {vidController.Name}");
+                            stringBuilder.AppendLine($"\t\tNVIDIA LHR? {vidController.NvidiaLHR}");
+                            stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
+                            stringBuilder.AppendLine($"\t\tVideoProcessor {vidController.VideoProcessor}");
+                            stringBuilder.AppendLine($"\t\tManufacturer {GetManufacturer(vidController.Manufacturer)} ({vidController.Manufacturer})");
+                            stringBuilder.AppendLine($"\t\tPNPDeviceID {vidController.PnpDeviceID}");
+                            stringBuilder.AppendLine($"\t\tCurrentRefreshRate {vidController.CurrentRefreshRate}");
+                            stringBuilder.AppendLine($"\t\tDeviceID {vidController.DeviceID}");
+                            stringBuilder.AppendLine($"\t\tDriverVersion {vidController.DriverVersion}");
+                            stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");
+                            stringBuilder.AppendLine($"\t\tInfSection {vidController.InfSection}");
+                            stringBuilder.AppendLine($"\t\tAdapterRAM {vidController.AdapterRam}");
+
+                            // check if controller ok
+                            if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
+                            {
+                                allVideoContollersOK = false;
+                            }
+
+                            AvaliableVideoControllers.Add(vidController);
+
+                            if (vidController.DriverVersion.Contains("4.6079"))
+                            {
+                                MessageBox.Show("Unsupported NVIDIA driver version 460.79\r " +
+                                    "Please revert to previous drivers or install newest",
+        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            if (warningsEnabled)
+                            {
+                                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
                                 {
-                                    msg += Environment.NewLine
-                                           + string.Format(
-                                               International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"),
-                                               vc.Name, vc.Status, vc.PnpDeviceID);
+                                    var msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
+                                    foreach (var vc in AvaliableVideoControllers)
+                                    {
+                                        if (!vc.Status.ToLower().Equals("ok"))
+                                        {
+                                            msg += Environment.NewLine
+                                                   + string.Format(
+                                                       International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"),
+                                                       vc.Name, vc.Status, vc.PnpDeviceID);
+                                        }
+                                    }
+                                    new Task(() => MessageBox.Show(msg,
+                                        International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning)).Start();
                                 }
                             }
-                            new Task(() => MessageBox.Show(msg,
-                                International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning)).Start();
+                            //test_msi_ab();
                         }
+                        Helpers.ConsolePrint(Tag, stringBuilder.ToString());
                     }
-                    //test_msi_ab();
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("QueryVideoControllers", ex.ToString());
+                        //https://github.com/angelbbs/NiceHashMinerLegacy/issues/162
+                    }
                 }
 
 

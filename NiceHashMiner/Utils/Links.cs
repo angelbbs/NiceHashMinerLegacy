@@ -42,28 +42,40 @@ namespace NiceHashMiner
         //dns cache
         public static string CheckDNS(string domain, bool forceIP = false)
         {
-            /*
-            Uri test = new Uri(domain);
-            var r = test.LocalPath;
-            var l = test.Host;
-            var p = domain.Split(':')[0];
-            string doh = p + "://" + internal_get_ip_from_dns(l, "cloudflare-dns.com") + r;
-            Helpers.ConsolePrint("CheckDNS", "********" + doh);
-            return doh;
-            */
             bool resolveError = false;
             string domainName = "";
             string prefix = "";
             string path = "";
-            string port = ":" + new Uri(domain).Port.ToString();
-            if (port.Contains("-") || 
-                (port.Contains("443") && domain.Contains("https")) ||
-                (port.Contains("80") && domain.Equals("http")) 
-                )//костыль. Uri("https://...").Port по умолчанию 443
-            {
-                port = "";
-            }
+            string port = "";
 
+            if (!domain.Contains("://"))
+            {
+                domain = "stratum+tcp://" + domain;
+            }
+            try
+            {
+                /*
+                Uri test = new Uri(domain);
+                var r = test.LocalPath;
+                var l = test.Host;
+                var p = domain.Split(':')[0];
+                string doh = p + "://" + internal_get_ip_from_dns(l, "cloudflare-dns.com") + r;
+                Helpers.ConsolePrint("CheckDNS", "********" + doh);
+                return doh;
+                */
+
+                port = ":" + new Uri(domain).Port.ToString();
+                if (port.Contains("-") ||
+                    (port.Contains("443") && domain.Contains("https")) ||
+                    (port.Contains("80") && domain.Equals("http"))
+                    )//костыль. Uri("https://...").Port по умолчанию 443
+                {
+                    port = "";
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("CheckDNS", ex.ToString());
+            }
             try
             {
                 domainName = new Uri(domain).Host;
@@ -83,21 +95,29 @@ namespace NiceHashMiner
                 if (heserver == null)
                 {
                     resolveError = true;
-                    Helpers.ConsolePrint("CheckDNS", "******** Resolve error " + domainName);
                 }
                 else
                 {
                     
                     foreach (IPAddress curAdd in heserver.AddressList)
                     {
-                        ResolvedIPsList.Add(curAdd.ToString());
+                        if (curAdd.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)//IPv4 only
+                        {
+                            ResolvedIPsList.Add(curAdd.ToString());
+                        }
                     }
                     
                     //resolveError = true;//tesing
                 }
                 if (!File.Exists("configs\\dnscache.json"))
                 {
-                    File.WriteAllBytes("configs\\dnscache.json", Properties.Resources.dnscache);
+                    WriteAllBytesWithBackup("configs\\dnscache.json", Properties.Resources.dnscache);
+                } else
+                {
+                    if (!File.ReadAllText("configs\\dnscache.json")[0].Equals('{'))
+                    {
+                        WriteAllBytesWithBackup("configs\\dnscache.json", Properties.Resources.dnscache);
+                    }
                 }
                 DNSCache file = null;
                 try
@@ -126,7 +146,9 @@ namespace NiceHashMiner
                     if (resolveError || forceIP)
                     {
                         Random random = new Random((int)DateTime.Now.Ticks);
+                        _ipList.IPs.RemoveAll(_IP => _IP.Contains(":"));//IPv4 only
                         string ip = _ipList.IPs[random.Next(_ipList.IPs.Count)].ToString();
+
                         if (resolveError)
                         {
                             Helpers.ConsolePrint("CheckDNS", "******** Return dnscache (" + domainName + "): " + prefix + ip + path);
@@ -175,9 +197,60 @@ namespace NiceHashMiner
             return prefix + domainName + path + port;
         }
 
+        public static void WriteAllBytesWithBackup(string FilePath, byte[] contents)
+        {
+            string path = FilePath;
+            var tempPath = FilePath + ".tmp";
+
+            // create the backup name
+            var backup = FilePath + ".backup";
+
+            // delete any existing backups
+            try
+            {
+                if (File.Exists(backup))
+                    File.Delete(backup);
+            }
+            catch (Exception ex)
+            {
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
+
+            // get the bytes
+            var data = contents;
+
+            // write the data to a temp file
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                tempFile.Write(data, 0, data.Length);
+
+            //copy file
+            try
+            {
+                if (File.Exists(path)) File.Delete(path);
+                File.Copy(tempPath, path);
+            }
+            catch (Exception ex)
+            {
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
+
+            // replace the contents
+            try
+            {
+                File.Replace(tempPath, path, backup);
+            }
+            catch (Exception ex)
+            {
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
+        }
         public static IPHostEntry GetHostEntry(string host)
         {
             IPHostEntry ret = null;
+            if (host.Contains("daggerautolykos") || host.Contains("daggeroctopus") || host.Contains("daggerkawpow"))
+            {
+                return ret;
+            }
             try
             {
                 return Dns.GetHostEntry(host);

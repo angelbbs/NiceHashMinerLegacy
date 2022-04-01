@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.Configs;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -17,22 +18,32 @@ namespace NiceHashMiner.Utils
         public static TimeSpan AnswerTime;
         public static int GetBestServer()
         {
-            string[,] myServers = Form_Main.myServers;
+            //string[,] myServers = Form_Main.myServers;
+            string[,] myServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" } };
 
-            for (int s = 0; s < 4; s++)
+            for (int s = 0; s < 5; s++)
             {
-                var ReplyTime = ConnectToServer(s);
+                int ReplyTime = ConnectToServer(s);
                 myServers[s, 1] = ReplyTime.ToString();
+
+                /*
+                if (myServers[s, 0].Contains("auto") && ReplyTime < 1000)
+                {
+                    myServers[s, 1] = "0";
+                }
+                */
             }
 
-            string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
+            myServers[ConfigManager.GeneralConfig.ServiceLocation, 1] = "0";
+            
+            string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" } };
             int ReplyTimeTmp;
             long bestReplyTimeTmp = 19999;
             int iTmp = 0;
 
-            for (int k = 0; k < 4; k++)
+            for (int k = 0; k < 5; k++)
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     ReplyTimeTmp = Convert.ToInt32(myServers[i, 1]);
                     if (ReplyTimeTmp < bestReplyTimeTmp && ReplyTimeTmp != -1)
@@ -48,13 +59,13 @@ namespace NiceHashMiner.Utils
                 bestReplyTimeTmp = 10000;
             }
 
+            string pr = "| ";
             Form_Main.myServers = tmpServers;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
-
-                Helpers.ConsolePrint("SortedServers", Form_Main.myServers[i, 0] + " " + Form_Main.myServers[i, 1]);
+                pr += Form_Main.myServers[i, 0] + "=" + (Form_Main.myServers[i, 1].Equals("0") ? "forced | ": Form_Main.myServers[i, 1] + " ms | ");
             }
-            Helpers.ConsolePrint("BestServer", Form_Main.myServers[0, 0]);
+            Helpers.ConsolePrint("SortedServers", pr);
             return 0;
         }
 
@@ -91,15 +102,18 @@ namespace NiceHashMiner.Utils
             string[,] myServers = Form_Main.myServers;
             IPAddress addr = IPAddress.Parse("0.0.0.0");
             IPAddress addrl = IPAddress.Parse("0.0.0.0");
+            string adr = "";
             try
             {
-                addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + myServers[nServer, 0] + ".nicehash.com"));
+                adr = Links.CheckDNS("stratum+tcp://daggerhashimoto." + myServers[nServer, 0] + ".nicehash.com", true).Replace("stratum+tcp://", "");
+                addr = IPAddress.Parse(adr);
                 addrl = IPAddress.Parse("0.0.0.0");
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("ConnectToServer", ex.ToString());
             }
+
             serverStream = null;
             if (tcpClient != null)
             {
@@ -113,10 +127,18 @@ namespace NiceHashMiner.Utils
                 try
                 {
                     //StartTime = DateTime.Now;
-                    using (TcpClient tcpClient = new TcpClient() { SendTimeout = 2000, ReceiveTimeout = 2000, LingerState = lingerOption })
+                    using (TcpClient tcpClient = new TcpClient(AddressFamily.InterNetwork & AddressFamily.InterNetworkV6) {SendTimeout = 2000, ReceiveTimeout = 2000, LingerState = lingerOption })
                     {
+                        tcpClient.SendTimeout = 1000;
                         tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                        tcpClient.ConnectAsync(addr, 3353);
+                        if (myServers[nServer, 0].Contains("auto"))
+                        {
+                            tcpClient.ConnectAsync(addr, 9200).Wait(1000);
+                        }
+                        else
+                        {
+                            tcpClient.ConnectAsync(addr, 3353).Wait(1000);
+                        }
 
                         while (!tcpClient.Connected)
                         {
@@ -131,9 +153,14 @@ namespace NiceHashMiner.Utils
                         tcpClient.Close();
                     }
                 }
+                catch (SocketException ex)
+                {
+                    Helpers.ConsolePrint("ConnectToServer", "Server: " + myServers[nServer, 0] + " Error code: " + ex.ErrorCode.ToString());
+                    ms = 1000;
+                }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("ConnectToServer", "Exception: " + ex);
+                    Helpers.ConsolePrint("ConnectToServer", "Server: " + myServers[nServer, 0] + " Exception: " + ex);
                     ms = 1000;
                 }
             }
@@ -247,7 +274,7 @@ namespace NiceHashMiner.Utils
                 }
 
             }
-            Helpers.ConsolePrint(myServers[nServer, 0] + ".nicehash.com", ms.ToString() + " ms");
+            //Helpers.ConsolePrint(myServers[nServer, 0] + ".nicehash.com", ms.ToString() + " ms");
             return ms;
         }
 

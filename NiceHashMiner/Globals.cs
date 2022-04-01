@@ -37,10 +37,14 @@ namespace NiceHashMiner
             // NHMConectionType.NONE
             var prefix = "";
             var port = nPort;
-            if (miningLocation.Contains("Auto"))
+            if (miningLocation.ToLower().Contains("auto"))
             {
                 //miningLocation = miningLocation.Replace("Auto", "eu");
                 miningLocation = Form_Main.myServers[0, 0];
+                if (miningLocation.ToLower().Contains("auto"))
+                {
+                    port = 9200;
+                }
             }
             switch (conectionType)
             {

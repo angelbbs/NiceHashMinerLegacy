@@ -77,9 +77,7 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(200);
 
             List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
-            String epools = String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[1], username) + "\n"
-               + String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[2], username) + "\n"
-               + String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[0], username) + "\n";
+            String epools = String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[1], (ResolvedServers[1].Contains("auto") ? "9200" : "3353"), username) + "\n";
             try
             {
                 FileStream fs = new FileStream("miners\\claymore_dual\\" + epoolsFile, FileMode.Create, FileAccess.Write);
@@ -132,7 +130,7 @@ namespace NiceHashMiner.Miners
 
             addParam = " "
                                     + GetDevicesCommandString()
-                                    + String.Format("  -epool {0} -ewal {1} -mport 127.0.0.1:-{2} -esm 3 -epsw x -allpools 1 -ftime 10 -retrydelay 5 -checkcert 0", Links.CheckDNS(url), username, ApiPort)
+                                    + String.Format("  -epool {0}:{1} -ewal {2} -mport 127.0.0.1:-{3} -esm 3 -epsw x -allpools 1 -ftime 10 -retrydelay 5 -checkcert 0", ResolvedServers[0], (ResolvedServers[0].Contains("auto.") ? "9200" : "3353"), username, ApiPort)
                                     + dualModeParams;
            
             return addParam + " -epoolsfile " + epoolsFile;
@@ -177,9 +175,7 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(200);
 
             List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
-            String epools = String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[1], username) + "\n"
-               + String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[2], username) + "\n"
-               + String.Format("POOL: {0}:3353, WALLET: {1}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[0], username) + "\n";
+            String epools = String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[0], (ResolvedServers[0].Contains("auto") ? "9200" : "3353"), username) + "\n";
             try
             {
                 FileStream fs = new FileStream("miners\\claymore_dual\\" + epoolsFile, FileMode.Create, FileAccess.Write);

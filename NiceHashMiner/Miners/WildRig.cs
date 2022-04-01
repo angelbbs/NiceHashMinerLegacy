@@ -50,11 +50,6 @@ namespace NiceHashMiner.Miners
                 algo = "x16rv2";
                 port = "3379";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
-            {
-                algo = "lyra2v3";
-                port = "3373";
-            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 algo = "kawpow";
@@ -82,14 +77,6 @@ namespace NiceHashMiner.Miners
                 algo = "x16rv2";
                 port = "3379";
                 return $" --benchmark -a {algo} -o stratum+tcp://x16rv2.eu.mine.zpool.ca:3637 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
-               + $" -o stratum+tcp://{algo}.eu.nicehash.com:{port} -u {username}:x "
-               + " --multiple-instance --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
-            {
-                algo = "lyra2rev3";
-                port = "3366";
-                return $" -a lyra2v3 -o stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550 -u 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 -p c=BTC {extras} --api-port {ApiPort} "
                + $" -o stratum+tcp://{algo}.eu.nicehash.com:{port} -u {username}:x "
                + " --multiple-instance --opencl-platforms=1 --opencl-devices=" + GetDevicesCommandString().TrimStart();
             }
@@ -159,7 +146,7 @@ namespace NiceHashMiner.Miners
                     var speed = lineLowered.Substring(speedStart, lineLowered.Length - speedStart);
                     speed = speed.Replace(_lookForStart, "");
                     speed = speed.Substring(0, speed.IndexOf(_lookForEnd));
-                    if (count >= 8 || (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3) && count >= 4)) //пропустить первые 8
+                    if (count >= 8) //пропустить первые 8
                     {
                         try
                         {

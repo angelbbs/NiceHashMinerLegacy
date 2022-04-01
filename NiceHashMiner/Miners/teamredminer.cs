@@ -73,27 +73,28 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
             {
                 algo = " -a lyra2z";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
-            {
-                algo = " -a lyra2rev3";
+                port = "3365";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
             {
                 algo = " -a x16rv2";
+                port = "3379";
             }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 algo = " -a ethash";
+                port = "3353";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 algo = " -a kawpow";
+                port = "3385";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
                 algo = " -a autolykos2";
+                port = "3390";
             }
             var sc = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
@@ -101,11 +102,11 @@ namespace NiceHashMiner.Miners
                 sc = variables.TRMiner_add1;
             }
 
-            LastCommandLine = sc + " --watchdog_script " + algo + " -o " + Links.CheckDNS(url) +
-                              " -u " + username + " -p x " +
-                               ResolvedServers[1] + ":" + port + " -u " + username + " -p x" +
-                               ResolvedServers[2] + ":" + port + " -u " + username + " -p x" +
-                               ResolvedServers[0] + ":" + port + " -u " + username + " -p x" +
+            LastCommandLine = sc + " --watchdog_script " + algo + 
+                              " -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
+                              " -o " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
+                              " -o " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
+                              " -o " + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
                               apiBind +
                               " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
@@ -160,13 +161,6 @@ namespace NiceHashMiner.Miners
                 CommandLine = sc + " -a x16rv2" +
                 " --url " + Links.CheckDNS("stratum+tcp://x16rv2.na.mine.zpool.ca:3637") + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
                 " -d ";
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2REv3))
-            {
-                CommandLine = sc + " -a lyra2rev3" +
-                " --url " + Links.CheckDNS("stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550") + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                 " -d ";
             }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))

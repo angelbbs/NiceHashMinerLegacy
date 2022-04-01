@@ -462,16 +462,6 @@ namespace NiceHashMiner
                 mPair.Device.MiningHashrateSecond = 0;
             }
 
-            if (ConfigManager.GeneralConfig.ServiceLocation == 4)
-            {
-                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
-                Thread.Sleep(2000);
-            }
-            else
-            {
-                string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
-                Form_Main.myServers = tmpServers;
-            }
             //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
             _cooldownCheckTimer?.Stop();
             _Stop(willswitch);
@@ -479,6 +469,7 @@ namespace NiceHashMiner
             IsRunning = false;
             IsRunningNew = IsRunning;
             Ethlargement.Stop();
+            new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
             RunCMDBeforeOrAfterMining(false);
             NiceHashStats._deviceUpdateTimer.Stop();
             //new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
@@ -1759,7 +1750,6 @@ namespace NiceHashMiner
                             }
                         }
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
-
                         P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, MinerDeviceName,
                             strPlatform, w, false,
                             false,

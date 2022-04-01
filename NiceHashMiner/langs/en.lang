@@ -158,6 +158,7 @@
         "Form_Settings_General_DisableDetection": "Disable Detection of {0}",
         "Form_Settings_General_AutoScaleBTCValues": "Autoscale BTC Values",
         "Form_Settings_General_StartMiningWhenIdle": "Start Mining When Idle",
+        "Form_Settings_General_ForceAutoLocation": "Force auto location",
         "Form_Settings_General_ShowDriverVersionWarning": "Show Driver Version Warning",
         "Form_Settings_General_DisableWindowsErrorReporting": "Disable Windows Error Reporting",
         "Form_Settings_General_ShowInternetConnectionWarning": "Show Internet Connection Warning",

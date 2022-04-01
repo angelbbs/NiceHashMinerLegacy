@@ -110,10 +110,10 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
-                   + String.Format("pool1 = {0}", Links.CheckDNS(url).Replace("stratum+tcp://", "")) + ":3353\n"
-                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":3353\n"
-                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":3353\n"
-                   + String.Format("pool4 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":3353\n";
+                   + String.Format("pool1 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + "\n"
+                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + "\n"
+                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + "\n"
+                   + String.Format("pool4 = {0}", ResolvedServers[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + "\n";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
@@ -137,10 +137,10 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + String.Format("pool1 = {0}", Links.CheckDNS(url).Replace("stratum+tcp://", "")) + ":3390\n"
-                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":3390\n"
-                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":3390\n"
-                   + String.Format("pool4 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":3390\n";
+                   + String.Format("pool1 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3390") + "\n"
+                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3390") + "\n"
+                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3390") + "\n"
+                   + String.Format("pool4 = {0}", ResolvedServers[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3390") + "\n";
             }
             try
             {
@@ -177,19 +177,20 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + String.Format("pool1 = {0}", Links.CheckDNS(url).Replace("stratum+tcp://", "")) + ":3390\n"
-                   + String.Format("pool2 = {0}", ResolvedServersAutolykos[1].Replace("stratum+tcp://", "")) + ":3390\n"
-                   + String.Format("pool3 = {0}", ResolvedServersAutolykos[2].Replace("stratum+tcp://", "")) + ":3390\n"
-                   + String.Format("pool4 = {0}", ResolvedServersAutolykos[0].Replace("stratum+tcp://", "")) + ":3390\n"
+                   + String.Format("pool1 = {0}", ResolvedServersAutolykos[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[0].Contains("auto.") ? "9200" : "3390") + "\n"
+                   + String.Format("pool2 = {0}", ResolvedServersAutolykos[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[1].Contains("auto.") ? "9200" : "3390") + "\n"
+                   + String.Format("pool3 = {0}", ResolvedServersAutolykos[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[2].Contains("auto.") ? "9200" : "3390") + "\n"
+                   + String.Format("pool4 = {0}", ResolvedServersAutolykos[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[3].Contains("auto.") ? "9200" : "3390") + "\n"
                 + String.Format("[zil]\n")
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("zilEpoch = 0\n")
                    //    + String.Format("protocol = JSON-RPC\n")
-                   + String.Format("pool2 = {0}", ResolvedServersZil[1].Replace("stratum+tcp://", "")) + ":3353\n"
-                   + String.Format("pool3 = {0}", ResolvedServersZil[2].Replace("stratum+tcp://", "")) + ":3353\n"
-                   + String.Format("pool4 = {0}", ResolvedServersZil[0].Replace("stratum+tcp://", "")) + ":3353\n";
+                   + String.Format("pool1 = {0}", ResolvedServersZil[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[0].Contains("auto.") ? "9200" : "3353") + "\n"
+                   + String.Format("pool2 = {0}", ResolvedServersZil[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[1].Contains("auto.") ? "9200" : "3353") + "\n"
+                   + String.Format("pool3 = {0}", ResolvedServersZil[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[2].Contains("auto.") ? "9200" : "3353") + "\n"
+                   + String.Format("pool4 = {0}", ResolvedServersZil[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[3].Contains("auto.") ? "9200" : "3353") + "\n";
             }
             try
             {

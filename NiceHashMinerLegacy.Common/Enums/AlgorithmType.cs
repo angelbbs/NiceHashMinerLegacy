@@ -98,7 +98,7 @@
         Beam_UNUSED = 37,
         GrinCuckaroo29_UNUSED = 38,
         GrinCuckatoo31 = 39,
-        Lyra2REv3 = 40,
+        Lyra2REv3_UNUSED = 40,
         MTP_UNUSED = 41,
         CryptoNightR_UNUSED = 42,
         CuckooCycle = 43,

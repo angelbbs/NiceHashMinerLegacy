@@ -1276,6 +1276,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
             ConfigManager.GeneralConfig.Show_current_actual_profitability = checkbox_current_actual_profitabilities.Checked;
+            ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
             ConfigManager.GeneralConfig.ShowTotalPower = checkBox_Show_Total_Power.Checked;
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
             ConfigManager.GeneralConfig.Additional_info_about_device = checkBox_Additional_info_about_device.Checked;

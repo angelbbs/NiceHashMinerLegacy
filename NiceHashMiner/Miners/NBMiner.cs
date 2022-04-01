@@ -110,59 +110,67 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1].Replace("stratum+tcp://", "nicehash+tcp://") + ":3353" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2].Replace("stratum+tcp://", "nicehash+tcp://") + ":3353" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0].Replace("stratum+tcp://", "nicehash+tcp://") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1].Replace("stratum+tcp://", "nicehash+tcp://") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2].Replace("stratum+tcp://", "nicehash+tcp://") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1] + ":3372" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":3372" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3372") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3372") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3372") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1] + ":3383" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":3383" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3383") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3383") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3383") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1] + ":3376" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":3376" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3376") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3376") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3376") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1] + ":3385" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":3385" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3385") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3385") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3385") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1] + ":3387" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":3387" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3387") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3387") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3387") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1] + ":3389" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":3389" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3389") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3389") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3389") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                cmd = $"-a {AlgoName} -o {Links.CheckDNS(url)} -u {user}" +
-                    $" -o1 " + ResolvedServers[1] + ":3390" + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":3390" + " -u2 " + user +
+                cmd = $"-a {AlgoName}" +
+                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3390") + " -u " + user +
+                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3390") + " -u1 " + user +
+                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3390") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;

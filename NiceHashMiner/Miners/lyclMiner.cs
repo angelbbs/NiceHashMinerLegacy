@@ -224,7 +224,7 @@ namespace NiceHashMiner.Miners
             w.Close();
 
             Thread.Sleep(500);
-            var url = Globals.GetLocationUrl(AlgorithmType.Lyra2REv3, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], NhmConectionType.STRATUM_TCP);
+            var url = Globals.GetLocationUrl(AlgorithmType.NONE, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], NhmConectionType.STRATUM_TCP);
             var username = Globals.GetBitcoinUser();
             string[] ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToArray();
             conf = conf.Replace("stratum+tcp://example.com:port", "stratum+tcp://lyra2v3.eu.mine.zpool.ca:4550");
@@ -370,7 +370,7 @@ namespace NiceHashMiner.Miners
             var totalSpeed = 0.0d;
             foreach (var miningPair in MiningSetup.MiningPairs)
             {
-                var algo = miningPair.Device.GetAlgorithm(MinerBaseType.lyclMiner, AlgorithmType.Lyra2REv3, AlgorithmType.NONE);
+                var algo = miningPair.Device.GetAlgorithm(MinerBaseType.lyclMiner, AlgorithmType.NONE, AlgorithmType.NONE);
                 if (algo != null)
                 {
                     totalSpeed += algo.BenchmarkSpeed;

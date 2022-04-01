@@ -60,9 +60,10 @@ namespace NiceHashMiner.Miners
                 {
                     return $" --main-pool-reconnect 2 --disable-cpu --a0-is-zil --multi-algorithm-job-mode 3 " +
                         $"--algorithm ethash;autolykos2 " +
-                        $"--pool {ResolvedServersZil[0]}:3353;{ResolvedServersAutolykos[0]}:3390 " +
-                        $"--pool {ResolvedServersZil[1]}:3353;{ResolvedServersAutolykos[1]}:3390 " +
-                        $"--pool {ResolvedServersZil[2]}:3353;{ResolvedServersAutolykos[2]}:3390 " +
+                        $"--pool {ResolvedServersZil[0]}:{(ResolvedServersZil[0].Contains("auto.") ? "9200" : "3353")};{ResolvedServersAutolykos[0]}:{(ResolvedServersAutolykos[0].Contains("auto.") ? "9200" : "3390")} " +
+                        $"--pool {ResolvedServersZil[1]}:{(ResolvedServersZil[1].Contains("auto.") ? "9200" : "3353")};{ResolvedServersAutolykos[1]}:{(ResolvedServersAutolykos[1].Contains("auto.") ? "9200" : "3390")} " +
+                        $"--pool {ResolvedServersZil[2]}:{(ResolvedServersZil[2].Contains("auto.") ? "9200" : "3353")};{ResolvedServersAutolykos[2]}:{(ResolvedServersAutolykos[2].Contains("auto.") ? "9200" : "3390")} " +
+                        $"--pool {ResolvedServersZil[3]}:{(ResolvedServersZil[3].Contains("auto.") ? "9200" : "3353")};{ResolvedServersAutolykos[3]}:{(ResolvedServersAutolykos[3].Contains("auto.") ? "9200" : "3390")} " +
                         $"--wallet {username};{username}  --password x;x --api-enable --api-port {ApiPort} " +
                    "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -72,30 +73,30 @@ namespace NiceHashMiner.Miners
                     var port = "3380";
                     url = url.Replace("randomx", "randomxmonero");
                     List<string> ResolvedServers = MiningSession.GetResolvedServers(algo);
-                    return $" --algorithm randomx --pool {Links.CheckDNS(url)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
-                   + $" --pool {ResolvedServers[1]}:{port} --wallet {username} "
-                   + $" --pool {ResolvedServers[2]}:{port} --wallet {username} "
-                   + $" --pool {ResolvedServers[0]}:{port} --wallet {username} ";
+                    return $" --algorithm randomx --pool {ResolvedServers[0]}:{(ResolvedServers[0].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} {extras} "
+                   + $" --pool {ResolvedServers[1]}:{(ResolvedServers[1].Contains("auto.") ? "9200" : port)} --wallet {username} "
+                   + $" --pool {ResolvedServers[2]}:{(ResolvedServers[2].Contains("auto.") ? "9200" : port)} --wallet {username} "
+                   + $" --pool {ResolvedServers[3]}:{(ResolvedServers[3].Contains("auto.") ? "9200" : port)} --wallet {username} ";
 
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
                     var port = "3353";
                     List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
-                    return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {Links.CheckDNS(url)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
-                   + $" --pool {ResolvedServers[1]}:{port} --wallet {username} --nicehash true "
-                   + $" --pool {ResolvedServers[2]}:{port} --wallet {username} --nicehash true "
-                   + $" --pool {ResolvedServers[0]}:{port} --wallet {username} --nicehash true "
+                    return $" --main-pool-reconnect 2 --a0-is-zil --disable-cpu --algorithm ethash --pool {ResolvedServers[0]}:{(ResolvedServers[0].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+                   + $" --pool {ResolvedServers[1]}:{(ResolvedServers[1].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[2]}:{(ResolvedServers[2].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[3]}:{(ResolvedServers[3].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true "
                    + "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     var port = "3390";
                     List<string> ResolvedServers = MiningSession.GetResolvedServers("autolykos");
-                    return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {Links.CheckDNS(url)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
-                   + $" --pool {ResolvedServers[1]}:{port} --wallet {username} --nicehash true "
-                   + $" --pool {ResolvedServers[2]}:{port} --wallet {username} --nicehash true "
-                   + $" --pool {ResolvedServers[0]}:{port} --wallet {username} --nicehash true "
+                    return $" --main-pool-reconnect 2 --disable-cpu --algorithm autolykos2 --pool {ResolvedServers[0]}:{(ResolvedServers[0].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true --api-enable --api-port {ApiPort} "
+                   + $" --pool {ResolvedServers[1]}:{(ResolvedServers[1].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[2]}:{(ResolvedServers[2].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true "
+                   + $" --pool {ResolvedServers[3]}:{(ResolvedServers[3].Contains("auto.") ? "9200" : port)} --wallet {username} --nicehash true "
                    + "--gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
             } catch (Exception ex)
