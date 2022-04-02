@@ -32,6 +32,7 @@ namespace NiceHashMiner.Miners
         private int offset = 0;
         private double _power = 0.0d;
         double _powerUsage = 0;
+        int addTime = 0;
 
         public GMiner(AlgorithmType secondaryAlgorithmType) : base("GMiner")
         {
@@ -277,7 +278,15 @@ namespace NiceHashMiner.Miners
         }
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            _benchmarkTimeWait = time;
+            foreach (var pair in MiningSetup.MiningPairs)
+            {
+                if (pair.Device.NvidiaLHR && MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+                {
+                    addTime = 60;
+                }
+            }
+
+            _benchmarkTimeWait = time + addTime;
             var ret = "";
 
             var btcAddress = Globals.GetBitcoinUser();
@@ -393,7 +402,7 @@ namespace NiceHashMiner.Miners
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
                         MinerStartDelay = 10;
-                        delay_before_calc_hashrate = 5;
+                        delay_before_calc_hashrate = 5 + addTime;
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))

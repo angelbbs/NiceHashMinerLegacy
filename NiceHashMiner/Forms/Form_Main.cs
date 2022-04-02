@@ -343,7 +343,7 @@ namespace NiceHashMiner
 
             Text += ForkString;
             //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "45";
+            Text += "46";
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -797,7 +797,7 @@ namespace NiceHashMiner
             foreach (var location in Globals.MiningLocation)
             {
                 //if (location.Contains("Auto")) continue;
-                for (int an = 8; an < (int)Enum.GetValues(typeof(AlgorithmType)).Cast<AlgorithmType>().Max(); an++)
+                for (int an = 8; an <= (int)Enum.GetValues(typeof(AlgorithmType)).Cast<AlgorithmType>().Max(); an++)
                 {
                     if (!an.ToString().Equals(((AlgorithmType)an).ToString()) && !((AlgorithmType)an).ToString().Contains("UNUSED"))
                     {

@@ -125,10 +125,11 @@ namespace NiceHashMiner
                     file = JsonConvert.DeserializeObject<DNSCache>(File.ReadAllText("configs\\dnscache.json"), Globals.JsonSettings);
                 } catch (Exception)
                 {
-                    File.WriteAllBytes("configs\\dnscache.json", Properties.Resources.dnscache);
+                    WriteAllBytesWithBackup("configs\\dnscache.json", Properties.Resources.dnscache);
+                    file = null;
+                    file = JsonConvert.DeserializeObject<DNSCache>(File.ReadAllText("configs\\dnscache.json"), Globals.JsonSettings);
                 }
-                file = JsonConvert.DeserializeObject<DNSCache>(File.ReadAllText("configs\\dnscache.json"), Globals.JsonSettings);
-
+                
                 List<IPList> _domains = file.domains;
                 var _ipList = new IPList();
                 _ipList.domainName = domainName;
