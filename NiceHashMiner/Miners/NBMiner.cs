@@ -446,8 +446,13 @@ namespace NiceHashMiner.Miners
                 }
 
                 ad.Speed = resp.TotalHashrate ?? 0;
-
-                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                if (ad.Speed != 0)
+                {
+                    CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                } else
+                {
+                    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                }
             }
             else
             {

@@ -759,11 +759,6 @@ namespace NiceHashMiner.Miners
             }
 
             Thread.Sleep(100);
-
-            //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-            // check if speed zero
-            if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-
             return ad;
         }
     }

@@ -7,6 +7,7 @@ namespace NiceHashMiner.Forms
 {
     public partial class Form_ChooseLanguage : Form
     {
+        public static bool FormMainMoved = false;
         private const string TosText =
          "The MIT License (MIT)\r\n\r\n" +
             "Copyright © 2020 angelbbs\r\n\r\n" +
@@ -138,6 +139,16 @@ namespace NiceHashMiner.Forms
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;
             }
+        }
+
+        private void Form_ChooseLanguage_ResizeBegin(object sender, EventArgs e)
+        {
+            FormMainMoved = true;
+        }
+
+        private void Form_ChooseLanguage_ResizeEnd(object sender, EventArgs e)
+        {
+            FormMainMoved = false;
         }
     }
 }

@@ -272,7 +272,7 @@ namespace NiceHashMiner.Forms.Components
 
         public void SetComputeDevicesStatus(List<ComputeDevice> computeDevices)
         {
-            if (Form_Main.FormMainMoved || Form_RigProfitChart.FormChartMoved || Form_Settings.FormSettingsMoved || Form_Benchmark.FormBenchmarkMoved)
+            if (Form_ChooseLanguage.FormMainMoved || Form_API_keys.FormMainMoved || Form_Main.FormMainMoved || Form_RigProfitChart.FormChartMoved || Form_Settings.FormSettingsMoved || Form_Benchmark.FormBenchmarkMoved)
             {
                 return;
             }

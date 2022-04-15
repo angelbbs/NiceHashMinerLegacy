@@ -179,6 +179,12 @@
     <Compile Include="Forms\Components\AlgorithmsListViewOverClock.Designer.cs">
       <DependentUpon>AlgorithmsListViewOverClock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_API_keys.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_API_keys.Designer.cs">
+      <DependentUpon>Form_API_keys.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_Downloading.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -323,12 +329,6 @@
     <Compile Include="Forms\Form_ChooseLanguage.Designer.cs">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_3rdParty_TOS.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
-      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Form_Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -428,14 +428,14 @@
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_API_keys.resx">
+      <DependentUpon>Form_API_keys.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
-      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Downloading.resx">
       <DependentUpon>Form_Downloading.cs</DependentUpon>

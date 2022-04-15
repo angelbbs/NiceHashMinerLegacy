@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.ExceptionServices;
@@ -95,6 +97,7 @@ namespace NiceHashMiner.Stats
 
         private static List<AlgorithmType> smaAlgos = new List<AlgorithmType>();
         private static List<string> markets = new List<string>();
+        public static string serverTime;
 
         private static void LoadCachedSMAData()
         {
@@ -256,7 +259,7 @@ namespace NiceHashMiner.Stats
                             break;
 
                         case "balance":
-                            if (!ConfigManager.GeneralConfig.ChartEnable)
+                            //if (!ConfigManager.GeneralConfig.ChartEnable)
                             {
                                 SetBalance(message.value.Value);
                             }
@@ -639,7 +642,6 @@ namespace NiceHashMiner.Stats
         public static bool GetSmaAPI5m()
         {
             Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPI5m");
-
             try
             {
                 string resp;
@@ -759,7 +761,142 @@ namespace NiceHashMiner.Stats
             return false;
 
         }
-        public static bool GetRigProfit()//big traffic
+
+        public static string GetApiFlags()
+        {
+            string apistr = Links.ApiFlags;
+            string resp;
+            try
+            {
+                resp = NiceHashStats.GetNiceHashApiDataWithSecret(apistr, false);
+                if (resp != null)
+                {
+                    dynamic respFlags = JsonConvert.DeserializeObject(resp);
+                    foreach(var flag in respFlags.list)
+                    {
+                        if (flag.flagName == "IS_MAINTENANCE" && flag.flagValue == true)
+                        {
+                            return "(" + International.GetText("Form_Main_NHflagMaintenance") + ")";
+                        }
+                        if (flag.flagName == "SYSTEM_UNAVAILABLE" && flag.flagValue == true)
+                        {
+                            return "(" + International.GetText("Form_Main_NHflagSystemUnavialable") + ")";
+                        }
+                    }
+                }
+                else
+                {
+                    return "";
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetApiFlags", ex.ToString());
+            }
+            return "";
+        }
+
+        public static bool GetRigProfit()
+        {
+            if (Form_Main.GetBTCwalletType().Equals("P2SH"))
+            {
+                return GetRigProfitInternal();//internal wallet P2SH
+            }
+            else if (Form_Main.GetBTCwalletType().Equals("P2PKH"))
+            {
+                return GetRigProfitExternal(); //external wallet P2PKH
+            }
+            else if (Form_Main.GetBTCwalletType().Equals("SegWit"))
+            {
+                return GetRigProfitExternal(); //external wallet SegWit
+            }
+            return false;
+        }
+
+        public static bool GetRigProfitInternal(bool force = false)
+        {
+            try
+            {
+                if ((ConfigManager.GeneralConfig.ChartEnable && ConfigManager.GeneralConfig.EnableAPIkeys) || force)
+                {
+                    string apistr = Links.ServerTime;
+                    string resp;
+                    resp = NiceHashStats.GetNiceHashApiDataWithSecret(apistr, false);
+                    if (resp != null)
+                    {
+                        dynamic respTime = JsonConvert.DeserializeObject(resp);
+                        serverTime = respTime.serverTime;
+                    } else
+                    {
+                        serverTime = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                    }
+                    
+                    apistr = Links.RigDetails + ConfigManager.GeneralConfig.MachineGuid;
+                    resp = NiceHashStats.GetNiceHashApiDataWithSecret(apistr, true);
+                    if (resp != null)
+                    {
+                        dynamic respJson = JsonConvert.DeserializeObject(resp);
+
+                        if (respJson.rigId == NiceHashSocket.RigID)
+                        {
+                            if (respJson.profitability > Form_Main.lastRigProfit.currentProfitAPI * 100 &&
+                                Form_Main.lastRigProfit.currentProfitAPI != 0 && respJson.profitability != 0)
+                            {
+                                Helpers.ConsolePrint("GetRigProfitInternal too high. Ignoring", (respJson.profitability * 1000).ToString());
+                            }
+                            else if (respJson.profitability * 100 < Form_Main.lastRigProfit.currentProfitAPI &&
+                                Form_Main.lastRigProfit.currentProfitAPI != 0 && respJson.profitability != 0)
+                            {
+                                Helpers.ConsolePrint("GetRigProfitInternal too low. Ignoring", (respJson.profitability * 1000).ToString());
+                                     }
+                            else
+                            {
+                                double localProfitability = respJson.localProfitability;
+                                if (localProfitability > 0)
+                                {
+                                    Form_Main.lastRigProfit.totalRate = localProfitability;
+                                }
+                                Form_Main.lastRigProfit.currentProfitAPI = respJson.profitability;
+                                Helpers.ConsolePrint("GetRigProfitInternal", (respJson.profitability * 1000).ToString());
+                            }
+                        }
+
+                        double unpaidAmount = respJson.unpaidAmount;
+                        Helpers.ConsolePrint("Rig unpaidAmount", (unpaidAmount * 1000).ToString());
+                        //SetBalance(unpaidAmount.ToString());//only this rig
+
+                        if (ConfigManager.GeneralConfig.ChartEnable)
+                        {
+                            Form_Main.TotalProfitabilityFromNH = Form_Main.TotalProfitabilityFromNH + Form_Main.lastRigProfit.currentProfitAPI / 1440;
+                        }
+                        else
+                        {
+                            Form_Main.TotalProfitabilityFromNH = 0;
+                        }
+                    }
+                    else
+                    {
+                        Form_Main.lastRigProfit.currentProfitAPI = 0;
+                        Form_Main.lastRigProfit.unpaidAmount = 0;
+                        return false;
+                    }
+                    
+                }
+                else
+                {
+                    Form_Main.lastRigProfit.currentProfitAPI = 0;
+                    Form_Main.lastRigProfit.unpaidAmount = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetRigProfitInternal", ex.Message);
+                Form_Main.errorAPIkeystring = ex.Message;
+                return false;
+            }
+            Form_Main.errorAPIkeystring = "No errors";
+            return true;
+        }
+        public static bool GetRigProfitExternal()//big traffic
         {
             try
             {
@@ -767,9 +904,7 @@ namespace NiceHashMiner.Stats
                 {
                     string apistr = Links.NhmExternal + Globals.GetBitcoinUser() + "/rigs2?sort=NAME&page=0";
                     string resp;
-                    Helpers.ConsolePrint("NHM_API_info", "Trying GetRigProfit");
                     resp = NiceHashStats.GetNiceHashApiData(apistr, "");
-
                     if (resp != null)
                     {
                         //Helpers.ConsolePrint("NHM_API_info", resp);
@@ -783,19 +918,19 @@ namespace NiceHashMiner.Stats
                                 if (rig.profitability > Form_Main.lastRigProfit.currentProfitAPI * 100 &&
                                     Form_Main.lastRigProfit.currentProfitAPI != 0 && rig.profitability != 0)
                                 {
-                                    Helpers.ConsolePrint("GetRigProfit too high. Ignoring", (rig.profitability * 1000).ToString());
+                                    Helpers.ConsolePrint("GetRigProfitExternal too high. Ignoring", (rig.profitability * 1000).ToString());
                                     //Helpers.ConsolePrint("Form_Main.lastRigProfit.currentProfitAPI", (Form_Main.lastRigProfit.currentProfitAPI * 1000).ToString());
                                 }
                                 else if (rig.profitability * 100 < Form_Main.lastRigProfit.currentProfitAPI &&
                                     Form_Main.lastRigProfit.currentProfitAPI != 0 && rig.profitability != 0)
                                 {
-                                    Helpers.ConsolePrint("GetRigProfit too low. Ignoring", (rig.profitability * 1000).ToString());
+                                    Helpers.ConsolePrint("GetRigProfitExternal too low. Ignoring", (rig.profitability * 1000).ToString());
                                     //Helpers.ConsolePrint("Form_Main.lastRigProfit.currentProfitAPI", (Form_Main.lastRigProfit.currentProfitAPI * 1000).ToString());
                                 }
                                 else
                                 {
                                     Form_Main.lastRigProfit.currentProfitAPI = rig.profitability;
-                                    Helpers.ConsolePrint("GetRigProfit", (rig.profitability * 1000).ToString());
+                                    Helpers.ConsolePrint("GetRigProfitExternal", (rig.profitability * 1000).ToString());
                                 }
                             }
                         }
@@ -827,8 +962,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("NHM_API_info", ex.Message);
-                Helpers.ConsolePrint("NHM_API_info", "GetRigProfit fatal ERROR");
+                Helpers.ConsolePrint("GetRigProfitExternal", ex.Message);
                 return false;
             }
             return false;
@@ -1693,10 +1827,14 @@ namespace NiceHashMiner.Stats
                 var activeMinersGroup = MinersManager.GetActiveMinersGroup();
 
                 var wr = (HttpWebRequest)WebRequest.Create(link);
-                wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
-                if (worker.Length > 64) worker = worker.Substring(0, 64);
-                wr.Headers.Add("NiceHash-Worker-ID", worker);
-                wr.Headers.Add("NHM-Active-Miners-Group", activeMinersGroup);
+
+                string RequestId = System.Guid.NewGuid().ToString().Replace("-", "");
+
+                //wr.UserAgent = "NiceHashMiner/" + ConfigManager.GeneralConfig.NHMVersion;
+                wr.UserAgent = "name=Edge;version=100.0.1185.39;buildNumber=1;os=Windows;osVersion=10;deviceVersion=amd64;lang=en";
+                wr.Headers.Add("X-Request-Id", RequestId);
+                wr.Headers.Add("X-User-Lang", "en");
+
                 wr.Host = host;
                 wr.Timeout = 5 * 1000;
                 var response = wr.GetResponse();
@@ -1714,7 +1852,135 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("NICEHASH", ex.Message);
+                Helpers.ConsolePrint("GetNiceHashApiData", ex.Message);
+                return null;
+            }
+            return responseFromServer;
+        }
+        private static string HashBySegments(string key, string apiKey, string time, string nonce, string orgId, string method, string encodedPath, string query, string bodyStr)
+        {
+            List<string> segments = new List<string>();
+            segments.Add(apiKey);
+            segments.Add(time);
+            segments.Add(nonce);
+            segments.Add(null);
+            segments.Add(orgId);
+            segments.Add(null);
+            segments.Add(method);
+            segments.Add(encodedPath == null ? null : encodedPath);
+            segments.Add(query == null ? null : query);
+
+            if (bodyStr != null && bodyStr.Length > 0)
+            {
+                segments.Add(bodyStr);
+            }
+            return CalcHMACSHA256Hash(JoinSegments(segments), key);
+        }
+        private static string JoinSegments(List<string> segments)
+        {
+            var sb = new System.Text.StringBuilder();
+            bool first = true;
+            foreach (var segment in segments)
+            {
+                if (!first)
+                {
+                    sb.Append("\x00");
+                }
+                else
+                {
+                    first = false;
+                }
+
+                if (segment != null)
+                {
+                    sb.Append(segment);
+                }
+            }
+            return sb.ToString();
+        }
+        private static string CalcHMACSHA256Hash(string plaintext, string salt)
+        {
+            string result = "";
+            var enc = Encoding.Default;
+            byte[]
+            baText2BeHashed = enc.GetBytes(plaintext),
+            baSalt = enc.GetBytes(salt);
+            System.Security.Cryptography.HMACSHA256 hasher = new System.Security.Cryptography.HMACSHA256(baSalt);
+            byte[] baHashedText = hasher.ComputeHash(baText2BeHashed);
+            result = string.Join("", baHashedText.ToList().Select(b => b.ToString("x2")).ToArray());
+            return result;
+        }
+        private static string getPath(string url)
+        {
+            var arrSplit = url.Split('?');
+            return arrSplit[0];
+        }
+        private static string getQuery(string url)
+        {
+            var arrSplit = url.Split('?');
+
+            if (arrSplit.Length == 1)
+            {
+                return null;
+            }
+            else
+            {
+                return arrSplit[1];
+            }
+        }
+        public static string GetNiceHashApiDataWithSecret(string url, bool auth)
+        {
+            string link = Links.CheckDNS(url);
+            string host = new Uri(url).Host;
+            var responseFromServer = "";
+
+            if ((Form_Main.orgId + Form_Main.apiKey + Form_Main.apiSecret).IsNullOrEmpty())
+            {
+                Form_API_keys.GetSavedAPIkeyData();
+            }
+
+            string orgId = Form_Main.orgId;
+            string apiKey = Form_Main.apiKey;
+            string apiSecret = Form_Main.apiSecret;
+
+
+            try
+            {
+                var wr = (HttpWebRequest)WebRequest.Create(link);
+                if (auth)
+                {
+                    string nonce = System.Guid.NewGuid().ToString().Replace("-", "");
+                    string RequestId = System.Guid.NewGuid().ToString().Replace("-", "");
+                    string digest = HashBySegments(apiSecret, apiKey, serverTime, nonce, orgId, "GET", getPath(url.Replace("https://api2.nicehash.com", "")), getQuery(url.Replace("https://api2.nicehash.com", "")), null);
+
+                    //wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
+                    wr.UserAgent = "name=Edge;version=100.0.1185.39;buildNumber=1;os=Windows;osVersion=10;deviceVersion=amd64;lang=en";
+                    wr.Headers.Add("X-Time", serverTime);
+                    wr.Headers.Add("X-Nonce", nonce);
+                    wr.Headers.Add("X-Organization-Id", orgId);
+                    wr.Headers.Add("X-Auth", apiKey + ":" + digest);
+                    wr.Headers.Add("X-Request-Id", RequestId);
+                    wr.Headers.Add("X-User-Lang", "en");
+                }
+                wr.Host = host;
+                wr.Timeout = 5 * 1000;
+                var response = wr.GetResponse();
+                var ss = response.GetResponseStream();
+                if (ss != null)
+                {
+                    ss.ReadTimeout = 3 * 1000;
+                    var reader = new StreamReader(ss);
+                    responseFromServer = reader.ReadToEnd();
+                    if (responseFromServer.Length == 0 || responseFromServer[0] != '{')
+                        throw new Exception("Not JSON!");
+                    reader.Close();
+                }
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetNiceHashApiDataWithSecret", ex.ToString());
+                Form_Main.errorAPIkeystring = ex.Message;
                 return null;
             }
             return responseFromServer;

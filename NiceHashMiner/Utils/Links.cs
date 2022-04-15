@@ -29,6 +29,10 @@ namespace NiceHashMiner
         public static string NhmCurrent = ("https://api2.nicehash.com/main/api/v2/public/stats/global/current");
         public static string Nhm24h = ("https://api2.nicehash.com/main/api/v2/public/stats/global/24");
         public static string NhmExternal = ("https://api2.nicehash.com/main/api/v2/mining/external/");
+        public static string RigDetails = ("https://api2.nicehash.com/main/api/v2/mining/rig2/");
+        public static string ServerTime = ("https://api2.nicehash.com/api/v2/time");
+        public static string ApiFlags = ("https://api2.nicehash.com/api/v2/system/flags");
+        public static string GetAPIkey = ("https://www.nicehash.com/my/settings/keys");
         public static string ApiUrl = ("https://api.nicehash.com/api?method=nicehash.service.info");//?
         public static string exchangeRateList = ("https://api2.nicehash.com/main/api/v2/exchangeRate/list/");
         public static string miningStats = ("https://www.nicehash.com/my/mining/stats/");

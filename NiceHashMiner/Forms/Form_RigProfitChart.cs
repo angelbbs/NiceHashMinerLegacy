@@ -96,6 +96,13 @@ namespace NiceHashMiner.Forms
         }
         void ChartData(object sender, EventArgs e)
         {
+            if (!ConfigManager.GeneralConfig.EnableAPIkeys)
+            {
+                checkBox_EnableChart.Checked = false;
+                checkBox_EnableChart.Update();
+                //this.Close();
+                //return;
+            }
             if (FormChartMoved || Form_Main.FormMainMoved || Form_Settings.FormSettingsMoved || Form_Benchmark.FormBenchmarkMoved) return;
 
             if (Form_Main.RigProfits.Count <= ProfitsCount)
@@ -495,6 +502,14 @@ namespace NiceHashMiner.Forms
 
         private void checkBox_EnableChart_CheckedChanged(object sender, EventArgs e)
         {
+            if (!ConfigManager.GeneralConfig.EnableAPIkeys && Form_Main.walletType.Equals("P2SH") && checkBox_EnableChart.Checked)
+            {
+                checkBox_EnableChart.Checked = false;
+                MessageBox.Show(International.GetText("Form_Settings_API_key_required"),
+                    International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (!ConfigManager.GeneralConfig.ChartEnable && checkBox_EnableChart.Checked)
             {
                 MessageBox.Show(International.GetText("Form_Profit_Chart_Warning1"),

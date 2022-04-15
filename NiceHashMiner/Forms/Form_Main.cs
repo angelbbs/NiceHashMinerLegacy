@@ -147,6 +147,14 @@ namespace NiceHashMiner
         public static bool InBenchmark = false;
         public static bool NHConnectingInProgress = false;
         public static bool DownloadingInProgress = false;
+        public static string orgId;
+        public static string apiKey;
+        public static string apiSecret;
+        public static string walletType = "";
+        public static string errorAPIkeystring;
+        public static bool API_key_validity = false;
+        public static bool checkBox_EnableAPI = false;
+        private static string NHApiFlag = "";
 
         public struct RigProfitList
         {
@@ -309,6 +317,24 @@ namespace NiceHashMiner
                 this.buttonLogo.Image = Properties.Resources.NHM_logo_small_2021; //dgdesign.ru
             }
             */
+            /*
+            var image = System.Drawing.Image.FromFile("9may.png");
+            PictureBox imageControl = new PictureBox();
+            imageControl.Top = 0;
+            imageControl.Left = 0;
+            imageControl.Dock = DockStyle.Fill;
+            imageControl.Image = (Image)image;
+            imageControl.BackColor = Color.Transparent;
+            */
+            //Controls.Add(imageControl);
+            //            imageControl.BringToFront();
+            //var iconUri = Bitmap.FromFile("9.ico");
+            /*
+            Icon TheIcon = IconFromFilePath("9.ico");
+            this.Icon = TheIcon;
+            */
+
+
             InitLocalization();
             devicesListViewEnableControl1.Visible = false;
             ComputeDeviceManager.SystemSpecs.QueryAndLog();
@@ -342,8 +368,21 @@ namespace NiceHashMiner
             R = new Random((int)DateTime.Now.Ticks);
 
             Text += ForkString;
-            //Text += ConfigManager.GeneralConfig.ForkFixVersion.ToString();
-            Text += "46";
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+            double.TryParse(version, out var d);
+            int.TryParse(version, out var i);
+            if (d / i == 1)
+            {
+                Text += i.ToString();
+            }
+            else
+            {
+                Text += d.ToString();
+            }
+
             Text += " for NiceHash";
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -377,7 +416,16 @@ namespace NiceHashMiner
             thisProc.PriorityClass = ProcessPriorityClass.Normal;
             //
         }
-
+        public Icon IconFromFilePath(string filePath)
+        {
+            Icon programicon = null;
+            try
+            {
+                programicon = Icon.ExtractAssociatedIcon(filePath);
+            }
+            catch { }
+            return programicon;
+        }
         private void InitLocalization()
         {
             MessageBoxManager.Unregister();
@@ -709,7 +757,7 @@ namespace NiceHashMiner
                 return;
             }
 
-
+            GetBTCwalletType();
             _loadingScreen.Show();
             _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
@@ -1299,6 +1347,7 @@ namespace NiceHashMiner
             {
                 NiceHashStats.GetRigProfit();
             }
+            NHApiFlag =  NiceHashStats.GetApiFlags();
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             _loadingScreen.SetValueAndMsg(1, "Starting...");
         }
@@ -1342,6 +1391,8 @@ namespace NiceHashMiner
             {
                 ChartDataAvail = RigProfit.currentProfitAPI + RigProfit.totalRate;
             }
+
+            NHApiFlag = NiceHashStats.GetApiFlags();
 
             _updateTimerCount++;
             int period = 0;
@@ -2738,16 +2789,16 @@ public static void CloseChilds(Process parentId)
                     _oldState = _curState;
                     if (_curState == WebSocketSharp.WebSocketState.Closed || _curState == WebSocketSharp.WebSocketState.Closing)
                     {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NHApiFlag;
                     }
                     if (_curState == WebSocketSharp.WebSocketState.Connecting || NHConnectingInProgress)
                     {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + NHApiFlag;
                         textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
                     }
                     if (_curState == WebSocketSharp.WebSocketState.Open)
                     {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected");
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected") + " " + NHApiFlag;
                     }
                     label_NH_ConnectStatus.Update();
                 }
@@ -2756,12 +2807,12 @@ public static void CloseChilds(Process parentId)
             {
                 if (NHConnectingInProgress)
                 {
-                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting");
+                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + NHApiFlag;
                     label_NH_ConnectStatus.Update();
                 }
                 else
                 {
-                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
+                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NHApiFlag;
                 }
             }
         }
@@ -2935,7 +2986,7 @@ public static void CloseChilds(Process parentId)
                         {
                             if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.CPU)
                             {
-                                hardware.Update();
+                                new Task(() => hardware.Update()).Start();
                             }
                         }
                     }
@@ -3352,10 +3403,29 @@ public static void CloseChilds(Process parentId)
             {
                 ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
                 buttonBTC_Save.Enabled = false;
+                GetBTCwalletType();
+
             }
             NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
             //NiceHashStats.StartConnection(Links.NhmSocketAddress);
+        }
+
+        public static string GetBTCwalletType()
+        {
+            if (ConfigManager.GeneralConfig.BitcoinAddressNew.Trim().Substring(0, 1) == "3")
+            {
+                walletType = "P2SH";//internal wallet P2SH
+            }
+            else if (ConfigManager.GeneralConfig.BitcoinAddressNew.Trim().Substring(0, 1) == "1")
+            {
+                walletType = "P2PKH"; //external wallet P2PKH
+            }
+            else if (ConfigManager.GeneralConfig.BitcoinAddressNew.Trim().Substring(0, 3) == "bc1")
+            {
+                walletType = "SegWit"; //external wallet SegWit
+            }
+            return walletType;
         }
 
         private void textBoxBTCAddress_new_TextChanged(object sender, EventArgs e)

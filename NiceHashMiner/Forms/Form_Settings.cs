@@ -285,6 +285,7 @@ namespace NiceHashMiner.Forms
             buttonDefaults.Text = International.GetText("Form_Settings_buttonDefaultsText");
             buttonSaveClose.Text = International.GetText("Form_Settings_buttonSaveText");
             buttonCloseNoSave.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
+            buttonSetupAPI.Text = International.GetText("Form_Settings_buttonSetupAPI");
         }
 
         #endregion //Form this
@@ -318,6 +319,7 @@ namespace NiceHashMiner.Forms
             checkBoxRestartDriver.Text = International.GetText("Form_Settings_checkBox_RestartDriver");
             checkBoxRestartWindows.Text = International.GetText("Form_Settings_checkBox_RestartWindows");
             checkBox_QM_mode.Text = International.GetText("Form_Settings_checkBox_QM_mode");
+            checkBox_EnableAPI.Text = International.GetText("Form_Settings_checkBox_EnableAPI");
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
                 checkBox_show_NVdevice_manufacturer.Location = new Point(checkBox_show_NVdevice_manufacturer.Location.X + 74, checkBox_show_NVdevice_manufacturer.Location.Y); ;
@@ -483,6 +485,7 @@ namespace NiceHashMiner.Forms
             radioButtonMOPA4.Text = International.GetText("Form_Settings_radioButtonMOPA4");
             radioButtonMOPA5.Text = International.GetText("Form_Settings_radioButtonMOPA5");
             groupBox1.Text = International.GetText("Form_Settings_groupBox1");
+            groupBoxAPIkeys.Text = International.GetText("Form_Settings_groupBoxAPIkeys");
 
             label_switching_algorithms.Text = International.GetText("Form_Settings_label_switching_algorithms");
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms1"));
@@ -990,6 +993,7 @@ namespace NiceHashMiner.Forms
                 checkBoxDriverWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxRestartWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_QM_mode.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_EnableAPI.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1103,6 +1107,7 @@ namespace NiceHashMiner.Forms
                 checkBoxDriverWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
                 checkBoxRestartWindows.Checked = ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost;
                 checkBox_QM_mode.Checked = ConfigManager.GeneralConfig.QM_mode;
+                checkBox_EnableAPI.Checked = ConfigManager.GeneralConfig.EnableAPIkeys;
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
@@ -1210,8 +1215,12 @@ namespace NiceHashMiner.Forms
                 //var oc = tabPageOverClock;
                 //tabControlGeneral.TabPages.Remove(oc);
             }
-
-
+            if (!Form_Main.GetBTCwalletType().Equals("P2SH"))
+            {
+                buttonSetupAPI.Enabled = false;
+                checkBox_EnableAPI.Enabled = false;
+                groupBoxAPIkeys.Enabled = false;
+            }
         }
 
         private void InitializeGeneralTab()
@@ -1272,6 +1281,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBoxDriverWarning.Checked;
             ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost = checkBoxRestartWindows.Checked;
             ConfigManager.GeneralConfig.QM_mode = checkBox_QM_mode.Checked;
+            ConfigManager.GeneralConfig.EnableAPIkeys = checkBox_EnableAPI.Checked;
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
@@ -2579,6 +2589,38 @@ namespace NiceHashMiner.Forms
             {
                 MessageBox.Show(International.GetText("Form_Settings_checkBox_orderPrice_Warning1"),
         International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void buttonSetupAPI_Click(object sender, EventArgs e)
+        {
+            Form ifrmAPI = new Form_API_keys();
+            ifrmAPI.ShowDialog();
+        }
+
+        private void checkBox_EnableAPI_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_EnableAPI.Checked)
+            {
+                if (!Form_API_keys.GetSavedAPIkeyData())
+                {
+                    MessageBox.Show(International.GetText("Form_Settings_firstAPI"));
+                    checkBox_EnableAPI.Checked = false;
+                    //Form_Main.checkBox_EnableAPI = false;
+                } else
+                {
+                    Form_Main.checkBox_EnableAPI = true;
+                }
+            } else
+            {
+                if (Form_API_keys.GetSavedAPIkeyData())
+                {
+                    MessageBox.Show(International.GetText("Form_Settings_chart_disabled"),
+                    International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ConfigManager.GeneralConfig.ChartEnable = false;
+                    Form_Main.checkBox_EnableAPI = false;
+                    Form_Main.Form_RigProfitChartRunning = false;
+                }
             }
         }
     }
