@@ -42,7 +42,7 @@ namespace NiceHashMiner.Forms
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
             this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
-            this.checkbox_current_actual_profitabilities = new System.Windows.Forms.CheckBox();
+            this.checkbox_wallet_balance = new System.Windows.Forms.CheckBox();
             this.textBoxAddAMD = new System.Windows.Forms.TextBox();
             this.labelAddAMD = new System.Windows.Forms.Label();
             this.checkBox_fiat = new System.Windows.Forms.CheckBox();
@@ -104,14 +104,8 @@ namespace NiceHashMiner.Forms
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
             this.label_displayCurrency = new System.Windows.Forms.Label();
             this.tabPageAdvanced1 = new System.Windows.Forms.TabPage();
-            this.groupBoxMOPA = new System.Windows.Forms.GroupBox();
-            this.checkBox_orderPrice = new System.Windows.Forms.CheckBox();
-            this.radioButtonMOPA5 = new System.Windows.Forms.RadioButton();
-            this.radioButtonMOPA4 = new System.Windows.Forms.RadioButton();
-            this.radioButtonMOPA3 = new System.Windows.Forms.RadioButton();
-            this.radioButtonMOPA2 = new System.Windows.Forms.RadioButton();
-            this.radioButtonMOPA1 = new System.Windows.Forms.RadioButton();
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
+            this.checkBox_orderPrice = new System.Windows.Forms.CheckBox();
             this.checkBox_withPower = new System.Windows.Forms.CheckBox();
             this.checkBox_By_profitability_of_all_devices = new System.Windows.Forms.CheckBox();
             this.label_switching_algorithms = new System.Windows.Forms.Label();
@@ -219,7 +213,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).BeginInit();
             this.tabPageAdvanced1.SuspendLayout();
-            this.groupBoxMOPA.SuspendLayout();
             this.groupBox_Miners.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -446,7 +439,7 @@ namespace NiceHashMiner.Forms
             // groupBox_Main
             // 
             this.groupBox_Main.Controls.Add(this.checkBox_Show_Total_Power);
-            this.groupBox_Main.Controls.Add(this.checkbox_current_actual_profitabilities);
+            this.groupBox_Main.Controls.Add(this.checkbox_wallet_balance);
             this.groupBox_Main.Controls.Add(this.textBoxAddAMD);
             this.groupBox_Main.Controls.Add(this.labelAddAMD);
             this.groupBox_Main.Controls.Add(this.checkBox_fiat);
@@ -486,16 +479,17 @@ namespace NiceHashMiner.Forms
             this.checkBox_Show_Total_Power.Text = "Show total power consumption for uptime";
             this.checkBox_Show_Total_Power.UseVisualStyleBackColor = true;
             // 
-            // checkbox_current_actual_profitabilities
+            // checkbox_wallet_balance
             // 
-            this.checkbox_current_actual_profitabilities.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkbox_current_actual_profitabilities.Location = new System.Drawing.Point(9, 215);
-            this.checkbox_current_actual_profitabilities.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkbox_current_actual_profitabilities.Name = "checkbox_current_actual_profitabilities";
-            this.checkbox_current_actual_profitabilities.Size = new System.Drawing.Size(318, 18);
-            this.checkbox_current_actual_profitabilities.TabIndex = 385;
-            this.checkbox_current_actual_profitabilities.Text = "Show current actual profitability";
-            this.checkbox_current_actual_profitabilities.UseVisualStyleBackColor = true;
+            this.checkbox_wallet_balance.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkbox_wallet_balance.Location = new System.Drawing.Point(9, 215);
+            this.checkbox_wallet_balance.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkbox_wallet_balance.Name = "checkbox_wallet_balance";
+            this.checkbox_wallet_balance.Size = new System.Drawing.Size(318, 18);
+            this.checkbox_wallet_balance.TabIndex = 385;
+            this.checkbox_wallet_balance.Text = "Show wallet balance";
+            this.checkbox_wallet_balance.UseVisualStyleBackColor = true;
+            this.checkbox_wallet_balance.Click += new System.EventHandler(this.checkbox_wallet_balance_Click);
             // 
             // textBoxAddAMD
             // 
@@ -1230,7 +1224,6 @@ namespace NiceHashMiner.Forms
             // tabPageAdvanced1
             // 
             this.tabPageAdvanced1.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPageAdvanced1.Controls.Add(this.groupBoxMOPA);
             this.tabPageAdvanced1.Controls.Add(this.groupBox_Miners);
             this.tabPageAdvanced1.Controls.Add(this.groupBox1);
             this.tabPageAdvanced1.Location = new System.Drawing.Point(4, 23);
@@ -1241,98 +1234,9 @@ namespace NiceHashMiner.Forms
             this.tabPageAdvanced1.TabIndex = 2;
             this.tabPageAdvanced1.Text = "Advanced";
             // 
-            // groupBoxMOPA
-            // 
-            this.groupBoxMOPA.Controls.Add(this.checkBox_orderPrice);
-            this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA5);
-            this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA4);
-            this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA3);
-            this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA2);
-            this.groupBoxMOPA.Controls.Add(this.radioButtonMOPA1);
-            this.groupBoxMOPA.Location = new System.Drawing.Point(7, 103);
-            this.groupBoxMOPA.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxMOPA.Name = "groupBoxMOPA";
-            this.groupBoxMOPA.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxMOPA.Size = new System.Drawing.Size(658, 96);
-            this.groupBoxMOPA.TabIndex = 396;
-            this.groupBoxMOPA.TabStop = false;
-            this.groupBoxMOPA.Text = "Method of obtaining profitability of algorithms:";
-            // 
-            // checkBox_orderPrice
-            // 
-            this.checkBox_orderPrice.AutoSize = true;
-            this.checkBox_orderPrice.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_orderPrice.Location = new System.Drawing.Point(10, 71);
-            this.checkBox_orderPrice.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_orderPrice.Name = "checkBox_orderPrice";
-            this.checkBox_orderPrice.Size = new System.Drawing.Size(116, 17);
-            this.checkBox_orderPrice.TabIndex = 419;
-            this.checkBox_orderPrice.Text = "Use the order price";
-            this.checkBox_orderPrice.UseVisualStyleBackColor = true;
-            this.checkBox_orderPrice.CheckedChanged += new System.EventHandler(this.checkBox_orderPrice_CheckedChanged);
-            // 
-            // radioButtonMOPA5
-            // 
-            this.radioButtonMOPA5.AutoSize = true;
-            this.radioButtonMOPA5.Location = new System.Drawing.Point(242, 42);
-            this.radioButtonMOPA5.Name = "radioButtonMOPA5";
-            this.radioButtonMOPA5.Size = new System.Drawing.Size(183, 17);
-            this.radioButtonMOPA5.TabIndex = 399;
-            this.radioButtonMOPA5.TabStop = true;
-            this.radioButtonMOPA5.Text = "Highest profitability by all methods";
-            this.radioButtonMOPA5.UseVisualStyleBackColor = true;
-            this.radioButtonMOPA5.CheckedChanged += new System.EventHandler(this.radioButtonMOPA5_CheckedChanged_1);
-            // 
-            // radioButtonMOPA4
-            // 
-            this.radioButtonMOPA4.AutoSize = true;
-            this.radioButtonMOPA4.Location = new System.Drawing.Point(10, 42);
-            this.radioButtonMOPA4.Name = "radioButtonMOPA4";
-            this.radioButtonMOPA4.Size = new System.Drawing.Size(139, 17);
-            this.radioButtonMOPA4.TabIndex = 398;
-            this.radioButtonMOPA4.TabStop = true;
-            this.radioButtonMOPA4.Text = "24 hours avg profitability";
-            this.radioButtonMOPA4.UseVisualStyleBackColor = true;
-            this.radioButtonMOPA4.CheckedChanged += new System.EventHandler(this.radioButtonMOPA4_CheckedChanged_1);
-            // 
-            // radioButtonMOPA3
-            // 
-            this.radioButtonMOPA3.AutoSize = true;
-            this.radioButtonMOPA3.Location = new System.Drawing.Point(472, 19);
-            this.radioButtonMOPA3.Name = "radioButtonMOPA3";
-            this.radioButtonMOPA3.Size = new System.Drawing.Size(143, 17);
-            this.radioButtonMOPA3.TabIndex = 397;
-            this.radioButtonMOPA3.TabStop = true;
-            this.radioButtonMOPA3.Text = "5 minutes avg profitability";
-            this.radioButtonMOPA3.UseVisualStyleBackColor = true;
-            this.radioButtonMOPA3.CheckedChanged += new System.EventHandler(this.radioButtonMOPA3_CheckedChanged_1);
-            // 
-            // radioButtonMOPA2
-            // 
-            this.radioButtonMOPA2.AutoSize = true;
-            this.radioButtonMOPA2.Location = new System.Drawing.Point(242, 19);
-            this.radioButtonMOPA2.Name = "radioButtonMOPA2";
-            this.radioButtonMOPA2.Size = new System.Drawing.Size(111, 17);
-            this.radioButtonMOPA2.TabIndex = 396;
-            this.radioButtonMOPA2.TabStop = true;
-            this.radioButtonMOPA2.Text = "Current profitability";
-            this.radioButtonMOPA2.UseVisualStyleBackColor = true;
-            this.radioButtonMOPA2.CheckedChanged += new System.EventHandler(this.radioButtonMOPA2_CheckedChanged_1);
-            // 
-            // radioButtonMOPA1
-            // 
-            this.radioButtonMOPA1.AutoSize = true;
-            this.radioButtonMOPA1.Location = new System.Drawing.Point(10, 19);
-            this.radioButtonMOPA1.Name = "radioButtonMOPA1";
-            this.radioButtonMOPA1.Size = new System.Drawing.Size(96, 17);
-            this.radioButtonMOPA1.TabIndex = 395;
-            this.radioButtonMOPA1.TabStop = true;
-            this.radioButtonMOPA1.Text = "Standard NHM";
-            this.radioButtonMOPA1.UseVisualStyleBackColor = true;
-            this.radioButtonMOPA1.CheckedChanged += new System.EventHandler(this.radioButtonMOPA1_CheckedChanged_1);
-            // 
             // groupBox_Miners
             // 
+            this.groupBox_Miners.Controls.Add(this.checkBox_orderPrice);
             this.groupBox_Miners.Controls.Add(this.checkBox_withPower);
             this.groupBox_Miners.Controls.Add(this.checkBox_By_profitability_of_all_devices);
             this.groupBox_Miners.Controls.Add(this.label_switching_algorithms);
@@ -1345,10 +1249,23 @@ namespace NiceHashMiner.Forms
             this.groupBox_Miners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Miners.Name = "groupBox_Miners";
             this.groupBox_Miners.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Miners.Size = new System.Drawing.Size(657, 91);
+            this.groupBox_Miners.Size = new System.Drawing.Size(657, 113);
             this.groupBox_Miners.TabIndex = 389;
             this.groupBox_Miners.TabStop = false;
             this.groupBox_Miners.Text = "Miners:";
+            // 
+            // checkBox_orderPrice
+            // 
+            this.checkBox_orderPrice.AutoSize = true;
+            this.checkBox_orderPrice.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_orderPrice.Location = new System.Drawing.Point(11, 84);
+            this.checkBox_orderPrice.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_orderPrice.Name = "checkBox_orderPrice";
+            this.checkBox_orderPrice.Size = new System.Drawing.Size(116, 17);
+            this.checkBox_orderPrice.TabIndex = 419;
+            this.checkBox_orderPrice.Text = "Use the order price";
+            this.checkBox_orderPrice.UseVisualStyleBackColor = true;
+            this.checkBox_orderPrice.CheckedChanged += new System.EventHandler(this.checkBox_orderPrice_CheckedChanged);
             // 
             // checkBox_withPower
             // 
@@ -1469,7 +1386,7 @@ namespace NiceHashMiner.Forms
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionNVIDIA);
             this.groupBox1.Controls.Add(this.pictureBox_DisableDetectionNVIDIA);
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionAMD);
-            this.groupBox1.Location = new System.Drawing.Point(7, 205);
+            this.groupBox1.Location = new System.Drawing.Point(6, 125);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -2436,8 +2353,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).EndInit();
             this.tabPageAdvanced1.ResumeLayout(false);
-            this.groupBoxMOPA.ResumeLayout(false);
-            this.groupBoxMOPA.PerformLayout();
             this.groupBox_Miners.ResumeLayout(false);
             this.groupBox_Miners.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).EndInit();
@@ -2523,12 +2438,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.ComboBox currencyConverterCombobox;
         private System.Windows.Forms.Label label_displayCurrency;
         private System.Windows.Forms.TabPage tabPageAdvanced1;
-        private System.Windows.Forms.GroupBox groupBoxMOPA;
-        private System.Windows.Forms.RadioButton radioButtonMOPA5;
-        private System.Windows.Forms.RadioButton radioButtonMOPA4;
-        private System.Windows.Forms.RadioButton radioButtonMOPA3;
-        private System.Windows.Forms.RadioButton radioButtonMOPA2;
-        private System.Windows.Forms.RadioButton radioButtonMOPA1;
         private System.Windows.Forms.GroupBox groupBox_Miners;
         private System.Windows.Forms.PictureBox pictureBox_SwitchProfitabilityThreshold;
         private System.Windows.Forms.PictureBox pictureBox_MinIdleSeconds;
@@ -2613,7 +2522,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_show_NVdevice_manufacturer;
         private System.Windows.Forms.CheckBox checkBox_ShowDeviceMemSize;
         private System.Windows.Forms.CheckBox checkBox_show_AMDdevice_manufacturer;
-        private System.Windows.Forms.CheckBox checkbox_current_actual_profitabilities;
+        private System.Windows.Forms.CheckBox checkbox_wallet_balance;
         private System.Windows.Forms.TabPage tabPageOverClock;
         private Components.DevicesListViewEnableControl devicesListViewEnableControl2;
         private System.Windows.Forms.GroupBox groupBoxOverClockSettings;

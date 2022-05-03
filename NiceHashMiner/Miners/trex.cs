@@ -44,7 +44,7 @@ namespace NiceHashMiner.Miners
             string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             algo = "-a " + MiningSetup.MinerName.ToLower();
-            apiBind = " --api-bind-http 127.0.0.1:" + ApiPort;
+            apiBind = " --api-bind-http 0.0.0.0:" + ApiPort;
             IsApiReadException = false;
 
             //  url = url.Replace(".nicehash.", "-new.nicehash.");

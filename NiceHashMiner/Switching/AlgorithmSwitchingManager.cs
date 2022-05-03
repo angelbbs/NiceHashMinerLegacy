@@ -173,7 +173,10 @@ namespace NiceHashMiner.Switching
         {
             var updated = false;
             var cTicks = "min";
-            if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5) cTicks = "ticks";
+            if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5)
+            {
+                ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = 2;
+            }
             foreach (var algo in history.Keys)
             {
                 NHSmaData.TryGetPaying(algo, out var paying);

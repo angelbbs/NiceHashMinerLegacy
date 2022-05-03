@@ -96,7 +96,7 @@ namespace NiceHashMiner.Forms
         }
         void ChartData(object sender, EventArgs e)
         {
-            if (!ConfigManager.GeneralConfig.EnableAPIkeys)
+            if (!ConfigManager.GeneralConfig.EnableAPIkeys && Form_Main.walletType.Equals("P2SH"))
             {
                 checkBox_EnableChart.Checked = false;
                 checkBox_EnableChart.Update();

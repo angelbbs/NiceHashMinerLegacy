@@ -224,7 +224,6 @@ namespace NiceHashMiner.Devices
             public static int CheckVideoControllersCountMismath()
             {
                 int ret = -1;
-                Helpers.ConsolePrint("ComputeDeviceManager.CheckCount", "1");
                 if (!WindowsDisplayAdapters.HasNvidiaVideoController()) return ret;
 
                 var gpusOld = _cudaDevices.CudaDevices.Count;
@@ -1562,7 +1561,7 @@ break;
                         select GetDeviceWithUuid(dev.Uuid)).ToList();
                 }
                 return (from dev in Devices
-                        where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType 
+                        where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType
                         select GetDeviceWithUuid(dev.Uuid)).ToList();
             }
 

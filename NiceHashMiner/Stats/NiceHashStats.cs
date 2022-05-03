@@ -189,14 +189,6 @@ namespace NiceHashMiner.Stats
                                     {
                                         smaAlgos.Add(algoKey);
                                     }
-                                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                                    {
-                                        //Helpers.ConsolePrint("SMA-DATA-WS: ", Enum.GetName(typeof(AlgorithmType), algoKey) + " (" + algo[0].ToString() + ") - " + algo[1]);
-                                    }
-                                }
-                                if (ConfigManager.GeneralConfig.MOPA5)
-                                {
-                                    ClearAlgorithmRates();
                                 }
 
                                 double tmp = 0.0d;
@@ -215,13 +207,6 @@ namespace NiceHashMiner.Stats
                                 } else
                                 {
                                     SetAlgorithmRates(message.data);
-                                }
-
-                                GetSmaAPI();
-
-                                if (ConfigManager.GeneralConfig.Use_orders_price)
-                                {
-                                    GetSmaAPIOrder();
                                 }
 
                                 if (Miner.IsRunningNew)
@@ -639,128 +624,6 @@ namespace NiceHashMiner.Stats
             return false;
 
         }
-        public static bool GetSmaAPI5m()
-        {
-            Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPI5m");
-            try
-            {
-                string resp;
-                resp = NiceHashStats.GetNiceHashApiData(Links.NhmCurrent, "x");
-                if (resp != null)
-                {
-                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                    {
-                        //  Helpers.ConsolePrint("NHM_API_info", resp);
-                    }
-
-                    dynamic list;
-                    list = JsonConvert.DeserializeObject<Rootobject5m>(resp);
-
-                    ProfitsSMA profdata = new ProfitsSMA();
-
-                    List<ProfitsSMA> profdata2 = new List<ProfitsSMA>();
-
-                    string outProf = "[\n";
-
-                    var _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
-                    foreach (var algos in list.algos)
-                    {
-                        {
-                            if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                            {
-                                Helpers.ConsolePrint("SMA-DATA-API5m: ", algos.a + " - " + algos.p);
-                            }
-                            outProf = outProf + "  [\n" + "    " + algos.a + ",\n" + "    \"" + algos.p + "\"\n" + "  ],\n";
-                        }
-                    }
-                    outProf = outProf.Remove(outProf.Length - 2) + "]";
-
-                    //  Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
-                    JArray smadata = (JArray.Parse(outProf));
-
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
-
-                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                    {
-                        Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI5m OK");
-                    }
-                    return true;
-                }
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI5m ERROR");
-                return false;
-
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NHM_API_info", ex.Message);
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI5m fatal ERROR");
-                return false;
-            }
-            return false;
-
-        }
-
-        public static bool GetSmaAPI24h()
-        {
-            Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPI24h");
-
-            try
-            {
-                string resp;
-                resp = NiceHashStats.GetNiceHashApiData(Links.Nhm24h, "x");
-                if (resp != null)
-                {
-                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                    {
-                        //  Helpers.ConsolePrint("NHM_API_info", resp);
-                    }
-
-                    dynamic list;
-                    list = JsonConvert.DeserializeObject<Rootobject24h>(resp);
-
-                    ProfitsSMA profdata = new ProfitsSMA();
-
-                    List<ProfitsSMA> profdata2 = new List<ProfitsSMA>();
-
-                    string outProf = "[\n";
-
-                    var _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
-                    foreach (var algos in list.algos)
-                    {
-                        {
-                            if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                            {
-                                Helpers.ConsolePrint("SMA-DATA-API24h: ", algos.a + " - " + algos.p);
-                            }
-                            outProf = outProf + "  [\n" + "    " + algos.a + ",\n" + "    \"" + algos.p + "\"\n" + "  ],\n";
-                        }
-                    }
-                    outProf = outProf.Remove(outProf.Length - 2) + "]";
-
-                    //   Helpers.ConsolePrint("SMA-DATA-API24h: ", outProf);
-                    JArray smadata = (JArray.Parse(outProf));
-
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 5);
-
-                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-                    {
-                        Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h OK");
-                    }
-                    return true;
-                }
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h ERROR");
-                return false;
-
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NHM_API_info", ex.Message);
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h fatal ERROR");
-                return false;
-            }
-            return false;
-
-        }
 
         public static string GetApiFlags()
         {
@@ -821,6 +684,7 @@ namespace NiceHashMiner.Stats
                     string apistr = Links.ServerTime;
                     string resp;
                     resp = NiceHashStats.GetNiceHashApiDataWithSecret(apistr, false);
+                    //Helpers.ConsolePrint("NHM_API_info", resp);
                     if (resp != null)
                     {
                         dynamic respTime = JsonConvert.DeserializeObject(resp);
@@ -829,7 +693,21 @@ namespace NiceHashMiner.Stats
                     {
                         serverTime = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
                     }
-                    
+                    /*
+                    //надо давать разрешение на просмотр баланса
+                    if (true)
+                    {
+                        apistr = Links.Balance;
+                        resp = NiceHashStats.GetNiceHashApiDataWithSecret(apistr, true);
+                        if (resp != null)
+                        {
+                            dynamic respJson = JsonConvert.DeserializeObject(resp);
+                            double totalBalance = respJson.totalBalance;
+                            Helpers.ConsolePrint("totalBalance", totalBalance.ToString() + " BTC");
+                            SetBalance(totalBalance.ToString());
+                        }
+                    }
+                    */
                     apistr = Links.RigDetails + ConfigManager.GeneralConfig.MachineGuid;
                     resp = NiceHashStats.GetNiceHashApiDataWithSecret(apistr, true);
                     if (resp != null)
@@ -861,7 +739,7 @@ namespace NiceHashMiner.Stats
                         }
 
                         double unpaidAmount = respJson.unpaidAmount;
-                        Helpers.ConsolePrint("Rig unpaidAmount", (unpaidAmount * 1000).ToString());
+                        Helpers.ConsolePrint("Rig unpaidAmount", (unpaidAmount * 1000).ToString() + " mBTC");
                         //SetBalance(unpaidAmount.ToString());//only this rig
 
                         if (ConfigManager.GeneralConfig.ChartEnable)
@@ -896,12 +774,14 @@ namespace NiceHashMiner.Stats
             Form_Main.errorAPIkeystring = "No errors";
             return true;
         }
-        public static bool GetRigProfitExternal()//big traffic
+        public static bool GetRigProfitExternal()
         {
+            Helpers.ConsolePrint("**********", "1");
             try
             {
-                if (ConfigManager.GeneralConfig.ChartEnable)
+                if (ConfigManager.GeneralConfig.ChartEnable || !Form_Main.walletType.Equals("P2SH"))
                 {
+                    Helpers.ConsolePrint("**********", "2");
                     string apistr = Links.NhmExternal + Globals.GetBitcoinUser() + "/rigs2?sort=NAME&page=0";
                     string resp;
                     resp = NiceHashStats.GetNiceHashApiData(apistr, "");
@@ -935,8 +815,18 @@ namespace NiceHashMiner.Stats
                             }
                         }
                         double unpaidAmount = respJson.unpaidAmount;
-                        Helpers.ConsolePrint("Total unpaidAmount", (unpaidAmount * 1000).ToString());
-                        SetBalance(unpaidAmount.ToString());
+                        double externalBalance = respJson.externalBalance;
+
+                        Helpers.ConsolePrint("Rig unpaidAmount", (unpaidAmount * 1000).ToString() + " mBTC");
+                        if (ConfigManager.GeneralConfig.Show_wallet_balance)
+                        {
+                            Helpers.ConsolePrint("Total externalBalance", (externalBalance * 1000).ToString() + " mBTC");
+                            SetBalance(externalBalance.ToString());
+                        }
+                        else
+                        {
+                            SetBalance(unpaidAmount.ToString());
+                        }
 
                         if (ConfigManager.GeneralConfig.ChartEnable)
                         {
@@ -974,24 +864,7 @@ namespace NiceHashMiner.Stats
         {
             try
             {
-                if (ConfigManager.GeneralConfig.MOPA2)
-                {
-                    GetSmaAPICurrent(); //bug *10
-                }
-                if (ConfigManager.GeneralConfig.MOPA3)
-                {
-                    GetSmaAPI5m(); //bug *10
-                }
-                if (ConfigManager.GeneralConfig.MOPA4)
-                {
-                    GetSmaAPI24h(); //bug *10
-                }
-                if (ConfigManager.GeneralConfig.MOPA5)
-                {
-                    //GetSmaAPI24h(); //bug *10
-                    GetSmaAPI5m(); //bug *10
-                    GetSmaAPICurrent(); //bug *10
-                }
+                GetSmaAPICurrent();
             }
             catch (Exception ex)
             {
@@ -1002,43 +875,23 @@ namespace NiceHashMiner.Stats
 
         public static void LoadSMA()
         {
-            if (!ConfigManager.GeneralConfig.NoShowApiInLog)
-            {
-                Helpers.ConsolePrint("SMA", "Trying LoadSMA");
-            }
             try
             {
-                //******
                 if (!GetSmaAPI())
                 {
                     if (System.IO.File.Exists("configs\\sma.dat"))
                     {
                         dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
-                        Helpers.ConsolePrint("SOCKET", "Using previous SMA");
+                        Helpers.ConsolePrint("LoadSMA", "Using previous SMA");
                         JArray smadata = (JArray.Parse(jsonData));
                         SetAlgorithmRates(smadata);
                     }
                     else
                     {
-                        Helpers.ConsolePrint("SOCKET", "Using default SMA");
-                        dynamic defsma = "[[50,\"16972.60766\"],[21,\"8.8998528e-09\"],[5,\"1.102001358e-07\"],[52,\"0.001248413077\"],[47,\"0.6922037679\"],[51,\"9.33e-08\"],[32,\"0.0002891\"],[20,\"0.0009621858322\"],[46,\"0.0001368625895\"],[56,\"0.0007271773409\"],[8,\"0.01201994833\"],[24,\"1.07489113\"],[43,\"3900.324439\"],[23,\"8.291841085e-08\"],[58,\"828.4841407\"],[48,\"2.9e-08\"],[36,\"280.0879146\"],[14,\"1.101334961e-06\"],[28,\"1.998259289e-08\"],[57,\"0.0002707835249\"],[54,\"1022.282717\"],[33,\"0.0001339187621\"],[42,\"3.594285714\"],[39,\"8339.393939\"]]";
+                        Helpers.ConsolePrint("LoadSMA", "Using default SMA");
+                        dynamic defsma = "[[21,\"1.1637063156e-08\"],[50,\"1.5700000000e+04\"],[5,\"2.3910000000e-07\"],[54,\"9.9593453508e+02\"],[56,\"8.3154640439e-04\"],[23,\"8.8917404737e-08\"],[32,\"4.1550000000e-04\"],[43,\"4.1000000000e+03\"],[42,\"1.9636363636e+00\"],[8,\"6.6641064511e-03\"],[47,\"8.7152481058e-01\"],[36,\"3.1534919293e+02\"],[52,\"1.4753894679e-03\"],[14,\"7.0010000000e-07\"],[28,\"1.3914259087e-09\"],[46,\"3.5115871886e-04\"],[57,\"2.6596125572e-04\"],[33,\"1.2604450871e-04\"],[39,\"4.9647058824e+03\"],[24,\"9.3575041979e-01\"],[20,\"9.3350169094e-04\"],[51,\"5.2500182871e-08\"],[48,\"1.8300000000e-08\"],[58,\"9.2579601837e+02\"]]";
                         JArray smadata = (JArray.Parse(defsma));
                         SetAlgorithmRates(smadata);
-                    }
-                }
-                //******
-                if (System.IO.File.Exists("configs\\balance.dat"))
-                {
-                    FileStream fs3 = new FileStream("configs\\balance.dat", FileMode.Open, FileAccess.Read);
-                    StreamReader w3 = new StreamReader(fs3);
-                    string fakeSMA3 = w3.ReadToEnd();
-                    dynamic message3 = JsonConvert.DeserializeObject(fakeSMA3);
-                    //Helpers.ConsolePrint("SOCKET-oldSMA", "Received: " + fakeSMA3);
-                    Helpers.ConsolePrint("SOCKET", "Using previous balance");
-                    w3.Close();
-                    if (message3.method == "balance")
-                    {
-                        SetBalance(message3.value.Value);
                     }
                 }
             }
@@ -1046,7 +899,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", ex.Message);
                 Helpers.ConsolePrint("SOCKET", "Using default SMA");
-                dynamic defsma = "[[50,\"16972.60766\"],[21,\"8.8998528e-09\"],[5,\"1.102001358e-07\"],[52,\"0.001248413077\"],[47,\"0.6922037679\"],[51,\"9.33e-08\"],[32,\"0.0002891\"],[20,\"0.0009621858322\"],[46,\"0.0001368625895\"],[56,\"0.0007271773409\"],[8,\"0.01201994833\"],[24,\"1.07489113\"],[43,\"3900.324439\"],[23,\"8.291841085e-08\"],[58,\"828.4841407\"],[48,\"2.9e-08\"],[36,\"280.0879146\"],[14,\"1.101334961e-06\"],[28,\"1.998259289e-08\"],[57,\"0.0002707835249\"],[54,\"1022.282717\"],[33,\"0.0001339187621\"],[42,\"3.594285714\"],[39,\"8339.393939\"]]";
+                dynamic defsma = "[[21,\"1.1637063156e-08\"],[50,\"1.5700000000e+04\"],[5,\"2.3910000000e-07\"],[54,\"9.9593453508e+02\"],[56,\"8.3154640439e-04\"],[23,\"8.8917404737e-08\"],[32,\"4.1550000000e-04\"],[43,\"4.1000000000e+03\"],[42,\"1.9636363636e+00\"],[8,\"6.6641064511e-03\"],[47,\"8.7152481058e-01\"],[36,\"3.1534919293e+02\"],[52,\"1.4753894679e-03\"],[14,\"7.0010000000e-07\"],[28,\"1.3914259087e-09\"],[46,\"3.5115871886e-04\"],[57,\"2.6596125572e-04\"],[33,\"1.2604450871e-04\"],[39,\"4.9647058824e+03\"],[24,\"9.3575041979e-01\"],[20,\"9.3350169094e-04\"],[51,\"5.2500182871e-08\"],[48,\"1.8300000000e-08\"],[58,\"9.2579601837e+02\"]]";
                 JArray smadata = (JArray.Parse(defsma));
                 SetAlgorithmRates(smadata);
                 Helpers.ConsolePrint("OLDSMA", ex.ToString());

@@ -863,6 +863,7 @@ namespace NiceHashMiner
 
             _loadingScreen.SetValueAndMsg(60, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
+            NiceHashStats.LoadSMA();//load old sma data if nh down
 
             _loadingScreen.SetValueAndMsg(65, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
             //new Task(() => CheckUpdates()).Start();
@@ -984,9 +985,13 @@ namespace NiceHashMiner
                 }
 
             }
-
+            if (!Form_Main.walletType.Equals("P2SH"))
+            {
+                NiceHashStats.GetRigProfit();
+            }
             _loadingScreen.SetValueAndMsg(100, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
+            NiceHashStats.GetSmaAPI();
             Thread.Sleep(300);
 
             if (_loadingScreen != null)
@@ -1345,11 +1350,20 @@ namespace NiceHashMiner
             }
             else
             {
-                NiceHashStats.GetRigProfit();
+                if (Form_Main.walletType.Equals("P2SH"))
+                {
+                    NiceHashStats.GetRigProfit();
+                }
             }
             NHApiFlag =  NiceHashStats.GetApiFlags();
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             _loadingScreen.SetValueAndMsg(1, "Starting...");
+
+
+            if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex > 4)
+            {
+                ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = 2;
+            }
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
@@ -1370,12 +1384,24 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("POWER", "TotalActualProfit: " + ExchangeRateApi.ConvertToActiveCurrency(TotalProfitabilityFromNH * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
             }
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
+
+            NiceHashStats.GetSmaAPI();
+            if (ConfigManager.GeneralConfig.Use_orders_price)
+            {
+                NiceHashStats.GetSmaAPIOrder();
+            }
+
+            GetBTCwalletType();
+
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
                 Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
                 Form_Main.lastRigProfit.currentPower = MinersManager.GetTotalPowerRate() + PowerAllDevices;
                 Form_Main.lastRigProfit.totalPowerRate = totalPowerRate;
-                NiceHashStats.GetRigProfit();
+                //if (Form_Main.walletType.Equals("P2SH"))
+                {
+                    NiceHashStats.GetRigProfit();
+                }
             }
             else
             {
@@ -1384,6 +1410,10 @@ namespace NiceHashMiner
                 Form_Main.lastRigProfit.currentProfit = 0;
                 Form_Main.lastRigProfit.currentPower = 0;
                 Form_Main.lastRigProfit.unpaidAmount = 0;
+                if (!Form_Main.walletType.Equals("P2SH"))
+                {
+                    NiceHashStats.GetRigProfit();
+                }
             }
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
 
@@ -3413,6 +3443,10 @@ public static void CloseChilds(Process parentId)
 
         public static string GetBTCwalletType()
         {
+            if (ConfigManager.GeneralConfig.BitcoinAddressNew.Trim().Length < 4)
+            {
+                return "";
+            }
             if (ConfigManager.GeneralConfig.BitcoinAddressNew.Trim().Substring(0, 1) == "3")
             {
                 walletType = "P2SH";//internal wallet P2SH

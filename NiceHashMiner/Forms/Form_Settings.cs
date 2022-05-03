@@ -467,7 +467,7 @@ namespace NiceHashMiner.Forms
             checkBox_withPower.Text = International.GetText("Form_Settings_checkbox_withPower");
             checkBox_By_profitability_of_all_devices.Text = International.GetText("FormSettings_By_profitability_of_all_devices");
             checkBox_Force_mining_if_nonprofitable.Text = International.GetText("Form_Settings_checkBox_Force_mining_if_nonprofitable");
-            checkbox_current_actual_profitabilities.Text = International.GetText("Form_Main_Checkbox_current_actual_profitabilities");
+            checkbox_wallet_balance.Text = International.GetText("Form_Main_Checkbox_wallet_balance");
             checkBox_Show_profit_with_power_consumption.Text = International.GetText("Form_Settings_checkBox_Show_profit_with_power_consumption");
             checkBox_Show_Total_Power.Text = International.GetText("Form_Settings_checkBox_Show_Total_Power");
             checkBox_fiat.Text = International.GetText("Form_Settings_checkBox_fiat");
@@ -478,12 +478,6 @@ namespace NiceHashMiner.Forms
             checkBox_Disable_extra_launch_parameter_checking.Text = International.GetText("Form_Settings_checkBox_Disable_extra_launch_parameter_checking");
             checkBox_DisableDetectionCPU.Text = International.GetText("Form_Settings_checkBox_DisableDetectionCPU");
             label_AutoStartMiningDelay.Text = International.GetText("Form_Settings_label_AutoStartMiningDelay");
-            groupBoxMOPA.Text = International.GetText("Form_Settings_groupBoxMOPA");
-            radioButtonMOPA1.Text = International.GetText("Form_Settings_radioButtonMOPA1");
-            radioButtonMOPA2.Text = International.GetText("Form_Settings_radioButtonMOPA2");
-            radioButtonMOPA3.Text = International.GetText("Form_Settings_radioButtonMOPA3");
-            radioButtonMOPA4.Text = International.GetText("Form_Settings_radioButtonMOPA4");
-            radioButtonMOPA5.Text = International.GetText("Form_Settings_radioButtonMOPA5");
             groupBox1.Text = International.GetText("Form_Settings_groupBox1");
             groupBoxAPIkeys.Text = International.GetText("Form_Settings_groupBoxAPIkeys");
 
@@ -493,7 +487,7 @@ namespace NiceHashMiner.Forms
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms5"));
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms10"));
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms15"));
-            comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms0"));
+            //comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms0"));
 
             label_devices_count.Text = International.GetText("Form_Settings_label_devices_count");
             tabPageAbout.Text = International.GetText("Form_Settings_tabPageAbout");
@@ -535,12 +529,6 @@ namespace NiceHashMiner.Forms
 
             checkBox_RunEthlargement.Enabled = Form_Main.ShouldRunEthlargement;
             checkBox_RunEthlargement.Visible = Form_Main.ShouldRunEthlargement;
-
-            radioButtonMOPA1.Checked = ConfigManager.GeneralConfig.MOPA1;
-            radioButtonMOPA2.Checked = ConfigManager.GeneralConfig.MOPA2;
-            radioButtonMOPA3.Checked = ConfigManager.GeneralConfig.MOPA3;
-            radioButtonMOPA4.Checked = ConfigManager.GeneralConfig.MOPA4;
-            radioButtonMOPA5.Checked = ConfigManager.GeneralConfig.MOPA5;
 
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             //label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
@@ -779,8 +767,8 @@ namespace NiceHashMiner.Forms
                 checkBox_Force_mining_if_nonprofitable.BackColor = Form_Main._backColor;
                 checkBox_Force_mining_if_nonprofitable.ForeColor = Form_Main._textColor;
 
-                checkbox_current_actual_profitabilities.BackColor = Form_Main._backColor;
-                checkbox_current_actual_profitabilities.ForeColor = Form_Main._textColor;
+                checkbox_wallet_balance.BackColor = Form_Main._backColor;
+                checkbox_wallet_balance.ForeColor = Form_Main._textColor;
 
                 checkBox_Show_profit_with_power_consumption.BackColor = Form_Main._backColor;
                 checkBox_Show_profit_with_power_consumption.ForeColor = Form_Main._textColor;
@@ -997,7 +985,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkbox_current_actual_profitabilities.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkbox_wallet_balance.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_Total_Power.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1065,6 +1053,11 @@ namespace NiceHashMiner.Forms
         {
             // Checkboxes set checked value
             {
+                if (Form_Main.walletType.Equals("P2SH"))
+                {
+                    checkbox_wallet_balance.Checked = false;
+                    ConfigManager.GeneralConfig.Show_wallet_balance = false;
+                }
                 if (checkBox_AutoStartMining.Checked)
                 {
                     textBox_AutoStartMiningDelay.Enabled = true;
@@ -1111,7 +1104,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
-                checkbox_current_actual_profitabilities.Checked = ConfigManager.GeneralConfig.Show_current_actual_profitability;
+                checkbox_wallet_balance.Checked = ConfigManager.GeneralConfig.Show_wallet_balance;
                 checkBox_Show_profit_with_power_consumption.Checked = ConfigManager.GeneralConfig.DecreasePowerCost;
                 checkBox_Show_Total_Power.Checked = ConfigManager.GeneralConfig.ShowTotalPower;
                 checkBox_fiat.Checked = ConfigManager.GeneralConfig.FiatCurrency;
@@ -1197,7 +1190,16 @@ namespace NiceHashMiner.Forms
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
                 comboBox_ColorProfile.SelectedIndex = ConfigManager.GeneralConfig.ColorProfileIndex;
-                comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
+                //убираем старые возможности переключения алгоритмов
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex > 4)
+                {
+                    comboBox_switching_algorithms.SelectedIndex = 2;
+                    ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = 2;
+                } else
+                {
+                    comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
+                }
+                
                 comboBox_devices_count.SelectedIndex = ConfigManager.GeneralConfig.DevicesCountIndex;
                 comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
                 comboBoxRestartProgram.SelectedIndex = ConfigManager.GeneralConfig.ProgramRestartIndex;
@@ -1285,7 +1287,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
-            ConfigManager.GeneralConfig.Show_current_actual_profitability = checkbox_current_actual_profitabilities.Checked;
+            ConfigManager.GeneralConfig.Show_wallet_balance = checkbox_wallet_balance.Checked;
             ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
             ConfigManager.GeneralConfig.ShowTotalPower = checkBox_Show_Total_Power.Checked;
             ConfigManager.GeneralConfig.FiatCurrency = checkBox_fiat.Checked;
@@ -1486,7 +1488,7 @@ namespace NiceHashMiner.Forms
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             IsChange = true;
             IsChangeSaved = true;
-
+            NiceHashStats.GetRigProfit();
             if (_isCredChange)
             {
                 NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddressNew.Trim(), ConfigManager.GeneralConfig.WorkerName.Trim());
@@ -1652,204 +1654,22 @@ namespace NiceHashMiner.Forms
             }
 
         }
-
-        private void radioButtonMOPA1_CheckedChanged_1(object sender, EventArgs e)
-        {
-            ConfigManager.GeneralConfig.MOPA1 = radioButtonMOPA1.Checked;
-        }
-
-        private void radioButtonMOPA2_CheckedChanged_1(object sender, EventArgs e)
-        {
-            ConfigManager.GeneralConfig.MOPA2 = radioButtonMOPA2.Checked;
-        }
-
-        private void radioButtonMOPA3_CheckedChanged_1(object sender, EventArgs e)
-        {
-            ConfigManager.GeneralConfig.MOPA3 = radioButtonMOPA3.Checked;
-        }
-
-        private void radioButtonMOPA4_CheckedChanged_1(object sender, EventArgs e)
-        {
-            ConfigManager.GeneralConfig.MOPA4 = radioButtonMOPA4.Checked;
-        }
-
-        private void textBox_BitcoinAddressNew_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox_ElectricityCost_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void textBox_ElectricityCost_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void label_ElectricityCost_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox_TimeUnit_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label_TimeUnit_Click(object sender, EventArgs e)
-        {
-        }
-
         private void comboBox_TimeUnit_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
 
-        private void label_IFTTTAPIKey_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void textBox_IFTTTKey_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox_UseIFTTT_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void checkBox_UseIFTTT_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox_WorkerName_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox_MinProfit_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox_ServiceLocation_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void textBox_MinProfit_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox_IdleWhenNoInternetAccess_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label_MinProfit_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label_WorkerName_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label_ServiceLocation_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void comboBox_ServiceLocation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
+       
         private void comboBox_ColorProfile_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
-        private void textBox_WorkerName_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void label_BitcoinAddressNew_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void devicesListViewEnableControl1_Load(object sender, EventArgs e)
-        {
-        }
-        private Dictionary<TabPage, Color> TabColors = new Dictionary<TabPage, Color>();
-        private void SetTabHeader(TabPage page, Color color)
-        {
-            TabColors[page] = color;
-            tabControlGeneral.Invalidate();
-        }
-        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            var bc = new SolidBrush(Form_Main._backColor);
-            var fc = new Pen(Form_Main._backColor);
-            var wc = new SolidBrush(Form_Main._windowColor);
-            var tc = new SolidBrush(Form_Main._textColor);
-            var gr = new SolidBrush(Color.Gray);
-            using (Brush br = bc)
-            {
-                e.Graphics.FillRectangle(br, e.Bounds);
-                SizeF sz = e.Graphics.MeasureString(tabControlGeneral.TabPages[e.Index].Text, e.Font);
-                e.Graphics.DrawString(tabControlGeneral.TabPages[e.Index].Text, e.Font, tc, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
-
-                Rectangle rect = e.Bounds;
-                rect.Offset(0, 1);
-                rect.Inflate(0, -1);
-                e.Graphics.DrawRectangle(fc, rect);
-                e.DrawFocusRectangle();
-            }
-
-        }
-        private void tabpage_Paint(object sender, PaintEventArgs e)
-        {
-            SolidBrush fillBrush = new SolidBrush(Form_Main._backColor);
-            e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
-        }
-
+        
         private void Form_Settings_Paint(object sender, PaintEventArgs e)
         {
             SolidBrush fillBrush = new SolidBrush(Form_Main._backColor);
             e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
         }
 
-        private void tabControlGeneral_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
-        {
-            TabPage CurrentTab = tabControlGeneral.TabPages[e.Index];
-            Rectangle ItemRect = tabControlGeneral.GetTabRect(e.Index);
-            SolidBrush FillBrush = new SolidBrush(Color.Red);
-            SolidBrush TextBrush = new SolidBrush(Color.White);
-            StringFormat sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-            sf.LineAlignment = StringAlignment.Center;
-
-            //If we are currently painting the Selected TabItem we'll
-            //change the brush colors and inflate the rectangle.
-            if (System.Convert.ToBoolean(e.State & DrawItemState.Selected))
-            {
-                FillBrush.Color = Color.White;
-                TextBrush.Color = Color.Red;
-                ItemRect.Inflate(2, 2);
-            }
-
-            //Set up rotation for left and right aligned tabs
-            if (tabControlGeneral.Alignment == TabAlignment.Left || tabControlGeneral.Alignment == TabAlignment.Right)
-            {
-                float RotateAngle = 90;
-                if (tabControlGeneral.Alignment == TabAlignment.Left)
-                    RotateAngle = 270;
-                PointF cp = new PointF(ItemRect.Left + (ItemRect.Width / 2), ItemRect.Top + (ItemRect.Height / 2));
-                e.Graphics.TranslateTransform(cp.X, cp.Y);
-                e.Graphics.RotateTransform(RotateAngle);
-                ItemRect = new Rectangle(-(ItemRect.Height / 2), -(ItemRect.Width / 2), ItemRect.Height, ItemRect.Width);
-            }
-
-            //Next we'll paint the TabItem with our Fill Brush
-            e.Graphics.FillRectangle(FillBrush, ItemRect);
-
-            //Now draw the text.
-            e.Graphics.DrawString(CurrentTab.Text, e.Font, TextBrush, (RectangleF)ItemRect, sf);
-
-            //Reset any Graphics rotation
-            e.Graphics.ResetTransform();
-
-            //Finally, we should Dispose of our brushes.
-            FillBrush.Dispose();
-            TextBrush.Dispose();
-        }
-
+       
         private void comboBox_ServiceLocation_DrawItem(object sender, DrawItemEventArgs e)
         {
             var cmb = (ComboBox)sender;
@@ -2017,22 +1837,8 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void radioButtonMOPA5_CheckedChanged_1(object sender, EventArgs e)
-        {
-            ConfigManager.GeneralConfig.MOPA5 = radioButtonMOPA5.Checked;
-        }
-
         private void checkBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
         {
-        }
-
-        private void buttonGPUtuning_Click_1(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("GPU-Tuning.exe");
         }
 
         private void textBox_MinIdleSeconds_TextChanged(object sender, EventArgs e)
@@ -2621,6 +2427,16 @@ namespace NiceHashMiner.Forms
                     Form_Main.checkBox_EnableAPI = false;
                     Form_Main.Form_RigProfitChartRunning = false;
                 }
+            }
+        }
+
+        private void checkbox_wallet_balance_Click(object sender, EventArgs e)
+        {
+            if (Form_Main.walletType.Equals("P2SH") && checkbox_wallet_balance.Checked)
+            {
+                MessageBox.Show(International.GetText("Form_Settings_Only_external_wallet"),
+                                    International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                checkbox_wallet_balance.Checked = false;
             }
         }
     }

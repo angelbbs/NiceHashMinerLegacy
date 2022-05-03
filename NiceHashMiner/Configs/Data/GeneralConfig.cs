@@ -26,7 +26,7 @@ namespace NiceHashMiner.Configs.Data
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";
         public bool Show_displayConected = false;
-        public bool Show_current_actual_profitability = true;
+        public bool Show_wallet_balance = false;
         public bool DivertRun = true;
         public bool ShowUptime = true;
         public bool DisableTooltips = false;
