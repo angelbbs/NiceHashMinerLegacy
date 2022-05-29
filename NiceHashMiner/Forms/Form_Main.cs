@@ -154,7 +154,8 @@ namespace NiceHashMiner
         public static string errorAPIkeystring;
         public static bool API_key_validity = false;
         public static bool checkBox_EnableAPI = false;
-        private static string NHApiFlag = "";
+        public static string NHApiFlag = "";
+        private static string _NHApiFlag = "";
 
         public struct RigProfitList
         {
@@ -1356,6 +1357,7 @@ namespace NiceHashMiner
                 }
             }
             NHApiFlag =  NiceHashStats.GetApiFlags();
+            Helpers.ConsolePrint("NiceHash status", string.IsNullOrEmpty(NHApiFlag) ? "OK": "NHApiFlag");
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             _loadingScreen.SetValueAndMsg(1, "Starting...");
 
@@ -1423,7 +1425,7 @@ namespace NiceHashMiner
             }
 
             NHApiFlag = NiceHashStats.GetApiFlags();
-
+            Helpers.ConsolePrint("NiceHash status", string.IsNullOrEmpty(NHApiFlag) ? "OK" : "NHApiFlag");
             _updateTimerCount++;
             int period = 0;
             switch (ConfigManager.GeneralConfig.ProgramUpdateIndex)
@@ -2809,14 +2811,16 @@ public static void CloseChilds(Process parentId)
         }
 
         WebSocketSharp.WebSocketState _oldState = WebSocketSharp.WebSocketState.Closed;
+
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
             if (NiceHashSocket._webSocket != null)
             {
                 var _curState = NiceHashSocket._webSocket.ReadyState;
-                if (_curState != _oldState)
+                if (_curState != _oldState || NHApiFlag != _NHApiFlag)
                 {
                     _oldState = _curState;
+                    _NHApiFlag = NHApiFlag;
                     if (_curState == WebSocketSharp.WebSocketState.Closed || _curState == WebSocketSharp.WebSocketState.Closing)
                     {
                         label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NHApiFlag;

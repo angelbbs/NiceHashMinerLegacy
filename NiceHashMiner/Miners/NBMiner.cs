@@ -284,7 +284,10 @@ namespace NiceHashMiner.Miners
             int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                _benchmarkTimeWait += 30;
+            }
             try
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
@@ -335,6 +338,12 @@ namespace NiceHashMiner.Miners
                     }
                     // wait a second due api request
                     Thread.Sleep(1000);
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        delay_before_calc_hashrate = 30;
+                        MinerStartDelay = 30;
+                    }
 
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)

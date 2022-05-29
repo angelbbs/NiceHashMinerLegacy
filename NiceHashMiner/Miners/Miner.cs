@@ -779,6 +779,14 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
+            if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("aeternity")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.92.exe");
+            }
+            if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("beam")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.92.exe");
+            }
 
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
             Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
@@ -1652,6 +1660,15 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
+            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("aeternity")))
+            {
+                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.92.exe");
+            }
+            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("beam")))
+            {
+                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.92.exe");
+            }
+
             /*
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle")))
             {

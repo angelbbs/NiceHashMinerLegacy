@@ -6,7 +6,6 @@ namespace NiceHashMiner.Utils
         {
             @"/vc_redist.x64.exe",
             @"/xmrig/xmrig.exe",
-            @"/claymore_dual/EthDcrMiner64.exe",
             @"/claymore_neoscrypt/NeoScryptMiner.exe",
             @"/CryptoDredge/CryptoDredge.exe",
             @"/Nanominer/nanominer.exe",
@@ -20,7 +19,7 @@ namespace NiceHashMiner.Utils
             @"/NBMiner/NBMiner.exe",
             @"/miniZ/miniZ.exe",
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
-            @"/Fork_Fix_47.txt"
+            @"/Fork_Fix_47.1.txt"
         };
     }
 }

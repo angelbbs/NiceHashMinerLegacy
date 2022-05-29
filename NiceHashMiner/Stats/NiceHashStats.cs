@@ -590,7 +590,7 @@ namespace NiceHashMiner.Stats
                                 {
                                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                                     {
-                                        Helpers.ConsolePrint("SMA-DATA-APICurrent: ", miningAlgorithms.title + " - " + Algo + " - " + miningAlgorithms.paying);
+                                       // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", miningAlgorithms.title + " - " + Algo + " - " + miningAlgorithms.paying);
                                     }
                                     outProf = outProf + "  [\n" + "    " + Algo + ",\n" + "    " + miningAlgorithms.paying + "\n" + "  ],\n";
                                     break;
@@ -776,12 +776,10 @@ namespace NiceHashMiner.Stats
         }
         public static bool GetRigProfitExternal()
         {
-            Helpers.ConsolePrint("**********", "1");
             try
             {
                 if (ConfigManager.GeneralConfig.ChartEnable || !Form_Main.walletType.Equals("P2SH"))
                 {
-                    Helpers.ConsolePrint("**********", "2");
                     string apistr = Links.NhmExternal + Globals.GetBitcoinUser() + "/rigs2?sort=NAME&page=0";
                     string resp;
                     resp = NiceHashStats.GetNiceHashApiData(apistr, "");

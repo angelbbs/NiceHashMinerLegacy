@@ -62,6 +62,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("trex_lhr-low-power", "-lhr-low-power", "--lhr-low-power", "0", MinerOptionFlagType.MultiParam, ""),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.SingleParam),
+                    new MinerOption("trex-validate-shares", "--validate-shares", "--validate-shares", "", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex_reconnect-on-fail-shares", "--reconnect-on-fail-shares", "--reconnect-on-fail-shares", "", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-new-block-info", "--no-new-block-info", "--no-new-block-info", "", MinerOptionFlagType.Uni),
                 },
@@ -77,7 +78,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("nbminer_temperature-limit", "--tl", "--temperature-limit", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_temperature-start", "--ts", "--temperature-start", "-1", MinerOptionFlagType.MultiParam, ","),
                     //new MinerOption("nbminer_lhr", "-lhr", "-lhr", "-1", MinerOptionFlagType.MultiParam, ","),
-                    //new MinerOption("nbminer_lhr-mode", "-lhr-mode", "-lhr-mode", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("nbminer_lhr-mode", "--lhr-mode", "--lhr-mode", "1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_power-limit", "--power-limit", "--pl", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_cclock", "--cclock", "--cclock", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("nbminer_mclock", "--mclock", "--mclock", "0", MinerOptionFlagType.MultiParam, ","),
@@ -511,6 +512,7 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>
                 {
                     new MinerOption("Phoenix_stales", "-stales", "-stales", "0", MinerOptionFlagType.SingleParam, ","),
+                    new MinerOption("Phoenix_mcdag", "-mcdag", "-mcdag", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_ftimeout", "-ftimeout", "-ftimeout", "", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_AMD", "-amd", "-amd", "", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("Phoenix_NVIDIA", "-nvidia", "-nvidia", "", MinerOptionFlagType.SingleParam, ","),

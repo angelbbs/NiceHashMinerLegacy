@@ -31,23 +31,6 @@ namespace NiceHashMiner.Devices.Algorithms
 
         private static Dictionary<MinerBaseType, List<Algorithm>> Gpu => new Dictionary<MinerBaseType, List<Algorithm>>
         {
-            /*
-            {
-                MinerBaseType.Claymore,
-                new List<Algorithm>()
-                {
-                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
-                    //new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
-//                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
-             //       new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
-//                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
-//                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia),
-              //      new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s),
-               //     new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak)
-                }
-            },
-            */
-
             {
                 MinerBaseType.Nanominer,
                 new List<Algorithm>()
@@ -165,18 +148,18 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31")
-                            {
-                                ExtraLaunchParameters = ""
-                            },
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
-                            {
-                                ExtraLaunchParameters = "--enablezilcache=1"
-                            },
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
-                            {
-                                ExtraLaunchParameters = ""
-                            },
+                            //new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31")
+                            //{
+                            //    ExtraLaunchParameters = ""
+                            //},
+                            //new Algorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            //{
+                            //    ExtraLaunchParameters = "--enablezilcache=1"
+                            //},
+                            //new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
+                            //{
+                            //    ExtraLaunchParameters = ""
+                            //},
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = ""
@@ -188,7 +171,6 @@ namespace NiceHashMiner.Devices.Algorithms
                             new List<Algorithm>
                             {
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.NeoScrypt, "NeoScrypt"),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto4GB, "DaggerHashimoto4GB")
                             }
             },
             {
@@ -244,14 +226,6 @@ namespace NiceHashMiner.Devices.Algorithms
         public static Dictionary<MinerBaseType, List<Algorithm>> Nvidia => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
-                MinerBaseType.Claymore,
-                new List<Algorithm>()
-                {
-                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
-
-                }
-            },
-            {
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()
                 {
@@ -279,6 +253,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--mt 1"
                             },
+                            /*
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Autolykos, "DaggerAutolykos")
                             {
                                 ExtraLaunchParameters = "--mt 1"
@@ -288,9 +263,11 @@ namespace NiceHashMiner.Devices.Algorithms
                                 ExtraLaunchParameters = "--mt 1"
                             },
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Octopus, "DaggerOctopus")
+
                             {
                                 ExtraLaunchParameters = "--mt 1"
                             },
+                            */
                             new Algorithm(MinerBaseType.trex, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = "--mt 1"
@@ -337,8 +314,8 @@ namespace NiceHashMiner.Devices.Algorithms
             },
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),

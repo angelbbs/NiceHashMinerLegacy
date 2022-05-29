@@ -229,6 +229,20 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
+
+            minerfilename = "gminer\\miner.2.92.exe";
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.GMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.CuckooCycle)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                        Helpers.ConsolePrint("GroupAlgorithms", "File miners\\" + minerfilename + " not exist. Some algorithms are disabled.");
+                    }
+                }
+            }
             //******************
             if (algoSettings.ContainsKey(MinerBaseType.trex))
             {

@@ -139,6 +139,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             try
             {
                 File.Replace(tempPath, path, backup);
+                if(File.Exists(backup)) File.Delete(backup);
             } catch (Exception ex)
             {
                 //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());

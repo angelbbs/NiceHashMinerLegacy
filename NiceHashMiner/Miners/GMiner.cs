@@ -282,7 +282,7 @@ namespace NiceHashMiner.Miners
             {
                 if (pair.Device.NvidiaLHR && MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
                 {
-                    addTime = 60;
+                    //addTime = 60;
                 }
             }
 
@@ -402,7 +402,7 @@ namespace NiceHashMiner.Miners
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
                         MinerStartDelay = 10;
-                        delay_before_calc_hashrate = 5 + addTime;
+                        delay_before_calc_hashrate = 15;
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))

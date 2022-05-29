@@ -495,7 +495,7 @@ namespace NiceHashMiner.Miners
                     $"\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
                 stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
-            Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
+            //Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
             Form_Main.smaCount = 0;
             if (smaTmp == 0)
             {
