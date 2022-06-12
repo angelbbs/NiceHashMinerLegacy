@@ -118,6 +118,7 @@ namespace WebSocketSharp
         private const string _version = "13";
         private TimeSpan _waitTime;
         private string _resolvedIP;
+        private int _port;
 
         #endregion
 
@@ -848,7 +849,10 @@ namespace WebSocketSharp
         {
             set => this._resolvedIP = value;
         }
-
+        public int Port
+        {
+            set => this._port = value;
+        }
 
         #endregion
 
@@ -2328,7 +2332,13 @@ namespace WebSocketSharp
                     _tcpClient = new TcpClient(_uri.DnsSafeHost, _uri.Port);
                 } else
                 {
-                    _tcpClient = new TcpClient(_resolvedIP, _uri.Port);
+                    if (_port != 0)
+                    {
+                        _tcpClient = new TcpClient(_resolvedIP, _port);
+                    } else
+                    {
+                        _tcpClient = new TcpClient(_resolvedIP, _uri.Port);
+                    }
                 }
                 _stream = _tcpClient.GetStream();
             }

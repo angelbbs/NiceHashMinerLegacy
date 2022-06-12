@@ -1063,6 +1063,7 @@ break;
                                 if (status != NvStatus.OK)
                                 {
                                     Helpers.ConsolePrint("NVAPI", "Enum physical GPUs failed with status: " + status);
+                                    Form_Main.NvAPIerror = true;
                                 }
                                 else
                                 {
@@ -1128,14 +1129,14 @@ break;
                             NvPhysicalGpuHandle handle = new NvPhysicalGpuHandle();
                             idHandles.TryGetValue(cudaDev.pciBusID, out handle);
 
-                            Helpers.ConsolePrint("QueryCudaDevices", "cudaDev.DeviceID: " + (cudaDev.DeviceID).ToString());
-                            foreach (var vc in AvaliableVideoControllers)
+                            //Helpers.ConsolePrint("QueryCudaDevices LHR detection", "cudaDev.DeviceID: " + (cudaDev.DeviceID).ToString());
+                            foreach (var vc in AvaliableVideoControllers)//LHR detection
                             {
                                 bool _equals = false;
                                 //Helpers.ConsolePrint("QueryCudaDevices", "vc.ID: " + vc.ID);
                                 if (string.IsNullOrEmpty(vc.DEV_ + vc.VEN_))
                                 {
-                                    Helpers.ConsolePrint("QueryCudaDevices", "Empty VEN_&DEV_");
+                                    Helpers.ConsolePrint("QueryCudaDevices LHR detection", "Empty VEN_&DEV_");
                                     if (vc.ID == cudaDev.DeviceID)
                                     {
                                         _equals = true;
@@ -1149,8 +1150,40 @@ break;
                                 }
                                 if (_equals)
                                 {
-                                    Helpers.ConsolePrint("QueryCudaDevices", vc.DEV_ + vc.VEN_ + " ?= " + cudaDev.pciDeviceId.ToString("X"));
+                                    //Helpers.ConsolePrint("QueryCudaDevices LHR detection", vc.ID.ToString() + ": " + vc.DEV_ + vc.VEN_ + " ?= " + cudaDev.DeviceID.ToString() + ": " + cudaDev.pciDeviceId.ToString("X"));
                                     cudaDev.NvidiaLHR = vc.NvidiaLHR;
+                                    //check empty uuid
+                                    if (!cudaDev.UUID.Contains("GPU-"))
+                                    {
+                                        idHandles.TryGetValue((int)cudaDev.DeviceID, out handle);
+                                        string fakeUUID = GetFakeUuid((int)cudaDev.DeviceID, vc.SUBSYS_, vc.fakeID_, DeviceGroupType.NVIDIA_6_x);
+                                        cudaDev.UUID = fakeUUID;
+                                        Helpers.ConsolePrint("QueryCudaDevices LHR detection", "Empty UUID for Device ID: " + cudaDev.DeviceID.ToString() + "Using Fake UUID: " + fakeUUID);
+                                    }
+                                }
+                            }
+                            /*
+                            foreach (var vc in AvaliableVideoControllers)//monitor detection
+                            {
+                                bool _equals = false;
+                                if (string.IsNullOrEmpty(vc.DEV_ + vc.VEN_))
+                                {
+                                    Helpers.ConsolePrint("QueryCudaDevices monitor detection", "Empty VEN_&DEV_");
+                                    if (vc.ID == cudaDev.DeviceID)
+                                    {
+                                        _equals = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if ((vc.DEV_ + vc.VEN_).Equals(cudaDev.pciDeviceId.ToString("X")) && vc.ID == cudaDev.DeviceID)
+                                    {
+                                        _equals = true;
+                                    }
+                                }
+                                if (_equals)
+                                {
+                                    Helpers.ConsolePrint("QueryCudaDevices monitor detection", vc.ID.ToString() + ": " + vc.DEV_ + vc.VEN_ + " ?= " + cudaDev.DeviceID.ToString() + ": " + cudaDev.pciDeviceId.ToString("X"));
                                     int.TryParse(vc.CurrentRefreshRate, out var refRate);
                                     cudaDev.HasMonitorConnected = refRate;
                                     //check empty uuid
@@ -1159,13 +1192,13 @@ break;
                                         idHandles.TryGetValue((int)cudaDev.DeviceID, out handle);
                                         string fakeUUID = GetFakeUuid((int)cudaDev.DeviceID, vc.SUBSYS_, vc.fakeID_, DeviceGroupType.NVIDIA_6_x);
                                         cudaDev.UUID = fakeUUID;
-                                        Helpers.ConsolePrint("QueryCudaDevices", "Empty UUID for Device ID: " + cudaDev.DeviceID.ToString() + "Using Fake UUID: " + fakeUUID);
+                                        Helpers.ConsolePrint("QueryCudaDevices monitor detection", "Empty UUID for Device ID: " + cudaDev.DeviceID.ToString() + "Using Fake UUID: " + fakeUUID);
                                     }
-                                    //idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
                                 }
                             }
-                                // check sm vesrions
-                                bool isUnderSM21;
+                            */
+                            // check sm vesrions
+                            bool isUnderSM21;
                             {
                                 var isUnderSM2Major = cudaDev.SM_major < 2;
                                 var isUnderSM1Minor = cudaDev.SM_minor < 1;

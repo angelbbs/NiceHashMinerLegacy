@@ -156,6 +156,7 @@ namespace NiceHashMiner
         public static bool checkBox_EnableAPI = false;
         public static string NHApiFlag = "";
         private static string _NHApiFlag = "";
+        public static bool NvAPIerror = false;
 
         public struct RigProfitList
         {
@@ -1001,6 +1002,9 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
+
+            //Helpers.ConsolePrint("**************", "3341");
+            //DSave.SaveDivertStart("3341");
 
         }
         [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]

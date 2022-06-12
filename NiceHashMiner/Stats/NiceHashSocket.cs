@@ -71,16 +71,27 @@ namespace NiceHashMiner.Stats
         }
         public void StartConnectionNew(string btc = null, string worker = null, string group = null)
         {
+            bool proxy = false;//test
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
-
+            string ResolvedIP = "";
+            string link = Links.CheckDNS(Links.NhmSocketAddress);
             try
             {
                 if (_webSocket == null)
                 {
                     _webSocket = new WebSocket(Links.NhmSocketAddress);
-                    string link = Links.CheckDNS(Links.NhmSocketAddress);
-                    string ResolvedIP = new Uri(link).Host;
+
+                    if (!proxy)
+                    {
+                        ResolvedIP = new Uri(link).Host;
+                    }
+                    else
+                    {
+                        _webSocket = new WebSocket("wss://localhost:443/v3/nhml");
+                        ResolvedIP = "127.0.0.1";
+                        _webSocket.Port = 6443;
+                    }
                     if (IsIPAddress(ResolvedIP))
                     {
                         _webSocket.ResolvedIP = ResolvedIP;
@@ -250,50 +261,6 @@ namespace NiceHashMiner.Stats
             _attemptingReconnect = false;
             OnConnectionLost?.Invoke(null, EventArgs.Empty);
             return false;
-        }
-
-        public void StartConnection()
-        {
-            Form_Main.NHConnectingInProgress = true;
-            Helpers.ConsolePrint("SOCKET", "Start connection");
-            NHSmaData.InitializeIfNeeded();
-            _connectionAttempted = true;
-
-            try
-            {
-                if (_webSocket == null)
-                {
-                    _webSocket = new WebSocket(_address);
-                    string ResolvedIP = Links.CheckDNS(_address);
-                    if (IsIPAddress(ResolvedIP))
-                    {
-                        _webSocket.ResolvedIP = ResolvedIP;
-                    }
-                }
-                else
-                {
-                    _connectionEstablished = false;
-                    _restartConnection = true;
-                    _webSocket.Close();
-                }
-
-                _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                _webSocket.OnOpen += ConnectCallback;
-                _webSocket.OnMessage += ReceiveCallback;
-                _webSocket.OnError += ErrorCallback;
-                _webSocket.OnClose += CloseCallback;
-                _webSocket.Log.Level = LogLevel.Debug;
-                _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
-                _webSocket.EnableRedirection = true;
-                _webSocket.Connect();
-                _connectionEstablished = true;
-                _restartConnection = false;
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
-            Form_Main.NHConnectingInProgress = false;
         }
 
         public void ConnectCallback(object sender, EventArgs e)
@@ -532,7 +499,7 @@ namespace NiceHashMiner.Stats
                     else
                     {
                         Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
-                        StartConnection();
+                        StartConnectionNew();
                     }
                 }
             }

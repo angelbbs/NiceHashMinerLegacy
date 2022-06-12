@@ -110,7 +110,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA || Form_Main.NvAPIerror)
                 {
                     return -1;
                 }
@@ -222,7 +222,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA || Form_Main.NvAPIerror)
                 {
                     return -1;
                 }

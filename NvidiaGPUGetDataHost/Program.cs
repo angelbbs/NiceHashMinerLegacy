@@ -186,59 +186,56 @@ namespace NvidiaGPUGetDataHost
                             }
                         }
                         Thread.Sleep(50);
-
-                        var gpus = NvAPIWrapper.GPU.PhysicalGPU.GetPhysicalGPUs();
-                        var sorted = gpus.OrderBy(x => x.GPUId).ToArray();
-
-                        /*
-                        for (int i=0; i<gpus.Length;i++)
+                        bool nvApierror = false;
+                        try
                         {
-                            var gpu = gpus[i];
-                            Logger.ConsolePrint("NvidiaGPUGetDataHost", gpu.FullName + " GPUId: " + gpu.GPUId.ToString());
+                            var gpus0 = NvAPIWrapper.GPU.PhysicalGPU.GetPhysicalGPUs();
+                        } catch (Exception ex)
+                        {
+                            nvApierror = true;
                         }
-                        */
-                        var gpu = sorted[dev];
-                        NvmlNativeMethods.nvmlDeviceGetName(_nvmlDevice, out string name);
-                        //Logger.ConsolePrint("NvidiaGPUGetDataHost", "dev: " + dev + " nvml.name: " + name + " api.FullName: " + gpu.FullName + " api.GPUId: " + gpu.GPUId.ToString());
-                        var handle = GPUApi.GetPhysicalGPUFromGPUID(gpu.GPUId);
-                        // find bits
-                        var maxBit = 0;
-                        for (; maxBit < 32; maxBit++)
+
+                        if (!nvApierror)
                         {
+                            var gpus = NvAPIWrapper.GPU.PhysicalGPU.GetPhysicalGPUs();
+                            var sorted = gpus.OrderBy(x => x.GPUId).ToArray();
+
+
+                            var gpu = sorted[dev];
+                            NvmlNativeMethods.nvmlDeviceGetName(_nvmlDevice, out string name);
+                            //Logger.ConsolePrint("NvidiaGPUGetDataHost", "dev: " + dev + " nvml.name: " + name + " api.FullName: " + gpu.FullName + " api.GPUId: " + gpu.GPUId.ToString());
+                            var handle = GPUApi.GetPhysicalGPUFromGPUID(gpu.GPUId);
+                            // find bits
+                            var maxBit = 0;
+                            for (; maxBit < 32; maxBit++)
+                            {
+                                try
+                                {
+                                    GPUApi.QueryThermalSensors(handle, 1u << maxBit);
+                                }
+                                catch
+                                {
+                                    break;
+                                }
+                            }
+                            //Logger.ConsolePrint("NvidiaGPUGetDataHost", "maxBit: " + maxBit.ToString());
+                            if (maxBit == 0)
+                            {
+                                return;
+                            }
+
+                            float[] t1 = new float[maxBit];
                             try
                             {
-                                GPUApi.QueryThermalSensors(handle, 1u << maxBit);
+                                var temp = GPUApi.QueryThermalSensors(handle, (1u << maxBit) - 1);
+                                t1 = temp.Temperatures;
                             }
                             catch
                             {
-                                break;
+                                // ignore
                             }
+                            _tempMem = (uint)t1[9];// 2-hotspot, 9-mem
                         }
-                        //Logger.ConsolePrint("NvidiaGPUGetDataHost", "maxBit: " + maxBit.ToString());
-                        if (maxBit == 0)
-                        {
-                            return;
-                        }
-
-                        float[] t1 = new float[maxBit];
-                        try
-                        {
-                            var temp = GPUApi.QueryThermalSensors(handle, (1u << maxBit) - 1);
-                            t1 = temp.Temperatures;
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-                        _tempMem = (uint)t1[9];// 2-hotspot, 9-mem
-                        /*
-                        for (int i = 0; i < t1.Length; i++)
-                        {
-                            Logger.ConsolePrint("NvidiaGPUGetDataHost", "i: " + i + " " + t1[i].ToString());
-                        }
-                        */
-                        //  Thread.Sleep(500);
-
                         Thread.Sleep(50);
 
                         using (MemoryMappedViewAccessor writer = sharedMemory.CreateViewAccessor(0, size * devCount + Marshal.SizeOf(devCount)))

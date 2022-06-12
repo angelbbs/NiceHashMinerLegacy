@@ -119,7 +119,6 @@ namespace NiceHashMiner.Stats
 
         public static void StartConnection(string address)
         {
-
             try
             {
                 _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
@@ -566,7 +565,7 @@ namespace NiceHashMiner.Stats
                     {
                         // Helpers.ConsolePrint("NHM_API_info", resp);
                     }
-
+                    //Helpers.ConsolePrint("NHM_API_info", resp);
                     dynamic list;
                     list = JsonConvert.DeserializeObject<RootobjectCurrent>(resp);
 
@@ -684,7 +683,6 @@ namespace NiceHashMiner.Stats
                     string apistr = Links.ServerTime;
                     string resp;
                     resp = NiceHashStats.GetNiceHashApiDataWithSecret(apistr, false);
-                    //Helpers.ConsolePrint("NHM_API_info", resp);
                     if (resp != null)
                     {
                         dynamic respTime = JsonConvert.DeserializeObject(resp);
@@ -1669,15 +1667,29 @@ namespace NiceHashMiner.Stats
 
         public static string GetNiceHashApiData(string url, string worker)
         {
-            string link = Links.CheckDNS(url);
+            bool proxy = false;//test
+            //string link = Links.CheckDNS(url);
+            //string host = new Uri(url).Host;
+
             string host = new Uri(url).Host;
+            if (proxy)
+            {
+                url = url.Replace("api2.nicehash.com", "localhost:7443");
+            } else
+            {
+                //url = "https://localhost/main/api/v2/public/stats/global/current";
+            }
+
+            string link = Links.CheckDNS(url);
+            var uri = new Uri(url);
             var responseFromServer = "";
 
             try
             {
+                //ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
                 var activeMinersGroup = MinersManager.GetActiveMinersGroup();
 
-                var wr = (HttpWebRequest)WebRequest.Create(link);
+                var wr = (HttpWebRequest)WebRequest.Create(uri);
 
                 string RequestId = System.Guid.NewGuid().ToString().Replace("-", "");
 
@@ -1703,7 +1715,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("GetNiceHashApiData", ex.Message);
+                Helpers.ConsolePrint("GetNiceHashApiData", ex.ToString());
                 return null;
             }
             return responseFromServer;
@@ -1781,8 +1793,17 @@ namespace NiceHashMiner.Stats
         }
         public static string GetNiceHashApiDataWithSecret(string url, bool auth)
         {
-            string link = Links.CheckDNS(url);
+            bool proxy = false;//test
+            string proxyServer = "192.168.1.110";
+
             string host = new Uri(url).Host;
+            if (proxy)
+            {
+                url = url.Replace("api2.nicehash.com", proxyServer + ":7443");
+            }
+            string link = Links.CheckDNS(url);
+            var uri = new Uri(url);
+
             var responseFromServer = "";
 
             if ((Form_Main.orgId + Form_Main.apiKey + Form_Main.apiSecret).IsNullOrEmpty())
@@ -1797,13 +1818,13 @@ namespace NiceHashMiner.Stats
 
             try
             {
-                var wr = (HttpWebRequest)WebRequest.Create(link);
+                ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+                var wr = (HttpWebRequest)WebRequest.Create(uri);
                 if (auth)
                 {
                     string nonce = System.Guid.NewGuid().ToString().Replace("-", "");
                     string RequestId = System.Guid.NewGuid().ToString().Replace("-", "");
-                    string digest = HashBySegments(apiSecret, apiKey, serverTime, nonce, orgId, "GET", getPath(url.Replace("https://api2.nicehash.com", "")), getQuery(url.Replace("https://api2.nicehash.com", "")), null);
-
+                    string digest = HashBySegments(apiSecret, apiKey, serverTime, nonce, orgId, "GET", getPath(uri.LocalPath), getQuery(uri.Query), null);
                     //wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
                     wr.UserAgent = "name=Edge;version=100.0.1185.39;buildNumber=1;os=Windows;osVersion=10;deviceVersion=amd64;lang=en";
                     wr.Headers.Add("X-Time", serverTime);
