@@ -35,7 +35,7 @@ namespace NiceHashMiner.Configs.Data
         public string WorkerName = "worker1";
         public TimeUnitType TimeUnit = TimeUnitType.Day;
         public string IFTTTKey = "";
-        public int ServiceLocation = 4;
+        public int ServiceLocation = 0;
         public bool ForceAutoLocation = true;
         public bool AutoStartMining = false;
         public int AutoStartMiningDelay = 0;

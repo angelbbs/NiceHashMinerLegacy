@@ -33,8 +33,6 @@ namespace NiceHashMiner.Miners
                     return new Xmrig();
                 case MinerBaseType.SRBMiner:
                     return new SRBMiner();
-                case MinerBaseType.hsrneoscrypt:
-                    return new hsrneoscrypt();
                 case MinerBaseType.CryptoDredge:
                     return new CryptoDredge();
                 case MinerBaseType.ZEnemy:
@@ -49,16 +47,13 @@ namespace NiceHashMiner.Miners
                     return new GMiner(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.lolMiner:
                     return new lolMiner();
-                case MinerBaseType.WildRig:
-                    return new WildRig();
                 case MinerBaseType.NBMiner:
                     return new NBMiner(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.miniZ:
                     return new miniZ();
                 case MinerBaseType.Nanominer:
                     return new Nanominer();
-                case MinerBaseType.Kawpowminer:
-                    return new Kawpowminer();
+
             }
 
             return null;

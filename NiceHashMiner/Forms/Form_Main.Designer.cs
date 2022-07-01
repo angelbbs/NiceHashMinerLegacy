@@ -103,10 +103,6 @@ namespace NiceHashMiner
             this.comboBoxLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLocation.FormattingEnabled = true;
             this.comboBoxLocation.Items.AddRange(new object[] {
-            "Europe (west) - Belgium",
-            "Europe (north) - Finland",
-            "USA (west) - California",
-            "USA (east) - New York",
             "Auto"});
             this.comboBoxLocation.Location = new System.Drawing.Point(107, 6);
             this.comboBoxLocation.Name = "comboBoxLocation";

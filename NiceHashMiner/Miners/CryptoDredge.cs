@@ -222,11 +222,6 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 20;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                    {
-                        delay_before_calc_hashrate = 2;
-                        MinerStartDelay = 10;
-                    }
 
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)

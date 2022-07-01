@@ -9,10 +9,7 @@
         "Global_Retry": "&Retry",
 
         "Service_Location": "Service location",
-        "LocationName_eu-west": "Europe (west) - Belgium",
-	"LocationName_eu-north": "Europe (north) - Finland",
-        "LocationName_usa-west": "USA (west) - California",
-        "LocationName_usa-east": "USA (east) - New York",
+        "LocationName": "Nicehash Auto",
         "Warning_with_Exclamation": "Warning!",
         "Error_with_Exclamation": "Error!",
         "BitcoinAddress": "Bitcoin Address",

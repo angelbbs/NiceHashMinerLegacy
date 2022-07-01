@@ -70,17 +70,7 @@ namespace NiceHashMiner.Miners
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
             List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Lyra2z))
-            {
-                algo = " -a lyra2z";
-                port = "3365";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-            {
-                algo = " -a x16rv2";
-                port = "3379";
-            }
-
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 algo = " -a ethash";
@@ -154,13 +144,6 @@ namespace NiceHashMiner.Miners
             {
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
                 worker = ConfigManager.GeneralConfig.WorkerName.Trim();
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-            {
-                CommandLine = sc + " -a x16rv2" +
-                " --url " + Links.CheckDNS("stratum+tcp://x16rv2.na.mine.zpool.ca:3637") + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2" + " -p c=BTC " +
-                " -d ";
             }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
@@ -271,11 +254,7 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 30;
                         MinerStartDelay = 10;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                    {
-                        delay_before_calc_hashrate = 60;
-                        MinerStartDelay = 10;
-                    }
+                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                     {
                         delay_before_calc_hashrate = 30;

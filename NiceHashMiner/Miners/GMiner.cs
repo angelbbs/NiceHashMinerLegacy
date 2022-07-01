@@ -108,19 +108,7 @@ namespace NiceHashMiner.Miners
                 ssl = " --ssl_verification 0";
                 port = "3387";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
-            {
-                algo = "grin31";
-                algoName = "grincuckatoo31";
-                port = "3372";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                algo = "grin32";
-                algoName = "grincuckatoo32";
-                ssl = " --ssl_verification 0";
-                port = "3383";
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 algo = "aeternity";
@@ -318,20 +306,7 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
-            {
-                ret = " --color 0 --pec --algo grin31" +
-                " --server " + Links.CheckDNS("stratum+tcp://mwc.2miners.com:1111").Replace("stratum+tcp://", "") + " --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.gminer --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo31.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                ret = " --color 0 --pec --algo grin32" +
-                " --server " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030").Replace("stratum+tcp://", "") + " --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.gminer --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                GetDevicesCommandString();
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 ret = " --color 0 --pec --algo aeternity" +
@@ -416,22 +391,14 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 10;
                     }
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
-                    {
-                        MinerStartDelay = 10;
-                        delay_before_calc_hashrate = 5;
-                    }
+                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
                     }
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-                    {
-                        MinerStartDelay = 10;
-                        delay_before_calc_hashrate = 5;
-                    }
+                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
                     {
                         MinerStartDelay = 10;
@@ -499,9 +466,7 @@ namespace NiceHashMiner.Miners
 
         protected double GetNumber(string outdata)
         {
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31 ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32 ||
-                MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 return GetNumber(outdata, LookForStart, "g/s");
             }

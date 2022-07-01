@@ -223,9 +223,7 @@
     <Compile Include="Miners\Ethash\Keccak.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMiner.cs" />
-    <Compile Include="Miners\hsrneoscrypt.cs" />
     <Compile Include="Miners\lolMiner.cs" />
-    <Compile Include="Miners\lyclMiner.cs" />
     <Compile Include="Miners\miniZ.cs" />
     <Compile Include="Miners\NBMiner.cs" />
     <Compile Include="Miners\Nanominer.cs" />
@@ -233,8 +231,6 @@
     <Compile Include="Miners\SRBMiner.cs" />
     <Compile Include="Miners\teamredminer.cs" />
     <Compile Include="Miners\trex.cs" />
-    <Compile Include="Miners\WildRig.cs" />
-    <Compile Include="Miners\Kawpowminer.cs" />
     <Compile Include="Miners\Z-Enemy.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

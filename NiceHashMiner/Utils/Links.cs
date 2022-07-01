@@ -85,7 +85,6 @@ namespace NiceHashMiner
             {
                 domainName = new Uri(domain).Host;
                 prefix = domain.Split(':')[0] + "://";
-
                 if (new Uri(domain).LocalPath.Length > 1 || new Uri(domain).Query.Length > 1)
                 {
                     path = new Uri(domain).LocalPath + new Uri(domain).Query;

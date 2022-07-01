@@ -91,9 +91,9 @@ namespace NiceHashMiner.Miners
         public static List<string> GetResolvedServers(string algo)
         {
             List<string> ResolvedServers = new List<string>();
-            for (int i = 0; i < Form_Main.myServers.Length / 2 - 1; i++)
+            for (int i = 0; i < Globals.MiningLocation.Length; i++)
             {
-                string _server = Links.CheckDNS($"stratum+tcp://{algo}.{Form_Main.myServers[i, 0]}.nicehash.com", false);
+                string _server = Links.CheckDNS($"stratum+tcp://{algo}.{Globals.MiningLocation[i]}", false);
                 ResolvedServers.Add(_server);
             }
             return ResolvedServers;
@@ -771,9 +771,9 @@ namespace NiceHashMiner.Miners
                         toStart.StartMinerTime = DateTime.Now;
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType} : {toStart.DualAlgorithmType}, ");
                         //toStart.Start(_miningLocation, _btcAdress, _worker);
-                        if (ConfigManager.GeneralConfig.ServiceLocation == 4)
+                        if (ConfigManager.GeneralConfig.ServiceLocation == 0)
                         {
-                            toStart.Start(Form_Main.myServers[0, 0], _btcAdress, _worker);
+                            toStart.Start(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], _btcAdress, _worker);
                         }
                         else
                         {

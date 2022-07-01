@@ -175,7 +175,7 @@ namespace NiceHashMiner
                 {
                     Logger.ConfigureWithFile();
                 }
-
+                ConfigManager.GeneralConfig.ServiceLocation = 0;//это добавить в релиз
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 47.1)
                 {
                     ConfigManager.GeneralConfig.ChartEnable = false;

@@ -82,15 +82,7 @@ namespace NiceHashMiner.Miners
             {
                 port = "3389";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
-            {
-                port = "3366";
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-            {
-                port = "3379";
-            }
-
+            
             if (!_isDual)
             {
                 LastCommandLine = algo +
@@ -199,30 +191,7 @@ namespace NiceHashMiner.Miners
             Helpers.ConsolePrint("BENCHMARK", "CurrentSecondaryAlgorithmType: " + MiningSetup.CurrentSecondaryAlgorithmType);
             if (!_isDual)
             {
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                {
-                    commandLine = "--algo x16rv2 -B " +
-                                  ExtraLaunchParametersParser.ParseForMiningSetup(
-                                      MiningSetup,
-                                      DeviceType.NVIDIA) +
-                                      " --api-bind-http 127.0.0.1:" + ApiPort +
-                                  " -d ";
-                    commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
-                    //_benchmarkTimeWait = 180;
-                    _benchmarkTimeWait = time;
-                }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
-                {
-                    commandLine = "--algo x16r -B " +
-                                  ExtraLaunchParametersParser.ParseForMiningSetup(
-                                      MiningSetup,
-                                      DeviceType.NVIDIA) +
-                                      " --api-bind-http 127.0.0.1:" + ApiPort +
-                                  " -d ";
-                    commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
-                    //_benchmarkTimeWait = 180;
-                    _benchmarkTimeWait = time;
-                }
+                
 
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
@@ -347,28 +316,7 @@ namespace NiceHashMiner.Miners
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 BenchmarkThreadRoutineStartSettup(); //need for benchmark log
 
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                {
-                    Thread.Sleep(1000);
-                    try
-                    {
-                        if (File.Exists("miners\\t-rex\\" + GetLogFileName()))
-                            File.Delete("miners\\t-rex\\" + GetLogFileName());
-
-                        Thread.Sleep(1000);
-                        do
-                        {
-                            Thread.Sleep(1000);
-                        } while (!File.Exists("miners\\t-rex\\" + GetLogFileName()));
-                        Thread.Sleep(1000);
-                        fs = new FileStream("miners\\t-rex\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint(MinerTag(), ex.Message);
-                    }
-                }
-
+                
                 while (IsActiveProcess(BenchmarkHandle.Id))
                 {
                     if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
@@ -420,17 +368,7 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 30;
                     }
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                    {
-                        delay_before_calc_hashrate = 20;
-                        MinerStartDelay = 20;
-                    }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R))
-                    {
-                        delay_before_calc_hashrate = 20;
-                        MinerStartDelay = 20;
-                    }
-
+                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                     {
                         delay_before_calc_hashrate = 10;
@@ -451,86 +389,9 @@ namespace NiceHashMiner.Miners
                     var ad = GetSummaryAsync();
 
                     double logSpeed = 0.0d;
-                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2)) && fs.Length > offset)
-                    {
-                        int count = (int)(fs.Length - offset);
-                        byte[] array = new byte[count];
-                        fs.Read(array, 0, count);
-                        offset = (int)fs.Length;
-                        string textFromFile = System.Text.Encoding.Default.GetString(array).Trim();
-                        //Helpers.ConsolePrint(MinerTag(), textFromFile);
+                    
 
-                        string strStart = "Total:";
-                        if (textFromFile.Contains(strStart) && textFromFile.Contains("H/s"))
-                        {
-                            var speedStart = textFromFile.IndexOf(strStart);
-                            var speed = textFromFile.Substring(speedStart + strStart.Length, 6);
-                            speed = speed.Replace(strStart, "");
-                            speed = speed.Replace(" ", "");
-                            double.TryParse(speed, out logSpeed);
-                            if (textFromFile.Contains("MH/s")) logSpeed = logSpeed * 1000 * 1000;
-                            if (textFromFile.Contains("GH/s")) logSpeed = logSpeed * 1000 * 1000 * 1000;
-                            Helpers.ConsolePrint("logSpeed", logSpeed.ToString());
-                        }
-                    }
-
-                    if ((ad.Result != null && ad.Result.Speed > 0) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                    {
-                        _powerUsage += _power;
-                        repeats++;
-                        double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
-                        BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
-                        if (repeats > delay_before_calc_hashrate)
-                        {
-                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                            {
-                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + logSpeed.ToString() + " power: " + _power.ToString());
-                                summspeed += logSpeed;
-                            }
-                            else
-                            {
-                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " SecondSpeed: " + ad.Result.SecondarySpeed + " power: " + _power.ToString());
-                                summspeed += ad.Result.Speed;
-                                secsummspeed += ad.Result.SecondarySpeed;
-                            }
-                        }
-                        else
-                        {
-                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16R) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
-                            {
-                                Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + logSpeed.ToString());
-                            }
-                            else
-                            {
-                                Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
-                            }
-                        }
-
-                        if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
-                        {
-                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
-                            ad.Dispose();
-                            benchmarkTimer.Stop();
-
-                            BenchmarkHandle.Kill();
-                            BenchmarkHandle.Dispose();
-                            EndBenchmarkProcces();
-                            /*
-                            var imageName = MinerExeName.Replace(".exe", "");
-                            // maybe will have to KILL process
-                            KillMinerBase(imageName);
-                            int k = ProcessTag().IndexOf("pid(");
-                            int i = ProcessTag().IndexOf(")|bin");
-                            var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
-                            int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
-                            KillProcessAndChildren(pid);
-                            */
-                            break;
-                        }
-
-                    }
+                    
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
                 BenchmarkAlgorithm.BenchmarkSecondarySpeed = Math.Round(secsummspeed / (repeats - delay_before_calc_hashrate), 2);

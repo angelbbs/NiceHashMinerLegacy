@@ -111,26 +111,7 @@ namespace NiceHashMiner.Miners
                               " --devices ";
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
-            {
-                LastCommandLine = "--coin MWC-C31" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3372") + " --user " + username + " --pass x --tls 0" +
-                    apiBind + " " + param +
-                              " --devices ";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                LastCommandLine = "--coin GRIN-C32" +
-                " --pool " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
-                " --pool " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3383") + " --user " + username + " --pass x --tls 0" +
-                    apiBind + " " + param +
-                              " --devices ";
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 LastCommandLine = "--algo C29AE" +
@@ -235,22 +216,7 @@ namespace NiceHashMiner.Miners
                 " --devices ";
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo31)
-            {
-                CommandLine = "--coin MWC-C31 " +
-                " --pool " + Links.CheckDNS("stratum+tcp://mwc.2miners.com:1111").Replace("stratum+tcp://", "") + " --user 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.lolMiner --pass x " +
-                "--pool " + Links.CheckDNS("stratum+tcp://grincuckatoo31.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                              param +
-                " --devices ";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                CommandLine = "--coin GRIN-C32" +
-                " --pool " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030").Replace("stratum+tcp://", "") + " --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.lolMiner --pass x" +
-                " --pool " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                              param +
-                " --devices ";
-            }
+            
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
@@ -549,16 +515,7 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 50;
                         MinerStartDelay = 20;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
-                    {
-                        delay_before_calc_hashrate = 20;
-                        MinerStartDelay = 10;
-                    }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-                    {
-                        delay_before_calc_hashrate = 10;
-                        MinerStartDelay = 30;
-                    }
+                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
                     {
                         delay_before_calc_hashrate = 20;

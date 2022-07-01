@@ -7,7 +7,7 @@ namespace NiceHashMiner
     public class Globals
     {
         // Constants
-        public static string[] MiningLocation = { "eu-west", "eu-north", "usa-west", "usa-east", "Auto" };
+        public static string[] MiningLocation = { "auto.nicehash.com" };
 
         public static readonly string DemoUser = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";
 
@@ -37,15 +37,8 @@ namespace NiceHashMiner
             // NHMConectionType.NONE
             var prefix = "";
             var port = nPort;
-            if (miningLocation.ToLower().Contains("auto"))
-            {
-                //miningLocation = miningLocation.Replace("Auto", "eu");
-                miningLocation = Form_Main.myServers[0, 0];
-                if (miningLocation.ToLower().Contains("auto"))
-                {
-                    port = 9200;
-                }
-            }
+
+            port = 9200;
             switch (conectionType)
             {
                 case NhmConectionType.LOCKED:
@@ -61,7 +54,7 @@ namespace NiceHashMiner
             return prefix
                + name
                + "." + miningLocation
-               + ".nicehash.com:"
+               + ":"
                + port;
 
         }

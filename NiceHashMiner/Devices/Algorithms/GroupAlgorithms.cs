@@ -139,27 +139,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
-            
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.GMiner])
-                {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.4))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam > (ulong)(1024 * 1024 * 1024 * 7.4) && Form_Main.GetWinVer(Environment.OSVersion.Version) < 8.0)
-                    {
-                        algo.Enabled = true;
-                        algo.Hidden = false;
-                    }
-                }
-            }
-
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
+                        if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
@@ -186,50 +166,7 @@ namespace NiceHashMiner.Devices.Algorithms
             //************* отключение алгоритмов, если отсутствует дополнительный файл майнера
             string minerfilename = "";
 
-            minerfilename = "CryptoDredge\\CryptoDredge.0.25.1.exe";
-            if (algoSettings.ContainsKey(MinerBaseType.CryptoDredge) && !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
-                {
-                    if (algo.NiceHashID == AlgorithmType.X16R || algo.NiceHashID == AlgorithmType.X16RV2 || algo.NiceHashID == AlgorithmType.NeoScrypt)
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                        //algo.BenchmarkSpeed = 0;
-                        //algo.BenchmarkSecondarySpeed = 0;
-                        Helpers.ConsolePrint("GroupAlgorithms", "File miners\\" + minerfilename + " not exist. Some algorithms are disabled.");
-                    }
-                }
-            }
-
-            minerfilename = "t-rex\\t-rex.0.19.4.exe";
-            if (algoSettings.ContainsKey(MinerBaseType.trex) && !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.trex])
-                {
-                    if (algo.NiceHashID == AlgorithmType.X16R || algo.NiceHashID == AlgorithmType.X16RV2)
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                        Helpers.ConsolePrint("GroupAlgorithms", "File miners\\" + minerfilename + " not exist. Some algorithms are disabled.");
-                    }
-                }
-            }
-
-            minerfilename = "nbminer\\nbminer.39.5.exe";
-            if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
-                {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 || algo.NiceHashID == AlgorithmType.GrinCuckatoo32)
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                        Helpers.ConsolePrint("GroupAlgorithms", "File miners\\" + minerfilename + " not exist. Some algorithms are disabled.");
-                    }
-                }
-            }
-
+            
             minerfilename = "gminer\\miner.2.92.exe";
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename))
             {
@@ -244,53 +181,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             //******************
-            if (algoSettings.ContainsKey(MinerBaseType.trex))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.trex])
-                {
-                    if (algo.DualNiceHashID == AlgorithmType.X16RV2 && !ConfigManager.GeneralConfig.ShowHiddenAlgos)
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
-            if (algoSettings.ContainsKey(MinerBaseType.trex))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.trex])
-                {
-                    if (algo.DualNiceHashID == AlgorithmType.X16R && !ConfigManager.GeneralConfig.ShowHiddenAlgos)
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
-
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.GMiner])
-                {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
-
-            if (algoSettings.ContainsKey(MinerBaseType.NBMiner))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
-                {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA && 
-                        (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.4) || device.Name.Contains("RTX 30")))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
+            
 
             if (algoSettings.ContainsKey(MinerBaseType.ZEnemy)) //not supported
             {
@@ -310,37 +201,6 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     if (algo.NiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 30")))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
-
-            if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.lolMiner])
-                {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
-
-            if (algoSettings.ContainsKey(MinerBaseType.NBMiner))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
-                {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.4))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.NVIDIA &&
-                        device.GpuRam > (ulong)(1024 * 1024 * 1024 * 7.4) && Form_Main.GetWinVer(Environment.OSVersion.Version) > 8.2)
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;
@@ -450,19 +310,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
-            {
-                foreach (var algo in algoSettings[MinerBaseType.lolMiner])
-                {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo31 && device.DeviceType == DeviceType.AMD &&
-                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
-
+            
             if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.lolMiner])

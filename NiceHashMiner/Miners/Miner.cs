@@ -469,7 +469,7 @@ namespace NiceHashMiner
             IsRunning = false;
             IsRunningNew = IsRunning;
             Ethlargement.Stop();
-            new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
             RunCMDBeforeOrAfterMining(false);
             NiceHashStats._deviceUpdateTimer.Stop();
             //new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
@@ -582,7 +582,7 @@ namespace NiceHashMiner
                     if (ProcessHandle != null && Process.GetProcessById(pid) != null)
                     {
                         Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Try force kill miner");
-                        ProcessHandle.Kill(); 
+                        ProcessHandle.Kill();
                     }
                 } catch
                 {
@@ -1513,7 +1513,7 @@ namespace NiceHashMiner
         { }
 
         protected abstract bool BenchmarkParseLine(string outdata);
-
+        /*
         public static int PingServers(string serv = "")
         {
             string[,] myServers = Form_Main.myServers;
@@ -1530,11 +1530,11 @@ namespace NiceHashMiner
                 {
                     if (serv.Contains("daggerhashimoto"))
                     {
-                        server = "stratum." + Globals.MiningLocation[i] + ".nicehash.com";
+                        server = "stratum." + Globals.MiningLocation[i];
                     }
                     else
                     {
-                        server = "stratum." + Globals.MiningLocation[i] + ".nicehash.com";
+                        server = "stratum." + Globals.MiningLocation[i];
                     }
                     var pingReply = ping.Send(server, 1000);
                     if (pingReply.Status != IPStatus.TimedOut)
@@ -1563,7 +1563,7 @@ namespace NiceHashMiner
                 serverId++;
             }
 
-            string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" } };
+            string[,] tmpServers = {  };
             int pingReplyTimeTmp;
             long bestReplyTimeTmp = 10000;
             int iTmp = 0;
@@ -1588,12 +1588,13 @@ namespace NiceHashMiner
             Form_Main.myServers = tmpServers;
             for (int i = 0; i < 4; i++)
             {
-                server = "stratum." + Form_Main.myServers[i, 0] + ".nicehash.com";
+                server = "stratum." + Form_Main.myServers[i, 0];
                 //Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
             }
             //Helpers.ConsolePrint("PingServers", "BestServer: " + Globals.MiningLocation[bestServerId]);
             return bestServerId;
         }
+        */
         protected string GetServiceUrl(AlgorithmType algo)
         {
             return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],

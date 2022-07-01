@@ -16,34 +16,27 @@ namespace NiceHashMiner.Utils
 
         public static DateTime StartTime = new DateTime();
         public static TimeSpan AnswerTime;
+        /*
         public static int GetBestServer()
         {
             //string[,] myServers = Form_Main.myServers;
-            string[,] myServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" } };
-
-            for (int s = 0; s < 5; s++)
+            string[,] myServers = { { "auto.nicehash.com", "20004" } };
+            int count = Globals.MiningLocation.Length;
+            for (int s = 0; s < count; s++)
             {
                 int ReplyTime = ConnectToServer(s);
                 myServers[s, 1] = ReplyTime.ToString();
 
-                /*
-                if (myServers[s, 0].Contains("auto") && ReplyTime < 1000)
-                {
-                    myServers[s, 1] = "0";
-                }
-                */
-            }
-
             myServers[ConfigManager.GeneralConfig.ServiceLocation, 1] = "0";
             
-            string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" } };
+            string[,] tmpServers = { { "auto.nicehash.com", "20004" } };
             int ReplyTimeTmp;
             long bestReplyTimeTmp = 19999;
             int iTmp = 0;
 
-            for (int k = 0; k < 5; k++)
+            for (int k = 0; k < count; k++)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < count; i++)
                 {
                     ReplyTimeTmp = Convert.ToInt32(myServers[i, 1]);
                     if (ReplyTimeTmp < bestReplyTimeTmp && ReplyTimeTmp != -1)
@@ -61,14 +54,14 @@ namespace NiceHashMiner.Utils
 
             string pr = "| ";
             Form_Main.myServers = tmpServers;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < count; i++)
             {
                 pr += Form_Main.myServers[i, 0] + "=" + (Form_Main.myServers[i, 1].Equals("0") ? "forced | ": Form_Main.myServers[i, 1] + " ms | ");
             }
             Helpers.ConsolePrint("SortedServers", pr);
             return 0;
         }
-
+        */
         public static string DNStoIP(string IPName)
         {
             string ret = Links.CheckDNS("stratum+tcp://" + IPName, true).Replace("stratum+tcp://", "");
@@ -93,7 +86,7 @@ namespace NiceHashMiner.Utils
             return "";
             */
         }
-
+        /*
         public static int ConnectToServer(int s)
         {
             nServer = s;
@@ -105,7 +98,7 @@ namespace NiceHashMiner.Utils
             string adr = "";
             try
             {
-                adr = Links.CheckDNS("stratum+tcp://daggerhashimoto." + myServers[nServer, 0] + ".nicehash.com", true).Replace("stratum+tcp://", "");
+                adr = Links.CheckDNS("stratum+tcp://daggerhashimoto." + myServers[nServer, 0], true).Replace("stratum+tcp://", "");
                 addr = IPAddress.Parse(adr);
                 addrl = IPAddress.Parse("0.0.0.0");
             }
@@ -173,7 +166,8 @@ namespace NiceHashMiner.Utils
 
             return ms;
         }
-
+        */
+        /*
         public static int ReadFromServer(Stream serverStream, TcpClient tcpClient)
         {
             string[,] myServers = Form_Main.myServers;
@@ -274,10 +268,10 @@ namespace NiceHashMiner.Utils
                 }
 
             }
-            //Helpers.ConsolePrint(myServers[nServer, 0] + ".nicehash.com", ms.ToString() + " ms");
+
             return ms;
         }
-
+        */
 
     }
 }

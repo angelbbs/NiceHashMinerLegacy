@@ -22,6 +22,7 @@ using Timer = System.Windows.Forms.Timer;
 namespace NiceHashMiner
 {
     using Microsoft.Win32;
+    using Newtonsoft.Json;
     using NiceHashMinerLegacy.Divert;
     using OpenHardwareMonitor.Hardware;
     using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace NiceHashMiner
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
 
+    
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         public Timer _minerStatsCheck;
@@ -46,6 +48,7 @@ namespace NiceHashMiner
         public static Timer _autostartTimerDelay;
         public static Timer _deviceStatusTimer;
         private Timer _updateTimer;
+        private Timer _GetProxyListTimer;
         private int _updateTimerCount;
         private int _updateTimerRestartProgramCount;
         private int _AutoStartMiningDelay = 0;
@@ -114,8 +117,7 @@ namespace NiceHashMiner
         public static bool GoogleAvailable = false;
         public static bool DivertAvailable = true;
         private static string dialogClearBTC = "You want to delete BTC address?";
-        public static string[,] myServers = {
-            { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" }};
+        //public static string[,] myServers = {{ "auto.nicehash.com", "20004" }};
         internal static bool DeviceStatusTimer_FirstTick = false;
         public static Computer thisComputer;
         public static DateTime StartTime = new DateTime();
@@ -184,6 +186,9 @@ namespace NiceHashMiner
             public uint temp;
             public uint tempMem;
         }
+
+
+
         public Form_Main()
         {
 
@@ -440,6 +445,7 @@ namespace NiceHashMiner
 
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
             {
+                /*
                 var i = 0;
                 foreach (var loc in Globals.MiningLocation)
                 {
@@ -452,8 +458,9 @@ namespace NiceHashMiner
                         comboBoxLocation.Items[i++] = "Auto";
                     }
                 }
+                */
             }
-
+                
             if (!ConfigManager.GeneralConfig.DisableTooltips)
             {
                 toolTip1.SetToolTip(buttonBTC_Clear, "Clear");
@@ -524,7 +531,6 @@ namespace NiceHashMiner
         public void InitMainConfigGuiData()
         {
             if (ConfigManager.GeneralConfig.ServiceLocation >= 0 &&
-                //ConfigManager.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
                 ConfigManager.GeneralConfig.ServiceLocation < 4)
                 comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
             else
@@ -668,24 +674,51 @@ namespace NiceHashMiner
                 Form_Settings.ProgressProgramUpdate.Visible = false;
             }
         }
-
-        private bool CheckGithubDownload()//unused
+        public class Proxy
+        {
+            [Serializable]
+            public class ProxyDetail
+            {
+                public string NameRU;
+                public string NameEN;
+                public string Url;
+            }
+        }
+        private void CheckProxyList(object sender, EventArgs e)
         {
             if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+            string j = "";
             try
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 WebClient client = new WebClient();
                 client.UseDefaultCredentials = false;
-                client.DownloadFileAsync(new Uri("https://github.com/angelbbs/NiceHashMinerLegacy/raw/master-old/NiceHashMiner/github.test"), "temp/github.test");
+                client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "temp//List.json");
+                j = File.ReadAllText("temp//List.json");
+
+                Proxy.ProxyDetail[] _ProxyList = JsonConvert.DeserializeObject<Proxy.ProxyDetail[]>(j);
+                if (_ProxyList.Count() > 0)
+                {
+                    foreach (Proxy.ProxyDetail a in _ProxyList)
+                    {
+                        Array.Resize(ref Globals.MiningLocation, Globals.MiningLocation.Length + 1);
+                        Globals.MiningLocation[Globals.MiningLocation.Length - 1] = a.Url;
+                        comboBoxLocation.Items.Add(a.NameEN);
+                        /*
+                        MessageBox.Show(a.NameEN);
+                        MessageBox.Show(a.NameRU);
+                        MessageBox.Show(a.Url);
+                        */
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("CheckGithubDownload", ex.ToString());
-                return false;
+                Helpers.ConsolePrint("CheckProxyList", ex.ToString());
+                return;
             }
-
-            return true;
+            ;
+            return;
         }
 
         private void CheckUpdates()
@@ -846,22 +879,21 @@ namespace NiceHashMiner
             int locations = 0;
             foreach (var location in Globals.MiningLocation)
             {
-                //if (location.Contains("Auto")) continue;
                 for (int an = 8; an <= (int)Enum.GetValues(typeof(AlgorithmType)).Cast<AlgorithmType>().Max(); an++)
                 {
                     if (!an.ToString().Equals(((AlgorithmType)an).ToString()) && !((AlgorithmType)an).ToString().Contains("UNUSED"))
                     {
                         string algo = ((AlgorithmType)an).ToString().ToLower();
                         algo = algo.Replace("randomx", "randomxmonero");
-                        string domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower() + ".nicehash.com";
-                        _loadingScreen.SetValueAndMsg(30 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location.ToLower() + ".nicehash.com");
+                        string domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower();
+                        _loadingScreen.SetValueAndMsg(30 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location.ToLower());
                         Links.CheckDNS(domain);
                     }
                 }
                 locations = locations + 5;
             }
 
-            new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
 
             _loadingScreen.SetValueAndMsg(60, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
@@ -1002,9 +1034,6 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
-
-            //Helpers.ConsolePrint("**************", "3341");
-            //DSave.SaveDivertStart("3341");
 
         }
         [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]
@@ -1343,6 +1372,12 @@ namespace NiceHashMiner
             _updateTimer.Interval = 1000 * 60;//1 min
             _updateTimerCount = 0;
             _updateTimer.Start();
+
+            _GetProxyListTimer = new Timer();
+            _GetProxyListTimer.Tick += CheckProxyList;
+            _GetProxyListTimer.Interval = 1000 * 60;//1 min
+            _GetProxyListTimer.Start();
+            CheckProxyList(null, null);
 
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (!ConfigManager.GeneralConfig.ChartEnable)
@@ -2778,24 +2813,10 @@ public static void CloseChilds(Process parentId)
             {
                 btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress_new.Text.Trim();
             }
-            if (comboBoxLocation.SelectedIndex < 4)
-            {
-                isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
-                    textBoxWorkerName.Text.Trim(), btcAdress);
-            }
-            else
-            {
-                if (ConfigManager.GeneralConfig.ServiceLocation == 4)
-                {
-                    isMining = MinersManager.StartInitialize(this, Form_Main.myServers[0, 0],
-                    textBoxWorkerName.Text.Trim(), btcAdress);
-                }
-                else
-                {
-                    isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[0],
-                        textBoxWorkerName.Text.Trim(), btcAdress);
-                }
-            }
+
+            isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
+                textBoxWorkerName.Text.Trim(), btcAdress);
+            
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
             _minerStatsCheck.Start();
 
@@ -3295,12 +3316,7 @@ public static void CloseChilds(Process parentId)
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
             if (Enabled == true)
             {
-                new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
-            }
-            else
-            {
-                string[,] tmpServers = { { "eu-west", "20000" }, { "eu-north", "20001" }, { "usa-west", "20002" }, { "usa-east", "20003" }, { "auto", "20004" } };
-                Form_Main.myServers = tmpServers;
+                //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
             }
         }
 

@@ -249,8 +249,6 @@ namespace NiceHashMiner
                 case AlgorithmType.BeamV3:
                     unit = "Sol/s ";
                     break;
-                case AlgorithmType.GrinCuckatoo31:
-                case AlgorithmType.GrinCuckatoo32:
                 case AlgorithmType.CuckooCycle:
                     unit = "G/s ";
                     break;

@@ -1199,7 +1199,7 @@ namespace NiceHashMiner.Forms
                 {
                     comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
                 }
-                
+
                 comboBox_devices_count.SelectedIndex = ConfigManager.GeneralConfig.DevicesCountIndex;
                 comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
                 comboBoxRestartProgram.SelectedIndex = ConfigManager.GeneralConfig.ProgramRestartIndex;
@@ -1658,18 +1658,18 @@ namespace NiceHashMiner.Forms
         {
         }
 
-       
+
         private void comboBox_ColorProfile_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
-        
+
         private void Form_Settings_Paint(object sender, PaintEventArgs e)
         {
             SolidBrush fillBrush = new SolidBrush(Form_Main._backColor);
             e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
         }
 
-       
+
         private void comboBox_ServiceLocation_DrawItem(object sender, DrawItemEventArgs e)
         {
             var cmb = (ComboBox)sender;
@@ -2189,6 +2189,7 @@ namespace NiceHashMiner.Forms
 
         private void button3_Click(object sender, EventArgs e)
         {
+            /*
             var ps = Miner.PingServers();
             if (ps < 0)
             {
@@ -2196,7 +2197,7 @@ namespace NiceHashMiner.Forms
                 Miner.PingServers("daggerhashimoto");
                 for (int i = 0; i < 4; i++)
                 {
-                    var server = "daggerhashimoto." + Globals.MiningLocation[i] + ".nicehash.com";
+                    var server = "daggerhashimoto." + Globals.MiningLocation[i];
                     richTextBoxCheckNiceHashservers.Text += server + " ping: " + Form_Main.myServers[i, 1] + " ms\n";
                 }
             }
@@ -2204,11 +2205,11 @@ namespace NiceHashMiner.Forms
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    var server = "speedtest." + Globals.MiningLocation[i] + ".nicehash.com";
+                    var server = "speedtest." + Globals.MiningLocation[i];
                     richTextBoxCheckNiceHashservers.Text += server + " ping: " + Form_Main.myServers[i, 1] + " ms\n";
                 }
             }
-
+            */
         }
 
         private void checkBox_program_monitoring_CheckedChanged(object sender, EventArgs e)

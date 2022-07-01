@@ -1,9 +1,5 @@
 ﻿namespace NiceHashMinerLegacy.Common.Enums
 {
-    /// <summary>
-    /// AlgorithmType enum should/must mirror the values from https://www.nicehash.com/?p=api
-    /// Some algorithms are not used anymore on the client, rename them with _UNUSED postfix so we can catch compile time errors if they are used.
-    /// </summary>
     public enum AlgorithmType
     {
         // dual algos for grouping
@@ -24,33 +20,10 @@
         INVALID = -2,
         NONE = -1,
         #region NiceHashAPI
-        //Scrypt_UNUSED = 0,
-        //SHA256_UNUSED = 1,
-        //ScryptNf_UNUSED = 2,
-        //X11_UNUSED = 3,
-        //X13 = 4,
+
         Keccak_UNUSED = 5,
-        //X15 = 6,
         Nist5_UNUSED = 7,
-        //NeoScrypt = 8,
-        //Lyra2RE = 9,
-        //WhirlpoolX = 10,
-        //Qubit = 11,
-        //Quark = 12,
-        //Axiom_UNUSED = 13,
-        //Lyra2REv2 = 14,
-        //ScryptJaneNf16_UNUSED = 15,
-        //Blake256r8 = 16,
-        //Blake256r14 = 17, // NOT USED ANYMORE?
-        //Blake256r8vnl = 18,
-        //Hodl = 19,
-        //DaggerHashimoto = 20,
-        //Decred = 21,
-        //CryptoNight = 22,
-        //Lbry = 23,
-        //Equihash = 24,
-        //Pascal = 25
-        // UNUSED START
+
         Scrypt_UNUSED = 0,
         SHA256_UNUSED = 1,
         ScryptNf_UNUSED = 2,
@@ -88,27 +61,27 @@
         Blake2s_UNUSED = 28,
         Skunk_UNUSED = 29,
         CryptoNightV7_UNUSED = 30,
-        // Tentative
+
         CryptoNightHeavy_UNUSED = 31,
-        Lyra2z = 32,
-        X16R = 33,
+        Lyra2z_UNUSED = 32,
+        X16R_UNUSED = 33,
         CryptoNightV8_UNUSED = 34,
         sha256asicboost_UNUSED = 35,
         ZHash = 36,
         Beam_UNUSED = 37,
         GrinCuckaroo29_UNUSED = 38,
-        GrinCuckatoo31 = 39,
+        GrinCuckatoo31_UNUSED = 39,
         Lyra2REv3_UNUSED = 40,
         MTP_UNUSED = 41,
         CryptoNightR_UNUSED = 42,
         CuckooCycle = 43,
         GrinCuckarood29_UNUSED = 44,
         BeamV2_UNUSED = 45,
-        X16RV2 = 46,
+        X16RV2_UNUSED = 46,
         RandomX = 47,
         Eaglesong_UNUSED = 48,
         Cuckaroom_UNUSED = 49,
-        GrinCuckatoo32 = 50,
+        GrinCuckatoo32_UNUSED = 50,
         Handshake_UNUSED = 51,
         KAWPOW = 52,
         Cuckaroo29BFC_UNUSED = 53,

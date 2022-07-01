@@ -43,11 +43,7 @@ namespace NiceHashMiner.Miners
             {
                 switch (MiningSetup.CurrentAlgorithmType)
                 {
-                    case AlgorithmType.GrinCuckatoo31:
-                        return "cuckatoo";
-                    case AlgorithmType.GrinCuckatoo32:
-                        return "cuckatoo32";
-                    case AlgorithmType.CuckooCycle:
+                     case AlgorithmType.CuckooCycle:
                         return "cuckoo_ae";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
@@ -116,22 +112,7 @@ namespace NiceHashMiner.Miners
                     $" -o2 " + ResolvedServers[2].Replace("stratum+tcp://", "nicehash+tcp://") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u2 " + user +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
-            {
-                cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3372") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3372") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3372") + " -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-            {
-                cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3383") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3383") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3383") + " -u2 " + user +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
                 cmd = $"-a {AlgoName}" +
@@ -222,16 +203,7 @@ namespace NiceHashMiner.Miners
                 cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner" +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo31))
-            {
-                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://mwc.2miners.com:1111") + " -u 2aHR0cHM6Ly9td2MuaG90Yml0LmlvLzcyOTkyMw.nbminer" +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-            {
-                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030") + " -u grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.nbminer" +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
                 cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040") + " -u ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.nbminer" +
