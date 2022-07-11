@@ -66,13 +66,13 @@ namespace NiceHashMiner.Miners
                 if (serverUrl.Contains("auto"))
                 {
                     ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --user " + 
-                        username + " --pass " + psw + " " + ssl;
+                        username.Split('.')[0] + " --pass " + psw + " --tls off ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
                     ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --user " + 
-                        username + " --pass " + psw + " " + ssl;
+                        username.Split('.')[0] + " --pass " + psw + " " + ssl;
                 }
             }
             return ret;
@@ -140,6 +140,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + " --worker " + worker + "$" + ConfigManager.GeneralConfig.MachineGuid +
+                //LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + " " +
                 GetServer("daggerhashimoto", username, "3353") +
                     apiBind + " " + param +
                               " --devices ";

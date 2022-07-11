@@ -160,7 +160,7 @@ namespace NiceHashMiner.Miners
                 if (serverUrl.Contains("auto"))
                 {
                     ret = ret + " -s " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " + 
-                        username + " -p " + psw + " " + ssl;
+                        username + " -p " + psw + " --ssl 0 ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
