@@ -41,12 +41,41 @@ namespace NiceHashMiner.Miners
         {
             return 60 * 1000 * 8;
         }
-
-        private string GetStartCommand(string url, string btcAdress, string worker)
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "ssl://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "";
+            }
+            int n = 0;
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                n++;
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + "-pool" + n.ToString() + " " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + "-pool" + n.ToString() + " " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                }
+                if (n >= 2) break;
+            }
+            return ret.Replace("-pool1", "-pool");
+        }
+        private string GetStartCommand(string btcAdress, string worker)
         {
             var username = GetUsername(btcAdress, worker);
-            url = url.Replace("daggerhashimoto3gb", "daggerhashimoto");
-            url = url.Replace("daggerhashimoto4gb", "daggerhashimoto");
+
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
@@ -69,40 +98,31 @@ namespace NiceHashMiner.Miners
             }
 
             Thread.Sleep(200);
-
-            List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
-
-            var epools = String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[1].Replace("stratum+tcp://", ""), (ResolvedServers[1].Contains("auto.") ? "9200" : "3353"), username) + "\n"
-               + String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[2].Replace("stratum+tcp://", ""), (ResolvedServers[2].Contains("auto.") ? "9200" : "3353"), username) + "\n"
-               + String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x, ESM: 3, ALLPOOLS: 1", ResolvedServers[3].Replace("stratum+tcp://", ""), (ResolvedServers[3].Contains("auto.") ? "9200" : "3353"), username) + "\n";
-            try
+            string ssl = "";
+            string port = "3353";
+            if (ConfigManager.GeneralConfig.ProxySSL)
             {
-                FileStream fs = new FileStream("miners\\phoenix\\epools.txt", FileMode.Create, FileAccess.Write);
-                StreamWriter w = new StreamWriter(fs);
-                w.WriteAsync(epools);
-                w.Flush();
-                w.Close();
-            }
-            catch (Exception e)
+                ssl = "ssl://";
+            } else
             {
-                Helpers.ConsolePrint("GetStartCommand", e.ToString());
+                ssl = "";
             }
 
-
+            DeviceType devtype = DeviceType.NVIDIA;
             if (platform == " -amd ")
             {
-                return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                       + $" -pool {ResolvedServers[0]}:{(ResolvedServers[0].Contains("auto.") ? "9200" : "3353")} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
-                       ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+                devtype = DeviceType.AMD;
             }
-            return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-       + $" -pool {ResolvedServers[0]}:{(ResolvedServers[0].Contains("auto.") ? "9200" : "3353")} -wal {username} -cdmport  127.0.0.1:{ApiPort} -proto 4 -pass x " +
-       ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
+            return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10 " +
+                GetServer("daggerhashimoto", username, port) + " -wal " + username + " -pass x" +
+                   " -cdmport  127.0.0.1:" + ApiPort + " -proto 4 " +
+                   ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
         }
 
         private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
         {
             var platform = "";
+            DeviceType devtype = DeviceType.NVIDIA;
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
@@ -112,6 +132,7 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     platform = " -amd ";
+                    devtype = DeviceType.AMD;
                 }
             }
             try
@@ -124,10 +145,11 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("GetStartCommand", ex.ToString());
             }
             Thread.Sleep(200);
-
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
             return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                   + $" -pool {Links.CheckDNS(url)} -wal {btcAdress} -cdmport  127.0.0.1:{ApiPort} -pass x " +
-                   ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+                   + $" -pool {Links.CheckDNS(url)} -wal {btcAdress} -cdmport  127.0.0.1:{ApiPort} -pass " + psw + " " +
+                   ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
 
         }
 
@@ -139,9 +161,10 @@ namespace NiceHashMiner.Miners
             return deviceStringCommand;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string btcAdress, string worker)
         {
-            LastCommandLine = GetStartCommand(url, btcAdress, worker);
+            string url = "";
+            LastCommandLine = GetStartCommand(btcAdress, worker);
             //IsApiReadException = false;
             ProcessHandle = _Start();
         }
@@ -166,7 +189,6 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             _benchmarkTimeWait = time;
-            var url = GetServiceUrl(algorithm.NiceHashID);
             string ret = "";
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
             {

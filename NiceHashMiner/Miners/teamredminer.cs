@@ -51,7 +51,39 @@ namespace NiceHashMiner.Miners
                 return 10;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "stratum+ssl://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "stratum+tcp://";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + "-o stratum+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " + 
+                        username + " -p " + psw + " ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
+                        username + " -p " + psw + " ";
+                }
+            }
+            return ret;
+        }
+        public override void Start(string btcAdress, string worker)
         {
             if (!IsInit)
             {
@@ -63,27 +95,28 @@ namespace NiceHashMiner.Miners
             IsApiReadException = false;
 
             //add failover
-            string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
-            string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
+            string algo = "";
+            string algo2 = "";
+            string port = "";
 
-            var algo = "";
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
-
             
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                algo = " -a ethash";
+                algo = "ethash";
+                algo2 = "daggerhashimoto";
                 port = "3353";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                algo = " -a kawpow";
+                algo = "kawpow";
+                algo2 = "kawpow";
                 port = "3385";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                algo = " -a autolykos2";
+                algo = "autolykos2";
+                algo2 = "autolykos";
                 port = "3390";
             }
             var sc = "";
@@ -92,19 +125,15 @@ namespace NiceHashMiner.Miners
                 sc = variables.TRMiner_add1;
             }
 
-            LastCommandLine = sc + " --watchdog_script " + algo + 
-                              " -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
-                              " -o " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
-                              " -o " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
-                              " -o " + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x" +
+            LastCommandLine = sc + " --watchdog_script " + "-a " + algo + " " +
+            GetServer(algo2, username, port) +
                               apiBind +
                               " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.AMD) +
-                              " -d ";
+                              " -d " + GetDevicesCommandString();
 
-            LastCommandLine += GetDevicesCommandString();
             ProcessHandle = _Start();
         }
 

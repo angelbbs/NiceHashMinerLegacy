@@ -7,7 +7,7 @@ namespace NiceHashMiner
     public class Globals
     {
         // Constants
-        public static string[] MiningLocation = { "auto.nicehash.com" };
+        public static string[] MiningLocation = { };
 
         public static readonly string DemoUser = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";
 

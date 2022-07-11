@@ -184,19 +184,21 @@ namespace NiceHashMiner.Switching
                 {
                     history[algo].Add(paying);
                     var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
+                    double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
                     if (paying > _lastLegitPaying[algo] || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                     {
                         updated = true;
+                        
                         if (i >= ticks || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                         {
                             _lastLegitPaying[algo] = paying;
-                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i}/{ticks} {cTicks} for {algo}");
+                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} {p1:f2}% after {i}/{ticks} {cTicks} for {algo}");
                             newProfit = true;
                         }
                         else
                         {
                             sb.AppendLine(
-                                $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5})," +
+                                $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5}) {p1:f2}%," +
                                 $" higher for {i}/{ticks} {cTicks} for {algo}"
                             );
                         }
@@ -205,9 +207,10 @@ namespace NiceHashMiner.Switching
                     {
                         // Profit has gone down
                         updated = true;
-                        _lastLegitPaying[algo] = paying;
-                        sb.AppendLine($"\tProfit has gone down: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5})," +
+                        
+                        sb.AppendLine($"\tProfit has gone down: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5}) {p1:f2}%," +
                             $" less for {i}/{ticks} {cTicks} for {algo}");
+                        _lastLegitPaying[algo] = paying;
                     }
                 }
             }

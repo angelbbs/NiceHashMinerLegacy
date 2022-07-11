@@ -434,7 +434,7 @@ namespace NiceHashMiner
             _allPidData.RemoveAll(x => toRemovePidData.Contains(x));
         }
 
-        public abstract void Start(string url, string btcAdress, string worker);
+        public abstract void Start(string btcAdress, string worker);
 
         protected string GetUsername(string btcAdress, string worker)
         {

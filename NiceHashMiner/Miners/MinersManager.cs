@@ -46,10 +46,10 @@ namespace NiceHashMiner.Miners
         }
 
         public static bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
-            string miningLocation, string worker, string btcAdress)
+            string worker, string btcAdress)
         {
             _curMiningSession = new MiningSession(ComputeDeviceManager.Available.Devices,
-                mainFormRatesComunication, miningLocation, worker, btcAdress);
+                mainFormRatesComunication, worker, btcAdress);
             return _curMiningSession.IsMiningEnabled;
         }
 

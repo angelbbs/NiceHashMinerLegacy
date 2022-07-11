@@ -15,23 +15,45 @@ namespace NiceHashMiner.Miners
             LookForStart = "ns - total speed:";
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        private string GetServer(string algo, string username, string port)
         {
-            List<string> ResolvedServers = MiningSession.GetResolvedServers("neoscrypt");
+            string ret = "";
+            string ssl = "";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "1" + port;//не подключается почему-то
+                ssl = "stratum+tcp://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "stratum+tcp://";
+            }
+
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + " -pool " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":9200 ";
+                    break;
+                }
+                else
+                {
+                    ret = ret + " -pool " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":" + port + " ";
+                    break;
+                }
+            }
+            return ret;
+        }
+        public override void Start(string btcAdress, string worker)
+        {
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
             string username = GetUsername(btcAdress, worker);
-            url = url.Replace("stratum+ssl", "stratum+tcp").Replace("33341", "3341");
-            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -pool " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") +
-                                  " -wal " + username + " -psw x -dbg -1 -ftime 10 -retrydelay 5";
+            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort +
+                GetServer("neoscrypt", username, "3341") +
+                " -wal " + username + " -psw " + psw + " -dbg -1 -ftime 10 -retrydelay 5";
 
-            String epools = String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x", ResolvedServers[1], (ResolvedServers[1].Contains("auto") ? "9200" : "3341"), username) + "\n"
-               + String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x", ResolvedServers[2], (ResolvedServers[2].Contains("auto") ? "9200" : "3341"), username) + "\n"
-               + String.Format("POOL: {0}:{1}, WALLET: {2}, PSW: x", ResolvedServers[3], (ResolvedServers[3].Contains("auto") ? "9200" : "3341"), username) + "\n";
-
-            FileStream fs = new FileStream("miners\\claymore_neoscrypt\\pools.txt", FileMode.Create, FileAccess.Write);
-            StreamWriter w = new StreamWriter(fs);
-            w.WriteAsync(epools);
-            w.Flush();
-            w.Close();
             ProcessHandle = _Start();
         }
 

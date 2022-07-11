@@ -37,10 +37,11 @@ namespace NiceHashMiner.Miners
             ConectionType = NhmConectionType.NONE;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string btcAdress, string worker)
         {
+            string url = "";
             //IsApiReadException = false;
-            LastCommandLine = GetStartCommand(url, btcAdress, worker);
+            LastCommandLine = GetStartCommand(btcAdress, worker);
             ProcessHandle = _Start();
             try
             {
@@ -56,8 +57,39 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint(MinerTag(), ex.Message);
             }
         }
-
-        private string GetStartCommand(string url, string btcAdress, string worker)
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "useSSL = true\n";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "useSSL = false\n";
+            }
+            int n = 0;
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                n++;
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + "pool" + n.ToString() + " = "  + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + ssl;
+                    ret = ret + "pool" + n.ToString() + " = " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                }
+                ret = ret + "\n";
+            }
+            return ret.Replace("-pool1", "-pool");
+        }
+        private string GetStartCommand(string btcAdress, string worker)
         {
             IsInBenchmark = false;
             var param = "";
@@ -86,11 +118,10 @@ namespace NiceHashMiner.Miners
             }
             string username = GetUsername(btcAdress, worker);
             string rigName = username.Split('.')[1];
-            url = url.Replace("stratum+tcp://", "");
+
             string cfgFile = "";
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                List<string> ResolvedServers = MiningSession.GetResolvedServers("daggerhashimoto");
                 try
                 {
                     if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
@@ -110,14 +141,15 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
-                   + String.Format("pool1 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + "\n"
-                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + "\n"
-                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + "\n"
-                   + String.Format("pool4 = {0}", ResolvedServers[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + "\n";
+                   + GetServer("daggerhashimoto", username, "3353");
+
+                if (ConfigManager.GeneralConfig.StaleProxy)
+                {
+                    cfgFile = cfgFile + "rigPassword = stale\n";
+                }
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
-                List<string> ResolvedServers = MiningSession.GetResolvedServers("autolykos");
                 try
                 {
                     if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
@@ -137,10 +169,11 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + String.Format("pool1 = {0}", ResolvedServers[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3390") + "\n"
-                   + String.Format("pool2 = {0}", ResolvedServers[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3390") + "\n"
-                   + String.Format("pool3 = {0}", ResolvedServers[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3390") + "\n"
-                   + String.Format("pool4 = {0}", ResolvedServers[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3390") + "\n";
+                   + GetServer("daggerhashimoto", username, "3390");
+                if (ConfigManager.GeneralConfig.StaleProxy)
+                {
+                    cfgFile = cfgFile + "rigPassword = stale\n";
+                }
             }
             try
             {
@@ -156,8 +189,6 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
-                List<string> ResolvedServersZil = MiningSession.GetResolvedServers("daggerhashimoto");
-                List<string> ResolvedServersAutolykos = MiningSession.GetResolvedServers("autolykos");
                 try
                 {
                     if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
@@ -177,20 +208,18 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + String.Format("pool1 = {0}", ResolvedServersAutolykos[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[0].Contains("auto.") ? "9200" : "3390") + "\n"
-                   + String.Format("pool2 = {0}", ResolvedServersAutolykos[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[1].Contains("auto.") ? "9200" : "3390") + "\n"
-                   + String.Format("pool3 = {0}", ResolvedServersAutolykos[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[2].Contains("auto.") ? "9200" : "3390") + "\n"
-                   + String.Format("pool4 = {0}", ResolvedServersAutolykos[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersAutolykos[3].Contains("auto.") ? "9200" : "3390") + "\n"
+                   + GetServer("autolykos", username, "3390")
                 + String.Format("[zil]\n")
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("zilEpoch = 0\n")
                    //    + String.Format("protocol = JSON-RPC\n")
-                   + String.Format("pool1 = {0}", ResolvedServersZil[0].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[0].Contains("auto.") ? "9200" : "3353") + "\n"
-                   + String.Format("pool2 = {0}", ResolvedServersZil[1].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[1].Contains("auto.") ? "9200" : "3353") + "\n"
-                   + String.Format("pool3 = {0}", ResolvedServersZil[2].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[2].Contains("auto.") ? "9200" : "3353") + "\n"
-                   + String.Format("pool4 = {0}", ResolvedServersZil[3].Replace("stratum+tcp://", "")) + ":" + (ResolvedServersZil[3].Contains("auto.") ? "9200" : "3353") + "\n";
+                   + GetServer("daggerhashimoto", username, "3353");
+                if (ConfigManager.GeneralConfig.StaleProxy)
+                {
+                    cfgFile = cfgFile + "rigPassword = stale\n";
+                }
             }
             try
             {

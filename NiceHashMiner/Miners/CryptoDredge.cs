@@ -34,8 +34,9 @@ namespace NiceHashMiner.Miners
             return 60 * 1000 * 8;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string btcAdress, string worker)
         {
+            string url = "";
             if (!IsInit)
             {
                 Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
@@ -57,21 +58,48 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
-                algo = "--algo kawpow";
+                algo = "--algo kawpow ";
                 port = "3385";
             }
 
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
             LastCommandLine = algo +
-                " -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + " -u " + username + " -p x " +
-                " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
+                GetServer("kawpow", username, port) +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
             ProcessHandle = _Start();
+        }
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "stratum+tcp://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "stratum+ssl://";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":9200 -u " + username + " -p " +
+                        psw + " ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":" + port + " -u " + username + " -p " +
+                        psw + " ";
+                }
+            }
+            return ret;
         }
         protected override string GetDevicesCommandString()
         {
@@ -111,8 +139,6 @@ namespace NiceHashMiner.Miners
             var commandLine = "";
             _benchmarkTimeWait = time;
             TotalCount = _benchmarkTimeWait / 60;
-
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {

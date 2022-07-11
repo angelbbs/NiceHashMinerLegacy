@@ -161,6 +161,17 @@ namespace NiceHashMiner.Miners
                 {
                     port = 9200;
                 }
+                else
+                {
+                    if (ConfigManager.GeneralConfig.ProxySSL)
+                    {
+                        port = 43353;
+                    }
+                    else
+                    {
+                        port = 13353;
+                    }
+                }
                 var iep = new IPEndPoint(addrl, port);
 
                 if (tcpClient == null)

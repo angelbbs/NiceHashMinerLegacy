@@ -33,9 +33,9 @@ namespace NiceHashMiner.Miners
         double _powerUsage = 0;
         public Xmrig() : base("Xmrig")
         { }
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string btcAdress, string worker)
         {
-            LastCommandLine = GetStartCommand(url, btcAdress, worker);
+            LastCommandLine = GetStartCommand(btcAdress, worker);
 
             ProcessHandle = _Start();
         }
@@ -53,14 +53,12 @@ namespace NiceHashMiner.Miners
             return deviceStringCommand;
         }
 
-        private string GetStartCommand(string url, string btcAdress, string worker)
+        private string GetStartCommand(string btcAdress, string worker)
         {
-            string _resolvedStratumIP = "";
-
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
-            var algo = "cryptonightv7";
-            var port = "3363";
             var variant = " --variant 1 ";
+            string algo = "";
+            string port = "";
 
             string username = GetUsername(btcAdress, worker);
 
@@ -85,19 +83,44 @@ namespace NiceHashMiner.Miners
                 algo = "randomxmonero";
                 port = "3380";
                 variant = "";
-                url = url.Replace("randomx", "randomxmonero");
 
-                List<string> ResolvedServers = MiningSession.GetResolvedServers(algo);
-
-                return $" --algo=rx/0 -o {ResolvedServers[0]}:{(ResolvedServers[0].Contains("auto.") ? "9200" : port)} {variant} -u {username} -p x --nicehash {extras} --http-port {ApiPort} --donate-level=1 "
-               + $" -o {ResolvedServers[1]}:{(ResolvedServers[1].Contains("auto.") ? "9200" : port)} -u {username} -p x "
-               + $" -o {ResolvedServers[2]}:{(ResolvedServers[2].Contains("auto.") ? "9200" : port)} -u {username} -p x "
-               + $" -o {ResolvedServers[3]}:{(ResolvedServers[3].Contains("auto.") ? "9200" : port)} -u {username} -p x "
-               + platform + " " + GetDevicesCommandString().TrimStart();
+                return " --algo=rx/0 " + GetServer(algo, username, port) + " --nicehash " + extras + " --http-port " + ApiPort + " --donate-level=1 " +
+               platform + " " + GetDevicesCommandString().TrimStart();
             }
             return "unsupported algo";
         }
-        private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "stratum+ssl://";
+            } else
+            {
+                port = "1" + port;
+                ssl = "stratum+tcp://";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + "-o stratum+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " + 
+                        username + " -p " + psw + " ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
+                        username + " -p " + psw + " ";
+                }
+            }
+            return ret;
+        }
+        private string GetStartBenchmarkCommand()
         {
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -120,13 +143,12 @@ namespace NiceHashMiner.Miners
 
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
             var algo = "";
-            var port = "3363";
-            string username = GetUsername(btcAdress, worker);
+            var port = "";
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
                 algo = "randomxmonero";
-                port = "3380";
+                port = "3363";
                 return $" --algo=rx/0 -o {Links.CheckDNS("stratum+tcp://xmr-eu1.nanopool.org")}:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p x {extras} --http-port {ApiPort} --donate-level=1 "
                 + $" {platform}"
                + GetDevicesCommandString().TrimStart();
@@ -227,12 +249,8 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-                ConectionType);
             _benchmarkTimeWait = time;
-            return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
-                + $" --print-time=10 --nicehash";
+            return GetStartBenchmarkCommand();
         }
 
         protected override void BenchmarkThreadRoutine(object commandLine)

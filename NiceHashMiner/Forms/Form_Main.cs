@@ -117,7 +117,6 @@ namespace NiceHashMiner
         public static bool GoogleAvailable = false;
         public static bool DivertAvailable = true;
         private static string dialogClearBTC = "You want to delete BTC address?";
-        //public static string[,] myServers = {{ "auto.nicehash.com", "20004" }};
         internal static bool DeviceStatusTimer_FirstTick = false;
         public static Computer thisComputer;
         public static DateTime StartTime = new DateTime();
@@ -159,6 +158,11 @@ namespace NiceHashMiner
         public static string NHApiFlag = "";
         private static string _NHApiFlag = "";
         public static bool NvAPIerror = false;
+        public static Proxy.ProxyDetail[] _ProxyList;
+        public static string[] _proxyUrls = { };
+        public static int wssConnectionsErrors = 0;
+        public static int apiConnectionsErrors = 0;
+        //public static int _ServiceLocation = 0;
 
         public struct RigProfitList
         {
@@ -530,12 +534,15 @@ namespace NiceHashMiner
 
         public void InitMainConfigGuiData()
         {
+            //_ServiceLocation = ConfigManager.GeneralConfig.ServiceLocation;
+            //comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
+            /*
             if (ConfigManager.GeneralConfig.ServiceLocation >= 0 &&
                 ConfigManager.GeneralConfig.ServiceLocation < 4)
                 comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
             else
-                comboBoxLocation.SelectedIndex = 4;
-
+                comboBoxLocation.SelectedIndex = 1;
+            */
             //textBoxBTCAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
             textBoxBTCAddress_new.Text = ConfigManager.GeneralConfig.BitcoinAddressNew;
             textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
@@ -686,41 +693,159 @@ namespace NiceHashMiner
         }
         private void CheckProxyList(object sender, EventArgs e)
         {
-            if (!Directory.Exists("temp")) Directory.CreateDirectory("temp");
+            int _location = ConfigManager.GeneralConfig.ServiceLocation;
             string j = "";
+            string _j = "";
+            bool newdata = false;
+            bool noproxyfile = false;
+            string[] _ProxyName = { };
             try
             {
+                if (File.Exists("configs//ProxyList.json"))
+                {
+                    _j = File.ReadAllText("configs//ProxyList.json");
+                } else
+                {
+                    noproxyfile = true;
+                }
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 WebClient client = new WebClient();
                 client.UseDefaultCredentials = false;
-                client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "temp//List.json");
-                j = File.ReadAllText("temp//List.json");
+                try
+                {
+                    client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "configs//ProxyList.tmp");
+                    string tmp = File.ReadAllText("configs//ProxyList.tmp");
+                    if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
+                    {
+                        if (File.Exists("configs//ProxyList.json")) File.Delete("configs//ProxyList.json");
+                        File.Copy("configs//ProxyList.tmp", "configs//ProxyList.json");
+                        if (File.Exists("configs//ProxyList.tmp")) File.Delete("configs//ProxyList.tmp");
+                    } else
+                    {
+                        client.DownloadFile(new Uri("https://mark.nl.tab.digital/s/b9mg5Gy8G6B5cSr/download"), "configs//ProxyList.tmp");
+                        tmp = File.ReadAllText("configs//ProxyList.tmp");
+                        if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
+                        {
+                            if (File.Exists("configs//ProxyList.json")) File.Delete("configs//ProxyList.json");
+                            File.Copy("configs//ProxyList.tmp", "configs//ProxyList.json");
+                            if (File.Exists("configs//ProxyList.tmp")) File.Delete("configs//ProxyList.tmp");
+                        }
+                    }
+                } catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("CheckProxyList", ex.ToString());
+                }
+                Thread.Sleep(100);
+                //DownloadFile сначала удаляет файл
 
-                Proxy.ProxyDetail[] _ProxyList = JsonConvert.DeserializeObject<Proxy.ProxyDetail[]>(j);
+                if (File.Exists("configs//ProxyList.json"))
+                {
+                    j = File.ReadAllText("configs//ProxyList.json");
+                    if (!j.Equals(_j) && !noproxyfile)
+                    {
+                        newdata = true;
+                    }
+                }
+                else
+                {
+                    Array.Resize(ref Globals.MiningLocation, 1);
+                    Globals.MiningLocation[0] = "auto.nicehash.com";
+                    comboBoxLocation.SelectedIndex = 0;
+                    comboBoxLocation.Items.Clear();
+                    comboBoxLocation.Items.Add("Nicehash Auto");
+                    comboBoxLocation.Update();
+                    return;
+                }
+                _ProxyList = JsonConvert.DeserializeObject<Proxy.ProxyDetail[]>(j);
+
+                Array.Resize(ref _proxyUrls, 0);
+                Array.Resize(ref _ProxyName, 0);
+                Array.Resize(ref Globals.MiningLocation, 0);
+                
+                comboBoxLocation.Items.Clear();
+                comboBoxLocation.Items.Add("Nicehash Auto");
+
                 if (_ProxyList.Count() > 0)
                 {
                     foreach (Proxy.ProxyDetail a in _ProxyList)
                     {
-                        Array.Resize(ref Globals.MiningLocation, Globals.MiningLocation.Length + 1);
-                        Globals.MiningLocation[Globals.MiningLocation.Length - 1] = a.Url;
-                        comboBoxLocation.Items.Add(a.NameEN);
-                        /*
-                        MessageBox.Show(a.NameEN);
-                        MessageBox.Show(a.NameRU);
-                        MessageBox.Show(a.Url);
-                        */
+                        Array.Resize(ref _proxyUrls, _proxyUrls.Length + 1);
+                        _proxyUrls[_proxyUrls.Length - 1] = a.Url;
+
+                        Array.Resize(ref _ProxyName, _ProxyName.Length + 1);
+                        
+                        if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+                        {
+                            comboBoxLocation.Items.Add(a.NameRU);
+                            _ProxyName[_ProxyName.Length - 1] = a.NameRU;
+                        } else
+                        {
+                            comboBoxLocation.Items.Add(a.NameEN);
+                            _ProxyName[_ProxyName.Length - 1] = a.NameEN;
+                        }
                     }
+                }
+                
+                if (_location > _proxyUrls.Length)//если список прокси уменьшился
+                {
+                    comboBoxLocation.SelectedIndex = _proxyUrls.Length;
+                    comboBoxLocation.Update();
+                } else
+                {
+                    comboBoxLocation.SelectedIndex = _location;
+                    comboBoxLocation.Update();
+                }
+
+                Array.Resize(ref Globals.MiningLocation, _proxyUrls.Length);
+                _proxyUrls.CopyTo(Globals.MiningLocation, 0);
+                if (comboBoxLocation.SelectedIndex > 0)
+                {
+                    ArrayRearrangeAfterItemMove(Globals.MiningLocation, 0, comboBoxLocation.SelectedIndex - 1);
+                } else
+                {
+                    Array.Resize(ref Globals.MiningLocation, Globals.MiningLocation.Length + 1);
+                    Globals.MiningLocation[Globals.MiningLocation.Length - 1] = "auto.nicehash.com";
+                    ArrayRearrangeAfterItemMove(Globals.MiningLocation, 0, Globals.MiningLocation.Length - 1);
                 }
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("CheckProxyList", ex.ToString());
+                Array.Resize(ref Globals.MiningLocation, 1);
+                Globals.MiningLocation[0] = "auto.nicehash.com";
+                comboBoxLocation.Items.Clear();
+                comboBoxLocation.Items.Add("Nicehash Auto");
+                comboBoxLocation.SelectedIndex = 0;
                 return;
             }
-            ;
-            return;
+            if (newdata)
+            {
+                foreach (var loc in Globals.MiningLocation)
+                {
+                    Helpers.ConsolePrint("New Proxy Location", loc);
+                }
+            }
+            if (comboBoxLocation.SelectedIndex > 0 && newdata)
+            {
+                Helpers.ConsolePrint("CheckProxyList", "Program restart");
+                MakeRestart(5000);
+            }
         }
+        static void ArrayRearrangeAfterItemMove<T>(T[] array, int indexFrom, int indexTo)
+        {
+            if (indexFrom == indexTo) return;
+            T temp = array[indexFrom];
+            T value = temp;
 
+            for (int i = indexFrom + 1; i <= indexTo; i++)
+            {
+                temp = array[i];
+                array[i] = value;
+                value = temp;
+            }
+
+            array[indexFrom] = temp;
+        }
         private void CheckUpdates()
         {
             try
@@ -748,6 +873,12 @@ namespace NiceHashMiner
         public static int ProgressMinimum = 0;
         public static int ProgressMaximum = 100;
         public static int ProgressValue = 0;
+
+        private static void TaskNHApiFlag()
+        {
+            NHApiFlag = NiceHashStats.GetApiFlags();
+        }
+
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             //Запускает приложение в классической теме windows. На 7-ке не отображается progressbar
@@ -802,10 +933,23 @@ namespace NiceHashMiner
 
             _isDeviceDetectionInitialized = true;
 
+            _loadingScreen.SetValueAndMsg(15, International.GetText("Form_Main_loadtext_LoadProxyList"));
+            _GetProxyListTimer = new Timer();
+            _GetProxyListTimer.Tick += CheckProxyList;
+            _GetProxyListTimer.Interval = 1000 * 60 * 50;
+            _GetProxyListTimer.Start();
+            CheckProxyList(null, null);
+            comboBoxLocation.Update();
+            comboBoxLocation.Refresh();
+
+            new Task(() => TaskNHApiFlag()).Start();
+
+            Helpers.ConsolePrint("NiceHash status", string.IsNullOrEmpty(NHApiFlag) ? "OK" : "NHApiFlag");
+
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
-            _loadingScreen.SetValueAndMsg(15, International.GetText("Form_Main_loadtext_SaveConfig"));
+            _loadingScreen.SetValueAndMsg(20, International.GetText("Form_Main_loadtext_SaveConfig"));
 
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
@@ -814,7 +958,7 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
-                _loadingScreen.SetValueAndMsg(20, International.GetText("Form_Main_loadtext_MSI_AB"));
+                _loadingScreen.SetValueAndMsg(25, International.GetText("Form_Main_loadtext_MSI_AB"));
                 MSIAfterburner.MSIAfterburnerRUN();
             }
             flowLayoutPanelRates.Visible = true;
@@ -870,6 +1014,7 @@ namespace NiceHashMiner
                     }
                 }
             }
+
             _loadingScreen.SetValueAndMsg(30, "Checking server: nicehash.com");
             //****************
             Links.CheckDNS("https://nicehash.com");
@@ -886,7 +1031,7 @@ namespace NiceHashMiner
                         string algo = ((AlgorithmType)an).ToString().ToLower();
                         algo = algo.Replace("randomx", "randomxmonero");
                         string domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower();
-                        _loadingScreen.SetValueAndMsg(30 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location.ToLower());
+                        _loadingScreen.SetValueAndMsg(35 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location.ToLower());
                         Links.CheckDNS(domain);
                     }
                 }
@@ -1034,6 +1179,7 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
+
 
         }
         [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]
@@ -1373,12 +1519,6 @@ namespace NiceHashMiner
             _updateTimerCount = 0;
             _updateTimer.Start();
 
-            _GetProxyListTimer = new Timer();
-            _GetProxyListTimer.Tick += CheckProxyList;
-            _GetProxyListTimer.Interval = 1000 * 60;//1 min
-            _GetProxyListTimer.Start();
-            CheckProxyList(null, null);
-
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (!ConfigManager.GeneralConfig.ChartEnable)
             {
@@ -1395,8 +1535,7 @@ namespace NiceHashMiner
                     NiceHashStats.GetRigProfit();
                 }
             }
-            NHApiFlag =  NiceHashStats.GetApiFlags();
-            Helpers.ConsolePrint("NiceHash status", string.IsNullOrEmpty(NHApiFlag) ? "OK": "NHApiFlag");
+
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             _loadingScreen.SetValueAndMsg(1, "Starting...");
 
@@ -1429,7 +1568,7 @@ namespace NiceHashMiner
             NiceHashStats.GetSmaAPI();
             if (ConfigManager.GeneralConfig.Use_orders_price)
             {
-                NiceHashStats.GetSmaAPIOrder();
+                //NiceHashStats.GetSmaAPIOrder();
             }
 
             GetBTCwalletType();
@@ -1463,7 +1602,8 @@ namespace NiceHashMiner
                 ChartDataAvail = RigProfit.currentProfitAPI + RigProfit.totalRate;
             }
 
-            NHApiFlag = NiceHashStats.GetApiFlags();
+            new Task(() => TaskNHApiFlag()).Start();
+
             Helpers.ConsolePrint("NiceHash status", string.IsNullOrEmpty(NHApiFlag) ? "OK" : "NHApiFlag");
             _updateTimerCount++;
             int period = 0;
@@ -2279,8 +2419,20 @@ public static void CloseChilds(Process parentId)
                 AlgorithmSwitchingManager._smaCheckTimer.Dispose();
                 AlgorithmSwitchingManager._smaCheckTimer = null;
             }
-            NiceHashSocket.StopConnection();
 
+            //NiceHashSocket.StopConnection();
+            /*
+            List<string> IPsList = new List<string>();
+            var heserver = Dns.GetHostEntry(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation].Replace("auto.", ""));
+            foreach (IPAddress curAdd in heserver.AddressList)
+            {
+                IPsList.Add(curAdd.ToString());
+            }
+            foreach (var ip in IPsList)
+            {
+               NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, ip, 443);
+            }
+            */
             devicesListViewEnableControl1.SaveColumns();
             if (this != null)
             {
@@ -2462,8 +2614,6 @@ public static void CloseChilds(Process parentId)
         {
             if (DownloadingInProgress) return;
 
-            ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-
             _benchmarkForm = new Form_Benchmark();
             //  SetChildFormCenter(_benchmarkForm);
             _benchmarkForm.ShowDialog();
@@ -2592,7 +2742,7 @@ public static void CloseChilds(Process parentId)
                     // Commit to config.json
                     ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
                     ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-                    ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+                    //ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
                     // ConfigManager.GeneralConfigFileCommit();
                 }
             }
@@ -2814,8 +2964,7 @@ public static void CloseChilds(Process parentId)
                 btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress_new.Text.Trim();
             }
 
-            isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
-                textBoxWorkerName.Text.Trim(), btcAdress);
+            isMining = MinersManager.StartInitialize(this, textBoxWorkerName.Text.Trim(), btcAdress);
             
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
             _minerStatsCheck.Start();
@@ -2858,6 +3007,7 @@ public static void CloseChilds(Process parentId)
                     if (_curState == WebSocketSharp.WebSocketState.Open)
                     {
                         label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected") + " " + NHApiFlag;
+                        wssConnectionsErrors = 0;
                     }
                     label_NH_ConnectStatus.Update();
                 }
@@ -3313,10 +3463,42 @@ public static void CloseChilds(Process parentId)
 
         private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-            if (Enabled == true)
+            try
             {
-                //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+                //CheckProxyList(sender, e);
+                ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+                //_ServiceLocation = comboBoxLocation.SelectedIndex;
+                ConfigManager.GeneralConfigFileCommit();
+                Array.Resize(ref Globals.MiningLocation, _proxyUrls.Length);
+
+                _proxyUrls.CopyTo(Globals.MiningLocation, 0);
+                if (comboBoxLocation.SelectedIndex > 0)
+                {
+                    if (comboBoxLocation.SelectedIndex > _proxyUrls.Length)//если список прокси уменьшился
+                    {
+                        comboBoxLocation.SelectedIndex = _proxyUrls.Length;
+                        comboBoxLocation.Update();
+                    }
+                    ArrayRearrangeAfterItemMove(Globals.MiningLocation, 0, comboBoxLocation.SelectedIndex - 1);
+                }
+                else
+                {
+                    Array.Resize(ref Globals.MiningLocation, Globals.MiningLocation.Length + 1);
+                    Globals.MiningLocation[Globals.MiningLocation.Length - 1] = "auto.nicehash.com";
+                    ArrayRearrangeAfterItemMove(Globals.MiningLocation, 0, Globals.MiningLocation.Length - 1);
+                }
+                
+                if (Enabled == true)
+                {
+                    //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("comboBoxLocation_SelectedIndexChanged", ex.ToString());
+            }
+            foreach (var loc in Globals.MiningLocation)
+            {
+                Helpers.ConsolePrint("Location", loc);
             }
         }
 

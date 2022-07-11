@@ -30,7 +30,7 @@ namespace NiceHashMiner.Miners
         private const string DoubleFormat = "F12";
 
         // session varibles fixed
-        public static string _miningLocation;
+        //public static string _miningLocation;
 
         public static string _btcAdress;
         public static string _worker;
@@ -46,7 +46,7 @@ namespace NiceHashMiner.Miners
 
         private GroupMiner _ethminerNvidiaPaused;
         private GroupMiner _ethminerAmdPaused;
-        private static int _tick = 0;
+        //private static int _tick = 0;
 
         private bool _isProfitable;
 
@@ -64,7 +64,7 @@ namespace NiceHashMiner.Miners
         public bool IsMiningEnabled => _miningDevices.Count > 0;
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
-
+        private int _ticks = 999;
         public List<int> ActiveDeviceIndexes
         {
             get
@@ -88,6 +88,7 @@ namespace NiceHashMiner.Miners
         {
 
         }
+        /*
         public static List<string> GetResolvedServers(string algo)
         {
             List<string> ResolvedServers = new List<string>();
@@ -98,14 +99,14 @@ namespace NiceHashMiner.Miners
             }
             return ResolvedServers;
         }
+        */
         public MiningSession(List<ComputeDevice> devices,
             IMainFormRatesComunication mainFormRatesComunication,
-            string miningLocation, string worker, string btcAdress)
+            string worker, string btcAdress)
         {
             // init fixed
             _mainFormRatesComunication = mainFormRatesComunication;
-            _miningLocation = miningLocation;
-            //_miningLocation = Form_Main.myServers[0, 0];
+           // _miningLocation = miningLocation;
             _switchingManager = new AlgorithmSwitchingManager();
             if (!FuncAttached)
             {
@@ -146,7 +147,7 @@ namespace NiceHashMiner.Miners
             AlgorithmSwitchingManager.Stop();
             AlgorithmSwitchingManager.Start();
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
-            _tick = 999;
+
         }
 
         #region Timers stuff
@@ -240,17 +241,6 @@ namespace NiceHashMiner.Miners
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
 
-            if (_ethminerNvidiaPaused != null)
-            {
-                _ethminerNvidiaPaused.End();
-                _ethminerNvidiaPaused = null;
-            }
-
-            if (_ethminerAmdPaused != null)
-            {
-                _ethminerAmdPaused.End();
-                _ethminerAmdPaused = null;
-            }
 
             //_switchingManager.Stop();
             AlgorithmSwitchingManager.Stop();
@@ -538,14 +528,14 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
             {
                 Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
-                var a = Math.Max(prevStateProfit, currentProfit);
-                var b = Math.Min(prevStateProfit, currentProfit);
-                var percDiff = ((a - b)) / Math.Abs(b);
+                double a = Math.Max(prevStateProfit, currentProfit);
+                double b = Math.Min(prevStateProfit, currentProfit);
+                double percDiff = ((a - b)) / Math.Abs(b);
                 if (percDiff <= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
                 {
                     // don't switch
                     Helpers.ConsolePrint(Tag,
-                        $"{"Total rig profit"}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                        $"{"Total rig profit"}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                     // RESTORE OLD PROFITS STATE
                     foreach (var device in _miningDevices)
                     {
@@ -555,17 +545,20 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     //if (AlgorithmSwitchingManager.newProfit)
-                    if (true)
+                    if (_ticks >= AlgorithmSwitchingManager._ticksForStable)
                     {
                         //AlgorithmSwitchingManager.newProfit = false;
+                        _ticks = 0;
                         needSwitch = true;
                         Helpers.ConsolePrint(Tag,
-                            $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                     }
                     else
                     {
+                        _ticks++;
                         needSwitch = false;
-                        Helpers.ConsolePrint(Tag, $"Will NOT SWITCH1. Switching period has not been exceeded");
+                        Helpers.ConsolePrint(Tag, $"Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
+                            _ticks.ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
                         // RESTORE OLD PROFITS STATE
                         foreach (var device in _miningDevices)
                         {
@@ -590,7 +583,7 @@ namespace NiceHashMiner.Miners
                     {
                         // don't switch
                         Helpers.ConsolePrint(Tag,
-                            $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {percDiff * 100}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {percDiff * 100:f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                         // RESTORE OLD PROFITS STATE
                         //foreach (var device in _miningDevices)
                         {
@@ -600,8 +593,9 @@ namespace NiceHashMiner.Miners
                     else
                     {
                         //if (AlgorithmSwitchingManager.newProfit)
-                        if (true)
+                        if (_ticks >= AlgorithmSwitchingManager._ticksForStable)
                         {
+                            _ticks = 0;
                             //AlgorithmSwitchingManager.newProfit = false;
                             needSwitch = true;
                             Helpers.ConsolePrint(Tag,
@@ -609,8 +603,10 @@ namespace NiceHashMiner.Miners
                         }
                         else
                         {
+                            _ticks++;
                             needSwitch = false;
-                            Helpers.ConsolePrint(Tag, $"Will NOT SWITCH2. Switching period has not been exceeded");
+                            Helpers.ConsolePrint(Tag, $"Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
+                                _ticks.ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
                             // RESTORE OLD PROFITS STATE
                             foreach (var device2 in _miningDevices)
                             {
@@ -773,11 +769,11 @@ namespace NiceHashMiner.Miners
                         //toStart.Start(_miningLocation, _btcAdress, _worker);
                         if (ConfigManager.GeneralConfig.ServiceLocation == 0)
                         {
-                            toStart.Start(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], _btcAdress, _worker);
+                            toStart.Start(_btcAdress, _worker);
                         }
                         else
                         {
-                            toStart.Start(_miningLocation, _btcAdress, _worker);
+                            toStart.Start(_btcAdress, _worker);
                         }
                         _runningGroupMiners[toStart.Key] = toStart;
                     }

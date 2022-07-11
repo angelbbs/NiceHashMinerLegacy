@@ -103,7 +103,11 @@ namespace NiceHashMiner
             this.comboBoxLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLocation.FormattingEnabled = true;
             this.comboBoxLocation.Items.AddRange(new object[] {
-            "Auto"});
+            "-",
+            ".",
+            ".",
+            ".",
+            "."});
             this.comboBoxLocation.Location = new System.Drawing.Point(107, 6);
             this.comboBoxLocation.Name = "comboBoxLocation";
             this.comboBoxLocation.Size = new System.Drawing.Size(182, 21);

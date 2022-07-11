@@ -495,7 +495,11 @@ namespace NiceHashMiner.Forms
             groupBoxUpdates.Text = International.GetText("Form_Settings_groupBoxUpdates");
             groupBoxBackup.Text = International.GetText("Form_Settings_groupBoxBackup");
             buttonLicence.Text = International.GetText("Form_Settings_buttonLicence");
-            //mem leak here
+
+            groupBoxConnection.Text = International.GetText("FormSettings_Tab_Advanced_Group_Connection");
+            checkBoxProxySSL.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxProxySSL");
+            checkBoxProxyAsFailover.Text = International.GetText("FormSettings_Tab_Advanced_ProxyAsFailover");
+            checkBoxStale.Text = International.GetText("FormSettings_Tab_Advanced_StaleProxy");
 
             richTextBoxInfo.ReadOnly = true;
             richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Bold);
@@ -1015,6 +1019,9 @@ namespace NiceHashMiner.Forms
                 checkBox_ABDefault_mining_stopped.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_program_closing.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABMinimize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxProxySSL.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxProxyAsFailover.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxStale.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -1134,6 +1141,9 @@ namespace NiceHashMiner.Forms
                 checkBox_ABDefault_mining_stopped.Checked = ConfigManager.GeneralConfig.ABDefaultMiningStopped;
                 checkBox_ABDefault_program_closing.Checked = ConfigManager.GeneralConfig.ABDefaultProgramClosing;
                 checkBox_ABMinimize.Checked = ConfigManager.GeneralConfig.ABMinimize;
+                checkBoxProxySSL.Checked = ConfigManager.GeneralConfig.ProxySSL;
+                checkBoxProxyAsFailover.Checked = ConfigManager.GeneralConfig.ProxyAsFailover;
+                checkBoxStale.Checked = ConfigManager.GeneralConfig.StaleProxy;
             }
 
             // Textboxes
@@ -1316,6 +1326,9 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
             ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;
             ConfigManager.GeneralConfig.ABMinimize = checkBox_ABMinimize.Checked;
+            ConfigManager.GeneralConfig.ProxySSL = checkBoxProxySSL.Checked;
+            ConfigManager.GeneralConfig.ProxyAsFailover = checkBoxProxyAsFailover.Checked;
+            ConfigManager.GeneralConfig.StaleProxy = checkBoxStale.Checked;
             if (checkBox_LogToFile.Checked)
             {
                 textBox_LogMaxFileSize.Enabled = true;

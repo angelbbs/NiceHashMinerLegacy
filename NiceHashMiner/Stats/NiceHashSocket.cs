@@ -46,6 +46,7 @@ namespace NiceHashMiner.Stats
         public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
         public event EventHandler OnConnectionLost;
+        public static int wssFailures = 0;
 
         //public static string RigID => UUID.GetDeviceB64UUID();
         public static string RigID => ConfigManager.GeneralConfig.MachineGuid;
@@ -69,13 +70,31 @@ namespace NiceHashMiner.Stats
             }
             return isIPAddres;
         }
+
+        private int _location = 0;
         public void StartConnectionNew(string btc = null, string worker = null, string group = null)
         {
             bool proxy = false;//test
+            string proxyUrl = "";
+            if (ConfigManager.GeneralConfig.ServiceLocation > 0)
+            {
+                proxy = true;
+                proxyUrl = Globals.MiningLocation[0];
+            }
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
             string ResolvedIP = "";
             string link = Links.CheckDNS(Links.NhmSocketAddress);
+            if (ConfigManager.GeneralConfig.ServiceLocation > 0 && Form_Main.wssConnectionsErrors > 2)
+            {
+                _location++;
+                if (_location >= Globals.MiningLocation.Length)
+                {
+                    _location = 0;
+                }
+                proxyUrl = Globals.MiningLocation[_location];
+            }
+            //proxyUrl = proxyUrl.Replace("ru.stratum-proxy.ru", "yandex.ru");
             try
             {
                 if (_webSocket == null)
@@ -85,11 +104,12 @@ namespace NiceHashMiner.Stats
                     if (!proxy)
                     {
                         ResolvedIP = new Uri(link).Host;
+                        Helpers.ConsolePrint("SOCKET", "Start connection to Nicehash directly");
                     }
                     else
                     {
-                        _webSocket = new WebSocket("wss://localhost:443/v3/nhml");
-                        ResolvedIP = "127.0.0.1";
+                        Helpers.ConsolePrint("SOCKET", "Start connection to Nicehash through proxy " + proxyUrl);
+                        ResolvedIP = Links.CheckDNS(proxyUrl, true).Replace("stratum+tcp://", "");
                         _webSocket.Port = 6443;
                     }
                     if (IsIPAddress(ResolvedIP))
@@ -105,7 +125,8 @@ namespace NiceHashMiner.Stats
                     _webSocket.Close();
                 }
                 Form_Main.NHConnectingInProgress = true;
-                Helpers.ConsolePrint("SOCKET", "Connecting");
+                Form_Main.wssConnectionsErrors++;
+                
                 _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                 _webSocket.OnOpen += ConnectCallback;
                 _webSocket.OnMessage += ReceiveCallbackNew;
@@ -158,7 +179,8 @@ namespace NiceHashMiner.Stats
             Helpers.ConsolePrint("NiceHashSocket", $"Connection closed code {e.Code}: {e.Reason}");
             if (!_restartConnection)
             {
-                AttemptReconnectNew();
+                new Task(() => AttemptReconnectNew()).Start();
+                //AttemptReconnectNew();
             }
         }
 
@@ -177,7 +199,8 @@ namespace NiceHashMiner.Stats
                 else if (_webSocket != null)
                 {
                     _webSocket = null; //force
-                    StartConnectionNew();
+                    new Task(() => StartConnectionNew()).Start();
+                    //StartConnectionNew();
                 }
                 else
                 {
@@ -211,10 +234,10 @@ namespace NiceHashMiner.Stats
                 return true;
             }
             _attemptingReconnect = true;
-            var sleep = 1;
+            var sleep = 5;
 
             // More retries on first attempt
-            var retries = _connectionEstablished ? 5 : 6;
+            var retries = 5;
             if (_connectionEstablished)
             {
                 // Don't wait if no connection yet
@@ -373,6 +396,7 @@ namespace NiceHashMiner.Stats
                 };
                 var loginJson = JsonConvert.SerializeObject(login);
 
+                //new Task(() => SendDataNew(loginJson)).Start();
                 SendDataNew(loginJson);
                 Thread.Sleep(500);
                 if (Form_Main.MiningStarted)
@@ -488,7 +512,8 @@ namespace NiceHashMiner.Stats
                     }
                     Thread.Sleep(3000);
                     _webSocket = null;
-                    StartConnectionNew();
+                    new Task(() => StartConnectionNew()).Start();
+                    //StartConnectionNew();
                 }
                 else
                 {
@@ -518,6 +543,11 @@ namespace NiceHashMiner.Stats
         {
             attemptReconnect_Tick();
             NiceHashStats.GetSmaAPICurrent();
+            if (ConfigManager.GeneralConfig.Use_orders_price)
+            {
+                //NiceHashStats.GetSmaAPIOrder();
+                new Task(() => NiceHashStats.GetSmaAPIOrder()).Start();
+            }
             ExchangeRateApi.GetNewBTCRate();
             if (_attemptingReconnect)
             {
@@ -533,10 +563,10 @@ namespace NiceHashMiner.Stats
         private async void attemptReconnect_Tick()
         {
             _attemptingReconnect = true;
-            var sleep = _connectionEstablished ? 10 + _random.Next(0, 5) : 1;
-            Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep + " seconds");
+            int sleep = 5;
+            Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep.ToString() + " seconds");
             // More retries on first attempt
-            var retries = _connectionEstablished ? 5 : 10;
+            var retries = _connectionEstablished ? 5 : 8;
             if (_connectionEstablished)
             {
                 // Don't wait if no connection yet
@@ -552,7 +582,7 @@ namespace NiceHashMiner.Stats
                 try
                 {
                     _webSocket.Connect();
-                    Thread.Sleep(100);
+                    Thread.Sleep(1000 * 2);
                     if (IsAlive)
                     {
                         _attemptingReconnect = false;

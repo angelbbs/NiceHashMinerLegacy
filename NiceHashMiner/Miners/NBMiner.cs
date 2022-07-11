@@ -73,6 +73,45 @@ namespace NiceHashMiner.Miners
             return 60 * 1000;
         }
 
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "stratum+ssl://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "stratum+tcp://";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            {
+                ssl = ssl.Replace("stratum", "nicehash");
+            }
+            int n = 0;
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + " -o" + n.ToString() + " " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://","") + ":9200 -u" + 
+                        n.ToString() + " " + username + " -p" + n.ToString() + psw + " ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + " -o" + n.ToString() + " " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u" + 
+                        n.ToString() + " " + username + " -p" + n.ToString() + psw + " ";
+                }
+                n++;
+                if (n >= 3) break;
+            }
+            return ret.Replace(" -o0", " -o").Replace(" -u0", " -u").Replace(" -p0", " -p");
+        }
         private string GetStartCommand(string url, string btcAddress, string worker)
         {
             var cmd = "";
@@ -81,7 +120,7 @@ namespace NiceHashMiner.Miners
                 url = url.Replace("stratum", "nicehash");
             }
 
-            var user = GetUsername(btcAddress, worker);
+            var username = GetUsername(btcAddress, worker);
             string devs = "";
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.DeviceType).ToList();
             var platform = "";
@@ -102,56 +141,42 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
-
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0].Replace("stratum+tcp://", "nicehash+tcp://") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1].Replace("stratum+tcp://", "nicehash+tcp://") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2].Replace("stratum+tcp://", "nicehash+tcp://") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u2 " + user +
+                    GetServer("daggerhashimoto", username, "3353") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
             }
             
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
                 cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3376") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3376") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3376") + " -u2 " + user +
+                    GetServer("cuckoocycle", username, "3376") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3385") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3385") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3385") + " -u2 " + user +
+                    GetServer("kawpow", username, "3385") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
             {
                 cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3387") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3387") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3387") + " -u2 " + user +
+                    GetServer("beamv3", username, "3387") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
                 cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3389") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3389") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3389") + " -u2 " + user +
+                    GetServer("octopus", username, "3389") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
                 cmd = $"-a {AlgoName}" +
-                    $" -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3390") + " -u " + user +
-                    $" -o1 " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3390") + " -u1 " + user +
-                    $" -o2 " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3390") + " -u2 " + user +
+                    GetServer("autolykos", username, "3390") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
             cmd += extra;
@@ -159,8 +184,9 @@ namespace NiceHashMiner.Miners
             return cmd;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string btcAdress, string worker)
         {
+            string url = "";
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.NBMiner;
             IsApiReadException = false;

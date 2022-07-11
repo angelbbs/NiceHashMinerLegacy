@@ -34,7 +34,39 @@ namespace NiceHashMiner.Miners
             return 60 * 1000 * 5;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "stratum+ssl://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "stratum+tcp://";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + "--url=stratum+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --userpass=" + 
+                        username + ":" + psw + " ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + "--url=" + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --userpass=" + 
+                        username + ":" + psw + " ";
+                }
+            }
+            return ret;
+        }
+        public override void Start(string btcAdress, string worker)
         {
             if (!IsInit)
             {
@@ -45,19 +77,15 @@ namespace NiceHashMiner.Miners
 
             // IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.ZEnemy;
 
-            var algo = "";
+            var algo = "kawpow";
             var apiBind = "";
-            string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
-            string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
+
             algo = "--algo=" + MiningSetup.MinerName;
             apiBind = " --api-bind-http=" + ApiPort;
             //kawpow only
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
-            LastCommandLine = algo +
-                " --url=" + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
-                " --url=" + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
-                " --url=" + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
-                " --url=" + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3385") + " --userpass=" + username + ":x" +
+
+            LastCommandLine = "--algo=kawpow" +
+                GetServer(algo, username, "3385") +
                 apiBind +
                 " --devices " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

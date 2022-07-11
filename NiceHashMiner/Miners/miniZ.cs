@@ -55,11 +55,12 @@ namespace NiceHashMiner.Miners
             ConectionType = NhmConectionType.NONE;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string btcAdress, string worker)
         {
+            string url = "";
             IsApiReadException = false;
             firstStart = true;
-            LastCommandLine = GetStartCommand(url, btcAdress, worker);
+            LastCommandLine = GetStartCommand(btcAdress, worker);
             ProcessHandle = _Start();
         }
         static int GetWinVer(Version ver)
@@ -71,10 +72,36 @@ namespace NiceHashMiner.Miners
             else
                 return 10;
         }
-
-        private string GetStartCommand(string url, string btcAddress, string worker)
+        private string GetServer(string algo, string username, string port)
         {
-            var server = url.Split(':')[0].Replace("stratum+tcp://", "");
+            string ret = "";
+            string ssl = "";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "ssl://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + " --url " + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + " --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port;
+                }
+            }
+            return ret;
+        }
+        private string GetStartCommand(string btcAddress, string worker)
+        {
             var algo = "";
             var algoName = "";
             string port = "";
@@ -110,15 +137,12 @@ namespace NiceHashMiner.Miners
             {
                 sColor = " --nocolour";
             }
-
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
             var ret = GetDevicesCommandString()
                       + sColor + " --pers auto --par=" + algo
-                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port)
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port)
-                      + " --url " + username + "@" + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port)
-                      + " --url " + username + "@" + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port)
-                      + " --pass=x" + " --telemetry=" + ApiPort;
+                      + GetServer(algoName, username, port)
+                      + " --pass=" + psw + " " + " --telemetry=" + ApiPort;
 
             return ret;
         }
@@ -160,11 +184,11 @@ namespace NiceHashMiner.Miners
             {
                 algo = "144,5";
                 algoName = "zhash";
-                List<string> ResolvedServers = MiningSession.GetResolvedServers(algoName);
+
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --pers auto --par=" + algo
                       + " --url GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.miniz@" + Links.CheckDNS("stratum+tcp://btg.2miners.com:4040").Replace("stratum+tcp://", "") + " -p x"
-                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3369")
+                      + " --url " + username + "@" + Globals.MiningLocation[0].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3369")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -173,11 +197,10 @@ namespace NiceHashMiner.Miners
             {
                 algo = "125,4";
                 algoName = "zelhash";
-                List<string> ResolvedServers = MiningSession.GetResolvedServers(algoName);
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --smart-pers --par=" + algo
                       + " --url t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.miniz@" + Links.CheckDNS("stratum+tcp://flux.2miners.com:9090").Replace("stratum+tcp://", "") + " -p x"
-                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3391")
+                      + " --url " + username + "@" + Globals.MiningLocation[0].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3391")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -187,11 +210,10 @@ namespace NiceHashMiner.Miners
                 algo = "beam3";
                 algoName = "beamv3";
                 stratumPort = "3387";
-                List<string> ResolvedServers = MiningSession.GetResolvedServers(algoName);
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --pers auto --par=" + algo
                       + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@" + Links.CheckDNS("stratum+tcp://beam.2miners.com:5252").Replace("stratum+tcp://", "") 
-                      + " --url " + username + "@" + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3387")
+                      + " --url " + username + "@" + Globals.MiningLocation[0].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3387")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }
@@ -199,11 +221,10 @@ namespace NiceHashMiner.Miners
             {
                 algo = "ethash";
                 algoName = "daggerhashimoto";
-                List<string> ResolvedServers = MiningSession.GetResolvedServers(algoName);
                 ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
                       + " --nocolour --par=" + algo
                       + " --url 0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "")
-                      + " --url " + username + "@" + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353")
+                      + " --url " + username + "@" + Globals.MiningLocation[1].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3353")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
             }

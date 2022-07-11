@@ -41,8 +41,9 @@ namespace NiceHashMiner.Miners
             IsMultiType = true;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string btcAdress, string worker)
         {
+            string url = "";
             try
             {
                 if (File.Exists("miners\\Gminer\\" + GetLogFileName()))
@@ -132,27 +133,48 @@ namespace NiceHashMiner.Miners
                 port = "3385";
             }
 
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(algoName);
-            var ret = GetDevicesCommandString()
-                      //+ " --algo " + algo + pers + " --server " + Links.CheckDNS(url).Split(':')[0].Replace("stratum+tcp://", "") + nicehashstratum
-                      //+ " --user " + username + " --pass x --port " + url.Split(':')[1]
-                      + " --algo " + algo + pers
-                      + " -s " + ResolvedServers[0].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + nicehashstratum
-                      + " -u " + username + " -p x"
-                      + " -s " + ResolvedServers[1].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + nicehashstratum
-                      + " -u " + username + " -p x"
-                      + " -s " + ResolvedServers[2].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + nicehashstratum
-                      + " -u " + username + " -p x"
-                      + " -s " + ResolvedServers[3].Replace("stratum+tcp://", "") + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + nicehashstratum
-                      + " -u " + username + " -p x"
-                      + " --api " + ApiPort + " -l " + GetLogFileName();
+            var ret = GetDevicesCommandString() +
+                      " --algo " + algo + pers +
+                      GetServer(algoName, username, port) +
+                      " --api " + ApiPort + " -l " + GetLogFileName();
+            return ret;
+        }
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "--ssl 1 ";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "--ssl 0 ";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + " -s " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " + 
+                        username + " -p " + psw + " " + ssl;
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + " -s " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
+                        username + " -p " + psw + " " + ssl;
+                }
+            }
             return ret;
         }
         protected override string GetDevicesCommandString()
         {
             var deviceStringCommand = " --devices ";
             var ids = new List<string>();
-            //var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.DeviceType).ToList();
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             var extra = "";
             int id;

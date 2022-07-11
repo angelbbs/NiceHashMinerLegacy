@@ -238,7 +238,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Stats\ExchangeRateAPI.cs" />
-    <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />

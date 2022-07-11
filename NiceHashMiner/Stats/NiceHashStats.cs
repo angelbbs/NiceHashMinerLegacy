@@ -133,7 +133,8 @@ namespace NiceHashMiner.Stats
                 _socket.OnDataReceived += SocketOnOnDataReceived;
 
                 Helpers.ConsolePrint("SOCKET-address:", address);
-                _socket.StartConnectionNew();
+                new Task(() => _socket.StartConnectionNew()).Start();
+                //_socket.StartConnectionNew();
             }
             catch (Exception er)
             {
@@ -488,11 +489,12 @@ namespace NiceHashMiner.Stats
                 int Algo = 0;
                 foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
                 {
-                    if (smaAlgos.Contains(algo) && !algo.ToString().ToUpper().Contains("UNUSED") && !algo.ToString().ToUpper().Contains("RANDOMX"))
+                    if (smaAlgos.Contains(algo) && !algo.ToString().ToUpper().Contains("UNUSED") &&
+                        !algo.ToString().ToUpper().Contains("RANDOMX"))
                     {
                         string a = algo.ToString().ToUpper();
                         //Helpers.ConsolePrint("GetSmaAPIOrder: ", a);
-                        string resp = NiceHashStats.GetNiceHashApiData(Links.NhmHashpower + a, "x");
+                        string resp = GetNiceHashApiData(Links.NhmHashpower + a + "&size=10", "x");
                         //Helpers.ConsolePrint("GetSmaAPIOrder: ", resp);
                         dynamic json = JsonConvert.DeserializeObject(resp);
                         if (json == null) return false;
@@ -589,9 +591,14 @@ namespace NiceHashMiner.Stats
                                 {
                                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                                     {
-                                       // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", miningAlgorithms.title + " - " + Algo + " - " + miningAlgorithms.paying);
+                                        //Helpers.ConsolePrint("SMA-DATA-APICurrent: ", miningAlgorithms.title + " - " + Algo + " - " + miningAlgorithms.paying);
                                     }
                                     outProf = outProf + "  [\n" + "    " + Algo + ",\n" + "    " + miningAlgorithms.paying + "\n" + "  ],\n";
+                                    var algoKey = (AlgorithmType)algo;
+                                    if (!smaAlgos.Contains(algoKey))
+                                    {
+                                        smaAlgos.Add(algoKey);
+                                    }
                                     break;
                                 }
                             }
@@ -860,7 +867,13 @@ namespace NiceHashMiner.Stats
         {
             try
             {
+                //new Task(() => GetSmaAPICurrent()).Start();
                 GetSmaAPICurrent();
+                if (ConfigManager.GeneralConfig.Use_orders_price)
+                {
+                    new Task(() => GetSmaAPIOrder()).Start();
+                //    GetSmaAPIOrder();
+                }
             }
             catch (Exception ex)
             {
@@ -1664,32 +1677,40 @@ namespace NiceHashMiner.Stats
         }
 
         #endregion
-
+        private static int _location = 0;
         public static string GetNiceHashApiData(string url, string worker)
         {
             bool proxy = false;//test
-            //string link = Links.CheckDNS(url);
-            //string host = new Uri(url).Host;
-
-            string host = new Uri(url).Host;
-            if (proxy)
+            string proxyUrl = "";
+            if (ConfigManager.GeneralConfig.ServiceLocation > 0)
             {
-                url = url.Replace("api2.nicehash.com", "localhost:7443");
-            } else
-            {
-                //url = "https://localhost/main/api/v2/public/stats/global/current";
+                proxy = true;
+                proxyUrl = Globals.MiningLocation[_location];
             }
 
-            string link = Links.CheckDNS(url);
-            var uri = new Uri(url);
-            var responseFromServer = "";
+            if (ConfigManager.GeneralConfig.ServiceLocation > 0 && Form_Main.apiConnectionsErrors > 3)
+            {
+                _location++;
+                if (_location >= Globals.MiningLocation.Length)
+                {
+                    _location = 0;
+                }
+                proxyUrl = Globals.MiningLocation[_location];
+            }
 
+            var uri = new Uri(url);
+            if (proxy)
+            {
+                url = url.Replace("api2.nicehash.com", proxyUrl + ":7443");
+            }
+            string host = new Uri(url).Host;
+            var responseFromServer = "";
             try
             {
-                //ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
                 var activeMinersGroup = MinersManager.GetActiveMinersGroup();
-
-                var wr = (HttpWebRequest)WebRequest.Create(uri);
+                ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var wr = (HttpWebRequest)WebRequest.Create(new Uri(url));
 
                 string RequestId = System.Guid.NewGuid().ToString().Replace("-", "");
 
@@ -1698,7 +1719,7 @@ namespace NiceHashMiner.Stats
                 wr.Headers.Add("X-Request-Id", RequestId);
                 wr.Headers.Add("X-User-Lang", "en");
 
-                wr.Host = host;
+                wr.Host = "api2.nicehash.com:443";
                 wr.Timeout = 5 * 1000;
                 var response = wr.GetResponse();
                 var ss = response.GetResponseStream();
@@ -1716,8 +1737,10 @@ namespace NiceHashMiner.Stats
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("GetNiceHashApiData", ex.ToString());
+                Form_Main.apiConnectionsErrors++;
                 return null;
             }
+            Form_Main.apiConnectionsErrors = 0;
             return responseFromServer;
         }
         private static string HashBySegments(string key, string apiKey, string time, string nonce, string orgId, string method, string encodedPath, string query, string bodyStr)
@@ -1794,16 +1817,30 @@ namespace NiceHashMiner.Stats
         public static string GetNiceHashApiDataWithSecret(string url, bool auth)
         {
             bool proxy = false;//test
-            string proxyServer = "192.168.1.110";
+            string proxyUrl = "";
+            if (ConfigManager.GeneralConfig.ServiceLocation > 0)
+            {
+                proxy = true;
+                proxyUrl = Globals.MiningLocation[_location];
+            }
 
-            string host = new Uri(url).Host;
+            if (ConfigManager.GeneralConfig.ServiceLocation > 0 && Form_Main.apiConnectionsErrors > 3)
+            {
+                _location++;
+                if (_location >= Globals.MiningLocation.Length)
+                {
+                    _location = 0;
+                }
+                proxyUrl = Globals.MiningLocation[_location];
+            }
+
+            proxyUrl = Links.CheckDNS(proxyUrl).Replace("stratum+tcp://", "");
+            var uri = new Uri(url);
             if (proxy)
             {
-                url = url.Replace("api2.nicehash.com", proxyServer + ":7443");
+                url = url.Replace("api2.nicehash.com", proxyUrl + ":7443");
             }
-            string link = Links.CheckDNS(url);
-            var uri = new Uri(url);
-
+            string host = new Uri(url).Host;
             var responseFromServer = "";
 
             if ((Form_Main.orgId + Form_Main.apiKey + Form_Main.apiSecret).IsNullOrEmpty())
@@ -1818,8 +1855,9 @@ namespace NiceHashMiner.Stats
 
             try
             {
-                ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-                var wr = (HttpWebRequest)WebRequest.Create(uri);
+                ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var wr = (HttpWebRequest)WebRequest.Create(new Uri(url));
                 if (auth)
                 {
                     string nonce = System.Guid.NewGuid().ToString().Replace("-", "");
@@ -1834,7 +1872,7 @@ namespace NiceHashMiner.Stats
                     wr.Headers.Add("X-Request-Id", RequestId);
                     wr.Headers.Add("X-User-Lang", "en");
                 }
-                wr.Host = host;
+                wr.Host = "api2.nicehash.com:443";
                 wr.Timeout = 5 * 1000;
                 var response = wr.GetResponse();
                 var ss = response.GetResponseStream();
@@ -1853,8 +1891,10 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("GetNiceHashApiDataWithSecret", ex.ToString());
                 Form_Main.errorAPIkeystring = ex.Message;
+                Form_Main.apiConnectionsErrors++;
                 return null;
             }
+            Form_Main.apiConnectionsErrors = 0;
             return responseFromServer;
         }
 

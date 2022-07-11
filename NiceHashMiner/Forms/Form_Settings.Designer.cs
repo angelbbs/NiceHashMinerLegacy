@@ -104,6 +104,10 @@ namespace NiceHashMiner.Forms
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
             this.label_displayCurrency = new System.Windows.Forms.Label();
             this.tabPageAdvanced1 = new System.Windows.Forms.TabPage();
+            this.groupBoxConnection = new System.Windows.Forms.GroupBox();
+            this.checkBoxStale = new System.Windows.Forms.CheckBox();
+            this.checkBoxProxyAsFailover = new System.Windows.Forms.CheckBox();
+            this.checkBoxProxySSL = new System.Windows.Forms.CheckBox();
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
             this.checkBox_orderPrice = new System.Windows.Forms.CheckBox();
             this.checkBox_withPower = new System.Windows.Forms.CheckBox();
@@ -213,6 +217,7 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).BeginInit();
             this.tabPageAdvanced1.SuspendLayout();
+            this.groupBoxConnection.SuspendLayout();
             this.groupBox_Miners.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -1224,6 +1229,7 @@ namespace NiceHashMiner.Forms
             // tabPageAdvanced1
             // 
             this.tabPageAdvanced1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageAdvanced1.Controls.Add(this.groupBoxConnection);
             this.tabPageAdvanced1.Controls.Add(this.groupBox_Miners);
             this.tabPageAdvanced1.Controls.Add(this.groupBox1);
             this.tabPageAdvanced1.Location = new System.Drawing.Point(4, 23);
@@ -1233,6 +1239,56 @@ namespace NiceHashMiner.Forms
             this.tabPageAdvanced1.Size = new System.Drawing.Size(669, 491);
             this.tabPageAdvanced1.TabIndex = 2;
             this.tabPageAdvanced1.Text = "Advanced";
+            // 
+            // groupBoxConnection
+            // 
+            this.groupBoxConnection.Controls.Add(this.checkBoxStale);
+            this.groupBoxConnection.Controls.Add(this.checkBoxProxyAsFailover);
+            this.groupBoxConnection.Controls.Add(this.checkBoxProxySSL);
+            this.groupBoxConnection.Location = new System.Drawing.Point(6, 397);
+            this.groupBoxConnection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxConnection.Name = "groupBoxConnection";
+            this.groupBoxConnection.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxConnection.Size = new System.Drawing.Size(657, 70);
+            this.groupBoxConnection.TabIndex = 395;
+            this.groupBoxConnection.TabStop = false;
+            this.groupBoxConnection.Text = "Connection";
+            // 
+            // checkBoxStale
+            // 
+            this.checkBoxStale.AutoSize = true;
+            this.checkBoxStale.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxStale.Location = new System.Drawing.Point(10, 42);
+            this.checkBoxStale.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxStale.Name = "checkBoxStale";
+            this.checkBoxStale.Size = new System.Drawing.Size(182, 17);
+            this.checkBoxStale.TabIndex = 404;
+            this.checkBoxStale.Text = "Detect stale shares on proxy side";
+            this.checkBoxStale.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxProxyAsFailover
+            // 
+            this.checkBoxProxyAsFailover.AutoSize = true;
+            this.checkBoxProxyAsFailover.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxProxyAsFailover.Location = new System.Drawing.Point(216, 19);
+            this.checkBoxProxyAsFailover.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxProxyAsFailover.Name = "checkBoxProxyAsFailover";
+            this.checkBoxProxyAsFailover.Size = new System.Drawing.Size(164, 17);
+            this.checkBoxProxyAsFailover.TabIndex = 403;
+            this.checkBoxProxyAsFailover.Text = "Using proxy as failover server";
+            this.checkBoxProxyAsFailover.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxProxySSL
+            // 
+            this.checkBoxProxySSL.AutoSize = true;
+            this.checkBoxProxySSL.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxProxySSL.Location = new System.Drawing.Point(11, 19);
+            this.checkBoxProxySSL.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxProxySSL.Name = "checkBoxProxySSL";
+            this.checkBoxProxySSL.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxProxySSL.TabIndex = 402;
+            this.checkBoxProxySSL.Text = "SSL connection to proxy";
+            this.checkBoxProxySSL.UseVisualStyleBackColor = true;
             // 
             // groupBox_Miners
             // 
@@ -1390,7 +1446,7 @@ namespace NiceHashMiner.Forms
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox1.Size = new System.Drawing.Size(658, 280);
+            this.groupBox1.Size = new System.Drawing.Size(658, 266);
             this.groupBox1.TabIndex = 394;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Devices:";
@@ -2353,6 +2409,8 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).EndInit();
             this.tabPageAdvanced1.ResumeLayout(false);
+            this.groupBoxConnection.ResumeLayout(false);
+            this.groupBoxConnection.PerformLayout();
             this.groupBox_Miners.ResumeLayout(false);
             this.groupBox_Miners.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).EndInit();
@@ -2548,5 +2606,9 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.GroupBox groupBoxAPIkeys;
         private System.Windows.Forms.Button buttonSetupAPI;
         public System.Windows.Forms.CheckBox checkBox_EnableAPI;
+        private System.Windows.Forms.GroupBox groupBoxConnection;
+        private System.Windows.Forms.CheckBox checkBoxProxyAsFailover;
+        private System.Windows.Forms.CheckBox checkBoxProxySSL;
+        private System.Windows.Forms.CheckBox checkBoxStale;
     }
 }

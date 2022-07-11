@@ -203,6 +203,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("TRMeth_aggr_mode", "", "--eth_aggr_mode", "", MinerOptionFlagType.Uni, ""),
                     new MinerOption("TRMeth_eth_config", "", "--eth_config", "B1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMprog_micro_tune", "", "--prog_micro_tune", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMeth_smooth_power", "", "--eth_smooth_power", "1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, "")
                 },
                 // TemperatureOptions

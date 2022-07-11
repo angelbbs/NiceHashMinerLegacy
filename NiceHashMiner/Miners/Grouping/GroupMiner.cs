@@ -112,7 +112,7 @@ namespace NiceHashMiner.Miners.Grouping
             PowerRate = 0;
         }
 
-        public void Start(string miningLocation, string btcAdress, string worker)
+        public void Start(string btcAdress, string worker)
         {
             if (Miner.IsRunning)
             {
@@ -121,8 +121,8 @@ namespace NiceHashMiner.Miners.Grouping
 
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            var locationUrl = Globals.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
-            Miner.Start(locationUrl, btcAdress, worker);
+            //var locationUrl = Globals.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
+            Miner.Start(btcAdress, worker);
         }
     }
 }

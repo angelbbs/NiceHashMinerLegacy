@@ -28,7 +28,39 @@ namespace NiceHashMiner.Miners
         {
         }
         private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.trex;
-        public override void Start(string url, string btcAdress, string worker)
+        private string GetServer(string algo, string username, string port)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                ssl = "stratum2+ssl://";
+            }
+            else
+            {
+                port = "1" + port;
+                ssl = "stratum2+tcp://";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + " -o stratum2+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " + 
+                        username + " -p " + psw + " ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + " -o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
+                        username + " -p " + psw + " ";
+                }
+            }
+            return ret;
+        }
+        public override void Start(string btcAdress, string worker)
         {
             if (!IsInit)
             {
@@ -38,20 +70,19 @@ namespace NiceHashMiner.Miners
             var username = GetUsername(btcAdress, worker);
 
             // IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.trex;
-
+            string port = "";
             var algo = "";
+            var algo2 = "";
             var apiBind = "";
-            string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
-            string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
-            algo = "-a " + MiningSetup.MinerName.ToLower();
+            //algo = MiningSetup.MinerName.ToLower();
             apiBind = " --api-bind-http 0.0.0.0:" + ApiPort;
             IsApiReadException = false;
 
             //  url = url.Replace(".nicehash.", "-new.nicehash.");
-            algo = algo.Replace("daggerhashimoto", "ethash");
-            algo = algo.Replace("autolykos", "autolykos2");
-            url = url.Replace("stratum+tcp", "stratum2+tcp");
-            string locations = url.Split('.')[1];
+            //algo = algo.Replace("daggerhashimoto", "ethash");
+            //algo = algo.Replace("autolykos", "autolykos2");
+            //url = url.Replace("stratum+tcp", "stratum2+tcp");
+            //string locations = url.Split('.')[1];
             //stratum+tcp://octopus.LOCATION.nicehash.com:3389
             foreach (var mPair in MiningSetup.MiningPairs)
             {
@@ -61,96 +92,42 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            List<string> ResolvedServers = MiningSession.GetResolvedServers(MiningSetup.MinerName.ToLower());
-            List<string> ResolvedServersEth = MiningSession.GetResolvedServers("daggerhashimoto");
-            List<string> ResolvedServersAutolykos = MiningSession.GetResolvedServers("autolykos");
-            List<string> ResolvedServersKAWPOW = MiningSession.GetResolvedServers("kawpow");
-            List<string> ResolvedServersOctopus = MiningSession.GetResolvedServers("octopus");
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 port = "3353";
+                algo = "ethash";
+                algo2 = "daggerhashimoto";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
             {
                 port = "3390";
+                algo = "autolykos2";
+                algo2 = "autolykos";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 port = "3385";
+                algo = "kawpow";
+                algo2 = "kawpow";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
                 port = "3389";
+                algo = "octopus";
+                algo2 = "octopus";
             }
-            
-            if (!_isDual)
-            {
-                LastCommandLine = algo +
-                " -o " + ResolvedServers[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
-                " -o " + ResolvedServers[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : port) + " " + " -u " + username + " -p x " +
 
-                apiBind +
-                " -d " + GetDevicesCommandString() + " --no-watchdog " +
-                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+            LastCommandLine = "-a " + algo +
+            GetServer(algo2, username, port) +
+            apiBind +
+            " -d " + GetDevicesCommandString() + " --no-watchdog " +
+            ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
 
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
-                {
-                    LastCommandLine = LastCommandLine.Replace("stratum2", "stratum");
-                }
-            }
-            else
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
             {
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
-                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
-                {
-                    LastCommandLine = "-a ethash --lhr-algo autolykos2" +
-                    " -o " + ResolvedServersEth[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersAutolykos[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersAutolykos[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersAutolykos[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersAutolykos[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3390") + " --user2 " + username + " --pass2 x " +
-                    apiBind +
-                    " -d " + GetDevicesCommandString() + " --no-watchdog " +
-                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-                }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
-                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
-                {
-                    LastCommandLine = "-a ethash --lhr-algo kawpow" +
-                    " -o " + ResolvedServersEth[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersKAWPOW[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersKAWPOW[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersKAWPOW[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersKAWPOW[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3385") + " --user2 " + username + " --pass2 x " +
-                    apiBind +
-                    " -d " + GetDevicesCommandString() + " --no-watchdog " +
-                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-                }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
-                    MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
-                {
-                    LastCommandLine = "-a ethash --lhr-algo octopus" +
-                    " -o " + ResolvedServersEth[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersOctopus[0] + ":" + (ResolvedServers[0].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersOctopus[1] + ":" + (ResolvedServers[1].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersOctopus[2] + ":" + (ResolvedServers[2].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
-                    " -o " + ResolvedServersEth[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3353") + " -u " + username + " -p x " +
-                    " --url2 " + ResolvedServersOctopus[3] + ":" + (ResolvedServers[3].Contains("auto.") ? "9200" : "3389") + " --user2 " + username + " --pass2 x " +
-                    apiBind +
-                    " -d " + GetDevicesCommandString() + " --no-watchdog " +
-                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
-                }
+                LastCommandLine = LastCommandLine.Replace("stratum2", "stratum");
             }
+
 
             ProcessHandle = _Start();
         }
@@ -388,10 +365,36 @@ namespace NiceHashMiner.Miners
 
                     var ad = GetSummaryAsync();
 
-                    double logSpeed = 0.0d;
-                    
+                    if (ad.Result != null && ad.Result.Speed > 0)
+                    {
+                        _powerUsage += _power;
+                        repeats++;
+                        double benchProgress = repeats / (_benchmarkTimeWait - MinerStartDelay - 15);
+                        BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
+                        if (repeats > delay_before_calc_hashrate)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " SecondSpeed: " + ad.Result.SecondarySpeed + " power: " + _power.ToString());
+                            summspeed += ad.Result.Speed;
+                            secsummspeed += ad.Result.SecondarySpeed;
 
-                    
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                        }
+
+                        if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
+                            ad.Dispose();
+                            benchmarkTimer.Stop();
+
+                            BenchmarkHandle.Kill();
+                            BenchmarkHandle.Dispose();
+                            EndBenchmarkProcces();
+                            break;
+                        }
+                    }
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
                 BenchmarkAlgorithm.BenchmarkSecondarySpeed = Math.Round(secsummspeed / (repeats - delay_before_calc_hashrate), 2);

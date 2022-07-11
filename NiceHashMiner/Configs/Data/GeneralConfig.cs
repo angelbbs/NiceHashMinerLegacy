@@ -95,6 +95,9 @@ namespace NiceHashMiner.Configs.Data
         public bool ABDefaultMiningStopped = false;
         public bool ABDefaultProgramClosing = false;
         public bool ABMinimize = false;
+        public bool ProxySSL = true;
+        public bool ProxyAsFailover = true;
+        public bool StaleProxy = false;
 
         public bool MinimizeMiningWindows = false;
         public bool StandartBenchmarkTime = true;

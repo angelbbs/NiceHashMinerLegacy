@@ -175,12 +175,12 @@ namespace NiceHashMiner
                 {
                     Logger.ConfigureWithFile();
                 }
-                ConfigManager.GeneralConfig.ServiceLocation = 0;//это добавить в релиз
-                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 47.1)
+
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 48)
                 {
-                    ConfigManager.GeneralConfig.ChartEnable = false;
+                    ConfigManager.GeneralConfig.ServiceLocation = 0;
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
-                    ConfigManager.GeneralConfig.ForkFixVersion = 47.1;
+                    ConfigManager.GeneralConfig.ForkFixVersion = 48;
                 }
                 //**
                 //Thread.Sleep(100);
