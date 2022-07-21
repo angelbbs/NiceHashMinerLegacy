@@ -12,7 +12,7 @@
         "LocationName": "Nicehash Auto",
     "Warning_with_Exclamation": "Предупреждение!",
     "Error_with_Exclamation": "Ошибка!",
-    "BitcoinAddress": "Биткоин-адрес",
+    "BitcoinAddress": "Биткоин адрес",
     "WorkerName": "Имя компьютера",
     "Time_Unit": "Единица времени",
     "Rate": "Ставка:",

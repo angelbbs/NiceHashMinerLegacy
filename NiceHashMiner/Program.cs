@@ -120,27 +120,44 @@ namespace NiceHashMiner
             var mainproc = Process.GetCurrentProcess();
             if (ConfigManager.GeneralConfig.ProgramMonitoring)
             {
-                if (File.Exists("MinerLegacyForkFixMonitor.exe"))
+                try
                 {
-                    var MonitorProc = new Process
+                    if (File.Exists("utils\\startMonitor.cmd"))
                     {
-                        StartInfo =
-                {
-                    FileName = "MinerLegacyForkFixMonitor.exe"
-                }
-                    };
+                        File.Delete("utils\\startMonitor.cmd");
+                        File.WriteAllText("utils\\startMonitor.cmd", "start MinerLegacyForkFixMonitor.exe %1");
+                    } else
+                    {
+                        File.WriteAllText("utils\\startMonitor.cmd", "start MinerLegacyForkFixMonitor.exe %1");
+                    }
 
-                    MonitorProc.StartInfo.Arguments = mainproc.Id.ToString();
-                    MonitorProc.StartInfo.UseShellExecute = false;
-                    MonitorProc.StartInfo.CreateNoWindow = true;
-                    if (MonitorProc.Start())
+                    if (File.Exists("MinerLegacyForkFixMonitor.exe"))
                     {
-                        Helpers.ConsolePrint("Monitor", "Starting OK");
+                        var MonitorProc = new Process
+                        {
+                            StartInfo =
+                {
+                    FileName = "utils\\startMonitor.cmd"
+                }
+                        };
+
+                        MonitorProc.StartInfo.Arguments = mainproc.Id.ToString();
+                        MonitorProc.StartInfo.UseShellExecute = false;
+                        MonitorProc.StartInfo.CreateNoWindow = true;
+                        if (MonitorProc.Start())
+                        {
+                            Helpers.ConsolePrint("Monitor", "Starting OK");
+
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("Monitor", "Starting ERROR");
+                        }
                     }
-                    else
-                    {
-                        Helpers.ConsolePrint("Monitor", "Starting ERROR");
-                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
 
@@ -149,7 +166,7 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.AllowMultipleInstances && ConfigManager.GeneralConfig.ProgramMonitoring)
             {
                 ConfigManager.GeneralConfig.AllowMultipleInstances = false;
-                ConfigManager.GeneralConfigFileCommit();
+                //ConfigManager.GeneralConfigFileCommit();
             }
             // #2 check if multiple instances are allowed
             var startProgram = true;
@@ -181,6 +198,17 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ServiceLocation = 0;
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 48;
+                }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 48.1)
+                {
+                    ConfigManager.GeneralConfig.ServiceLocation = 0;
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 48.1;
+                }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 48.2)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 48.2;
                 }
                 //**
                 //Thread.Sleep(100);

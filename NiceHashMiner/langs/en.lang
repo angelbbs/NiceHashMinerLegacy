@@ -12,7 +12,7 @@
         "LocationName": "Nicehash Auto",
         "Warning_with_Exclamation": "Warning!",
         "Error_with_Exclamation": "Error!",
-        "BitcoinAddress": "Bitcoin Address",
+        "BitcoinAddress": "Mining Address",
         "WorkerName": "Worker Name",
         "Time_Unit": "Time Unit",
         "Rate": "Rate",

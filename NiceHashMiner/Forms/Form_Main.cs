@@ -483,9 +483,10 @@ namespace NiceHashMiner
             {
                 label_Uptime.Visible = false;
             }
+
+            labelBitcoinAddressNew.Text = International.GetText("BitcoinAddress") + ":";
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
-                labelBitcoinAddressNew.Text = "Биткоин адрес" + ":";
                 labelWorkerName.Text = "Имя компьютера" + ":";
                 dialogClearBTC = "Вы хотите удалить биткоин адрес?";
             }
@@ -724,7 +725,7 @@ namespace NiceHashMiner
                     {
                         client.DownloadFile(new Uri("https://mark.nl.tab.digital/s/b9mg5Gy8G6B5cSr/download"), "configs//ProxyList.tmp");
                         tmp = File.ReadAllText("configs//ProxyList.tmp");
-                        if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
+                        //if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
                         {
                             if (File.Exists("configs//ProxyList.json")) File.Delete("configs//ProxyList.json");
                             File.Copy("configs//ProxyList.tmp", "configs//ProxyList.json");
@@ -1179,7 +1180,6 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
-
 
         }
         [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]
@@ -2535,6 +2535,19 @@ public static void CloseChilds(Process parentId)
 
             try
             {
+                foreach (var process in Process.GetProcessesByName("MinerLegacyForkFixMonitor"))
+                {
+                    process.Kill();
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
                 foreach (var process in Process.GetProcessesByName("device_detection"))
                 {
                     process.Kill();
@@ -3468,7 +3481,7 @@ public static void CloseChilds(Process parentId)
                 //CheckProxyList(sender, e);
                 ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
                 //_ServiceLocation = comboBoxLocation.SelectedIndex;
-                ConfigManager.GeneralConfigFileCommit();
+                //ConfigManager.GeneralConfigFileCommit();
                 Array.Resize(ref Globals.MiningLocation, _proxyUrls.Length);
 
                 _proxyUrls.CopyTo(Globals.MiningLocation, 0);
@@ -3664,6 +3677,10 @@ public static void CloseChilds(Process parentId)
             else if (ConfigManager.GeneralConfig.BitcoinAddressNew.Trim().Substring(0, 3) == "bc1")
             {
                 walletType = "SegWit"; //external wallet SegWit
+            }
+            else if (ConfigManager.GeneralConfig.BitcoinAddressNew.Trim().Substring(0, 2) == "NH")
+            {
+                walletType = "Nicehash"; //internal wallet NH
             }
             return walletType;
         }

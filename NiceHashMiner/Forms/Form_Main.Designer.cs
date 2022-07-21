@@ -451,7 +451,7 @@ namespace NiceHashMiner
             // 
             this.textBoxBTCAddress_new.Location = new System.Drawing.Point(107, 33);
             this.textBoxBTCAddress_new.Name = "textBoxBTCAddress_new";
-            this.textBoxBTCAddress_new.Size = new System.Drawing.Size(230, 20);
+            this.textBoxBTCAddress_new.Size = new System.Drawing.Size(235, 20);
             this.textBoxBTCAddress_new.TabIndex = 111;
             this.textBoxBTCAddress_new.TextChanged += new System.EventHandler(this.textBoxBTCAddress_new_TextChanged);
             // 

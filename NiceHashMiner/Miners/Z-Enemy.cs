@@ -84,8 +84,8 @@ namespace NiceHashMiner.Miners
             apiBind = " --api-bind-http=" + ApiPort;
             //kawpow only
 
-            LastCommandLine = "--algo=kawpow" +
-                GetServer(algo, username, "3385") +
+            LastCommandLine = "--algo=kawpow " +
+                GetServer("kawpow", username, "3385") +
                 apiBind +
                 " --devices " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";

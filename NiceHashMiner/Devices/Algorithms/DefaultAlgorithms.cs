@@ -274,20 +274,18 @@ namespace NiceHashMiner.Devices.Algorithms
                             }
                         }
             },
-
+            
+             //тоже, extranonce2 не поддерживает
+             /*
             { MinerBaseType.ZEnemy,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.KAWPOW, "KAWPOW")
                             {
                             },
-                            /*
-                            new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.X16R, "X16R")
-                            {
-                            },
-                            */
                         }
+        
             },
-
+    */
             { MinerBaseType.miniZ,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")
@@ -306,9 +304,7 @@ namespace NiceHashMiner.Devices.Algorithms
             },
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
-                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31"),
-                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),//майнер не поддерживает extranonce найса
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),

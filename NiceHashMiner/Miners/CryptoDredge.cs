@@ -48,8 +48,6 @@ namespace NiceHashMiner.Miners
 
             var algo = "";
             var apiBind = "";
-            string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
-            //string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             string port = "3341"; //neoscrypt
             algo = "--algo " + MiningSetup.MinerName;
             apiBind = " --api-bind 127.0.0.1:" + ApiPort;
@@ -62,7 +60,7 @@ namespace NiceHashMiner.Miners
                 port = "3385";
             }
 
-            LastCommandLine = algo +
+            LastCommandLine = algo + " " +
                 GetServer("kawpow", username, port) +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
@@ -78,24 +76,24 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.GeneralConfig.ProxySSL)
             {
                 port = "4" + port;
-                ssl = "stratum+tcp://";
+                ssl = "stratum+ssl://";
             }
             else
             {
                 port = "1" + port;
-                ssl = "stratum+ssl://";
+                ssl = "stratum+tcp://";
             }
-            foreach (string serverUrl in Globals.MiningLocation)
+            foreach (string serverUrl in Globals.MiningLocation.Reverse())
             {
                 if (serverUrl.Contains("auto"))
                 {
-                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":9200 -u " + username + " -p " +
+                    ret = ret + "-o " + "stratum+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " + username + " -p " +
                         psw + " ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
-                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":" + port + " -u " + username + " -p " +
+                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + username + " -p " +
                         psw + " ";
                 }
             }

@@ -9,7 +9,6 @@ namespace NiceHashMiner.Utils
             @"/claymore_neoscrypt/NeoScryptMiner.exe",
             @"/CryptoDredge/CryptoDredge.exe",
             @"/Nanominer/nanominer.exe",
-            @"/Z-ENEMY/z-enemy.exe",
             @"/phoenix/PhoenixMiner.exe",
             @"/SRBMiner/SRBMiner-MULTI.exe",
             @"/t-rex/t-rex.exe",
@@ -19,7 +18,7 @@ namespace NiceHashMiner.Utils
             @"/NBMiner/NBMiner.exe",
             @"/miniZ/miniZ.exe",
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
-            @"/Fork_Fix_48.txt"
+            @"/Fork_Fix_48.2.txt"
         };
     }
 }

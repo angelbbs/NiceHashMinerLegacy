@@ -57,10 +57,11 @@ namespace NiceHashMiner.Miners
             string ssl = "";
             string psw = "x";
             if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
-            if (ConfigManager.GeneralConfig.ProxySSL)
+            if (ConfigManager.GeneralConfig.ProxySSL)//teamredminer почему-то падает при подключении к серверам с сертификатом
+                //letsencrypt. С локальным самоподписанным всё хорошо
             {
-                port = "4" + port;
-                ssl = "stratum+ssl://";
+                port = "1" + port;
+                ssl = "stratum+tcp://";
             }
             else
             {

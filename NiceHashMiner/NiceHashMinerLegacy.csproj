@@ -338,6 +338,7 @@
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="International.cs" />
+    <Compile Include="Utils\Bech32.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\Firewall.cs" />
     <Compile Include="Utils\Links.cs" />

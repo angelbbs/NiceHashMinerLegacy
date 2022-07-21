@@ -99,13 +99,13 @@ namespace NiceHashMiner.Miners
                 if (serverUrl.Contains("auto"))
                 {
                     ret = ret + " -o" + n.ToString() + " " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://","") + ":9200 -u" + 
-                        n.ToString() + " " + username + " -p" + n.ToString() + psw + " ";
+                        n.ToString() + " " + username + " -p" + n.ToString() + " " + psw + " ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
                     ret = ret + " -o" + n.ToString() + " " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u" + 
-                        n.ToString() + " " + username + " -p" + n.ToString() + psw + " ";
+                        n.ToString() + " " + username + " -p" + n.ToString() + " " + psw + " ";
                 }
                 n++;
                 if (n >= 3) break;
