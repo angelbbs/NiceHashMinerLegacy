@@ -64,7 +64,7 @@ namespace NiceHashMiner.Miners
         public bool IsMiningEnabled => _miningDevices.Count > 0;
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
-        private int _ticks = 999;
+        public int[] _ticks;
         public List<int> ActiveDeviceIndexes
         {
             get
@@ -104,6 +104,11 @@ namespace NiceHashMiner.Miners
             IMainFormRatesComunication mainFormRatesComunication,
             string worker, string btcAdress)
         {
+            _ticks = new int[devices.Count];
+            for (int d = 0; d < _ticks.Length; d++)
+            {
+                _ticks[d] = 999;
+            }
             // init fixed
             _mainFormRatesComunication = mainFormRatesComunication;
            // _miningLocation = miningLocation;
@@ -545,20 +550,20 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     //if (AlgorithmSwitchingManager.newProfit)
-                    if (_ticks >= AlgorithmSwitchingManager._ticksForStable)
+                    if (_ticks[0] >= AlgorithmSwitchingManager._ticksForStable)
                     {
                         //AlgorithmSwitchingManager.newProfit = false;
-                        _ticks = 0;
+                        _ticks[0] = 0;
                         needSwitch = true;
                         Helpers.ConsolePrint(Tag,
                             $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                     }
                     else
                     {
-                        _ticks++;
+                        _ticks[0]++;
                         needSwitch = false;
                         Helpers.ConsolePrint(Tag, $"Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
-                            _ticks.ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
+                            _ticks[0].ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
                         // RESTORE OLD PROFITS STATE
                         foreach (var device in _miningDevices)
                         {
@@ -593,25 +598,26 @@ namespace NiceHashMiner.Miners
                     else
                     {
                         //if (AlgorithmSwitchingManager.newProfit)
-                        if (_ticks >= AlgorithmSwitchingManager._ticksForStable)
+                        if (_ticks[device.Device.Index] >= AlgorithmSwitchingManager._ticksForStable)
                         {
-                            _ticks = 0;
+                            _ticks[device.Device.Index] = 0;
                             //AlgorithmSwitchingManager.newProfit = false;
                             needSwitch = true;
                             Helpers.ConsolePrint(Tag,
-                                $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                                $"{device.Device.GetFullName()}: Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                         }
                         else
                         {
-                            _ticks++;
+                            _ticks[device.Device.Index]++;
                             needSwitch = false;
-                            Helpers.ConsolePrint(Tag, $"Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
-                                _ticks.ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
+                            Helpers.ConsolePrint(Tag, $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
+                                _ticks[device.Device.Index].ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
                             // RESTORE OLD PROFITS STATE
-                            foreach (var device2 in _miningDevices)
-                            {
-                                device2.RestoreOldProfitsState();
-                            }
+                            //foreach (var device2 in _miningDevices)
+                            //{
+                            //  device2.RestoreOldProfitsState();
+                            //}
+                            device.RestoreOldProfitsState();
                         }
                     }
                 }

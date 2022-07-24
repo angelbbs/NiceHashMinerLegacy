@@ -355,6 +355,7 @@
     "FormSettings_Tab_General_Group_Misc": "Разное:",
     "FormSettings_Tab_Advanced_Group_Miners": "Майнеры:",
     "FormSettings_Tab_Advanced_Group_Connection": "Подключение",
+    "FormSettings_Tab_Advanced_checkBoxEnableProxy": "Использовать подключение к прокси",
     "FormSettings_Tab_Advanced_checkBoxProxySSL": "SSL подключение к прокси",
     "FormSettings_Tab_Advanced_ProxyAsFailover": "Использовать прокси как отказоустойчивый (failover) сервер",
     "FormSettings_Tab_Advanced_StaleProxy": "Обнаружение stale шар на стороне прокси",

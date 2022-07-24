@@ -95,6 +95,7 @@ namespace NiceHashMiner.Configs.Data
         public bool ABDefaultMiningStopped = false;
         public bool ABDefaultProgramClosing = false;
         public bool ABMinimize = false;
+        public bool EnableProxy = true;
         public bool ProxySSL = true;
         public bool ProxyAsFailover = true;
         public bool StaleProxy = false;
@@ -272,6 +273,9 @@ namespace NiceHashMiner.Configs.Data
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
             DownloadInit = false;
+            EnableProxy = true;
+            ProxyAsFailover = true;
+            ProxySSL = true;
             IdleWhenNoInternetAccess = false;
             Use3rdPartyMiners = Use3rdPartyMiners.YES;
             DownloadInit3rdParty = false;

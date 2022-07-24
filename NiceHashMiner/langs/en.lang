@@ -358,6 +358,7 @@
         "FormSettings_Tab_General_Group_Misc": "Misc:",
         "FormSettings_Tab_Advanced_Group_Miners": "Miners:",
 	"FormSettings_Tab_Advanced_Group_Connection": "Connection",
+	"FormSettings_Tab_Advanced_checkBoxEnableProxy": "Using proxy connection",
 	"FormSettings_Tab_Advanced_checkBoxProxySSL": "SSL connection to proxy",
 	"FormSettings_Tab_Advanced_ProxyAsFailover": "Using proxy as failover server",
 	"FormSettings_Tab_Advanced_StaleProxy": "Detect stale shares on proxy",

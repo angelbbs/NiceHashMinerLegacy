@@ -694,6 +694,16 @@ namespace NiceHashMiner
         }
         private void CheckProxyList(object sender, EventArgs e)
         {
+            if (!ConfigManager.GeneralConfig.EnableProxy)
+            {
+                Helpers.ConsolePrint("CheckProxyList", "Using proxy disabled");
+                Array.Resize(ref Globals.MiningLocation, 1);
+                Globals.MiningLocation[0] = "auto.nicehash.com";
+                comboBoxLocation.Items.Clear();
+                comboBoxLocation.Items.Add("Nicehash Auto");
+                comboBoxLocation.SelectedIndex = 0;
+                return;
+            }
             int _location = ConfigManager.GeneralConfig.ServiceLocation;
             string j = "";
             string _j = "";

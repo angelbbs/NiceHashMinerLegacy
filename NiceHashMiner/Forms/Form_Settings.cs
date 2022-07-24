@@ -498,6 +498,7 @@ namespace NiceHashMiner.Forms
 
             groupBoxConnection.Text = International.GetText("FormSettings_Tab_Advanced_Group_Connection");
             checkBoxProxySSL.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxProxySSL");
+            checkBoxEnableProxy.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxEnableProxy");
             checkBoxProxyAsFailover.Text = International.GetText("FormSettings_Tab_Advanced_ProxyAsFailover");
             checkBoxStale.Text = International.GetText("FormSettings_Tab_Advanced_StaleProxy");
 
@@ -1020,6 +1021,7 @@ namespace NiceHashMiner.Forms
                 checkBox_ABDefault_program_closing.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABMinimize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxProxySSL.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxEnableProxy.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxProxyAsFailover.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxStale.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
@@ -1142,8 +1144,22 @@ namespace NiceHashMiner.Forms
                 checkBox_ABDefault_program_closing.Checked = ConfigManager.GeneralConfig.ABDefaultProgramClosing;
                 checkBox_ABMinimize.Checked = ConfigManager.GeneralConfig.ABMinimize;
                 checkBoxProxySSL.Checked = ConfigManager.GeneralConfig.ProxySSL;
+                checkBoxEnableProxy.Checked = ConfigManager.GeneralConfig.EnableProxy;
                 checkBoxProxyAsFailover.Checked = ConfigManager.GeneralConfig.ProxyAsFailover;
                 checkBoxStale.Checked = ConfigManager.GeneralConfig.StaleProxy;
+
+                if (checkBoxEnableProxy.Checked)
+                {
+                    checkBoxProxySSL.Enabled = true;
+                    checkBoxProxyAsFailover.Enabled = true;
+                    checkBoxStale.Enabled = true;
+                }
+                else
+                {
+                    checkBoxProxySSL.Enabled = false;
+                    checkBoxProxyAsFailover.Enabled = false;
+                    checkBoxStale.Enabled = false;
+                }
             }
 
             // Textboxes
@@ -1326,6 +1342,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
             ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;
             ConfigManager.GeneralConfig.ABMinimize = checkBox_ABMinimize.Checked;
+            ConfigManager.GeneralConfig.EnableProxy = checkBoxEnableProxy.Checked;
             ConfigManager.GeneralConfig.ProxySSL = checkBoxProxySSL.Checked;
             ConfigManager.GeneralConfig.ProxyAsFailover = checkBoxProxyAsFailover.Checked;
             ConfigManager.GeneralConfig.StaleProxy = checkBoxStale.Checked;
@@ -2451,6 +2468,22 @@ namespace NiceHashMiner.Forms
                 MessageBox.Show(International.GetText("Form_Settings_Only_external_wallet"),
                                     International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 checkbox_wallet_balance.Checked = false;
+            }
+        }
+
+        private void checkBoxEnableProxy_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.EnableProxy = checkBoxEnableProxy.Checked;
+            if (checkBoxEnableProxy.Checked)
+            {
+                checkBoxProxySSL.Enabled = true;
+                checkBoxProxyAsFailover.Enabled = true;
+                checkBoxStale.Enabled = true;
+            } else
+            {
+                checkBoxProxySSL.Enabled = false;
+                checkBoxProxyAsFailover.Enabled = false;
+                checkBoxStale.Enabled = false;
             }
         }
     }
