@@ -748,10 +748,7 @@ namespace NiceHashMiner.Forms
                InBenchmark = false;
                Form_Main.InBenchmark = false;
                BenchmarkStarted = false;
-               Ethlargement.Stop();
                Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
-
-                //CopyBenchmarks();
 
                 BenchmarkStoppedGuiSettings();
                RunCMDAfterBenchmark();

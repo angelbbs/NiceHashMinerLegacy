@@ -48,23 +48,27 @@ namespace NiceHashMiner.Miners
 
             var algo = "";
             var apiBind = "";
-            string port = "3341"; //neoscrypt
-            algo = "--algo " + MiningSetup.MinerName;
             apiBind = " --api-bind 127.0.0.1:" + ApiPort;
             IsApiReadException = false;
 
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NeoScrypt))
             {
-                algo = "--algo kawpow ";
-                port = "3385";
-            }
-
-            LastCommandLine = algo + " " +
-                GetServer("kawpow", username, port) +
+                LastCommandLine = "--algo neoscrypt " +
+                GetServer("neoscrypt", username, "3341") +
                 apiBind +
                 " -d " + GetDevicesCommandString() + " " +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+            }
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                LastCommandLine = "--algo kawpow " +
+                GetServer("kawpow", username, "3385") +
+                apiBind +
+                " -d " + GetDevicesCommandString() + " " +
+                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA) + " ";
+            }
+
             ProcessHandle = _Start();
         }
         private string GetServer(string algo, string username, string port)

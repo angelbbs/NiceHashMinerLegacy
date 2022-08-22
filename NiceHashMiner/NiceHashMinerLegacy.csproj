@@ -221,7 +221,6 @@
     <Compile Include="Miners\Ethash\IHash.cs" />
     <Compile Include="Miners\Ethash\IHashInfo.cs" />
     <Compile Include="Miners\Ethash\Keccak.cs" />
-    <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\lolMiner.cs" />
     <Compile Include="Miners\miniZ.cs" />
@@ -239,6 +238,8 @@
     </Compile>
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\Xmrig.cs" />
+    <Compile Include="Stats\JsonClass.cs" />
+    <Compile Include="Stats\NiceHashServer.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />

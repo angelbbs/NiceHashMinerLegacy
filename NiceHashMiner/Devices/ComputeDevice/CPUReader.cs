@@ -1,3 +1,4 @@
+using NiceHashMiner;
 using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace ComputeDeviceCPU
                 {
                     if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
                     {
+                        //Helpers.ConsolePrint("CPU", sensor.Name + " " + sensor.Value.ToString());
                         //  if (sensor.Name == "Package")
                         {
                             _ret = (int)sensor.Value.Value;
@@ -124,8 +126,8 @@ namespace ComputeDeviceCPU
                 {
                     if (sensor.SensorType == SensorType.Load && sensor.Value.HasValue)
                     {
-                        // Helpers.ConsolePrint("CPU", sensor.Name + " " + sensor.Value.ToString());
-                        // if (sensor.Name == "Package")
+                        //Helpers.ConsolePrint("CPU", sensor.Name + " " + sensor.Value.ToString());
+                        if (sensor.Name == "Package" || sensor.Name == "CPU Total")
                         {
                             _ret = (int)sensor.Value.Value;
                         }

@@ -34,12 +34,12 @@ namespace NiceHashMiner.Miners
             {
                 if (serverUrl.Contains("auto"))
                 {
-                    ret = ret + " -pool " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":9200 ";
+                    ret = ret + " -pool " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
                     break;
                 }
                 else
                 {
-                    ret = ret + " -pool " + ssl + Links.CheckDNS(algo + "." + serverUrl) + ":" + port + " ";
+                    ret = ret + " -pool " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                     break;
                 }
             }

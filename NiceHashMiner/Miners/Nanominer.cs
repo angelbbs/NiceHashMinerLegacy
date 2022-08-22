@@ -83,7 +83,7 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     ret = ret + ssl;
-                    ret = ret + "pool" + n.ToString() + " = " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                    ret = ret + "pool" + n.ToString() + " = " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                 }
                 ret = ret + "\n";
             }
@@ -169,7 +169,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + GetServer("daggerhashimoto", username, "3390");
+                   + GetServer("autolykos", username, "3390");
                 if (ConfigManager.GeneralConfig.StaleProxy)
                 {
                     cfgFile = cfgFile + "rigPassword = stale\n";
@@ -213,6 +213,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
+                   + String.Format("protocol = stratum\n")
                    + String.Format("zilEpoch = 0\n")
                    //    + String.Format("protocol = JSON-RPC\n")
                    + GetServer("daggerhashimoto", username, "3353");

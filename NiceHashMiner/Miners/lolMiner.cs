@@ -66,13 +66,15 @@ namespace NiceHashMiner.Miners
                 if (serverUrl.Contains("auto"))
                 {
                     ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --user " + 
-                        username.Split('.')[0] + " --pass " + psw + " --tls off ";
+                        //username.Split('.')[0] + " --pass " + psw + " --tls off ";
+                        username + " --pass " + psw + " --tls off ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
                     ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --user " + 
-                        username.Split('.')[0] + " --pass " + psw + " " + ssl;
+                        //username.Split('.')[0] + " --pass " + psw + " " + ssl;
+                        username + " --pass " + psw + " " + ssl;
                 }
             }
             return ret;

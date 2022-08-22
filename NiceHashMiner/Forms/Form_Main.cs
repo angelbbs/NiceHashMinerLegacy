@@ -28,6 +28,7 @@ namespace NiceHashMiner
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data;
+    using System.Drawing.Imaging;
     using System.IO;
     using System.IO.MemoryMappedFiles;
     using System.Net;
@@ -40,6 +41,8 @@ namespace NiceHashMiner
     
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
+        public static string platform = "Nicehash";
+        public static string version = "";
         public Timer _minerStatsCheck;
         private Timer _startupTimer;
         private Timer _remoteTimer;
@@ -162,7 +165,7 @@ namespace NiceHashMiner
         public static string[] _proxyUrls = { };
         public static int wssConnectionsErrors = 0;
         public static int apiConnectionsErrors = 0;
-        //public static int _ServiceLocation = 0;
+        public static byte[] desktop = new byte[0];
 
         public struct RigProfitList
         {
@@ -387,14 +390,16 @@ namespace NiceHashMiner
             int.TryParse(version, out var i);
             if (d / i == 1)
             {
+                Form_Main.version = i.ToString();
                 Text += i.ToString();
             }
             else
             {
+                Form_Main.version = d.ToString();
                 Text += d.ToString();
             }
 
-            Text += " for NiceHash";
+            Text += " for " + platform;
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
             var buildDate = new DateTime(2000, 1, 1).AddDays(internalversion.Build).AddSeconds(internalversion.Revision * 2);
@@ -1155,6 +1160,10 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfig.DownloadInit = true;
                 ConfigManager.GeneralConfigFileCommit();
             }
+
+            _loadingScreen.SetValueAndMsg(90, "Start internal http server");
+            Thread.Sleep(10);
+            new Task(() => NiceHashServer.Listener()).Start();
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
@@ -3192,6 +3201,29 @@ public static void CloseChilds(Process parentId)
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            try
+            {
+                if (!Directory.Exists("HTML")) Directory.CreateDirectory("HTML");
+
+                Rectangle bounds = Screen.GetBounds(Point.Empty);
+                using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+                {
+                    using (Graphics g = Graphics.FromImage(bitmap))
+                    {
+                        g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                    }
+                    //bitmap.Save("HTML\\test.jpg", ImageFormat.Jpeg);
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        bitmap.Save(ms, ImageFormat.Png);
+                        desktop = ms.ToArray();
+                    }
+                }
+            } catch (Exception ex)
+            {
+                //Helpers.ConsolePrint("DeviceStatusTimer_Tick", ex.ToString());
+            }
+
             var rateCurrencyString = ExchangeRateApi
                              .ConvertToActiveCurrency((profitabilityFromNH) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                              .ToString("F2", CultureInfo.InvariantCulture)

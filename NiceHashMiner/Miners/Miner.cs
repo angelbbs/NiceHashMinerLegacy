@@ -468,7 +468,6 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             IsRunning = false;
             IsRunningNew = IsRunning;
-            Ethlargement.Stop();
             //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
             RunCMDBeforeOrAfterMining(false);
             NiceHashStats._deviceUpdateTimer.Stop();
@@ -813,8 +812,6 @@ namespace NiceHashMiner
             benchmarkHandle.OutputDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.ErrorDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.Exited += BenchmarkHandle_Exited;
-
-            Ethlargement.CheckAndStart(MiningSetup);
 
             if (!benchmarkHandle.Start()) return null;
 
@@ -1628,11 +1625,7 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
-            Ethlargement.CheckAndStart(MiningSetup);
-
             var P = new NiceHashProcess();
-
-            Ethlargement.CheckAndStart(MiningSetup);
 
             if (WorkingDirectory.Length > 1)
             {

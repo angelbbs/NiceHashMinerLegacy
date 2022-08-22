@@ -31,6 +31,8 @@ namespace NiceHashMiner.Configs.Data
         public bool ShowUptime = true;
         public bool DisableTooltips = false;
         public bool ProgramMonitoring = true;
+        public bool EnableRigRemoteView = false;
+        public int RigRemoteViewPort = 7007;
         public string BitcoinAddressNew = "";
         public string WorkerName = "worker1";
         public TimeUnitType TimeUnit = TimeUnitType.Day;
@@ -97,7 +99,7 @@ namespace NiceHashMiner.Configs.Data
         public bool ABMinimize = false;
         public bool EnableProxy = true;
         public bool ProxySSL = true;
-        public bool ProxyAsFailover = true;
+        public bool ProxyAsFailover = false;
         public bool StaleProxy = false;
 
         public bool MinimizeMiningWindows = false;
@@ -232,7 +234,6 @@ namespace NiceHashMiner.Configs.Data
         public int ProgramRestartIndex = 0;
         public bool PeriodicalReconnect = true;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();
-        public bool UseEthlargement = false;
 
         // methods
         public void SetDefaults()
@@ -274,7 +275,7 @@ namespace NiceHashMiner.Configs.Data
             MinimumProfit = 0;
             DownloadInit = false;
             EnableProxy = true;
-            ProxyAsFailover = true;
+            ProxyAsFailover = false;
             ProxySSL = true;
             IdleWhenNoInternetAccess = false;
             Use3rdPartyMiners = Use3rdPartyMiners.YES;
@@ -292,7 +293,6 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
             UseSmaCache = true;
-            UseEthlargement = false;
             ShowFanAsPercent = false;
             MOPA1 = true;
             MOPA2 = false;

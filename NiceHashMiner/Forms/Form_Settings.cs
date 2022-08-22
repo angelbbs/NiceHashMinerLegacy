@@ -11,6 +11,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Security;
 using System.Threading.Tasks;
@@ -462,6 +464,7 @@ namespace NiceHashMiner.Forms
             checkBox_sorting_list_of_algorithms.Text = International.GetText("Form_Settings_checkBox_sorting_list_of_algorithms");
             checkBox_DisableTooltips.Text = International.GetText("Form_Settings_checkBox_DisableToltips");
             checkBox_program_monitoring.Text = International.GetText("Form_Settings_checkBox_program_monitoring");
+            checkBoxEnableRigRemoteView.Text = International.GetText("Form_Settings_checkBox_EnableRigRemoteView");
             checkBox_ShowFanAsPercent.Text = International.GetText("Form_Settings_checkBox_ShowFanAsPercent");
             checkbox_Group_same_devices.Text = International.GetText("Form_Settings_checkbox_Group_same_devices");
             checkBox_withPower.Text = International.GetText("Form_Settings_checkbox_withPower");
@@ -532,16 +535,8 @@ namespace NiceHashMiner.Forms
             comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram3"));
             comboBoxRestartProgram.Items.Add(International.GetText("Form_Settings_comboBoxRestartProgram4"));
 
-            checkBox_RunEthlargement.Enabled = Form_Main.ShouldRunEthlargement;
-            checkBox_RunEthlargement.Visible = Form_Main.ShouldRunEthlargement;
-
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
-            //label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
-            //label_SwitchMaxSeconds.Text =
-            //  International.GetText("Form_Settings_General_SwitchMaxSeconds") + ":";
-            //label_SwitchMinSeconds.Text = International.GetText("Form_Settings_General_SwitchMinSeconds") + ":";
-            //label_APIBindPortStart.Text = International.GetText("Form_Settings_APIBindPortStart") + ":";
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
             label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
@@ -679,6 +674,13 @@ namespace NiceHashMiner.Forms
                 linkLabel3.ActiveLinkColor = Form_Main._textColor;
                 linkLabel3.MouseLeave += (s, e) => linkLabel3.LinkBehavior = LinkBehavior.NeverUnderline;
                 linkLabel3.MouseEnter += (s, e) => linkLabel3.LinkBehavior = LinkBehavior.AlwaysUnderline;
+
+                linkLabelRigRemoteView.BackColor = Form_Main._backColor;
+                linkLabelRigRemoteView.ForeColor = Form_Main._textColor;
+                linkLabelRigRemoteView.LinkColor = Form_Main._textColor;
+                linkLabelRigRemoteView.ActiveLinkColor = Form_Main._textColor;
+                linkLabelRigRemoteView.MouseLeave += (s, e) => linkLabelRigRemoteView.LinkBehavior = LinkBehavior.NeverUnderline;
+                linkLabelRigRemoteView.MouseEnter += (s, e) => linkLabelRigRemoteView.LinkBehavior = LinkBehavior.AlwaysUnderline;
 
                 foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
                 {
@@ -828,6 +830,9 @@ namespace NiceHashMiner.Forms
                 checkBox_program_monitoring.BackColor = Form_Main._backColor;
                 checkBox_program_monitoring.ForeColor = Form_Main._textColor;
 
+                checkBoxEnableRigRemoteView.BackColor = Form_Main._backColor;
+                checkBoxEnableRigRemoteView.ForeColor = Form_Main._textColor;
+
                 checkBox_ShowFanAsPercent.BackColor = Form_Main._backColor;
                 checkBox_ShowFanAsPercent.ForeColor = Form_Main._textColor;
 
@@ -842,9 +847,6 @@ namespace NiceHashMiner.Forms
 
                 checkBox_Disable_extra_launch_parameter_checking.BackColor = Form_Main._backColor;
                 checkBox_Disable_extra_launch_parameter_checking.ForeColor = Form_Main._textColor;
-
-                checkBox_RunEthlargement.BackColor = Form_Main._backColor;
-                checkBox_RunEthlargement.ForeColor = Form_Main._textColor;
 
                 checkBox_ABEnableOverclock.BackColor = Form_Main._backColor;
                 checkBox_ABEnableOverclock.ForeColor = Form_Main._textColor;
@@ -1007,6 +1009,7 @@ namespace NiceHashMiner.Forms
                 checkBox_sorting_list_of_algorithms.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableTooltips.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_program_monitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxEnableRigRemoteView.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1015,7 +1018,6 @@ namespace NiceHashMiner.Forms
                 checkBoxAutoupdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_BackupBeforeUpdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABEnableOverclock.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_mining_stopped.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_program_closing.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1130,6 +1132,7 @@ namespace NiceHashMiner.Forms
                 Checkbox_Save_windows_size_and_position.Checked = ConfigManager.GeneralConfig.Save_windows_size_and_position;
                 checkBox_DisableTooltips.Checked = ConfigManager.GeneralConfig.DisableTooltips;
                 checkBox_program_monitoring.Checked = ConfigManager.GeneralConfig.ProgramMonitoring;
+                checkBoxEnableRigRemoteView.Checked = ConfigManager.GeneralConfig.EnableRigRemoteView;
                 checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
@@ -1138,7 +1141,6 @@ namespace NiceHashMiner.Forms
                 checkBoxAutoupdate.Checked = ConfigManager.GeneralConfig.ProgramAutoUpdate;
                 checkBox_BackupBeforeUpdate.Checked = ConfigManager.GeneralConfig.BackupBeforeUpdate;
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
-                checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
                 checkBox_ABEnableOverclock.Checked = ConfigManager.GeneralConfig.ABEnableOverclock;
                 checkBox_ABDefault_mining_stopped.Checked = ConfigManager.GeneralConfig.ABDefaultMiningStopped;
                 checkBox_ABDefault_program_closing.Checked = ConfigManager.GeneralConfig.ABDefaultProgramClosing;
@@ -1330,6 +1332,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
             ConfigManager.GeneralConfig.DisableTooltips = checkBox_DisableTooltips.Checked;
             ConfigManager.GeneralConfig.ProgramMonitoring = checkBox_program_monitoring.Checked;
+            ConfigManager.GeneralConfig.EnableRigRemoteView = checkBoxEnableRigRemoteView.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
             ConfigManager.GeneralConfig.with_power = checkBox_withPower.Checked;
@@ -1337,7 +1340,6 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ProgramAutoUpdate = checkBoxAutoupdate.Checked;
             ConfigManager.GeneralConfig.BackupBeforeUpdate = checkBox_BackupBeforeUpdate.Checked;
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
-            ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
             ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
             ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
             ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;
@@ -2484,6 +2486,53 @@ namespace NiceHashMiner.Forms
                 checkBoxProxySSL.Enabled = false;
                 checkBoxProxyAsFailover.Enabled = false;
                 checkBoxStale.Enabled = false;
+            }
+        }
+        public static string GetLocalIPAddress()
+        {
+            IPHostEntry host;
+            string localIP = "";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+
+            foreach (IPAddress ip in host.AddressList)
+            {
+                localIP = ip.ToString();
+                string[] temp = localIP.Split('.');
+                if (ip.AddressFamily == AddressFamily.InterNetwork && (temp[0] == "192") || temp[0] == "10" || temp[0] == "172")
+                {
+                    break;
+                }
+                else
+                {
+                    localIP = null;
+                }
+            }
+            return localIP;
+        }
+        private void checkBoxEnableRigRemoteView_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxEnableRigRemoteView.Checked)
+            {
+                string ip = GetLocalIPAddress();
+                if (!string.IsNullOrEmpty(ip))
+                {
+                    linkLabelRigRemoteView.Text = "http://" + ip + ":" + ConfigManager.GeneralConfig.RigRemoteViewPort.ToString();
+                }
+                linkLabelRigRemoteView.Visible = true;
+            } else
+            {
+                linkLabelRigRemoteView.Visible = false;
+            }
+        }
+
+        private void linkLabelRigRemoteView_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string ip = GetLocalIPAddress();
+            string link = "";
+            if (!string.IsNullOrEmpty(ip))
+            {
+                link = "http://" + ip + ":" + ConfigManager.GeneralConfig.RigRemoteViewPort.ToString();
+                System.Diagnostics.Process.Start(link);
             }
         }
     }
