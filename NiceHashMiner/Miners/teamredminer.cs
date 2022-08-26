@@ -160,7 +160,6 @@ namespace NiceHashMiner.Miners
         {
             var CommandLine = "";
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
-            string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             var sc = "";
             _benchmarkTimeWait = time;
             if (GetWinVer(Environment.OSVersion.Version) < 8)

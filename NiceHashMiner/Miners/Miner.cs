@@ -744,11 +744,8 @@ namespace NiceHashMiner
             _benchmarkLogPath =
                 $"{Logger.LogPath}Log_{MiningSetup.MiningPairs[0].Device.Uuid}_{MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID}";
 
-
             var commandLine = BenchmarkCreateCommandLine(BenchmarkAlgorithm, time);
-
             var benchmarkThread = new Thread(BenchmarkThreadRoutine, time);
-
             benchmarkThread.Start(commandLine);
         }
 
@@ -1510,92 +1507,15 @@ namespace NiceHashMiner
         { }
 
         protected abstract bool BenchmarkParseLine(string outdata);
-        /*
-        public static int PingServers(string serv = "")
-        {
-            string[,] myServers = Form_Main.myServers;
-            Ping ping = new Ping();
-            int serverId = 0;
-            int bestServerId = 0;
-            long bestReplyTime = 10000;
-
-            string server = "";
-            Helpers.ConsolePrint("PingServers", " start ping");
-            for (int i = 0; i < 4; i++)
-            {
-                try
-                {
-                    if (serv.Contains("daggerhashimoto"))
-                    {
-                        server = "stratum." + Globals.MiningLocation[i];
-                    }
-                    else
-                    {
-                        server = "stratum." + Globals.MiningLocation[i];
-                    }
-                    var pingReply = ping.Send(server, 1000);
-                    if (pingReply.Status != IPStatus.TimedOut)
-                    {
-                        var pingReplyTime = pingReply.RoundtripTime;
-                        myServers[i, 1] = pingReplyTime.ToString();
-                        Helpers.ConsolePrint("PingServers", server + " id:" + serverId.ToString() + " ping: " + pingReplyTime.ToString());
-                        if (pingReplyTime < bestReplyTime)
-                        {
-                            bestServerId = serverId;
-                            bestReplyTime = pingReplyTime;
-                        }
-                    }
-                    else
-                    {
-                        Helpers.ConsolePrint("PingServers", server + " out of range");
-                        bestServerId = -1;
-                    }
-                }
-                catch (PingException)
-                {
-                    Helpers.ConsolePrint("PingServers", server + " offline " + i.ToString());
-                    myServers[i, 1] = "1";
-                    bestServerId = 1;
-                }
-                serverId++;
-            }
-
-            string[,] tmpServers = {  };
-            int pingReplyTimeTmp;
-            long bestReplyTimeTmp = 10000;
-            int iTmp = 0;
-            for (int k = 0; k < 4; k++)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    pingReplyTimeTmp = Convert.ToInt32(myServers[i, 1]);
-                    if (pingReplyTimeTmp < bestReplyTimeTmp && pingReplyTimeTmp != -1)
-                    {
-                        iTmp = i;
-                        bestReplyTimeTmp = pingReplyTimeTmp;
-                    }
-
-                }
-                tmpServers[k, 0] = myServers[iTmp, 0];
-                tmpServers[k, 1] = myServers[iTmp, 1];
-                myServers[iTmp, 1] = "-1";
-                bestReplyTimeTmp = 10000;
-            }
-
-            Form_Main.myServers = tmpServers;
-            for (int i = 0; i < 4; i++)
-            {
-                server = "stratum." + Form_Main.myServers[i, 0];
-                //Helpers.ConsolePrint("SortedServers", server + " ping: " + Form_Main.myServers[i, 1]);
-            }
-            //Helpers.ConsolePrint("PingServers", "BestServer: " + Globals.MiningLocation[bestServerId]);
-            return bestServerId;
-        }
-        */
+        
         protected string GetServiceUrl(AlgorithmType algo)
         {
-            return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-            //return Globals.GetLocationUrl(algo, Form_Main.myServers[0, 0],
+            int _location = ConfigManager.GeneralConfig.ServiceLocation;
+            if (ConfigManager.GeneralConfig.ServiceLocation >= Globals.MiningLocation.Length)
+            {
+                _location = ConfigManager.GeneralConfig.ServiceLocation - 1;
+            }
+            return Globals.GetLocationUrl(algo, Globals.MiningLocation[_location],
                 ConectionType);
         }
         protected bool IsActiveProcess(int pid)

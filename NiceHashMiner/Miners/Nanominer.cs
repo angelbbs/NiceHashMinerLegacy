@@ -373,11 +373,6 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType).Replace("stratum+tcp://", "");
-            var username = Globals.GetBitcoinUser();
-            var rigName = ConfigManager.GeneralConfig.WorkerName.Trim();
-
             try
             {
                 if (File.Exists("miners\\Nanominer\\bench_nh_" + platform + GetDevicesCommandString().Trim(' ') + ".ini"))

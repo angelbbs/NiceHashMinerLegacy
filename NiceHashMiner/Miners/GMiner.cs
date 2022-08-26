@@ -133,7 +133,7 @@ namespace NiceHashMiner.Miners
                 port = "3385";
             }
 
-            var ret = GetDevicesCommandString() +
+            var ret = GetDevicesCommandString() + nicehashstratum + 
                       " --algo " + algo + pers +
                       GetServer(algoName, username, port) +
                       " --api " + ApiPort + " -l " + GetLogFileName();

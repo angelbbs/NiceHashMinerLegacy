@@ -1162,6 +1162,19 @@ namespace NiceHashMiner.Forms
                     checkBoxProxyAsFailover.Enabled = false;
                     checkBoxStale.Enabled = false;
                 }
+                if (checkBoxEnableRigRemoteView.Checked)
+                {
+                    string ip = GetLocalIPAddress();
+                    if (!string.IsNullOrEmpty(ip))
+                    {
+                        linkLabelRigRemoteView.Text = "http://" + ip + ":" + ConfigManager.GeneralConfig.RigRemoteViewPort.ToString();
+                    }
+                    linkLabelRigRemoteView.Visible = true;
+                }
+                else
+                {
+                    linkLabelRigRemoteView.Visible = false;
+                }
             }
 
             // Textboxes

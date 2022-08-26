@@ -149,7 +149,12 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             string configfilename = GetLogFileName();
-            string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            int _location = ConfigManager.GeneralConfig.ServiceLocation;
+            if (ConfigManager.GeneralConfig.ServiceLocation >= Globals.MiningLocation.Length)
+            {
+                _location = ConfigManager.GeneralConfig.ServiceLocation - 1;
+            }
+            string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[_location], this.ConectionType);
             string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
             var username = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());

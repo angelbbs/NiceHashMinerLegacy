@@ -65,9 +65,6 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             BenchmarkTimeWait = time;
-
-            // network workaround
-            string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], NhmConectionType.STRATUM_TCP);
             // demo for benchmark
             string username = Globals.GetBitcoinUser();
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)

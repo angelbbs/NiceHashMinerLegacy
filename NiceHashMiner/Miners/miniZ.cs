@@ -149,12 +149,39 @@ namespace NiceHashMiner.Miners
 
         protected override string GetDevicesCommandString()
         {
-            var deviceStringCommand = MiningSetup.MiningPairs.Aggregate(" --cuda-devices ",
-                (current, nvidiaPair) => current + (nvidiaPair.Device.IDByBus + " "));
-
-            deviceStringCommand +=
-                " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
-
+            string platform = "";
+            string deviceStringCommand = "";
+            try
+            {
+                foreach (var pair in MiningSetup.MiningPairs)
+                {
+                    if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                    {
+                        platform = " --nvidia ";
+                    }
+                    else
+                    {
+                        platform = " --pci-order --amd ";
+                    }
+                }
+                if (platform.Contains("nvidia"))
+                {
+                    deviceStringCommand = platform + MiningSetup.MiningPairs.Aggregate(" --cuda-devices ",
+                    (current, nvidiaPair) => current + (nvidiaPair.Device.IDByBus + " "));
+                    deviceStringCommand +=
+                        " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
+                }
+                else
+                {
+                    deviceStringCommand = platform + MiningSetup.MiningPairs.Aggregate(" -cd ",
+                    (current, amdPair) => current + (amdPair.Device.IDByBus + " "));
+                    deviceStringCommand +=
+                        " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("*********", ex.ToString());
+            }
             return deviceStringCommand;
         }
 
@@ -170,22 +197,26 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
+            var ret = "";
+            int _location = ConfigManager.GeneralConfig.ServiceLocation;
+            if (ConfigManager.GeneralConfig.ServiceLocation >= Globals.MiningLocation.Length)
+            {
+                _location = ConfigManager.GeneralConfig.ServiceLocation - 1;
+            }
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType).Replace("stratum+tcp://", "");
+                Globals.MiningLocation[_location], ConectionType).Replace("stratum+tcp://", "");
             var algo = "";
             var algoName = "";
             var btcAddress = Globals.GetBitcoinUser();
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
             string username = GetUsername(btcAddress, worker);
             var stratumPort = "3369";
-            var ret = "";
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 algo = "144,5";
                 algoName = "zhash";
-
-                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
+                ret = GetDevicesCommandString()
                       + " --nocolour --pers auto --par=" + algo
                       + " --url GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.miniz@" + Links.CheckDNS("stratum+tcp://btg.2miners.com:4040").Replace("stratum+tcp://", "") + " -p x"
                       + " --url " + username + "@" + Globals.MiningLocation[0].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3369")
@@ -197,7 +228,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "125,4";
                 algoName = "zelhash";
-                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
+                ret = GetDevicesCommandString()
                       + " --nocolour --smart-pers --par=" + algo
                       + " --url t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.miniz@" + Links.CheckDNS("stratum+tcp://flux.2miners.com:9090").Replace("stratum+tcp://", "") + " -p x"
                       + " --url " + username + "@" + Globals.MiningLocation[0].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3391")
@@ -210,9 +241,9 @@ namespace NiceHashMiner.Miners
                 algo = "beam3";
                 algoName = "beamv3";
                 stratumPort = "3387";
-                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
+                ret = GetDevicesCommandString()
                       + " --nocolour --pers auto --par=" + algo
-                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@" + Links.CheckDNS("stratum+tcp://beam.2miners.com:5252").Replace("stratum+tcp://", "") 
+                      + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@" + Links.CheckDNS("stratum+tcp://beam.2miners.com:5252").Replace("stratum+tcp://", "")
                       + " --url " + username + "@" + Globals.MiningLocation[0].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3387")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
@@ -221,7 +252,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "ethash";
                 algoName = "daggerhashimoto";
-                ret = GetDevicesCommandString() + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)
+                ret = GetDevicesCommandString()
                       + " --nocolour --par=" + algo
                       + " --url 0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "")
                       + " --url " + username + "@" + Globals.MiningLocation[1].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3353")
@@ -400,6 +431,7 @@ namespace NiceHashMiner.Miners
             }
 
             JsonApiResponse resp = null;
+            string respStr = "";
             try
             {
                 var bytesToSend = Encoding.ASCII.GetBytes(variables.miniZ_toSend);
@@ -408,7 +440,7 @@ namespace NiceHashMiner.Miners
                 await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                 var bytesToRead = new byte[client.ReceiveBufferSize];
                 var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 respStr = respStr.Substring(respStr.IndexOf('{'), respStr.Length - respStr.IndexOf('{'));
                 //Helpers.ConsolePrint("miniZ API:", respStr);
                 if (!respStr.Contains("}]}") && prevSpeed != 0)
@@ -424,6 +456,7 @@ namespace NiceHashMiner.Miners
             catch (Exception ex)
             {
                 Helpers.ConsolePrint(MinerTag(), ex.Message);
+                //Helpers.ConsolePrint(MinerTag(), respStr);
                 //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = prevSpeed;

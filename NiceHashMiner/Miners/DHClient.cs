@@ -143,7 +143,13 @@ namespace NiceHashMiner.Miners
             {
                 Random r = new Random();
                 int r1 = r.Next(0, 3);
-                var serv = Links.CheckDNS("daggerhashimoto." + Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], true).Replace("stratum+tcp://", "");
+                int _location = ConfigManager.GeneralConfig.ServiceLocation;
+                if (ConfigManager.GeneralConfig.ServiceLocation >= Globals.MiningLocation.Length)
+                {
+                    _location = ConfigManager.GeneralConfig.ServiceLocation - 1;
+                }
+                var serv = Links.CheckDNS("daggerhashimoto." + 
+                    Globals.MiningLocation[_location], true).Replace("stratum+tcp://", "");
                 IPAddress addr = IPAddress.Parse(serv);
                 //IPAddress addr = IPAddress.Parse(DNStoIP("daggerhashimoto." + Form_Main.myServers[0, 0]));
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
@@ -158,7 +164,7 @@ namespace NiceHashMiner.Miners
                 }
 
                 int port = 3353;
-                if (Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation].ToLower().Contains("auto"))
+                if (Globals.MiningLocation[_location].ToLower().Contains("auto"))
                 {
                     port = 9200;
                 } else

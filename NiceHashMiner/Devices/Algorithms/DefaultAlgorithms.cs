@@ -31,6 +31,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
         private static Dictionary<MinerBaseType, List<Algorithm>> Gpu => new Dictionary<MinerBaseType, List<Algorithm>>
         {
+            
             {
                 MinerBaseType.Nanominer,
                 new List<Algorithm>()
@@ -41,7 +42,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             },
-
+            
             {
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()
@@ -216,6 +217,22 @@ namespace NiceHashMiner.Devices.Algorithms
                         ExtraLaunchParameters = "memTweak=1"
                     }
                 }
+            },
+            { MinerBaseType.miniZ,
+                        new List<Algorithm>() {
+                            //new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")
+                            //{
+                            //},
+                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
+                            {
+                            },
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZelHash, "ZelHash")
+                            {
+                            },
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            {
+                            },
+                        }
             },
         }.ConcatDictList(All, Gpu);
 

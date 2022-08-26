@@ -191,13 +191,12 @@ namespace NiceHashMiner.Miners
 
             return deviceStringCommand;
         }
-        private string GetStartBenchmarkCommand(string url, string btcAddress, string worker)
+        private string GetStartBenchmarkCommand(string btcAddress, string worker)
         {
             IsInBenchmark = true;
             var LastCommandLine = GetStartCommand(btcAddress, worker);
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string username = GetUsername(btcAddress, worker);
-            url = url.Replace("stratum+tcp://", "");
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
@@ -411,11 +410,8 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            var server = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-                ConectionType);
             _benchmarkTimeWait = time;
-            return GetStartBenchmarkCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            return GetStartBenchmarkCommand(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
         }
 
         protected override void BenchmarkThreadRoutine(object commandLine)
