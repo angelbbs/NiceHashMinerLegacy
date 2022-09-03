@@ -141,10 +141,13 @@ namespace NiceHashMiner.Configs
 
         public static void GeneralConfigFileCommit()
         {
-            GeneralConfig.LastDevicesSettup.Clear();
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            if (ComputeDeviceManager.Available.Devices.Count > 0)
             {
-                GeneralConfig.LastDevicesSettup.Add(cDev.GetComputeDeviceConfig());
+                GeneralConfig.LastDevicesSettup.Clear();
+                foreach (var cDev in ComputeDeviceManager.Available.Devices)
+                {
+                    GeneralConfig.LastDevicesSettup.Add(cDev.GetComputeDeviceConfig());
+                }
             }
             GeneralConfigFile.Commit(GeneralConfig);
         }

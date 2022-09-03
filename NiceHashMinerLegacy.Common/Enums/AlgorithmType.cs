@@ -89,7 +89,9 @@
         CuckaRooz29_UNUSED = 55,
         Octopus = 56,
         Autolykos = 57,
-        ZelHash = 58
+        ZelHash = 58,
+        Kadena_UNUSED = 59,
+        ETCHash = 60
         #endregion // NiceHashAPI
     }
 }

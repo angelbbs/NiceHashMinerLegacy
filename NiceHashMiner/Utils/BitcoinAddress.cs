@@ -8,6 +8,7 @@ namespace NiceHashMiner
     {//bc1qt53k3d3fur2n5st829yfadqwl3fyxdlfh8jeu8
         public static bool ValidateBitcoinAddress(string address)
         {
+            if (string.IsNullOrEmpty(address)) return false;
             if (address.Trim().Substring(0, 1) == "1" || address.Trim().Substring(0, 1) == "2" || address.Trim().Substring(0, 1) == "3")
             {
                 try

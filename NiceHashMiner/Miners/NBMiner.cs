@@ -47,6 +47,8 @@ namespace NiceHashMiner.Miners
                         return "cuckoo_ae";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
+                    case AlgorithmType.ETCHash:
+                        return "etchash";
                     case AlgorithmType.Autolykos:
                         return "ergo";
                     case AlgorithmType.KAWPOW:
@@ -89,7 +91,7 @@ namespace NiceHashMiner.Miners
                 port = "1" + port;
                 ssl = "stratum+tcp://";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
             {
                 ssl = ssl.Replace("stratum", "nicehash");
             }
@@ -115,7 +117,7 @@ namespace NiceHashMiner.Miners
         private string GetStartCommand(string url, string btcAddress, string worker)
         {
             var cmd = "";
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
             {
                 url = url.Replace("stratum", "nicehash");
             }
@@ -147,7 +149,14 @@ namespace NiceHashMiner.Miners
                     GetServer("daggerhashimoto", username, "3353") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
             }
-            
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+            {
+                cmd = $"-a {AlgoName}" +
+                    GetServer("etchash", username, "3393") +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN --enable-dag-cache " + platform;
+            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
                 cmd = $"-a {AlgoName}" +
@@ -229,7 +238,13 @@ namespace NiceHashMiner.Miners
                 cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x9290e50e7ccf1bdc90da8248a2bbacc5063aeee1.NBMiner" +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+            {
+                cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505.NBMiner" +
+                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
+            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
             {
                 cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040") + " -u ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.nbminer" +
@@ -282,7 +297,7 @@ namespace NiceHashMiner.Miners
             int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
             {
                 _benchmarkTimeWait += 30;
             }
@@ -337,7 +352,7 @@ namespace NiceHashMiner.Miners
                     // wait a second due api request
                     Thread.Sleep(1000);
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) || MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
                     {
                         delay_before_calc_hashrate = 30;
                         MinerStartDelay = 30;

@@ -74,16 +74,10 @@ namespace NiceHashMiner.Miners
             var algo = "";
             var algo2 = "";
             var apiBind = "";
-            //algo = MiningSetup.MinerName.ToLower();
+
             apiBind = " --api-bind-http 0.0.0.0:" + ApiPort;
             IsApiReadException = false;
 
-            //  url = url.Replace(".nicehash.", "-new.nicehash.");
-            //algo = algo.Replace("daggerhashimoto", "ethash");
-            //algo = algo.Replace("autolykos", "autolykos2");
-            //url = url.Replace("stratum+tcp", "stratum2+tcp");
-            //string locations = url.Split('.')[1];
-            //stratum+tcp://octopus.LOCATION.nicehash.com:3389
             foreach (var mPair in MiningSetup.MiningPairs)
             {
                 if (mPair.Algorithm is DualAlgorithm algoDual)
@@ -115,6 +109,12 @@ namespace NiceHashMiner.Miners
                 port = "3389";
                 algo = "octopus";
                 algo2 = "octopus";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+            {
+                port = "3393";
+                algo = "etchash";
+                algo2 = "etchash";
             }
 
             LastCommandLine = "-a " + algo +
@@ -191,6 +191,18 @@ namespace NiceHashMiner.Miners
                 {
                     commandLine = "--algo ethash" +
                      " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trex" +
+                     " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
+                                  ExtraLaunchParametersParser.ParseForMiningSetup(
+                                      MiningSetup,
+                                      DeviceType.NVIDIA) + " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString();
+                    _benchmarkTimeWait = time;
+                }
+                if(MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+                {
+                    commandLine = "--algo etchash" +
+                     " -o " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trex" +
                      " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,

@@ -50,6 +50,10 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                     {
     //                    ExtraLaunchParameters = "-rvram -1 "
+                    },
+                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.ETCHash, "ETCHash")
+                    {
+    //                    ExtraLaunchParameters = "-rvram -1 "
                     }
                 }
             },
@@ -192,6 +196,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--mt 1 "
                             },
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.ETCHash, "ETCHash")
+                            {
+                                ExtraLaunchParameters = "--mt 1 "
+                            },
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW")
                             {
                                 ExtraLaunchParameters = "--mt 1 "
@@ -270,6 +278,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--mt 1"
                             },
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.ETCHash, "ETCHash")
+                            {
+                                ExtraLaunchParameters = "--mt 1"
+                            },
                             /*
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Autolykos, "DaggerAutolykos")
                             {
@@ -325,6 +337,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
+                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.ETCHash, "ETCHash"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.BeamV3, "BeamV3"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos"),
                         }

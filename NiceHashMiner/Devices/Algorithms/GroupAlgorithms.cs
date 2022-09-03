@@ -61,6 +61,14 @@ namespace NiceHashMiner.Devices.Algorithms
                 Form_Main.DaggerHashimoto4GB = false;
             }
 
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.ETCHash
+                    });
+            }
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>

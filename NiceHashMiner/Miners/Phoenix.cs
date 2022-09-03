@@ -107,14 +107,22 @@ namespace NiceHashMiner.Miners
             {
                 ssl = "";
             }
+            string coin = "";
+            string algo = "daggerhashimoto";
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+            {
+                coin = "-coin etc ";
+                algo = "etchash";
+                port = "3393";
+            }
 
             DeviceType devtype = DeviceType.NVIDIA;
             if (platform == " -amd ")
             {
                 devtype = DeviceType.AMD;
             }
-            return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10 " +
-                GetServer("daggerhashimoto", username, port) + " -wal " + username + " -pass x" +
+            return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10 " + coin +
+                GetServer(algo, username, port) + " -wal " + username + " -pass x" +
                    " -cdmport  127.0.0.1:" + ApiPort + " -proto 4 " +
                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
         }
@@ -201,6 +209,10 @@ namespace NiceHashMiner.Miners
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto4GB)
             {
                 ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565"), "angelbbs.Phoenix4", "") + " -proto 1";
+            }
+            if (algorithm.NiceHashID == AlgorithmType.ETCHash)
+            {
+                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://etc.2miners.com:1010"), "0x266b27bd794d1A65ab76842ED85B067B415CD505.Phoenix", "");
             }
             return ret;
         }

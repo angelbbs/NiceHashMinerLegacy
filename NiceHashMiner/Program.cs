@@ -190,6 +190,7 @@ namespace NiceHashMiner
             {
                 if (ConfigManager.GeneralConfig.LogToFile)
                 {
+                    if (!Directory.Exists("logs")) Directory.CreateDirectory("logs");
                     Logger.ConfigureWithFile();
                 }
 

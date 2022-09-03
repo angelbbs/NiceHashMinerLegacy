@@ -1161,9 +1161,12 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            _loadingScreen.SetValueAndMsg(90, "Start internal http server");
-            Thread.Sleep(10);
-            new Task(() => NiceHashServer.Listener()).Start();
+            //if (ConfigManager.GeneralConfig.EnableRigRemoteView)
+            {
+                _loadingScreen.SetValueAndMsg(90, "Start internal http server");
+                Thread.Sleep(10);
+                new Task(() => NiceHashServer.Listener()).Start();
+            }
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {

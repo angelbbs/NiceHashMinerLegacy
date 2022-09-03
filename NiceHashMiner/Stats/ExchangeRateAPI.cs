@@ -32,7 +32,7 @@ namespace NiceHashMiner.Stats
                     if (value > 0)
                     {
                         Interlocked.Exchange(ref _usdBtcRate, value);
-                        Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
+                        Helpers.ConsolePrint("NICEHASH", $"BTC rate updated: {value} USD");
                     }
                     if (value > 0 && value < 100)
                     {
