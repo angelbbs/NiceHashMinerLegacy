@@ -123,6 +123,13 @@ namespace NiceHashMiner.Miners
                 nicehashstratum = " --proto stratum";
                 port = "3353";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
+            {
+                algo = "etchash";
+                algoName = "etchash";
+                nicehashstratum = " --proto stratum";
+                port = "3393";
+            }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
@@ -340,6 +347,13 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --algo ethash" +
                 " --server " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                GetDevicesCommandString();
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
+            {
+                ret = " --color 0 --pec --algo etchash" +
+                " --server " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x" +
                 " --server " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
                 GetDevicesCommandString();
             }

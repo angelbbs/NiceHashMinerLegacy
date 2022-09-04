@@ -123,6 +123,9 @@ namespace NiceHashMiner.Devices.Algorithms
                         },
                         new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                         {
+                        },
+                        new Algorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, "ETCHash")
+                        {
                         }
                     }
             },
@@ -347,6 +350,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, "ETCHash"),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash, "ZHash")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
