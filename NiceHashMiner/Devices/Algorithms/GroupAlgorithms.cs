@@ -19,6 +19,7 @@ namespace NiceHashMiner.Devices.Algorithms
             if (algoSettings == null) return null;
 
             // check if it is Etherum capable
+            
             if (device.IsEtherumCapale == false)
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -26,7 +27,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     AlgorithmType.DaggerHashimoto
                 });
             }
-
+            
             Helpers.ConsolePrint("GPU MEMORY: ", device.GpuRam.ToString() + " bytes - " + device.Name);
 
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
@@ -188,7 +189,9 @@ namespace NiceHashMiner.Devices.Algorithms
 
             
             minerfilename = "gminer\\miner.2.92.exe";
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename))
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) &&
+                !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename) &&
+                File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + "gminer\\miner.exe"))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {

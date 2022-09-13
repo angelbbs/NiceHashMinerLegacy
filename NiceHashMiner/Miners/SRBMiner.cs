@@ -152,8 +152,14 @@ namespace NiceHashMiner.Miners
 
                     return $" --algorithm randomx --api-enable --api-port {ApiPort} {extras} " +
                         GetServer(algo, username, port);
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
+                {
+                    var algo = "verushash";
+                    var port = "3394";
 
-
+                    return $" --algorithm verushash --api-enable --api-port {ApiPort} {extras} " +
+                        GetServer(algo, username, port);
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
@@ -198,6 +204,14 @@ namespace NiceHashMiner.Miners
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string username = GetUsername(btcAddress, worker);
 
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
+            {
+                ApiPort = 4040;
+
+                return $" --algorithm verushash"
+                + $" --pool {Links.CheckDNS("stratum+tcp://verushash.mine.zergpool.com")}:3300 --wallet 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 --password c=BTC" +
+                $" --nicehash true --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
+            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
             {
                 ApiPort = 4040;
@@ -365,7 +379,8 @@ namespace NiceHashMiner.Miners
                             totalsMain = resp.algorithms[0].hashrate.gpu.total;
                         }
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
                     {
                         totalsMain = resp.algorithms[0].hashrate.cpu.total;
                         foreach (var mPair in sortedMinerPairs)

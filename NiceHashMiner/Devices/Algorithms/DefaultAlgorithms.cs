@@ -78,6 +78,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.RandomX, "RandomX")
                             {
                               //  ExtraLaunchParameters = " "
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.VerusHash, "VerusHash")
+                            {
+                              //  ExtraLaunchParameters = " "
                             }
                         }
             }
@@ -160,10 +164,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             //{
                             //    ExtraLaunchParameters = ""
                             //},
-                            //new Algorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
-                            //{
-                            //    ExtraLaunchParameters = "--enablezilcache=1"
-                            //},
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            {
+                                ExtraLaunchParameters = "--enablezilcache=1"
+                            },
                             //new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
                             //{
                             //    ExtraLaunchParameters = ""

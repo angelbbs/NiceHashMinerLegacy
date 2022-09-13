@@ -91,7 +91,8 @@
         Autolykos = 57,
         ZelHash = 58,
         Kadena_UNUSED = 59,
-        ETCHash = 60
+        ETCHash = 60,
+        VerusHash = 61
         #endregion // NiceHashAPI
     }
 }

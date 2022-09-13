@@ -141,7 +141,7 @@ namespace NiceHashMiner.Miners
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
-                LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + " --worker " + worker + "$" + ConfigManager.GeneralConfig.MachineGuid +
+                LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + 
                 //LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + " " +
                 GetServer("daggerhashimoto", username, "3353") +
                     apiBind + " " + param +

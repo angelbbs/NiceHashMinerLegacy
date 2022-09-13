@@ -75,7 +75,7 @@ namespace ComputeDeviceCPU
             int _ret = -1;
             _mainboard.Open();
             var coreAndTemperature = new Dictionary<string, float>();
-
+            if (_mainboard.Hardware == null) return -1;
             foreach (var hardware in _mainboard.Hardware)
             {
                 //hardware.Update(); //use hardware.Name to get CPU model
