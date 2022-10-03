@@ -777,11 +777,15 @@ namespace NiceHashMiner
             }
             if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("aeternity")))
             {
-                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.92.exe");
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.54.exe");
             }
             if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("beam")))
             {
-                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.92.exe");
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.54.exe");
+            }
+            if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("grincuckatoo32")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.54.exe");
             }
 
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
@@ -1576,11 +1580,15 @@ namespace NiceHashMiner
             }
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("aeternity")))
             {
-                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.92.exe");
+                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.54.exe");
             }
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("beam")))
             {
-                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.92.exe");
+                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.54.exe");
+            }
+            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("grin32")))
+            {
+                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.54.exe");
             }
 
             /*

@@ -215,7 +215,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = "--mt 1 "
-                            },
+                            }
 
                  }
             },
@@ -289,6 +289,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--mt 1"
                             },
+                            new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16RV2")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
                             /*
                             new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Autolykos, "DaggerAutolykos")
                             {
@@ -341,6 +345,7 @@ namespace NiceHashMiner.Devices.Algorithms
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
                             //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),//майнер не поддерживает extranonce найса
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
@@ -366,10 +371,19 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
+                    {
+                                //ExtraLaunchParameters = "--pec 1 "
+                    },
 
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "KAWPOW")
                     {
                     },
+                    /*
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
+                    {
+                    },
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZelHash, "ZelHash")
                     {
                     }

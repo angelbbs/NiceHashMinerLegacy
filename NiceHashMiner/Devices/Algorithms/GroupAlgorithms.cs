@@ -140,19 +140,19 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        //AlgorithmType.GrinCuckarood29
+                        AlgorithmType.GrinCuckatoo32
                     });
             }
 
-                        if (algoSettings.ContainsKey(MinerBaseType.GMiner))
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZelHash && 
+                    if (algo.NiceHashID == AlgorithmType.ZelHash &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
                     {
                         algo.Enabled = false;
@@ -188,7 +188,7 @@ namespace NiceHashMiner.Devices.Algorithms
             string minerfilename = "";
 
             
-            minerfilename = "gminer\\miner.2.92.exe";
+            minerfilename = "gminer\\miner.2.54.exe";
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) &&
                 !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename) &&
                 File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + "gminer\\miner.exe"))

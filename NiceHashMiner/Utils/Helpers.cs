@@ -250,6 +250,7 @@ namespace NiceHashMiner
                     unit = "Sol/s ";
                     break;
                 case AlgorithmType.CuckooCycle:
+                case AlgorithmType.GrinCuckatoo32:
                     unit = "G/s ";
                     break;
                 default:

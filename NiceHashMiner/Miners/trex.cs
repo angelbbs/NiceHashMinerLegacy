@@ -17,7 +17,7 @@ namespace NiceHashMiner.Miners
 {
     public class trex : Miner
     {
-        private int _benchmarkTimeWait = 180;
+        private int _benchmarkTimeWait = 60;
         private const int TotalDelim = 2;
         private double _power = 0.0d;
         double _powerUsage = 0;
@@ -54,7 +54,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + " -o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
+                    ret = ret + " -o " + ssl + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
                         username + " -p " + psw + " ";
                 }
             }
@@ -116,6 +116,12 @@ namespace NiceHashMiner.Miners
                 algo = "etchash";
                 algo2 = "etchash";
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+            {
+                port = "3379";
+                algo = "x16rv2";
+                algo2 = "x16rv2";
+            }
 
             LastCommandLine = "-a " + algo +
             GetServer(algo2, username, port) +
@@ -157,7 +163,7 @@ namespace NiceHashMiner.Miners
             string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[_location], this.ConectionType);
             string alg = url.Substring(url.IndexOf("://") + 3, url.IndexOf(".") - url.IndexOf("://") - 3);
             string port = url.Substring(url.IndexOf(".com:") + 5, url.Length - url.IndexOf(".com:") - 5);
-            var username = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            var username = GetUsername(Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
             var commandLine = "";
             url = url.Replace("stratum+tcp", "stratum2+tcp");
 
@@ -190,7 +196,7 @@ namespace NiceHashMiner.Miners
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
                     commandLine = "--algo ethash" +
-                     " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trex" +
+                     " -o " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trex" +
                      " -o " + Links.CheckDNS(url) + " -u " + username + " -p x " +
                                   ExtraLaunchParametersParser.ParseForMiningSetup(
                                       MiningSetup,
@@ -234,15 +240,24 @@ namespace NiceHashMiner.Miners
                     commandLine += GetDevicesCommandString();
                     _benchmarkTimeWait = time;
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                {
+                    commandLine = "--algo x16rv2 --benchmark" +
+                    " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
+                                  " -d ";
+                    commandLine += GetDevicesCommandString() + " -l " + GetLogFileName();
+                    _benchmarkTimeWait = time;
+                }
 
             }
+            /*
             else
             {
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     commandLine = "-a ethash --lhr-algo autolykos2" +
-                    " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
+                    " -o " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
                     " --url2 " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " --user2 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.trexdual --pass2 x" +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                     " -d " + GetDevicesCommandString() +
@@ -253,7 +268,7 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KAWPOW))
                 {
                     commandLine = "-a ethash --lhr-algo kawpow" +
-                    " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
+                    " -o " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
                     " --url2 " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060") + " --user2 RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.trexdual --pass2 x" +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                     " -d " + GetDevicesCommandString() +
@@ -264,7 +279,7 @@ namespace NiceHashMiner.Miners
                     MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Octopus))
                 {
                     commandLine = "-a ethash --lhr-algo octopus" +
-                    " -o " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
+                    " -o " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505" + " -p x -w trexdual" +
                     " --url2 " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3094") + " --user2 cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.trexdual --pass2 x" +
                     " --gpu-report-interval 1 --no-watchdog --api-bind-http 127.0.0.1:" + ApiPort +
                     " -d " + GetDevicesCommandString() +
@@ -272,7 +287,7 @@ namespace NiceHashMiner.Miners
                     _benchmarkTimeWait = time;
                 }
             }
-
+            */
             return commandLine;
         }
 
@@ -310,7 +325,29 @@ namespace NiceHashMiner.Miners
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 BenchmarkThreadRoutineStartSettup(); //need for benchmark log
 
-                
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                {
+                    Thread.Sleep(1000);
+                    try
+                    {
+                        if (File.Exists("miners\\t-rex\\" + GetLogFileName()))
+                            File.Delete("miners\\t-rex\\" + GetLogFileName());
+
+                        Thread.Sleep(1000);
+                        do
+                        {
+                            Thread.Sleep(1000);
+                        } while (!File.Exists("miners\\t-rex\\" + GetLogFileName()));
+                        Thread.Sleep(1000);
+                        fs = new FileStream("miners\\t-rex\\" + GetLogFileName(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint(MinerTag(), ex.Message);
+                    }
+                }
+
+
                 while (IsActiveProcess(BenchmarkHandle.Id))
                 {
                     if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
@@ -374,6 +411,11 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;
                     }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2)) 
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 10;
+                    }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                     {
                         delay_before_calc_hashrate = 5;
@@ -382,7 +424,32 @@ namespace NiceHashMiner.Miners
 
                     var ad = GetSummaryAsync();
 
-                    if (ad.Result != null && ad.Result.Speed > 0)
+                    double logSpeed = 0.0d;
+                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2)) && fs.Length > offset)
+                    {
+                        int count = (int)(fs.Length - offset);
+                        byte[] array = new byte[count];
+                        fs.Read(array, 0, count);
+                        offset = (int)fs.Length;
+                        string textFromFile = System.Text.Encoding.Default.GetString(array).Trim();
+                        //Helpers.ConsolePrint(MinerTag(), textFromFile);
+
+                        string strStart = "Total:";
+                        if (textFromFile.Contains(strStart) && textFromFile.Contains("H/s"))
+                        {
+                            var speedStart = textFromFile.IndexOf(strStart);
+                            var speed = textFromFile.Substring(speedStart + strStart.Length, 6);
+                            speed = speed.Replace(strStart, "");
+                            speed = speed.Replace(" ", "");
+                            double.TryParse(speed, out logSpeed);
+                            if (textFromFile.Contains("MH/s")) logSpeed = logSpeed * 1000 * 1000;
+                            if (textFromFile.Contains("GH/s")) logSpeed = logSpeed * 1000 * 1000 * 1000;
+                            Helpers.ConsolePrint("logSpeed", logSpeed.ToString());
+                        }
+                    }
+
+                    if ((ad.Result != null && ad.Result.Speed > 0) || 
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
                     {
                         _powerUsage += _power;
                         repeats++;
@@ -390,14 +457,28 @@ namespace NiceHashMiner.Miners
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " SecondSpeed: " + ad.Result.SecondarySpeed + " power: " + _power.ToString());
-                            summspeed += ad.Result.Speed;
-                            secsummspeed += ad.Result.SecondarySpeed;
-
+                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + logSpeed.ToString() + " power: " + _power.ToString());
+                                summspeed += logSpeed;
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " SecondSpeed: " + ad.Result.SecondarySpeed + " power: " + _power.ToString());
+                                summspeed += ad.Result.Speed;
+                                secsummspeed += ad.Result.SecondarySpeed;
+                            }
                         }
                         else
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.X16RV2))
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + logSpeed.ToString());
+                            }
+                            else
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                            }
                         }
 
                         if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
@@ -409,6 +490,16 @@ namespace NiceHashMiner.Miners
                             BenchmarkHandle.Kill();
                             BenchmarkHandle.Dispose();
                             EndBenchmarkProcces();
+                            /*
+                            var imageName = MinerExeName.Replace(".exe", "");
+                            // maybe will have to KILL process
+                            KillMinerBase(imageName);
+                            int k = ProcessTag().IndexOf("pid(");
+                            int i = ProcessTag().IndexOf(")|bin");
+                            var cpid = ProcessTag().Substring(k + 4, i - k - 4).Trim();
+                            int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
+                            KillProcessAndChildren(pid);
+                            */
                             break;
                         }
                     }

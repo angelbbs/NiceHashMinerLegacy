@@ -168,14 +168,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    if (ConfigManager.GeneralConfig.ProxySSL)
-                    {
-                        port = 43353;
-                    }
-                    else
-                    {
-                        port = 13353;
-                    }
+                    port = 13353;
                 }
                 var iep = new IPEndPoint(addrl, port);
 

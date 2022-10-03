@@ -399,7 +399,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
                    + String.Format("wallet = 0x266b27bd794d1A65ab76842ED85B067B415CD505") + "\n"
                    + String.Format("rigName = Nanominer") + "\n"
-                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "")) + "\n";
+                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "")) + "\n";
 
                 try
                 {

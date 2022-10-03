@@ -254,7 +254,7 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
                 ret = GetDevicesCommandString()
                       + " --nocolour --par=" + algo
-                      + " --url 0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("stratum+tcp://eth.2miners.com:2020").Replace("stratum+tcp://", "")
+                      + " --url 0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "")
                       + " --url " + username + "@" + Globals.MiningLocation[1].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3353")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
@@ -459,7 +459,7 @@ namespace NiceHashMiner.Miners
                 //Helpers.ConsolePrint(MinerTag(), respStr);
                 //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                ad.Speed = prevSpeed;
+                ad.Speed = 0;
             }
             try
             {

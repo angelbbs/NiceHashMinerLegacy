@@ -138,7 +138,8 @@ namespace NiceHashMiner.Forms
             lastRigProfit.currentProfitAPI = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].currentProfitAPI;
             lastRigProfit.DateTime = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].DateTime;
             lastRigProfit.totalPowerRate = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].totalPowerRate;
-            lastRigProfit.totalRate = totalRateLocal / LocalProfitsCount;//усредняем за прошедшую минуту
+            //lastRigProfit.totalRate = totalRateLocal / LocalProfitsCount;//усредняем за прошедшую минуту
+            lastRigProfit.totalRate = MinersManager.GetTotalRate();
             lastRigProfit.unpaidAmount = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].unpaidAmount;
 
 

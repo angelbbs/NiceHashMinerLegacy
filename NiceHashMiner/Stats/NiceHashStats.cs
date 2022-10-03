@@ -1734,6 +1734,12 @@ namespace NiceHashMiner.Stats
                 }
                 response.Close();
             }
+            catch (WebException wex)
+            {
+                Helpers.ConsolePrint("GetNiceHashApiData", wex.Message);
+                Form_Main.apiConnectionsErrors++;
+                return null;
+            }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("GetNiceHashApiData", ex.ToString());
@@ -1886,6 +1892,13 @@ namespace NiceHashMiner.Stats
                     reader.Close();
                 }
                 response.Close();
+            }
+            catch (WebException wex)
+            {
+                Helpers.ConsolePrint("GetNiceHashApiDataWithSecret", wex.Message);
+                Form_Main.errorAPIkeystring = wex.Message;
+                Form_Main.apiConnectionsErrors++;
+                return null;
             }
             catch (Exception ex)
             {

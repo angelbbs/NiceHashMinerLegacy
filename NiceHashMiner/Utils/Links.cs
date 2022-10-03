@@ -53,6 +53,11 @@ namespace NiceHashMiner
             string path = "";
             string port = "";
 
+            if (domain.Contains("stratum-proxy"))
+            {
+                domain = domain.Replace("grincuckatoo32", "stratum").Replace("verushash", "stratum").Replace("x16rv2", "stratum");
+            }
+
             if (!domain.Contains("://"))
             {
                 domain = "stratum+tcp://" + domain;

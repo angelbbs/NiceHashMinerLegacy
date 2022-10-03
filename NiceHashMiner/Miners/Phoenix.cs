@@ -200,7 +200,7 @@ namespace NiceHashMiner.Miners
             string ret = "";
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
             {
-                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://eth.2miners.com:2020"), "0x266b27bd794d1A65ab76842ED85B067B415CD505.Phoenix", "");
+                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020"), "0x266b27bd794d1A65ab76842ED85B067B415CD505.Phoenix", "");
             }
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto3GB)
             {

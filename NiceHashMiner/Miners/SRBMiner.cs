@@ -223,7 +223,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 return $" --disable-cpu --algorithm ethash" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://eth.2miners.com")}:2020" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ethw.2miners.com")}:2020" +
                     $" --wallet 0x266b27bd794d1A65ab76842ED85B067B415CD505.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
