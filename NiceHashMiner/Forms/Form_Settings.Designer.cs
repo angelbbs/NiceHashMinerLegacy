@@ -62,6 +62,8 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.linkLabelRigRemoteView = new System.Windows.Forms.LinkLabel();
+            this.checkBoxEnableRigRemoteView = new System.Windows.Forms.CheckBox();
             this.checkBox_QM_mode = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableTooltips = new System.Windows.Forms.CheckBox();
             this.labelRestartProgram = new System.Windows.Forms.Label();
@@ -186,8 +188,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBoxEnableRigRemoteView = new System.Windows.Forms.CheckBox();
-            this.linkLabelRigRemoteView = new System.Windows.Forms.LinkLabel();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -728,6 +728,30 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
+            // 
+            // linkLabelRigRemoteView
+            // 
+            this.linkLabelRigRemoteView.AutoSize = true;
+            this.linkLabelRigRemoteView.Location = new System.Drawing.Point(31, 452);
+            this.linkLabelRigRemoteView.Name = "linkLabelRigRemoteView";
+            this.linkLabelRigRemoteView.Size = new System.Drawing.Size(55, 13);
+            this.linkLabelRigRemoteView.TabIndex = 409;
+            this.linkLabelRigRemoteView.TabStop = true;
+            this.linkLabelRigRemoteView.Text = "linkLabel1";
+            this.linkLabelRigRemoteView.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelRigRemoteView_LinkClicked);
+            // 
+            // checkBoxEnableRigRemoteView
+            // 
+            this.checkBoxEnableRigRemoteView.AutoSize = true;
+            this.checkBoxEnableRigRemoteView.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxEnableRigRemoteView.Location = new System.Drawing.Point(7, 429);
+            this.checkBoxEnableRigRemoteView.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxEnableRigRemoteView.Name = "checkBoxEnableRigRemoteView";
+            this.checkBoxEnableRigRemoteView.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxEnableRigRemoteView.TabIndex = 408;
+            this.checkBoxEnableRigRemoteView.Text = "Enable rig remote view";
+            this.checkBoxEnableRigRemoteView.UseVisualStyleBackColor = true;
+            this.checkBoxEnableRigRemoteView.CheckedChanged += new System.EventHandler(this.checkBoxEnableRigRemoteView_CheckedChanged);
             // 
             // checkBox_QM_mode
             // 
@@ -2279,30 +2303,6 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.Text = "View licence";
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
-            // 
-            // checkBoxEnableRigRemoteView
-            // 
-            this.checkBoxEnableRigRemoteView.AutoSize = true;
-            this.checkBoxEnableRigRemoteView.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxEnableRigRemoteView.Location = new System.Drawing.Point(7, 429);
-            this.checkBoxEnableRigRemoteView.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBoxEnableRigRemoteView.Name = "checkBoxEnableRigRemoteView";
-            this.checkBoxEnableRigRemoteView.Size = new System.Drawing.Size(133, 17);
-            this.checkBoxEnableRigRemoteView.TabIndex = 408;
-            this.checkBoxEnableRigRemoteView.Text = "Enable rig remote view";
-            this.checkBoxEnableRigRemoteView.UseVisualStyleBackColor = true;
-            this.checkBoxEnableRigRemoteView.CheckedChanged += new System.EventHandler(this.checkBoxEnableRigRemoteView_CheckedChanged);
-            // 
-            // linkLabelRigRemoteView
-            // 
-            this.linkLabelRigRemoteView.AutoSize = true;
-            this.linkLabelRigRemoteView.Location = new System.Drawing.Point(31, 452);
-            this.linkLabelRigRemoteView.Name = "linkLabelRigRemoteView";
-            this.linkLabelRigRemoteView.Size = new System.Drawing.Size(55, 13);
-            this.linkLabelRigRemoteView.TabIndex = 409;
-            this.linkLabelRigRemoteView.TabStop = true;
-            this.linkLabelRigRemoteView.Text = "linkLabel1";
-            this.linkLabelRigRemoteView.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelRigRemoteView_LinkClicked);
             // 
             // algorithmsListView1
             // 

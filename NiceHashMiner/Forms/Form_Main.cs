@@ -1561,11 +1561,6 @@ namespace NiceHashMiner
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             _loadingScreen.SetValueAndMsg(1, "Starting...");
 
-
-            if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex > 4)
-            {
-                ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = 2;
-            }
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)

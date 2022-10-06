@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+п»їusing Microsoft.Win32;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
@@ -490,6 +490,8 @@ namespace NiceHashMiner.Forms
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms5"));
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms10"));
             comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms15"));
+            comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms30"));
+            comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms60"));
             //comboBox_switching_algorithms.Items.Add(International.GetText("Form_Settings_comboBox_switching_algorithms0"));
 
             label_devices_count.Text = International.GetText("Form_Settings_label_devices_count");
@@ -570,6 +572,9 @@ namespace NiceHashMiner.Forms
             algorithmsListViewOverClock1.InitLocale();
 
             comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+
+            //checkBox_RunAtStartup.BackColor = Color.DarkGreen;
+
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
                 this.BackColor = Form_Main._backColor;
@@ -1231,15 +1236,8 @@ namespace NiceHashMiner.Forms
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
                 comboBox_ColorProfile.SelectedIndex = ConfigManager.GeneralConfig.ColorProfileIndex;
-                //убираем старые возможности переключения алгоритмов
-                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex > 4)
-                {
-                    comboBox_switching_algorithms.SelectedIndex = 2;
-                    ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = 2;
-                } else
-                {
+
                     comboBox_switching_algorithms.SelectedIndex = ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex;
-                }
 
                 comboBox_devices_count.SelectedIndex = ConfigManager.GeneralConfig.DevicesCountIndex;
                 comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
@@ -2548,5 +2546,7 @@ namespace NiceHashMiner.Forms
                 System.Diagnostics.Process.Start(link);
             }
         }
+
     }
+
 }

@@ -951,8 +951,9 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", e.Message);
             }
         }
-        public static void SetAlgorithmRates(JArray data, int mult = 1, double treshold = 12.0, bool average = false)
+        public static void SetAlgorithmRates(JArray data, int multipl = 1, double treshold = 12.0, bool average = false)
         {
+            double mult = multipl * 0.99;
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();

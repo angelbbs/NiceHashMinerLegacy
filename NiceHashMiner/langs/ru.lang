@@ -472,6 +472,8 @@
                 "Form_Settings_comboBox_switching_algorithms5": "через 5 мин",
                 "Form_Settings_comboBox_switching_algorithms10": "через 10 мин",
                 "Form_Settings_comboBox_switching_algorithms15": "через 15 мин",
+		  "Form_Settings_comboBox_switching_algorithms30": "через 30 мин",
+		  "Form_Settings_comboBox_switching_algorithms60": "через 60 мин",
                 "Form_Settings_comboBox_switching_algorithms0": "случайно (1-5 мин)",
                 "Form_Settings_label_devices_count": "Кол-во видимых устройств",
                 "Form_Settings_tabPageAbout": "О программе",

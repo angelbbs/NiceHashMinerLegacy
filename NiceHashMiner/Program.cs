@@ -221,6 +221,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 50;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 51)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 51;
+                }
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

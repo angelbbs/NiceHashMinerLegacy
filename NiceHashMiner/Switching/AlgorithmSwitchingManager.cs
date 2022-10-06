@@ -39,7 +39,7 @@ namespace NiceHashMiner.Switching
 
         private static bool _hasStarted;
 
-        public static bool newProfit = true;
+        public static bool forceZIL = true;
         /// <summary>
         /// Currently used normalized profits
         /// </summary>
@@ -173,10 +173,7 @@ namespace NiceHashMiner.Switching
         {
             var updated = false;
             var cTicks = "min";
-            if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5)
-            {
-                ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex = 2;
-            }
+
             foreach (var algo in history.Keys)
             {
                 NHSmaData.TryGetPaying(algo, out var paying);
@@ -189,11 +186,10 @@ namespace NiceHashMiner.Switching
                     {
                         updated = true;
                         
-                        if (i >= ticks || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
+                        if (i >= ticks)
                         {
                             _lastLegitPaying[algo] = paying;
                             sb.AppendLine($"\tTAKEN: new profit {paying:e5} {p1:f2}% after {i}/{ticks} {cTicks} for {algo}");
-                            newProfit = true;
                         }
                         else
                         {
@@ -202,6 +198,13 @@ namespace NiceHashMiner.Switching
                                 $" higher for {i}/{ticks} {cTicks} for {algo}"
                             );
                         }
+
+                        if (algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
+                        {
+                            _lastLegitPaying[algo] = paying;
+                            forceZIL = true;
+                        }
+
                     }
                     else
                     {
@@ -264,9 +267,15 @@ namespace NiceHashMiner.Switching
                 }
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 5)
                 {
-                    _ticksForStable = StableRange.RandomInt(_random);
-                    _ticksForUnstable = UnstableRange.RandomInt(_random);
-                    //_smaCheckTime = SmaCheckRange.RandomInt(_random);
+                    //_smaCheckTime = 60;
+                    _ticksForStable = 30;
+                    _ticksForUnstable = 30;
+                }
+                if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 6)
+                {
+                    //_smaCheckTime = 60;
+                    _ticksForStable = 60;
+                    _ticksForUnstable = 60;
                 }
             }
         }

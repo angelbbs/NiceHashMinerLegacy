@@ -17,7 +17,7 @@ namespace NiceHashMiner.Utils
             @"/lolMiner/lolMiner.exe",
             @"/NBMiner/NBMiner.exe",
             @"/miniZ/miniZ.exe",
-            @"/Fork_Fix_50.txt"
+            @"/Fork_Fix_51.txt"
         };
     }
 }

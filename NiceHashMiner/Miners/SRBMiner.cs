@@ -447,7 +447,7 @@ namespace NiceHashMiner.Miners
             {
                 double BenchmarkSpeed = 0.0d;
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
-                _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                _benchmarkTimeWait = _benchmarkTimeWait + 90;
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
                 var benchmarkTimer = new Stopwatch();
@@ -458,7 +458,7 @@ namespace NiceHashMiner.Miners
                 BenchmarkThreadRoutineStartSettup(); //need for benchmark log
                 while (IsActiveProcess(BenchmarkHandle.Id))
                 {
-                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 60)
+                    if (benchmarkTimer.Elapsed.TotalSeconds >= (_benchmarkTimeWait + 90)
                         || BenchmarkSignalQuit
                         || BenchmarkSignalFinnished
                         || BenchmarkSignalHanged

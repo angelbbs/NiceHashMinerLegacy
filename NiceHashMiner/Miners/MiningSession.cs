@@ -546,8 +546,7 @@ namespace NiceHashMiner.Miners
                     {
                         device.RestoreOldProfitsState();
                     }
-                }
-                else
+                } else 
                 {
                     //if (AlgorithmSwitchingManager.newProfit)
                     if (_ticks[0] >= AlgorithmSwitchingManager._ticksForStable)
@@ -622,6 +621,15 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
+
+            if (AlgorithmSwitchingManager.forceZIL)
+            {
+                _ticks[0] = 0;
+                needSwitch = true;
+                Helpers.ConsolePrint(Tag, "Force switch ZIL mining");
+                AlgorithmSwitchingManager.forceZIL = false;
+            }
+
             if (!needSwitch)
             {
                 AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;

@@ -149,9 +149,8 @@
     <Reference Include="websocket-sharp">
       <HintPath>..\3rdparty\websocket-sharp\bin\Debug\websocket-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="WinDivertSharp, Version=1.4.3.3, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Debug\WinDivertSharp.dll</HintPath>
+    <Reference Include="WinDivertSharp">
+      <HintPath>..\Debug\common\WinDivertSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

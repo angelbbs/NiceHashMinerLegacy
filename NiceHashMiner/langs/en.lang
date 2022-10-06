@@ -490,6 +490,8 @@
                 "Form_Settings_comboBox_switching_algorithms5": "after 5 min",
                 "Form_Settings_comboBox_switching_algorithms10": "after 10 min",
                 "Form_Settings_comboBox_switching_algorithms15": "after 15 min",
+		  "Form_Settings_comboBox_switching_algorithms30": "after 30 min",
+		  "Form_Settings_comboBox_switching_algorithms60": "after 60 min",
                 "Form_Settings_comboBox_switching_algorithms0": "random (standard NHM)",
                 "Form_Settings_label_devices_count": "Visible devices count",
                 "Form_Settings_tabPageAbout": "About",
