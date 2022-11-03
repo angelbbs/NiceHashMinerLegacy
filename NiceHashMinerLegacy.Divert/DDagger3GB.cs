@@ -60,9 +60,9 @@ namespace NiceHashMinerLegacy.Divert
         {
             Divert.Dagger3GBdivert_running = true;
 
-            filter = "(!loopback && outbound ? (tcp.DstPort == 3353 || tcp.DstPort == 9200)" +
+            filter = "(!loopback && outbound ? (tcp.DstPort == 13353 || tcp.DstPort == 43353 || tcp.DstPort == 9200)" +
                 " : " +
-                "(tcp.SrcPort == 3353 || tcp.SrcPort == 9200)" +
+                "(tcp.SrcPort == 13353 || tcp.SrcPort == 43353 || tcp.SrcPort == 9200)" +
                 ")";
 
             DivertHandle = Divert.OpenWinDivert(filter);

@@ -167,6 +167,10 @@ namespace NiceHashMiner
         public static int apiConnectionsErrors = 0;
         public static byte[] desktop = new byte[0];
 
+        //**
+        public static string[] ZoneSchedule1 = { "00:00", "23:59", "0.00" };
+        public static string[] ZoneSchedule2 = { "07:00", "22:59", "0.00", "23:00", "06:59", "0.00" };
+        public static string[] ZoneSchedule3 = { "23:00", "06:59", "0.00", "07:00", "08:59", "0.00", "09:00", "16:59", "0.00", "17:00", "19:59", "0.00", "20:00", "22:59", "0.00" };
         public struct RigProfitList
         {
             public DateTime DateTime;
@@ -324,30 +328,6 @@ namespace NiceHashMiner
 
             Icon = Properties.Resources.logo;
             Helpers.ConsolePrint("NICEHASH", "Start InitLocalization");
-            /*
-            var start = DateTime.Now;
-            if (start >= new DateTime(2020, 12, 26) && start <= new DateTime(2021, 01, 02))
-            {
-                this.buttonLogo.Image = Properties.Resources.NHM_logo_small_2021; //dgdesign.ru
-            }
-            */
-            /*
-            var image = System.Drawing.Image.FromFile("9may.png");
-            PictureBox imageControl = new PictureBox();
-            imageControl.Top = 0;
-            imageControl.Left = 0;
-            imageControl.Dock = DockStyle.Fill;
-            imageControl.Image = (Image)image;
-            imageControl.BackColor = Color.Transparent;
-            */
-            //Controls.Add(imageControl);
-            //            imageControl.BringToFront();
-            //var iconUri = Bitmap.FromFile("9.ico");
-            /*
-            Icon TheIcon = IconFromFilePath("9.ico");
-            this.Icon = TheIcon;
-            */
-
 
             InitLocalization();
             devicesListViewEnableControl1.Visible = false;
@@ -895,6 +875,262 @@ namespace NiceHashMiner
             NHApiFlag = NiceHashStats.GetApiFlags();
         }
 
+        public static double GetKwhPrice()
+        {
+            if (ConfigManager.GeneralConfig.PowerTarif == 0)
+            {
+                TimeSpan _From = new TimeSpan();
+                TimeSpan _To = new TimeSpan();
+                double _price = 0.0d;
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule1[0]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule1[1]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule1[2]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+            }
+
+            if (ConfigManager.GeneralConfig.PowerTarif == 1)
+            {
+                TimeSpan _From = new TimeSpan();
+                TimeSpan _To = new TimeSpan();
+                double _price = 0.0d;
+                //1
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule2[0]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule2[1]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule2[2]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+                //2
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule2[3]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule2[4]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule2[5]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+            }
+
+            if (ConfigManager.GeneralConfig.PowerTarif == 2)
+            {
+                TimeSpan _From = new TimeSpan();
+                TimeSpan _To = new TimeSpan();
+                double _price = 0.0d;
+                //1
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[0]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[1]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule3[2]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+                //2
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[3]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[4]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule3[5]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+                //3
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[6]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[7]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule3[8]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+                //4
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[9]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[10]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule3[11]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+                //5
+                try
+                {
+                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[12]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[13]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                try
+                {
+                    _price = double.Parse(Form_Main.ZoneSchedule3[14]);
+                }
+                catch (FormatException ex)
+                {
+                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
+                }
+                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                {
+                    return _price;
+                }
+            }
+            return 0.0d;
+        }
+
         private void StartupTimer_Tick(object sender, EventArgs e)
         {
             //Запускает приложение в классической теме windows. На 7-ке не отображается progressbar
@@ -943,6 +1179,11 @@ namespace NiceHashMiner
             _loadingScreen.Show();
             _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
+
+            ZoneSchedule1 = ConfigManager.GeneralConfig.ZoneSchedule1;
+            ZoneSchedule2 = ConfigManager.GeneralConfig.ZoneSchedule2;
+            ZoneSchedule3 = ConfigManager.GeneralConfig.ZoneSchedule3;
+
             // Query Available ComputeDevices
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_CPU"));
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//10-15
@@ -1572,9 +1813,9 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("MEMORY", "Mem used: " + Math.Round(bytesInUse / 1048576, 2).ToString() + "MB");
 
             Helpers.ConsolePrint("POWER", "TotalPowerConsumption: " + TotalPowerConsumption.ToString("F0") + "W");
-            if (ConfigManager.GeneralConfig.KwhPrice > 0)
+            if (GetKwhPrice() > 0)
             {
-                Helpers.ConsolePrint("POWER", "TotalPowerConsumptionCost: " + (TotalPowerConsumption * 0.001 * ConfigManager.GeneralConfig.KwhPrice).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
+                Helpers.ConsolePrint("POWER", "TotalPowerConsumptionCost: " + (TotalPowerConsumption * 0.001 * GetKwhPrice()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
             }
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
@@ -3100,7 +3341,7 @@ public static void CloseChilds(Process parentId)
 
         private void CheckDagger3GB()
         {
-            if (ConfigManager.GeneralConfig.DivertRun)
+            //if (ConfigManager.GeneralConfig.DivertRun)
             {
                 //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
                 //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
@@ -3113,7 +3354,7 @@ public static void CloseChilds(Process parentId)
                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                         Divert.Dagger3GBEpochCount = 0;
-                        Divert.DaggerHashimoto3GBForce = false;
+                        //Divert.DaggerHashimoto3GBForce = false;
                         Divert.checkConnection3GB = false;
                     }
                     if (Divert.Dagger3GBEpochCount > 1 && !Divert.checkConnection3GB)
@@ -3121,7 +3362,7 @@ public static void CloseChilds(Process parentId)
                         Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                        Divert.DaggerHashimoto3GBForce = false;
+                        //Divert.DaggerHashimoto3GBForce = false;
                         Divert.checkConnection3GB = true;
                         //new Task(() => DHClient.StartConnection()).Start();
                     }
@@ -3139,7 +3380,7 @@ public static void CloseChilds(Process parentId)
         }
         private void CheckDagger4GB()
         {
-            if (ConfigManager.GeneralConfig.DivertRun)
+            //if (ConfigManager.GeneralConfig.DivertRun)
             {
                 //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
                 //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
@@ -3152,7 +3393,7 @@ public static void CloseChilds(Process parentId)
                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
                         Divert.Dagger4GBEpochCount = 0;
-                        Divert.DaggerHashimoto4GBForce = false;
+                        //Divert.DaggerHashimoto4GBForce = false;
                         Divert.checkConnection4GB = false;
                     }
                     if (Divert.Dagger4GBEpochCount > 1 && !Divert.checkConnection4GB)
@@ -3160,7 +3401,7 @@ public static void CloseChilds(Process parentId)
                         Helpers.ConsolePrint("DaggerHashimoto4GB", "Force switch OFF");
                         NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, 0.0d);
                         NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                        Divert.DaggerHashimoto4GBForce = false;
+                        //Divert.DaggerHashimoto4GBForce = false;
                         Divert.checkConnection4GB = true;
                         //new Task(() => DHClient.StartConnection()).Start();
                     }
@@ -3829,7 +4070,7 @@ public static void CloseChilds(Process parentId)
 
             if (ConfigManager.GeneralConfig.ShowTotalPower)
             {
-                ctooltip += string.Format(International.GetText("Form_Main_TotalPowerConsumptionCost"), (TotalPowerConsumption * 0.001 * ConfigManager.GeneralConfig.KwhPrice).ToString("F2"), ExchangeRateApi.ActiveDisplayCurrency);
+                ctooltip += string.Format(International.GetText("Form_Main_TotalPowerConsumptionCost"), (TotalPowerConsumption * 0.001 * GetKwhPrice()).ToString("F2"), ExchangeRateApi.ActiveDisplayCurrency);
                 ctooltip += "\r\n";
             }
 

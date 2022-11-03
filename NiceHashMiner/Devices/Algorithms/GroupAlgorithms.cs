@@ -117,14 +117,21 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.5))
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.Octopus
                     });
             }
-            if (algoSettings.ContainsKey(MinerBaseType.trex) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.5))
+            if (algoSettings.ContainsKey(MinerBaseType.trex) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.Octopus
+                    });
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.miniZ) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {

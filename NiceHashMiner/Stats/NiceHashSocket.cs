@@ -50,7 +50,7 @@ namespace NiceHashMiner.Stats
 
         //public static string RigID => UUID.GetDeviceB64UUID();
         public static string RigID => ConfigManager.GeneralConfig.MachineGuid;
-
+        private static int ForceReconnectCount = 0;
         public NiceHashSocket(string address)
         {
             _address = address;
@@ -193,6 +193,7 @@ namespace NiceHashMiner.Stats
                 if (_webSocket != null && IsAlive)
                 {
                     Helpers.ConsolePrint("SOCKETNEW", $"Sending data: {data}");
+                    ForceReconnectCount = 0;
                     _webSocket.Send(data);
                     return true;
                 }
@@ -496,6 +497,7 @@ namespace NiceHashMiner.Stats
                     if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "login" || dataJson.method == "executed")
                     {
                         Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
+                        ForceReconnectCount = 0;
                         _webSocket.Send(data);
                         dataJson = null;
                         return true;
@@ -504,14 +506,21 @@ namespace NiceHashMiner.Stats
                 }
                 else if (_webSocket != null)
                 {
+                    ForceReconnectCount++;
+                    if (ForceReconnectCount > 1000)
+                    {
+                        Helpers.ConsolePrint("SOCKET", "CRITICAL ERROR! Need restart");
+                        Form_Main.MakeRestart(0);
+                    }
+
                     Form_Main.NHConnectingInProgress = true;
                     Helpers.ConsolePrint("SOCKET", "Force reconnect");
                     foreach (var ip in IPsList)
                     {
                         DropIPPort(Process.GetCurrentProcess().Id, ip, 443);
                     }
-                    Thread.Sleep(3000);
                     _webSocket = null;
+                    Thread.Sleep(3000);
                     new Task(() => StartConnectionNew()).Start();
                     //StartConnectionNew();
                 }

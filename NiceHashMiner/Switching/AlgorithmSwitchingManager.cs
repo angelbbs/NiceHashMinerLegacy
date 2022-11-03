@@ -39,7 +39,6 @@ namespace NiceHashMiner.Switching
 
         private static bool _hasStarted;
 
-        public static bool forceZIL = true;
         /// <summary>
         /// Currently used normalized profits
         /// </summary>
@@ -182,7 +181,7 @@ namespace NiceHashMiner.Switching
                     history[algo].Add(paying);
                     var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
                     double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
-                    if (paying > _lastLegitPaying[algo] || algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
+                    if (paying > _lastLegitPaying[algo])
                     {
                         updated = true;
                         
@@ -202,7 +201,6 @@ namespace NiceHashMiner.Switching
                         if (algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                         {
                             _lastLegitPaying[algo] = paying;
-                            forceZIL = true;
                         }
 
                     }

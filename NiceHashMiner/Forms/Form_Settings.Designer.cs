@@ -43,18 +43,9 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
             this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
             this.checkbox_wallet_balance = new System.Windows.Forms.CheckBox();
-            this.textBoxAddAMD = new System.Windows.Forms.TextBox();
-            this.labelAddAMD = new System.Windows.Forms.Label();
             this.checkBox_fiat = new System.Windows.Forms.CheckBox();
-            this.textBox_psu = new System.Windows.Forms.TextBox();
-            this.label_psu = new System.Windows.Forms.Label();
-            this.textBox_mb = new System.Windows.Forms.TextBox();
-            this.label_MBpower = new System.Windows.Forms.Label();
             this.checkBox_Show_profit_with_power_consumption = new System.Windows.Forms.CheckBox();
             this.checkBox_Force_mining_if_nonprofitable = new System.Windows.Forms.CheckBox();
-            this.pictureBox_ElectricityCost = new System.Windows.Forms.PictureBox();
-            this.textBox_ElectricityCost = new System.Windows.Forms.TextBox();
-            this.label_ElectricityCost = new System.Windows.Forms.Label();
             this.pictureBox_TimeUnit = new System.Windows.Forms.PictureBox();
             this.label_TimeUnit = new System.Windows.Forms.Label();
             this.comboBox_TimeUnit = new System.Windows.Forms.ComboBox();
@@ -105,11 +96,27 @@ namespace NiceHashMiner.Forms
             this.comboBox_Language = new System.Windows.Forms.ComboBox();
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
             this.label_displayCurrency = new System.Windows.Forms.Label();
+            this.tabPagePower = new System.Windows.Forms.TabPage();
+            this.groupBoxTariffs = new System.Windows.Forms.GroupBox();
+            this.textBoxScheduleTo1 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom1 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost1 = new System.Windows.Forms.TextBox();
+            this.labelCost1 = new System.Windows.Forms.Label();
+            this.labelTo1 = new System.Windows.Forms.Label();
+            this.labelFrom1 = new System.Windows.Forms.Label();
+            this.label_Schedules2 = new System.Windows.Forms.Label();
+            this.label_Schedules = new System.Windows.Forms.Label();
+            this.comboBoxZones = new System.Windows.Forms.ComboBox();
+            this.label_MBpower = new System.Windows.Forms.Label();
+            this.textBoxAddAMD = new System.Windows.Forms.TextBox();
+            this.labelAddAMD = new System.Windows.Forms.Label();
+            this.textBox_psu = new System.Windows.Forms.TextBox();
+            this.pictureBox_ElectricityCost = new System.Windows.Forms.PictureBox();
+            this.label_psu = new System.Windows.Forms.Label();
+            this.textBox_mb = new System.Windows.Forms.TextBox();
             this.tabPageAdvanced1 = new System.Windows.Forms.TabPage();
             this.groupBoxConnection = new System.Windows.Forms.GroupBox();
             this.checkBoxEnableProxy = new System.Windows.Forms.CheckBox();
-            this.checkBoxStale = new System.Windows.Forms.CheckBox();
-            this.checkBoxProxyAsFailover = new System.Windows.Forms.CheckBox();
             this.checkBoxProxySSL = new System.Windows.Forms.CheckBox();
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
             this.checkBox_orderPrice = new System.Windows.Forms.CheckBox();
@@ -161,16 +168,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_ABMinimize = new System.Windows.Forms.CheckBox();
             this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
             this.groupBoxOverClockSettings = new System.Windows.Forms.GroupBox();
-            this.tabPageTools = new System.Windows.Forms.TabPage();
-            this.groupBoxToolsNH = new System.Windows.Forms.GroupBox();
-            this.richTextBoxCheckNiceHashservers = new System.Windows.Forms.RichTextBox();
-            this.buttonCheckNiceHashservers = new System.Windows.Forms.Button();
-            this.buttonCheckNiceHashStatus = new System.Windows.Forms.Button();
-            this.groupBoxToolsNET = new System.Windows.Forms.GroupBox();
-            this.buttonCurrPorts = new System.Windows.Forms.Button();
-            this.groupBoxToolsGPU = new System.Windows.Forms.GroupBox();
-            this.buttonNVIDIAinspector = new System.Windows.Forms.Button();
-            this.buttonOverdriveNTool = new System.Windows.Forms.Button();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
             this.groupBoxBackup = new System.Windows.Forms.GroupBox();
             this.checkBox_BackupBeforeUpdate = new System.Windows.Forms.CheckBox();
@@ -188,6 +185,36 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.labelPowerCurrency1 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency2 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo2 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom2 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost2 = new System.Windows.Forms.TextBox();
+            this.labelCost2 = new System.Windows.Forms.Label();
+            this.labelFrom2 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency3 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo3 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom3 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost3 = new System.Windows.Forms.TextBox();
+            this.labelCost3 = new System.Windows.Forms.Label();
+            this.labelFrom3 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency4 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo4 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom4 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost4 = new System.Windows.Forms.TextBox();
+            this.labelCost4 = new System.Windows.Forms.Label();
+            this.labelFrom4 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency5 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo5 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom5 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost5 = new System.Windows.Forms.TextBox();
+            this.labelCost5 = new System.Windows.Forms.Label();
+            this.labelFrom5 = new System.Windows.Forms.Label();
+            this.labelTo2 = new System.Windows.Forms.Label();
+            this.labelTo3 = new System.Windows.Forms.Label();
+            this.labelTo4 = new System.Windows.Forms.Label();
+            this.labelTo5 = new System.Windows.Forms.Label();
+            this.groupBox_additionally = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
@@ -201,7 +228,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartMiningWhenIdle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).BeginInit();
             this.groupBox_Main.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).BeginInit();
             this.groupBox_Misc.SuspendLayout();
@@ -218,6 +244,9 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).BeginInit();
+            this.tabPagePower.SuspendLayout();
+            this.groupBoxTariffs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).BeginInit();
             this.tabPageAdvanced1.SuspendLayout();
             this.groupBoxConnection.SuspendLayout();
             this.groupBox_Miners.SuspendLayout();
@@ -231,14 +260,11 @@ namespace NiceHashMiner.Forms
             this.tabPageOverClock.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBoxOverClockSettings.SuspendLayout();
-            this.tabPageTools.SuspendLayout();
-            this.groupBoxToolsNH.SuspendLayout();
-            this.groupBoxToolsNET.SuspendLayout();
-            this.groupBoxToolsGPU.SuspendLayout();
             this.tabPageAbout.SuspendLayout();
             this.groupBoxBackup.SuspendLayout();
             this.groupBoxUpdates.SuspendLayout();
             this.groupBoxInfo.SuspendLayout();
+            this.groupBox_additionally.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -288,10 +314,10 @@ namespace NiceHashMiner.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControlGeneral.Controls.Add(this.tabPageGeneral);
+            this.tabControlGeneral.Controls.Add(this.tabPagePower);
             this.tabControlGeneral.Controls.Add(this.tabPageAdvanced1);
             this.tabControlGeneral.Controls.Add(this.tabPageDevicesAlgos);
             this.tabControlGeneral.Controls.Add(this.tabPageOverClock);
-            this.tabControlGeneral.Controls.Add(this.tabPageTools);
             this.tabControlGeneral.Controls.Add(this.tabPageAbout);
             // 
             // 
@@ -339,7 +365,7 @@ namespace NiceHashMiner.Forms
             // 
             this.groupBoxAPIkeys.Controls.Add(this.buttonSetupAPI);
             this.groupBoxAPIkeys.Controls.Add(this.checkBox_EnableAPI);
-            this.groupBoxAPIkeys.Location = new System.Drawing.Point(6, 429);
+            this.groupBoxAPIkeys.Location = new System.Drawing.Point(6, 303);
             this.groupBoxAPIkeys.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxAPIkeys.Name = "groupBoxAPIkeys";
             this.groupBoxAPIkeys.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -380,7 +406,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_Idle.Controls.Add(this.label_MinIdleSeconds);
             this.groupBox_Idle.Controls.Add(this.pictureBox_MinIdleSeconds);
             this.groupBox_Idle.Controls.Add(this.textBox_MinIdleSeconds);
-            this.groupBox_Idle.Location = new System.Drawing.Point(6, 365);
+            this.groupBox_Idle.Location = new System.Drawing.Point(6, 239);
             this.groupBox_Idle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Idle.Name = "groupBox_Idle";
             this.groupBox_Idle.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -445,20 +471,9 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Main
             // 
-            this.groupBox_Main.Controls.Add(this.checkBox_Show_Total_Power);
             this.groupBox_Main.Controls.Add(this.checkbox_wallet_balance);
-            this.groupBox_Main.Controls.Add(this.textBoxAddAMD);
-            this.groupBox_Main.Controls.Add(this.labelAddAMD);
             this.groupBox_Main.Controls.Add(this.checkBox_fiat);
-            this.groupBox_Main.Controls.Add(this.textBox_psu);
-            this.groupBox_Main.Controls.Add(this.label_psu);
-            this.groupBox_Main.Controls.Add(this.textBox_mb);
-            this.groupBox_Main.Controls.Add(this.label_MBpower);
-            this.groupBox_Main.Controls.Add(this.checkBox_Show_profit_with_power_consumption);
             this.groupBox_Main.Controls.Add(this.checkBox_Force_mining_if_nonprofitable);
-            this.groupBox_Main.Controls.Add(this.pictureBox_ElectricityCost);
-            this.groupBox_Main.Controls.Add(this.textBox_ElectricityCost);
-            this.groupBox_Main.Controls.Add(this.label_ElectricityCost);
             this.groupBox_Main.Controls.Add(this.pictureBox_TimeUnit);
             this.groupBox_Main.Controls.Add(this.label_TimeUnit);
             this.groupBox_Main.Controls.Add(this.comboBox_TimeUnit);
@@ -469,7 +484,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(365, 243);
+            this.groupBox_Main.Size = new System.Drawing.Size(365, 117);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
@@ -478,7 +493,7 @@ namespace NiceHashMiner.Forms
             // checkBox_Show_Total_Power
             // 
             this.checkBox_Show_Total_Power.AutoSize = true;
-            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(9, 126);
+            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(8, 101);
             this.checkBox_Show_Total_Power.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Show_Total_Power.Name = "checkBox_Show_Total_Power";
             this.checkBox_Show_Total_Power.Size = new System.Drawing.Size(220, 17);
@@ -489,7 +504,7 @@ namespace NiceHashMiner.Forms
             // checkbox_wallet_balance
             // 
             this.checkbox_wallet_balance.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkbox_wallet_balance.Location = new System.Drawing.Point(9, 215);
+            this.checkbox_wallet_balance.Location = new System.Drawing.Point(9, 90);
             this.checkbox_wallet_balance.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkbox_wallet_balance.Name = "checkbox_wallet_balance";
             this.checkbox_wallet_balance.Size = new System.Drawing.Size(318, 18);
@@ -498,28 +513,10 @@ namespace NiceHashMiner.Forms
             this.checkbox_wallet_balance.UseVisualStyleBackColor = true;
             this.checkbox_wallet_balance.Click += new System.EventHandler(this.checkbox_wallet_balance_Click);
             // 
-            // textBoxAddAMD
-            // 
-            this.textBoxAddAMD.Location = new System.Drawing.Point(249, 96);
-            this.textBoxAddAMD.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxAddAMD.Name = "textBoxAddAMD";
-            this.textBoxAddAMD.Size = new System.Drawing.Size(37, 20);
-            this.textBoxAddAMD.TabIndex = 383;
-            // 
-            // labelAddAMD
-            // 
-            this.labelAddAMD.AutoSize = true;
-            this.labelAddAMD.Location = new System.Drawing.Point(6, 99);
-            this.labelAddAMD.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelAddAMD.Name = "labelAddAMD";
-            this.labelAddAMD.Size = new System.Drawing.Size(221, 13);
-            this.labelAddAMD.TabIndex = 384;
-            this.labelAddAMD.Text = "Additional AMD GPU power consumption (W)";
-            // 
             // checkBox_fiat
             // 
             this.checkBox_fiat.AutoSize = true;
-            this.checkBox_fiat.Location = new System.Drawing.Point(9, 172);
+            this.checkBox_fiat.Location = new System.Drawing.Point(9, 47);
             this.checkBox_fiat.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_fiat.Name = "checkBox_fiat";
             this.checkBox_fiat.Size = new System.Drawing.Size(239, 17);
@@ -528,48 +525,10 @@ namespace NiceHashMiner.Forms
             this.checkBox_fiat.UseVisualStyleBackColor = true;
             this.checkBox_fiat.CheckedChanged += new System.EventHandler(this.checkBox_fiat_CheckedChanged);
             // 
-            // textBox_psu
-            // 
-            this.textBox_psu.Location = new System.Drawing.Point(314, 44);
-            this.textBox_psu.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_psu.Name = "textBox_psu";
-            this.textBox_psu.Size = new System.Drawing.Size(39, 20);
-            this.textBox_psu.TabIndex = 380;
-            // 
-            // label_psu
-            // 
-            this.label_psu.AutoSize = true;
-            this.label_psu.Location = new System.Drawing.Point(209, 49);
-            this.label_psu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_psu.Name = "label_psu";
-            this.label_psu.Size = new System.Drawing.Size(94, 13);
-            this.label_psu.TabIndex = 381;
-            this.label_psu.Text = "PSU efficiency (%)";
-            // 
-            // textBox_mb
-            // 
-            this.textBox_mb.Location = new System.Drawing.Point(287, 70);
-            this.textBox_mb.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_mb.Name = "textBox_mb";
-            this.textBox_mb.Size = new System.Drawing.Size(66, 20);
-            this.textBox_mb.TabIndex = 378;
-            this.textBox_mb.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // label_MBpower
-            // 
-            this.label_MBpower.AutoSize = true;
-            this.label_MBpower.Location = new System.Drawing.Point(6, 73);
-            this.label_MBpower.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_MBpower.Name = "label_MBpower";
-            this.label_MBpower.Size = new System.Drawing.Size(271, 13);
-            this.label_MBpower.TabIndex = 379;
-            this.label_MBpower.Text = "Power consumption of Motherboard, HDD(SSD) etc (W)";
-            this.label_MBpower.Click += new System.EventHandler(this.label2_Click_1);
-            // 
             // checkBox_Show_profit_with_power_consumption
             // 
             this.checkBox_Show_profit_with_power_consumption.AutoSize = true;
-            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(9, 149);
+            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(8, 126);
             this.checkBox_Show_profit_with_power_consumption.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Show_profit_with_power_consumption.Name = "checkBox_Show_profit_with_power_consumption";
             this.checkBox_Show_profit_with_power_consumption.Size = new System.Drawing.Size(196, 17);
@@ -581,7 +540,7 @@ namespace NiceHashMiner.Forms
             // checkBox_Force_mining_if_nonprofitable
             // 
             this.checkBox_Force_mining_if_nonprofitable.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Force_mining_if_nonprofitable.Location = new System.Drawing.Point(9, 193);
+            this.checkBox_Force_mining_if_nonprofitable.Location = new System.Drawing.Point(9, 68);
             this.checkBox_Force_mining_if_nonprofitable.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Force_mining_if_nonprofitable.Name = "checkBox_Force_mining_if_nonprofitable";
             this.checkBox_Force_mining_if_nonprofitable.Size = new System.Drawing.Size(318, 18);
@@ -589,38 +548,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_Force_mining_if_nonprofitable.Text = "Force mining if nonprofitable";
             this.checkBox_Force_mining_if_nonprofitable.UseVisualStyleBackColor = true;
             this.checkBox_Force_mining_if_nonprofitable.CheckedChanged += new System.EventHandler(this.checkBox_Force_mining_if_nonprofitable_CheckedChanged_1);
-            // 
-            // pictureBox_ElectricityCost
-            // 
-            this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(171, 46);
-            this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
-            this.pictureBox_ElectricityCost.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ElectricityCost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ElectricityCost.TabIndex = 375;
-            this.pictureBox_ElectricityCost.TabStop = false;
-            this.pictureBox_ElectricityCost.Click += new System.EventHandler(this.pictureBox_ElectricityCost_Click_1);
-            // 
-            // textBox_ElectricityCost
-            // 
-            this.textBox_ElectricityCost.Location = new System.Drawing.Point(128, 45);
-            this.textBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_ElectricityCost.Name = "textBox_ElectricityCost";
-            this.textBox_ElectricityCost.Size = new System.Drawing.Size(39, 20);
-            this.textBox_ElectricityCost.TabIndex = 373;
-            this.textBox_ElectricityCost.TextChanged += new System.EventHandler(this.textBox_ElectricityCost_TextChanged_1);
-            // 
-            // label_ElectricityCost
-            // 
-            this.label_ElectricityCost.AutoSize = true;
-            this.label_ElectricityCost.Location = new System.Drawing.Point(6, 48);
-            this.label_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_ElectricityCost.Name = "label_ElectricityCost";
-            this.label_ElectricityCost.Size = new System.Drawing.Size(105, 13);
-            this.label_ElectricityCost.TabIndex = 374;
-            this.label_ElectricityCost.Text = "Electricity Cost (kW):";
-            this.label_ElectricityCost.Click += new System.EventHandler(this.label_ElectricityCost_Click_1);
             // 
             // pictureBox_TimeUnit
             // 
@@ -1076,7 +1003,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_Logging.Controls.Add(this.textBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.checkBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
-            this.groupBox_Logging.Location = new System.Drawing.Point(6, 314);
+            this.groupBox_Logging.Location = new System.Drawing.Point(6, 188);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1135,7 +1062,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(6, 255);
+            this.groupBox_Localization.Location = new System.Drawing.Point(6, 129);
             this.groupBox_Localization.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1257,6 +1184,229 @@ namespace NiceHashMiner.Forms
             this.label_displayCurrency.TabIndex = 382;
             this.label_displayCurrency.Text = "Currency:";
             // 
+            // tabPagePower
+            // 
+            this.tabPagePower.Controls.Add(this.groupBox_additionally);
+            this.tabPagePower.Controls.Add(this.groupBoxTariffs);
+            this.tabPagePower.Location = new System.Drawing.Point(4, 23);
+            this.tabPagePower.Name = "tabPagePower";
+            this.tabPagePower.Size = new System.Drawing.Size(669, 491);
+            this.tabPagePower.TabIndex = 6;
+            this.tabPagePower.Text = "Power";
+            this.tabPagePower.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxTariffs
+            // 
+            this.groupBoxTariffs.Controls.Add(this.labelTo5);
+            this.groupBoxTariffs.Controls.Add(this.labelTo4);
+            this.groupBoxTariffs.Controls.Add(this.labelTo3);
+            this.groupBoxTariffs.Controls.Add(this.labelTo2);
+            this.groupBoxTariffs.Controls.Add(this.pictureBox_ElectricityCost);
+            this.groupBoxTariffs.Controls.Add(this.labelPowerCurrency5);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleTo5);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleFrom5);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleCost5);
+            this.groupBoxTariffs.Controls.Add(this.labelCost5);
+            this.groupBoxTariffs.Controls.Add(this.labelFrom5);
+            this.groupBoxTariffs.Controls.Add(this.labelPowerCurrency4);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleTo4);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleFrom4);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleCost4);
+            this.groupBoxTariffs.Controls.Add(this.labelCost4);
+            this.groupBoxTariffs.Controls.Add(this.labelFrom4);
+            this.groupBoxTariffs.Controls.Add(this.labelPowerCurrency3);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleTo3);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleFrom3);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleCost3);
+            this.groupBoxTariffs.Controls.Add(this.labelCost3);
+            this.groupBoxTariffs.Controls.Add(this.labelFrom3);
+            this.groupBoxTariffs.Controls.Add(this.labelPowerCurrency2);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleTo2);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleFrom2);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleCost2);
+            this.groupBoxTariffs.Controls.Add(this.labelCost2);
+            this.groupBoxTariffs.Controls.Add(this.labelFrom2);
+            this.groupBoxTariffs.Controls.Add(this.labelPowerCurrency1);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleTo1);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleFrom1);
+            this.groupBoxTariffs.Controls.Add(this.textBoxScheduleCost1);
+            this.groupBoxTariffs.Controls.Add(this.labelCost1);
+            this.groupBoxTariffs.Controls.Add(this.labelTo1);
+            this.groupBoxTariffs.Controls.Add(this.labelFrom1);
+            this.groupBoxTariffs.Controls.Add(this.label_Schedules2);
+            this.groupBoxTariffs.Controls.Add(this.label_Schedules);
+            this.groupBoxTariffs.Controls.Add(this.comboBoxZones);
+            this.groupBoxTariffs.Location = new System.Drawing.Point(5, 6);
+            this.groupBoxTariffs.Name = "groupBoxTariffs";
+            this.groupBoxTariffs.Size = new System.Drawing.Size(332, 184);
+            this.groupBoxTariffs.TabIndex = 394;
+            this.groupBoxTariffs.TabStop = false;
+            this.groupBoxTariffs.Text = "Tariffs";
+            // 
+            // textBoxScheduleTo1
+            // 
+            this.textBoxScheduleTo1.AsciiOnly = true;
+            this.textBoxScheduleTo1.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo1.Location = new System.Drawing.Point(98, 46);
+            this.textBoxScheduleTo1.Mask = "00:00";
+            this.textBoxScheduleTo1.Name = "textBoxScheduleTo1";
+            this.textBoxScheduleTo1.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo1.TabIndex = 404;
+            this.textBoxScheduleTo1.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo1.Leave += new System.EventHandler(this.textBoxScheduleTo1_Leave);
+            // 
+            // textBoxScheduleFrom1
+            // 
+            this.textBoxScheduleFrom1.AsciiOnly = true;
+            this.textBoxScheduleFrom1.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom1.Location = new System.Drawing.Point(35, 47);
+            this.textBoxScheduleFrom1.Mask = "00:00";
+            this.textBoxScheduleFrom1.Name = "textBoxScheduleFrom1";
+            this.textBoxScheduleFrom1.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom1.TabIndex = 403;
+            this.textBoxScheduleFrom1.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom1.Leave += new System.EventHandler(this.textBoxScheduleFrom1_Leave);
+            // 
+            // textBoxScheduleCost1
+            // 
+            this.textBoxScheduleCost1.Location = new System.Drawing.Point(183, 46);
+            this.textBoxScheduleCost1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost1.Name = "textBoxScheduleCost1";
+            this.textBoxScheduleCost1.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost1.TabIndex = 402;
+            this.textBoxScheduleCost1.WordWrap = false;
+            this.textBoxScheduleCost1.Leave += new System.EventHandler(this.textBoxScheduleCost1_Leave);
+            // 
+            // labelCost1
+            // 
+            this.labelCost1.AutoSize = true;
+            this.labelCost1.Location = new System.Drawing.Point(146, 49);
+            this.labelCost1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost1.Name = "labelCost1";
+            this.labelCost1.Size = new System.Drawing.Size(27, 13);
+            this.labelCost1.TabIndex = 401;
+            this.labelCost1.Text = "cost";
+            // 
+            // labelTo1
+            // 
+            this.labelTo1.AutoSize = true;
+            this.labelTo1.Location = new System.Drawing.Point(78, 49);
+            this.labelTo1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo1.Name = "labelTo1";
+            this.labelTo1.Size = new System.Drawing.Size(16, 13);
+            this.labelTo1.TabIndex = 399;
+            this.labelTo1.Text = "to";
+            // 
+            // labelFrom1
+            // 
+            this.labelFrom1.AutoSize = true;
+            this.labelFrom1.Location = new System.Drawing.Point(5, 50);
+            this.labelFrom1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom1.Name = "labelFrom1";
+            this.labelFrom1.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom1.TabIndex = 397;
+            this.labelFrom1.Text = "from";
+            // 
+            // label_Schedules2
+            // 
+            this.label_Schedules2.AutoSize = true;
+            this.label_Schedules2.Location = new System.Drawing.Point(227, 22);
+            this.label_Schedules2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_Schedules2.Name = "label_Schedules2";
+            this.label_Schedules2.Size = new System.Drawing.Size(10, 13);
+            this.label_Schedules2.TabIndex = 396;
+            this.label_Schedules2.Text = ".";
+            // 
+            // label_Schedules
+            // 
+            this.label_Schedules.AutoSize = true;
+            this.label_Schedules.Location = new System.Drawing.Point(5, 22);
+            this.label_Schedules.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_Schedules.Name = "label_Schedules";
+            this.label_Schedules.Size = new System.Drawing.Size(159, 13);
+            this.label_Schedules.TabIndex = 395;
+            this.label_Schedules.Text = "Schedules of tariffs for electricity";
+            // 
+            // comboBoxZones
+            // 
+            this.comboBoxZones.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxZones.FormattingEnabled = true;
+            this.comboBoxZones.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3"});
+            this.comboBoxZones.Location = new System.Drawing.Point(183, 19);
+            this.comboBoxZones.Name = "comboBoxZones";
+            this.comboBoxZones.Size = new System.Drawing.Size(39, 21);
+            this.comboBoxZones.TabIndex = 394;
+            this.comboBoxZones.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxZones_DrawItem);
+            this.comboBoxZones.SelectedIndexChanged += new System.EventHandler(this.comboBoxZones_SelectedIndexChanged);
+            // 
+            // label_MBpower
+            // 
+            this.label_MBpower.AutoSize = true;
+            this.label_MBpower.Location = new System.Drawing.Point(5, 49);
+            this.label_MBpower.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_MBpower.Name = "label_MBpower";
+            this.label_MBpower.Size = new System.Drawing.Size(271, 13);
+            this.label_MBpower.TabIndex = 389;
+            this.label_MBpower.Text = "Power consumption of Motherboard, HDD(SSD) etc (W)";
+            // 
+            // textBoxAddAMD
+            // 
+            this.textBoxAddAMD.Location = new System.Drawing.Point(248, 73);
+            this.textBoxAddAMD.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxAddAMD.Name = "textBoxAddAMD";
+            this.textBoxAddAMD.Size = new System.Drawing.Size(37, 20);
+            this.textBoxAddAMD.TabIndex = 392;
+            // 
+            // labelAddAMD
+            // 
+            this.labelAddAMD.AutoSize = true;
+            this.labelAddAMD.Location = new System.Drawing.Point(5, 76);
+            this.labelAddAMD.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelAddAMD.Name = "labelAddAMD";
+            this.labelAddAMD.Size = new System.Drawing.Size(221, 13);
+            this.labelAddAMD.TabIndex = 393;
+            this.labelAddAMD.Text = "Additional AMD GPU power consumption (W)";
+            // 
+            // textBox_psu
+            // 
+            this.textBox_psu.Location = new System.Drawing.Point(110, 17);
+            this.textBox_psu.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_psu.Name = "textBox_psu";
+            this.textBox_psu.Size = new System.Drawing.Size(39, 20);
+            this.textBox_psu.TabIndex = 390;
+            // 
+            // pictureBox_ElectricityCost
+            // 
+            this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(308, 17);
+            this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
+            this.pictureBox_ElectricityCost.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ElectricityCost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ElectricityCost.TabIndex = 387;
+            this.pictureBox_ElectricityCost.TabStop = false;
+            // 
+            // label_psu
+            // 
+            this.label_psu.AutoSize = true;
+            this.label_psu.Location = new System.Drawing.Point(5, 22);
+            this.label_psu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_psu.Name = "label_psu";
+            this.label_psu.Size = new System.Drawing.Size(94, 13);
+            this.label_psu.TabIndex = 391;
+            this.label_psu.Text = "PSU efficiency (%)";
+            // 
+            // textBox_mb
+            // 
+            this.textBox_mb.Location = new System.Drawing.Point(280, 46);
+            this.textBox_mb.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_mb.Name = "textBox_mb";
+            this.textBox_mb.Size = new System.Drawing.Size(35, 20);
+            this.textBox_mb.TabIndex = 388;
+            // 
             // tabPageAdvanced1
             // 
             this.tabPageAdvanced1.BackColor = System.Drawing.SystemColors.Control;
@@ -1274,14 +1424,12 @@ namespace NiceHashMiner.Forms
             // groupBoxConnection
             // 
             this.groupBoxConnection.Controls.Add(this.checkBoxEnableProxy);
-            this.groupBoxConnection.Controls.Add(this.checkBoxStale);
-            this.groupBoxConnection.Controls.Add(this.checkBoxProxyAsFailover);
             this.groupBoxConnection.Controls.Add(this.checkBoxProxySSL);
             this.groupBoxConnection.Location = new System.Drawing.Point(6, 359);
             this.groupBoxConnection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxConnection.Name = "groupBoxConnection";
             this.groupBoxConnection.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxConnection.Size = new System.Drawing.Size(657, 70);
+            this.groupBoxConnection.Size = new System.Drawing.Size(657, 51);
             this.groupBoxConnection.TabIndex = 395;
             this.groupBoxConnection.TabStop = false;
             this.groupBoxConnection.Text = "Connection";
@@ -1299,35 +1447,11 @@ namespace NiceHashMiner.Forms
             this.checkBoxEnableProxy.UseVisualStyleBackColor = true;
             this.checkBoxEnableProxy.CheckedChanged += new System.EventHandler(this.checkBoxEnableProxy_CheckedChanged);
             // 
-            // checkBoxStale
-            // 
-            this.checkBoxStale.AutoSize = true;
-            this.checkBoxStale.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxStale.Location = new System.Drawing.Point(241, 42);
-            this.checkBoxStale.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBoxStale.Name = "checkBoxStale";
-            this.checkBoxStale.Size = new System.Drawing.Size(182, 17);
-            this.checkBoxStale.TabIndex = 404;
-            this.checkBoxStale.Text = "Detect stale shares on proxy side";
-            this.checkBoxStale.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxProxyAsFailover
-            // 
-            this.checkBoxProxyAsFailover.AutoSize = true;
-            this.checkBoxProxyAsFailover.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxProxyAsFailover.Location = new System.Drawing.Point(241, 19);
-            this.checkBoxProxyAsFailover.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBoxProxyAsFailover.Name = "checkBoxProxyAsFailover";
-            this.checkBoxProxyAsFailover.Size = new System.Drawing.Size(164, 17);
-            this.checkBoxProxyAsFailover.TabIndex = 403;
-            this.checkBoxProxyAsFailover.Text = "Using proxy as failover server";
-            this.checkBoxProxyAsFailover.UseVisualStyleBackColor = true;
-            // 
             // checkBoxProxySSL
             // 
             this.checkBoxProxySSL.AutoSize = true;
             this.checkBoxProxySSL.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxProxySSL.Location = new System.Drawing.Point(11, 42);
+            this.checkBoxProxySSL.Location = new System.Drawing.Point(192, 19);
             this.checkBoxProxySSL.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxProxySSL.Name = "checkBoxProxySSL";
             this.checkBoxProxySSL.Size = new System.Drawing.Size(142, 17);
@@ -1967,131 +2091,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxOverClockSettings.TabStop = false;
             this.groupBoxOverClockSettings.Text = "Overclock settings for selected device:";
             // 
-            // tabPageTools
-            // 
-            this.tabPageTools.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPageTools.Controls.Add(this.groupBoxToolsNH);
-            this.tabPageTools.Controls.Add(this.groupBoxToolsNET);
-            this.tabPageTools.Controls.Add(this.groupBoxToolsGPU);
-            this.tabPageTools.Location = new System.Drawing.Point(4, 23);
-            this.tabPageTools.Name = "tabPageTools";
-            this.tabPageTools.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTools.Size = new System.Drawing.Size(669, 491);
-            this.tabPageTools.TabIndex = 4;
-            this.tabPageTools.Text = "Tools";
-            // 
-            // groupBoxToolsNH
-            // 
-            this.groupBoxToolsNH.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxToolsNH.Controls.Add(this.richTextBoxCheckNiceHashservers);
-            this.groupBoxToolsNH.Controls.Add(this.buttonCheckNiceHashservers);
-            this.groupBoxToolsNH.Controls.Add(this.buttonCheckNiceHashStatus);
-            this.groupBoxToolsNH.Location = new System.Drawing.Point(5, 6);
-            this.groupBoxToolsNH.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxToolsNH.Name = "groupBoxToolsNH";
-            this.groupBoxToolsNH.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxToolsNH.Size = new System.Drawing.Size(657, 108);
-            this.groupBoxToolsNH.TabIndex = 398;
-            this.groupBoxToolsNH.TabStop = false;
-            this.groupBoxToolsNH.Text = "NiceHash";
-            // 
-            // richTextBoxCheckNiceHashservers
-            // 
-            this.richTextBoxCheckNiceHashservers.Location = new System.Drawing.Point(326, 19);
-            this.richTextBoxCheckNiceHashservers.Name = "richTextBoxCheckNiceHashservers";
-            this.richTextBoxCheckNiceHashservers.Size = new System.Drawing.Size(283, 83);
-            this.richTextBoxCheckNiceHashservers.TabIndex = 46;
-            this.richTextBoxCheckNiceHashservers.Text = "";
-            // 
-            // buttonCheckNiceHashservers
-            // 
-            this.buttonCheckNiceHashservers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCheckNiceHashservers.Location = new System.Drawing.Point(177, 19);
-            this.buttonCheckNiceHashservers.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonCheckNiceHashservers.Name = "buttonCheckNiceHashservers";
-            this.buttonCheckNiceHashservers.Size = new System.Drawing.Size(144, 23);
-            this.buttonCheckNiceHashservers.TabIndex = 45;
-            this.buttonCheckNiceHashservers.Text = "Check NiceHash servers";
-            this.buttonCheckNiceHashservers.UseVisualStyleBackColor = true;
-            this.buttonCheckNiceHashservers.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // buttonCheckNiceHashStatus
-            // 
-            this.buttonCheckNiceHashStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCheckNiceHashStatus.Location = new System.Drawing.Point(4, 19);
-            this.buttonCheckNiceHashStatus.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonCheckNiceHashStatus.Name = "buttonCheckNiceHashStatus";
-            this.buttonCheckNiceHashStatus.Size = new System.Drawing.Size(144, 23);
-            this.buttonCheckNiceHashStatus.TabIndex = 44;
-            this.buttonCheckNiceHashStatus.Text = "Check NiceHash status";
-            this.buttonCheckNiceHashStatus.UseVisualStyleBackColor = true;
-            this.buttonCheckNiceHashStatus.Click += new System.EventHandler(this.buttonCheckNiceHashStatus_Click);
-            // 
-            // groupBoxToolsNET
-            // 
-            this.groupBoxToolsNET.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxToolsNET.Controls.Add(this.buttonCurrPorts);
-            this.groupBoxToolsNET.Location = new System.Drawing.Point(5, 120);
-            this.groupBoxToolsNET.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxToolsNET.Name = "groupBoxToolsNET";
-            this.groupBoxToolsNET.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxToolsNET.Size = new System.Drawing.Size(657, 108);
-            this.groupBoxToolsNET.TabIndex = 397;
-            this.groupBoxToolsNET.TabStop = false;
-            this.groupBoxToolsNET.Text = "Network";
-            // 
-            // buttonCurrPorts
-            // 
-            this.buttonCurrPorts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCurrPorts.Location = new System.Drawing.Point(4, 19);
-            this.buttonCurrPorts.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonCurrPorts.Name = "buttonCurrPorts";
-            this.buttonCurrPorts.Size = new System.Drawing.Size(144, 23);
-            this.buttonCurrPorts.TabIndex = 45;
-            this.buttonCurrPorts.Text = "Run CurrPorts";
-            this.buttonCurrPorts.UseVisualStyleBackColor = true;
-            this.buttonCurrPorts.Click += new System.EventHandler(this.buttonCurrPorts_Click);
-            // 
-            // groupBoxToolsGPU
-            // 
-            this.groupBoxToolsGPU.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxToolsGPU.Controls.Add(this.buttonNVIDIAinspector);
-            this.groupBoxToolsGPU.Controls.Add(this.buttonOverdriveNTool);
-            this.groupBoxToolsGPU.Location = new System.Drawing.Point(4, 234);
-            this.groupBoxToolsGPU.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxToolsGPU.Name = "groupBoxToolsGPU";
-            this.groupBoxToolsGPU.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxToolsGPU.Size = new System.Drawing.Size(657, 108);
-            this.groupBoxToolsGPU.TabIndex = 396;
-            this.groupBoxToolsGPU.TabStop = false;
-            this.groupBoxToolsGPU.Text = "GPU";
-            // 
-            // buttonNVIDIAinspector
-            // 
-            this.buttonNVIDIAinspector.Location = new System.Drawing.Point(178, 19);
-            this.buttonNVIDIAinspector.Name = "buttonNVIDIAinspector";
-            this.buttonNVIDIAinspector.Size = new System.Drawing.Size(131, 23);
-            this.buttonNVIDIAinspector.TabIndex = 1;
-            this.buttonNVIDIAinspector.Text = "NVIDIA Inspector";
-            this.buttonNVIDIAinspector.UseVisualStyleBackColor = true;
-            this.buttonNVIDIAinspector.Click += new System.EventHandler(this.buttonNVIDIAinspector_Click);
-            // 
-            // buttonOverdriveNTool
-            // 
-            this.buttonOverdriveNTool.Location = new System.Drawing.Point(18, 20);
-            this.buttonOverdriveNTool.Name = "buttonOverdriveNTool";
-            this.buttonOverdriveNTool.Size = new System.Drawing.Size(131, 23);
-            this.buttonOverdriveNTool.TabIndex = 0;
-            this.buttonOverdriveNTool.Text = "AMD OverdriveNTool";
-            this.buttonOverdriveNTool.UseVisualStyleBackColor = true;
-            this.buttonOverdriveNTool.Click += new System.EventHandler(this.buttonOverdriveNTool_Click);
-            // 
             // tabPageAbout
             // 
             this.tabPageAbout.BackColor = System.Drawing.SystemColors.Control;
@@ -2304,6 +2303,337 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
+            // labelPowerCurrency1
+            // 
+            this.labelPowerCurrency1.AutoSize = true;
+            this.labelPowerCurrency1.Location = new System.Drawing.Point(227, 49);
+            this.labelPowerCurrency1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency1.Name = "labelPowerCurrency1";
+            this.labelPowerCurrency1.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency1.TabIndex = 405;
+            this.labelPowerCurrency1.Text = "USD/kW.h";
+            // 
+            // labelPowerCurrency2
+            // 
+            this.labelPowerCurrency2.AutoSize = true;
+            this.labelPowerCurrency2.Location = new System.Drawing.Point(227, 75);
+            this.labelPowerCurrency2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency2.Name = "labelPowerCurrency2";
+            this.labelPowerCurrency2.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency2.TabIndex = 411;
+            this.labelPowerCurrency2.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo2
+            // 
+            this.textBoxScheduleTo2.AsciiOnly = true;
+            this.textBoxScheduleTo2.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo2.Location = new System.Drawing.Point(98, 72);
+            this.textBoxScheduleTo2.Mask = "00:00";
+            this.textBoxScheduleTo2.Name = "textBoxScheduleTo2";
+            this.textBoxScheduleTo2.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo2.TabIndex = 410;
+            this.textBoxScheduleTo2.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo2.Leave += new System.EventHandler(this.textBoxScheduleTo2_Leave);
+            // 
+            // textBoxScheduleFrom2
+            // 
+            this.textBoxScheduleFrom2.AsciiOnly = true;
+            this.textBoxScheduleFrom2.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom2.Location = new System.Drawing.Point(35, 72);
+            this.textBoxScheduleFrom2.Mask = "00:00";
+            this.textBoxScheduleFrom2.Name = "textBoxScheduleFrom2";
+            this.textBoxScheduleFrom2.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom2.TabIndex = 409;
+            this.textBoxScheduleFrom2.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom2.Leave += new System.EventHandler(this.textBoxScheduleFrom2_Leave);
+            // 
+            // textBoxScheduleCost2
+            // 
+            this.textBoxScheduleCost2.Location = new System.Drawing.Point(183, 72);
+            this.textBoxScheduleCost2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost2.Name = "textBoxScheduleCost2";
+            this.textBoxScheduleCost2.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost2.TabIndex = 408;
+            this.textBoxScheduleCost2.WordWrap = false;
+            this.textBoxScheduleCost2.Leave += new System.EventHandler(this.textBoxScheduleCost2_Leave);
+            // 
+            // labelCost2
+            // 
+            this.labelCost2.AutoSize = true;
+            this.labelCost2.Location = new System.Drawing.Point(146, 75);
+            this.labelCost2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost2.Name = "labelCost2";
+            this.labelCost2.Size = new System.Drawing.Size(27, 13);
+            this.labelCost2.TabIndex = 407;
+            this.labelCost2.Text = "cost";
+            // 
+            // labelFrom2
+            // 
+            this.labelFrom2.AutoSize = true;
+            this.labelFrom2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom2.Location = new System.Drawing.Point(5, 76);
+            this.labelFrom2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom2.Name = "labelFrom2";
+            this.labelFrom2.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom2.TabIndex = 406;
+            this.labelFrom2.Text = "from";
+            this.labelFrom2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelPowerCurrency3
+            // 
+            this.labelPowerCurrency3.AutoSize = true;
+            this.labelPowerCurrency3.Location = new System.Drawing.Point(227, 101);
+            this.labelPowerCurrency3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency3.Name = "labelPowerCurrency3";
+            this.labelPowerCurrency3.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency3.TabIndex = 417;
+            this.labelPowerCurrency3.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo3
+            // 
+            this.textBoxScheduleTo3.AsciiOnly = true;
+            this.textBoxScheduleTo3.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo3.Location = new System.Drawing.Point(98, 98);
+            this.textBoxScheduleTo3.Mask = "00:00";
+            this.textBoxScheduleTo3.Name = "textBoxScheduleTo3";
+            this.textBoxScheduleTo3.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo3.TabIndex = 416;
+            this.textBoxScheduleTo3.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo3.Leave += new System.EventHandler(this.textBoxScheduleTo3_Leave);
+            // 
+            // textBoxScheduleFrom3
+            // 
+            this.textBoxScheduleFrom3.AsciiOnly = true;
+            this.textBoxScheduleFrom3.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom3.Location = new System.Drawing.Point(35, 98);
+            this.textBoxScheduleFrom3.Mask = "00:00";
+            this.textBoxScheduleFrom3.Name = "textBoxScheduleFrom3";
+            this.textBoxScheduleFrom3.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom3.TabIndex = 415;
+            this.textBoxScheduleFrom3.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom3.Leave += new System.EventHandler(this.textBoxScheduleFrom3_Leave);
+            // 
+            // textBoxScheduleCost3
+            // 
+            this.textBoxScheduleCost3.Location = new System.Drawing.Point(183, 98);
+            this.textBoxScheduleCost3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost3.Name = "textBoxScheduleCost3";
+            this.textBoxScheduleCost3.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost3.TabIndex = 414;
+            this.textBoxScheduleCost3.WordWrap = false;
+            this.textBoxScheduleCost3.Leave += new System.EventHandler(this.textBoxScheduleCost3_Leave);
+            // 
+            // labelCost3
+            // 
+            this.labelCost3.AutoSize = true;
+            this.labelCost3.Location = new System.Drawing.Point(146, 101);
+            this.labelCost3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost3.Name = "labelCost3";
+            this.labelCost3.Size = new System.Drawing.Size(27, 13);
+            this.labelCost3.TabIndex = 413;
+            this.labelCost3.Text = "cost";
+            // 
+            // labelFrom3
+            // 
+            this.labelFrom3.AutoSize = true;
+            this.labelFrom3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom3.Location = new System.Drawing.Point(5, 102);
+            this.labelFrom3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom3.Name = "labelFrom3";
+            this.labelFrom3.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom3.TabIndex = 412;
+            this.labelFrom3.Text = "from";
+            this.labelFrom3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelPowerCurrency4
+            // 
+            this.labelPowerCurrency4.AutoSize = true;
+            this.labelPowerCurrency4.Location = new System.Drawing.Point(227, 127);
+            this.labelPowerCurrency4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency4.Name = "labelPowerCurrency4";
+            this.labelPowerCurrency4.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency4.TabIndex = 423;
+            this.labelPowerCurrency4.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo4
+            // 
+            this.textBoxScheduleTo4.AsciiOnly = true;
+            this.textBoxScheduleTo4.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo4.Location = new System.Drawing.Point(98, 124);
+            this.textBoxScheduleTo4.Mask = "00:00";
+            this.textBoxScheduleTo4.Name = "textBoxScheduleTo4";
+            this.textBoxScheduleTo4.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo4.TabIndex = 422;
+            this.textBoxScheduleTo4.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo4.Leave += new System.EventHandler(this.textBoxScheduleTo4_Leave);
+            // 
+            // textBoxScheduleFrom4
+            // 
+            this.textBoxScheduleFrom4.AsciiOnly = true;
+            this.textBoxScheduleFrom4.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom4.Location = new System.Drawing.Point(35, 124);
+            this.textBoxScheduleFrom4.Mask = "00:00";
+            this.textBoxScheduleFrom4.Name = "textBoxScheduleFrom4";
+            this.textBoxScheduleFrom4.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom4.TabIndex = 421;
+            this.textBoxScheduleFrom4.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom4.Leave += new System.EventHandler(this.textBoxScheduleFrom4_Leave);
+            // 
+            // textBoxScheduleCost4
+            // 
+            this.textBoxScheduleCost4.Location = new System.Drawing.Point(183, 124);
+            this.textBoxScheduleCost4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost4.Name = "textBoxScheduleCost4";
+            this.textBoxScheduleCost4.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost4.TabIndex = 420;
+            this.textBoxScheduleCost4.WordWrap = false;
+            this.textBoxScheduleCost4.Leave += new System.EventHandler(this.textBoxScheduleCost4_Leave);
+            // 
+            // labelCost4
+            // 
+            this.labelCost4.AutoSize = true;
+            this.labelCost4.Location = new System.Drawing.Point(146, 127);
+            this.labelCost4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost4.Name = "labelCost4";
+            this.labelCost4.Size = new System.Drawing.Size(27, 13);
+            this.labelCost4.TabIndex = 419;
+            this.labelCost4.Text = "cost";
+            // 
+            // labelFrom4
+            // 
+            this.labelFrom4.AutoSize = true;
+            this.labelFrom4.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom4.Location = new System.Drawing.Point(5, 128);
+            this.labelFrom4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom4.Name = "labelFrom4";
+            this.labelFrom4.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom4.TabIndex = 418;
+            this.labelFrom4.Text = "from";
+            this.labelFrom4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelPowerCurrency5
+            // 
+            this.labelPowerCurrency5.AutoSize = true;
+            this.labelPowerCurrency5.Location = new System.Drawing.Point(227, 153);
+            this.labelPowerCurrency5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency5.Name = "labelPowerCurrency5";
+            this.labelPowerCurrency5.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency5.TabIndex = 429;
+            this.labelPowerCurrency5.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo5
+            // 
+            this.textBoxScheduleTo5.AsciiOnly = true;
+            this.textBoxScheduleTo5.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo5.Location = new System.Drawing.Point(98, 150);
+            this.textBoxScheduleTo5.Mask = "00:00";
+            this.textBoxScheduleTo5.Name = "textBoxScheduleTo5";
+            this.textBoxScheduleTo5.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo5.TabIndex = 428;
+            this.textBoxScheduleTo5.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo5.Leave += new System.EventHandler(this.textBoxScheduleTo5_Leave);
+            // 
+            // textBoxScheduleFrom5
+            // 
+            this.textBoxScheduleFrom5.AsciiOnly = true;
+            this.textBoxScheduleFrom5.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom5.Location = new System.Drawing.Point(35, 150);
+            this.textBoxScheduleFrom5.Mask = "00:00";
+            this.textBoxScheduleFrom5.Name = "textBoxScheduleFrom5";
+            this.textBoxScheduleFrom5.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom5.TabIndex = 427;
+            this.textBoxScheduleFrom5.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom5.Leave += new System.EventHandler(this.textBoxScheduleFrom5_Leave);
+            // 
+            // textBoxScheduleCost5
+            // 
+            this.textBoxScheduleCost5.Location = new System.Drawing.Point(183, 150);
+            this.textBoxScheduleCost5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost5.Name = "textBoxScheduleCost5";
+            this.textBoxScheduleCost5.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost5.TabIndex = 426;
+            this.textBoxScheduleCost5.WordWrap = false;
+            this.textBoxScheduleCost5.Leave += new System.EventHandler(this.textBoxScheduleCost5_Leave);
+            // 
+            // labelCost5
+            // 
+            this.labelCost5.AutoSize = true;
+            this.labelCost5.Location = new System.Drawing.Point(146, 153);
+            this.labelCost5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost5.Name = "labelCost5";
+            this.labelCost5.Size = new System.Drawing.Size(27, 13);
+            this.labelCost5.TabIndex = 425;
+            this.labelCost5.Text = "cost";
+            // 
+            // labelFrom5
+            // 
+            this.labelFrom5.AutoSize = true;
+            this.labelFrom5.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom5.Location = new System.Drawing.Point(5, 154);
+            this.labelFrom5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom5.Name = "labelFrom5";
+            this.labelFrom5.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom5.TabIndex = 424;
+            this.labelFrom5.Text = "from";
+            this.labelFrom5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelTo2
+            // 
+            this.labelTo2.AutoSize = true;
+            this.labelTo2.Location = new System.Drawing.Point(78, 75);
+            this.labelTo2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo2.Name = "labelTo2";
+            this.labelTo2.Size = new System.Drawing.Size(16, 13);
+            this.labelTo2.TabIndex = 430;
+            this.labelTo2.Text = "to";
+            // 
+            // labelTo3
+            // 
+            this.labelTo3.AutoSize = true;
+            this.labelTo3.Location = new System.Drawing.Point(78, 101);
+            this.labelTo3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo3.Name = "labelTo3";
+            this.labelTo3.Size = new System.Drawing.Size(16, 13);
+            this.labelTo3.TabIndex = 431;
+            this.labelTo3.Text = "to";
+            // 
+            // labelTo4
+            // 
+            this.labelTo4.AutoSize = true;
+            this.labelTo4.Location = new System.Drawing.Point(78, 127);
+            this.labelTo4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo4.Name = "labelTo4";
+            this.labelTo4.Size = new System.Drawing.Size(16, 13);
+            this.labelTo4.TabIndex = 432;
+            this.labelTo4.Text = "to";
+            // 
+            // labelTo5
+            // 
+            this.labelTo5.AutoSize = true;
+            this.labelTo5.Location = new System.Drawing.Point(78, 153);
+            this.labelTo5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo5.Name = "labelTo5";
+            this.labelTo5.Size = new System.Drawing.Size(16, 13);
+            this.labelTo5.TabIndex = 433;
+            this.labelTo5.Text = "to";
+            // 
+            // groupBox_additionally
+            // 
+            this.groupBox_additionally.Controls.Add(this.checkBox_Show_Total_Power);
+            this.groupBox_additionally.Controls.Add(this.label_psu);
+            this.groupBox_additionally.Controls.Add(this.checkBox_Show_profit_with_power_consumption);
+            this.groupBox_additionally.Controls.Add(this.textBox_psu);
+            this.groupBox_additionally.Controls.Add(this.label_MBpower);
+            this.groupBox_additionally.Controls.Add(this.labelAddAMD);
+            this.groupBox_additionally.Controls.Add(this.textBox_mb);
+            this.groupBox_additionally.Controls.Add(this.textBoxAddAMD);
+            this.groupBox_additionally.Location = new System.Drawing.Point(343, 6);
+            this.groupBox_additionally.Name = "groupBox_additionally";
+            this.groupBox_additionally.Size = new System.Drawing.Size(320, 184);
+            this.groupBox_additionally.TabIndex = 395;
+            this.groupBox_additionally.TabStop = false;
+            this.groupBox_additionally.Text = "Additionally";
+            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2419,7 +2749,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).EndInit();
             this.groupBox_Main.ResumeLayout(false);
             this.groupBox_Main.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).EndInit();
             this.groupBox_Misc.ResumeLayout(false);
@@ -2439,6 +2768,10 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).EndInit();
+            this.tabPagePower.ResumeLayout(false);
+            this.groupBoxTariffs.ResumeLayout(false);
+            this.groupBoxTariffs.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).EndInit();
             this.tabPageAdvanced1.ResumeLayout(false);
             this.groupBoxConnection.ResumeLayout(false);
             this.groupBoxConnection.PerformLayout();
@@ -2457,16 +2790,14 @@ namespace NiceHashMiner.Forms
             this.tabPageOverClock.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBoxOverClockSettings.ResumeLayout(false);
-            this.tabPageTools.ResumeLayout(false);
-            this.groupBoxToolsNH.ResumeLayout(false);
-            this.groupBoxToolsNET.ResumeLayout(false);
-            this.groupBoxToolsGPU.ResumeLayout(false);
             this.tabPageAbout.ResumeLayout(false);
             this.groupBoxBackup.ResumeLayout(false);
             this.groupBoxBackup.PerformLayout();
             this.groupBoxUpdates.ResumeLayout(false);
             this.groupBoxUpdates.PerformLayout();
             this.groupBoxInfo.ResumeLayout(false);
+            this.groupBox_additionally.ResumeLayout(false);
+            this.groupBox_additionally.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2481,9 +2812,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.GroupBox groupBox_Main;
         private System.Windows.Forms.CheckBox checkBox_Force_mining_if_nonprofitable;
-        private System.Windows.Forms.PictureBox pictureBox_ElectricityCost;
-        private System.Windows.Forms.TextBox textBox_ElectricityCost;
-        private System.Windows.Forms.Label label_ElectricityCost;
         private System.Windows.Forms.PictureBox pictureBox_TimeUnit;
         private System.Windows.Forms.Label label_TimeUnit;
         private System.Windows.Forms.ComboBox comboBox_TimeUnit;
@@ -2513,11 +2841,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.PictureBox pictureBox_HideMiningWindows;
         private System.Windows.Forms.CheckBox checkBox_AutoScaleBTCValues;
         private System.Windows.Forms.CheckBox checkBox_StartMiningWhenIdle;
-        private System.Windows.Forms.GroupBox groupBox_Logging;
-        private System.Windows.Forms.Label label_LogMaxFileSize;
-        private System.Windows.Forms.TextBox textBox_LogMaxFileSize;
-        private System.Windows.Forms.CheckBox checkBox_LogToFile;
-        private System.Windows.Forms.PictureBox pictureBox_LogMaxFileSize;
         private System.Windows.Forms.GroupBox groupBox_Localization;
         private System.Windows.Forms.Label label_Language;
         private System.Windows.Forms.PictureBox pictureBox5;
@@ -2555,10 +2878,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label label_switching_algorithms;
         private System.Windows.Forms.ComboBox comboBox_switching_algorithms;
         private System.Windows.Forms.CheckBox checkBox_Show_profit_with_power_consumption;
-        private System.Windows.Forms.TextBox textBox_mb;
-        private System.Windows.Forms.Label label_MBpower;
-        private System.Windows.Forms.TextBox textBox_psu;
-        private System.Windows.Forms.Label label_psu;
         private System.Windows.Forms.Label label_devices_count;
         private System.Windows.Forms.ComboBox comboBox_devices_count;
         private System.Windows.Forms.CheckBox checkBox_fiat;
@@ -2592,21 +2911,9 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxCPUmonitoring;
         private System.Windows.Forms.CheckBox checkBoxNVMonitoring;
         private System.Windows.Forms.CheckBox checkBoxAMDmonitoring;
-        private System.Windows.Forms.TextBox textBoxAddAMD;
-        private System.Windows.Forms.Label labelAddAMD;
         private System.Windows.Forms.CheckBox checkBoxDriverWarning;
         private System.Windows.Forms.TextBox textBoxMaxEpoch;
         private System.Windows.Forms.Label labelMaxEpoch;
-        private System.Windows.Forms.TabPage tabPageTools;
-        private System.Windows.Forms.GroupBox groupBoxToolsNET;
-        private System.Windows.Forms.GroupBox groupBoxToolsGPU;
-        private System.Windows.Forms.Button buttonOverdriveNTool;
-        private System.Windows.Forms.GroupBox groupBoxToolsNH;
-        private System.Windows.Forms.Button buttonCheckNiceHashservers;
-        private System.Windows.Forms.Button buttonCheckNiceHashStatus;
-        private System.Windows.Forms.Button buttonCurrPorts;
-        private System.Windows.Forms.Button buttonNVIDIAinspector;
-        private System.Windows.Forms.RichTextBox richTextBoxCheckNiceHashservers;
         private System.Windows.Forms.CheckBox checkBox_show_NVdevice_manufacturer;
         private System.Windows.Forms.CheckBox checkBox_ShowDeviceMemSize;
         private System.Windows.Forms.CheckBox checkBox_show_AMDdevice_manufacturer;
@@ -2637,11 +2944,62 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonSetupAPI;
         public System.Windows.Forms.CheckBox checkBox_EnableAPI;
         private System.Windows.Forms.GroupBox groupBoxConnection;
-        private System.Windows.Forms.CheckBox checkBoxProxyAsFailover;
         private System.Windows.Forms.CheckBox checkBoxProxySSL;
-        private System.Windows.Forms.CheckBox checkBoxStale;
         private System.Windows.Forms.CheckBox checkBoxEnableProxy;
         private System.Windows.Forms.CheckBox checkBoxEnableRigRemoteView;
         private System.Windows.Forms.LinkLabel linkLabelRigRemoteView;
+        private System.Windows.Forms.GroupBox groupBox_Logging;
+        private System.Windows.Forms.Label label_LogMaxFileSize;
+        private System.Windows.Forms.TextBox textBox_LogMaxFileSize;
+        private System.Windows.Forms.CheckBox checkBox_LogToFile;
+        private System.Windows.Forms.PictureBox pictureBox_LogMaxFileSize;
+        private System.Windows.Forms.TabPage tabPagePower;
+        private System.Windows.Forms.TextBox textBoxAddAMD;
+        private System.Windows.Forms.Label labelAddAMD;
+        private System.Windows.Forms.TextBox textBox_psu;
+        private System.Windows.Forms.Label label_psu;
+        private System.Windows.Forms.TextBox textBox_mb;
+        private System.Windows.Forms.Label label_MBpower;
+        private System.Windows.Forms.PictureBox pictureBox_ElectricityCost;
+        private System.Windows.Forms.GroupBox groupBoxTariffs;
+        private System.Windows.Forms.Label label_Schedules;
+        private System.Windows.Forms.ComboBox comboBoxZones;
+        private System.Windows.Forms.Label label_Schedules2;
+        private System.Windows.Forms.TextBox textBoxScheduleCost1;
+        private System.Windows.Forms.Label labelCost1;
+        private System.Windows.Forms.Label labelTo1;
+        private System.Windows.Forms.Label labelFrom1;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleFrom1;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleTo1;
+        private System.Windows.Forms.Label labelPowerCurrency1;
+        private System.Windows.Forms.Label labelPowerCurrency5;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleTo5;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleFrom5;
+        private System.Windows.Forms.TextBox textBoxScheduleCost5;
+        private System.Windows.Forms.Label labelCost5;
+        private System.Windows.Forms.Label labelFrom5;
+        private System.Windows.Forms.Label labelPowerCurrency4;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleTo4;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleFrom4;
+        private System.Windows.Forms.TextBox textBoxScheduleCost4;
+        private System.Windows.Forms.Label labelCost4;
+        private System.Windows.Forms.Label labelFrom4;
+        private System.Windows.Forms.Label labelPowerCurrency3;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleTo3;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleFrom3;
+        private System.Windows.Forms.TextBox textBoxScheduleCost3;
+        private System.Windows.Forms.Label labelCost3;
+        private System.Windows.Forms.Label labelFrom3;
+        private System.Windows.Forms.Label labelPowerCurrency2;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleTo2;
+        private System.Windows.Forms.MaskedTextBox textBoxScheduleFrom2;
+        private System.Windows.Forms.TextBox textBoxScheduleCost2;
+        private System.Windows.Forms.Label labelCost2;
+        private System.Windows.Forms.Label labelFrom2;
+        private System.Windows.Forms.Label labelTo5;
+        private System.Windows.Forms.Label labelTo4;
+        private System.Windows.Forms.Label labelTo3;
+        private System.Windows.Forms.Label labelTo2;
+        private System.Windows.Forms.GroupBox groupBox_additionally;
     }
 }

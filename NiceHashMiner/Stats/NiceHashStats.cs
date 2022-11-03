@@ -953,7 +953,7 @@ namespace NiceHashMiner.Stats
         }
         public static void SetAlgorithmRates(JArray data, int multipl = 1, double treshold = 12.0, bool average = false)
         {
-            double mult = multipl * 0.99;
+            double mult = multipl * 0.98;
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();

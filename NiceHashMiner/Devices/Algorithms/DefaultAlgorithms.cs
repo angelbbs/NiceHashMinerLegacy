@@ -340,6 +340,9 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.Octopus, "Octopus")
+                            {
+                            }
                         }
             },
             { MinerBaseType.NBMiner,

@@ -138,6 +138,7 @@ namespace NiceHashMiner.Miners
 
         public static void ConnectToPool()
         {
+            Helpers.ConsolePrint("DaggerHashimoto4GB", "Start connection");
             LingerOption lingerOption = new LingerOption(true, 0);
             while (Divert.checkConnection4GB)
             {
@@ -273,6 +274,7 @@ namespace NiceHashMiner.Miners
             byte[] hashrateBytes = Encoding.ASCII.GetBytes(hashrate);
             byte[] submitBytes = Encoding.ASCII.GetBytes(submit);
             int epoch = 999;
+            int GoodEpochCount = 0;
             waitReconnect = 300;
 
             if (serverStream == null)
@@ -344,21 +346,24 @@ namespace NiceHashMiner.Miners
                                     epoch = Epoch(seedhash);
                                     Helpers.ConsolePrint("DaggerHashimoto4GB", "Epoch = " + epoch.ToString());
                                     bool previousEpoch = Epoch4GB;
-                                    if (epoch <= ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch) //win 10
+                                    if (epoch <= ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch) 
                                     {
-                                        Divert.DaggerHashimoto4GBProfit = true;
-                                        Divert.DaggerHashimoto4GBForce = true;
-                                        Thread.Sleep(2000);//wait for stop
-
+                                        GoodEpochCount++;
                                     }
                                     else
                                     {
-
+                                        GoodEpochCount = 0;
                                     }
 
                                 }
                             }
-
+                            if (GoodEpochCount >= 3)
+                            {
+                                GoodEpochCount = 0;
+                                Divert.DaggerHashimoto4GBProfit = true;
+                                Divert.DaggerHashimoto4GBForce = true;
+                                Thread.Sleep(2000);//wait for stop
+                            }
                         }
 
                         if (poolAnswer.Contains("set_difficulty"))

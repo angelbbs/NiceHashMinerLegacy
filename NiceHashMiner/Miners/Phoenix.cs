@@ -55,6 +55,15 @@ namespace NiceHashMiner.Miners
                 port = "1" + port;
                 ssl = "";
             }
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB) ||
+                MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB)
+                )
+            {
+                port = "13353";
+                ssl = "";
+            }
+
             int n = 0;
             foreach (string serverUrl in Globals.MiningLocation)
             {

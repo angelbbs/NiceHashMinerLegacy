@@ -226,6 +226,9 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 51;
                 }
+
+                //ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");заменить
+
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

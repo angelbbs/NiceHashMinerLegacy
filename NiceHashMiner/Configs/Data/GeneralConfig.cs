@@ -36,6 +36,12 @@ namespace NiceHashMiner.Configs.Data
         public string BitcoinAddressNew = "";
         public string WorkerName = "worker1";
         public TimeUnitType TimeUnit = TimeUnitType.Day;
+
+        public int PowerTarif = 0;
+        public string[] ZoneSchedule1 = { "00:00", "23:59:59", "0.00" };
+        public string[] ZoneSchedule2 = { "07:00", "23:00", "0.00", "23:00", "07:00", "0.00" };
+        public string[] ZoneSchedule3 = { "23:00", "07:00", "0.00", "07:00", "09:00", "0.00", "09:00", "17:00", "0.00", "17:00", "20:00", "0.00", "20:00", "23:00", "0.00" };
+
         public string IFTTTKey = "";
         public int ServiceLocation = 0;
         public bool ForceAutoLocation = true;

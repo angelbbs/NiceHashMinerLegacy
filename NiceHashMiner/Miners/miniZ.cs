@@ -50,6 +50,7 @@ namespace NiceHashMiner.Miners
         private bool firstStart = true;
         private double _power = 0.0d;
         double _powerUsage = 0;
+        private int errorCount = 0;
         public miniZ() : base("miniZ")
         {
             ConectionType = NhmConectionType.NONE;
@@ -90,12 +91,12 @@ namespace NiceHashMiner.Miners
             {
                 if (serverUrl.Contains("auto"))
                 {
-                    ret = ret + " --url " + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
+                    ret = ret + " --url " + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --pers auto ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
-                    ret = ret + " --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port;
+                    ret = ret + " --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --pers auto ";
                 }
             }
             return ret;
@@ -132,6 +133,12 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
                 port = "3353";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
+            {
+                algo = "octopus";
+                algoName = "octopus";
+                port = "3389";
+            }
             string sColor = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
             {
@@ -140,7 +147,7 @@ namespace NiceHashMiner.Miners
             string psw = "x";
             if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
             var ret = GetDevicesCommandString()
-                      + sColor + " --pers auto --par=" + algo
+                      + sColor + " --par=" + algo
                       + GetServer(algoName, username, port)
                       + " --pass=" + psw + " " + " --telemetry=" + ApiPort;
 
@@ -209,7 +216,7 @@ namespace NiceHashMiner.Miners
             var algoName = "";
             var btcAddress = Globals.GetBitcoinUser();
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
-            string username = GetUsername(btcAddress, worker);
+            string username = Globals.DemoUser;
             var stratumPort = "3369";
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
@@ -255,6 +262,17 @@ namespace NiceHashMiner.Miners
                 ret = GetDevicesCommandString()
                       + " --nocolour --par=" + algo
                       + " --url 0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "")
+                      + " --url " + username + "@" + Globals.MiningLocation[1].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3353")
+                      + " --pass=x" + " --telemetry=" + ApiPort;
+                _benchmarkTimeWait = time;
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
+            {
+                algo = "octopus";
+                algoName = "octopus";
+                ret = GetDevicesCommandString()
+                      + " --nocolour --par=" + algo
+                      + " --url cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.miniz@" + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3094").Replace("stratum+tcp://", "")
                       + " --url " + username + "@" + Globals.MiningLocation[1].Replace("stratum+tcp://", "") + ":" + (Globals.MiningLocation[0].Contains("auto.") ? "9200" : "3353")
                       + " --pass=x" + " --telemetry=" + ApiPort;
                 _benchmarkTimeWait = time;
@@ -445,6 +463,7 @@ namespace NiceHashMiner.Miners
                 //Helpers.ConsolePrint("miniZ API:", respStr);
                 if (!respStr.Contains("}]}") && prevSpeed != 0)
                 {
+                    errorCount = 0;
                     client.Close();
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                     ad.Speed = prevSpeed;
@@ -455,11 +474,18 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint(MinerTag(), ex.Message);
+                Helpers.ConsolePrint("miniZ API error", ex.Message);
+                errorCount++;
                 //Helpers.ConsolePrint(MinerTag(), respStr);
                 //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = 0;
+                if (errorCount > 20)
+                {
+                    Helpers.ConsolePrint("miniZ API error", "Restart miner");
+                    errorCount = 0;
+                    Restart();
+                }
             }
             try
             {

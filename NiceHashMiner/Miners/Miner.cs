@@ -775,10 +775,7 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
-            if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("aeternity")))
-            {
-                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.54.exe");
-            }
+
             if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("beam")))
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.54.exe");
@@ -1578,10 +1575,7 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
-            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("aeternity")))
-            {
-                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.54.exe");
-            }
+
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("beam")))
             {
                 Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.54.exe");
@@ -1670,7 +1664,7 @@ namespace NiceHashMiner
                                 new Task(() => DHClient.StartConnection()).Start();
                             }
                         }
-                        if (Form_Main.DaggerHashimoto4GB && algo != -12 && Form_Main.DaggerHashimoto4GBEnabled)
+                        if (Form_Main.DaggerHashimoto4GB && Form_Main.DaggerHashimoto4GBEnabled)
                         {
                             if (DHClient4gb.serverStream == null)
                             {
@@ -2120,6 +2114,7 @@ namespace NiceHashMiner
             //_currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
             if (CooldownCheck > 30)//150 sec
             {
+                Helpers.ConsolePrint(MinerTag(), ProcessTag() + "API Error. Restart miner");
                 CooldownCheck = 0;
                 Restart();
             }

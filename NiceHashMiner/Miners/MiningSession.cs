@@ -7,6 +7,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -530,12 +531,14 @@ namespace NiceHashMiner.Miners
             }
             // check profit threshold
             bool needSwitch = false;
+            double percDiff = 0.0d;
             if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
             {
                 Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
                 double a = Math.Max(prevStateProfit, currentProfit);
                 double b = Math.Min(prevStateProfit, currentProfit);
-                double percDiff = ((a - b)) / Math.Abs(b);
+                percDiff = ((a - b)) / Math.Abs(b);
+
                 if (percDiff <= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
                 {
                     // don't switch
@@ -549,7 +552,7 @@ namespace NiceHashMiner.Miners
                 } else 
                 {
                     //if (AlgorithmSwitchingManager.newProfit)
-                    if (_ticks[0] >= AlgorithmSwitchingManager._ticksForStable)
+                    if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                     {
                         //AlgorithmSwitchingManager.newProfit = false;
                         _ticks[0] = 0;
@@ -582,7 +585,7 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
                     var a = Math.Max(prevStateProfit, currentProfit);
                     var b = Math.Min(prevStateProfit, currentProfit);
-                    var percDiff = ((a - b)) / Math.Abs(b);
+                    percDiff = ((a - b)) / Math.Abs(b);
                     if (percDiff <= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
                     {
                         // don't switch
@@ -597,7 +600,7 @@ namespace NiceHashMiner.Miners
                     else
                     {
                         //if (AlgorithmSwitchingManager.newProfit)
-                        if (_ticks[device.Device.Index] >= AlgorithmSwitchingManager._ticksForStable)
+                        if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                         {
                             _ticks[device.Device.Index] = 0;
                             //AlgorithmSwitchingManager.newProfit = false;
@@ -622,12 +625,34 @@ namespace NiceHashMiner.Miners
                 }
             }
 
+            /*
             if (AlgorithmSwitchingManager.forceZIL)
             {
                 _ticks[0] = 0;
                 needSwitch = true;
                 Helpers.ConsolePrint(Tag, "Force switch ZIL mining");
                 AlgorithmSwitchingManager.forceZIL = false;
+            }
+            */
+            if (Divert.DaggerHashimoto4GBForce && percDiff >= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+            {
+                for (int i = 0; i > _ticks.Length;i++)
+                {
+                    _ticks[i] = 0;
+                }
+                needSwitch = true;
+                Divert.DaggerHashimoto4GBForce = false;
+                Helpers.ConsolePrint(Tag, "Force switch to/from DaggerHashimoto4GB mining");
+            }
+            if (Divert.DaggerHashimoto3GBForce && percDiff >= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+            {
+                for (int i = 0; i > _ticks.Length; i++)
+                {
+                    _ticks[i] = 0;
+                }
+                needSwitch = true;
+                Divert.DaggerHashimoto3GBForce = false;
+                Helpers.ConsolePrint(Tag, "Force switch to/from DaggerHashimoto3GB mining");
             }
 
             if (!needSwitch)

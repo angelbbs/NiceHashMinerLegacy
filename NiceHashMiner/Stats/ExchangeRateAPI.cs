@@ -156,7 +156,7 @@ namespace NiceHashMiner.Stats
         /// </summary>
         public static double GetKwhPriceInBtc()
         {
-            var price = ConfigManager.GeneralConfig.KwhPrice;
+            var price = Form_Main.GetKwhPrice();
             if (price <= 0) return 0;
             // Converting with 1/price will give us 1/usdPrice
             var invertedUsdRate = ConvertToActiveCurrency(1 / price);

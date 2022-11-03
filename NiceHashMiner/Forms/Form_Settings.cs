@@ -271,8 +271,8 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
 
             // Electricity cost
-            toolTip1.SetToolTip(label_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
-            toolTip1.SetToolTip(textBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+            //toolTip1.SetToolTip(label_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+            //toolTip1.SetToolTip(textBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
             toolTip1.SetToolTip(pictureBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
 
             Text = International.GetText("Form_Settings_Title");
@@ -504,8 +504,8 @@ namespace NiceHashMiner.Forms
             groupBoxConnection.Text = International.GetText("FormSettings_Tab_Advanced_Group_Connection");
             checkBoxProxySSL.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxProxySSL");
             checkBoxEnableProxy.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxEnableProxy");
-            checkBoxProxyAsFailover.Text = International.GetText("FormSettings_Tab_Advanced_ProxyAsFailover");
-            checkBoxStale.Text = International.GetText("FormSettings_Tab_Advanced_StaleProxy");
+            //checkBoxProxyAsFailover.Text = International.GetText("FormSettings_Tab_Advanced_ProxyAsFailover");
+            //checkBoxStale.Text = International.GetText("FormSettings_Tab_Advanced_StaleProxy");
 
             richTextBoxInfo.ReadOnly = true;
             richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Bold);
@@ -541,8 +541,29 @@ namespace NiceHashMiner.Forms
             label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
-            label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
+            label_Schedules.Text = International.GetText("Form_Settings_label_Schedules");
+            label_Schedules2.Text = International.GetText("Form_Settings_label_Schedules2");
+            labelFrom1.Text = International.GetText("Form_Settings_label_From");
+            labelFrom2.Text = International.GetText("Form_Settings_label_From");
+            labelFrom3.Text = International.GetText("Form_Settings_label_From");
+            labelFrom4.Text = International.GetText("Form_Settings_label_From");
+            labelFrom5.Text = International.GetText("Form_Settings_label_From");
+            labelTo1.Text = International.GetText("Form_Settings_label_To");
+            labelTo2.Text = International.GetText("Form_Settings_label_To");
+            labelTo3.Text = International.GetText("Form_Settings_label_To");
+            labelTo4.Text = International.GetText("Form_Settings_label_To");
+            labelTo5.Text = International.GetText("Form_Settings_label_To");
+            labelCost1.Text = International.GetText("Form_Settings_label_Cost");
+            labelCost2.Text = International.GetText("Form_Settings_label_Cost");
+            labelCost3.Text = International.GetText("Form_Settings_label_Cost");
+            labelCost4.Text = International.GetText("Form_Settings_label_Cost");
+            labelCost5.Text = International.GetText("Form_Settings_label_Cost");
 
+            labelPowerCurrency1.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency2.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency3.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency4.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency5.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
             devicesListViewEnableControl2.InitLocale();
@@ -620,6 +641,10 @@ namespace NiceHashMiner.Forms
 
                 tabPageAbout.BackColor = Form_Main._backColor;
                 tabPageAbout.ForeColor = Form_Main._foreColor;
+
+                tabPagePower.BackColor = Form_Main._backColor;
+                tabPagePower.ForeColor = Form_Main._foreColor;
+
                 progressBarUpdate.BackColor = Form_Main._backColor;
                 progressBarUpdate.ForeColor = Form_Main._foreColor;
                 progressBarUpdate.ProgressColor = Form_Main._backColor;
@@ -735,6 +760,7 @@ namespace NiceHashMiner.Forms
 
                 //comboBox_ServiceLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_TimeUnit.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBoxZones.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 currencyConverterCombobox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_Language.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
@@ -867,9 +893,66 @@ namespace NiceHashMiner.Forms
                 textBox_AutoStartMiningDelay.ForeColor = Form_Main._foreColor;
                 textBox_AutoStartMiningDelay.BorderStyle = BorderStyle.FixedSingle;
 
-                textBox_ElectricityCost.BackColor = Form_Main._backColor;
-                textBox_ElectricityCost.ForeColor = Form_Main._foreColor;
-                textBox_ElectricityCost.BorderStyle = BorderStyle.FixedSingle;
+                textBoxScheduleFrom1.BackColor = Form_Main._backColor;
+                textBoxScheduleFrom1.ForeColor = Form_Main._foreColor;
+                textBoxScheduleFrom1.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleTo1.BackColor = Form_Main._backColor;
+                textBoxScheduleTo1.ForeColor = Form_Main._foreColor;
+                textBoxScheduleTo1.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleCost1.BackColor = Form_Main._backColor;
+                textBoxScheduleCost1.ForeColor = Form_Main._foreColor;
+                textBoxScheduleCost1.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleFrom2.BackColor = Form_Main._backColor;
+                textBoxScheduleFrom2.ForeColor = Form_Main._foreColor;
+                textBoxScheduleFrom2.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleTo2.BackColor = Form_Main._backColor;
+                textBoxScheduleTo2.ForeColor = Form_Main._foreColor;
+                textBoxScheduleTo2.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleCost2.BackColor = Form_Main._backColor;
+                textBoxScheduleCost2.ForeColor = Form_Main._foreColor;
+                textBoxScheduleCost2.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleFrom3.BackColor = Form_Main._backColor;
+                textBoxScheduleFrom3.ForeColor = Form_Main._foreColor;
+                textBoxScheduleFrom3.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleTo3.BackColor = Form_Main._backColor;
+                textBoxScheduleTo3.ForeColor = Form_Main._foreColor;
+                textBoxScheduleTo3.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleCost3.BackColor = Form_Main._backColor;
+                textBoxScheduleCost3.ForeColor = Form_Main._foreColor;
+                textBoxScheduleCost3.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleFrom4.BackColor = Form_Main._backColor;
+                textBoxScheduleFrom4.ForeColor = Form_Main._foreColor;
+                textBoxScheduleFrom4.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleTo4.BackColor = Form_Main._backColor;
+                textBoxScheduleTo4.ForeColor = Form_Main._foreColor;
+                textBoxScheduleTo4.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleCost4.BackColor = Form_Main._backColor;
+                textBoxScheduleCost4.ForeColor = Form_Main._foreColor;
+                textBoxScheduleCost4.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleFrom5.BackColor = Form_Main._backColor;
+                textBoxScheduleFrom5.ForeColor = Form_Main._foreColor;
+                textBoxScheduleFrom5.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleTo5.BackColor = Form_Main._backColor;
+                textBoxScheduleTo5.ForeColor = Form_Main._foreColor;
+                textBoxScheduleTo5.BorderStyle = BorderStyle.FixedSingle;
+
+                textBoxScheduleCost5.BackColor = Form_Main._backColor;
+                textBoxScheduleCost5.ForeColor = Form_Main._foreColor;
+                textBoxScheduleCost5.BorderStyle = BorderStyle.FixedSingle;
+
 
                 textBox_psu.BackColor = Form_Main._backColor;
                 textBox_psu.ForeColor = Form_Main._foreColor;
@@ -952,10 +1035,14 @@ namespace NiceHashMiner.Forms
             }
 
             tabControlGeneral.TabPages[0].Text = International.GetText("FormSettings_Tab_General");
-            tabControlGeneral.TabPages[1].Text = International.GetText("FormSettings_Tab_Advanced");
-            tabControlGeneral.TabPages[2].Text = International.GetText("FormSettings_Tab_Devices_Algorithms");
-            tabControlGeneral.TabPages[3].Text = International.GetText("FormSettings_ABOverclockTab");
+            tabControlGeneral.TabPages[1].Text = International.GetText("FormSettings_Tab_Power");
+            tabControlGeneral.TabPages[2].Text = International.GetText("FormSettings_Tab_Advanced");
+            tabControlGeneral.TabPages[3].Text = International.GetText("FormSettings_Tab_Devices_Algorithms");
+            tabControlGeneral.TabPages[4].Text = International.GetText("FormSettings_ABOverclockTab");
+
             groupBox_Main.Text = International.GetText("FormSettings_Tab_General_Group_Main");
+            groupBoxTariffs.Text = International.GetText("FormSettings_Tab_General_Group_Tariffs");
+            groupBox_additionally.Text = International.GetText("FormSettings_Tab_General_Group_Additionally");
             groupBox_Localization.Text = International.GetText("FormSettings_Tab_General_Group_Localization");
             groupBox_Logging.Text = International.GetText("FormSettings_Tab_General_Group_Logging");
             groupBox_Misc.Text = International.GetText("FormSettings_Tab_General_Group_Misc");
@@ -1029,8 +1116,8 @@ namespace NiceHashMiner.Forms
                 checkBox_ABMinimize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxProxySSL.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxEnableProxy.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBoxProxyAsFailover.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBoxStale.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                //checkBoxProxyAsFailover.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                //checkBoxStale.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -1038,17 +1125,37 @@ namespace NiceHashMiner.Forms
                 textBox_MinIdleSeconds.Leave += GeneralTextBoxes_Leave;
                 textBox_LogMaxFileSize.Leave += GeneralTextBoxes_Leave;
                 textBox_MinProfit.Leave += GeneralTextBoxes_Leave;
-                textBox_ElectricityCost.Leave += GeneralTextBoxes_Leave;
                 textBox_psu.Leave += GeneralTextBoxes_Leave;
                 textBox_mb.Leave += GeneralTextBoxes_Leave;
                 textBoxAddAMD.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchProfitabilityThreshold.Leave += GeneralTextBoxes_Leave;
                 textBoxMaxEpoch.Leave += GeneralTextBoxes_Leave;
+
+                textBoxScheduleFrom1.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleTo1.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleCost1.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleFrom2.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleTo2.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleCost2.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleFrom3.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleTo3.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleCost3.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleFrom4.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleTo4.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleCost4.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleFrom5.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleTo5.Leave += GeneralTextBoxes_Leave;
+                textBoxScheduleCost5.Leave += GeneralTextBoxes_Leave;
+
                 // set int only keypress
                 textBox_MinIdleSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 // set double only keypress
                 textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
-                textBox_ElectricityCost.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBoxScheduleCost1.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBoxScheduleCost2.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBoxScheduleCost3.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBoxScheduleCost4.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBoxScheduleCost5.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBox_psu.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBox_mb.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBoxAddAMD.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
@@ -1057,6 +1164,7 @@ namespace NiceHashMiner.Forms
             {
                 comboBox_Language.Leave += GeneralComboBoxes_Leave;
                 comboBox_TimeUnit.Leave += GeneralComboBoxes_Leave;
+                comboBoxZones.Leave += GeneralComboBoxes_Leave;
                 comboBox_ColorProfile.Leave += GeneralComboBoxes_Leave;
                 comboBox_switching_algorithms.Leave += GeneralComboBoxes_Leave;
                 comboBox_devices_count.Leave += GeneralComboBoxes_Leave;
@@ -1152,20 +1260,23 @@ namespace NiceHashMiner.Forms
                 checkBox_ABMinimize.Checked = ConfigManager.GeneralConfig.ABMinimize;
                 checkBoxProxySSL.Checked = ConfigManager.GeneralConfig.ProxySSL;
                 checkBoxEnableProxy.Checked = ConfigManager.GeneralConfig.EnableProxy;
-                checkBoxProxyAsFailover.Checked = ConfigManager.GeneralConfig.ProxyAsFailover;
-                checkBoxStale.Checked = ConfigManager.GeneralConfig.StaleProxy;
+                //checkBoxProxyAsFailover.Checked = ConfigManager.GeneralConfig.ProxyAsFailover;
+                //checkBoxStale.Checked = ConfigManager.GeneralConfig.StaleProxy;
+
+                ConfigManager.GeneralConfig.ProxyAsFailover = false; //отключим до лучших времён
+                ConfigManager.GeneralConfig.StaleProxy = false;
 
                 if (checkBoxEnableProxy.Checked)
                 {
                     checkBoxProxySSL.Enabled = true;
-                    checkBoxProxyAsFailover.Enabled = true;
-                    checkBoxStale.Enabled = true;
+                    //checkBoxProxyAsFailover.Enabled = true;
+                    //checkBoxStale.Enabled = true;
                 }
                 else
                 {
                     checkBoxProxySSL.Enabled = false;
-                    checkBoxProxyAsFailover.Enabled = false;
-                    checkBoxStale.Enabled = false;
+                    //checkBoxProxyAsFailover.Enabled = false;
+                    //checkBoxStale.Enabled = false;
                 }
                 if (checkBoxEnableRigRemoteView.Checked)
                 {
@@ -1189,10 +1300,11 @@ namespace NiceHashMiner.Forms
                 textBox_AutoStartMiningDelay.Text = ConfigManager.GeneralConfig.AutoStartMiningDelay.ToString();
                 textBox_SwitchProfitabilityThreshold.Text = ((ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) * 100)
                     .ToString("F1").Replace(',', '.'); // force comma;
-                textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
                 textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
                 textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString();
                 textBoxAddAMD.Text = ConfigManager.GeneralConfig.PowerAddAMD.ToString();
+                
+                SetZoneTable(ConfigManager.GeneralConfig.PowerTarif);
             }
 
             // set custom control referances
@@ -1234,6 +1346,8 @@ namespace NiceHashMiner.Forms
                 comboBox_Language.SelectedIndex = (int)ConfigManager.GeneralConfig.Language;
                 //comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                comboBoxZones.SelectedIndex = ConfigManager.GeneralConfig.PowerTarif;
+
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
                 comboBox_ColorProfile.SelectedIndex = ConfigManager.GeneralConfig.ColorProfileIndex;
 
@@ -1249,13 +1363,6 @@ namespace NiceHashMiner.Forms
             checkBox_ABDefault_program_closing.Enabled = checkBox_ABEnableOverclock.Checked;
             Form_Main.OverclockEnabled = checkBox_ABEnableOverclock.Checked;
 
-            //if (!ConfigManager.GeneralConfig.ShowToolsFolder)
-            {
-                var tp = tabPageTools;
-                tabControlGeneral.TabPages.Remove(tp);
-                //var oc = tabPageOverClock;
-                //tabControlGeneral.TabPages.Remove(oc);
-            }
             if (!Form_Main.GetBTCwalletType().Equals("P2SH"))
             {
                 buttonSetupAPI.Enabled = false;
@@ -1264,6 +1371,133 @@ namespace NiceHashMiner.Forms
             }
         }
 
+        private void SetZoneTable(int PowerTarif)
+        {
+            if (PowerTarif == 0)
+            {
+                textBoxScheduleFrom1.Text = ConfigManager.GeneralConfig.ZoneSchedule1[0].Replace("23:59:59", "24:00");
+                textBoxScheduleTo1.Text = ConfigManager.GeneralConfig.ZoneSchedule1[1].Replace("23:59:59", "24:00");
+                textBoxScheduleCost1.Text = ConfigManager.GeneralConfig.ZoneSchedule1[2];
+
+                textBoxScheduleFrom2.Visible = false;
+                textBoxScheduleFrom3.Visible = false;
+                textBoxScheduleFrom4.Visible = false;
+                textBoxScheduleFrom5.Visible = false;
+                textBoxScheduleTo2.Visible = false;
+                textBoxScheduleTo3.Visible = false;
+                textBoxScheduleTo4.Visible = false;
+                textBoxScheduleTo5.Visible = false;
+                textBoxScheduleCost2.Visible = false;
+                textBoxScheduleCost3.Visible = false;
+                textBoxScheduleCost4.Visible = false;
+                textBoxScheduleCost5.Visible = false;
+
+                labelFrom2.Visible = false;
+                labelFrom3.Visible = false;
+                labelFrom4.Visible = false;
+                labelFrom5.Visible = false;
+                labelTo2.Visible = false;
+                labelTo3.Visible = false;
+                labelTo4.Visible = false;
+                labelTo5.Visible = false;
+                labelCost2.Visible = false;
+                labelCost3.Visible = false;
+                labelCost4.Visible = false;
+                labelCost5.Visible = false;
+                labelPowerCurrency2.Visible = false;
+                labelPowerCurrency3.Visible = false;
+                labelPowerCurrency4.Visible = false;
+                labelPowerCurrency5.Visible = false;
+            }
+            if (PowerTarif == 1)
+            {
+                textBoxScheduleFrom1.Text = ConfigManager.GeneralConfig.ZoneSchedule2[0].Replace("23:59:59", "24:00");
+                textBoxScheduleTo1.Text = ConfigManager.GeneralConfig.ZoneSchedule2[1].Replace("23:59:59", "24:00");
+                textBoxScheduleCost1.Text = ConfigManager.GeneralConfig.ZoneSchedule2[2];
+                textBoxScheduleFrom2.Text = ConfigManager.GeneralConfig.ZoneSchedule2[3].Replace("23:59:59", "24:00");
+                textBoxScheduleTo2.Text = ConfigManager.GeneralConfig.ZoneSchedule2[4].Replace("23:59:59", "24:00");
+                textBoxScheduleCost2.Text = ConfigManager.GeneralConfig.ZoneSchedule2[5];
+
+                textBoxScheduleFrom2.Visible = true;
+                textBoxScheduleTo2.Visible = true;
+                textBoxScheduleCost2.Visible = true;
+                labelFrom2.Visible = true;
+                labelTo2.Visible = true;
+                labelCost2.Visible = true;
+                labelPowerCurrency2.Visible = true;
+
+                textBoxScheduleFrom3.Visible = false;
+                textBoxScheduleFrom4.Visible = false;
+                textBoxScheduleFrom5.Visible = false;
+                textBoxScheduleTo3.Visible = false;
+                textBoxScheduleTo4.Visible = false;
+                textBoxScheduleTo5.Visible = false;
+                textBoxScheduleCost3.Visible = false;
+                textBoxScheduleCost4.Visible = false;
+                textBoxScheduleCost5.Visible = false;
+
+                labelFrom3.Visible = false;
+                labelFrom4.Visible = false;
+                labelFrom5.Visible = false;
+                labelTo3.Visible = false;
+                labelTo4.Visible = false;
+                labelTo5.Visible = false;
+                labelCost3.Visible = false;
+                labelCost4.Visible = false;
+                labelCost5.Visible = false;
+                labelPowerCurrency3.Visible = false;
+                labelPowerCurrency4.Visible = false;
+                labelPowerCurrency5.Visible = false;
+            }
+            if (PowerTarif == 2)
+            {
+                textBoxScheduleFrom1.Text = ConfigManager.GeneralConfig.ZoneSchedule3[0].Replace("23:59:59", "24:00");
+                textBoxScheduleTo1.Text = ConfigManager.GeneralConfig.ZoneSchedule3[1].Replace("23:59:59", "24:00");
+                textBoxScheduleCost1.Text = ConfigManager.GeneralConfig.ZoneSchedule3[2];
+                textBoxScheduleFrom2.Text = ConfigManager.GeneralConfig.ZoneSchedule3[3].Replace("23:59:59", "24:00");
+                textBoxScheduleTo2.Text = ConfigManager.GeneralConfig.ZoneSchedule3[4].Replace("23:59:59", "24:00");
+                textBoxScheduleCost2.Text = ConfigManager.GeneralConfig.ZoneSchedule3[5];
+                textBoxScheduleFrom3.Text = ConfigManager.GeneralConfig.ZoneSchedule3[6].Replace("23:59:59", "24:00");
+                textBoxScheduleTo3.Text = ConfigManager.GeneralConfig.ZoneSchedule3[7].Replace("23:59:59", "24:00");
+                textBoxScheduleCost3.Text = ConfigManager.GeneralConfig.ZoneSchedule3[8];
+                textBoxScheduleFrom4.Text = ConfigManager.GeneralConfig.ZoneSchedule3[9].Replace("23:59:59", "24:00");
+                textBoxScheduleTo4.Text = ConfigManager.GeneralConfig.ZoneSchedule3[10].Replace("23:59:59", "24:00");
+                textBoxScheduleCost4.Text = ConfigManager.GeneralConfig.ZoneSchedule3[11];
+                textBoxScheduleFrom5.Text = ConfigManager.GeneralConfig.ZoneSchedule3[12].Replace("23:59:59", "24:00");
+                textBoxScheduleTo5.Text = ConfigManager.GeneralConfig.ZoneSchedule3[13].Replace("23:59:59", "24:00");
+                textBoxScheduleCost5.Text = ConfigManager.GeneralConfig.ZoneSchedule3[14];
+
+                textBoxScheduleFrom2.Visible = true;
+                textBoxScheduleFrom3.Visible = true;
+                textBoxScheduleFrom4.Visible = true;
+                textBoxScheduleFrom5.Visible = true;
+                textBoxScheduleTo2.Visible = true;
+                textBoxScheduleTo3.Visible = true;
+                textBoxScheduleTo4.Visible = true;
+                textBoxScheduleTo5.Visible = true;
+                textBoxScheduleCost2.Visible = true;
+                textBoxScheduleCost3.Visible = true;
+                textBoxScheduleCost4.Visible = true;
+                textBoxScheduleCost5.Visible = true;
+
+                labelFrom2.Visible = true;
+                labelFrom3.Visible = true;
+                labelFrom4.Visible = true;
+                labelFrom5.Visible = true;
+                labelTo2.Visible = true;
+                labelTo3.Visible = true;
+                labelTo4.Visible = true;
+                labelTo5.Visible = true;
+                labelCost2.Visible = true;
+                labelCost3.Visible = true;
+                labelCost4.Visible = true;
+                labelCost5.Visible = true;
+                labelPowerCurrency2.Visible = true;
+                labelPowerCurrency3.Visible = true;
+                labelPowerCurrency4.Visible = true;
+                labelPowerCurrency5.Visible = true;
+            }
+        }
         private void InitializeGeneralTab()
         {
             InitializeGeneralTabTranslations();//<- mem leak
@@ -1357,8 +1591,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ABMinimize = checkBox_ABMinimize.Checked;
             ConfigManager.GeneralConfig.EnableProxy = checkBoxEnableProxy.Checked;
             ConfigManager.GeneralConfig.ProxySSL = checkBoxProxySSL.Checked;
-            ConfigManager.GeneralConfig.ProxyAsFailover = checkBoxProxyAsFailover.Checked;
-            ConfigManager.GeneralConfig.StaleProxy = checkBoxStale.Checked;
+            //ConfigManager.GeneralConfig.ProxyAsFailover = checkBoxProxyAsFailover.Checked;
+            //ConfigManager.GeneralConfig.StaleProxy = checkBoxStale.Checked;
             if (checkBox_LogToFile.Checked)
             {
                 textBox_LogMaxFileSize.Enabled = true;
@@ -1403,10 +1637,14 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.SwitchProfitabilityThreshold =
                 Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text) / 100;
 
-            ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
             ConfigManager.GeneralConfig.PowerMB = Helpers.ParseInt(textBox_mb.Text);
             ConfigManager.GeneralConfig.PowerAddAMD = Helpers.ParseInt(textBoxAddAMD.Text);
             ConfigManager.GeneralConfig.PowerPSU = Helpers.ParseInt(textBox_psu.Text);
+
+            ConfigManager.GeneralConfig.ZoneSchedule1 = Form_Main.ZoneSchedule1;
+            ConfigManager.GeneralConfig.ZoneSchedule2 = Form_Main.ZoneSchedule2;
+            ConfigManager.GeneralConfig.ZoneSchedule3 = Form_Main.ZoneSchedule3;
+
             if (Form_Main.DaggerHashimoto3GBVisible)
             {
                 ConfigManager.GeneralConfig.DaggerHashimoto3GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
@@ -1430,7 +1668,6 @@ namespace NiceHashMiner.Forms
             textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
             textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
             textBox_AutoStartMiningDelay.Text = ConfigManager.GeneralConfig.AutoStartMiningDelay.ToString();
-            textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
             textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString("");
             textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString("");
             textBoxAddAMD.Text = ConfigManager.GeneralConfig.PowerAddAMD.ToString("");
@@ -1448,6 +1685,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ProgramUpdateIndex = comboBoxCheckforprogramupdatesevery.SelectedIndex;
             ConfigManager.GeneralConfig.ProgramRestartIndex = comboBoxRestartProgram.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType)comboBox_TimeUnit.SelectedIndex;
+            ConfigManager.GeneralConfig.PowerTarif = comboBoxZones.SelectedIndex;
         }
 
         private void ComboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e)
@@ -2490,13 +2728,13 @@ namespace NiceHashMiner.Forms
             if (checkBoxEnableProxy.Checked)
             {
                 checkBoxProxySSL.Enabled = true;
-                checkBoxProxyAsFailover.Enabled = true;
-                checkBoxStale.Enabled = true;
+                //checkBoxProxyAsFailover.Enabled = true;
+                //checkBoxStale.Enabled = true;
             } else
             {
                 checkBoxProxySSL.Enabled = false;
-                checkBoxProxyAsFailover.Enabled = false;
-                checkBoxStale.Enabled = false;
+                //checkBoxProxyAsFailover.Enabled = false;
+                //checkBoxStale.Enabled = false;
             }
         }
         public static string GetLocalIPAddress()
@@ -2547,6 +2785,362 @@ namespace NiceHashMiner.Forms
             }
         }
 
+        private void comboBoxZones_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_ServiceLocation_DrawItem(sender, e);
+        }
+
+        private void comboBoxZones_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetZoneTable(comboBoxZones.SelectedIndex);
+        }
+
+        private void SaveSchedules()
+        {
+            if (comboBoxZones.SelectedIndex == 0)
+            {
+                string _textBoxScheduleFrom1 = textBoxScheduleFrom1.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo1 = textBoxScheduleTo1.Text.Replace("24:00", "23:59:59");
+
+                try
+                {
+                    Form_Main.ZoneSchedule1[0] = DateTime.Parse(_textBoxScheduleFrom1).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom1.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom1.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule1[1] = DateTime.Parse(_textBoxScheduleTo1).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo1.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo1.Focus();
+                }
+
+                try
+                {
+                    Form_Main.ZoneSchedule1[2] = double.Parse(textBoxScheduleCost1.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost1.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost1.Focus();
+                }
+            }
+
+            if (comboBoxZones.SelectedIndex == 1)
+            {
+                string _textBoxScheduleFrom1 = textBoxScheduleFrom1.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo1 = textBoxScheduleTo1.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleFrom2 = textBoxScheduleFrom2.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo2 = textBoxScheduleTo2.Text.Replace("24:00", "23:59:59");
+                //1
+                try
+                {
+                    Form_Main.ZoneSchedule2[0] = DateTime.Parse(_textBoxScheduleFrom1).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom1.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom1.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule2[1] = DateTime.Parse(_textBoxScheduleTo1).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo1.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo1.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule2[2] = double.Parse(textBoxScheduleCost1.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost1.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost1.Focus();
+                }
+                //2
+                try
+                {
+                    Form_Main.ZoneSchedule2[3] = DateTime.Parse(_textBoxScheduleFrom2).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom2.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom2.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule2[4] = DateTime.Parse(_textBoxScheduleTo2).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo2.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo2.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule2[5] = double.Parse(textBoxScheduleCost2.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost2.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost2.Focus();
+                }
+            }
+
+            if (comboBoxZones.SelectedIndex == 2)
+            {
+                string _textBoxScheduleFrom1 = textBoxScheduleFrom1.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo1 = textBoxScheduleTo1.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleFrom2 = textBoxScheduleFrom2.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo2 = textBoxScheduleTo2.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleFrom3 = textBoxScheduleFrom3.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo3 = textBoxScheduleTo3.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleFrom4 = textBoxScheduleFrom4.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo4 = textBoxScheduleTo4.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleFrom5 = textBoxScheduleFrom5.Text.Replace("24:00", "23:59:59");
+                string _textBoxScheduleTo5 = textBoxScheduleTo5.Text.Replace("24:00", "23:59:59");
+                //1
+                try
+                {
+                    Form_Main.ZoneSchedule3[0] = DateTime.Parse(_textBoxScheduleFrom1).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom1.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom1.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[1] = DateTime.Parse(_textBoxScheduleTo1).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo1.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo1.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[2] = double.Parse(textBoxScheduleCost1.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost1.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost1.Focus();
+                }
+                //2
+                try
+                {
+                    Form_Main.ZoneSchedule3[3] = DateTime.Parse(_textBoxScheduleFrom2).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom2.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom2.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[4] = DateTime.Parse(_textBoxScheduleTo2).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo2.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo2.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[5] = double.Parse(textBoxScheduleCost2.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost2.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost2.Focus();
+                }
+                //3
+                try
+                {
+                    Form_Main.ZoneSchedule3[6] = DateTime.Parse(_textBoxScheduleFrom3).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom3.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom3.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[7] = DateTime.Parse(_textBoxScheduleTo3).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo3.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo3.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[8] = double.Parse(textBoxScheduleCost3.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost3.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost3.Focus();
+                }
+                //4
+                try
+                {
+                    Form_Main.ZoneSchedule3[9] = DateTime.Parse(_textBoxScheduleFrom4).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom4.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom4.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[10] = DateTime.Parse(_textBoxScheduleTo4).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo4.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo4.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[11] = double.Parse(textBoxScheduleCost4.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost4.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost4.Focus();
+                }
+                //5
+                try
+                {
+                    Form_Main.ZoneSchedule3[12] = DateTime.Parse(_textBoxScheduleFrom5).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleFrom5.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleFrom5.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[13] = DateTime.Parse(_textBoxScheduleTo5).ToString("T");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Time format error: " + textBoxScheduleTo5.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBoxScheduleTo5.Focus();
+                }
+                try
+                {
+                    Form_Main.ZoneSchedule3[14] = double.Parse(textBoxScheduleCost5.Text).ToString();
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Format error: " + textBoxScheduleCost5.Text,
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBoxScheduleCost5.Focus();
+                }
+            }
+        }
+
+        private void textBoxScheduleFrom1_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleTo1_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleCost1_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleFrom2_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleTo2_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleFrom3_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleTo3_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleFrom4_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleTo4_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleFrom5_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleTo5_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleCost2_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleCost3_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleCost4_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
+
+        private void textBoxScheduleCost5_Leave(object sender, EventArgs e)
+        {
+            SaveSchedules();
+        }
     }
 
 }

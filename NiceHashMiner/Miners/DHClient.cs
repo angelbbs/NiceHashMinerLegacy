@@ -273,6 +273,7 @@ namespace NiceHashMiner.Miners
             byte[] submitBytes = Encoding.ASCII.GetBytes(submit);
             int epoch = 999;
             waitReconnect = 300;
+            int GoodEpochCount = 0;
 
             if (serverStream == null)
             {
@@ -355,19 +356,23 @@ namespace NiceHashMiner.Miners
                                     epoch = Epoch(seedhash);
                                     Helpers.ConsolePrint("DaggerHashimoto3GB", "Epoch = " + epoch.ToString());
                                     bool previousEpoch = Epoch3GB;
-                                    if (epoch <= 235) //win 7
+                                    if (epoch <= ConfigManager.GeneralConfig.DaggerHashimoto3GBMaxEpoch) 
                                     {
-                                        Divert.DaggerHashimoto3GBProfit = true;
-                                        Divert.DaggerHashimoto3GBForce = true;
-                                        Thread.Sleep(2000);//wait for stop
+                                        GoodEpochCount++;
                                     }
                                     else
                                     {
-
+                                        GoodEpochCount = 0;
                                     }
                                 }
                             }
-
+                            if (GoodEpochCount >= 3)
+                            {
+                                GoodEpochCount = 0;
+                                Divert.DaggerHashimoto3GBProfit = true;
+                                Divert.DaggerHashimoto3GBForce = true;
+                                Thread.Sleep(2000);//wait for stop
+                            }
                         }
 
                         if (poolAnswer.Contains("set_difficulty"))

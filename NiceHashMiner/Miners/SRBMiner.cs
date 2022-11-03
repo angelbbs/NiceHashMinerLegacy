@@ -150,7 +150,7 @@ namespace NiceHashMiner.Miners
                     var algo = "randomxmonero";
                     var port = "3380";
 
-                    return $" --algorithm randomx --api-enable --api-port {ApiPort} {extras} " +
+                    return $" --algorithm randomx --disable-gpu --api-enable --api-port {ApiPort} {extras} " +
                         GetServer(algo, username, port);
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
@@ -158,7 +158,7 @@ namespace NiceHashMiner.Miners
                     var algo = "verushash";
                     var port = "3394";
 
-                    return $" --algorithm verushash --api-enable --api-port {ApiPort} {extras} " +
+                    return $" --algorithm verushash --disable-gpu --api-enable --api-port {ApiPort} {extras} " +
                         GetServer(algo, username, port);
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
