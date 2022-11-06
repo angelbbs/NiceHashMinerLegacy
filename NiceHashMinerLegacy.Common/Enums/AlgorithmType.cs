@@ -92,7 +92,8 @@
         ZelHash = 58,
         Kadena_UNUSED = 59,
         ETCHash = 60,
-        VerusHash = 61
+        VerusHash = 61,
+        KHeavyHash = 62
         #endregion // NiceHashAPI
     }
 }

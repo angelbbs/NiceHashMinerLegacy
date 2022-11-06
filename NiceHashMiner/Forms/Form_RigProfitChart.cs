@@ -153,14 +153,14 @@ namespace NiceHashMiner.Forms
             if (ConfigManager.GeneralConfig.ChartFiat)
             {
                 //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
-                chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(MinersManager.GetTotalRate() * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
+                chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
                 chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
 
             }
             else
             {
                 //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
-                chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, MinersManager.GetTotalRate() * 1000);
+                chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalRate * 1000);
                 chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
             }
 
@@ -215,7 +215,7 @@ namespace NiceHashMiner.Forms
                 chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
                     ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
                 chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(MinersManager.GetTotalRate() * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
+                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
             }
             else
             {
@@ -225,7 +225,7 @@ namespace NiceHashMiner.Forms
                 chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
                     ": " + Form_Main.lastRigProfit.currentProfitAPI * 1000 + " " + CurrencyName;
                 chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                    ": " + MinersManager.GetTotalRate() * 1000 + " " + CurrencyName;
+                    ": " + Form_Main.lastRigProfit.totalRate * 1000 + " " + CurrencyName;
             }
 
             if (currentProfitAllAPI == 0 || totalRateAll == 0)

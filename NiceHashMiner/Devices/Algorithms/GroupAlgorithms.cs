@@ -202,7 +202,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.CuckooCycle)
+                    if (algo.NiceHashID == AlgorithmType.BeamV3)
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;

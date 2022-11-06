@@ -45,11 +45,12 @@ namespace NiceHashMiner.Miners
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
-        private string GetServer(string algo, string username, string port)
+        private string GetServer(string algo, string btcAdress, string worker, string port)
         {
             string ret = "";
             string ssl = "";
             string psw = "x";
+            string _worker = "";
             if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
             if (ConfigManager.GeneralConfig.ProxySSL)
             {
@@ -61,20 +62,27 @@ namespace NiceHashMiner.Miners
                 port = "1" + port;
                 ssl = "--tls off ";
             }
+            if (worker != null)
+            {
+                _worker = " --worker " + worker;
+            } else
+            {
+                _worker = "";
+            }
             foreach (string serverUrl in Globals.MiningLocation)
             {
                 if (serverUrl.Contains("auto"))
                 {
-                    ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --user " + 
+                    ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --user " +
                         //username.Split('.')[0] + " --pass " + psw + " --tls off ";
-                        username + " --pass " + psw + " --tls off ";
+                        btcAdress + _worker + " --pass " + psw + " --tls off ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
                     ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --user " + 
                         //username.Split('.')[0] + " --pass " + psw + " " + ssl;
-                        username + " --pass " + psw + " " + ssl;
+                        btcAdress + _worker + " --pass " + psw + " " + ssl;
                 }
             }
             return ret;
@@ -82,6 +90,8 @@ namespace NiceHashMiner.Miners
         public override void Start(string btcAdress, string worker)
         {
             string url = "";
+            string username = GetUsername(btcAdress, worker);
+            worker = worker + "$" + ConfigManager.GeneralConfig.MachineGuid;
             if (!IsInit)
             {
                 Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
@@ -101,7 +111,6 @@ namespace NiceHashMiner.Miners
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
                 }
             }
-            string username = GetUsername(btcAdress, worker);
             //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.lolMiner;
             IsApiReadException = false;
 
@@ -110,7 +119,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 LastCommandLine = "--coin AUTO144_5" +
-                    GetServer("zhash", username, "3369") +
+                    GetServer("zhash", username, null, "3369") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -118,7 +127,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
             {
                 LastCommandLine = "--coin ZEL" +
-                    GetServer("zelhash", username, "3391") +
+                    GetServer("zelhash", username, null, "3391") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -126,7 +135,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 LastCommandLine = "--algo BEAM-III" +
-                GetServer("beamv3", username, "3387") +
+                GetServer("beamv3", username, null, "3387") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -135,7 +144,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 LastCommandLine = "--algo C29AE" +
-                GetServer("cuckoocycle", username, "3376") +
+                GetServer("cuckoocycle", username, null, "3376") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -143,14 +152,14 @@ namespace NiceHashMiner.Miners
             {
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + 
                 //LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + " " +
-                GetServer("daggerhashimoto", username, "3353") +
+                GetServer("daggerhashimoto", btcAdress, worker, "3353") +
                     apiBind + " " + param +
                               " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
             {
                 LastCommandLine = "--algo AUTOLYKOS2" +
-                GetServer("autolykos", username, "3390") +
+                GetServer("autolykos", username, null, "3390") +
                     apiBind + " " + param +
                               " --devices ";
             }

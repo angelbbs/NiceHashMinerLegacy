@@ -226,8 +226,12 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 51;
                 }
-
-                //ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");заменить
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 52)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 52;
+                    ConfigManager.GeneralConfig.ZoneSchedule1[2] = ConfigManager.GeneralConfig.KwhPrice.ToString("0.00");
+                }
 
                 //**
                 //Thread.Sleep(100);
