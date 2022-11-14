@@ -293,6 +293,7 @@
         "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Choose which GPU will create the on GPU DAG file.\nAs a rule of thumb, choose the fastest GPU that is available.",
         "Form_Settings_ToolTip_DisableAMDTempControl": "Check it, if you would like to disable the built-in temperature control\nfor AMD GPUs (except daggerhashimoto algorithm).",
         "Form_Settings_ToolTip_MinimizeMiningWindows": "When checked, mining windows will start minimized.",
+	 "Form_Settings_ToolTip_Last24hours": "When checked, it will reduce the frequency of switching algorithms.",
         "Form_Settings_ToolTip_ElectricityCost": "Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.", 
         "Form_Settings_ToolTip_PowerUsage": "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.", 
 
@@ -488,7 +489,9 @@
                 "Form_Settings_radioButtonMOPA3": "5 minutes avg profitability",
                 "Form_Settings_radioButtonMOPA4": "24 hours avg profitability",
                 "Form_Settings_radioButtonMOPA5": "Highest profitability by all methods",
-		"Form_Settings_checkBox_orderPrice": "Use the order price to calculate the profitability of algorithms",
+		"Form_Settings_checkBox_orderPrice": "Use the order price to calculate the profitability",
+		"Form_Settings_checkBox_ShortTerm": "Do not react to a short-term change in profitability",
+		"Form_Settings_checkBox_Last24hours": "Use the average price for the last 24 hours",
 		"Form_Settings_checkBox_orderPrice_Warning1": "Enabling the use of order prices will lead to an increase in Internet traffic consumption",
                 "Form_Settings_groupBox1": "Devices:",
                 "Form_Settings_groupBoxAPIkeys": "API keys:",

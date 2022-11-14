@@ -108,8 +108,19 @@ namespace NiceHashMiner.Devices.Algorithms
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3"
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            {
+                                //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
+                            {
+                                ExtraLaunchParameters = "--gpu-auto-tune 1 --gpu-autolykos2-preload 1"
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
+                            {
+                                ExtraLaunchParameters = "--gpu-auto-tune 1"
                             }
-
                         }
             },
             {
@@ -175,6 +186,16 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = ""
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
+                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, AlgorithmType.ETCHashKHeavyHash.ToString())
+                            {
                             }
                         }
             },
@@ -388,6 +409,18 @@ namespace NiceHashMiner.Devices.Algorithms
                     },
                     */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZelHash, "ZelHash")
+                    {
+                    },
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                    {
+                    },
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
+                    {
+                    },
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
+                    {
+                    },
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, AlgorithmType.ETCHashKHeavyHash.ToString())
                     {
                     }
                 }

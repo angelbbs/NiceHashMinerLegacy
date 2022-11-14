@@ -27,7 +27,14 @@ namespace NiceHashMiner.Devices.Algorithms
                     AlgorithmType.DaggerHashimoto
                 });
             }
-            
+            if (device.IsEtherumCapale == false)
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                {
+                    AlgorithmType.DaggerKHeavyHash
+                });
+            }
+
             Helpers.ConsolePrint("GPU MEMORY: ", device.GpuRam.ToString() + " bytes - " + device.Name);
 
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
@@ -69,12 +76,27 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.ETCHash
                     });
             }
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.ETCHashKHeavyHash
+                    });
+            }
 
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.CuckooCycle
+                    });
+            }
+
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.AutolykosKHeavyHash
                     });
             }
 

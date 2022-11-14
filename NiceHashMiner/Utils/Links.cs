@@ -257,7 +257,8 @@ namespace NiceHashMiner
         public static IPHostEntry GetHostEntry(string host)
         {
             IPHostEntry ret = null;
-            if (host.Contains("daggerautolykos") || host.Contains("daggeroctopus") || host.Contains("daggerkawpow"))
+            if (host.ToLower().Contains("daggerautolykos") || host.ToLower().Contains("daggeroctopus") || host.ToLower().Contains("daggerkawpow") ||
+                host.ToLower().Contains("daggerkheavyhash") || host.ToLower().Contains("etckheavyhash") || host.ToLower().Contains("autolykoskheavyhash"))
             {
                 return ret;
             }

@@ -65,7 +65,7 @@ namespace NiceHashMiner.Miners
         public bool IsMiningEnabled => _miningDevices.Count > 0;
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
-        public int[] _ticks;
+        public static int[] _ticks;
         public List<int> ActiveDeviceIndexes
         {
             get
@@ -448,8 +448,8 @@ namespace NiceHashMiner.Miners
             Form_Main.DaggerHashimoto3GBEnabled = false;
             foreach (var device in _miningDevices)
             {
-                var stringBuilderDevice = new StringBuilder();
-                stringBuilderDevice.AppendLine($"\tProfits for busID {device.Device.BusID} ({device.Device.GetFullName()}):");
+                //var stringBuilderDevice = new StringBuilder();
+                //stringBuilderDevice.AppendLine($"\tProfits for busID {device.Device.BusID} ({device.Device.GetFullName()}):");
 
                 foreach (var algo in device.Algorithms)
                 {
@@ -471,25 +471,34 @@ namespace NiceHashMiner.Miners
                             $"\t less than {device.GetMostProfitableString()} {(((device.GetCurrentMostProfitValue - algo.CurrentProfit) / device.GetCurrentMostProfitValue) * 100):0.00}%"
                         );
                     */
+                    /*
                     stringBuilderDevice.AppendLine(
-    $"\tPROFIT = {Math.Round(algo.CurrentProfit, 6).ToString("F9")}" +
-        $"\tSPEED = {Math.Round(algo.AvaragedSpeed, 3).ToString()}" +
-        $"\tNHSMA = {algo.CurNhmSmaDataVal.ToString("F6")}" +
-        $"\t{algo.AlgorithmStringID}" +
-        $"\t < {device.GetMostProfitableString()} {(((device.GetCurrentMostProfitValue - algo.CurrentProfit) / device.GetCurrentMostProfitValue) * 100):0.00}%"
-    );
+                        $"\tPROFIT = {Math.Round(algo.CurrentProfit, 6).ToString("F9")}" +
+                        $"\tSPEED = {Math.Round(algo.AvaragedSpeed, 3).ToString()}" +
+                        $"\tNHSMA = {algo.CurNhmSmaDataVal.ToString("F6")}" +
+                        $"\t{algo.AlgorithmStringID}" +
+                        $"\t < {device.GetMostProfitableString()} {(((device.GetCurrentMostProfitValue - algo.CurrentProfit) / device.GetCurrentMostProfitValue) * 100):0.00}%"
+                        );
+                    */
                     if (algo is DualAlgorithm dualAlg)
                     {
+                        /*
                         stringBuilderDevice.AppendLine(
                             $"\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
                                 $"\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
                             );
+                        */
                     }
                 }
                 // most profitable
+                /*
                 stringBuilderDevice.AppendLine(
                     $"\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
                 stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
+                */
+                string profitStr = ExchangeRateApi.ConvertToActiveCurrency(device.GetCurrentMostProfitValueWithoutPower * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
+                string profitStrWithPower = ExchangeRateApi.ConvertToActiveCurrency(device.GetCurrentMostProfitValue * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
+                Helpers.ConsolePrint($"BusID {device.Device.BusID}", $"({ device.Device.GetFullName()}) - MOST PROFITABLE ALGO: {device.GetMostProfitableString()} PROFIT: {profitStr} with power: {profitStrWithPower}");
             }
             //Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
             Form_Main.smaCount = 0;
@@ -532,6 +541,7 @@ namespace NiceHashMiner.Miners
             // check profit threshold
             bool needSwitch = false;
             double percDiff = 0.0d;
+
             if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
             {
                 Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
@@ -660,6 +670,9 @@ namespace NiceHashMiner.Miners
                 AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
                 return;
             }
+
+            Form_Main.SwitchCount++;
+            Helpers.ConsolePrint("SWITCHING", "Number of switches: " + Form_Main.SwitchCount.ToString() + " Uptime: " + Form_Main.Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss"));
             // group new miners
             var newGroupedMiningPairs = new Dictionary<string, List<MiningPair>>();
             // group devices with same supported algorithms

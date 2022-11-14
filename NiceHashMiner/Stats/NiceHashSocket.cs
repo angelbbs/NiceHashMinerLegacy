@@ -552,6 +552,10 @@ namespace NiceHashMiner.Stats
         {
             attemptReconnect_Tick();
             NiceHashStats.GetSmaAPICurrent();
+            if (ConfigManager.GeneralConfig.Use_Last24hours)
+            {
+                NiceHashStats.GetSmaAPI24h();
+            } 
             if (ConfigManager.GeneralConfig.Use_orders_price)
             {
                 //NiceHashStats.GetSmaAPIOrder();

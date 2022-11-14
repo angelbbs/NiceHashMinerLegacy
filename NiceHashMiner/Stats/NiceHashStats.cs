@@ -326,13 +326,13 @@ namespace NiceHashMiner.Stats
         }
         public class Rootobject24h
         {
-            public Algos24h[] algos { get; set; }
+            public List<Algos24h> algos { get; set; }
         }
         public class Algos24h
         {
             public int a { get; set; }
             public string p { get; set; }
-            public float s { get; set; }
+            public double s { get; set; }
         }
 
         public class ProfitsSMA
@@ -628,6 +628,79 @@ namespace NiceHashMiner.Stats
                 return false;
             }
             return false;
+        }
+
+        public static bool GetSmaAPI24h()
+        {
+            Helpers.ConsolePrint("NHM_API_info", "Trying GetSmaAPI24h");
+
+            try
+            {
+                string resp;
+                resp = NiceHashStats.GetNiceHashApiData(Links.Nhm24h, "x");
+                if (resp != null)
+                {
+                    //Helpers.ConsolePrint("NHM_API_info", resp);
+                    dynamic list;
+                    list = JsonConvert.DeserializeObject<Rootobject24h>(resp);
+
+                    ProfitsSMA profdata = new ProfitsSMA();
+
+                    List<ProfitsSMA> profdata2 = new List<ProfitsSMA>();
+
+                    string outProf = "[\n";
+
+                    var _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+                    foreach (var miningAlgorithms in list.algos)
+                    {
+                        int Algo = 0;
+                        foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
+                        {
+                            if (algo >= 0)
+                            {
+                                Algo = (int)algo;
+                                //var AlgorithmName = AlgorithmNiceHashNames.GetName(algo);
+                                if (Algo == miningAlgorithms.a)
+                                {
+                                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
+                                    {
+                                        //Helpers.ConsolePrint("SMA-DATA-APICurrent: ", miningAlgorithms.title + " - " + Algo + " - " + miningAlgorithms.paying);
+                                    }
+                                    outProf = outProf + "  [\n" + "    " + miningAlgorithms.a + ",\n" + "    " + miningAlgorithms.p + "\n" + "  ],\n";
+                                    var algoKey = (AlgorithmType)algo;
+                                    if (!smaAlgos.Contains(algoKey))
+                                    {
+                                        smaAlgos.Add(algoKey);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    outProf = outProf.Remove(outProf.Length - 2) + "]";
+
+                    // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
+                    JArray smadata = (JArray.Parse(outProf));
+
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
+
+                    if (!ConfigManager.GeneralConfig.NoShowApiInLog)
+                    {
+                        Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent OK");
+                    }
+                    return true;
+                }
+                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent ERROR");
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("NHM_API_info", ex.Message);
+                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent fatal ERROR");
+                return false;
+            }
+            return false;
 
         }
 
@@ -869,6 +942,10 @@ namespace NiceHashMiner.Stats
             {
                 //new Task(() => GetSmaAPICurrent()).Start();
                 GetSmaAPICurrent();
+                if (ConfigManager.GeneralConfig.Use_Last24hours)
+                {
+                    NiceHashStats.GetSmaAPI24h();
+                }
                 if (ConfigManager.GeneralConfig.Use_orders_price)
                 {
                     new Task(() => GetSmaAPIOrder()).Start();
@@ -951,7 +1028,7 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", e.Message);
             }
         }
-        public static void SetAlgorithmRates(JArray data, int multipl = 1, double treshold = 12.0, bool average = false)
+        public static void SetAlgorithmRates(JArray data, int multipl = 1, double treshold = 12.0, bool average = true)
         {
             double mult = multipl * 0.98;
             try
@@ -1344,6 +1421,7 @@ namespace NiceHashMiner.Stats
             string b64Web;
             string nuuid = "";
             double HashRate = 0.0d;
+            double SecondHashRate = 0.0d;
 
             if (state != null)
                 rigStatus = state.ToString();
@@ -1566,10 +1644,15 @@ namespace NiceHashMiner.Stats
                         var speedsJson = new JArray();
 
                         HashRate = device.MiningHashrate;
+                        SecondHashRate = device.MiningHashrateSecond;
 
                         if (rigs == 1 & device.AlgorithmID > 0)
                         {
                             speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
+                            if (device.SecondAlgorithmID > 0)
+                            {
+                                speedsJson.Add(new JArray(device.SecondAlgorithmID, SecondHashRate)); 
+                            }
                         }
                         if (rigs == 1 & (device.AlgorithmID == -9) || device.AlgorithmID == -12) //dagger 3-4
                         {

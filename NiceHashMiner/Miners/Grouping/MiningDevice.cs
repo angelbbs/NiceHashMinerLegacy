@@ -67,7 +67,18 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     return Algorithms[mostProfitableIndex].CurrentProfit;
                 }
-
+                return 0;
+            }
+        }
+        public double GetCurrentMostProfitValueWithoutPower
+        {
+            get
+            {
+                var mostProfitableIndex = GetMostProfitableIndex();
+                if (mostProfitableIndex > -1)
+                {
+                    return Algorithms[mostProfitableIndex].CurrentProfitWithoutPower;
+                }
                 return 0;
             }
         }
@@ -125,8 +136,8 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 if (algo is DualAlgorithm algoDual)
                 {
-//                    Helpers.ConsolePrint("*********", "DUAL");
-                    //algoDual.UpdateCurProfit(profits);
+                    //Helpers.ConsolePrint("*********", algo.ToString());
+                    algoDual.UpdateCurProfit(profits);
                 }
   //                  Helpers.ConsolePrint("*********", "algo.NiceHashID: " + algo.NiceHashID + " algo.DualNiceHashID: " + algo.DualNiceHashID);
                 algo.UpdateCurProfit(profits);
@@ -144,6 +155,7 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     maxProfit = algo.CurrentProfit;
                     MostProfitableAlgorithmType = algo.DualNiceHashID;
+                    //Helpers.ConsolePrint("MostProfitableAlgorithmType", MostProfitableAlgorithmType.ToString());
                     MostProfitableMinerBaseType = algo.MinerBaseType;
                     //                        Helpers.ConsolePrint("PROFIT", "WARNING! Mining nonprofitable");
                 }

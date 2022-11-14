@@ -81,6 +81,7 @@ namespace NiceHashMiner.Devices
         public string BenchmarkCopyUuid { get; set; }
         public string TuningCopyUuid { get; set; }
         public int AlgorithmID { get; set; }
+        public int SecondAlgorithmID { get; set; }
 
         public virtual float Load => -1;
         public virtual float MemLoad => 0;

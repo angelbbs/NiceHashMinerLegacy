@@ -166,6 +166,7 @@ namespace NiceHashMiner
         public static int wssConnectionsErrors = 0;
         public static int apiConnectionsErrors = 0;
         public static byte[] desktop = new byte[0];
+        public static int SwitchCount = 0;
 
         //**
         public static string[] ZoneSchedule1 = { "00:00", "23:59", "0.00" };
@@ -368,6 +369,7 @@ namespace NiceHashMiner
             string version = fvi.FileVersion;
             double.TryParse(version, out var d);
             int.TryParse(version, out var i);
+            /*
             if (d / i == 1)
             {
                 Form_Main.version = i.ToString();
@@ -378,7 +380,9 @@ namespace NiceHashMiner
                 Form_Main.version = d.ToString();
                 Text += d.ToString();
             }
+            */
 
+            Text += "53 (beta)";
             Text += " for " + platform;
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -709,6 +713,7 @@ namespace NiceHashMiner
                 client.UseDefaultCredentials = false;
                 try
                 {
+                    Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from github");
                     client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "configs//ProxyList.tmp");
                     string tmp = File.ReadAllText("configs//ProxyList.tmp");
                     if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
@@ -718,6 +723,7 @@ namespace NiceHashMiner
                         if (File.Exists("configs//ProxyList.tmp")) File.Delete("configs//ProxyList.tmp");
                     } else
                     {
+                        Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from gitlab");
                         client.DownloadFile(new Uri("https://mark.nl.tab.digital/s/b9mg5Gy8G6B5cSr/download"), "configs//ProxyList.tmp");
                         tmp = File.ReadAllText("configs//ProxyList.tmp");
                         //if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
@@ -877,6 +883,7 @@ namespace NiceHashMiner
 
         public static double GetKwhPrice()
         {
+            double _24h = (new TimeSpan(24, 0, 0)).TotalMilliseconds;
             if (ConfigManager.GeneralConfig.PowerTarif == 0)
             {
                 TimeSpan _From = new TimeSpan();
@@ -906,6 +913,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -942,6 +950,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -971,6 +980,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -1007,6 +1017,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -1036,6 +1047,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -1065,6 +1077,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -1094,6 +1107,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -1123,6 +1137,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
                 if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
                 {
                     return _price;
@@ -1193,7 +1208,7 @@ namespace NiceHashMiner
             _loadingScreen.SetValueAndMsg(15, International.GetText("Form_Main_loadtext_LoadProxyList"));
             _GetProxyListTimer = new Timer();
             _GetProxyListTimer.Tick += CheckProxyList;
-            _GetProxyListTimer.Interval = 1000 * 60 * 50;
+            _GetProxyListTimer.Interval = 1000 * 60 * 180;
             _GetProxyListTimer.Start();
             CheckProxyList(null, null);
             comboBoxLocation.Update();

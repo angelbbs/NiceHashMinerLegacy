@@ -181,6 +181,47 @@ namespace NiceHashMiner.Switching
                     history[algo].Add(paying);
                     var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
                     double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
+                    
+                    if (p1 >= 20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
+                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash))
+                    {
+                        Helpers.ConsolePrint("UpdateProfits", "ZIL round detected?");
+                        i = 0;
+                        ticks = 0;
+                        _lastLegitPaying[algo] = paying;
+                        updated = true;
+                        if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
+                        {
+                                MiningSession._ticks[0] = 999;
+                        } else
+                        {
+                            for (int d = 0; d < MiningSession._ticks.Length; d++)
+                            {
+                                MiningSession._ticks[d] = 999;
+                            }
+                        }
+                    }
+                    if (p1 <= -20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
+                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash))
+                    {
+                        Helpers.ConsolePrint("UpdateProfits", "ZIL round is over?");
+                        i = 0;
+                        ticks = 0;
+                        _lastLegitPaying[algo] = paying;
+                        updated = true;
+                        if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
+                        {
+                            MiningSession._ticks[0] = 999;
+                        }
+                        else
+                        {
+                            for (int d = 0; d < MiningSession._ticks.Length; d++)
+                            {
+                                MiningSession._ticks[d] = 999;
+                            }
+                        }
+                    }
+                    
                     if (paying > _lastLegitPaying[algo])
                     {
                         updated = true;
@@ -272,6 +313,11 @@ namespace NiceHashMiner.Switching
                 if (ConfigManager.GeneralConfig.SwitchingAlgorithmsIndex == 6)
                 {
                     //_smaCheckTime = 60;
+                    _ticksForStable = 60;
+                    _ticksForUnstable = 60;
+                }
+                if (ConfigManager.GeneralConfig.ShortTerm)
+                {
                     _ticksForStable = 60;
                     _ticksForUnstable = 60;
                 }

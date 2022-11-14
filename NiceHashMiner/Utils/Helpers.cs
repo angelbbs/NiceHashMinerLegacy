@@ -207,7 +207,7 @@ namespace NiceHashMiner
         {
             string ret;
             string format = "F3";
-            if (_isDual) format = "F1";
+            if (_isDual) format = "F2";
 
             if (speed < 1000)
                 ret = (speed).ToString(format, CultureInfo.InvariantCulture) + separator;
@@ -486,6 +486,31 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.DaggerHashimoto:
                         return AlgorithmType.AutolykosZil;
+                }
+            }
+
+            if (primary == AlgorithmType.Autolykos)
+            {
+                switch (secondary)
+                {
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.AutolykosKHeavyHash;
+                }
+            }
+            if (primary == AlgorithmType.DaggerHashimoto)
+            {
+                switch (secondary)
+                {
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.DaggerKHeavyHash;
+                }
+            }
+            if (primary == AlgorithmType.ETCHash)
+            {
+                switch (secondary)
+                {
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.ETCHashKHeavyHash;
                 }
             }
 

@@ -41,10 +41,8 @@ namespace NiceHashMiner.Forms
             this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
-            this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
             this.checkbox_wallet_balance = new System.Windows.Forms.CheckBox();
             this.checkBox_fiat = new System.Windows.Forms.CheckBox();
-            this.checkBox_Show_profit_with_power_consumption = new System.Windows.Forms.CheckBox();
             this.checkBox_Force_mining_if_nonprofitable = new System.Windows.Forms.CheckBox();
             this.pictureBox_TimeUnit = new System.Windows.Forms.PictureBox();
             this.label_TimeUnit = new System.Windows.Forms.Label();
@@ -97,7 +95,46 @@ namespace NiceHashMiner.Forms
             this.currencyConverterCombobox = new System.Windows.Forms.ComboBox();
             this.label_displayCurrency = new System.Windows.Forms.Label();
             this.tabPagePower = new System.Windows.Forms.TabPage();
+            this.groupBox_additionally = new System.Windows.Forms.GroupBox();
+            this.checkBox_Show_Total_Power = new System.Windows.Forms.CheckBox();
+            this.label_psu = new System.Windows.Forms.Label();
+            this.checkBox_Show_profit_with_power_consumption = new System.Windows.Forms.CheckBox();
+            this.textBox_psu = new System.Windows.Forms.TextBox();
+            this.label_MBpower = new System.Windows.Forms.Label();
+            this.labelAddAMD = new System.Windows.Forms.Label();
+            this.textBox_mb = new System.Windows.Forms.TextBox();
+            this.textBoxAddAMD = new System.Windows.Forms.TextBox();
             this.groupBoxTariffs = new System.Windows.Forms.GroupBox();
+            this.labelTo5 = new System.Windows.Forms.Label();
+            this.labelTo4 = new System.Windows.Forms.Label();
+            this.labelTo3 = new System.Windows.Forms.Label();
+            this.labelTo2 = new System.Windows.Forms.Label();
+            this.pictureBox_ElectricityCost = new System.Windows.Forms.PictureBox();
+            this.labelPowerCurrency5 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo5 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom5 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost5 = new System.Windows.Forms.TextBox();
+            this.labelCost5 = new System.Windows.Forms.Label();
+            this.labelFrom5 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency4 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo4 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom4 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost4 = new System.Windows.Forms.TextBox();
+            this.labelCost4 = new System.Windows.Forms.Label();
+            this.labelFrom4 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency3 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo3 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom3 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost3 = new System.Windows.Forms.TextBox();
+            this.labelCost3 = new System.Windows.Forms.Label();
+            this.labelFrom3 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency2 = new System.Windows.Forms.Label();
+            this.textBoxScheduleTo2 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleFrom2 = new System.Windows.Forms.MaskedTextBox();
+            this.textBoxScheduleCost2 = new System.Windows.Forms.TextBox();
+            this.labelCost2 = new System.Windows.Forms.Label();
+            this.labelFrom2 = new System.Windows.Forms.Label();
+            this.labelPowerCurrency1 = new System.Windows.Forms.Label();
             this.textBoxScheduleTo1 = new System.Windows.Forms.MaskedTextBox();
             this.textBoxScheduleFrom1 = new System.Windows.Forms.MaskedTextBox();
             this.textBoxScheduleCost1 = new System.Windows.Forms.TextBox();
@@ -107,18 +144,12 @@ namespace NiceHashMiner.Forms
             this.label_Schedules2 = new System.Windows.Forms.Label();
             this.label_Schedules = new System.Windows.Forms.Label();
             this.comboBoxZones = new System.Windows.Forms.ComboBox();
-            this.label_MBpower = new System.Windows.Forms.Label();
-            this.textBoxAddAMD = new System.Windows.Forms.TextBox();
-            this.labelAddAMD = new System.Windows.Forms.Label();
-            this.textBox_psu = new System.Windows.Forms.TextBox();
-            this.pictureBox_ElectricityCost = new System.Windows.Forms.PictureBox();
-            this.label_psu = new System.Windows.Forms.Label();
-            this.textBox_mb = new System.Windows.Forms.TextBox();
             this.tabPageAdvanced1 = new System.Windows.Forms.TabPage();
             this.groupBoxConnection = new System.Windows.Forms.GroupBox();
             this.checkBoxEnableProxy = new System.Windows.Forms.CheckBox();
             this.checkBoxProxySSL = new System.Windows.Forms.CheckBox();
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
+            this.checkBoxLast24hours = new System.Windows.Forms.CheckBox();
             this.checkBox_orderPrice = new System.Windows.Forms.CheckBox();
             this.checkBox_withPower = new System.Windows.Forms.CheckBox();
             this.checkBox_By_profitability_of_all_devices = new System.Windows.Forms.CheckBox();
@@ -160,6 +191,9 @@ namespace NiceHashMiner.Forms
             this.labelMaxEpoch = new System.Windows.Forms.Label();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
             this.checkBox_ABDefault_program_closing = new System.Windows.Forms.CheckBox();
             this.checkBox_ABDefault_mining_stopped = new System.Windows.Forms.CheckBox();
@@ -168,6 +202,8 @@ namespace NiceHashMiner.Forms
             this.checkBox_ABMinimize = new System.Windows.Forms.CheckBox();
             this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
             this.groupBoxOverClockSettings = new System.Windows.Forms.GroupBox();
+            this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
+            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
             this.groupBoxBackup = new System.Windows.Forms.GroupBox();
             this.checkBox_BackupBeforeUpdate = new System.Windows.Forms.CheckBox();
@@ -182,45 +218,11 @@ namespace NiceHashMiner.Forms
             this.linkLabelNewVersion2 = new System.Windows.Forms.LinkLabel();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonCheckNewVersion = new System.Windows.Forms.Button();
+            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.labelPowerCurrency1 = new System.Windows.Forms.Label();
-            this.labelPowerCurrency2 = new System.Windows.Forms.Label();
-            this.textBoxScheduleTo2 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleFrom2 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleCost2 = new System.Windows.Forms.TextBox();
-            this.labelCost2 = new System.Windows.Forms.Label();
-            this.labelFrom2 = new System.Windows.Forms.Label();
-            this.labelPowerCurrency3 = new System.Windows.Forms.Label();
-            this.textBoxScheduleTo3 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleFrom3 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleCost3 = new System.Windows.Forms.TextBox();
-            this.labelCost3 = new System.Windows.Forms.Label();
-            this.labelFrom3 = new System.Windows.Forms.Label();
-            this.labelPowerCurrency4 = new System.Windows.Forms.Label();
-            this.textBoxScheduleTo4 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleFrom4 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleCost4 = new System.Windows.Forms.TextBox();
-            this.labelCost4 = new System.Windows.Forms.Label();
-            this.labelFrom4 = new System.Windows.Forms.Label();
-            this.labelPowerCurrency5 = new System.Windows.Forms.Label();
-            this.textBoxScheduleTo5 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleFrom5 = new System.Windows.Forms.MaskedTextBox();
-            this.textBoxScheduleCost5 = new System.Windows.Forms.TextBox();
-            this.labelCost5 = new System.Windows.Forms.Label();
-            this.labelFrom5 = new System.Windows.Forms.Label();
-            this.labelTo2 = new System.Windows.Forms.Label();
-            this.labelTo3 = new System.Windows.Forms.Label();
-            this.labelTo4 = new System.Windows.Forms.Label();
-            this.labelTo5 = new System.Windows.Forms.Label();
-            this.groupBox_additionally = new System.Windows.Forms.GroupBox();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
-            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
-            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
+            this.checkBoxShortTerm = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxAPIkeys.SuspendLayout();
@@ -245,6 +247,7 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).BeginInit();
             this.tabPagePower.SuspendLayout();
+            this.groupBox_additionally.SuspendLayout();
             this.groupBoxTariffs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).BeginInit();
             this.tabPageAdvanced1.SuspendLayout();
@@ -264,7 +267,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxBackup.SuspendLayout();
             this.groupBoxUpdates.SuspendLayout();
             this.groupBoxInfo.SuspendLayout();
-            this.groupBox_additionally.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -490,17 +492,6 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.Text = "Main:";
             this.groupBox_Main.Enter += new System.EventHandler(this.groupBox_Main_Enter);
             // 
-            // checkBox_Show_Total_Power
-            // 
-            this.checkBox_Show_Total_Power.AutoSize = true;
-            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(8, 101);
-            this.checkBox_Show_Total_Power.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_Show_Total_Power.Name = "checkBox_Show_Total_Power";
-            this.checkBox_Show_Total_Power.Size = new System.Drawing.Size(220, 17);
-            this.checkBox_Show_Total_Power.TabIndex = 386;
-            this.checkBox_Show_Total_Power.Text = "Show total power consumption for uptime";
-            this.checkBox_Show_Total_Power.UseVisualStyleBackColor = true;
-            // 
             // checkbox_wallet_balance
             // 
             this.checkbox_wallet_balance.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -524,18 +515,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_fiat.Text = "Show profitability of algorithms in fiat currency";
             this.checkBox_fiat.UseVisualStyleBackColor = true;
             this.checkBox_fiat.CheckedChanged += new System.EventHandler(this.checkBox_fiat_CheckedChanged);
-            // 
-            // checkBox_Show_profit_with_power_consumption
-            // 
-            this.checkBox_Show_profit_with_power_consumption.AutoSize = true;
-            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(8, 126);
-            this.checkBox_Show_profit_with_power_consumption.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_Show_profit_with_power_consumption.Name = "checkBox_Show_profit_with_power_consumption";
-            this.checkBox_Show_profit_with_power_consumption.Size = new System.Drawing.Size(196, 17);
-            this.checkBox_Show_profit_with_power_consumption.TabIndex = 377;
-            this.checkBox_Show_profit_with_power_consumption.Text = "Show profit with power consumption";
-            this.checkBox_Show_profit_with_power_consumption.UseVisualStyleBackColor = true;
-            this.checkBox_Show_profit_with_power_consumption.CheckedChanged += new System.EventHandler(this.checkBox_Show_profit_with_power_consumption_CheckedChanged);
             // 
             // checkBox_Force_mining_if_nonprofitable
             // 
@@ -1195,6 +1174,100 @@ namespace NiceHashMiner.Forms
             this.tabPagePower.Text = "Power";
             this.tabPagePower.UseVisualStyleBackColor = true;
             // 
+            // groupBox_additionally
+            // 
+            this.groupBox_additionally.Controls.Add(this.checkBox_Show_Total_Power);
+            this.groupBox_additionally.Controls.Add(this.label_psu);
+            this.groupBox_additionally.Controls.Add(this.checkBox_Show_profit_with_power_consumption);
+            this.groupBox_additionally.Controls.Add(this.textBox_psu);
+            this.groupBox_additionally.Controls.Add(this.label_MBpower);
+            this.groupBox_additionally.Controls.Add(this.labelAddAMD);
+            this.groupBox_additionally.Controls.Add(this.textBox_mb);
+            this.groupBox_additionally.Controls.Add(this.textBoxAddAMD);
+            this.groupBox_additionally.Location = new System.Drawing.Point(343, 6);
+            this.groupBox_additionally.Name = "groupBox_additionally";
+            this.groupBox_additionally.Size = new System.Drawing.Size(320, 184);
+            this.groupBox_additionally.TabIndex = 395;
+            this.groupBox_additionally.TabStop = false;
+            this.groupBox_additionally.Text = "Additionally";
+            // 
+            // checkBox_Show_Total_Power
+            // 
+            this.checkBox_Show_Total_Power.AutoSize = true;
+            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(8, 101);
+            this.checkBox_Show_Total_Power.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_Show_Total_Power.Name = "checkBox_Show_Total_Power";
+            this.checkBox_Show_Total_Power.Size = new System.Drawing.Size(220, 17);
+            this.checkBox_Show_Total_Power.TabIndex = 386;
+            this.checkBox_Show_Total_Power.Text = "Show total power consumption for uptime";
+            this.checkBox_Show_Total_Power.UseVisualStyleBackColor = true;
+            // 
+            // label_psu
+            // 
+            this.label_psu.AutoSize = true;
+            this.label_psu.Location = new System.Drawing.Point(5, 22);
+            this.label_psu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_psu.Name = "label_psu";
+            this.label_psu.Size = new System.Drawing.Size(94, 13);
+            this.label_psu.TabIndex = 391;
+            this.label_psu.Text = "PSU efficiency (%)";
+            // 
+            // checkBox_Show_profit_with_power_consumption
+            // 
+            this.checkBox_Show_profit_with_power_consumption.AutoSize = true;
+            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(8, 126);
+            this.checkBox_Show_profit_with_power_consumption.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_Show_profit_with_power_consumption.Name = "checkBox_Show_profit_with_power_consumption";
+            this.checkBox_Show_profit_with_power_consumption.Size = new System.Drawing.Size(196, 17);
+            this.checkBox_Show_profit_with_power_consumption.TabIndex = 377;
+            this.checkBox_Show_profit_with_power_consumption.Text = "Show profit with power consumption";
+            this.checkBox_Show_profit_with_power_consumption.UseVisualStyleBackColor = true;
+            this.checkBox_Show_profit_with_power_consumption.CheckedChanged += new System.EventHandler(this.checkBox_Show_profit_with_power_consumption_CheckedChanged);
+            // 
+            // textBox_psu
+            // 
+            this.textBox_psu.Location = new System.Drawing.Point(110, 17);
+            this.textBox_psu.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_psu.Name = "textBox_psu";
+            this.textBox_psu.Size = new System.Drawing.Size(39, 20);
+            this.textBox_psu.TabIndex = 390;
+            // 
+            // label_MBpower
+            // 
+            this.label_MBpower.AutoSize = true;
+            this.label_MBpower.Location = new System.Drawing.Point(5, 49);
+            this.label_MBpower.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_MBpower.Name = "label_MBpower";
+            this.label_MBpower.Size = new System.Drawing.Size(271, 13);
+            this.label_MBpower.TabIndex = 389;
+            this.label_MBpower.Text = "Power consumption of Motherboard, HDD(SSD) etc (W)";
+            // 
+            // labelAddAMD
+            // 
+            this.labelAddAMD.AutoSize = true;
+            this.labelAddAMD.Location = new System.Drawing.Point(5, 76);
+            this.labelAddAMD.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelAddAMD.Name = "labelAddAMD";
+            this.labelAddAMD.Size = new System.Drawing.Size(221, 13);
+            this.labelAddAMD.TabIndex = 393;
+            this.labelAddAMD.Text = "Additional AMD GPU power consumption (W)";
+            // 
+            // textBox_mb
+            // 
+            this.textBox_mb.Location = new System.Drawing.Point(280, 46);
+            this.textBox_mb.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_mb.Name = "textBox_mb";
+            this.textBox_mb.Size = new System.Drawing.Size(35, 20);
+            this.textBox_mb.TabIndex = 388;
+            // 
+            // textBoxAddAMD
+            // 
+            this.textBoxAddAMD.Location = new System.Drawing.Point(248, 73);
+            this.textBoxAddAMD.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxAddAMD.Name = "textBoxAddAMD";
+            this.textBoxAddAMD.Size = new System.Drawing.Size(37, 20);
+            this.textBoxAddAMD.TabIndex = 392;
+            // 
             // groupBoxTariffs
             // 
             this.groupBoxTariffs.Controls.Add(this.labelTo5);
@@ -1242,6 +1315,331 @@ namespace NiceHashMiner.Forms
             this.groupBoxTariffs.TabIndex = 394;
             this.groupBoxTariffs.TabStop = false;
             this.groupBoxTariffs.Text = "Tariffs";
+            // 
+            // labelTo5
+            // 
+            this.labelTo5.AutoSize = true;
+            this.labelTo5.Location = new System.Drawing.Point(78, 153);
+            this.labelTo5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo5.Name = "labelTo5";
+            this.labelTo5.Size = new System.Drawing.Size(16, 13);
+            this.labelTo5.TabIndex = 433;
+            this.labelTo5.Text = "to";
+            // 
+            // labelTo4
+            // 
+            this.labelTo4.AutoSize = true;
+            this.labelTo4.Location = new System.Drawing.Point(78, 127);
+            this.labelTo4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo4.Name = "labelTo4";
+            this.labelTo4.Size = new System.Drawing.Size(16, 13);
+            this.labelTo4.TabIndex = 432;
+            this.labelTo4.Text = "to";
+            // 
+            // labelTo3
+            // 
+            this.labelTo3.AutoSize = true;
+            this.labelTo3.Location = new System.Drawing.Point(78, 101);
+            this.labelTo3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo3.Name = "labelTo3";
+            this.labelTo3.Size = new System.Drawing.Size(16, 13);
+            this.labelTo3.TabIndex = 431;
+            this.labelTo3.Text = "to";
+            // 
+            // labelTo2
+            // 
+            this.labelTo2.AutoSize = true;
+            this.labelTo2.Location = new System.Drawing.Point(78, 75);
+            this.labelTo2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTo2.Name = "labelTo2";
+            this.labelTo2.Size = new System.Drawing.Size(16, 13);
+            this.labelTo2.TabIndex = 430;
+            this.labelTo2.Text = "to";
+            // 
+            // pictureBox_ElectricityCost
+            // 
+            this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(308, 17);
+            this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
+            this.pictureBox_ElectricityCost.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ElectricityCost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ElectricityCost.TabIndex = 387;
+            this.pictureBox_ElectricityCost.TabStop = false;
+            // 
+            // labelPowerCurrency5
+            // 
+            this.labelPowerCurrency5.AutoSize = true;
+            this.labelPowerCurrency5.Location = new System.Drawing.Point(227, 153);
+            this.labelPowerCurrency5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency5.Name = "labelPowerCurrency5";
+            this.labelPowerCurrency5.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency5.TabIndex = 429;
+            this.labelPowerCurrency5.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo5
+            // 
+            this.textBoxScheduleTo5.AsciiOnly = true;
+            this.textBoxScheduleTo5.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo5.Location = new System.Drawing.Point(98, 150);
+            this.textBoxScheduleTo5.Mask = "00:00";
+            this.textBoxScheduleTo5.Name = "textBoxScheduleTo5";
+            this.textBoxScheduleTo5.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo5.TabIndex = 428;
+            this.textBoxScheduleTo5.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo5.Leave += new System.EventHandler(this.textBoxScheduleTo5_Leave);
+            // 
+            // textBoxScheduleFrom5
+            // 
+            this.textBoxScheduleFrom5.AsciiOnly = true;
+            this.textBoxScheduleFrom5.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom5.Location = new System.Drawing.Point(35, 150);
+            this.textBoxScheduleFrom5.Mask = "00:00";
+            this.textBoxScheduleFrom5.Name = "textBoxScheduleFrom5";
+            this.textBoxScheduleFrom5.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom5.TabIndex = 427;
+            this.textBoxScheduleFrom5.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom5.Leave += new System.EventHandler(this.textBoxScheduleFrom5_Leave);
+            // 
+            // textBoxScheduleCost5
+            // 
+            this.textBoxScheduleCost5.Location = new System.Drawing.Point(183, 150);
+            this.textBoxScheduleCost5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost5.Name = "textBoxScheduleCost5";
+            this.textBoxScheduleCost5.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost5.TabIndex = 426;
+            this.textBoxScheduleCost5.WordWrap = false;
+            this.textBoxScheduleCost5.Leave += new System.EventHandler(this.textBoxScheduleCost5_Leave);
+            // 
+            // labelCost5
+            // 
+            this.labelCost5.AutoSize = true;
+            this.labelCost5.Location = new System.Drawing.Point(146, 153);
+            this.labelCost5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost5.Name = "labelCost5";
+            this.labelCost5.Size = new System.Drawing.Size(27, 13);
+            this.labelCost5.TabIndex = 425;
+            this.labelCost5.Text = "cost";
+            // 
+            // labelFrom5
+            // 
+            this.labelFrom5.AutoSize = true;
+            this.labelFrom5.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom5.Location = new System.Drawing.Point(5, 154);
+            this.labelFrom5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom5.Name = "labelFrom5";
+            this.labelFrom5.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom5.TabIndex = 424;
+            this.labelFrom5.Text = "from";
+            this.labelFrom5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelPowerCurrency4
+            // 
+            this.labelPowerCurrency4.AutoSize = true;
+            this.labelPowerCurrency4.Location = new System.Drawing.Point(227, 127);
+            this.labelPowerCurrency4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency4.Name = "labelPowerCurrency4";
+            this.labelPowerCurrency4.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency4.TabIndex = 423;
+            this.labelPowerCurrency4.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo4
+            // 
+            this.textBoxScheduleTo4.AsciiOnly = true;
+            this.textBoxScheduleTo4.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo4.Location = new System.Drawing.Point(98, 124);
+            this.textBoxScheduleTo4.Mask = "00:00";
+            this.textBoxScheduleTo4.Name = "textBoxScheduleTo4";
+            this.textBoxScheduleTo4.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo4.TabIndex = 422;
+            this.textBoxScheduleTo4.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo4.Leave += new System.EventHandler(this.textBoxScheduleTo4_Leave);
+            // 
+            // textBoxScheduleFrom4
+            // 
+            this.textBoxScheduleFrom4.AsciiOnly = true;
+            this.textBoxScheduleFrom4.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom4.Location = new System.Drawing.Point(35, 124);
+            this.textBoxScheduleFrom4.Mask = "00:00";
+            this.textBoxScheduleFrom4.Name = "textBoxScheduleFrom4";
+            this.textBoxScheduleFrom4.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom4.TabIndex = 421;
+            this.textBoxScheduleFrom4.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom4.Leave += new System.EventHandler(this.textBoxScheduleFrom4_Leave);
+            // 
+            // textBoxScheduleCost4
+            // 
+            this.textBoxScheduleCost4.Location = new System.Drawing.Point(183, 124);
+            this.textBoxScheduleCost4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost4.Name = "textBoxScheduleCost4";
+            this.textBoxScheduleCost4.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost4.TabIndex = 420;
+            this.textBoxScheduleCost4.WordWrap = false;
+            this.textBoxScheduleCost4.Leave += new System.EventHandler(this.textBoxScheduleCost4_Leave);
+            // 
+            // labelCost4
+            // 
+            this.labelCost4.AutoSize = true;
+            this.labelCost4.Location = new System.Drawing.Point(146, 127);
+            this.labelCost4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost4.Name = "labelCost4";
+            this.labelCost4.Size = new System.Drawing.Size(27, 13);
+            this.labelCost4.TabIndex = 419;
+            this.labelCost4.Text = "cost";
+            // 
+            // labelFrom4
+            // 
+            this.labelFrom4.AutoSize = true;
+            this.labelFrom4.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom4.Location = new System.Drawing.Point(5, 128);
+            this.labelFrom4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom4.Name = "labelFrom4";
+            this.labelFrom4.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom4.TabIndex = 418;
+            this.labelFrom4.Text = "from";
+            this.labelFrom4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelPowerCurrency3
+            // 
+            this.labelPowerCurrency3.AutoSize = true;
+            this.labelPowerCurrency3.Location = new System.Drawing.Point(227, 101);
+            this.labelPowerCurrency3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency3.Name = "labelPowerCurrency3";
+            this.labelPowerCurrency3.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency3.TabIndex = 417;
+            this.labelPowerCurrency3.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo3
+            // 
+            this.textBoxScheduleTo3.AsciiOnly = true;
+            this.textBoxScheduleTo3.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo3.Location = new System.Drawing.Point(98, 98);
+            this.textBoxScheduleTo3.Mask = "00:00";
+            this.textBoxScheduleTo3.Name = "textBoxScheduleTo3";
+            this.textBoxScheduleTo3.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo3.TabIndex = 416;
+            this.textBoxScheduleTo3.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo3.Leave += new System.EventHandler(this.textBoxScheduleTo3_Leave);
+            // 
+            // textBoxScheduleFrom3
+            // 
+            this.textBoxScheduleFrom3.AsciiOnly = true;
+            this.textBoxScheduleFrom3.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom3.Location = new System.Drawing.Point(35, 98);
+            this.textBoxScheduleFrom3.Mask = "00:00";
+            this.textBoxScheduleFrom3.Name = "textBoxScheduleFrom3";
+            this.textBoxScheduleFrom3.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom3.TabIndex = 415;
+            this.textBoxScheduleFrom3.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom3.Leave += new System.EventHandler(this.textBoxScheduleFrom3_Leave);
+            // 
+            // textBoxScheduleCost3
+            // 
+            this.textBoxScheduleCost3.Location = new System.Drawing.Point(183, 98);
+            this.textBoxScheduleCost3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost3.Name = "textBoxScheduleCost3";
+            this.textBoxScheduleCost3.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost3.TabIndex = 414;
+            this.textBoxScheduleCost3.WordWrap = false;
+            this.textBoxScheduleCost3.Leave += new System.EventHandler(this.textBoxScheduleCost3_Leave);
+            // 
+            // labelCost3
+            // 
+            this.labelCost3.AutoSize = true;
+            this.labelCost3.Location = new System.Drawing.Point(146, 101);
+            this.labelCost3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost3.Name = "labelCost3";
+            this.labelCost3.Size = new System.Drawing.Size(27, 13);
+            this.labelCost3.TabIndex = 413;
+            this.labelCost3.Text = "cost";
+            // 
+            // labelFrom3
+            // 
+            this.labelFrom3.AutoSize = true;
+            this.labelFrom3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom3.Location = new System.Drawing.Point(5, 102);
+            this.labelFrom3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom3.Name = "labelFrom3";
+            this.labelFrom3.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom3.TabIndex = 412;
+            this.labelFrom3.Text = "from";
+            this.labelFrom3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelPowerCurrency2
+            // 
+            this.labelPowerCurrency2.AutoSize = true;
+            this.labelPowerCurrency2.Location = new System.Drawing.Point(227, 75);
+            this.labelPowerCurrency2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency2.Name = "labelPowerCurrency2";
+            this.labelPowerCurrency2.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency2.TabIndex = 411;
+            this.labelPowerCurrency2.Text = "USD/kW.h";
+            // 
+            // textBoxScheduleTo2
+            // 
+            this.textBoxScheduleTo2.AsciiOnly = true;
+            this.textBoxScheduleTo2.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleTo2.Location = new System.Drawing.Point(98, 72);
+            this.textBoxScheduleTo2.Mask = "00:00";
+            this.textBoxScheduleTo2.Name = "textBoxScheduleTo2";
+            this.textBoxScheduleTo2.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleTo2.TabIndex = 410;
+            this.textBoxScheduleTo2.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleTo2.Leave += new System.EventHandler(this.textBoxScheduleTo2_Leave);
+            // 
+            // textBoxScheduleFrom2
+            // 
+            this.textBoxScheduleFrom2.AsciiOnly = true;
+            this.textBoxScheduleFrom2.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
+            this.textBoxScheduleFrom2.Location = new System.Drawing.Point(35, 72);
+            this.textBoxScheduleFrom2.Mask = "00:00";
+            this.textBoxScheduleFrom2.Name = "textBoxScheduleFrom2";
+            this.textBoxScheduleFrom2.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleFrom2.TabIndex = 409;
+            this.textBoxScheduleFrom2.ValidatingType = typeof(System.DateTime);
+            this.textBoxScheduleFrom2.Leave += new System.EventHandler(this.textBoxScheduleFrom2_Leave);
+            // 
+            // textBoxScheduleCost2
+            // 
+            this.textBoxScheduleCost2.Location = new System.Drawing.Point(183, 72);
+            this.textBoxScheduleCost2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBoxScheduleCost2.Name = "textBoxScheduleCost2";
+            this.textBoxScheduleCost2.Size = new System.Drawing.Size(39, 20);
+            this.textBoxScheduleCost2.TabIndex = 408;
+            this.textBoxScheduleCost2.WordWrap = false;
+            this.textBoxScheduleCost2.Leave += new System.EventHandler(this.textBoxScheduleCost2_Leave);
+            // 
+            // labelCost2
+            // 
+            this.labelCost2.AutoSize = true;
+            this.labelCost2.Location = new System.Drawing.Point(146, 75);
+            this.labelCost2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCost2.Name = "labelCost2";
+            this.labelCost2.Size = new System.Drawing.Size(27, 13);
+            this.labelCost2.TabIndex = 407;
+            this.labelCost2.Text = "cost";
+            // 
+            // labelFrom2
+            // 
+            this.labelFrom2.AutoSize = true;
+            this.labelFrom2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrom2.Location = new System.Drawing.Point(5, 76);
+            this.labelFrom2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelFrom2.Name = "labelFrom2";
+            this.labelFrom2.Size = new System.Drawing.Size(27, 13);
+            this.labelFrom2.TabIndex = 406;
+            this.labelFrom2.Text = "from";
+            this.labelFrom2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelPowerCurrency1
+            // 
+            this.labelPowerCurrency1.AutoSize = true;
+            this.labelPowerCurrency1.Location = new System.Drawing.Point(227, 49);
+            this.labelPowerCurrency1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPowerCurrency1.Name = "labelPowerCurrency1";
+            this.labelPowerCurrency1.Size = new System.Drawing.Size(61, 13);
+            this.labelPowerCurrency1.TabIndex = 405;
+            this.labelPowerCurrency1.Text = "USD/kW.h";
             // 
             // textBoxScheduleTo1
             // 
@@ -1342,71 +1740,6 @@ namespace NiceHashMiner.Forms
             this.comboBoxZones.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxZones_DrawItem);
             this.comboBoxZones.SelectedIndexChanged += new System.EventHandler(this.comboBoxZones_SelectedIndexChanged);
             // 
-            // label_MBpower
-            // 
-            this.label_MBpower.AutoSize = true;
-            this.label_MBpower.Location = new System.Drawing.Point(5, 49);
-            this.label_MBpower.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_MBpower.Name = "label_MBpower";
-            this.label_MBpower.Size = new System.Drawing.Size(271, 13);
-            this.label_MBpower.TabIndex = 389;
-            this.label_MBpower.Text = "Power consumption of Motherboard, HDD(SSD) etc (W)";
-            // 
-            // textBoxAddAMD
-            // 
-            this.textBoxAddAMD.Location = new System.Drawing.Point(248, 73);
-            this.textBoxAddAMD.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxAddAMD.Name = "textBoxAddAMD";
-            this.textBoxAddAMD.Size = new System.Drawing.Size(37, 20);
-            this.textBoxAddAMD.TabIndex = 392;
-            // 
-            // labelAddAMD
-            // 
-            this.labelAddAMD.AutoSize = true;
-            this.labelAddAMD.Location = new System.Drawing.Point(5, 76);
-            this.labelAddAMD.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelAddAMD.Name = "labelAddAMD";
-            this.labelAddAMD.Size = new System.Drawing.Size(221, 13);
-            this.labelAddAMD.TabIndex = 393;
-            this.labelAddAMD.Text = "Additional AMD GPU power consumption (W)";
-            // 
-            // textBox_psu
-            // 
-            this.textBox_psu.Location = new System.Drawing.Point(110, 17);
-            this.textBox_psu.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_psu.Name = "textBox_psu";
-            this.textBox_psu.Size = new System.Drawing.Size(39, 20);
-            this.textBox_psu.TabIndex = 390;
-            // 
-            // pictureBox_ElectricityCost
-            // 
-            this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(308, 17);
-            this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
-            this.pictureBox_ElectricityCost.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ElectricityCost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ElectricityCost.TabIndex = 387;
-            this.pictureBox_ElectricityCost.TabStop = false;
-            // 
-            // label_psu
-            // 
-            this.label_psu.AutoSize = true;
-            this.label_psu.Location = new System.Drawing.Point(5, 22);
-            this.label_psu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_psu.Name = "label_psu";
-            this.label_psu.Size = new System.Drawing.Size(94, 13);
-            this.label_psu.TabIndex = 391;
-            this.label_psu.Text = "PSU efficiency (%)";
-            // 
-            // textBox_mb
-            // 
-            this.textBox_mb.Location = new System.Drawing.Point(280, 46);
-            this.textBox_mb.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_mb.Name = "textBox_mb";
-            this.textBox_mb.Size = new System.Drawing.Size(35, 20);
-            this.textBox_mb.TabIndex = 388;
-            // 
             // tabPageAdvanced1
             // 
             this.tabPageAdvanced1.BackColor = System.Drawing.SystemColors.Control;
@@ -1425,7 +1758,7 @@ namespace NiceHashMiner.Forms
             // 
             this.groupBoxConnection.Controls.Add(this.checkBoxEnableProxy);
             this.groupBoxConnection.Controls.Add(this.checkBoxProxySSL);
-            this.groupBoxConnection.Location = new System.Drawing.Point(6, 359);
+            this.groupBoxConnection.Location = new System.Drawing.Point(6, 379);
             this.groupBoxConnection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxConnection.Name = "groupBoxConnection";
             this.groupBoxConnection.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1451,7 +1784,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBoxProxySSL.AutoSize = true;
             this.checkBoxProxySSL.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxProxySSL.Location = new System.Drawing.Point(192, 19);
+            this.checkBoxProxySSL.Location = new System.Drawing.Point(304, 19);
             this.checkBoxProxySSL.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxProxySSL.Name = "checkBoxProxySSL";
             this.checkBoxProxySSL.Size = new System.Drawing.Size(142, 17);
@@ -1461,6 +1794,8 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Miners
             // 
+            this.groupBox_Miners.Controls.Add(this.checkBoxShortTerm);
+            this.groupBox_Miners.Controls.Add(this.checkBoxLast24hours);
             this.groupBox_Miners.Controls.Add(this.checkBox_orderPrice);
             this.groupBox_Miners.Controls.Add(this.checkBox_withPower);
             this.groupBox_Miners.Controls.Add(this.checkBox_By_profitability_of_all_devices);
@@ -1474,10 +1809,22 @@ namespace NiceHashMiner.Forms
             this.groupBox_Miners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Miners.Name = "groupBox_Miners";
             this.groupBox_Miners.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Miners.Size = new System.Drawing.Size(657, 113);
+            this.groupBox_Miners.Size = new System.Drawing.Size(657, 133);
             this.groupBox_Miners.TabIndex = 389;
             this.groupBox_Miners.TabStop = false;
             this.groupBox_Miners.Text = "Miners:";
+            // 
+            // checkBoxLast24hours
+            // 
+            this.checkBoxLast24hours.AutoSize = true;
+            this.checkBoxLast24hours.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxLast24hours.Location = new System.Drawing.Point(307, 84);
+            this.checkBoxLast24hours.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxLast24hours.Name = "checkBoxLast24hours";
+            this.checkBoxLast24hours.Size = new System.Drawing.Size(227, 17);
+            this.checkBoxLast24hours.TabIndex = 420;
+            this.checkBoxLast24hours.Text = "Use the average price for the last 24 hours";
+            this.checkBoxLast24hours.UseVisualStyleBackColor = true;
             // 
             // checkBox_orderPrice
             // 
@@ -1610,7 +1957,7 @@ namespace NiceHashMiner.Forms
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionNVIDIA);
             this.groupBox1.Controls.Add(this.pictureBox_DisableDetectionNVIDIA);
             this.groupBox1.Controls.Add(this.checkBox_DisableDetectionAMD);
-            this.groupBox1.Location = new System.Drawing.Point(6, 125);
+            this.groupBox1.Location = new System.Drawing.Point(6, 145);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1979,6 +2326,47 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
             // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
+            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(645, 217);
+            this.algorithmsListView1.TabIndex = 2;
+            // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
+            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 215);
+            this.algorithmSettingsControl1.TabIndex = 396;
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 8);
+            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 198);
+            this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
             // tabPageOverClock
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
@@ -2090,6 +2478,34 @@ namespace NiceHashMiner.Forms
             this.groupBoxOverClockSettings.TabIndex = 400;
             this.groupBoxOverClockSettings.TabStop = false;
             this.groupBoxOverClockSettings.Text = "Overclock settings for selected device:";
+            // 
+            // algorithmsListViewOverClock1
+            // 
+            this.algorithmsListViewOverClock1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListViewOverClock1.ComunicationInterface = null;
+            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 19);
+            this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
+            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(652, 266);
+            this.algorithmsListViewOverClock1.TabIndex = 399;
+            // 
+            // devicesListViewEnableControl2
+            // 
+            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl2.IsInBenchmark = false;
+            this.devicesListViewEnableControl2.IsMining = false;
+            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(6, 16);
+            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
+            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 163);
+            this.devicesListViewEnableControl2.TabIndex = 398;
+            this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
             // 
             // tabPageAbout
             // 
@@ -2264,6 +2680,20 @@ namespace NiceHashMiner.Forms
             this.buttonCheckNewVersion.UseVisualStyleBackColor = true;
             this.buttonCheckNewVersion.Click += new System.EventHandler(this.buttonCheckNewVersion_Click);
             // 
+            // progressBarUpdate
+            // 
+            this.progressBarUpdate.CustomText = "";
+            this.progressBarUpdate.Location = new System.Drawing.Point(536, 14);
+            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
+            this.progressBarUpdate.Name = "progressBarUpdate";
+            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
+            this.progressBarUpdate.Size = new System.Drawing.Size(118, 23);
+            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBarUpdate.TabIndex = 396;
+            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
+            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
+            // 
             // groupBoxInfo
             // 
             this.groupBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -2303,419 +2733,18 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // labelPowerCurrency1
-            // 
-            this.labelPowerCurrency1.AutoSize = true;
-            this.labelPowerCurrency1.Location = new System.Drawing.Point(227, 49);
-            this.labelPowerCurrency1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelPowerCurrency1.Name = "labelPowerCurrency1";
-            this.labelPowerCurrency1.Size = new System.Drawing.Size(61, 13);
-            this.labelPowerCurrency1.TabIndex = 405;
-            this.labelPowerCurrency1.Text = "USD/kW.h";
-            // 
-            // labelPowerCurrency2
-            // 
-            this.labelPowerCurrency2.AutoSize = true;
-            this.labelPowerCurrency2.Location = new System.Drawing.Point(227, 75);
-            this.labelPowerCurrency2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelPowerCurrency2.Name = "labelPowerCurrency2";
-            this.labelPowerCurrency2.Size = new System.Drawing.Size(61, 13);
-            this.labelPowerCurrency2.TabIndex = 411;
-            this.labelPowerCurrency2.Text = "USD/kW.h";
-            // 
-            // textBoxScheduleTo2
-            // 
-            this.textBoxScheduleTo2.AsciiOnly = true;
-            this.textBoxScheduleTo2.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleTo2.Location = new System.Drawing.Point(98, 72);
-            this.textBoxScheduleTo2.Mask = "00:00";
-            this.textBoxScheduleTo2.Name = "textBoxScheduleTo2";
-            this.textBoxScheduleTo2.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleTo2.TabIndex = 410;
-            this.textBoxScheduleTo2.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleTo2.Leave += new System.EventHandler(this.textBoxScheduleTo2_Leave);
-            // 
-            // textBoxScheduleFrom2
-            // 
-            this.textBoxScheduleFrom2.AsciiOnly = true;
-            this.textBoxScheduleFrom2.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleFrom2.Location = new System.Drawing.Point(35, 72);
-            this.textBoxScheduleFrom2.Mask = "00:00";
-            this.textBoxScheduleFrom2.Name = "textBoxScheduleFrom2";
-            this.textBoxScheduleFrom2.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleFrom2.TabIndex = 409;
-            this.textBoxScheduleFrom2.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleFrom2.Leave += new System.EventHandler(this.textBoxScheduleFrom2_Leave);
-            // 
-            // textBoxScheduleCost2
-            // 
-            this.textBoxScheduleCost2.Location = new System.Drawing.Point(183, 72);
-            this.textBoxScheduleCost2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxScheduleCost2.Name = "textBoxScheduleCost2";
-            this.textBoxScheduleCost2.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleCost2.TabIndex = 408;
-            this.textBoxScheduleCost2.WordWrap = false;
-            this.textBoxScheduleCost2.Leave += new System.EventHandler(this.textBoxScheduleCost2_Leave);
-            // 
-            // labelCost2
-            // 
-            this.labelCost2.AutoSize = true;
-            this.labelCost2.Location = new System.Drawing.Point(146, 75);
-            this.labelCost2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelCost2.Name = "labelCost2";
-            this.labelCost2.Size = new System.Drawing.Size(27, 13);
-            this.labelCost2.TabIndex = 407;
-            this.labelCost2.Text = "cost";
-            // 
-            // labelFrom2
-            // 
-            this.labelFrom2.AutoSize = true;
-            this.labelFrom2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelFrom2.Location = new System.Drawing.Point(5, 76);
-            this.labelFrom2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelFrom2.Name = "labelFrom2";
-            this.labelFrom2.Size = new System.Drawing.Size(27, 13);
-            this.labelFrom2.TabIndex = 406;
-            this.labelFrom2.Text = "from";
-            this.labelFrom2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // labelPowerCurrency3
-            // 
-            this.labelPowerCurrency3.AutoSize = true;
-            this.labelPowerCurrency3.Location = new System.Drawing.Point(227, 101);
-            this.labelPowerCurrency3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelPowerCurrency3.Name = "labelPowerCurrency3";
-            this.labelPowerCurrency3.Size = new System.Drawing.Size(61, 13);
-            this.labelPowerCurrency3.TabIndex = 417;
-            this.labelPowerCurrency3.Text = "USD/kW.h";
-            // 
-            // textBoxScheduleTo3
-            // 
-            this.textBoxScheduleTo3.AsciiOnly = true;
-            this.textBoxScheduleTo3.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleTo3.Location = new System.Drawing.Point(98, 98);
-            this.textBoxScheduleTo3.Mask = "00:00";
-            this.textBoxScheduleTo3.Name = "textBoxScheduleTo3";
-            this.textBoxScheduleTo3.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleTo3.TabIndex = 416;
-            this.textBoxScheduleTo3.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleTo3.Leave += new System.EventHandler(this.textBoxScheduleTo3_Leave);
-            // 
-            // textBoxScheduleFrom3
-            // 
-            this.textBoxScheduleFrom3.AsciiOnly = true;
-            this.textBoxScheduleFrom3.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleFrom3.Location = new System.Drawing.Point(35, 98);
-            this.textBoxScheduleFrom3.Mask = "00:00";
-            this.textBoxScheduleFrom3.Name = "textBoxScheduleFrom3";
-            this.textBoxScheduleFrom3.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleFrom3.TabIndex = 415;
-            this.textBoxScheduleFrom3.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleFrom3.Leave += new System.EventHandler(this.textBoxScheduleFrom3_Leave);
-            // 
-            // textBoxScheduleCost3
-            // 
-            this.textBoxScheduleCost3.Location = new System.Drawing.Point(183, 98);
-            this.textBoxScheduleCost3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxScheduleCost3.Name = "textBoxScheduleCost3";
-            this.textBoxScheduleCost3.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleCost3.TabIndex = 414;
-            this.textBoxScheduleCost3.WordWrap = false;
-            this.textBoxScheduleCost3.Leave += new System.EventHandler(this.textBoxScheduleCost3_Leave);
-            // 
-            // labelCost3
-            // 
-            this.labelCost3.AutoSize = true;
-            this.labelCost3.Location = new System.Drawing.Point(146, 101);
-            this.labelCost3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelCost3.Name = "labelCost3";
-            this.labelCost3.Size = new System.Drawing.Size(27, 13);
-            this.labelCost3.TabIndex = 413;
-            this.labelCost3.Text = "cost";
-            // 
-            // labelFrom3
-            // 
-            this.labelFrom3.AutoSize = true;
-            this.labelFrom3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelFrom3.Location = new System.Drawing.Point(5, 102);
-            this.labelFrom3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelFrom3.Name = "labelFrom3";
-            this.labelFrom3.Size = new System.Drawing.Size(27, 13);
-            this.labelFrom3.TabIndex = 412;
-            this.labelFrom3.Text = "from";
-            this.labelFrom3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // labelPowerCurrency4
-            // 
-            this.labelPowerCurrency4.AutoSize = true;
-            this.labelPowerCurrency4.Location = new System.Drawing.Point(227, 127);
-            this.labelPowerCurrency4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelPowerCurrency4.Name = "labelPowerCurrency4";
-            this.labelPowerCurrency4.Size = new System.Drawing.Size(61, 13);
-            this.labelPowerCurrency4.TabIndex = 423;
-            this.labelPowerCurrency4.Text = "USD/kW.h";
-            // 
-            // textBoxScheduleTo4
-            // 
-            this.textBoxScheduleTo4.AsciiOnly = true;
-            this.textBoxScheduleTo4.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleTo4.Location = new System.Drawing.Point(98, 124);
-            this.textBoxScheduleTo4.Mask = "00:00";
-            this.textBoxScheduleTo4.Name = "textBoxScheduleTo4";
-            this.textBoxScheduleTo4.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleTo4.TabIndex = 422;
-            this.textBoxScheduleTo4.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleTo4.Leave += new System.EventHandler(this.textBoxScheduleTo4_Leave);
-            // 
-            // textBoxScheduleFrom4
-            // 
-            this.textBoxScheduleFrom4.AsciiOnly = true;
-            this.textBoxScheduleFrom4.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleFrom4.Location = new System.Drawing.Point(35, 124);
-            this.textBoxScheduleFrom4.Mask = "00:00";
-            this.textBoxScheduleFrom4.Name = "textBoxScheduleFrom4";
-            this.textBoxScheduleFrom4.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleFrom4.TabIndex = 421;
-            this.textBoxScheduleFrom4.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleFrom4.Leave += new System.EventHandler(this.textBoxScheduleFrom4_Leave);
-            // 
-            // textBoxScheduleCost4
-            // 
-            this.textBoxScheduleCost4.Location = new System.Drawing.Point(183, 124);
-            this.textBoxScheduleCost4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxScheduleCost4.Name = "textBoxScheduleCost4";
-            this.textBoxScheduleCost4.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleCost4.TabIndex = 420;
-            this.textBoxScheduleCost4.WordWrap = false;
-            this.textBoxScheduleCost4.Leave += new System.EventHandler(this.textBoxScheduleCost4_Leave);
-            // 
-            // labelCost4
-            // 
-            this.labelCost4.AutoSize = true;
-            this.labelCost4.Location = new System.Drawing.Point(146, 127);
-            this.labelCost4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelCost4.Name = "labelCost4";
-            this.labelCost4.Size = new System.Drawing.Size(27, 13);
-            this.labelCost4.TabIndex = 419;
-            this.labelCost4.Text = "cost";
-            // 
-            // labelFrom4
-            // 
-            this.labelFrom4.AutoSize = true;
-            this.labelFrom4.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelFrom4.Location = new System.Drawing.Point(5, 128);
-            this.labelFrom4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelFrom4.Name = "labelFrom4";
-            this.labelFrom4.Size = new System.Drawing.Size(27, 13);
-            this.labelFrom4.TabIndex = 418;
-            this.labelFrom4.Text = "from";
-            this.labelFrom4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // labelPowerCurrency5
-            // 
-            this.labelPowerCurrency5.AutoSize = true;
-            this.labelPowerCurrency5.Location = new System.Drawing.Point(227, 153);
-            this.labelPowerCurrency5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelPowerCurrency5.Name = "labelPowerCurrency5";
-            this.labelPowerCurrency5.Size = new System.Drawing.Size(61, 13);
-            this.labelPowerCurrency5.TabIndex = 429;
-            this.labelPowerCurrency5.Text = "USD/kW.h";
-            // 
-            // textBoxScheduleTo5
-            // 
-            this.textBoxScheduleTo5.AsciiOnly = true;
-            this.textBoxScheduleTo5.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleTo5.Location = new System.Drawing.Point(98, 150);
-            this.textBoxScheduleTo5.Mask = "00:00";
-            this.textBoxScheduleTo5.Name = "textBoxScheduleTo5";
-            this.textBoxScheduleTo5.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleTo5.TabIndex = 428;
-            this.textBoxScheduleTo5.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleTo5.Leave += new System.EventHandler(this.textBoxScheduleTo5_Leave);
-            // 
-            // textBoxScheduleFrom5
-            // 
-            this.textBoxScheduleFrom5.AsciiOnly = true;
-            this.textBoxScheduleFrom5.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
-            this.textBoxScheduleFrom5.Location = new System.Drawing.Point(35, 150);
-            this.textBoxScheduleFrom5.Mask = "00:00";
-            this.textBoxScheduleFrom5.Name = "textBoxScheduleFrom5";
-            this.textBoxScheduleFrom5.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleFrom5.TabIndex = 427;
-            this.textBoxScheduleFrom5.ValidatingType = typeof(System.DateTime);
-            this.textBoxScheduleFrom5.Leave += new System.EventHandler(this.textBoxScheduleFrom5_Leave);
-            // 
-            // textBoxScheduleCost5
-            // 
-            this.textBoxScheduleCost5.Location = new System.Drawing.Point(183, 150);
-            this.textBoxScheduleCost5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxScheduleCost5.Name = "textBoxScheduleCost5";
-            this.textBoxScheduleCost5.Size = new System.Drawing.Size(39, 20);
-            this.textBoxScheduleCost5.TabIndex = 426;
-            this.textBoxScheduleCost5.WordWrap = false;
-            this.textBoxScheduleCost5.Leave += new System.EventHandler(this.textBoxScheduleCost5_Leave);
-            // 
-            // labelCost5
-            // 
-            this.labelCost5.AutoSize = true;
-            this.labelCost5.Location = new System.Drawing.Point(146, 153);
-            this.labelCost5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelCost5.Name = "labelCost5";
-            this.labelCost5.Size = new System.Drawing.Size(27, 13);
-            this.labelCost5.TabIndex = 425;
-            this.labelCost5.Text = "cost";
-            // 
-            // labelFrom5
-            // 
-            this.labelFrom5.AutoSize = true;
-            this.labelFrom5.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelFrom5.Location = new System.Drawing.Point(5, 154);
-            this.labelFrom5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelFrom5.Name = "labelFrom5";
-            this.labelFrom5.Size = new System.Drawing.Size(27, 13);
-            this.labelFrom5.TabIndex = 424;
-            this.labelFrom5.Text = "from";
-            this.labelFrom5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // labelTo2
-            // 
-            this.labelTo2.AutoSize = true;
-            this.labelTo2.Location = new System.Drawing.Point(78, 75);
-            this.labelTo2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelTo2.Name = "labelTo2";
-            this.labelTo2.Size = new System.Drawing.Size(16, 13);
-            this.labelTo2.TabIndex = 430;
-            this.labelTo2.Text = "to";
-            // 
-            // labelTo3
-            // 
-            this.labelTo3.AutoSize = true;
-            this.labelTo3.Location = new System.Drawing.Point(78, 101);
-            this.labelTo3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelTo3.Name = "labelTo3";
-            this.labelTo3.Size = new System.Drawing.Size(16, 13);
-            this.labelTo3.TabIndex = 431;
-            this.labelTo3.Text = "to";
-            // 
-            // labelTo4
-            // 
-            this.labelTo4.AutoSize = true;
-            this.labelTo4.Location = new System.Drawing.Point(78, 127);
-            this.labelTo4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelTo4.Name = "labelTo4";
-            this.labelTo4.Size = new System.Drawing.Size(16, 13);
-            this.labelTo4.TabIndex = 432;
-            this.labelTo4.Text = "to";
-            // 
-            // labelTo5
-            // 
-            this.labelTo5.AutoSize = true;
-            this.labelTo5.Location = new System.Drawing.Point(78, 153);
-            this.labelTo5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelTo5.Name = "labelTo5";
-            this.labelTo5.Size = new System.Drawing.Size(16, 13);
-            this.labelTo5.TabIndex = 433;
-            this.labelTo5.Text = "to";
-            // 
-            // groupBox_additionally
-            // 
-            this.groupBox_additionally.Controls.Add(this.checkBox_Show_Total_Power);
-            this.groupBox_additionally.Controls.Add(this.label_psu);
-            this.groupBox_additionally.Controls.Add(this.checkBox_Show_profit_with_power_consumption);
-            this.groupBox_additionally.Controls.Add(this.textBox_psu);
-            this.groupBox_additionally.Controls.Add(this.label_MBpower);
-            this.groupBox_additionally.Controls.Add(this.labelAddAMD);
-            this.groupBox_additionally.Controls.Add(this.textBox_mb);
-            this.groupBox_additionally.Controls.Add(this.textBoxAddAMD);
-            this.groupBox_additionally.Location = new System.Drawing.Point(343, 6);
-            this.groupBox_additionally.Name = "groupBox_additionally";
-            this.groupBox_additionally.Size = new System.Drawing.Size(320, 184);
-            this.groupBox_additionally.TabIndex = 395;
-            this.groupBox_additionally.TabStop = false;
-            this.groupBox_additionally.Text = "Additionally";
-            // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
-            this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
-            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(645, 217);
-            this.algorithmsListView1.TabIndex = 2;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
-            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 215);
-            this.algorithmSettingsControl1.TabIndex = 396;
-            // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 8);
-            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 198);
-            this.devicesListViewEnableControl1.TabIndex = 397;
-            // 
-            // algorithmsListViewOverClock1
-            // 
-            this.algorithmsListViewOverClock1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
-            this.algorithmsListViewOverClock1.ComunicationInterface = null;
-            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 19);
-            this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
-            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(652, 266);
-            this.algorithmsListViewOverClock1.TabIndex = 399;
-            // 
-            // devicesListViewEnableControl2
-            // 
-            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
-            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.devicesListViewEnableControl2.IsInBenchmark = false;
-            this.devicesListViewEnableControl2.IsMining = false;
-            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(6, 16);
-            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
-            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 163);
-            this.devicesListViewEnableControl2.TabIndex = 398;
-            this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
-            // 
-            // progressBarUpdate
-            // 
-            this.progressBarUpdate.CustomText = "";
-            this.progressBarUpdate.Location = new System.Drawing.Point(536, 14);
-            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
-            this.progressBarUpdate.Name = "progressBarUpdate";
-            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
-            this.progressBarUpdate.Size = new System.Drawing.Size(118, 23);
-            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBarUpdate.TabIndex = 396;
-            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
-            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
+            // checkBoxShortTerm
+            // 
+            this.checkBoxShortTerm.AutoSize = true;
+            this.checkBoxShortTerm.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxShortTerm.Location = new System.Drawing.Point(10, 107);
+            this.checkBoxShortTerm.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxShortTerm.Name = "checkBoxShortTerm";
+            this.checkBoxShortTerm.Size = new System.Drawing.Size(257, 17);
+            this.checkBoxShortTerm.TabIndex = 421;
+            this.checkBoxShortTerm.Text = "Do not react to a short-term change in profitability";
+            this.checkBoxShortTerm.UseVisualStyleBackColor = true;
+            this.checkBoxShortTerm.CheckedChanged += new System.EventHandler(this.checkBoxShortTerm_CheckedChanged);
             // 
             // Form_Settings
             // 
@@ -2769,6 +2798,8 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).EndInit();
             this.tabPagePower.ResumeLayout(false);
+            this.groupBox_additionally.ResumeLayout(false);
+            this.groupBox_additionally.PerformLayout();
             this.groupBoxTariffs.ResumeLayout(false);
             this.groupBoxTariffs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).EndInit();
@@ -2796,8 +2827,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.ResumeLayout(false);
             this.groupBoxUpdates.PerformLayout();
             this.groupBoxInfo.ResumeLayout(false);
-            this.groupBox_additionally.ResumeLayout(false);
-            this.groupBox_additionally.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3001,5 +3030,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label labelTo3;
         private System.Windows.Forms.Label labelTo2;
         private System.Windows.Forms.GroupBox groupBox_additionally;
+        private System.Windows.Forms.CheckBox checkBoxLast24hours;
+        private System.Windows.Forms.CheckBox checkBoxShortTerm;
     }
 }

@@ -72,11 +72,14 @@ namespace NiceHashMiner.Miners
         private string GetStartCommand(string url, string btcAddress, string worker)
         {
             var algo = "";
+            var algo2 = "";
             var algoName = "";
+            var algoName2 = "";
             var pers = "";
             var nicehashstratum = "";
             var ssl = "";
             string port = "";
+            string port2 = "";
             string username = GetUsername(btcAddress, worker);
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
@@ -122,6 +125,13 @@ namespace NiceHashMiner.Miners
                 nicehashstratum = " --proto stratum";
                 port = "3393";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                algo = "kheavyhash";
+                algoName = "kheavyhash";
+                nicehashstratum = " --proto stratum";
+                port = "3395";
+            }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
@@ -141,10 +151,103 @@ namespace NiceHashMiner.Miners
                 port = "3383";
             }
 
-            var ret = GetDevicesCommandString() + nicehashstratum +
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                algo = "autolykos2";
+                algoName = "autolykos";
+                nicehashstratum = " --proto stratum";
+                port = "3390";
+
+                algo2 = "kheavyhash";
+                algoName2 = "kheavyhash";
+                nicehashstratum = " --proto stratum";
+                port2 = "3395";
+
+                return GetDevicesCommandString() + nicehashstratum +
                       " --algo " + algo + pers +
-                      GetServer(algoName, username, port) +
+                      GetServerDual(algoName, algoName2, username, port, port2) +
                       " --api " + ApiPort;
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                algo = "ethash";
+                algoName = "daggerhashimoto";
+                nicehashstratum = " --proto stratum";
+                port = "3353";
+
+                algo2 = "kheavyhash";
+                algoName2 = "kheavyhash";
+                nicehashstratum = " --proto stratum";
+                port2 = "3395";
+
+                return GetDevicesCommandString() + nicehashstratum +
+                      " --algo " + algo + pers +
+                      GetServerDual(algoName, algoName2, username, port, port2) +
+                      " --api " + ApiPort;
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                algo = "etchash";
+                algoName = "etchash";
+                nicehashstratum = " --proto stratum";
+                port = "3393";
+
+                algo2 = "kheavyhash";
+                algoName2 = "kheavyhash";
+                nicehashstratum = " --proto stratum";
+                port2 = "3395";
+
+                return GetDevicesCommandString() + nicehashstratum +
+                      " --algo " + algo + pers +
+                      GetServerDual(algoName, algoName2, username, port, port2) +
+                      " --api " + ApiPort;
+            }
+
+            return GetDevicesCommandString() + nicehashstratum +
+                  " --algo " + algo + pers +
+                  GetServer(algoName, username, port) +
+                  " --api " + ApiPort;
+        }
+
+        private string GetServerDual(string algo, string algo2, string username, string port, string port2)
+        {
+            string ret = "";
+            string ssl = "";
+            string dssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)
+            {
+                port = "4" + port;
+                port2 = "4" + port2;
+                ssl = "--ssl 1 ";
+                dssl = "--dssl 1 ";
+            }
+            else
+            {
+                port = "1" + port;
+                port = "1" + port;
+                ssl = "--ssl 0 ";
+                dssl = "--dssl 0 ";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + " -s " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " +
+                        username + " -p " + psw + " --ssl 0 " +
+                        "--dalgo " + algo2 + " --dserver " + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --duser " +
+                        username + " --dpass " + psw + " --dssl 0 ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + " -s " + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " +
+                        username + " -p " + psw + " " + ssl + " " +
+                        "--dalgo " + algo2 + " --dserver " + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port2 + " --duser " +
+                        username + " --dpass " + psw + " " + dssl;
+                }
+            }
             return ret;
         }
         private string GetServer(string algo, string username, string port)
@@ -371,6 +474,34 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
                 GetDevicesCommandString();
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                ret = " --color 0 --pec --algo kheavyhash" +
+                " --server " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --user kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --pass x" +
+                GetDevicesCommandString();
+            }
+            //duals
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                ret = " --color 0 --pec --algo autolykos2" +
+                " --server " + Links.CheckDNS("pool.woolypooly.com:3100").Replace("stratum+tcp://", "") + " --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt --pass x " +
+                "--dalgo kheavyhash --dserver " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum + tcp://", "") + " --duser kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --dpass x " +
+                GetDevicesCommandString();
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                ret = " --color 0 --pec --algo ethash" +
+                " --server " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x " +
+                "--dalgo kheavyhash --dserver " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum + tcp://", "") + " --duser kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --dpass x " +
+                GetDevicesCommandString();
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                ret = " --color 0 --pec --algo etchash" +
+                " --server " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x " +
+                "--dalgo kheavyhash --dserver " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum + tcp://", "") + " --duser kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --dpass x " +
+                GetDevicesCommandString();
+            }
 
             return ret + " --api " + ApiPort; ;
         }
@@ -386,6 +517,7 @@ namespace NiceHashMiner.Miners
             BenchmarkException = null;
             double repeats = 0.0d;
             double summspeed = 0.0d;
+            double secsummspeed = 0.0d;
 
             int delay_before_calc_hashrate = 5;
             int MinerStartDelay = 10;
@@ -468,6 +600,7 @@ namespace NiceHashMiner.Miners
                         {
                             Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
                             summspeed += ad.Result.Speed;
+                            secsummspeed += ad.Result.SecondarySpeed;
                         }
                         else
                         {
@@ -492,6 +625,7 @@ namespace NiceHashMiner.Miners
                 }
 
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
+                BenchmarkAlgorithm.BenchmarkSecondarySpeed = Math.Round(secsummspeed / (repeats - delay_before_calc_hashrate), 2);
                 BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
             }
             catch (Exception ex)
@@ -597,6 +731,8 @@ namespace NiceHashMiner.Miners
                 public int gpu_id { get; set; }
                 public double speed { get; set; }
                 public double speed2 { get; set; }
+                public string speed_unit { get; set; }
+                public string speed_unit2 { get; set; }
             }
             public Devices[] devices { get; set; }
         }
@@ -605,12 +741,11 @@ namespace NiceHashMiner.Miners
         {
             //Helpers.ConsolePrint("try API...........", "");
             ApiData ad;
-
-
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             string ResponseFromGMiner;
             double total = 0;
+            double total2 = 0;
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/stat");
@@ -634,17 +769,20 @@ namespace NiceHashMiner.Miners
             }
 
             ResponseFromGMiner = ResponseFromGMiner.Replace("-nan", "0.00");
-
+            //Helpers.ConsolePrint("->", ResponseFromGMiner);
             try
             {
                 dynamic resp = JsonConvert.DeserializeObject<JsonApiResponse>(ResponseFromGMiner);
                 if (resp != null)
                 {
                     double[] hashrates = new double[resp.devices.Length];
+                    double[] hashrates2 = new double[resp.devices.Length];
                     for (var i = 0; i < resp.devices.Length; i++)
                     {
                         total = total + resp.devices[i].speed;
+                        total2 = total2 + resp.devices[i].speed2;
                         hashrates[i] = resp.devices[i].speed;
+                        hashrates2[i] = resp.devices[i].speed2;
                     }
                     int dev = 0;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
@@ -657,6 +795,7 @@ namespace NiceHashMiner.Miners
                     {
                         _power = mPair.Device.PowerUsage;
                         mPair.Device.MiningHashrate = hashrates[dev];
+                        mPair.Device.MiningHashrateSecond = hashrates2[dev];
                         dev++;
                     }
                 }
@@ -673,6 +812,7 @@ namespace NiceHashMiner.Miners
             finally
             {
                 ad.Speed = total;
+                ad.SecondarySpeed = total2;
 
                 if (ad.Speed == 0)
                 {

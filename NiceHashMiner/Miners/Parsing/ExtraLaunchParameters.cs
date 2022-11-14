@@ -428,6 +428,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("SRBMiner-threads", "--gpu-threads", "--gpu-threads", "-1", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-worksize", "--gpu-worksize", "--gpu-worksize", "0", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner-auto-intensity", "--gpu-auto-intensity", "--gpu-auto-intensity", "0", MinerOptionFlagType.MultiParam, "!"),
+                    new MinerOption("SRBMiner-gpu-auto-tune", "--gpu-auto-tune", "--gpu-auto-tune", "0", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner_gpu_autolykos2_preload", "--gpu-autolykos2-preload", "--gpu-autolykos2-preload", "0", MinerOptionFlagType.MultiParam, "!"),
                     new MinerOption("SRBMiner_gpu_boost", "--gpu-boost", "--gpu-boost", "0", MinerOptionFlagType.MultiParam, "!")
                 },

@@ -4,6 +4,9 @@
     {
         // dual algos for grouping
         AutolykosZil = -73,
+        AutolykosKHeavyHash = -20,
+        DaggerKHeavyHash = -19,
+        ETCHashKHeavyHash = -18,
         DaggerOctopus = -17,
         DaggerKAWPOW = -16,
         DaggerAutolykos = -15,

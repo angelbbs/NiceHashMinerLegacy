@@ -92,6 +92,7 @@ namespace NiceHashMiner.Algorithms
         /// Current profit for this algorithm in BTC/Day
         /// </summary>
         public double CurrentProfit { get; set; }
+        public double CurrentProfitWithoutPower { get; set; }
         /// <summary>
         /// Current SMA profitability for this algorithm type in BTC/GH/Day
         /// </summary>
@@ -176,7 +177,11 @@ namespace NiceHashMiner.Algorithms
             get
             {
                 var ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (NHSmaData.TryGetPaying(NiceHashID, out var paying))
+                AlgorithmType _NiceHashID = NiceHashID;
+                //if (NiceHashID == AlgorithmType.AutolykosKHeavyHash) _NiceHashID = AlgorithmType.Autolykos;
+                //if (NiceHashID == AlgorithmType.DaggerKHeavyHash) _NiceHashID = AlgorithmType.DaggerHashimoto;
+                //if (NiceHashID == AlgorithmType.ETCHashKHeavyHash) _NiceHashID = AlgorithmType.ETCHash;
+                if (NHSmaData.TryGetPaying(_NiceHashID, out var paying))
                 {
                     ratio = paying.ToString("F8");
                 }
@@ -203,31 +208,27 @@ namespace NiceHashMiner.Algorithms
         {
             get
             {
-                /*
-                var rate = International.GetText("BenchmarkRatioRateN_A");
-
-                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
-                {
-                    var payingRate = BenchmarkSpeed * paying * Mult;
-                    rate = payingRate.ToString("F8");
-                }
-                */
-                //var rate = International.GetText("BenchmarkRatioRateN_A");
                 var rate = "0.00";
                 var payingRate = 0.0d;
-
-                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
+                AlgorithmType _NiceHashID = NiceHashID;
+                //if (NiceHashID == AlgorithmType.AutolykosKHeavyHash) _NiceHashID = AlgorithmType.Autolykos;
+                //if (NiceHashID == AlgorithmType.DaggerKHeavyHash) _NiceHashID = AlgorithmType.DaggerHashimoto;
+                //if (NiceHashID == AlgorithmType.ETCHashKHeavyHash) _NiceHashID = AlgorithmType.ETCHash;
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(_NiceHashID, out var paying))
                 {
                     payingRate = BenchmarkSpeed * paying * Mult;
                     rate = payingRate.ToString("F8");
                 }
-
                 return rate;
             }
             set
             {
                 var rate = International.GetText("BenchmarkRatioRateN_A");
-                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
+                AlgorithmType _NiceHashID = NiceHashID;
+                //if (NiceHashID == AlgorithmType.AutolykosKHeavyHash) _NiceHashID = AlgorithmType.Autolykos;
+                //if (NiceHashID == AlgorithmType.DaggerKHeavyHash) _NiceHashID = AlgorithmType.DaggerHashimoto;
+                //if (NiceHashID == AlgorithmType.ETCHashKHeavyHash) _NiceHashID = AlgorithmType.ETCHash;
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(_NiceHashID, out var paying))
                 {
                     double.TryParse(value, out var valueBench);
                     var payingRate = valueBench * paying * Mult;
@@ -349,6 +350,7 @@ namespace NiceHashMiner.Algorithms
             {
                 CurrentProfit = (CurNhmSmaDataVal * AvaragedSpeed + payingSecond * BenchmarkSecondarySpeed) * Mult;
             }
+            CurrentProfitWithoutPower = CurrentProfit;
             if (ConfigManager.GeneralConfig.with_power)
             {
                 SubtractPowerFromProfit();

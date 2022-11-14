@@ -57,7 +57,6 @@ namespace NiceHashMiner
                 {
                     AlgorithmName = mpairs.Algorithm.AlgorithmNameCustom;
                 }
-
             }
 
             Speed = 0.0;
@@ -84,6 +83,24 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerKAWPOW;
                     case AlgorithmType.Octopus:
                         return AlgorithmType.DaggerOctopus;
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.DaggerKHeavyHash;
+                }
+            }
+            if (AlgorithmID == AlgorithmType.ETCHash)
+            {
+                switch (SecondaryAlgorithmID)
+                {
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.ETCHashKHeavyHash;
+                }
+            }
+            if (AlgorithmID == AlgorithmType.Autolykos)
+            {
+                switch (SecondaryAlgorithmID)
+                {
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.AutolykosKHeavyHash;
                 }
             }
 
@@ -380,7 +397,9 @@ namespace NiceHashMiner
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 int a = (int)pair.Algorithm.NiceHashID;
+                int b = (int)pair.Algorithm.SecondaryNiceHashID;
                 pair.Device.AlgorithmID = a;
+                pair.Device.SecondAlgorithmID = b; ;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -518,7 +537,9 @@ namespace NiceHashMiner
                 pair.Device.MiningHashrate = 0;
                 pair.Device.MiningHashrateSecond = 0;
                 int a = (int)pair.Algorithm.NiceHashID;
+                int b = (int)pair.Algorithm.SecondaryNiceHashID;
                 pair.Device.AlgorithmID = a;
+                pair.Device.SecondAlgorithmID = b;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -1618,7 +1639,9 @@ namespace NiceHashMiner
                     foreach (var pair in MiningSetup.MiningPairs)
                     {
                         int a = (int)pair.Algorithm.NiceHashID;
+                        int b = (int)pair.Algorithm.SecondaryNiceHashID;
                         pair.Device.AlgorithmID = a;
+                        pair.Device.SecondAlgorithmID = b;
 
                         if (pair.Device.DeviceType == DeviceType.NVIDIA)
                         {
@@ -1761,7 +1784,9 @@ namespace NiceHashMiner
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 int a = (int)pair.Algorithm.NiceHashID;
+                int b = (int)pair.Algorithm.SecondaryNiceHashID;
                 pair.Device.AlgorithmID = a;
+                pair.Device.SecondAlgorithmID = b;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -1824,7 +1849,9 @@ namespace NiceHashMiner
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 int a = (int)pair.Algorithm.NiceHashID;
+                int b = (int)pair.Algorithm.SecondaryNiceHashID;
                 pair.Device.AlgorithmID = a;
+                pair.Device.SecondAlgorithmID = b;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -2190,7 +2217,10 @@ namespace NiceHashMiner
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosZil ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerAutolykos)
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerAutolykos ||
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKHeavyHash ||
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashKHeavyHash ||
+                    pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKHeavyHash)
                 {
                     strDual = "DUAL";
                 }

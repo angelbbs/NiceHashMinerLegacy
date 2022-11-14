@@ -165,6 +165,8 @@ namespace NiceHashMiner.Configs.Data
         public bool Show_NVdevice_manufacturer = true;
         public bool Show_NVIDIA_LHR = true;
         public bool Use_orders_price = false;
+        public bool Use_Last24hours = true;
+        public bool ShortTerm = false;
         public bool Show_memory_temperature = true;
         public bool Show_AMDdevice_manufacturer = true;
         public bool Show_ShowDeviceMemSize = true;

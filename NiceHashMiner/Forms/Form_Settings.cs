@@ -270,6 +270,9 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(checkBox_MinimizeMiningWindows,
                 International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
 
+            toolTip1.SetToolTip(checkBoxLast24hours,
+                International.GetText("Form_Settings_ToolTip_Last24hours"));
+
             // Electricity cost
             //toolTip1.SetToolTip(label_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
             //toolTip1.SetToolTip(textBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
@@ -452,6 +455,8 @@ namespace NiceHashMiner.Forms
             checkBox_show_NVdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_NVdevice_manufacturer");
             checkBox_show_NVIDIA_LHR.Text = International.GetText("Form_Settings_checkBox_show_NVIDIA_LHR");
             checkBox_orderPrice.Text = International.GetText("Form_Settings_checkBox_orderPrice");
+            checkBoxLast24hours.Text = International.GetText("Form_Settings_checkBox_Last24hours");
+            checkBoxShortTerm.Text = International.GetText("Form_Settings_checkBox_ShortTerm");
             checkBox_Show_memory_temp.Text = International.GetText("Form_Settings_checkBox_show_memory_temp");
             label_show_manufacturer.Text = International.GetText("Form_Settings_label_show_manufacturer");
             label_restart_nv_lost.Text = International.GetText("Form_Settings_label_restart_nv_lost");
@@ -506,6 +511,16 @@ namespace NiceHashMiner.Forms
             checkBoxEnableProxy.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxEnableProxy");
             //checkBoxProxyAsFailover.Text = International.GetText("FormSettings_Tab_Advanced_ProxyAsFailover");
             //checkBoxStale.Text = International.GetText("FormSettings_Tab_Advanced_StaleProxy");
+            if (Globals.MiningLocation.Length > 1)
+            {
+                checkBoxEnableProxy.Enabled = true;
+                checkBoxProxySSL.Enabled = true;
+            } else
+            {
+                checkBoxEnableProxy.Enabled = false;
+                checkBoxProxySSL.Enabled = false;
+            }
+
 
             richTextBoxInfo.ReadOnly = true;
             richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Bold);
@@ -835,6 +850,12 @@ namespace NiceHashMiner.Forms
                 checkBox_orderPrice.BackColor = Form_Main._backColor;
                 checkBox_orderPrice.ForeColor = Form_Main._textColor;
 
+                checkBoxLast24hours.BackColor = Form_Main._backColor;
+                checkBoxLast24hours.ForeColor = Form_Main._textColor;
+
+                checkBoxShortTerm.BackColor = Form_Main._backColor;
+                checkBoxShortTerm.ForeColor = Form_Main._textColor;
+
                 checkBox_Show_memory_temp.BackColor = Form_Main._backColor;
                 checkBox_Show_memory_temp.ForeColor = Form_Main._textColor;
                 checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
@@ -1092,6 +1113,8 @@ namespace NiceHashMiner.Forms
                 checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVIDIA_LHR.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_orderPrice.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxLast24hours.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxShortTerm.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_memory_temp.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_AMDdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowDeviceMemSize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1237,6 +1260,8 @@ namespace NiceHashMiner.Forms
                 checkBox_show_NVdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_NVdevice_manufacturer;
                 checkBox_show_NVIDIA_LHR.Checked = ConfigManager.GeneralConfig.Show_NVIDIA_LHR;
                 checkBox_orderPrice.Checked = ConfigManager.GeneralConfig.Use_orders_price;
+                checkBoxLast24hours.Checked = ConfigManager.GeneralConfig.Use_Last24hours;
+                checkBoxShortTerm.Checked = ConfigManager.GeneralConfig.ShortTerm;
                 checkBox_Show_memory_temp.Checked = ConfigManager.GeneralConfig.Show_memory_temperature;
                 checkBox_show_AMDdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer;
                 checkBox_ShowDeviceMemSize.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceMemSize;
@@ -1268,15 +1293,17 @@ namespace NiceHashMiner.Forms
 
                 if (checkBoxEnableProxy.Checked)
                 {
-                    checkBoxProxySSL.Enabled = true;
-                    //checkBoxProxyAsFailover.Enabled = true;
-                    //checkBoxStale.Enabled = true;
+                    if (Globals.MiningLocation.Length > 1)
+                    {
+                        checkBoxProxySSL.Enabled = true;
+                    } else
+                    {
+                        checkBoxProxySSL.Enabled = false;
+                    }
                 }
                 else
                 {
                     checkBoxProxySSL.Enabled = false;
-                    //checkBoxProxyAsFailover.Enabled = false;
-                    //checkBoxStale.Enabled = false;
                 }
                 if (checkBoxEnableRigRemoteView.Checked)
                 {
@@ -1568,6 +1595,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Show_displayConected = checkBox_DisplayConnected.Checked;
             ConfigManager.GeneralConfig.Show_NVdevice_manufacturer = checkBox_show_NVdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Use_orders_price = checkBox_orderPrice.Checked;
+            ConfigManager.GeneralConfig.Use_Last24hours = checkBoxLast24hours.Checked;
+            ConfigManager.GeneralConfig.ShortTerm = checkBoxShortTerm.Checked;
             ConfigManager.GeneralConfig.Show_memory_temperature = checkBox_Show_memory_temp.Checked;
             ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer = checkBox_show_AMDdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;
@@ -2688,7 +2717,7 @@ namespace NiceHashMiner.Forms
 
         private void checkBox_EnableAPI_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox_EnableAPI.Checked)
+            if (ConfigManager.GeneralConfig.EnableAPIkeys)
             {
                 if (!Form_API_keys.GetSavedAPIkeyData())
                 {
@@ -3140,6 +3169,17 @@ namespace NiceHashMiner.Forms
         private void textBoxScheduleCost5_Leave(object sender, EventArgs e)
         {
             SaveSchedules();
+        }
+
+        private void checkBoxShortTerm_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxShortTerm.Checked)
+            {
+                comboBox_switching_algorithms.Enabled = false;
+            } else
+            {
+                comboBox_switching_algorithms.Enabled = true;
+            }
         }
     }
 

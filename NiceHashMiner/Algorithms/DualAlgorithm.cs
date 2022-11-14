@@ -50,6 +50,31 @@ namespace NiceHashMiner.Algorithms
                     }
                 }
 
+                if (NiceHashID == AlgorithmType.DaggerHashimoto)
+                {
+                    switch (SecondaryNiceHashID)
+                    {
+                        case AlgorithmType.KHeavyHash:
+                            return AlgorithmType.DaggerKHeavyHash;
+                    }
+                }
+                if (NiceHashID == AlgorithmType.Autolykos)
+                {
+                    switch (SecondaryNiceHashID)
+                    {
+                        case AlgorithmType.KHeavyHash:
+                            return AlgorithmType.AutolykosKHeavyHash;
+                    }
+                }
+                if (NiceHashID == AlgorithmType.ETCHash)
+                {
+                    switch (SecondaryNiceHashID)
+                    {
+                        case AlgorithmType.KHeavyHash:
+                            return AlgorithmType.ETCHashKHeavyHash;
+                    }
+                }
+
                 return NiceHashID;
             }
         }
