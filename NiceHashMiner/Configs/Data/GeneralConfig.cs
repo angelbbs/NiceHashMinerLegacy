@@ -330,7 +330,7 @@ namespace NiceHashMiner.Configs.Data
             ColumnSort = false;
             ColumnListSort = 1;
 
-            FormWidth = 770;
+            FormWidth = 780;
             FormHeight = 406;
             FormTop = 0;
             FormLeft = 0;

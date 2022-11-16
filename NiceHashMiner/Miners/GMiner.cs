@@ -164,7 +164,7 @@ namespace NiceHashMiner.Miners
                 port2 = "3395";
 
                 return GetDevicesCommandString() + nicehashstratum +
-                      " --algo " + algo + pers +
+                      " --algo " + algo + " --dalgo " + algo2 + pers +
                       GetServerDual(algoName, algoName2, username, port, port2) +
                       " --api " + ApiPort;
             }
@@ -181,7 +181,7 @@ namespace NiceHashMiner.Miners
                 port2 = "3395";
 
                 return GetDevicesCommandString() + nicehashstratum +
-                      " --algo " + algo + pers +
+                      " --algo " + algo + " --dalgo " + algo2 + pers +
                       GetServerDual(algoName, algoName2, username, port, port2) +
                       " --api " + ApiPort;
             }
@@ -198,7 +198,7 @@ namespace NiceHashMiner.Miners
                 port2 = "3395";
 
                 return GetDevicesCommandString() + nicehashstratum +
-                      " --algo " + algo + pers +
+                      " --algo " + algo + " --dalgo " + algo2 + pers +
                       GetServerDual(algoName, algoName2, username, port, port2) +
                       " --api " + ApiPort;
             }
@@ -236,7 +236,7 @@ namespace NiceHashMiner.Miners
                 {
                     ret = ret + " -s " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " +
                         username + " -p " + psw + " --ssl 0 " +
-                        "--dalgo " + algo2 + " --dserver " + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --duser " +
+                        " --dserver " + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --duser " +
                         username + " --dpass " + psw + " --dssl 0 ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
@@ -244,7 +244,7 @@ namespace NiceHashMiner.Miners
                 {
                     ret = ret + " -s " + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " +
                         username + " -p " + psw + " " + ssl + " " +
-                        "--dalgo " + algo2 + " --dserver " + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port2 + " --duser " +
+                        " --dserver " + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port2 + " --duser " +
                         username + " --dpass " + psw + " " + dssl;
                 }
             }

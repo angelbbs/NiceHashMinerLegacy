@@ -214,9 +214,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             //************* отключение алгоритмов, если отсутствует дополнительный файл майнера
+            /*
             string minerfilename = "";
-
-            
             minerfilename = "gminer\\miner.2.54.exe";
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) &&
                 !File.Exists(Directory.GetCurrentDirectory() + "\\miners\\" + minerfilename) &&
@@ -232,6 +231,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
+            */
             //******************
             
 

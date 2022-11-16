@@ -21,6 +21,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 toolTip2.SetToolTip(button_restart, "Restar miner");
             }
+            richTextBoxSpeedValue.SelectionColor = Form_Main._foreColor;
             groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
             groupBoxMinerGroup.BackColor = Form_Main._backColor;
 

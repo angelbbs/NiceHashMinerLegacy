@@ -369,7 +369,7 @@ namespace NiceHashMiner
             string version = fvi.FileVersion;
             double.TryParse(version, out var d);
             int.TryParse(version, out var i);
-            /*
+            
             if (d / i == 1)
             {
                 Form_Main.version = i.ToString();
@@ -380,9 +380,9 @@ namespace NiceHashMiner
                 Form_Main.version = d.ToString();
                 Text += d.ToString();
             }
-            */
+            
 
-            Text += "53 (beta)";
+            //Text += "53 (beta)";
             Text += " for " + platform;
 
             var internalversion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -718,9 +718,15 @@ namespace NiceHashMiner
                     string tmp = File.ReadAllText("configs//ProxyList.tmp");
                     if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
                     {
-                        if (File.Exists("configs//ProxyList.json")) File.Delete("configs//ProxyList.json");
-                        File.Copy("configs//ProxyList.tmp", "configs//ProxyList.json");
-                        if (File.Exists("configs//ProxyList.tmp")) File.Delete("configs//ProxyList.tmp");
+                        try
+                        {
+                            if (File.Exists("configs//ProxyList.json")) File.Delete("configs//ProxyList.json");
+                            File.Copy("configs//ProxyList.tmp", "configs//ProxyList.json");
+                            if (File.Exists("configs//ProxyList.tmp")) File.Delete("configs//ProxyList.tmp");
+                        } catch (Exception ex)
+                        {
+
+                        }
                     } else
                     {
                         Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from gitlab");
@@ -728,9 +734,15 @@ namespace NiceHashMiner
                         tmp = File.ReadAllText("configs//ProxyList.tmp");
                         //if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
                         {
-                            if (File.Exists("configs//ProxyList.json")) File.Delete("configs//ProxyList.json");
-                            File.Copy("configs//ProxyList.tmp", "configs//ProxyList.json");
-                            if (File.Exists("configs//ProxyList.tmp")) File.Delete("configs//ProxyList.tmp");
+                            try
+                            {
+                                if (File.Exists("configs//ProxyList.json")) File.Delete("configs//ProxyList.json");
+                                File.Copy("configs//ProxyList.tmp", "configs//ProxyList.json");
+                                if (File.Exists("configs//ProxyList.tmp")) File.Delete("configs//ProxyList.tmp");
+                            } catch (Exception ex)
+                            {
+
+                            }
                         }
                     }
                 } catch (Exception ex)

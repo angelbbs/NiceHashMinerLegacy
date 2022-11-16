@@ -797,11 +797,6 @@ namespace NiceHashMiner
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
 
-            if (MinerTag().ToLower().Contains("gminer") && (commandLine.ToLower().Contains("beam")))
-            {
-                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miner.exe", "miner.2.54.exe");
-            }
-
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
             Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
             benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -1591,11 +1586,6 @@ namespace NiceHashMiner
             if (MiningSetup.MinerPath.ToLower().Contains("nbminer") && (LastCommandLine.ToLower().Contains("cuckatoo")))
             {
                 Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
-            }
-
-            if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("beam")))
-            {
-                Path = MiningSetup.MinerPath.Replace("miner.exe", "miner.2.54.exe");
             }
 
             /*

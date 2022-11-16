@@ -83,7 +83,7 @@ namespace NiceHashMiner.Switching
                     if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
                         HasData = true;
 
-                    if (Divert.DaggerHashimoto3GBProfit)
+                    //if (Divert.DaggerHashimoto3GBProfit)
                     {
                         _currentSma[algo] = new NiceHashSma
                         {
@@ -93,6 +93,7 @@ namespace NiceHashMiner.Switching
                             Paying = paying
                         };
                     }
+                    /*
                     else
                     {
                         _currentSma[algo] = new NiceHashSma
@@ -103,6 +104,7 @@ namespace NiceHashMiner.Switching
                             Paying = 0.0d
                         };
                     }
+                    */
                 }
                 if (algo == AlgorithmType.DaggerHashimoto4GB)
                 {
@@ -110,7 +112,7 @@ namespace NiceHashMiner.Switching
                     if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
                         HasData = true;
 
-                    if (Divert.DaggerHashimoto4GBProfit)
+                    //if (Divert.DaggerHashimoto4GBProfit)
                     {
                         _currentSma[algo] = new NiceHashSma
                         {
@@ -120,6 +122,7 @@ namespace NiceHashMiner.Switching
                             Paying = paying
                         };
                     }
+                    /*
                     else
                     {
                         _currentSma[algo] = new NiceHashSma
@@ -130,6 +133,7 @@ namespace NiceHashMiner.Switching
                             Paying = 0.0d
                         };
                     }
+                    */
                 }
             }
 
@@ -147,7 +151,7 @@ namespace NiceHashMiner.Switching
         /// Change SMA profits to new values
         /// </summary>
         /// <param name="newSma">Algorithm/profit dictionary with new values</param>
-        public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma, bool average = false)
+        public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma, bool average = true)
         {
             CheckInit();
             lock (_currentSma)

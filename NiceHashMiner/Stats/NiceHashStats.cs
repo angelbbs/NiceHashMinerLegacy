@@ -1067,6 +1067,9 @@ namespace NiceHashMiner.Stats
                 //testing
                 //payingDict[AlgorithmType.ZelHash] = 12345;
 
+                payingDict[AlgorithmType.DaggerHashimoto3GB] = payingDict[AlgorithmType.DaggerHashimoto];
+                payingDict[AlgorithmType.DaggerHashimoto4GB] = payingDict[AlgorithmType.DaggerHashimoto];
+
                 NHSmaData.UpdateSmaPaying(payingDict, average);
 
                 Thread.Sleep(10);

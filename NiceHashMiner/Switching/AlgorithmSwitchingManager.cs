@@ -181,18 +181,19 @@ namespace NiceHashMiner.Switching
                     history[algo].Add(paying);
                     var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
                     double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
-                    
-                    if (p1 >= 20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
-                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash))
+
+                    if (MiningSession._ticks[0] != 0 && p1 >= 20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
+                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash ||
+                        algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB))
                     {
-                        Helpers.ConsolePrint("UpdateProfits", "ZIL round detected?");
+                        Helpers.ConsolePrint("UpdateProfits", "ZIL round detected? " + ticks.ToString() + " / " + MiningSession._ticks[0].ToString());
                         i = 0;
                         ticks = 0;
                         _lastLegitPaying[algo] = paying;
                         updated = true;
                         if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
                         {
-                                MiningSession._ticks[0] = 999;
+                            MiningSession._ticks[0] = 999;
                         } else
                         {
                             for (int d = 0; d < MiningSession._ticks.Length; d++)
@@ -200,11 +201,13 @@ namespace NiceHashMiner.Switching
                                 MiningSession._ticks[d] = 999;
                             }
                         }
+                        break;
                     }
-                    if (p1 <= -20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
-                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash))
+                    if (MiningSession._ticks[0] != 0 && p1 <= -20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
+                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash ||
+                        algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB))
                     {
-                        Helpers.ConsolePrint("UpdateProfits", "ZIL round is over?");
+                        Helpers.ConsolePrint("UpdateProfits", "ZIL round is over? " + ticks.ToString() + " / " + MiningSession._ticks[0].ToString());
                         i = 0;
                         ticks = 0;
                         _lastLegitPaying[algo] = paying;
@@ -220,6 +223,7 @@ namespace NiceHashMiner.Switching
                                 MiningSession._ticks[d] = 999;
                             }
                         }
+                        break;
                     }
                     
                     if (paying > _lastLegitPaying[algo])
