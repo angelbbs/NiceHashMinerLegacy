@@ -26,7 +26,7 @@ namespace NiceHashMiner.Miners
         private double _power = 0.0d;
         double _powerUsage = 0;
         string platform = "";
-        int addTime = 0;
+        int APIerrorsCount = 0;
         public lolMiner()
             : base("lolMiner")
         {
@@ -225,10 +225,17 @@ namespace NiceHashMiner.Miners
                               " --devices ";
             }
             //duals
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" +
                 GetServerDual("daggerhashimoto", "KASPADUAL", "kheavyhash",  btcAdress, worker, "3353", "3395") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+            {
+                LastCommandLine = "--algo ETCHASH --ethstratum=ETHV1" +
+                GetServerDual("etchash", "KASPADUAL", "kheavyhash", btcAdress, worker, "3393", "3395") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -272,10 +279,6 @@ namespace NiceHashMiner.Miners
                     platform = "amd";
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
                 }
-                if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-                {
-                    addTime = 180;//need for calibration
-                }
             }
             // demo for benchmark
             var btcAddress = Globals.GetBitcoinUser();
@@ -304,9 +307,6 @@ namespace NiceHashMiner.Miners
                                               param +
                 " --devices ";
             }
-
-            
-
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 CommandLine = "--algo C29AE " +
@@ -356,7 +356,7 @@ namespace NiceHashMiner.Miners
             }
 
             CommandLine += GetDevicesCommandString() + " "; //amd карты перечисляются первыми
-            _benchmarkTimeWait = time + addTime;
+            _benchmarkTimeWait = time;
             CommandLine = CommandLine.Replace("--asm 1", "");
             string sColor = "";
             //if (GetWinVer(Environment.OSVersion.Version) < 8)
@@ -534,6 +534,7 @@ namespace NiceHashMiner.Miners
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
+            BenchmarkSignalTimedout = false;
             double repeats = 0.0d;
             double summspeed = 0.0d;
             double secsummspeed = 0.0d;
@@ -549,6 +550,10 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
@@ -561,6 +566,16 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
+                }
+                
+                if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//+dual
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 120;
+                }
+                
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
@@ -612,7 +627,12 @@ namespace NiceHashMiner.Miners
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
-                        delay_before_calc_hashrate = 60 + addTime;
+                        delay_before_calc_hashrate = 60;
+                        MinerStartDelay = 20;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+                    {
+                        delay_before_calc_hashrate = 60;
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
@@ -636,10 +656,20 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 20;
                         MinerStartDelay = 20;
                     }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                    {
+                        delay_before_calc_hashrate = 20;
+                        MinerStartDelay = 10;
+                    }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                     {
                         delay_before_calc_hashrate = 40;
                         MinerStartDelay = 5;
+                    }
+                    if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//dual
+                    {
+                        delay_before_calc_hashrate = 180;
+                        MinerStartDelay = 30;
                     }
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
@@ -652,7 +682,7 @@ namespace NiceHashMiner.Miners
                         {
                             Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() +
                                 "  Second: " + ad.Result.SecondarySpeed.ToString() +
-                                " power: " + _power.ToString());
+                                " power: " + _power.ToString() + " after " + repeats.ToString() + " sec");
                             /*
                             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                             {
@@ -668,7 +698,9 @@ namespace NiceHashMiner.Miners
                         }
                         else
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString() +
+                                "  Second: " + ad.Result.SecondarySpeed.ToString() +
+                                " power: " + _power.ToString());
                         }
 
                         if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
@@ -731,7 +763,7 @@ namespace NiceHashMiner.Miners
         // TODO _currentMinerReadStatus
         public override async Task<ApiData> GetSummaryAsync()
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
             string ResponseFromlolMiner;
             try
             {
@@ -852,10 +884,16 @@ namespace NiceHashMiner.Miners
                         if (ad.Speed == 0)
                         {
                             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                            APIerrorsCount++;
                         }
                         else
                         {
                             CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                            APIerrorsCount = 0;
+                        }
+                        if (Num_Algorithms == 2 && ad.SecondarySpeed == 0)
+                        {
+                            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                         }
                     }
 
@@ -864,6 +902,13 @@ namespace NiceHashMiner.Miners
             catch (Exception e)
             {
                 Helpers.ConsolePrint(MinerTag(), e.ToString());
+            }
+
+            if (APIerrorsCount >= 100)
+            {
+                Helpers.ConsolePrint(MinerTag(), "Too many API errors. Restarting miner");
+                APIerrorsCount = 0;
+                Restart();
             }
 
             Thread.Sleep(100);

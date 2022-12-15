@@ -181,7 +181,8 @@ namespace NiceHashMiner.Switching
                     history[algo].Add(paying);
                     var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
                     double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
-
+                    //Helpers.ConsolePrint("**********", "MiningSession._ticks[0]: " + MiningSession._ticks[0].ToString() +
+                    //    " algo: " + algo + " p1: " + p1.ToString());
                     if (MiningSession._ticks[0] != 0 && p1 >= 20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
                         algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash ||
                         algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB))

@@ -281,7 +281,7 @@ namespace NiceHashMiner.Forms.Components
 
             foreach (var computeDevice in _computeDevices)
             {
-                string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, computeDevice.MiningHashrateSecond, (AlgorithmType)computeDevice.AlgorithmID);
+                string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, computeDevice.MiningHashrateSecond, (AlgorithmType)computeDevice.AlgorithmID, (AlgorithmType)computeDevice.SecondAlgorithmID);
                 string cTemp = "";
                 if (computeDevice.TempMemory > 0 )
                 {

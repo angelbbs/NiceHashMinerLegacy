@@ -217,30 +217,71 @@ namespace NiceHashMiner
                 ret = (speed * 0.000001).ToString(format, CultureInfo.InvariantCulture) + separator + "M";
             else
                 ret = (speed * 0.000000001).ToString(format, CultureInfo.InvariantCulture) + separator + "G";
-
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed = 0, AlgorithmType algo = AlgorithmType.NONE)
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed = 0, AlgorithmType algo = AlgorithmType.NONE, AlgorithmType algo2 = AlgorithmType.NONE)
         {
             string ret;
-
-            if (secondarySpeed > 0)
+            string first;
+            string second;
+            string separator = "";
+            if (algo2 == AlgorithmType.NONE || algo == algo2)
+            {
+                ret = FormatSpeedOutput(primarySpeed);
+            } else
             {
                 if (primarySpeed == 0)
                 {
-                    ret = "-- /" + FormatSpeedOutput(secondarySpeed, "", true);
+                    first = "0";
                 }
                 else
                 {
-                    ret = FormatSpeedOutput(primarySpeed, "", true) + "/" + FormatSpeedOutput(secondarySpeed, "", true) + " ";
+                    first = FormatSpeedOutput(primarySpeed, "", true);
                 }
+                if (secondarySpeed == 0)
+                {
+                    second = "0";
+                }
+                else
+                {
+                    second = FormatSpeedOutput(secondarySpeed, "", true);
+                }
+                ret = first + "/" + second;
+                separator = " ";
+
+                if (primarySpeed == 0 && secondarySpeed == 0)
+                {
+                    ret = "--";
+                    return ret;
+                }
+            }
+
+            /*
+            if (algo != algo2)//dual
+            {
+                if (primarySpeed == 0)
+                {
+                    first = "--";
+                } else
+                {
+                    first = FormatSpeedOutput(primarySpeed, "", true);
+                }
+                if (secondarySpeed == 0)
+                {
+                    second = "--";
+                }
+                else
+                {
+                    second = FormatSpeedOutput(secondarySpeed, "", true);
+                }
+                ret = first + "/" + second;
             }
             else
             {
                 ret = FormatSpeedOutput(primarySpeed);
             }
-
+            */
             string unit;
             switch (algo)
             {
@@ -257,7 +298,7 @@ namespace NiceHashMiner
                     unit = "H/s ";
                     break;
             }
-            return ret + unit;
+            return ret + separator + unit;
         }
 
         public static string GetMotherboardID()

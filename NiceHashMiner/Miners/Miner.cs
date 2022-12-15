@@ -128,7 +128,7 @@ namespace NiceHashMiner
         protected readonly long MinerID;
 
         private string _minerTag;
-        public string MinerDeviceName { get; set; }
+        public static string MinerDeviceName { get; set; }
 
         protected int ApiPort { get; set; }
 
@@ -727,7 +727,7 @@ namespace NiceHashMiner
         public int BenchmarkTimeoutInSeconds(int timeInSeconds)
         {
             if (TimeoutStandard) return timeInSeconds;
-            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
+            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto || BenchmarkAlgorithm.NiceHashID == AlgorithmType.ETCHash)
             {
                 return 5 * 60 + 120; // 5 minutes plus two minutes
             }
@@ -796,7 +796,10 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
-
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("nbminer") && (commandLine.ToLower().Contains("beam")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
             Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
             benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -1058,13 +1061,13 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("BENCHMARK-finish",
                     "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed,
-                        BenchmarkAlgorithm.BenchmarkSecondarySpeed, dualAlg.DualNiceHashID));
+                        BenchmarkAlgorithm.BenchmarkSecondarySpeed, dualAlg.NiceHashID, dualAlg.DualNiceHashID));
             }
             else
             {
                 Helpers.ConsolePrint("BENCHMARK-finish",
                     "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, 0,
-                        BenchmarkAlgorithm.NiceHashID));
+                        BenchmarkAlgorithm.NiceHashID, BenchmarkAlgorithm.DualNiceHashID));
             }
 
             Helpers.ConsolePrint("BENCHMARK-finish", "Benchmark ends");
@@ -1288,193 +1291,7 @@ namespace NiceHashMiner
             }
         }
 
-        /// <summary>
-        /// Thread routine for miners that cannot be scheduled to stop and need speed data read from command line
-        /// </summary>
-        /// <param name="commandLine"></param>
-        /// <param name="benchmarkTimeWait"></param>
-        //protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait)
-        //public void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait)
-        protected virtual void BenchmarkThreadRoutineAPI(object commandLine, int benchmarkTimeWait)
-        {
-            CleanOldLogs();
-
-            BenchmarkSignalQuit = false;
-            BenchmarkSignalHanged = false;
-            BenchmarkSignalFinnished = false;
-            BenchmarkException = null;
-            double repeats = 0.0d;
-            double summspeed = 0.0d;
-            double maxspeed = 0.0d;
-            int MinerStartDelay = 5;
-
-
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            if (MinerDeviceName.Contains("Phoenix")) benchmarkTimeWait = benchmarkTimeWait + 30;
-
-            try
-            {
-                Helpers.ConsolePrint("BENCHMARK-routineAlt", "Benchmark starts");
-                Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
-                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
-                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 60);
-                var benchmarkTimer = new Stopwatch();
-                benchmarkTimer.Reset();
-                benchmarkTimer.Start();
-
-                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                var keepRunning = true;
-                int delay_before_calc_hashrate = 10;
-                int bench_time = benchmarkTimeWait - 10;
-                Task<ApiData> ad;
-                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id))
-                {
-                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
-                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
-                    // terminate process situations
-                    if (benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 60)
-                        || BenchmarkSignalQuit
-                        || BenchmarkSignalFinnished
-                        || BenchmarkSignalHanged
-                        || BenchmarkSignalTimedout
-                        || BenchmarkException != null)
-                    {
-                        if (BenchmarkSignalTimedout)
-                        {
-                            throw new Exception("Benchmark timedout");
-                        }
-
-                        if (BenchmarkException != null)
-                        {
-                            throw BenchmarkException;
-                        }
-
-                        if (BenchmarkSignalQuit)
-                        {
-                            throw new Exception("Termined by user request");
-                        }
-
-                        if (BenchmarkSignalFinnished)
-                        {
-                            break;
-                        }
-
-                        keepRunning = false;
-                        break;
-                    }
-
-                    // wait a second due api request
-                    Thread.Sleep(1000);
-
-                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto)) &&
-                        MinerDeviceName.Contains("Claymore"))
-                    {
-                        MinerStartDelay = 20;
-                        delay_before_calc_hashrate = 10;
-                    }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NeoScrypt) &&
-                        MinerDeviceName.Contains("Claymore"))
-                    {
-                        MinerStartDelay = 5;
-                        delay_before_calc_hashrate = 5;
-                    }
-
-                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto)) &&
-                        MinerDeviceName.Contains("Phoenix"))
-                    {
-                        MinerStartDelay = 20;
-                        delay_before_calc_hashrate = 20;
-                    }
-
-                    ad = GetSummaryAsync();
-                    if (ad.Result != null && ad.Result.Speed > 0)
-                    {
-
-                        repeats++;
-                        if (repeats > delay_before_calc_hashrate)
-                        {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString());
-                            summspeed += ad.Result.Speed;
-                            maxspeed = Math.Max(maxspeed, ad.Result.Speed);
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
-                        }
-
-                        //if (repeats >= bench_time + delay_before_calc_hashrate)
-                        if (repeats >= benchmarkTimeWait - MinerStartDelay)
-                        {
-                            Helpers.ConsolePrint(MinerTag(), "Benchmark ended");
-                            //BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (bench_time), 2);
-                            ad.Dispose();
-                            benchmarkTimer.Stop();
-                            /*
-                            BenchmarkHandle.Dispose();
-                            EndBenchmarkProcces();
-                            */
-                            break;
-                        }
-                    }
-                    benchmarkTimer.Stop();
-                }
-                //Helpers.ConsolePrint(MinerTag(), "summspeed: " + summspeed.ToString() + " bench_time:" + bench_time.ToString());
-                BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
-                if (MinerDeviceName.Contains("Phoenix"))
-                {
-                    BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(maxspeed, 2);
-                }
-                if (MinerDeviceName.Contains("Claymore"))
-                {
-                    //Thread.Sleep(10000);
-                }
-            }
-            catch (Exception ex)
-            {
-                BenchmarkThreadRoutineCatch(ex);
-            }
-            finally
-            {
-
-                int pid = _currentPidData.Pid;
-                if (MinerTag().Contains("Phoenix"))
-                {
-                    try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
-                    Thread.Sleep(1000);
-                }
-                //KillProcessAndChildren(pid);
-
-                Helpers.ConsolePrint("BENCHMARK-end",
-                        $"Trying to kill benchmark process {BenchmarkProcessPath}, pID:{pid}  algorithm {BenchmarkAlgorithm.AlgorithmName}");
-                try
-                {
-                    ManagementObjectSearcher searcher = new ManagementObjectSearcher
-                            ("Select * From Win32_Process Where ParentProcessID=" + pid);
-                    ManagementObjectCollection moc = searcher.Get();
-
-                    foreach (ManagementObject mo in moc)
-                    {
-                        KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
-                    }
-                }
-
-                catch (Exception er)
-                {
-                    Helpers.ConsolePrint("BenchmarkThreadRoutineAPI", er.ToString());
-                }
-                finally
-                {
-                    //KillAllUsedMinerProcesses();
-                }
-
-                BenchmarkThreadRoutineFinish();
-            }
-        }
-
+        
         protected void CleanOldLogs()
         {
             // clean old logs
@@ -1587,6 +1404,10 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
+            if (MiningSetup.MinerPath.ToLower().Contains("nbminer") && (LastCommandLine.ToLower().Contains("beam")))
+            {
+                Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
 
             /*
             if (MiningSetup.MinerPath.ToLower().Contains("gminer") && (LastCommandLine.ToLower().Contains("cuckoocycle")))
@@ -1617,35 +1438,46 @@ namespace NiceHashMiner
 
             try
             {
+                NiceHashStats._deviceUpdateTimer.Stop();
+
+                NiceHashStats._deviceUpdateTimer.Start();
+                string strPlatform = "";
+                foreach (var pair in MiningSetup.MiningPairs)
+                {
+                    int a = (int)pair.Algorithm.NiceHashID;
+                    int b = (int)pair.Algorithm.SecondaryNiceHashID;
+                    pair.Device.AlgorithmID = a;
+                    pair.Device.SecondAlgorithmID = b;
+                    pair.Device.MinerName = MinerDeviceName;
+
+                    if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                    {
+                        strPlatform = "NVIDIA";
+                    }
+                    else if (pair.Device.DeviceType == DeviceType.AMD)
+                    {
+                        strPlatform = "AMD";
+                    }
+                    else if (pair.Device.DeviceType == DeviceType.CPU)
+                    {
+                        strPlatform = "CPU";
+                    }
+                }
+                GC.Collect();
+                try
+                {
+                    byte[] cache = File.ReadAllBytes(Path);
+                    Helpers.ConsolePrint(MinerTag(), "Caching " + cache.Length.ToString() + " bytes");
+                } catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("Caching", ex.ToString());
+                }
                 if (P.Start())
                 {
                     IsRunning = true;
                     IsRunningNew = IsRunning;
                     //  NiceHashStats.SetDeviceStatus("MINING");
-                    NiceHashStats._deviceUpdateTimer.Stop();
 
-                    NiceHashStats._deviceUpdateTimer.Start();
-                    string strPlatform = "";
-                    foreach (var pair in MiningSetup.MiningPairs)
-                    {
-                        int a = (int)pair.Algorithm.NiceHashID;
-                        int b = (int)pair.Algorithm.SecondaryNiceHashID;
-                        pair.Device.AlgorithmID = a;
-                        pair.Device.SecondAlgorithmID = b;
-
-                        if (pair.Device.DeviceType == DeviceType.NVIDIA)
-                        {
-                            strPlatform = "NVIDIA";
-                        }
-                        else if (pair.Device.DeviceType == DeviceType.AMD)
-                        {
-                            strPlatform = "AMD";
-                        }
-                        else if (pair.Device.DeviceType == DeviceType.CPU)
-                        {
-                            strPlatform = "CPU";
-                        }
-                    }
                     if (Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;

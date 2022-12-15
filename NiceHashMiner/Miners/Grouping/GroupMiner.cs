@@ -99,7 +99,7 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 Miner.Stop();
                 // wait before going on
-                System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+                //System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             }
             CurrentRate = 0;
             PowerRate = 0;
@@ -118,9 +118,8 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 return;
             }
-
             // Wait before new start
-            System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            System.Threading.Thread.Sleep(100);
             //var locationUrl = Globals.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
             Miner.Start(btcAdress, worker);
         }

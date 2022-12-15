@@ -686,18 +686,18 @@ namespace NiceHashMiner.Stats
 
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
-                        Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent OK");
+                        Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h OK");
                     }
                     return true;
                 }
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent ERROR");
+                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h ERROR");
                 return false;
 
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("NHM_API_info", ex.Message);
-                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent fatal ERROR");
+                Helpers.ConsolePrint("NHM_API_info", "GetSmaAPI24h fatal ERROR");
                 return false;
             }
             return false;

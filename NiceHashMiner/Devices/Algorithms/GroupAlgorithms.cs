@@ -247,12 +247,36 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
+            if (algoSettings.ContainsKey(MinerBaseType.ZEnemy)) //not supported
+            {
+                foreach (var algo in algoSettings[MinerBaseType.ZEnemy])
+                {
+                    if (algo.NiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 40")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
             if (algoSettings.ContainsKey(MinerBaseType.CryptoDredge)) //not supported
             {
                 foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
                 {
                     if (algo.NiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 30")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.CryptoDredge)) //not supported
+            {
+                foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
+                {
+                    if (algo.NiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;
@@ -327,6 +351,30 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         AlgorithmType.Autolykos
                     });
+            }
+            
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.2) && Form_Main.GetWinVer(Environment.OSVersion.Version) > 9)
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.Autolykos,
+                        AlgorithmType.AutolykosKHeavyHash
+                    });
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.GMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.ZelHash &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.2) &&
+                        Form_Main.GetWinVer(Environment.OSVersion.Version) > 9)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                        algo.BenchmarkSpeed = 0;
+                        algo.BenchmarkSecondarySpeed = 0;
+                    }
+                }
             }
 
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.4))

@@ -899,15 +899,21 @@ namespace NiceHashMiner.Devices
         }
         public static void ApplyFromFile(int _busID, string FileName)
         {
-            ControlMemoryGpuEntry dev = ReadFromFile(_busID, FileName);
-
-            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+            try
             {
-                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
-                if (busID == _busID)
+                ControlMemoryGpuEntry dev = ReadFromFile(_busID, FileName);
+
+                for (int i = 0; i < macm.Header.GpuEntryCount; i++)
                 {
-                    macm.GpuEntries[i] = dev;
+                    int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                    if (busID == _busID)
+                    {
+                        macm.GpuEntries[i] = dev;
+                    }
                 }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner", ex.ToString());
             }
         }
         public static void Flush()

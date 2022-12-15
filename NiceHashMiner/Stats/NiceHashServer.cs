@@ -20,7 +20,7 @@ namespace NiceHashMiner.Stats
             return Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(text));
         }
     }
-
+    
     public static class NiceHashServer 
     {
         public static string worker = Configs.ConfigManager.GeneralConfig.WorkerName;
@@ -32,41 +32,81 @@ namespace NiceHashMiner.Stats
         public static string load_header = International.GetText("Form_Main_device_load");
         public static string fan_header = International.GetText("Form_Main_device_fan");
         public static string power_header = International.GetText("Form_Main_device_power");
+        /// <summary>
+        /// Wrapper around TcpListener that exposes the Active property
+        /// </summary>
+        public class TcpListenerEx : TcpListener
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="T:System.Net.Sockets.TcpListener"/> class with the specified local endpoint.
+            /// </summary>
+            /// <param name="localEP">An <see cref="T:System.Net.IPEndPoint"/> that represents the local endpoint to which to bind the listener <see cref="T:System.Net.Sockets.Socket"/>. </param><exception cref="T:System.ArgumentNullException"><paramref name="localEP"/> is null. </exception>
+            public TcpListenerEx(IPEndPoint localEP) : base(localEP)
+            {
+            }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="T:System.Net.Sockets.TcpListener"/> class that listens for incoming connection attempts on the specified local IP address and port number.
+            /// </summary>
+            /// <param name="localaddr">An <see cref="T:System.Net.IPAddress"/> that represents the local IP address. </param><param name="port">The port on which to listen for incoming connection attempts. </param><exception cref="T:System.ArgumentNullException"><paramref name="localaddr"/> is null. </exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="port"/> is not between <see cref="F:System.Net.IPEndPoint.MinPort"/> and <see cref="F:System.Net.IPEndPoint.MaxPort"/>. </exception>
+            public TcpListenerEx(IPAddress localaddr, int port) : base(localaddr, port)
+            {
+            }
+
+            public new bool Active
+            {
+                get { return base.Active; }
+            }
+        }
         public static string ToUTF8(this string text)
         {
             return Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(text));
         }
-        public static void Listener()
+
+        private static TcpClient client = new TcpClient();
+        private static Stream clientStream = null;
+        private static TcpListenerEx RemoteListener;
+        public static void Listener(bool enable)
         {
-            int Port = ConfigManager.GeneralConfig.RigRemoteViewPort;
-            TcpListener Listener = new TcpListener(IPAddress.Any, Port);
-            Listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-            Listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
             try
             {
-                Listener.Start();
+                if (!enable)
+                {
+                    client.Close();
+                    RemoteListener.Server.Close();
+                    return;
+                }
+                else
+                {
+                    int Port = ConfigManager.GeneralConfig.RigRemoteViewPort;
+                    RemoteListener = new TcpListenerEx(IPAddress.Any, Port);
+                    RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
+                    RemoteListener.Start();
+                }
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("Listener", "Port " + Port.ToString() + " used");
-                Helpers.ConsolePrint("Listener", ex.ToString());
+                Helpers.ConsolePrint("NiceHashServer", "Already started?");
+                Helpers.ConsolePrint("NiceHashServer", ex.ToString());
+                return;
             }
 
-            while (true)
+            while (RemoteListener.Active)
             {
                 try
                 {
-                    TcpClient client = Listener.AcceptTcpClient();
-                    Stream clientStream = client.GetStream();
+                    client = RemoteListener.AcceptTcpClient();
+                    clientStream = client.GetStream();
                     string IPClient = Convert.ToString(((System.Net.IPEndPoint)client.Client.RemoteEndPoint).Address);
 
-                    new Task(() => ReadFromClient(Listener, client, clientStream)).Start();
+                    new Task(() => ReadFromClient(RemoteListener, client, clientStream)).Start();
 
                 }
                 catch (Exception ex)
                 {
-
+                    Helpers.ConsolePrint("NiceHashServer", ex.Message);
+                    return;
                 }
                 Thread.Sleep(1);
             }

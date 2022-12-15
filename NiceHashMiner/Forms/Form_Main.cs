@@ -716,6 +716,7 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from github");
                     client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "configs//ProxyList.tmp");
                     string tmp = File.ReadAllText("configs//ProxyList.tmp");
+
                     if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
                     {
                         try
@@ -896,10 +897,11 @@ namespace NiceHashMiner
         public static double GetKwhPrice()
         {
             double _24h = (new TimeSpan(24, 0, 0)).TotalMilliseconds;
+            TimeSpan _From = new TimeSpan();
+            TimeSpan _To = new TimeSpan();
+            TimeSpan _Add = new TimeSpan(0, 0, 0);//при переходе через 24:00
             if (ConfigManager.GeneralConfig.PowerTarif == 0)
             {
-                TimeSpan _From = new TimeSpan();
-                TimeSpan _To = new TimeSpan();
                 double _price = 0.0d;
                 try
                 {
@@ -925,8 +927,12 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
@@ -934,8 +940,6 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.PowerTarif == 1)
             {
-                TimeSpan _From = new TimeSpan();
-                TimeSpan _To = new TimeSpan();
                 double _price = 0.0d;
                 //1
                 try
@@ -962,11 +966,18 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                /*
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
+                */
+                if (DateTime.Now.TimeOfDay.IsBetween(_From, _To)) return _price;
                 //2
                 try
                 {
@@ -992,17 +1003,24 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                /*
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                //10:00-07:00
+                //34:00>=10:00 < 31:00
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
+                */
+                if (DateTime.Now.TimeOfDay.IsBetween(_From, _To)) return _price;
             }
 
             if (ConfigManager.GeneralConfig.PowerTarif == 2)
             {
-                TimeSpan _From = new TimeSpan();
-                TimeSpan _To = new TimeSpan();
                 double _price = 0.0d;
                 //1
                 try
@@ -1029,8 +1047,12 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
@@ -1059,8 +1081,12 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
@@ -1089,8 +1115,12 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
@@ -1119,8 +1149,12 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
@@ -1149,8 +1183,12 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0) _To = _To.Add(new TimeSpan(24, 0, 0));
-                if (DateTime.Now.TimeOfDay >= _From && DateTime.Now.TimeOfDay < _To)
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
                 {
                     return _price;
                 }
@@ -1429,11 +1467,17 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            //if (ConfigManager.GeneralConfig.EnableRigRemoteView)
+            if (ConfigManager.GeneralConfig.EnableRigRemoteView)
             {
                 _loadingScreen.SetValueAndMsg(90, "Start internal http server");
                 Thread.Sleep(10);
-                new Task(() => NiceHashServer.Listener()).Start();
+                new Task(() => NiceHashServer.Listener(true)).Start();
+            }
+            if (ConfigManager.GeneralConfig.EnableAPI)
+            {
+                _loadingScreen.SetValueAndMsg(90, "Start internal http server");
+                Thread.Sleep(10);
+                new Task(() => NiceHashAPIServer.Listener(true)).Start();
             }
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
@@ -1842,6 +1886,7 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("POWER", "TotalPowerConsumption: " + TotalPowerConsumption.ToString("F0") + "W");
             if (GetKwhPrice() > 0)
             {
+                Helpers.ConsolePrint("POWER", "TotalPowerConsumptionRate: " + (GetKwhPrice()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
                 Helpers.ConsolePrint("POWER", "TotalPowerConsumptionCost: " + (TotalPowerConsumption * 0.001 * GetKwhPrice()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
             }
             if (ConfigManager.GeneralConfig.ChartEnable)
@@ -1861,7 +1906,7 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
                 Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
-                Form_Main.lastRigProfit.currentPower = MinersManager.GetTotalPowerRate() + PowerAllDevices;
+                //Form_Main.lastRigProfit.currentPower = MinersManager.GetTotalPowerRate() + PowerAllDevices;
                 Form_Main.lastRigProfit.totalPowerRate = totalPowerRate;
                 //if (Form_Main.walletType.Equals("P2SH"))
                 {
@@ -2302,9 +2347,10 @@ public static void CloseChilds(Process parentId)
         {
             var apiGetExceptionString = isApiGetException ? " **" : "";
             string speedString = "";
-            speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
+            speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID, iApiData.DualAlgorithmID()) +
                           iApiData.AlgorithmName + apiGetExceptionString;
-            //хрень. надо поправить
+            speedString = speedString.Replace("--", "0.000 H/s ");
+            //еще больше костылей понаделал. Надо это всё, что от найса осталось, переделывать.
 
             string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
             speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + speedString + "\\b\\par}";
@@ -2513,6 +2559,16 @@ public static void CloseChilds(Process parentId)
                     (totalRate - totalPowerRateDec) * ExchangeRateApi.GetUsdExchangeRate())
                     .ToString("F2", CultureInfo.InvariantCulture);
                 */
+
+                //*******
+                NiceHashAPIServer.balance = NiceHashStats.Balance * 1000;
+                NiceHashAPIServer.Rate = totalRate;
+                NiceHashAPIServer.Power = totalPower;
+                NiceHashAPIServer.TotalPower = TotalPowerConsumption / 1000;
+                NiceHashAPIServer.PowerRate = totalPowerRate;
+                NiceHashAPIServer.PowerRateFiat = totalPowerRateFiat;
+                NiceHashAPIServer.TotalPowerSpentFiat = TotalPowerConsumption * 0.001 * GetKwhPrice();
+
                 if (ConfigManager.GeneralConfig.ShowTotalPower)
                 {
                     toolStripStatusLabel_power4.Text = International.GetText("Form_Main_Power4");
@@ -2547,9 +2603,7 @@ public static void CloseChilds(Process parentId)
                     toolStripStatusLabelBalanceBTCValue.Text = balance.ToString("F6", CultureInfo.InvariantCulture);
                 }
 
-
-                var amountUsd = (balance * ExchangeRateApi.GetUsdExchangeRate());
-                var amount = ExchangeRateApi.ConvertToActiveCurrency(amountUsd);
+                var amount = ExchangeRateApi.ConvertToActiveCurrency(balance * ExchangeRateApi.GetUsdExchangeRate());
 
                 toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
                 toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
@@ -4124,6 +4178,26 @@ public static void CloseChilds(Process parentId)
             {
                 buttonChangeWorkerName.Enabled = true;
             }
+        }
+    }
+    static class TimeSpanExtensions
+    {
+        static public bool IsBetween(this TimeSpan time,
+                                      TimeSpan startTime, TimeSpan endTime)
+        {
+            if (endTime == startTime)
+            {
+                return true;
+            }
+
+            if (endTime < startTime)
+            {
+                return time <= endTime ||
+                    time >= startTime;
+            }
+
+            return time >= startTime &&
+                time <= endTime;
         }
     }
 }

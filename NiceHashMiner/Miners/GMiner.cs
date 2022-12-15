@@ -151,6 +151,15 @@ namespace NiceHashMiner.Miners
                 port = "3383";
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
+            {
+                algo = "autolykos2";
+                algoName = "autolykos";
+                ssl = " --ssl 0";
+                nicehashstratum = " --proto stratum";
+                port = "3390";
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
                 algo = "autolykos2";
@@ -480,6 +489,12 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --user kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --pass x" +
                 GetDevicesCommandString();
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
+            {
+                ret = " --color 0 --pec --algo autolykos2" +
+                " --server " + Links.CheckDNS("pool.woolypooly.com:3100").Replace("stratum+tcp://", "") + " --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt --pass x " +
+                GetDevicesCommandString();
+            }
             //duals
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
@@ -526,6 +541,11 @@ namespace NiceHashMiner.Miners
 
             try
             {
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) ||
+                    MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.AutolykosKHeavyHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
+                }
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
@@ -550,6 +570,11 @@ namespace NiceHashMiner.Miners
                     Thread.Sleep(1000);
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 15;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 15;

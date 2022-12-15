@@ -32,7 +32,9 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableTooltips = false;
         public bool ProgramMonitoring = true;
         public bool EnableRigRemoteView = false;
+        public bool EnableAPI = false;
         public int RigRemoteViewPort = 7007;
+        public int RigAPiPort = 7001;
         public string BitcoinAddressNew = "";
         public string WorkerName = "worker1";
         public TimeUnitType TimeUnit = TimeUnitType.Day;

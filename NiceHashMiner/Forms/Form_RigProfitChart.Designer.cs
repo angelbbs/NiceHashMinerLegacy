@@ -58,8 +58,11 @@ namespace NiceHashMiner.Forms
             chartArea1.Name = "ChartArea1";
             this.chartRigProfit.ChartAreas.Add(chartArea1);
             legend1.Alignment = System.Drawing.StringAlignment.Center;
+            legend1.AutoFitMinFontSize = 8;
             legend1.BackColor = System.Drawing.SystemColors.Control;
             legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
+            legend1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            legend1.IsTextAutoFit = false;
             legend1.Name = "Legend1";
             this.chartRigProfit.Legends.Add(legend1);
             this.chartRigProfit.Location = new System.Drawing.Point(-3, 0);
@@ -77,7 +80,6 @@ namespace NiceHashMiner.Forms
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series3.Legend = "Legend1";
             series3.Name = "Series3";
-            series3.YValuesPerPoint = 4;
             this.chartRigProfit.Series.Add(series1);
             this.chartRigProfit.Series.Add(series2);
             this.chartRigProfit.Series.Add(series3);

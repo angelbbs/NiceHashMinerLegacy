@@ -995,6 +995,10 @@ namespace NiceHashMiner.Forms
                 textBox_MinIdleSeconds.ForeColor = Form_Main._foreColor;
                 textBox_MinIdleSeconds.BorderStyle = BorderStyle.FixedSingle;
 
+                textBoxAPIport.BackColor = Form_Main._backColor;
+                textBoxAPIport.ForeColor = Form_Main._foreColor;
+                textBoxAPIport.BorderStyle = BorderStyle.FixedSingle;
+
                 textBox_MinProfit.BackColor = Form_Main._backColor;
                 textBox_MinProfit.ForeColor = Form_Main._foreColor;
                 textBox_MinProfit.BorderStyle = BorderStyle.FixedSingle;
@@ -1125,6 +1129,7 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableTooltips.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_program_monitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxEnableRigRemoteView.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxAPI.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowFanAsPercent.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_fiat.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Group_same_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1146,6 +1151,7 @@ namespace NiceHashMiner.Forms
             {
                 textBox_AutoStartMiningDelay.Leave += GeneralTextBoxes_Leave;
                 textBox_MinIdleSeconds.Leave += GeneralTextBoxes_Leave;
+                textBoxAPIport.Leave += GeneralTextBoxes_Leave;
                 textBox_LogMaxFileSize.Leave += GeneralTextBoxes_Leave;
                 textBox_MinProfit.Leave += GeneralTextBoxes_Leave;
                 textBox_psu.Leave += GeneralTextBoxes_Leave;
@@ -1172,6 +1178,7 @@ namespace NiceHashMiner.Forms
 
                 // set int only keypress
                 textBox_MinIdleSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
+                textBoxAPIport.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 // set double only keypress
                 textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBoxScheduleCost1.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
@@ -1271,6 +1278,7 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableTooltips.Checked = ConfigManager.GeneralConfig.DisableTooltips;
                 checkBox_program_monitoring.Checked = ConfigManager.GeneralConfig.ProgramMonitoring;
                 checkBoxEnableRigRemoteView.Checked = ConfigManager.GeneralConfig.EnableRigRemoteView;
+                checkBoxAPI.Checked = ConfigManager.GeneralConfig.EnableAPI;
                 checkBox_sorting_list_of_algorithms.Checked = ConfigManager.GeneralConfig.ColumnSort;
                 checkBox_ShowFanAsPercent.Checked = ConfigManager.GeneralConfig.ShowFanAsPercent;
                 checkbox_Group_same_devices.Checked = ConfigManager.GeneralConfig.Group_same_devices;
@@ -1318,11 +1326,19 @@ namespace NiceHashMiner.Forms
                 {
                     linkLabelRigRemoteView.Visible = false;
                 }
+                if (checkBoxAPI.Checked)
+                {
+
+                } else
+                {
+                    textBoxAPIport.Enabled = false;
+                }
             }
 
             // Textboxes
             {
                 textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
+                textBoxAPIport.Text = ConfigManager.GeneralConfig.RigAPiPort.ToString();
                 textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
                 textBox_AutoStartMiningDelay.Text = ConfigManager.GeneralConfig.AutoStartMiningDelay.ToString();
                 textBox_SwitchProfitabilityThreshold.Text = ((ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) * 100)
@@ -1607,6 +1623,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.DisableTooltips = checkBox_DisableTooltips.Checked;
             ConfigManager.GeneralConfig.ProgramMonitoring = checkBox_program_monitoring.Checked;
             ConfigManager.GeneralConfig.EnableRigRemoteView = checkBoxEnableRigRemoteView.Checked;
+            ConfigManager.GeneralConfig.EnableAPI = checkBoxAPI.Checked;
             ConfigManager.GeneralConfig.ShowFanAsPercent = checkBox_ShowFanAsPercent.Checked;
             ConfigManager.GeneralConfig.Group_same_devices = checkbox_Group_same_devices.Checked;
             ConfigManager.GeneralConfig.with_power = checkBox_withPower.Checked;
@@ -1659,6 +1676,7 @@ namespace NiceHashMiner.Forms
             if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.GeneralConfig.MinIdleSeconds = Helpers.ParseInt(textBox_MinIdleSeconds.Text);
+            ConfigManager.GeneralConfig.RigAPiPort = Helpers.ParseInt(textBoxAPIport.Text);
             ConfigManager.GeneralConfig.LogMaxFileSize = Helpers.ParseLong(textBox_LogMaxFileSize.Text);
             ConfigManager.GeneralConfig.AutoStartMiningDelay = Helpers.ParseInt(textBox_AutoStartMiningDelay.Text);
             // min profit
@@ -1695,6 +1713,7 @@ namespace NiceHashMiner.Forms
             textBox_SwitchProfitabilityThreshold.Text = (ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100)
                 .ToString("F1").Replace(',', '.'); // force comma
             textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
+            textBoxAPIport.Text = ConfigManager.GeneralConfig.RigAPiPort.ToString();
             textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
             textBox_AutoStartMiningDelay.Text = ConfigManager.GeneralConfig.AutoStartMiningDelay.ToString();
             textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString("");
@@ -2797,9 +2816,11 @@ namespace NiceHashMiner.Forms
                     linkLabelRigRemoteView.Text = "http://" + ip + ":" + ConfigManager.GeneralConfig.RigRemoteViewPort.ToString();
                 }
                 linkLabelRigRemoteView.Visible = true;
+                new Task(() => NiceHashServer.Listener(true)).Start();
             } else
             {
                 linkLabelRigRemoteView.Visible = false;
+                new Task(() => NiceHashServer.Listener(false)).Start();
             }
         }
 
@@ -3179,6 +3200,19 @@ namespace NiceHashMiner.Forms
             } else
             {
                 comboBox_switching_algorithms.Enabled = true;
+            }
+        }
+
+        private void checkBoxAPI_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAPI.Checked)
+            {
+                textBoxAPIport.Enabled = false;
+                new Task(() => NiceHashAPIServer.Listener(true)).Start();
+            } else
+            {
+                textBoxAPIport.Enabled = true;
+                new Task(() => NiceHashAPIServer.Listener(true)).Start();
             }
         }
     }

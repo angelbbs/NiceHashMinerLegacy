@@ -77,7 +77,6 @@ namespace NiceHashMiner.Forms
                 chartRigProfit.Legends["Legend1"].BackColor = Form_Main._backColor;
                 chartRigProfit.Legends["Legend1"].ForeColor = Form_Main._textColor;
 
-                //chartRigProfit.Series["Series1"].
                 chartRigProfit.ChartAreas[0].BackColor = Form_Main._backColor;
                 //chartRigProfit.ChartAreas[0].fo = Form_Main._textColor;
                 progressBar1.BackColor = Form_Main._backColor; 
@@ -152,19 +151,19 @@ namespace NiceHashMiner.Forms
 
             if (ConfigManager.GeneralConfig.ChartFiat)
             {
-                //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
+                chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalPowerRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
                 chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
                 chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
 
             }
             else
             {
-                //chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
+                chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalPowerRate * 1000);
                 chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalRate * 1000);
                 chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
             }
 
-            chartRigProfit.Series["Series3"].Enabled = false;
+            //chartRigProfit.Series["Series3"].Enabled = false;
             chartRigProfit.ChartAreas[0].AxisX.Maximum = ProfitsCount;
             if (ProfitsCount > 60 * 24)
             {
@@ -216,6 +215,8 @@ namespace NiceHashMiner.Forms
                     ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
                 chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
                     ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
+                chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power") +
+                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalPowerRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
             }
             else
             {
@@ -226,6 +227,8 @@ namespace NiceHashMiner.Forms
                     ": " + Form_Main.lastRigProfit.currentProfitAPI * 1000 + " " + CurrencyName;
                 chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
                     ": " + Form_Main.lastRigProfit.totalRate * 1000 + " " + CurrencyName;
+                chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power") +
+                    ": " + Form_Main.lastRigProfit.totalPowerRate * 1000 + " " + CurrencyName;
             }
 
             if (currentProfitAllAPI == 0 || totalRateAll == 0)
@@ -312,6 +315,8 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Series["Series1"].BorderWidth = 2;
             chartRigProfit.Series["Series2"].BorderWidth = 2;
             chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities");
+            chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power");
+            chartRigProfit.Series["Series3"].BorderWidth = 2;
             //chartRigProfit.Series["Series3"].LegendText = "API";
             //chartRigProfit.Series["Series3"].BorderWidth = 1;
             //chartRigProfit.Series["Series3"].ChartType = SeriesChartType.Line;
@@ -319,6 +324,8 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Series["Series1"].ChartType = SeriesChartType.Spline;
             chartRigProfit.Series["Series2"].Color = Color.Orange;
             chartRigProfit.Series["Series1"].Color = Color.Green;
+            chartRigProfit.Series["Series3"].ChartType = SeriesChartType.Spline;
+            chartRigProfit.Series["Series3"].Color = Color.Blue;
 
 
             //chartRigProfit.Series["Series1"].SetCustomProperty("LineTension", "0.9");//0.8 by default
@@ -326,6 +333,7 @@ namespace NiceHashMiner.Forms
 
             chartRigProfit.ChartAreas[0].AxisX.Minimum = 0;
             chartRigProfit.ChartAreas[0].AxisY.Minimum = 0;
+            //chartRigProfit.ChartAreas[0].AxisY.IntervalAutoMode = IntervalAutoMode.VariableCount;
             chartRigProfit.ChartAreas[0].AxisX.Interval = 60;//
             chartRigProfit.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
             chartRigProfit.ChartAreas[0].AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
@@ -571,6 +579,7 @@ namespace NiceHashMiner.Forms
             Form_Main.ChartDataAvail = 0;
             chartRigProfit.Series["Series1"].Points.Clear();
             chartRigProfit.Series["Series2"].Points.Clear();
+            chartRigProfit.Series["Series3"].Points.Clear();
             buttonClear.BackgroundImage = Properties.Resources.recycle1;
 
             //Form_Main.lastRigProfit.currentProfitAPI = 0;

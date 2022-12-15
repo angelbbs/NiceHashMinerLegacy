@@ -191,10 +191,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
+                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
                             {
                             },
-                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, AlgorithmType.ETCHashKHeavyHash.ToString())
+                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, "ETCHashKHeavyHash")
                             {
                             }
                         }
@@ -414,8 +414,13 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                     {
                     },
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, "Autolykos")
+                    {
+                        ExtraLaunchParameters = "--mt 1"
+                    },
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
                     {
+                        ExtraLaunchParameters = "--mt 1"
                     },
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
                     {
@@ -435,7 +440,15 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = ""
-                            }
+                            },
+                            
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
+                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
+                            {
+                            },
                         }
             },
         }.ConcatDictList(All, Gpu);

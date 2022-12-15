@@ -73,7 +73,6 @@ namespace NiceHashMiner.Miners.Parsing
 
             foreach (var pair in miningPairs)
             {
-                pair.CurrentExtraLaunchParameters = pair.CurrentExtraLaunchParameters.Replace("--server-share", "").Replace("--extra", "");
                 if (pair.CurrentExtraLaunchParameters.StartsWith("%"))
                 {
                     Helpers.ConsolePrint("ExtraLaunchParametersParser DISABLED%", pair.CurrentExtraLaunchParameters);

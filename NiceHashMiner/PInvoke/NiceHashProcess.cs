@@ -242,7 +242,7 @@ namespace NiceHashMiner
             //uint thisConsoleId = GetCurrentProcessId();
             // Leave current console if it exists
             // (otherwise AttachConsole will return ERROR_ACCESS_DENIED)
-            var consoleDetached = FreeConsole();
+            //var consoleDetached = FreeConsole();
 
             if (AttachConsole(dwProcessId))
             {
@@ -250,11 +250,12 @@ namespace NiceHashMiner
                 // WARNING: do not revert it or current program will be also killed
                 SetConsoleCtrlHandler(null, true);
                 success = GenerateConsoleCtrlEvent(dwCtrlEvent, 0);
-                FreeConsole();
+                //FreeConsole();
                 // wait for termination so we don't terminate NHM
                 WaitForSingleObject(_pHandle, 10000);
             }
-
+            return true;
+            /*
             if (consoleDetached)
             {
                 // Create a new console if previous was deleted by OS
@@ -269,6 +270,7 @@ namespace NiceHashMiner
                 }
                 SetConsoleCtrlHandler(null, false);
             }
+            */
             return success;
         }
 

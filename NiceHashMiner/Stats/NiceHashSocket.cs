@@ -552,7 +552,7 @@ namespace NiceHashMiner.Stats
         {
             attemptReconnect_Tick();
             NiceHashStats.GetSmaAPICurrent();
-            if (ConfigManager.GeneralConfig.Use_Last24hours)
+            if (ConfigManager.GeneralConfig.Use_Last24hours || ConfigManager.GeneralConfig.ShortTerm)
             {
                 NiceHashStats.GetSmaAPI24h();
             } 

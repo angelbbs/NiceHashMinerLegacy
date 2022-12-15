@@ -117,7 +117,10 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("miniZ_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("miniZ_oc2", "--oc2", "--oc2", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("miniZ_ocX", "--ocX", "--ocX", null, MinerOptionFlagType.Uni, ""),
-                    new MinerOption("miniZ_mod", "--mode=", "--mode=", "0", MinerOptionFlagType.MultiParam, ",")
+                    new MinerOption("miniZ_mod", "--mode=", "--mode=", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("miniZ_autoclocks", "--autoclocks", "--autoclocks", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("miniZ_stocksettings", "--stocksettings=", "--stocksettings=", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("miniZ_priority", "--priority=", "--priority=", "0", MinerOptionFlagType.MultiParam, ",")
                 },
                 new List<MinerOption>()
 
@@ -234,6 +237,10 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("lolMiner_lhrtune", "", "--lhrtune", "auto", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_cclk", "", "--cclk", "*", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_mclk", "", "--mclk", "*", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_coff", "", "--coff", "*", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_moff", "", "--moff", "*", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_pl", "", "--pl", "*", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_fan", "", "--fan", "*", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_ergo-prebuild", "--ergo-prebuild", "--ergo-prebuild", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMiner_lhrwait", "--lhrwait", "--lhrwait", "0", MinerOptionFlagType.SingleParam, "")
@@ -624,6 +631,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_pl", "--pl", "--pl", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_cclock", "--cclock", "--cclock", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_mclock", "--mclock", "--mclock", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_lock_mclock", "--lock_mclock", "--lock_mclock", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_cvddc", "--cvddc", "--cvddc", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_lock_voltage", "--lock_voltage", "--lock_voltage", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_lock_cclock", "--lock_cclock", "--lock_cclock", "0", MinerOptionFlagType.MultiParam, " "),

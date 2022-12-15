@@ -66,6 +66,7 @@ namespace NiceHashMiner.Miners
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
         public static int[] _ticks;
+        private static int APIerrors = 0;
         public List<int> ActiveDeviceIndexes
         {
             get
@@ -562,6 +563,7 @@ namespace NiceHashMiner.Miners
                 } else 
                 {
                     //if (AlgorithmSwitchingManager.newProfit)
+                    //if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable || percDiff > 0.2)
                     if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                     {
                         //AlgorithmSwitchingManager.newProfit = false;
@@ -884,6 +886,7 @@ namespace NiceHashMiner.Miners
                         m.IsUpdatingApi = true;
                         ad = await m.GetSummaryAsync();
                         m.IsUpdatingApi = false;
+
                     }
 
                     // set rates

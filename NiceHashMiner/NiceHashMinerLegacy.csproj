@@ -238,6 +238,7 @@
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\JsonClass.cs" />
+    <Compile Include="Stats\NiceHashAPIServer.cs" />
     <Compile Include="Stats\NiceHashServer.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
