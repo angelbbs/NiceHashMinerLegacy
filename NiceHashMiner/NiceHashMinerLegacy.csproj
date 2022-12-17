@@ -222,6 +222,7 @@
     <Compile Include="Miners\Ethash\Keccak.cs" />
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\lolMiner.cs" />
+    <Compile Include="Miners\MinerVersion.cs" />
     <Compile Include="Miners\miniZ.cs" />
     <Compile Include="Miners\NBMiner.cs" />
     <Compile Include="Miners\Nanominer.cs" />

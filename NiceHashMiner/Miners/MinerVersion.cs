@@ -1,0 +1,1021 @@
+﻿using Newtonsoft.Json;
+using NiceHashMiner.Miners.Grouping;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace NiceHashMiner.Miners
+{
+    public static class MinerVersion
+    {
+        public class MinerData
+        {
+            public string MinerPath;
+            public long MinerSize;
+            public string MinerVersion;
+        }
+        public static List<MinerData> MinerDataList = new List<MinerData>();
+        public static MinerData Get_ClaymoreNeoscrypt()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.ClaymoreNeoscryptMiner;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-v 1",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        string line = reader.ReadToEnd();
+                        if (line != null)
+                        {
+                            ret.MinerPath = path;
+                            ret.MinerSize = new System.IO.FileInfo(path).Length;
+                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty);
+                            return ret;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+
+        public static MinerData Get_CryptoDredge()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.CryptoDredge;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-v",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "CryptoDredge ";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + 13).Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+        public static MinerData Get_GMiner()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.GMiner;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-v",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "GMiner v";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+        public static MinerData Get_lolMiner()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.lolMiner;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-v",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                            line = reader.ReadLine();
+                            if (line != null)
+                            {
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+        public static MinerData Get_miniZ()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.miniZ;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "--nocolor --version",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "miniZ v";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty).Split('@')[0];
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+        public static MinerData Get_nanominer()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.Nanominer;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    if (File.Exists("Miners\\Nanominer\\ver.txt")) File.Delete("Miners\\Nanominer\\ver.txt");
+                    if (File.Exists("Miners\\Nanominer\\ver.ini")) File.Delete("Miners\\Nanominer\\ver.ini");
+                    File.WriteAllText("Miners\\Nanominer\\ver.ini", "logPath=ver.txt\r\n" +
+                                                                    "coin = ergo\r\n" +
+                                                                    "wallet = ************\r\n");
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                WorkingDirectory = "Miners\\Nanominer",
+                                Arguments = "ver.ini",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = false,
+                                RedirectStandardError = false,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    
+                    const string findString = "Version ";
+                    Thread.Sleep(3000);
+
+                    //P.Kill();
+                    Thread.Sleep(1000);
+                    using (var reader = File.OpenText("miners\\Nanominer\\ver.txt"))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty).Split('-')[0];
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+
+        public static MinerData Get_NBMiner()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.NBMiner;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-v",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "NBMiner ";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+
+        public static MinerData Get_Phoenix()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.Phoenix;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-vs",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        line = reader.ReadLine();
+                        if (line != null)
+                        {
+                            ret.MinerPath = path;
+                            ret.MinerSize = new System.IO.FileInfo(path).Length;
+                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty);
+                            return ret;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+        
+        public static MinerData Get_SRBMiner()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.SRBMiner;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    if (File.Exists("Miners\\SRBMiner\\ver.txt")) File.Delete("Miners\\SRBMiner\\ver.txt");
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "--disable-gpu --algorithm yespowertide --pool q:0 --wallet Q --log-file ver.txt",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = false,
+                                RedirectStandardError = false,
+                                CreateNoWindow = true,
+                                WorkingDirectory = "miners\\SRBMiner"
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    //var stdOut = P.StandardOutput.ReadToEnd();
+                    //var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "Miner version: ";
+                    Thread.Sleep(4000);
+
+                    //P.Kill();
+                    Thread.Sleep(1000);
+                    using (var reader = File.OpenText("miners\\SRBMiner\\ver.txt"))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+
+        public static MinerData Get_TRex()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.trex;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "--version",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "T-Rex NVIDIA GPU miner v";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty).Split(' ')[0];
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+
+        public static MinerData Get_TeamRedMiner()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.teamredminer;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-v",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "Team Red Miner version";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+        public static MinerData Get_XMRig()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.Xmrig;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "--version",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "XMRig ";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var xmrig = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(xmrig + 6).Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
+
+    }
+}

@@ -37,8 +37,8 @@ namespace NiceHashMiner
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
+    using static NiceHashMiner.Miners.MinerVersion;
 
-    
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         public static string platform = "Nicehash";
@@ -1373,15 +1373,85 @@ namespace NiceHashMiner
 
             label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
             label_NH_ConnectStatus.Update();
-            _loadingScreen.SetValueAndMsg(75, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            _loadingScreen.SetValueAndMsg(70, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
             Thread.Sleep(500);
 
-            _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_CheckMiners"));
+            _loadingScreen.SetValueAndMsg(75, International.GetText("Form_Main_loadtext_CheckMiners"));
             Thread.Sleep(10);
-
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
+
+
+            var minerdata = new MinerData();
+
+            _loadingScreen.SetValueAndMsg(76, International.GetText("Form_Main_loadtext_GetMinerVersion") + "ClaymoreNeoscrypt");
+            minerdata = MinerVersion.Get_ClaymoreNeoscrypt();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
+            {
+                _loadingScreen.SetValueAndMsg(77, International.GetText("Form_Main_loadtext_GetMinerVersion") + "CryptoDredge");
+                minerdata = MinerVersion.Get_CryptoDredge();
+                MinerVersion.MinerDataList.Add(minerdata);
+            }
+
+            _loadingScreen.SetValueAndMsg(78, International.GetText("Form_Main_loadtext_GetMinerVersion") + "GMiner");
+            minerdata = MinerVersion.Get_GMiner();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(79, International.GetText("Form_Main_loadtext_GetMinerVersion") + "lolMiner");
+            minerdata = MinerVersion.Get_lolMiner();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(80, International.GetText("Form_Main_loadtext_GetMinerVersion") + "miniZ");
+            minerdata = MinerVersion.Get_miniZ();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(81, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer");
+            minerdata = MinerVersion.Get_nanominer();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
+            minerdata = MinerVersion.Get_NBMiner();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
+            minerdata = MinerVersion.Get_Phoenix();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(84, International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner");
+            minerdata = MinerVersion.Get_SRBMiner();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex");
+            minerdata = MinerVersion.Get_TRex();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(86, International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner");
+            minerdata = MinerVersion.Get_TeamRedMiner();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            _loadingScreen.SetValueAndMsg(87, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
+            minerdata = MinerVersion.Get_XMRig();
+            MinerVersion.MinerDataList.Add(minerdata);
+
+            string json = JsonConvert.SerializeObject(MinerDataList, Formatting.Indented);
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    File.Delete("Configs\\MinersData.json");
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("CheckMiners", ex.ToString());
+            }
+            File.WriteAllText("Configs\\MinersData.json", json);
+            MinerVersion.MinerDataList.Clear();
+            MinersGetVersionWatchdog();
+
 
             _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
             _autostartTimerDelay = new Timer();
@@ -1475,7 +1545,7 @@ namespace NiceHashMiner
             }
             if (ConfigManager.GeneralConfig.EnableAPI)
             {
-                _loadingScreen.SetValueAndMsg(90, "Start internal http server");
+                _loadingScreen.SetValueAndMsg(91, "Start internal http server");
                 Thread.Sleep(10);
                 new Task(() => NiceHashAPIServer.Listener(true)).Start();
             }
@@ -1516,6 +1586,25 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
 
         }
+
+        private static void MinersGetVersionWatchdog()
+        {
+            Process localByName = Process.GetProcessById(Process.GetCurrentProcess().Id);
+            var query = "Select * From Win32_Process Where ParentProcessId = " + Process.GetCurrentProcess().Id.ToString();
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+            ManagementObjectCollection processList = searcher.Get();
+            var result = processList.Cast<ManagementObject>().Select(p =>
+                Process.GetProcessById(Convert.ToInt32(p.GetPropertyValue("ProcessId")))).ToList();
+
+            foreach (var process in result)
+            {
+                string m = process.ProcessName;
+                Helpers.ConsolePrint("MinersGetVersionWatchdog", "Stuck miner: " + m);
+                process.Kill();
+            }
+        }
+
+
         [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]
         static extern UInt32 DnsFlushResolverCache();
 

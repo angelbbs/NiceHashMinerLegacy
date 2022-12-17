@@ -390,12 +390,13 @@ namespace NiceHashMiner.Forms
             // linkLabelGetAPIkey
             // 
             this.linkLabelGetAPIkey.AutoSize = true;
-            this.linkLabelGetAPIkey.Location = new System.Drawing.Point(262, 45);
+            this.linkLabelGetAPIkey.Location = new System.Drawing.Point(243, 45);
             this.linkLabelGetAPIkey.Name = "linkLabelGetAPIkey";
             this.linkLabelGetAPIkey.Size = new System.Drawing.Size(61, 13);
             this.linkLabelGetAPIkey.TabIndex = 413;
             this.linkLabelGetAPIkey.TabStop = true;
             this.linkLabelGetAPIkey.Text = "How to use";
+            this.linkLabelGetAPIkey.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGetAPIkey_LinkClicked);
             // 
             // label2
             // 

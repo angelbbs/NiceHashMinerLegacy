@@ -210,8 +210,8 @@ namespace NiceHashMiner
         public static string BenchmarkStringAdd = "";
         public static string InBenchmark = "";
 
-
-
+        
+        
         protected virtual int GetMaxCooldownTimeInMilliseconds()
         {
             return 60 * 1000 * 10;  // 10 min

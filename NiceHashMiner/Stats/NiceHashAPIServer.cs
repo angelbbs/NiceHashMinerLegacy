@@ -81,8 +81,8 @@ namespace NiceHashMiner.Stats
                 {
                     int Port = ConfigManager.GeneralConfig.RigAPiPort;
                     RemoteListener = new TcpListenerEx(IPAddress.Any, Port);
-                    RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
+                    //RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                    //RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
                     RemoteListener.Start();
                 }
             }
@@ -196,7 +196,7 @@ namespace NiceHashMiner.Stats
                         string Header = "";
                         string responce = "";
                         byte[] bytesresponce;
-                        if (s1.Contains("GET / HTTP/1.1"))
+                        if (s1.ToUpper().Contains("GET / HTTP/1.1"))
                         {
                             Header = "HTTP/1.1 200 OK\r\n";
                             Header += "Content-Type: text/html\r\n\r\n";
@@ -206,11 +206,33 @@ namespace NiceHashMiner.Stats
                             clientStream.Write(bytesresponce, 0, bytesresponce.Length);
                             clientStream.Flush();
                         }
+                        else if (s1.ToUpper().Contains("GET /HELP HTTP/1.1"))
+                        {
+                            Header = "HTTP/1.1 200 OK\r\n";
+                            Header += "Content-Type: text/json\r\n\r\n";
+                            string text;
+                            string help = "";
+                            try
+                            {
+                                help = File.ReadAllText("Help\\API.txt");
+                            }
+                            catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("NiceHashAPIServer", ex.ToString());
+                                help = "File Help\\API.txt not found\r\n";
+                            }
+                            
+
+                            responce = Header + help;
+                            bytesresponce = Encoding.ASCII.GetBytes(responce);
+                            clientStream.Write(bytesresponce, 0, bytesresponce.Length);
+                            clientStream.Flush();
+                        }
                         else if (s1.ToUpper().Contains("GET /VERSION HTTP/1.1"))
                         {
                             Header = "HTTP/1.1 200 OK\r\n";
                             Header += "Content-Type: application/json\r\n\r\n";
-                            responce = Header + "{\"version\":\"" + 
+                            responce = Header + "{\"version\":\"" +
                                 "Miner Legacy Fork Fix " + ConfigManager.GeneralConfig.ForkFixVersion.ToString() +
                                 " (for NiceHash)" +
                                 "\"}\r\n";
@@ -218,13 +240,12 @@ namespace NiceHashMiner.Stats
                             clientStream.Write(bytesresponce, 0, bytesresponce.Length);
                             clientStream.Flush();
                         }
-                        else if (s1.ToUpper().Contains("GET /DEVICES HTTP/1.1"))
+                        else if (s1.ToUpper().Contains("GET /SUMMARY HTTP/1.1"))
                         {
                             DateTime uptime = new DateTime() + Form_Main.Uptime;
                             Header = "HTTP/1.1 200 OK\r\n";
-                            Header += "Content-Type: application/json\r\n\r\n";
+                            Header += "Content-Type: text/json\r\n\r\n";
                             List<Device> MiningDevicesList = new List<Device>();
-                            Device MiningDevice = new Device();
                             double RateFiat = ExchangeRateApi.ConvertToActiveCurrency((Rate - PowerRate) *
                                 ExchangeRateApi.GetUsdExchangeRate());
                             double powerspentfiat = ExchangeRateApi.ConvertToActiveCurrency(PowerRate *
@@ -233,6 +254,7 @@ namespace NiceHashMiner.Stats
 
                             foreach (var dev in ComputeDeviceManager.Available.Devices)
                             {
+                                Device MiningDevice = new Device();
                                 MiningDevice.Name = dev.Name;
                                 MiningDevice.DeviceType = dev.DeviceType.ToString();
                                 MiningDevice.Manufacturer = ComputeDevice.GetManufacturer(dev.Manufacturer);
@@ -251,13 +273,52 @@ namespace NiceHashMiner.Stats
                                 MiningDevice.MonitorConnected = dev.MonitorConnected;
                                 MiningDevice.AlgorithmID = dev.AlgorithmID;
                                 MiningDevice.Algorithm = ((AlgorithmType)dev.AlgorithmID).ToString();
-                                MiningDevice.MinerName = dev.MinerName;
-                                //MiningDevice.MinerName = Miner.MinerDeviceName;//надо в computedevice сохранять
+                                string unit;
+                                switch ((AlgorithmType)dev.AlgorithmID)
+                                {
+                                    case AlgorithmType.ZHash:
+                                    case AlgorithmType.ZelHash:
+                                    case AlgorithmType.BeamV3:
+                                        unit = "Sol/s";
+                                        break;
+                                    case AlgorithmType.CuckooCycle:
+                                    case AlgorithmType.GrinCuckatoo32:
+                                        unit = "G/s";
+                                        break;
+                                    default:
+                                        unit = "H/s";
+                                        break;
+                                }
+                                MiningDevice.SecondaryAlgorithmID = dev.SecondAlgorithmID;
+                                MiningDevice.SecondaryAlgorithm = ((AlgorithmType)dev.SecondAlgorithmID).ToString();
+                                string unit2;
+                                switch ((AlgorithmType)dev.SecondAlgorithmID)
+                                {
+                                    case AlgorithmType.ZHash:
+                                    case AlgorithmType.ZelHash:
+                                    case AlgorithmType.BeamV3:
+                                        unit2 = "Sol/s";
+                                        break;
+                                    case AlgorithmType.CuckooCycle:
+                                    case AlgorithmType.GrinCuckatoo32:
+                                        unit2 = "G/s";
+                                        break;
+                                    default:
+                                        unit2 = "H/s";
+                                        break;
+                                }
+                                if (dev.SecondAlgorithmID > 0)
+                                {
+                                    MiningDevice.IsDualAlgorithm = true;
+                                }
 
+                                MiningDevice.MinerName = dev.MinerName;
                                 MiningDevice.MinerVersion = "Unknown";
 
                                 MiningDevice.MiningHashrate = dev.MiningHashrate;
+                                MiningDevice.DescHashrate = unit;
                                 MiningDevice.MiningHashrateSecond = dev.MiningHashrateSecond;
+                                MiningDevice.DescHashrateSecond = unit2;
 
                                 MiningDevice.Temp = (int)dev.Temp;
                                 MiningDevice.TempMemory = (int)dev.TempMemory;
@@ -265,8 +326,9 @@ namespace NiceHashMiner.Stats
                                 MiningDevice.MemLoad = (int)dev.MemLoad;
                                 MiningDevice.Fan = (int)dev.FanSpeed;
                                 MiningDevice.FanRPM = (int)dev.FanSpeedRPM;
-                                }
-                            MiningDevicesList.Add(MiningDevice);
+                                MiningDevicesList.Add(MiningDevice);
+                            }
+
                             var _root = new Root
                             {
                                 platform = "NiceHash",
@@ -306,12 +368,12 @@ namespace NiceHashMiner.Stats
                         }
                         else
                         {
-                            
-                            {
-                                Header = "HTTP/1.1 404 Not found\r\n";
-                                Header += "Content-Type: text/html\r\n\r\n";
-                                responce = Header + "{\"message\":\"" + request + " not found\"}\r\n";
-                            }
+                            Header = "HTTP/1.1 404 Not found\r\n";
+                            Header += "Content-Type: text/html\r\n\r\n";
+                            responce = Header + "404\r\n";
+                            bytesresponce = Encoding.ASCII.GetBytes(responce);
+                            clientStream.Write(bytesresponce, 0, bytesresponce.Length);
+                            clientStream.Flush();
                         }
 
                         if (client != null)

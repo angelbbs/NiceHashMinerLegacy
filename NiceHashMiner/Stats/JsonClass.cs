@@ -55,10 +55,15 @@ namespace NiceHashMiner.Stats
         public bool NvidiaLHR { get; set; } = false;
         public int AlgorithmID { get; set; } = -1;
         public string Algorithm { get; set; } = "NONE";
+        public int SecondaryAlgorithmID { get; set; } = -1;
+        public string SecondaryAlgorithm { get; set; } = "NONE";
+        public bool IsDualAlgorithm { get; set; } = false;
         public string MinerName { get; set; } = "NONE";
         public string MinerVersion { get; set; } = "NONE";
         public double MiningHashrate { get; set; } = -1;
+        public string DescHashrate { get; set; } = "";
         public double MiningHashrateSecond { get; set; } = -1;
+        public string DescHashrateSecond { get; set; } = "";
         public int Temp { get; set; } = -1;
         public int TempMemory { get; set; } = -1;
         public int Load { get; set; } = -1;

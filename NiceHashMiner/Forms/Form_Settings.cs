@@ -343,6 +343,7 @@ namespace NiceHashMiner.Forms
             checkBox_ABDefault_mining_stopped.Text = International.GetText("FormSettings_ABDefault_mining_stopped");
             checkBox_ABDefault_program_closing.Text = International.GetText("FormSettings_ABDefault_program_closing");
             linkLabel3.Text = International.GetText("FormSettings_AB_HowToUse");
+            linkLabelGetAPIkey.Text = International.GetText("FormSettings_API_HowToUse");
             labelCheckforprogramupdatesevery.Text = International.GetText("Form_Settings_labelCheckforprogramupdatesevery");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
@@ -3214,6 +3215,17 @@ namespace NiceHashMiner.Forms
                 textBoxAPIport.Enabled = true;
                 new Task(() => NiceHashAPIServer.Listener(true)).Start();
             }
+        }
+
+        private void linkLabelGetAPIkey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var notepad = new Process
+            {
+                StartInfo = { FileName = "notepad.exe" }
+            };
+
+            notepad.StartInfo.Arguments = "Help\\API.txt";
+            notepad.Start();
         }
     }
 
