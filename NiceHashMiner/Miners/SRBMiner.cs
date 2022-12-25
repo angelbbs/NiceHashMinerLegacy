@@ -363,6 +363,11 @@ namespace NiceHashMiner.Miners
             dynamic resp = JsonConvert.DeserializeObject(ResponseFromSRBMiner);
             //Helpers.ConsolePrint("API ResponseFromSRBMiner:", ResponseFromSRBMiner.ToString());
 
+            if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
+            {
+                ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
+            }
+
             try
             {
                 int totalsMain = 0;

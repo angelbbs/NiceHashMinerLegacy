@@ -54,6 +54,7 @@ namespace NiceHashMiner.Configs.Data
         public bool AlwaysOnTop = false;
         public bool ShowFanAsPercent = false;
         public bool ShowToolsFolder = false;
+        public bool GetMinersVersions = true;
         public bool MOPA1 = true;
         public bool MOPA2 = false;
         public bool MOPA3 = false;
@@ -111,6 +112,7 @@ namespace NiceHashMiner.Configs.Data
         public bool StaleProxy = false;
 
         public bool MinimizeMiningWindows = false;
+        public bool ShowMinersVersions = false;
         public bool StandartBenchmarkTime = true;
 
         //public int LessThreads;
@@ -175,6 +177,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Show_ShowDeviceBusId = false;
         public bool Use_OpenHardwareMonitor = true;
         public bool Disable_extra_launch_parameter_checking = false;
+        public bool Hide_unused_algorithms = false;
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
         public bool StrongDeviceName = true;
@@ -243,6 +246,7 @@ namespace NiceHashMiner.Configs.Data
         public int ProgramUpdateIndex = 1;
         public int ProgramRestartIndex = 0;
         public bool PeriodicalReconnect = true;
+        public bool ColorizeTables = true;
         public ColorProfilesConfig ColorProfiles = new ColorProfilesConfig();
 
         // methods

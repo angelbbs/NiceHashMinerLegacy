@@ -5,6 +5,7 @@ using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -62,6 +63,7 @@ namespace NiceHashMiner.Stats
         private static TcpClient client = new TcpClient();
         private static Stream clientStream = null;
         private static TcpListenerEx RemoteListener;
+        private static bool listen;
         private static long ToUnixTime(DateTime dt)
         {
             TimeSpan timeSpan = (dt - new DateTime(1970, 1, 1, 0, 0, 0));
@@ -69,48 +71,65 @@ namespace NiceHashMiner.Stats
         }
         public static void Listener(bool enable)
         {
+            int Port = ConfigManager.GeneralConfig.RigAPiPort;
+            s:
             try
             {
                 if (!enable)
                 {
+                    listen = false;
+                    Helpers.ConsolePrint("NiceHashAPIServer", "Stop listener on port " + Port.ToString());
                     client.Close();
                     RemoteListener.Server.Close();
+                    NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "127.0.0.1", (uint)Port, false);
+                    NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "0.0.0.0", (uint)Port, false);
                     return;
                 }
                 else
                 {
-                    int Port = ConfigManager.GeneralConfig.RigAPiPort;
+                    if (listen) return;
+                    listen = true;
+                    NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "127.0.0.1", (uint)Port, false);
+                    NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "0.0.0.0", (uint)Port, false);
+                    Thread.Sleep(1000 * 2);
+                    Helpers.ConsolePrint("NiceHashAPIServer", "Try start listener on port " + Port.ToString());
                     RemoteListener = new TcpListenerEx(IPAddress.Any, Port);
-                    //RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    //RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
+                    RemoteListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, false);
                     RemoteListener.Start();
+                }
+                while (RemoteListener.Active)
+                {
+                    try
+                    {
+                        client = RemoteListener.AcceptTcpClient();
+                        clientStream = client.GetStream();
+                        string IPClient = Convert.ToString(((System.Net.IPEndPoint)client.Client.RemoteEndPoint).Address);
+
+                        new Task(() => ReadFromClient(RemoteListener, client, clientStream)).Start();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("NiceHashAPIServer", ex.Message);
+                        listen = false;
+                        return;
+                    }
+                    Thread.Sleep(1);
                 }
             }
             catch (Exception ex)
             {
+                listen = false;
                 Helpers.ConsolePrint("NiceHashAPIServer", "Already started?");
                 Helpers.ConsolePrint("NiceHashAPIServer", ex.ToString());
+                client.Close();
+                RemoteListener.Server.Close();
+                NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "127.0.0.1", (uint)Port, false);
+                NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "0.0.0.0", (uint)Port, false);
                 return;
-            }
-
-            while (RemoteListener.Active)
-            {
-                try
-                {
-                    client = RemoteListener.AcceptTcpClient();
-                    clientStream = client.GetStream();
-                    string IPClient = Convert.ToString(((System.Net.IPEndPoint)client.Client.RemoteEndPoint).Address);
-
-                    new Task(() => ReadFromClient(RemoteListener, client, clientStream)).Start();
-
-                }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("NiceHashAPIServer", ex.Message);
-                    return;
-                }
-                Thread.Sleep(1);
-            }
+            } 
+            Thread.Sleep(1000);
+            goto s;
         }
 
         public static void ReadFromClient(TcpListener Listener, TcpClient client, Stream clientStream)

@@ -159,6 +159,12 @@ namespace NiceHashMiner.Miners.Grouping
                     MostProfitableMinerBaseType = algo.MinerBaseType;
                     //                        Helpers.ConsolePrint("PROFIT", "WARNING! Mining nonprofitable");
                 }
+                if (algo.Forced)
+                {
+                    MostProfitableAlgorithmType = algo.DualNiceHashID;
+                    MostProfitableMinerBaseType = algo.MinerBaseType;
+                    break;
+                }
             }
         }
     }

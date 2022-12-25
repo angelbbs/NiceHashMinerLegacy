@@ -250,13 +250,13 @@ namespace NiceHashMiner
                 // WARNING: do not revert it or current program will be also killed
                 SetConsoleCtrlHandler(null, true);
                 success = GenerateConsoleCtrlEvent(dwCtrlEvent, 0);
-                //FreeConsole();
+                FreeConsole();
                 // wait for termination so we don't terminate NHM
                 WaitForSingleObject(_pHandle, 10000);
             }
-            return true;
-            /*
-            if (consoleDetached)
+            //return true;
+            
+            //if (consoleDetached)
             {
                 // Create a new console if previous was deleted by OS
                 if (AttachConsole(thisConsoleId) == false)
@@ -270,7 +270,7 @@ namespace NiceHashMiner
                 }
                 SetConsoleCtrlHandler(null, false);
             }
-            */
+            
             return success;
         }
 

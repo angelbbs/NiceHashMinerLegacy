@@ -284,7 +284,7 @@ namespace NiceHashMinerLegacy.Divert
             return true;
         }
 
-        
+
         public static string CheckParityConnections(List<string> processIdList, ushort Port, WinDivertDirection dir, List<string> _oldPorts)
         {
             try
@@ -445,7 +445,7 @@ namespace NiceHashMinerLegacy.Divert
         public static IntPtr DivertStart(int processId, int CurrentAlgorithmType, int SecondaryAlgorithmType, string MinerName, string strPlatform,
             string w, bool log, bool SaveDiverPackets, bool BlockGMinerApacheTomcatConfig, bool DivertEnabled, int MaxEpoch)
         {
-            if (!DivertEnabled) return new IntPtr(0); 
+            if (!DivertEnabled) return new IntPtr(0);
             logging = log;
             logging = false;
             _SaveDivertPackets = SaveDiverPackets;

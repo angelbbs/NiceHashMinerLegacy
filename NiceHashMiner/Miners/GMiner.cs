@@ -340,6 +340,26 @@ namespace NiceHashMiner.Miners
             {
                 return;
             }
+
+            try
+            {
+                var GMinerHandle = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "taskkill.exe"
+                }
+                };
+                GMinerHandle.StartInfo.Arguments = "/PID " + pid.ToString() + " /F /T";
+                GMinerHandle.StartInfo.UseShellExecute = false;
+                GMinerHandle.StartInfo.CreateNoWindow = true;
+                GMinerHandle.Start();
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("KillProcessAndChildren", ex.ToString());
+            }
+            
+            Thread.Sleep(100);
             ManagementObjectSearcher searcher = new ManagementObjectSearcher
                     ("Select * From Win32_Process Where ParentProcessID=" + pid);
             ManagementObjectCollection moc = searcher.Get();
@@ -347,15 +367,18 @@ namespace NiceHashMiner.Miners
             {
                 KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
             }
+            /*
+            Thread.Sleep(100);
             try
             {
                 Process proc = Process.GetProcessById(pid);
-                proc.Kill();
+                if (proc != new Process()) proc.Kill();
             }
             catch (ArgumentException)
             {
                 // Process already exited.
             }
+            */
         }
         public override void EndBenchmarkProcces()
         {
@@ -365,7 +388,7 @@ namespace NiceHashMiner.Miners
                 try
                 {
                     Helpers.ConsolePrint("BENCHMARK",
-                        $"Trying to kill benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName}");
+                        $"Trying to kill benchmark process {ProcessTag()} algorithm {BenchmarkAlgorithm.AlgorithmName}");
 
                     int k = ProcessTag().IndexOf("pid(");
                     int i = ProcessTag().IndexOf(")|bin");
@@ -623,7 +646,7 @@ namespace NiceHashMiner.Miners
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " Dual: " + ad.Result.SecondarySpeed.ToString() + " power: " + _power.ToString());
                             summspeed += ad.Result.Speed;
                             secsummspeed += ad.Result.SecondarySpeed;
                         }
@@ -638,10 +661,15 @@ namespace NiceHashMiner.Miners
                             ad.Dispose();
                             benchmarkTimer.Stop();
 
-                            KillProcessAndChildren(BenchmarkHandle.Id);
-                            BenchmarkHandle.Dispose();
-                            EndBenchmarkProcces();
-
+                            try
+                            {
+                                KillProcessAndChildren(BenchmarkHandle.Id);
+                                BenchmarkHandle.Dispose();
+                                EndBenchmarkProcces();
+                            } catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("**", ex.ToString());
+                            }
 
                             break;
                         }
@@ -791,6 +819,11 @@ namespace NiceHashMiner.Miners
             catch (Exception)
             {
                 return null;
+            }
+
+            if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
+            {
+                ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
             }
 
             ResponseFromGMiner = ResponseFromGMiner.Replace("-nan", "0.00");

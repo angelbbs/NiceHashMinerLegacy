@@ -15,7 +15,7 @@ namespace NiceHashMiner.Miners.Grouping
 
         public static bool IsAlgoMiningCapable(Algorithm algo)
         {
-            return algo != null && algo.Enabled && algo.BenchmarkSpeed > 0;
+            return algo != null && algo.Enabled && !algo.Hidden && algo.BenchmarkSpeed > 0;
         }
 
         public static Tuple<ComputeDevice, DeviceMiningStatus> GetDeviceMiningStatus(ComputeDevice device)
@@ -113,8 +113,16 @@ namespace NiceHashMiner.Miners.Grouping
                     foreach (var algo in device.GetAlgorithmSettings())
                     {
                         var isEnabled = IsAlgoMiningCapable(algo) && MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
-                        stringBuilder.AppendLine(
-                            $"\t\tALGORITHM {(isEnabled ? "ENABLED " : "DISABLED")} ({algo.AlgorithmStringID})");
+                        if (algo.Forced && isEnabled)
+                        {
+                            stringBuilder.AppendLine(
+                                $"\t\tALGORITHM {"FORCED  "} ({algo.AlgorithmStringID})");
+                        }
+                        else
+                        {
+                            stringBuilder.AppendLine(
+                                $"\t\tALGORITHM {(isEnabled ? "ENABLED " : "DISABLED")} ({algo.AlgorithmStringID})");
+                        }
                     }
                 }
 

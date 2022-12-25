@@ -104,6 +104,7 @@
     "Form_Benchmark_listView_WaitSeconds": "Подождите, пожалуйста, около {0} секунд…",
     "Form_Benchmark_listView_WaitMinutes": " Подождите, пожалуйста, около {0} минут…",
     "Form_Benchmark_listView_WaitForEth": "Бенчмарк (2-4 минуты)…",
+    "Form_Benchmark_listView_NeedBenchmark": "Отсутствует скорость алгоритма {0}",
 
     "Form_DcriValues_Title": "Тюнинг ClaymoreDual",
     "Form_DcriValues_Intensity": "Интенсивность",
@@ -166,6 +167,7 @@
     "Form_Settings_General_LogToFile": "Запись в файл",
     "Form_Settings_General_RunAtStartup": "Запуск с Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Минимизировать окна майнинга",
+    "Form_Settings_General_ShowMinersVersions": "Показывать версию майнеров",
     "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Запуск скрипта при потере NVIDIA GPU",
 
     "Form_Settings_General_Language": "Язык",
@@ -323,6 +325,9 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
     "AlgorithmsListView_ContextMenu_EnableAll": "Включить все алгоритмы",
     "AlgorithmsListView_ContextMenu_ClearItem": "Сбросить скорость алгоритма",
+    "AlgorithmsListView_ContextMenu_ClearItemAllDevices": "Сбросить скорость алгоритма * для всех устройств",
+    "AlgorithmsListView_ContextMenu_ForceItem": "Запускать принудительно",
+    "AlgorithmsListView_ContextMenu_DisableForceItem": "Отключить принудительный запуск",
     "AlgorithmsListView_ContextMenu_ClearItemAll": "Сбросить скорость всех алгоритмов",
     "AlgorithmsListView_ContextMenu_TestItem": "Включить только",
     "AlgorithmsListView_ContextMenu_EnableBenched": "Включить только прошедшие бенчмарк",
@@ -458,6 +463,7 @@
                 "Form_Settings_label_psu": "КПД блока пит.(%)",
                 "Form_Settings_label_MBpower": "Потребление материнской платы, диска и т.п. (Вт)",
                 "Form_Settings_checkBox_Disable_extra_launch_parameter_checking": "Отключить проверку дополнительных параметров",
+		  "Form_Settings_checkBox_Hide_Unused": "Скрыть неиспользуемые алгоритмы",
                 "Form_Settings_checkBox_DisableDetectionCPU": "Отключить определение CPU",
                 "Form_Settings_label_AutoStartMiningDelay": "секунд",
                 "Form_Settings_groupBoxMOPA": "Метод получения прибыльности алгоритмов",

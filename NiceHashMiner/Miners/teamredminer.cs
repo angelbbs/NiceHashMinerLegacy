@@ -84,6 +84,45 @@ namespace NiceHashMiner.Miners
             }
             return ret;
         }
+        private string GetServerDual(string algo, string algoDual, string username, string port, string portDual)
+        {
+            string ret = "";
+            string ssl = "";
+            string psw = "x";
+            if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
+            if (ConfigManager.GeneralConfig.ProxySSL)//teamredminer почему-то падает при подключении к серверам с сертификатом
+                                                     //letsencrypt. С локальным самоподписанным всё хорошо
+            {
+                port = "1" + port;
+                portDual = "1" + portDual;
+                ssl = "stratum+tcp://";
+            }
+            else
+            {
+                port = "1" + port;
+                portDual = "1" + portDual;
+                ssl = "stratum+tcp://";
+            }
+            foreach (string serverUrl in Globals.MiningLocation)
+            {
+                if (serverUrl.Contains("auto"))
+                {
+                    ret = ret + "-o stratum+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " +
+                        username + " -p " + psw + " " +
+                        "--kas -o stratum+tcp://" + Links.CheckDNS(algoDual + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 -u " +
+                        username + " -p " + psw + " ";
+                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                }
+                else
+                {
+                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " +
+                        username + " -p " + psw + " " +
+                        "--kas -o " + ssl + Links.CheckDNS(algoDual + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + portDual + " -u " +
+                        username + " -p " + psw + " ";
+                }
+            }
+            return ret;
+        }
         public override void Start(string btcAdress, string worker)
         {
             if (!IsInit)
@@ -101,7 +140,13 @@ namespace NiceHashMiner.Miners
             string port = "";
 
             var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
-            
+
+            var sc = "";
+            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            {
+                sc = variables.TRMiner_add1;
+            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 algo = "ethash";
@@ -114,18 +159,33 @@ namespace NiceHashMiner.Miners
                 algo2 = "kawpow";
                 port = "3385";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && 
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
             {
                 algo = "autolykos2";
                 algo2 = "autolykos";
                 port = "3390";
             }
-            var sc = "";
-            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
             {
-                sc = variables.TRMiner_add1;
+                algo = "autolykos2";
+                algo2 = "autolykos";
+                port = "3390";
+                LastCommandLine = sc + " --watchdog_script " +
+                    " -d " + GetDevicesCommandString() +
+                    " -a " + algo + " " +
+            GetServerDual(algo2, "kheavyhash", username, port, "3395") +
+                              apiBind +
+                              " " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                                                MiningSetup,
+                                                                DeviceType.AMD);
+                              
+                ProcessHandle = _Start();
+                return;
             }
-
+            
             LastCommandLine = sc + " --watchdog_script " + "-a " + algo + " " +
             GetServer(algo2, username, port) +
                               apiBind +
@@ -185,10 +245,23 @@ namespace NiceHashMiner.Miners
                 CommandLine = sc + " -a kawpow" +
                  " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.teamred" + " -p x -d ";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
             {
                 CommandLine = sc + " -a autolykos2" +
                  " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+            {
+                CommandLine = sc + " -d " + GetDevicesCommandString() + " -a autolykos2" +
+                 " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x " +
+                 " --kas -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x " +
+                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD) +
+                ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD) +
+                apiBind;
+                TotalCount = (time / 30) * 2;
+                return CommandLine;
             }
 
             CommandLine += GetDevicesCommandString() +
@@ -211,6 +284,7 @@ namespace NiceHashMiner.Miners
             BenchmarkException = null;
             double repeats = 0.0d;
             double summspeed = 0.0d;
+            double summspeedDual = 0.0d;
 
             int delay_before_calc_hashrate = 10;
             int MinerStartDelay = 10;
@@ -299,8 +373,11 @@ namespace NiceHashMiner.Miners
                         BenchmarkAlgorithm.BenchmarkProgressPercent = (int)(benchProgress * 100);
                         if (repeats > delay_before_calc_hashrate)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + " power: " + _power.ToString());
+                            Helpers.ConsolePrint(MinerTag(), "Useful API Speed: " + ad.Result.Speed.ToString() + 
+                                " Second speed: " + ad.Result.SecondarySpeed.ToString() +
+                                " power: " + _power.ToString());
                             summspeed = Math.Max(ad.Result.Speed, summspeed);
+                            summspeedDual = Math.Max(ad.Result.Speed, summspeedDual);
                         }
                         else
                         {
@@ -323,6 +400,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = summspeed;
+                BenchmarkAlgorithm.BenchmarkSecondarySpeed = summspeedDual;
                 BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
             }
             catch (Exception ex)
@@ -354,28 +432,67 @@ namespace NiceHashMiner.Miners
                 ad.Speed = 0.0d;
                 return null;
             }
-            //Helpers.ConsolePrint("API: ", resp2.Trim());
+            resp2 = resp2.Trim('\x00');
+            Helpers.ConsolePrint("API: ", resp2.Trim());
             try
             {
-                var devStatus = resp2.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                int dev = 0;
-                double totalSpeed = 0.0d;
-                foreach (var s in devStatus)
+                if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
                 {
-                    if (s.Contains("GPU="))
+                    var devStatus = resp2.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    int dev = 0;
+                    double totalSpeed = 0.0d;
+                    foreach (var s in devStatus)
                     {
-                        var st = s.LastIndexOf("MHS 30s=");
-                        var e = s.LastIndexOf(",KHS av=");
-                        string cSpeed = s.Substring(st + 8, e - st - 8);
-                        //Helpers.ConsolePrint("API: ", cSpeed);
-                        double.TryParse(cSpeed, out double devSpeed);
-                        sortedMinerPairs[dev].Device.MiningHashrate = devSpeed * 1000000;
-                        _power = sortedMinerPairs[dev].Device.PowerUsage;
-                        totalSpeed = totalSpeed + devSpeed * 1000000;
-                        ad.Speed = totalSpeed;
-                        dev++;
-                    }
+                        if (s.Contains("GPU="))
+                        {
+                            var st = s.LastIndexOf("MHS 30s=");
+                            var e = s.LastIndexOf(",KHS av=");
+                            string cSpeed = s.Substring(st + 8, e - st - 8);
+                            //Helpers.ConsolePrint("API: ", cSpeed);
+                            double.TryParse(cSpeed, out double devSpeed);
+                            sortedMinerPairs[dev].Device.MiningHashrate = devSpeed * 1000000;
+                            _power = sortedMinerPairs[dev].Device.PowerUsage;
+                            totalSpeed = totalSpeed + devSpeed * 1000000;
+                            ad.Speed = totalSpeed;
+                            dev++;
+                        }
 
+                    }
+                }
+                if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                {
+                    var devStatus = resp2.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    int dev = 0;
+                    double totalSpeed = 0.0d;
+                    double totalSpeed2 = 0.0d;
+                    ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
+                    foreach (var s in devStatus)
+                    {
+                        if (s.Contains("GPU="))
+                        {
+                            var st = s.LastIndexOf("MHS 30s=");
+                            var e = s.LastIndexOf(",KHS av=");
+                            string cSpeed = s.Substring(st + 8, e - st - 8);
+                            Helpers.ConsolePrint("API: ", cSpeed);
+                            double.TryParse(cSpeed, out double devSpeed);
+                            sortedMinerPairs[dev].Device.MiningHashrate = devSpeed * 1000000;
+                            _power = sortedMinerPairs[dev].Device.PowerUsage;
+                            //totalSpeed = totalSpeed + devSpeed * 1000000;
+                            ad.Speed = devSpeed * 1000000;
+
+                            var st2 = s.LastIndexOf("Total MH=");
+                            var e2 = s.LastIndexOf(",Diff1 Work=");
+                            string cSpeed2 = s.Substring(st2 + 9, e2 - st2 - 9);
+                            Helpers.ConsolePrint("API2: ", cSpeed2);
+                            double.TryParse(cSpeed2, out double devSpeed2);
+                            sortedMinerPairs[dev].Device.MiningHashrateSecond = devSpeed2;
+                            //totalSpeed2 = totalSpeed2 + devSpeed2;
+                            ad.SecondarySpeed = devSpeed2;
+
+                            dev++;
+                        }
+
+                    }
                 }
             }
             catch

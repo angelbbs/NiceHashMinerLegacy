@@ -2,8 +2,8 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections;
@@ -49,9 +49,38 @@ namespace NiceHashMiner.Forms.Components
 
             public void LviSetColor(ListViewItem lvi)
             {
+                int yellowInc = 0;
+                int greenInc = 0;
+
+                if (Form_Main._windowColor.B < 127)
+                {
+                    yellowInc = 60;
+                }
+                else
+                {
+                    yellowInc = -30;
+                }
+                if (Form_Main._windowColor.G < 127)
+                {
+                    greenInc = 10;
+                }
+                else
+                {
+                    greenInc = -5;
+                }
+                Color _DefaultBackColorHighlight = Color.FromArgb(Form_Main._windowColor.A, Form_Main._windowColor.R,
+                    Form_Main._windowColor.G + greenInc, Form_Main._windowColor.B + yellowInc);
+
                 if (!isListViewEnabled)
                 {
                     //  return;
+                }
+                if (ConfigManager.GeneralConfig.ColorizeTables)
+                {
+                    if (lvi.Index % 2 == 1)
+                    {
+                        lvi.BackColor = _DefaultBackColorHighlight;
+                    }
                 }
                 if (lvi.Tag is Algorithm algorithm)
                 {
@@ -99,6 +128,7 @@ namespace NiceHashMiner.Forms.Components
                     {
                         lvi.BackColor = UnbenchmarkedColor;
                     }
+
                 }
             }
         }
@@ -231,40 +261,56 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.Columns[RATE].Width = ConfigManager.GeneralConfig.ColumnListRATE;
         }
 
-        public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
+        public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled, bool fromBenchmark = false)
         {
             _computeDevice = computeDevice;
+
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
+            Font fontRegular = new Font(this.Font, FontStyle.Regular);
+            Font fontBold = new Font(this.Font, FontStyle.Bold);
+
             foreach (var alg in computeDevice.GetAlgorithmSettings())
             {
+                if (ConfigManager.GeneralConfig.Hide_unused_algorithms && !alg.Enabled)
+                {
+                    continue;
+                }
+                var name = "";
+                var miner = "";
+                var secondarySpeed = "";
+                var totalSpeed = "";
+                var payingRatio = "";
+
+                if (alg is DualAlgorithm dualAlg)
+                {
+                    name = dualAlg.DualAlgorithmNameCustom;
+                    miner = alg.MinerBaseTypeName;
+                    secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
+                    totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
+                    payingRatio = alg.CurPayingRatio + "/" + alg.CurSecondPayingRatio;
+                }
+                else
+                {
+                    name = alg.AlgorithmNameCustom;
+                    miner = alg.MinerBaseTypeName;
+                    totalSpeed = alg.BenchmarkSpeedString();
+                    payingRatio = alg.CurPayingRatio;
+                }
+                if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
+                {
+                    miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                }
+                else
+                {
+                    miner = miner + MinerVersion.GetMinerVersion(miner);
+                }
+
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
-                    var name = "";
-                    var miner = "";
-                    var secondarySpeed = "";
-                    var totalSpeed = "";
-                    var payingRatio = "";
-                    if (alg is DualAlgorithm dualAlg)
-                    {
-                        name = dualAlg.DualAlgorithmNameCustom;
-                        miner = alg.MinerBaseTypeName;
-                        secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
-                        totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
-                        payingRatio = alg.CurPayingRatio + "/" + alg.CurSecondPayingRatio;
-                    }
-                    else
-                    {
-                        name = alg.AlgorithmNameCustom;
-                        miner = alg.MinerBaseTypeName;
-                        totalSpeed = alg.BenchmarkSpeedString();
-                        payingRatio = alg.CurPayingRatio;
-                    }
-
                     lvi.SubItems.Add(name);
                     lvi.SubItems.Add(miner);
-
                     lvi.SubItems.Add(totalSpeed);
                     //lvi.SubItems.Add(secondarySpeed);
                     if (alg.PowerUsage <= 0)
@@ -330,32 +376,35 @@ namespace NiceHashMiner.Forms.Components
                     }
                     lvi.Tag = alg;
                     lvi.Checked = alg.Enabled;
-                    listViewAlgorithms.Items.Add(lvi);
-                    //*******
-                    /*
-                    Rectangle r = lvi.SubItems[3].Bounds;//*******************************
-                    pb.SetBounds(r.X, r.Y, r.Width, r.Height);
-                    pb.Minimum = 1;
-                    pb.Maximum = 10;
-                    pb.Value = 5;
-                    pb.Name = totalSpeed;
-                    listViewAlgorithms.Controls.Add(pb);
-                    pb.Value = 8;
-                    */
-                }
-            }
 
-            listViewAlgorithms.EndUpdate();
-            //Enabled = isEnabled;
-            //   if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
-            // {
+                    try
+                    {
+                        if (alg.Forced)
+                        {
+                            lvi.Font = fontBold;
+                        }
+                        else
+                        {
+                            lvi.Font = fontRegular;
+                        }
+                        listViewAlgorithms.Items.Add(lvi);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("SetAlgorithms", ex.ToString());
+                    }
+
+                }
+                listViewAlgorithms.EndUpdate();
+            }
             isListViewEnabled = isEnabled;
             listViewAlgorithms.CheckBoxes = isEnabled;
-            //}
         }
 
         public void UpdateLvi()
         {
+            Font fontRegular = new Font(this.Font, FontStyle.Regular);
+            Font fontBold = new Font(this.Font, FontStyle.Bold);
             try
             {
                 if (_computeDevice != null && listViewAlgorithms.Items != null)
@@ -367,6 +416,22 @@ namespace NiceHashMiner.Forms.Components
                             var algo = lvi.Tag as Algorithm;
                             if (algo != null)
                             {
+                                try
+                                {
+                                    if (algo.Forced)
+                                    {
+                                        lvi.Font = fontBold;
+                                    }
+                                    else
+                                    {
+                                        lvi.Font = fontRegular;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Helpers.ConsolePrint("UpdateLvi", ex.ToString());
+                                }
+
                                 if (algorithm is DualAlgorithm dualAlg)
                                 {
                                     //lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
@@ -684,8 +749,17 @@ namespace NiceHashMiner.Forms.Components
                         };
                         clearItem.Click += ToolStripMenuItemClear_Click;
                         contextMenuStrip1.Items.Add(clearItem);
+
                         //this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                        //
+                        var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        var clearItemAllDevices = new ToolStripMenuItem
+                        {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAllDevices").Replace("*", al)
+                        };
+                        clearItemAllDevices.Click += ToolStripMenuItemClearAllDevices_Click;
+                        contextMenuStrip1.Items.Add(clearItemAllDevices);
+
                         var clearItemAll = new ToolStripMenuItem
                         {
                             Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAll")
@@ -714,6 +788,36 @@ namespace NiceHashMiner.Forms.Components
                         Enablealgo.Click += ToolStripMenuDisablealgo_Click;
                         contextMenuStrip1.Items.Add(Enablealgo);
                     }
+                    //force
+                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                    var forceItem = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_ForceItem") + " " +
+                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
+                        " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                    };
+                    forceItem.Click += ToolStripMenuItemForce_Click;
+                    if (IsForceEnabled())
+                    {
+                        forceItem.Enabled = false;
+                    }
+                    else
+                    {
+                        forceItem.Enabled = !IsForced();
+                    }
+                    contextMenuStrip1.Items.Add(forceItem);
+
+                    var DisableforceItem = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_DisableForceItem") + " " +
+                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
+                        " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                    };
+                    DisableforceItem.Click += ToolStripMenuItemDisableForce_Click;
+
+                    DisableforceItem.Enabled = IsForced();
+                    contextMenuStrip1.Items.Add(DisableforceItem);
+
 
                     contextMenuStrip1.Show(Cursor.Position);
                 }
@@ -813,7 +917,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                 var miningDevices = ComputeDeviceManager.Available.Devices;
                 foreach (var device in miningDevices)
                 {
-                    Helpers.ConsolePrint("", device.Name);
+                    //Helpers.ConsolePrint("", device.Name);
                     if (device != null)
                     {
                         var devicesAlgos = device.GetAlgorithmSettings();
@@ -867,6 +971,53 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                         // update settings
                         ComunicationInterface?.ChangeSpeed(lvi);
+                    }
+                }
+            }
+        }
+
+        private void ToolStripMenuItemClearAllDevices_Click(object sender, EventArgs e)
+        {
+            string aName = "";
+            MinerBaseType mName = MinerBaseType.NONE;
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        aName = algorithm.AlgorithmName;
+                        mName = algorithm.MinerBaseType;
+                        if (algorithm is DualAlgorithm dualAlgo)
+                        {
+                        }
+                    }
+                }
+                var miningDevices = ComputeDeviceManager.Available.Devices;
+                foreach (var device in miningDevices)
+                {
+                    //Helpers.ConsolePrint("", device.Name);
+                    if (device != null)
+                    {
+                        var devicesAlgos = device.GetAlgorithmSettings();
+                        foreach (var a in devicesAlgos)
+                        {
+                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                            {
+                                a.BenchmarkSpeed = 0;
+                                a.BenchmarkSecondarySpeed = 0;
+                                if (a is DualAlgorithm dualAlgo)
+                                {
+                                    dualAlgo.BenchmarkSecondarySpeed = 0;
+                                }
+                                a.PowerUsage = 0;
+                                a.CurrentProfit = 0;
+                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                                BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
+
+                                //ComunicationInterface?.ChangeSpeed(lvi);
+                            }
+                        }
                     }
                 }
             }
@@ -940,6 +1091,84 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                             lvi.Checked = false;
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         }
+                    }
+                }
+            }
+        }
+
+        private bool IsForced()
+        {
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+            {
+                if (lvi.Tag is Algorithm algorithm)
+                {
+                    return algorithm.Forced;
+                }
+            }
+            return false;
+        }
+        private bool IsForceEnabled()
+        {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items)
+            {
+                if (lvi.Tag is Algorithm algorithm)
+                {
+                    if (algorithm.Forced)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void ToolStripMenuItemForce_Click(object sender, EventArgs e)
+        {
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        if (algorithm.BenchmarkSpeed > 0)
+                        {
+                            algorithm.Forced = true;
+                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                            BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
+                            ComunicationInterface?.ChangeSpeed(lvi);
+                        }
+                        else
+                        {
+                            string miner = algorithm.MinerBaseTypeName;
+                            string name = algorithm.AlgorithmName;
+                            if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
+                            {
+                                miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                            }
+                            else
+                            {
+                                miner = miner + MinerVersion.GetMinerVersion(miner);
+                            }
+
+                            MessageBox.Show(string.Format(International.GetText("Form_Benchmark_listView_NeedBenchmark"),
+                                algorithm.AlgorithmName + " (" + miner + ")"));
+                        }
+                    }
+                }
+            }
+        }
+        private void ToolStripMenuItemDisableForce_Click(object sender, EventArgs e)
+        {
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        algorithm.Forced = false;
+                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                        BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
+                        ComunicationInterface?.ChangeSpeed(lvi);
                     }
                 }
             }

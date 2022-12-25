@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Grouping;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace NiceHashMiner.Miners
     {
         public class MinerData
         {
+            public string MinerName;
             public string MinerPath;
             public long MinerSize;
             public string MinerVersion;
@@ -27,6 +29,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "ClaymoreNeoscryptMiner";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -104,6 +107,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "CryptoDredge";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -186,6 +190,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "GMiner";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -269,6 +274,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "lolMiner";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -346,6 +352,8 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "miniZ";
+
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -429,6 +437,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "Nanominer";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -483,9 +492,16 @@ namespace NiceHashMiner.Miners
 
                     
                     const string findString = "Version ";
-                    Thread.Sleep(3000);
+                    int _ticks = 0;
+                    do
+                    {
+                        Thread.Sleep(500);
+                        _ticks++;
+                        if (_ticks > 20) break;
+                    } while (!File.Exists("miners\\Nanominer\\ver.txt"));
+                    Thread.Sleep(1000);
 
-                    //P.Kill();
+                    P.Kill();
                     Thread.Sleep(1000);
                     using (var reader = File.OpenText("miners\\Nanominer\\ver.txt"))
                     {
@@ -521,6 +537,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "NBMiner";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -597,7 +614,90 @@ namespace NiceHashMiner.Miners
             }
             return ret;
         }
+        public static MinerData Get_NBMiner39_5()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = "Miners\\nbminer\\nbminer.39.5.exe";
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            ret.MinerName = "NBMiner.39.5";
+            try
+            {
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-v",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
 
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "NBMiner ";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
         public static MinerData Get_Phoenix()
         {
             List<MinerData> _MinerDataList = new List<MinerData>();
@@ -605,6 +705,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "Phoenix";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -683,6 +784,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "SRBMiner";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -735,9 +837,15 @@ namespace NiceHashMiner.Miners
                     //var stdErr = P.StandardError.ReadToEnd();
 
                     const string findString = "Miner version: ";
-                    Thread.Sleep(4000);
+                    int _ticks = 0;
+                    do
+                    {
+                        Thread.Sleep(500);
+                        _ticks++;
+                        if (_ticks > 20) break;
+                    } while (!File.Exists("miners\\SRBMiner\\ver.txt"));
 
-                    //P.Kill();
+                    P.Kill();
                     Thread.Sleep(1000);
                     using (var reader = File.OpenText("miners\\SRBMiner\\ver.txt"))
                     {
@@ -773,6 +881,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "trex";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -857,6 +966,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "teamredminer";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -940,6 +1050,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
+            ret.MinerName = "Xmrig";
             try
             {
                 if (File.Exists("Configs\\MinersData.json"))
@@ -1017,5 +1128,24 @@ namespace NiceHashMiner.Miners
             return ret;
         }
 
+        public static string GetMinerVersion(string minerName)
+        {
+            if (!ConfigManager.GeneralConfig.ShowMinersVersions) return "";
+
+            foreach (var miner in MinerVersion.MinerDataList)
+            {
+                if (miner.MinerName.ToLower().Equals(minerName.ToLower()))
+                {
+                    if (miner.MinerVersion.Length > 0)
+                    {
+                        return " " + miner.MinerVersion;
+                    } else
+                    {
+                        return "";
+                    }
+                }
+            }
+            return "";
+        }
     }
 }

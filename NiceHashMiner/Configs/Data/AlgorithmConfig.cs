@@ -16,6 +16,7 @@ namespace NiceHashMiner.Configs.Data
         public string ExtraLaunchParameters = "";
         public bool Enabled = true;
         public bool Hidden = false;
+        public bool Forced = false;
         public int LessThreads = 0;
         public double PowerUsage = 0;
         //configs/benchmark_...json

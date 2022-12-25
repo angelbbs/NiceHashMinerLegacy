@@ -150,6 +150,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, "Autolykos")
+                            /*
+                            new DualAlgorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
+                            {
+                                ExtraLaunchParameters = "--kas_end"
+                            },
+                            */
                         }
             },
             {

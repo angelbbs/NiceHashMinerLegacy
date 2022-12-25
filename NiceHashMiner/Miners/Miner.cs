@@ -389,7 +389,6 @@ namespace NiceHashMiner
 
         public void KillAllUsedMinerProcesses()
         {
-            //new Task(() => Form_Main.checkD()).Start();
             var toRemovePidData = new List<MinerPidData>();
             Helpers.ConsolePrint(MinerTag(), "Trying to close all miner processes for this instance:");
             var algo = (int)MiningSetup.CurrentAlgorithmType;
@@ -796,6 +795,7 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
+
             if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("nbminer") && (commandLine.ToLower().Contains("beam")))
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
@@ -1059,18 +1059,18 @@ namespace NiceHashMiner
             BenchmarkProcessStatus = status;
             if (BenchmarkAlgorithm is DualAlgorithm dualAlg)
             {
-                Helpers.ConsolePrint("BENCHMARK-finish",
+                Helpers.ConsolePrint(MinerTag() + " BENCHMARK-finish",
                     "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed,
                         BenchmarkAlgorithm.BenchmarkSecondarySpeed, dualAlg.NiceHashID, dualAlg.DualNiceHashID));
             }
             else
             {
-                Helpers.ConsolePrint("BENCHMARK-finish",
+                Helpers.ConsolePrint(MinerTag() + " BENCHMARK-finish",
                     "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, 0,
                         BenchmarkAlgorithm.NiceHashID, BenchmarkAlgorithm.DualNiceHashID));
             }
 
-            Helpers.ConsolePrint("BENCHMARK-finish", "Benchmark ends");
+            Helpers.ConsolePrint(MinerTag() + " BENCHMARK-finish", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled)
             {
                 OnBenchmarkCompleteCalled = true;
@@ -1362,6 +1362,37 @@ namespace NiceHashMiner
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
+        private void MinerDelayStart(string minerpath)
+        {
+            try
+            {
+                Process localByName = Process.GetProcessById(Process.GetCurrentProcess().Id);
+                var query = "Select * From Win32_Process Where ParentProcessId = " + Process.GetCurrentProcess().Id.ToString();
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+                ManagementObjectCollection processList = searcher.Get();
+                var result = processList.Cast<ManagementObject>().Select(p =>
+                    Process.GetProcessById(Convert.ToInt32(p.GetPropertyValue("ProcessId")))).ToList();
+
+                bool minerrunning = false;
+                foreach (var process in result)
+                {
+                    string m = process.ProcessName;
+                    string p = process.MainWindowTitle;
+                    if (p.ToLower().Contains(minerpath) && (p.ToLower().Contains("gminer") || p.ToLower().Contains("miniz")))
+                    {
+                        minerrunning = true;
+                        //Helpers.ConsolePrint("++++++++++++++", minerpath);
+                        break;
+                    }
+                }
+                if (minerrunning) Thread.Sleep(2000);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MinerDelayStart", ex.ToString());
+            }
+        }
+
         protected virtual NiceHashProcess _Start()
         {
             //new Task(() => NiceHashStats.SetDeviceStatus("PENDING")).Start();
@@ -1463,6 +1494,7 @@ namespace NiceHashMiner
                         strPlatform = "CPU";
                     }
                 }
+                /*
                 GC.Collect();
                 try
                 {
@@ -1472,6 +1504,39 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("Caching", ex.ToString());
                 }
+                */
+                /*
+                if (Path.ToLower().Contains("gminer"))
+                {
+                    if (MinerVersion.GetMinerVersion("GMiner").Length > 2)
+                    {
+                        try
+                        {
+                            var Pcache = new Process
+                            {
+                                StartInfo =
+                            {
+                                FileName = Path,
+                                Arguments = "-v",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                            };
+                            Pcache.Start();
+                            //Helpers.ConsolePrint("GMiner cache", "Start");
+                            Pcache.WaitForExit(2 * 1000);
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("GMiner cache", ex.ToString());
+                        }
+                    }
+                }
+                */
+
+                MinerDelayStart(Path);
                 if (P.Start())
                 {
                     IsRunning = true;
@@ -1520,7 +1585,7 @@ namespace NiceHashMiner
                             }
                         }
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
-                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, MinerDeviceName,
+                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, Path,
                             strPlatform, w, false,
                             false,
                             false, ConfigManager.GeneralConfig.DivertRun,

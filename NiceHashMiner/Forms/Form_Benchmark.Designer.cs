@@ -34,6 +34,7 @@ namespace NiceHashMiner.Forms {
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
+            this.checkBoxHideUnused = new System.Windows.Forms.CheckBox();
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,7 +119,7 @@ namespace NiceHashMiner.Forms {
             // 
             this.checkBox_StartMiningAfterBenchmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_StartMiningAfterBenchmark.AutoSize = true;
-            this.checkBox_StartMiningAfterBenchmark.Location = new System.Drawing.Point(350, 427);
+            this.checkBox_StartMiningAfterBenchmark.Location = new System.Drawing.Point(350, 428);
             this.checkBox_StartMiningAfterBenchmark.Name = "checkBox_StartMiningAfterBenchmark";
             this.checkBox_StartMiningAfterBenchmark.Size = new System.Drawing.Size(161, 17);
             this.checkBox_StartMiningAfterBenchmark.TabIndex = 111;
@@ -168,11 +169,26 @@ namespace NiceHashMiner.Forms {
             this.benchmarkOptions1.Size = new System.Drawing.Size(208, 140);
             this.benchmarkOptions1.TabIndex = 106;
             // 
+            // checkBoxHideUnused
+            // 
+            this.checkBoxHideUnused.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxHideUnused.AutoSize = true;
+            this.checkBoxHideUnused.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxHideUnused.Location = new System.Drawing.Point(350, 405);
+            this.checkBoxHideUnused.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxHideUnused.Name = "checkBoxHideUnused";
+            this.checkBoxHideUnused.Size = new System.Drawing.Size(136, 17);
+            this.checkBoxHideUnused.TabIndex = 401;
+            this.checkBoxHideUnused.Text = "Hide unused algorithms";
+            this.checkBoxHideUnused.UseVisualStyleBackColor = true;
+            this.checkBoxHideUnused.CheckedChanged += new System.EventHandler(this.checkBoxHideUnused_CheckedChanged);
+            // 
             // Form_Benchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 511);
+            this.Controls.Add(this.checkBoxHideUnused);
             this.Controls.Add(this.checkBox_StartMiningAfterBenchmark);
             this.Controls.Add(this.radioButton_RE_SelectedUnbenchmarked);
             this.Controls.Add(this.radioButton_SelectedUnbenchmarked);
@@ -211,5 +227,6 @@ namespace NiceHashMiner.Forms {
         private System.Windows.Forms.RadioButton radioButton_RE_SelectedUnbenchmarked;
         private System.Windows.Forms.CheckBox checkBox_StartMiningAfterBenchmark;
         private Components.BenchmarkOptions benchmarkOptions1;
+        private System.Windows.Forms.CheckBox checkBoxHideUnused;
     }
 }

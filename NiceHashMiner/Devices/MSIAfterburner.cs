@@ -1132,9 +1132,9 @@ namespace NiceHashMiner.Devices
                 }
                 Thread.Sleep(1000);
                 repeatsab++;
-            } while (repeatsab < 5);
+            } while (repeatsab < 15);
 
-            if (repeatsab >= 5)
+            if (repeatsab >= 15)
             {
                 Helpers.ConsolePrint("MSIAfterburnerInit", "Fatal error");
                 new Task(() =>

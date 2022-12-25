@@ -102,6 +102,7 @@
         "Form_Benchmark_listView_WaitSeconds": "Please wait about {0} seconds...",
         "Form_Benchmark_listView_WaitMinutes": "Please wait about {0} minutes...",
         "Form_Benchmark_listView_WaitForEth": "Benchmarking (2-4 minutes)...",
+	 "Form_Benchmark_listView_NeedBenchmark": "There is no algorithm speed {0}",
 
     "Form_DcriValues_Title": "ClaymoreDual Tuning",
     "Form_DcriValues_Intensity": "Intensity",
@@ -166,6 +167,7 @@
         "Form_Settings_General_LogToFile": "Log To File",
         "Form_Settings_General_RunAtStartup": "Run With Windows",
         "Form_Settings_General_MinimizeMiningWindows": "Minimize Mining Windows",
+	 "Form_Settings_General_ShowMinersVersions": "Show the miners versions",
         "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Run script when NVIDIA GPU is lost",
 
         "Form_Settings_General_Language": "Language",
@@ -433,6 +435,9 @@
         "AlgorithmsListView_ContextMenu_DisableAll": "Disable All Algorithms",
         "AlgorithmsListView_ContextMenu_EnableAll": "Enable All Algorithms",
         "AlgorithmsListView_ContextMenu_ClearItem": "Clear Algorithm Speed",
+	 "AlgorithmsListView_ContextMenu_ClearItemAllDevices": "Clear Algorithm Speed * for all devices",
+	 "AlgorithmsListView_ContextMenu_ForceItem": "Forced start",
+	 "AlgorithmsListView_ContextMenu_DisableForceItem": "Disable forced start",
 	"AlgorithmsListView_ContextMenu_ClearItemAll": "Clear All Algorithm Speed",
         "AlgorithmsListView_ContextMenu_TestItem": "Enable Only",
         "AlgorithmsListView_ContextMenu_EnableBenched": "Enable Benchmarked Only",
@@ -482,6 +487,7 @@
                 "Form_Settings_label_psu": "PSU efficiency (%)",
                 "Form_Settings_label_MBpower": "Power consumption of Motherboard, HDD(SSD) etc (W)",
                 "Form_Settings_checkBox_Disable_extra_launch_parameter_checking": "Disable extra launch parameter checking",
+		  "Form_Settings_checkBox_Hide_Unused": "Hide unused algorithms",
                 "Form_Settings_checkBox_DisableDetectionCPU": "Disable CPU detection",
                 "Form_Settings_label_AutoStartMiningDelay": "seconds",
                 "Form_Settings_groupBoxMOPA": "Method of obtaining profitability of algorithms:",

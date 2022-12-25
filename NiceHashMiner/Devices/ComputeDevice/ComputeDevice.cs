@@ -426,6 +426,8 @@ namespace NiceHashMiner.Devices
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
                     setAlgo.LessThreads = copyFromAlgo.LessThreads;
                     setAlgo.PowerUsage = copyFromAlgo.PowerUsage;
+                    setAlgo.Hidden = copyFromAlgo.Hidden;
+                    setAlgo.Forced = copyFromAlgo.Forced;
                     NiceHashMiner.Forms.Form_Settings.ActiveForm.Update();
 
                     if (setAlgo is DualAlgorithm dualSA && copyFromAlgo is DualAlgorithm dualCFA)
@@ -476,6 +478,8 @@ namespace NiceHashMiner.Devices
                         setAlgo.BenchmarkSecondarySpeed = conf.BenchmarkSecondarySpeed;
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
                         setAlgo.Enabled = conf.Enabled;
+                        setAlgo.Hidden = conf.Hidden;
+                        setAlgo.Forced = conf.Forced;
 
                         setAlgo.LessThreads = conf.LessThreads;
                         setAlgo.PowerUsage = conf.PowerUsage;
@@ -539,11 +543,12 @@ namespace NiceHashMiner.Devices
                     ExtraLaunchParameters = algo.ExtraLaunchParameters,
                     Enabled = algo.Enabled,
                     Hidden = algo.Hidden,
+                    Forced = algo.Forced,
                     LessThreads = algo.LessThreads,
                     PowerUsage = algo.PowerUsage
                 };
 
-                if (!conf.Hidden)
+                //if (!conf.Hidden)
                 {
                     ret.AlgorithmSettings.Add(conf);
                 }
@@ -566,7 +571,7 @@ namespace NiceHashMiner.Devices
                         IntensityPowers = dualAlgo.IntensityPowers,
                         UseIntensityPowers = dualAlgo.UseIntensityPowers
                     };
-                    if (!conf.Hidden)
+                    //if (!conf.Hidden)
                     {
                         ret.DualAlgorithmSettings.Add(dualConf);
                     }
@@ -582,7 +587,6 @@ namespace NiceHashMiner.Devices
         {
             // hello state
             var algos = GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
-
             var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);
             ;
 

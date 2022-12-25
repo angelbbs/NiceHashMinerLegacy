@@ -3,6 +3,7 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Miners;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections;
@@ -50,6 +51,28 @@ namespace NiceHashMiner.Forms.Components
 
             public void LviSetColor(ListViewItem lvi)
             {
+                int yellowInc = 0;
+                int greenInc = 0;
+
+                if (Form_Main._windowColor.B < 127)
+                {
+                    yellowInc = 60;
+                }
+                else
+                {
+                    yellowInc = -30;
+                }
+                if (Form_Main._windowColor.G < 127)
+                {
+                    greenInc = 10;
+                }
+                else
+                {
+                    greenInc = -5;
+                }
+                Color _DefaultBackColorHighlight = Color.FromArgb(Form_Main._windowColor.A, Form_Main._windowColor.R,
+                    Form_Main._windowColor.G + greenInc, Form_Main._windowColor.B + yellowInc);
+
                 if (!isListViewEnabled)
                 {
                     //  return;
@@ -91,6 +114,13 @@ namespace NiceHashMiner.Forms.Components
                         else
                         {
                             lvi.BackColor = SystemColors.ControlLightLight;
+                        }
+                    }
+                    if (ConfigManager.GeneralConfig.ColorizeTables)
+                    {
+                        if (lvi.Index % 2 == 1)
+                        {
+                            lvi.BackColor = _DefaultBackColorHighlight;
                         }
                     }
                 }
@@ -207,8 +237,13 @@ namespace NiceHashMiner.Forms.Components
             _computeDevice = computeDevice;
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
+
             foreach (var alg in computeDevice.GetAlgorithmSettings())
             {
+                if (ConfigManager.GeneralConfig.Hide_unused_algorithms && !alg.Enabled)
+                {
+                    continue;
+                }
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
@@ -234,6 +269,14 @@ namespace NiceHashMiner.Forms.Components
                         name = alg.AlgorithmNameCustom;
                     }
                     miner = alg.MinerBaseTypeName;
+                    if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
+                    {
+                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                    }
+                    else
+                    {
+                        miner = miner + MinerVersion.GetMinerVersion(miner);
+                    }
                     if (_computeDevice.DeviceType == DeviceType.NVIDIA)
                     {
                         gpu_clock = dev.CoreClockBoostCur / 1000;
@@ -295,9 +338,8 @@ namespace NiceHashMiner.Forms.Components
                     lvi.Checked = alg.Enabled;
                     listViewAlgorithms.Items.Add(lvi);
                 }
+                listViewAlgorithms.EndUpdate();
             }
-
-            listViewAlgorithms.EndUpdate();
             isListViewEnabled = isEnabled;
             listViewAlgorithms.CheckBoxes = isEnabled;
         }

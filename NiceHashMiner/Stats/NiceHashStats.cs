@@ -1648,7 +1648,7 @@ namespace NiceHashMiner.Stats
 
                         HashRate = device.MiningHashrate;
                         SecondHashRate = device.MiningHashrateSecond;
-
+                        
                         if (rigs == 1 & device.AlgorithmID > 0)
                         {
                             speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
@@ -1661,7 +1661,7 @@ namespace NiceHashMiner.Stats
                         {
                             speedsJson.Add(new JArray(20, HashRate)); //  номер алгоритма, хешрейт
                         }
-
+                        
                         array.Add(speedsJson);
 
                         //костыль для amd

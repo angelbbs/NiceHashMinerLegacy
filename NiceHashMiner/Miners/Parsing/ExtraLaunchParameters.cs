@@ -207,6 +207,8 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     // SingleParam
                     new MinerOption("Platform", "", "--platform=", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRM_kas_start", "", "-kas_start", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRM_kas_end", "", "-kas_end", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("TRMintensity", "", "--cn_config=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMtemp_limit", "", "--temp_limit=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMtemp_resume", "", "--temp_resume=", "-1", MinerOptionFlagType.MultiParam, ","),

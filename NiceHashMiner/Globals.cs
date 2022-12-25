@@ -33,6 +33,7 @@ namespace NiceHashMiner
             var name = sma.Name;
             var nPort = sma.Port;
             var sslPort = 30000 + nPort;
+            string ret = "";
 
             // NHMConectionType.NONE
             var prefix = "";
@@ -51,12 +52,22 @@ namespace NiceHashMiner
                     port = sslPort;
                     break;
             }
-            return prefix
-               + name
-               + "." + miningLocation
-               + ":"
-               + port;
-
+            if (miningLocation.Contains("auto"))
+            {
+                ret = prefix
+                   + name
+                   + "." + miningLocation
+                   + ":"
+                   + "9200";
+            } else
+            {
+                ret = prefix
+                   + name
+                   + "." + miningLocation
+                   + ":"
+                   + (nPort + 10000).ToString();
+            }
+            return ret;
         }
 
         public static string GetBitcoinUser()

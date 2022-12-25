@@ -4,6 +4,7 @@ using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMiner.Utils;
@@ -23,6 +24,7 @@ namespace NiceHashMiner
 {
     using Microsoft.Win32;
     using Newtonsoft.Json;
+    using NiceHashMiner.Miners.Grouping;
     using NiceHashMinerLegacy.Divert;
     using OpenHardwareMonitor.Hardware;
     using System.Collections.Generic;
@@ -716,7 +718,8 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from github");
                     client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "configs//ProxyList.tmp");
                     string tmp = File.ReadAllText("configs//ProxyList.tmp");
-
+                    tmp = new string(tmp.Where(c => !char.IsControl(c)).ToArray());
+                    //Helpers.ConsolePrint("**********", tmp);
                     if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
                     {
                         try
@@ -728,7 +731,17 @@ namespace NiceHashMiner
                         {
 
                         }
-                    } else
+                    } else if (tmp.Contains("[]"))
+                    {
+                        Helpers.ConsolePrint("CheckProxyList", "All proxy disabled");
+                        Array.Resize(ref Globals.MiningLocation, 1);
+                        Globals.MiningLocation[0] = "auto.nicehash.com";
+                        comboBoxLocation.Items.Clear();
+                        comboBoxLocation.Items.Add("Nicehash Auto");
+                        comboBoxLocation.SelectedIndex = 0;
+                        return;
+                    }
+                    else
                     {
                         Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from gitlab");
                         client.DownloadFile(new Uri("https://mark.nl.tab.digital/s/b9mg5Gy8G6B5cSr/download"), "configs//ProxyList.tmp");
@@ -1382,89 +1395,80 @@ namespace NiceHashMiner
             Thread.Sleep(10);
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
 
-
-            var minerdata = new MinerData();
-
-            _loadingScreen.SetValueAndMsg(76, International.GetText("Form_Main_loadtext_GetMinerVersion") + "ClaymoreNeoscrypt");
-            minerdata = MinerVersion.Get_ClaymoreNeoscrypt();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
+            if (ConfigManager.GeneralConfig.GetMinersVersions)
             {
-                _loadingScreen.SetValueAndMsg(77, International.GetText("Form_Main_loadtext_GetMinerVersion") + "CryptoDredge");
-                minerdata = MinerVersion.Get_CryptoDredge();
+                var minerdata = new MinerData();
+
+                _loadingScreen.SetValueAndMsg(76, International.GetText("Form_Main_loadtext_GetMinerVersion") + "ClaymoreNeoscrypt");
+                minerdata = MinerVersion.Get_ClaymoreNeoscrypt();
                 MinerVersion.MinerDataList.Add(minerdata);
-            }
 
-            _loadingScreen.SetValueAndMsg(78, International.GetText("Form_Main_loadtext_GetMinerVersion") + "GMiner");
-            minerdata = MinerVersion.Get_GMiner();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(79, International.GetText("Form_Main_loadtext_GetMinerVersion") + "lolMiner");
-            minerdata = MinerVersion.Get_lolMiner();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(80, International.GetText("Form_Main_loadtext_GetMinerVersion") + "miniZ");
-            minerdata = MinerVersion.Get_miniZ();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(81, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer");
-            minerdata = MinerVersion.Get_nanominer();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
-            minerdata = MinerVersion.Get_NBMiner();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
-            minerdata = MinerVersion.Get_Phoenix();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(84, International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner");
-            minerdata = MinerVersion.Get_SRBMiner();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex");
-            minerdata = MinerVersion.Get_TRex();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(86, International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner");
-            minerdata = MinerVersion.Get_TeamRedMiner();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            _loadingScreen.SetValueAndMsg(87, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
-            minerdata = MinerVersion.Get_XMRig();
-            MinerVersion.MinerDataList.Add(minerdata);
-
-            string json = JsonConvert.SerializeObject(MinerDataList, Formatting.Indented);
-            try
-            {
-                if (File.Exists("Configs\\MinersData.json"))
+                if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
                 {
-                    File.Delete("Configs\\MinersData.json");
+                    _loadingScreen.SetValueAndMsg(77, International.GetText("Form_Main_loadtext_GetMinerVersion") + "CryptoDredge");
+                    minerdata = MinerVersion.Get_CryptoDredge();
+                    MinerVersion.MinerDataList.Add(minerdata);
                 }
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("CheckMiners", ex.ToString());
-            }
-            File.WriteAllText("Configs\\MinersData.json", json);
-            MinerVersion.MinerDataList.Clear();
-            MinersGetVersionWatchdog();
 
+                _loadingScreen.SetValueAndMsg(78, International.GetText("Form_Main_loadtext_GetMinerVersion") + "GMiner");
+                minerdata = MinerVersion.Get_GMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
 
-            _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
-            _autostartTimerDelay = new Timer();
-            _autostartTimerDelay.Tick += AutoStartTimer_TickDelay;
-            _autostartTimerDelay.Interval = 1000;
-            _autostartTimerDelay.Start();
+                _loadingScreen.SetValueAndMsg(79, International.GetText("Form_Main_loadtext_GetMinerVersion") + "lolMiner");
+                minerdata = MinerVersion.Get_lolMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
 
-            Thread.Sleep(200);//костыль для очередности запуска таймеров
+                _loadingScreen.SetValueAndMsg(80, International.GetText("Form_Main_loadtext_GetMinerVersion") + "miniZ");
+                minerdata = MinerVersion.Get_miniZ();
+                MinerVersion.MinerDataList.Add(minerdata);
 
-            _autostartTimer = new Timer();
-            _autostartTimer.Tick += AutoStartTimer_Tick;
-            _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
-            _autostartTimer.Start();
+                _loadingScreen.SetValueAndMsg(81, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer");
+                minerdata = MinerVersion.Get_nanominer();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner.39.5");
+                minerdata = MinerVersion.Get_NBMiner39_5();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
+                minerdata = MinerVersion.Get_NBMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner");
+                minerdata = MinerVersion.Get_Phoenix();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                _loadingScreen.SetValueAndMsg(84, International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner");
+                minerdata = MinerVersion.Get_SRBMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex");
+                minerdata = MinerVersion.Get_TRex();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                _loadingScreen.SetValueAndMsg(86, International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner");
+                minerdata = MinerVersion.Get_TeamRedMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                _loadingScreen.SetValueAndMsg(87, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
+                minerdata = MinerVersion.Get_XMRig();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                string json = JsonConvert.SerializeObject(MinerDataList, Formatting.Indented);
+                try
+                {
+                    if (File.Exists("Configs\\MinersData.json"))
+                    {
+                        File.Delete("Configs\\MinersData.json");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("CheckMiners", ex.ToString());
+                }
+                File.WriteAllText("Configs\\MinersData.json", json);
+                new Task(() => MinersGetVersionWatchdog()).Start();
+                }
 
             if (!MinersExistanceChecker.IsMinersBinsInit())
             {
@@ -1552,15 +1556,26 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
+                bool MSIAfterburnerRunning = true;
                 _loadingScreen.SetValueAndMsg(95, "Check MSI Afterburner");
                 int countab = 0;
                 do
                 {
-                    Thread.Sleep(100);
+                    Thread.Sleep(1000);
                     countab++;
-                    if (Process.GetProcessesByName("MSIAfterburner").Any()) break;
-                } while (countab < 50); //5 sec
+                    if (Process.GetProcessesByName("MSIAfterburner").Any())
+                    {
+                        break;
+                    } else
+                    {
+                        MSIAfterburnerRunning = false;
+                    }
+                } while (countab < 15); //15 sec
 
+                if (!MSIAfterburnerRunning)
+                {
+                    Thread.Sleep(5000);
+                }
                 if (!MSIAfterburner.MSIAfterburnerInit())
                 {
                     new Task(() =>
@@ -1575,8 +1590,22 @@ namespace NiceHashMiner
             }
             _loadingScreen.SetValueAndMsg(100, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
-            NiceHashStats.GetSmaAPI();
-            Thread.Sleep(300);
+            new Task(() => NiceHashStats.GetSmaAPI()).Start();
+
+            //Thread.Sleep(300);
+
+            _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
+            _autostartTimerDelay = new Timer();
+            _autostartTimerDelay.Tick += AutoStartTimer_TickDelay;
+            _autostartTimerDelay.Interval = 1000;
+            _autostartTimerDelay.Start();
+
+            Thread.Sleep(200);//костыль для очередности запуска таймеров
+
+            _autostartTimer = new Timer();
+            _autostartTimer.Tick += AutoStartTimer_Tick;
+            _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
+            _autostartTimer.Start();
 
             if (_loadingScreen != null)
             {
@@ -1584,23 +1613,35 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
-
         }
 
         private static void MinersGetVersionWatchdog()
         {
-            Process localByName = Process.GetProcessById(Process.GetCurrentProcess().Id);
-            var query = "Select * From Win32_Process Where ParentProcessId = " + Process.GetCurrentProcess().Id.ToString();
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
-            ManagementObjectCollection processList = searcher.Get();
-            var result = processList.Cast<ManagementObject>().Select(p =>
-                Process.GetProcessById(Convert.ToInt32(p.GetPropertyValue("ProcessId")))).ToList();
-
-            foreach (var process in result)
+            Thread.Sleep(1000);
+            try
             {
-                string m = process.ProcessName;
-                Helpers.ConsolePrint("MinersGetVersionWatchdog", "Stuck miner: " + m);
-                process.Kill();
+                Process localByName = Process.GetProcessById(Process.GetCurrentProcess().Id);
+                var query = "Select * From Win32_Process Where ParentProcessId = " + Process.GetCurrentProcess().Id.ToString();
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+                ManagementObjectCollection processList = searcher.Get();
+                var result = processList.Cast<ManagementObject>().Select(p =>
+                    Process.GetProcessById(Convert.ToInt32(p.GetPropertyValue("ProcessId")))).ToList();
+
+                foreach (var process in result)
+                {
+                    string m = process.ProcessName;
+                    string p = process.StartInfo.WorkingDirectory;
+                    if (m.Contains("MSIAfterburner") || m.Contains("NvidiaGPUGetDataHost") ||
+                        m.Contains("netsh") || m.Contains("cports") || m.Contains("sc"))
+                    {
+                        continue;
+                    }
+                    Helpers.ConsolePrint("MinersGetVersionWatchdog", "Stuck miner: " + m);
+                    process.Kill();
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MinersGetVersionWatchdog", ex.ToString());
             }
         }
 
@@ -2114,6 +2155,14 @@ namespace NiceHashMiner
         public static void MakeRestart(int periodRestartProgram)
         {
             ProgramClosing = true;
+            if (ConfigManager.GeneralConfig.EnableRigRemoteView)
+            {
+                NiceHashServer.Listener(false);
+            }
+            if (ConfigManager.GeneralConfig.EnableAPI)
+            {
+                NiceHashAPIServer.Listener(false);
+            }
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 if (ConfigManager.GeneralConfig.ABDefaultProgramClosing)
@@ -2885,6 +2934,15 @@ public static void CloseChilds(Process parentId)
                 _deviceStatusTimer.Dispose();
             }
 
+            if (ConfigManager.GeneralConfig.EnableRigRemoteView)
+            {
+                NiceHashServer.Listener(false);
+            }
+            if (ConfigManager.GeneralConfig.EnableAPI)
+            {
+                NiceHashAPIServer.Listener(false);
+            }
+
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 if (ConfigManager.GeneralConfig.ABDefaultProgramClosing)
@@ -3610,29 +3668,32 @@ public static void CloseChilds(Process parentId)
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
-            try
+            if (ConfigManager.GeneralConfig.EnableRigRemoteView)
             {
-                if (!Directory.Exists("HTML")) Directory.CreateDirectory("HTML");
-
-                Rectangle bounds = Screen.GetBounds(Point.Empty);
-                using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+                try
                 {
-                    using (Graphics g = Graphics.FromImage(bitmap))
+                    if (!Directory.Exists("HTML")) Directory.CreateDirectory("HTML");
+
+                    Rectangle bounds = Screen.GetBounds(Point.Empty);
+                    using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
                     {
-                        g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-                    }
-                    //bitmap.Save("HTML\\test.jpg", ImageFormat.Jpeg);
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        bitmap.Save(ms, ImageFormat.Png);
-                        desktop = ms.ToArray();
+                        using (Graphics g = Graphics.FromImage(bitmap))
+                        {
+                            g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                        }
+                        //bitmap.Save("HTML\\test.jpg", ImageFormat.Jpeg);
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            bitmap.Save(ms, ImageFormat.Png);
+                            desktop = ms.ToArray();
+                        }
                     }
                 }
-            } catch (Exception ex)
-            {
-                //Helpers.ConsolePrint("DeviceStatusTimer_Tick", ex.ToString());
+                catch (Exception ex)
+                {
+                    //Helpers.ConsolePrint("DeviceStatusTimer_Tick", ex.ToString());
+                }
             }
-
             var rateCurrencyString = ExchangeRateApi
                              .ConvertToActiveCurrency((profitabilityFromNH) * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                              .ToString("F2", CultureInfo.InvariantCulture)

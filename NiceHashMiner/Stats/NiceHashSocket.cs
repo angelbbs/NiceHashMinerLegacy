@@ -444,7 +444,7 @@ namespace NiceHashMiner.Stats
             });
         }
 
-        public static void DropIPPort(int processId, string IP, uint port)
+        public static void DropIPPort(int processId, string IP, uint port, bool message = true)
         {
             ProcessStartInfo cports;
 
@@ -464,7 +464,10 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("DropIPPort", ex.Message);
             }
-            Helpers.ConsolePrint("DropIPPort", "Drop port " + IP + ":" + port.ToString() + " completed");
+            if (message)
+            {
+                Helpers.ConsolePrint("DropIPPort", "Drop port " + IP + ":" + port.ToString() + " completed");
+            }
         }
 
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed

@@ -147,7 +147,7 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-                    platform = "--platform 2 --fee 5";
+                    platform = "--platform 2";
                     extra = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
                 }
             }

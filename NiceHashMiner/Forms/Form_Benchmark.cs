@@ -54,6 +54,8 @@ namespace NiceHashMiner.Forms
         public string benchmarkfail = "";
         private static Timer UpdateListView_timer;
         public static bool FormBenchmarkMoved = false;
+        private ComputeDevice _selectedComputeDevice;
+        private bool benchmarkRepeat = false;
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
         {
@@ -61,6 +63,14 @@ namespace NiceHashMiner.Forms
             Icon = Resources.logo;
             Algorithm.BenchmarkActive = true;
             StartMining = false;
+
+            // set first device selected 
+            if (ComputeDeviceManager.Available.Devices.Count > 0)
+            {
+                _selectedComputeDevice = ComputeDeviceManager.Available.Devices[0];
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled, true);
+            }
+
 
             // clear prev pending statuses
             foreach (var dev in ComputeDeviceManager.Available.Devices)
@@ -473,9 +483,10 @@ namespace NiceHashMiner.Forms
                 International.GetText("FormBenchmark_Benchmark_All_Selected_Unbenchmarked");
             radioButton_RE_SelectedUnbenchmarked.Text =
                 International.GetText("FormBenchmark_Benchmark_All_Selected_ReUnbenchmarked");
-            checkBox_StartMiningAfterBenchmark.Text =
-                International.GetText("Form_Benchmark_checkbox_StartMiningAfterBenchmark");
+            checkBox_StartMiningAfterBenchmark.Text = International.GetText("Form_Benchmark_checkbox_StartMiningAfterBenchmark");
+            checkBoxHideUnused.Text = International.GetText("Form_Settings_checkBox_Hide_Unused");
             checkBox_StartMiningAfterBenchmark.Enabled = !Form_Main.MiningStarted;
+            checkBoxHideUnused.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
         }
 
         #region Start/Stop methods
@@ -762,7 +773,16 @@ namespace NiceHashMiner.Forms
                }
                else if (StartMining == false)
                {
-
+                   /*
+                   if (!benchmarkRepeat)
+                   {
+                       benchmarkRepeat = true;
+                       StartButonClick();
+                       CalcBenchmarkDevicesAlgorithmQueue();
+                       if (ExitWhenFinished || StartMining) Close();
+                       return;
+                   }
+                   */
                    var result = MessageBox.Show(
                        International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
                        International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
@@ -913,6 +933,20 @@ namespace NiceHashMiner.Forms
         private void Form_Benchmark_ResizeEnd(object sender, EventArgs e)
         {
             FormBenchmarkMoved = false;
+        }
+
+        private void checkBoxHideUnused_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused.Checked;
+            try
+            {
+                if (_selectedComputeDevice == null) return;
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }
