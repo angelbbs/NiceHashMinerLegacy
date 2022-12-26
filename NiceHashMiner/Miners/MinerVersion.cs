@@ -32,6 +32,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "ClaymoreNeoscryptMiner";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -110,6 +111,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "CryptoDredge";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -193,6 +195,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "GMiner";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -277,6 +280,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "lolMiner";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -356,6 +360,7 @@ namespace NiceHashMiner.Miners
 
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -440,6 +445,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "Nanominer";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -540,6 +546,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "NBMiner";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -624,6 +631,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "NBMiner.39.5";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -708,6 +716,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "Phoenix";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -787,6 +796,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "SRBMiner";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -884,6 +894,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "trex";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -969,6 +980,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "teamredminer";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");
@@ -1053,6 +1065,7 @@ namespace NiceHashMiner.Miners
             ret.MinerName = "Xmrig";
             try
             {
+                if (!File.Exists(path)) return ret;
                 if (File.Exists("Configs\\MinersData.json"))
                 {
                     string json = File.ReadAllText("Configs\\MinersData.json");

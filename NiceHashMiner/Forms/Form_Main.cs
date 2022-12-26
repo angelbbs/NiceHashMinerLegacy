@@ -1395,6 +1395,77 @@ namespace NiceHashMiner
             Thread.Sleep(10);
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
 
+            if (!MinersExistanceChecker.IsMinersBinsInit())
+            {
+                try
+                {
+                    if (_autostartTimerDelay != null)
+                    {
+                        _autostartTimerDelay.Stop();
+                    }
+                    if (_autostartTimer != null)
+                    {
+                        _autostartTimer.Stop();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("Download miners", ex.ToString());
+                }
+
+                var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
+                  International.GetText("Warning_with_Exclamation"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
+
+                if (result == DialogResult.Yes)
+                {
+                    DownloadingInProgress = true;
+                    ConfigManager.GeneralConfigFileCommit();
+                    /*
+                    try
+                    {
+                        if (_autostartTimerDelay != null)
+                        {
+                            _autostartTimerDelay.Stop();
+                        }
+                        if (_autostartTimer != null)
+                        {
+                            _autostartTimer.Stop();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("Download miners", ex.ToString());
+                    } finally
+                    */
+                    {
+                        if (Updater.Updater.GetGITHUBVersion() > 0)
+                        {
+                            Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
+                        }
+                        else if (Updater.Updater.GetGITLABVersion() > 0)
+                        {
+                            Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
+                        }
+                    }
+                    //блокировка формы блокирует всё
+                    /*
+                    do
+                    {
+                        Thread.Sleep(1);
+                    } while (DownloadingInProgress);
+                    _autostartTimerDelay.Start();
+                    _autostartTimer.Start();
+                    */
+                }
+            }
+            else
+            {
+                // all good
+                ConfigManager.GeneralConfig.DownloadInit = true;
+                ConfigManager.GeneralConfigFileCommit();
+            }
+
             if (ConfigManager.GeneralConfig.GetMinersVersions)
             {
                 var minerdata = new MinerData();
@@ -1468,78 +1539,8 @@ namespace NiceHashMiner
                 }
                 File.WriteAllText("Configs\\MinersData.json", json);
                 new Task(() => MinersGetVersionWatchdog()).Start();
-                }
-
-            if (!MinersExistanceChecker.IsMinersBinsInit())
-            {
-                try
-                {
-                    if (_autostartTimerDelay != null)
-                    {
-                        _autostartTimerDelay.Stop();
-                    }
-                    if (_autostartTimer != null)
-                    {
-                        _autostartTimer.Stop();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("Download miners", ex.ToString());
-                }
-
-                var result = Utils.MessageBoxEx.Show(International.GetText("Form_Main_bins_folder_files_missing"),
-                  International.GetText("Warning_with_Exclamation"),
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, 5000);
-
-                if (result == DialogResult.Yes)
-                {
-                    DownloadingInProgress = true;
-                    ConfigManager.GeneralConfigFileCommit();
-                    /*
-                    try
-                    {
-                        if (_autostartTimerDelay != null)
-                        {
-                            _autostartTimerDelay.Stop();
-                        }
-                        if (_autostartTimer != null)
-                        {
-                            _autostartTimer.Stop();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("Download miners", ex.ToString());
-                    } finally
-                    */
-                    {
-                        if (Updater.Updater.GetGITHUBVersion() > 0)
-                        {
-                            Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
-                        }
-                        else if (Updater.Updater.GetGITLABVersion() > 0)
-                        {
-                            Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
-                        }
-                    }
-                    //блокировка формы блокирует всё
-                    /*
-                    do
-                    {
-                        Thread.Sleep(1);
-                    } while (DownloadingInProgress);
-                    _autostartTimerDelay.Start();
-                    _autostartTimer.Start();
-                    */
-                }
             }
-            else
-            {
-                // all good
-                ConfigManager.GeneralConfig.DownloadInit = true;
-                ConfigManager.GeneralConfigFileCommit();
-            }
+
 
             if (ConfigManager.GeneralConfig.EnableRigRemoteView)
             {
