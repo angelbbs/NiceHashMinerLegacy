@@ -54,13 +54,13 @@ namespace NiceHashMiner.Miners
             {
                 if (serverUrl.Contains("auto"))
                 {
-                    ret = ret + "--url=stratum+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --userpass=" + 
+                    ret = ret + "--url=stratum+tcp://" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --userpass=" +
                         username + ":" + psw + " ";
                     if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
-                    ret = ret + "--url=" + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --userpass=" + 
+                    ret = ret + "--url=" + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --userpass=" +
                         username + ":" + psw + " ";
                 }
             }
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Miners
             var algo = "kawpow";
             var apiBind = "";
 
-            algo = "--algo=" + MiningSetup.MinerName;
+            algo = "--algo=" + MiningSetup.AlgorithmName;
             apiBind = " --api-bind-http=" + ApiPort;
             //kawpow only
 
@@ -115,7 +115,7 @@ namespace NiceHashMiner.Miners
             var commandLine = "";
             var timeLimit = (_benchmarkException) ? "" : " --time-limit 300";
 
-            
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 _benchmarkTimeWait = time;

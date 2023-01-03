@@ -1144,19 +1144,27 @@ namespace NiceHashMiner.Miners
         public static string GetMinerVersion(string minerName)
         {
             if (!ConfigManager.GeneralConfig.ShowMinersVersions) return "";
-
-            foreach (var miner in MinerVersion.MinerDataList)
+            try
             {
-                if (miner.MinerName.ToLower().Equals(minerName.ToLower()))
+                foreach (var miner in MinerVersion.MinerDataList)
                 {
-                    if (miner.MinerVersion.Length > 0)
+                    if (miner.MinerName.ToLower().Equals(minerName.ToLower()))
                     {
-                        return " " + miner.MinerVersion;
-                    } else
-                    {
-                        return "";
+                        if (miner.MinerVersion == null) continue;
+                        if (miner.MinerVersion.Length > 0)
+                        {
+                            return " " + miner.MinerVersion;
+                        }
+                        else
+                        {
+                            return "";
+                        }
                     }
                 }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", "ERROR. Miners files not available?");
+                return "";
             }
             return "";
         }

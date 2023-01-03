@@ -491,6 +491,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyDownloader.Core.csproj" />
+    <None Include="Resources\Run.png" />
     <None Include="Resources\NHM_logo_xxsmall_light92w.png" />
     <None Include="Resources\recycle2.ico" />
     <None Include="Resources\recycle1.ico" />
@@ -505,6 +506,8 @@
     <None Include="Resources\Close-hot.png" />
     <None Include="Resources\floppy2.ico" />
     <None Include="Resources\floppy.bmp" />
+    <None Include="Resources\Copy.png" />
+    <None Include="Resources\Down.png" />
     <Content Include="Resources\info_black_18.png" />
     <Content Include="Resources\info_black_36.png" />
     <None Include="Resources\Ok-hot.png" />

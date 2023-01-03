@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -75,13 +76,6 @@ namespace NiceHashMiner.Forms.Components
                 {
                     //  return;
                 }
-                if (ConfigManager.GeneralConfig.ColorizeTables)
-                {
-                    if (lvi.Index % 2 == 1)
-                    {
-                        lvi.BackColor = _DefaultBackColorHighlight;
-                    }
-                }
                 if (lvi.Tag is Algorithm algorithm)
                 {
                     if (!algorithm.Enabled && !algorithm.IsBenchmarkPending)
@@ -95,6 +89,13 @@ namespace NiceHashMiner.Forms.Components
                             lvi.BackColor = SystemColors.ControlLightLight;
                         }
                         lvi.ForeColor = DisabledForeColor;
+                        if (ConfigManager.GeneralConfig.ColorizeTables)
+                        {
+                            if (lvi.Index % 2 == 1)
+                            {
+                                lvi.BackColor = _DefaultBackColorHighlight;
+                            }
+                        }
                     }
                     else if (!algorithm.BenchmarkNeeded && !algorithm.IsBenchmarkPending)
                     {
@@ -110,6 +111,13 @@ namespace NiceHashMiner.Forms.Components
                             {
                                 lvi.BackColor = SystemColors.ControlLightLight;
                             }
+                            if (ConfigManager.GeneralConfig.ColorizeTables)
+                            {
+                                if (lvi.Index % 2 == 1)
+                                {
+                                    lvi.BackColor = _DefaultBackColorHighlight;
+                                }
+                            }
                         }
                         else
                         {
@@ -121,6 +129,13 @@ namespace NiceHashMiner.Forms.Components
                             else
                             {
                                 lvi.BackColor = SystemColors.ControlLightLight;
+                            }
+                            if (ConfigManager.GeneralConfig.ColorizeTables)
+                            {
+                                if (lvi.Index % 2 == 1)
+                                {
+                                    lvi.BackColor = _DefaultBackColorHighlight;
+                                }
                             }
                         }
                     }
@@ -167,7 +182,11 @@ namespace NiceHashMiner.Forms.Components
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += ListViewAlgorithms_ItemSelectionChanged;
             listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler)ListViewAlgorithms_ItemChecked;
+            listViewAlgorithms.MultiSelect = true;
+            listViewAlgorithms.FullRowSelect = true;
+
             IsInBenchmark = false;
+            //ComCtrlExtensions.WindowExplorerTheme(listViewAlgorithms, true);
         }
         public static void colorListViewHeader(ref ListView list, Color backColor, Color foreColor)
         {
@@ -698,10 +717,14 @@ namespace NiceHashMiner.Forms.Components
                 if (e.Button == MouseButtons.Right)
                 {
                     contextMenuStrip1.Items.Clear();
+                    Bitmap _EnableBitmap = new Bitmap(Properties.Resources.Ok_normal, 14, 14);
+                    Bitmap _DisableBitmap = new Bitmap(Properties.Resources.Delete_normal, 14, 14);
                     // enable all
                     {
                         var enableAllItems = new ToolStripMenuItem
                         {
+                            Image = _EnableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
                             Text = International.GetText("AlgorithmsListView_ContextMenu_EnableAll")
                         };
                         enableAllItems.Click += ToolStripMenuItemEnableAll_Click;
@@ -711,21 +734,51 @@ namespace NiceHashMiner.Forms.Components
                     {
                         var disableAllItems = new ToolStripMenuItem
                         {
+                            Image = _DisableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
                             Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll")
                         };
                         disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
                         contextMenuStrip1.Items.Add(disableAllItems);
                     }
-                    // test this
+                    // enable selected
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                     {
+                        string _text = Text = International.GetText("AlgorithmsListView_ContextMenu_EnableItem") + " " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("AlgorithmsListView_ContextMenu_EnableSelected");
+                        }
+
                         var testItem = new ToolStripMenuItem
                         {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem") + " " +
-                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                            Image = _EnableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
                         };
-                        testItem.Click += ToolStripMenuItemTest_Click;
+                        testItem.Click += ToolStripMenuItemEnableSelected_Click;
+                        contextMenuStrip1.Items.Add(testItem);
+                    }
+                    // disable selected
+                    {
+                        string _text = Text = International.GetText("AlgorithmsListView_ContextMenu_DisableItem") + " " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("AlgorithmsListView_ContextMenu_DisableSelected");
+                        }
+                        var testItem = new ToolStripMenuItem
+                        {
+                            Image = _DisableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
+                        };
+                        testItem.Click += ToolStripMenuItemDisableSelected_Click;
                         contextMenuStrip1.Items.Add(testItem);
                     }
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
@@ -733,91 +786,130 @@ namespace NiceHashMiner.Forms.Components
                     {
                         var enableBenchedItem = new ToolStripMenuItem
                         {
+                            Image = _EnableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
                             Text = International.GetText("AlgorithmsListView_ContextMenu_EnableBenched")
                         };
                         enableBenchedItem.Click += ToolStripMenuItemEnableBenched_Click;
                         contextMenuStrip1.Items.Add(enableBenchedItem);
                     }
+                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                     // clear item
                     {
-                        this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                        string _text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem") + " " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
+                            " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("AlgorithmsListView_ContextMenu_ClearSelectedItem");
+                        }
                         var clearItem = new ToolStripMenuItem
                         {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem") + " " +
-                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
-                            " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                            Image = _DisableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
                         };
                         clearItem.Click += ToolStripMenuItemClear_Click;
                         contextMenuStrip1.Items.Add(clearItem);
 
-                        //this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                        //
                         var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
                             listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        _text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAllDevices").Replace("*", al);
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("AlgorithmsListView_ContextMenu_ClearSelectedItemAllDevices");
+                        }
                         var clearItemAllDevices = new ToolStripMenuItem
                         {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAllDevices").Replace("*", al)
+                            Image = _DisableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
                         };
                         clearItemAllDevices.Click += ToolStripMenuItemClearAllDevices_Click;
                         contextMenuStrip1.Items.Add(clearItemAllDevices);
-
+                        //
                         var clearItemAll = new ToolStripMenuItem
                         {
+                            Image = _DisableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
                             Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItemAll")
                         };
                         clearItemAll.Click += ToolStripMenuItemClearAll_Click;
                         contextMenuStrip1.Items.Add(clearItemAll);
                         this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                     }
-                    {
-                        var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
-                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                    {//EnableAlgosSelected
+                        string al =  listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                                listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        string _text = International.GetText("Form_Settings_EnableAlgos").Replace("*", al);
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("Form_Settings_EnableAlgosSelectedAll");
+                        }
                         var Enablealgo = new ToolStripMenuItem
                         {
-                            Text = International.GetText("Form_Settings_EnableAlgos").Replace("*", al)
+                            Image = _EnableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
                         };
                         Enablealgo.Click += ToolStripMenuEnablealgo_Click;
                         contextMenuStrip1.Items.Add(Enablealgo);
                     }
-                    {
+                    {//DisableAlgosSelected
                         var al = listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
                             listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        string _text = International.GetText("Form_Settings_DisableAlgos").Replace("*", al);
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("Form_Settings_DisableAlgosSelectedAll");
+                        }
                         var Enablealgo = new ToolStripMenuItem
                         {
-                            Text = International.GetText("Form_Settings_DisableAlgos").Replace("*", al)
+                            Image = _DisableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
                         };
                         Enablealgo.Click += ToolStripMenuDisablealgo_Click;
                         contextMenuStrip1.Items.Add(Enablealgo);
                     }
                     //force
-                    this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                    var forceItem = new ToolStripMenuItem
+                    if (listViewAlgorithms.SelectedItems.Count == 1)
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_ForceItem") + " " +
-                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
-                        " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
-                    };
-                    forceItem.Click += ToolStripMenuItemForce_Click;
-                    if (IsForceEnabled())
-                    {
-                        forceItem.Enabled = false;
+
+                        this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                        var forceItem = new ToolStripMenuItem
+                        {
+                            Image = _EnableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_ForceItem") + " " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
+                            " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                        };
+                        forceItem.Click += ToolStripMenuItemForce_Click;
+                        if (IsForceEnabled())
+                        {
+                            forceItem.Enabled = false;
+                        }
+                        else
+                        {
+                            forceItem.Enabled = !IsForced();
+                        }
+                        contextMenuStrip1.Items.Add(forceItem);
+
+                        var DisableforceItem = new ToolStripMenuItem
+                        {
+                            Image = _DisableBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_DisableForceItem") + " " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
+                            " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
+                        };
+                        DisableforceItem.Click += ToolStripMenuItemDisableForce_Click;
+
+                        DisableforceItem.Enabled = IsForced();
+                        contextMenuStrip1.Items.Add(DisableforceItem);
                     }
-                    else
-                    {
-                        forceItem.Enabled = !IsForced();
-                    }
-                    contextMenuStrip1.Items.Add(forceItem);
-
-                    var DisableforceItem = new ToolStripMenuItem
-                    {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_DisableForceItem") + " " +
-                        listViewAlgorithms.SelectedItems[0].SubItems[1].Text +
-                        " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
-                    };
-                    DisableforceItem.Click += ToolStripMenuItemDisableForce_Click;
-
-                    DisableforceItem.Enabled = IsForced();
-                    contextMenuStrip1.Items.Add(DisableforceItem);
-
 
                     contextMenuStrip1.Show(Cursor.Position);
                 }
@@ -865,6 +957,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
         {
             string aName = "";
             MinerBaseType mName = MinerBaseType.NONE;
+            var miningDevices = ComputeDeviceManager.Available.Devices;
             if (_computeDevice != null)
             {
                 foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
@@ -873,24 +966,25 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         aName = algorithm.AlgorithmName;
                         mName = algorithm.MinerBaseType;
+                        /*
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
                         }
-                    }
-                }
-                var miningDevices = ComputeDeviceManager.Available.Devices;
-                foreach (var device in miningDevices)
-                {
-                    Helpers.ConsolePrint("", device.Name);
-                    if (device != null)
-                    {
-                        var devicesAlgos = device.GetAlgorithmSettings();
-                        foreach (var a in devicesAlgos)
+                        */
+                        foreach (var device in miningDevices)
                         {
-                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                            Helpers.ConsolePrint("", device.Name);
+                            if (device != null)
                             {
-                                a.Enabled = true;
-                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                                var devicesAlgos = device.GetAlgorithmSettings();
+                                foreach (var a in devicesAlgos)
+                                {
+                                    if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                                    {
+                                        a.Enabled = true;
+                                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                                    }
+                                }
                             }
                         }
                     }
@@ -901,6 +995,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
         {
             string aName = "";
             MinerBaseType mName = MinerBaseType.NONE;
+            var miningDevices = ComputeDeviceManager.Available.Devices;
             if (_computeDevice != null)
             {
                 foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
@@ -909,24 +1004,25 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         aName = algorithm.AlgorithmName;
                         mName = algorithm.MinerBaseType;
+                        /*
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
                         }
-                    }
-                }
-                var miningDevices = ComputeDeviceManager.Available.Devices;
-                foreach (var device in miningDevices)
-                {
-                    //Helpers.ConsolePrint("", device.Name);
-                    if (device != null)
-                    {
-                        var devicesAlgos = device.GetAlgorithmSettings();
-                        foreach (var a in devicesAlgos)
+                        */
+                        foreach (var device in miningDevices)
                         {
-                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                            //Helpers.ConsolePrint("", device.Name);
+                            if (device != null)
                             {
-                                a.Enabled = false;
-                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                                var devicesAlgos = device.GetAlgorithmSettings();
+                                foreach (var a in devicesAlgos)
+                                {
+                                    if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                                    {
+                                        a.Enabled = false;
+                                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                                    }
+                                }
                             }
                         }
                     }
@@ -980,6 +1076,8 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
         {
             string aName = "";
             MinerBaseType mName = MinerBaseType.NONE;
+            var miningDevices = ComputeDeviceManager.Available.Devices;
+
             if (_computeDevice != null)
             {
                 foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
@@ -988,34 +1086,33 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         aName = algorithm.AlgorithmName;
                         mName = algorithm.MinerBaseType;
+                        /*
                         if (algorithm is DualAlgorithm dualAlgo)
                         {
                         }
-                    }
-                }
-                var miningDevices = ComputeDeviceManager.Available.Devices;
-                foreach (var device in miningDevices)
-                {
-                    //Helpers.ConsolePrint("", device.Name);
-                    if (device != null)
-                    {
-                        var devicesAlgos = device.GetAlgorithmSettings();
-                        foreach (var a in devicesAlgos)
+                        */
+                        foreach (var device in miningDevices)
                         {
-                            if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                            //Helpers.ConsolePrint("", device.Name);
+                            if (device != null)
                             {
-                                a.BenchmarkSpeed = 0;
-                                a.BenchmarkSecondarySpeed = 0;
-                                if (a is DualAlgorithm dualAlgo)
+                                var devicesAlgos = device.GetAlgorithmSettings();
+                                foreach (var a in devicesAlgos)
                                 {
-                                    dualAlgo.BenchmarkSecondarySpeed = 0;
+                                    if (a.AlgorithmName == aName && a.MinerBaseType == mName)
+                                    {
+                                        a.BenchmarkSpeed = 0;
+                                        a.BenchmarkSecondarySpeed = 0;
+                                        if (a is DualAlgorithm dualAlgo)
+                                        {
+                                            dualAlgo.BenchmarkSecondarySpeed = 0;
+                                        }
+                                        a.PowerUsage = 0;
+                                        a.CurrentProfit = 0;
+                                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                                        BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
+                                    }
                                 }
-                                a.PowerUsage = 0;
-                                a.CurrentProfit = 0;
-                                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                                BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
-
-                                //ComunicationInterface?.ChangeSpeed(lvi);
                             }
                         }
                     }
@@ -1052,7 +1149,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                 }
             }
         }
-        private void ToolStripMenuItemTest_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemEnableSelected_Click(object sender, EventArgs e)
         {
             if (_computeDevice != null)
             {
@@ -1063,8 +1160,25 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                         lvi.Checked = lvi.Selected;
                         if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
                         {
-                            // If it has zero speed, set to 1 so it can be tested
-                            //algorithm.BenchmarkSpeed = 1;
+                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
+                            ComunicationInterface?.ChangeSpeed(lvi);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ToolStripMenuItemDisableSelected_Click(object sender, EventArgs e)
+        {
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        lvi.Checked = !lvi.Selected;
+                        if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
+                        {
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                             ComunicationInterface?.ChangeSpeed(lvi);
                         }
@@ -1247,6 +1361,14 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
 
         private void listViewAlgorithms_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            if (mouseDown)
+            {
+                e.NewValue = e.CurrentValue;
+            }
+            if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Shift || (ModifierKeys == (Keys.Control | Keys.Shift)))
+            {
+                e.NewValue = e.CurrentValue;
+            }
             if (!isListViewEnabled)
             {
                 listViewAlgorithms.SelectedItems.Clear();
@@ -1337,6 +1459,21 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                 listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(ConfigManager.GeneralConfig.ColumnListSort);
             }
         }
+        bool mouseDown = false;
+        private void listViewAlgorithms_MouseDown(object sender, MouseEventArgs e)
+        {
+            mouseDown = true;
+        }
+
+        private void listViewAlgorithms_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseDown = false;
+        }
+
+        private void listViewAlgorithms_MouseLeave(object sender, EventArgs e)
+        {
+            mouseDown = false;
+        }
     }
     class ListViewColumnComparer : IComparer
     {
@@ -1361,5 +1498,17 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
             }
         }
     }
+    static class ComCtrlExtensions
+    {
+        private const string EXPLORER = "EXPLORER";
 
+        [DllImport("uxtheme.dll", ExactSpelling = true, PreserveSig = false, CharSet = CharSet.Auto)]
+        public static extern void SetWindowTheme(IntPtr hWnd, string subAppName, string subIdList);
+
+        public static void WindowExplorerTheme(this ListView ctrl, bool enable)
+        {
+            string appName = enable ? EXPLORER : null;
+            SetWindowTheme(ctrl.Handle, appName, null);
+        }
+    }
 }

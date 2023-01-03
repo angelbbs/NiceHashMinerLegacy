@@ -453,6 +453,39 @@ namespace NiceHashMiner.Miners
                         }
                         */
                     }
+                    if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        devs = 0;
+                        foreach (var mPair in sortedMinerPairs)
+                        {
+                            try
+                            {
+                                int gpu_hr1 = 0;
+                                string token0 = $"algorithms[0].hashrate.gpu.gpu{mPair.Device.IDByBus}";
+                                var hash0 = resp.SelectToken(token0);
+                                int gpu_hr0 = (int)Convert.ToInt32(hash0, CultureInfo.InvariantCulture.NumberFormat);
+                                //if (IsInBenchmark == false)
+                                {
+                                    string token1 = $"algorithms[1].hashrate.gpu.gpu{mPair.Device.IDByBus}";
+                                    var hash1 = resp.SelectToken(token1);
+                                    gpu_hr1 = (int)Convert.ToInt32(hash1, CultureInfo.InvariantCulture.NumberFormat);
+                                }
+
+                                mPair.Device.MiningHashrate = gpu_hr1;
+                                mPair.Device.MiningHashrateSecond = gpu_hr0;
+                                _power = mPair.Device.PowerUsage;
+                            }
+                            catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("API Exception:", ex.ToString());
+                            }
+                            devs++;
+                        }
+                        totalsMain = resp.algorithms[1].hashrate.gpu.total;
+                        totalsSecond = resp.algorithms[0].hashrate.gpu.total;
+
+                    } 
+
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX) ||
                         MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
                     {

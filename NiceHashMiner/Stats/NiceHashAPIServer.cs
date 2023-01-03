@@ -127,7 +127,7 @@ namespace NiceHashMiner.Stats
                 NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "127.0.0.1", (uint)Port, false);
                 NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "0.0.0.0", (uint)Port, false);
                 return;
-            } 
+            }
             Thread.Sleep(1000);
             goto s;
         }
@@ -240,7 +240,7 @@ namespace NiceHashMiner.Stats
                                 Helpers.ConsolePrint("NiceHashAPIServer", ex.ToString());
                                 help = "File Help\\API.txt not found\r\n";
                             }
-                            
+
 
                             responce = Header + help;
                             bytesresponce = Encoding.ASCII.GetBytes(responce);

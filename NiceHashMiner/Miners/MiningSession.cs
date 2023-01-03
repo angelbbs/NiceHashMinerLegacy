@@ -563,7 +563,7 @@ namespace NiceHashMiner.Miners
                 } else 
                 {
                     //if (AlgorithmSwitchingManager.newProfit)
-                    //if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable || percDiff > 0.2)
+                    //if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable || Math.Round(percDiff * 100, 2) > 20)
                     if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                     {
                         //AlgorithmSwitchingManager.newProfit = false;
@@ -611,7 +611,7 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
-                        //if (AlgorithmSwitchingManager.newProfit)
+                        //if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable || Math.Round(percDiff * 100, 2) > 20)
                         if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                         {
                             _ticks[device.Device.Index] = 0;
@@ -870,7 +870,6 @@ namespace NiceHashMiner.Miners
                 foreach (var groupMiners in checks)
                 {
                     m = groupMiners.Miner;
-
                     // skip if not running or if await already in progress
                     // if (!Miner.IsRunning || m.IsUpdatingApi) continue;
                     if (!m.IsRunning || m.IsUpdatingApi) continue;

@@ -136,7 +136,7 @@ namespace NiceHashMiner.Miners
                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
         }
 
-        private string GetStartBenchmarkCommand(string url, string btcAdress, string worker)
+        private string GetStartBenchmarkCommand(string url, string btcAdress, string worker, string psw = "x", bool benchmark = false)
         {
             var platform = "";
             DeviceType devtype = DeviceType.NVIDIA;
@@ -162,10 +162,16 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("GetStartCommand", ex.ToString());
             }
             Thread.Sleep(200);
-            string psw = "x";
+            string pool = $" -pool {Links.CheckDNS(url)} -wal {btcAdress} -cdmport 127.0.0.1:{ApiPort} -pass " + psw + " ";
+            /*
+            if (benchmark)
+            {
+                pool = $" -bench 100 -cdmport 127.0.0.1:{ApiPort} ";
+            }
+            */
             if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
             return " -gpus " + GetDevicesCommandString() + platform + "-retrydelay 10"
-                   + $" -pool {Links.CheckDNS(url)} -wal {btcAdress} -cdmport  127.0.0.1:{ApiPort} -pass " + psw + " " +
+                   + pool +
                    ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
 
         }
@@ -213,11 +219,13 @@ namespace NiceHashMiner.Miners
             }
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto3GB)
             {
-                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565"), "angelbbs.Phoenix3", "") + " -proto 1";
+                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://ethash.mine.zergpool.com:9999"), "LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.Phoenix3", "", "c=LTC,mc=ALT/BRB/OCTA/REDE");
+                //ret = GetStartBenchmarkCommand("", "", "", "", true);
             }
             if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto4GB)
             {
-                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://us-east.ethash-hub.miningpoolhub.com:20565"), "angelbbs.Phoenix4", "") + " -proto 1";
+                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://ethash.mine.zergpool.com:9999"), "LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.Phoenix4", "", "c=LTC,mc=ALT/BRB/OCTA/REDE");
+                //ret = GetStartBenchmarkCommand("", "", "", "", true);
             }
             if (algorithm.NiceHashID == AlgorithmType.ETCHash)
             {

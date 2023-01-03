@@ -433,7 +433,7 @@ namespace NiceHashMiner.Miners
                 return null;
             }
             resp2 = resp2.Trim('\x00');
-            Helpers.ConsolePrint("API: ", resp2.Trim());
+            //Helpers.ConsolePrint("API: ", resp2.Trim());
             try
             {
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))

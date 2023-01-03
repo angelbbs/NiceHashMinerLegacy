@@ -254,7 +254,7 @@ namespace NiceHashMiner
                 // wait for termination so we don't terminate NHM
                 WaitForSingleObject(_pHandle, 10000);
             }
-            //return true;
+            return success;
             
             //if (consoleDetached)
             {

@@ -223,9 +223,8 @@ namespace NiceHashMiner
             MiningSetup = new MiningSetup(null);
             IsInit = false;
             MinerID = MinerIDCount++;
-
-            MinerDeviceName = minerDeviceName;
-
+            Miner.MinerDeviceName = minerDeviceName;
+            //MinerDeviceName = minerDeviceName;
             WorkingDirectory = "";
 
             IsRunning = false;
@@ -360,6 +359,7 @@ namespace NiceHashMiner
         // TAG for identifying miner
         public string MinerTag()
         {
+            MinerDeviceName = MiningSetup.MinerName;
             if (_minerTag == null)
             {
                 const string mask = "{0}-MINER_ID({1})-DEVICE_IDs({2})";
@@ -368,7 +368,7 @@ namespace NiceHashMiner
                 {
                     return string.Format(mask, MinerDeviceName, MinerID, "NOT_SET");
                 }
-
+                
                 // contains ids
                 var ids = MiningSetup.MiningPairs.Select(cdevs => cdevs.Device.ID.ToString()).ToList();
                 _minerTag = string.Format(mask, MinerDeviceName, MinerID, string.Join(",", ids));
@@ -2080,115 +2080,121 @@ namespace NiceHashMiner
                 }
             };
 
-            var strPlatform = "";
-            var strDual = "SINGLE";
-            var strAlgo = AlgorithmNiceHashNames.GetName(MiningSetup.CurrentAlgorithmType);
-
-            var minername = MinerDeviceName;
-            int subStr;
-            subStr = MinerDeviceName.IndexOf("_");
-            if (subStr > 0)
-            {
-                minername = MinerDeviceName.Substring(0, subStr);
-            }
-            if (minername == "ClaymoreCryptoNight" || minername == "ClaymoreZcash" || minername == "ClaymoreDual" || minername == "ClaymoreNeoscrypt")
-            {
-                minername = "Claymore";
-            }
-            minername = minername.Replace("Z-Enemy", "ZEnemy");
-            var gpus = "";
-            List<string> l = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
-            l.Sort();
-            gpus += string.Join(",", l);
-
-            foreach (var pair in MiningSetup.MiningPairs)
-            {
-                if (pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosZil ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerAutolykos ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKHeavyHash ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashKHeavyHash ||
-                    pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKHeavyHash)
-                {
-                    strDual = "DUAL";
-                }
-                if (pair.Device.DeviceType == DeviceType.NVIDIA)
-                {
-                    strPlatform = "NVIDIA";
-                }
-                else if (pair.Device.DeviceType == DeviceType.AMD)
-                {
-                    strPlatform = "AMD";
-                }
-                else if (pair.Device.DeviceType == DeviceType.CPU)
-                {
-                    strPlatform = "CPU";
-                }
-            }
-
-            string MinerDir = MiningSetup.MinerPath.Substring(0, MiningSetup.MinerPath.LastIndexOf("\\"));
-            if (isBefore)
-            {
-                CMDconfigHandle.StartInfo.FileName = "GPU-Scrypt.cmd";
-            }
-            else
-            {
-                CMDconfigHandle.StartInfo.FileName = "GPU-Reset.cmd";
-            }
-
-            {
-                var cmd = "";
-                FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Open, FileAccess.Read);
-                StreamReader w = new StreamReader(fs);
-                cmd = w.ReadToEnd();
-                w.Close();
-
-                if (cmd.ToUpper().Trim().Contains("SET NOVISIBLE=TRUE"))
-                {
-                    CreateNoWindow = true;
-                }
-                if (cmd.ToUpper().Trim().Contains("SET RUN=FALSE"))
-                {
-                    return null;
-                }
-            }
-            //BenchmarkProcessPath = CMDconfigHandle.StartInfo.WorkingDirectory;
-            Helpers.ConsolePrint(MinerTag(), "Using CMD: " + CMDconfigHandle.StartInfo.FileName);
-            //CMDconfigHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-
-            if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
-            {
-                foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path])
-                {
-                    var envName = kvp.Key;
-                    var envValue = kvp.Value;
-                    CMDconfigHandle.StartInfo.EnvironmentVariables[envName] = envValue;
-                }
-            }
-
-            CMDconfigHandle.StartInfo.Arguments = " " + strPlatform + " " + strDual + " " + strAlgo + " \"" + gpus + "\"" + " " + minername;
-            CMDconfigHandle.StartInfo.UseShellExecute = false;
-            // CMDconfigHandle.StartInfo.RedirectStandardError = true;
-            // CMDconfigHandle.StartInfo.RedirectStandardOutput = true;
-            CMDconfigHandle.StartInfo.CreateNoWindow = CreateNoWindow;
-
-            Helpers.ConsolePrint(MinerTag(), "Start CMD: " + CMDconfigHandle.StartInfo.FileName + CMDconfigHandle.StartInfo.Arguments);
-            CMDconfigHandle.Start();
-
-
             try
             {
-                if (!CMDconfigHandle.WaitForExit(60 * 1000))
-                {
-                    CMDconfigHandle.Kill();
-                    CMDconfigHandle.WaitForExit(5 * 1000);
-                    CMDconfigHandle.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("KillCMDBeforeOrAfterMining", e.ToString());
-            }
+                var strPlatform = "";
+                var strDual = "SINGLE";
+                var strAlgo = AlgorithmNiceHashNames.GetName(MiningSetup.CurrentAlgorithmType);
 
+                var minername = MinerTag();
+                int subStr;
+                subStr = MinerTag().IndexOf("-");
+                if (subStr > 0)
+                {
+                    minername = MinerTag().Substring(0, subStr);
+                }
+                if (minername == "ClaymoreCryptoNight" || minername == "ClaymoreZcash" || minername == "ClaymoreDual" || minername == "ClaymoreNeoscrypt")
+                {
+                    minername = "Claymore";
+                }
+                minername = minername.Replace("Z-Enemy", "ZEnemy");
+
+                var gpus = "";
+                List<string> l = MiningSetup.MiningPairs.Select(mPair => mPair.Device.IDByBus.ToString()).ToList();
+                l.Sort();
+                gpus += string.Join(",", l);
+
+                foreach (var pair in MiningSetup.MiningPairs)
+                {
+                    if (pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosZil ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerAutolykos ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKHeavyHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashKHeavyHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKHeavyHash)
+                    {
+                        strDual = "DUAL";
+                    }
+                    if (pair.Device.DeviceType == DeviceType.NVIDIA)
+                    {
+                        strPlatform = "NVIDIA";
+                    }
+                    else if (pair.Device.DeviceType == DeviceType.AMD)
+                    {
+                        strPlatform = "AMD";
+                    }
+                    else if (pair.Device.DeviceType == DeviceType.CPU)
+                    {
+                        strPlatform = "CPU";
+                    }
+                }
+
+                string MinerDir = MiningSetup.MinerPath.Substring(0, MiningSetup.MinerPath.LastIndexOf("\\"));
+                if (isBefore)
+                {
+                    CMDconfigHandle.StartInfo.FileName = "GPU-Scrypt.cmd";
+                }
+                else
+                {
+                    CMDconfigHandle.StartInfo.FileName = "GPU-Reset.cmd";
+                }
+
+                {
+                    var cmd = "";
+                    FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Open, FileAccess.Read);
+                    StreamReader w = new StreamReader(fs);
+                    cmd = w.ReadToEnd();
+                    w.Close();
+
+                    if (cmd.ToUpper().Trim().Contains("SET NOVISIBLE=TRUE"))
+                    {
+                        CreateNoWindow = true;
+                    }
+                    if (cmd.ToUpper().Trim().Contains("SET RUN=FALSE"))
+                    {
+                        return null;
+                    }
+                }
+                //BenchmarkProcessPath = CMDconfigHandle.StartInfo.WorkingDirectory;
+                Helpers.ConsolePrint(MinerTag(), "Using CMD: " + CMDconfigHandle.StartInfo.FileName);
+                //CMDconfigHandle.StartInfo.WorkingDirectory = WorkingDirectory;
+
+                if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
+                {
+                    foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path])
+                    {
+                        var envName = kvp.Key;
+                        var envValue = kvp.Value;
+                        CMDconfigHandle.StartInfo.EnvironmentVariables[envName] = envValue;
+                    }
+                }
+
+                CMDconfigHandle.StartInfo.Arguments = " " + strPlatform + " " + strDual + " " + strAlgo + " \"" + gpus + "\"" + " " + minername;
+                CMDconfigHandle.StartInfo.UseShellExecute = false;
+                // CMDconfigHandle.StartInfo.RedirectStandardError = true;
+                // CMDconfigHandle.StartInfo.RedirectStandardOutput = true;
+                CMDconfigHandle.StartInfo.CreateNoWindow = CreateNoWindow;
+
+                Helpers.ConsolePrint(MinerTag(), "Start CMD: " + CMDconfigHandle.StartInfo.FileName + CMDconfigHandle.StartInfo.Arguments);
+                CMDconfigHandle.Start();
+
+
+                try
+                {
+                    if (!CMDconfigHandle.WaitForExit(60 * 1000))
+                    {
+                        CMDconfigHandle.Kill();
+                        CMDconfigHandle.WaitForExit(5 * 1000);
+                        CMDconfigHandle.Close();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("KillCMDBeforeOrAfterMining", e.ToString());
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint(MinerTag(), ex.ToString());
+            }
             return CMDconfigHandle;
         }
 

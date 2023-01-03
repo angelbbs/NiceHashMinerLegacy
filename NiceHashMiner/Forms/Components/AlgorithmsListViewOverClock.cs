@@ -139,6 +139,8 @@ namespace NiceHashMiner.Forms.Components
             // callback initializations
             listViewAlgorithms.ItemSelectionChanged += ListViewAlgorithms_ItemSelectionChanged;
             listViewAlgorithms.ItemChecked += (ItemCheckedEventHandler)ListViewAlgorithms_ItemChecked;
+            listViewAlgorithms.MultiSelect = true;
+            listViewAlgorithms.FullRowSelect = true;
             if (ConfigManager.GeneralConfig.ABEnableOverclock && MSIAfterburner.Initialized)
             {
                 MSIAfterburner.InitTempFiles();
@@ -437,25 +439,54 @@ namespace NiceHashMiner.Forms.Components
                 if (e.Button == MouseButtons.Right)
                 {
                     contextMenuStrip1.Items.Clear();
+                    Bitmap _EnableBitmap = new Bitmap(Properties.Resources.Ok_normal, 14, 14);
+                    Bitmap _DisableBitmap = new Bitmap(Properties.Resources.Delete_normal, 14, 14);
+                    Bitmap _GetBitmap = new Bitmap(Properties.Resources.Down, 14, 14);
+                    Bitmap _CheckBitmap = new Bitmap(Properties.Resources.Run, 14, 14);
+                    Bitmap _CopyBitmap = new Bitmap(Properties.Resources.Copy, 14, 14);
+                    Bitmap _ResetBitmap = new Bitmap(Properties.Resources.Refresh_normal, 14, 14);
                     GetDefMinMax();
-                    //test msi ab
+                    //get from ab
                     {
+                        string _text = Text = International.GetText("DeviceListView_ContextMenu_GetValues") + " - " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("DeviceListView_ContextMenu_GetValuesSelected");
+                        }
+
                         var MSIABGET = new ToolStripMenuItem
                         {
-                            Text = International.GetText("DeviceListView_ContextMenu_GetValues")
+                            Image = _GetBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
                         };
                         MSIABGET.Click += ToolStripMenuItemGET_Click;
                         contextMenuStrip1.Items.Add(MSIABGET);
                     }
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                    {
+                    {//test
+                        string _text = Text = International.GetText("DeviceListView_ContextMenu_TestValues") + " - " +
+                            listViewAlgorithms.SelectedItems[0].SubItems[1].Text + " (" +
+                            listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")";
+                        /*
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            _text = International.GetText("DeviceListView_ContextMenu_TestValuesSelected");
+                        }
+                        */
                         var MSIABSAVE = new ToolStripMenuItem
                         {
-                            Text = International.GetText("DeviceListView_ContextMenu_TestValues")
+                            Image = _CheckBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
+                            Text = _text
                         };
                         MSIABSAVE.Click += ToolStripMenuItemTest_Click;
                         contextMenuStrip1.Items.Add(MSIABSAVE);
                     }
+
                     var devicesAlgos = _computeDevice.GetAlgorithmSettings();
                     foreach (var alg in devicesAlgos)
                     {
@@ -468,23 +499,31 @@ namespace NiceHashMiner.Forms.Components
                                 {
                                     var copyOverclockDropDownItem = new ToolStripMenuItem
                                     {
+                                        Image = _CopyBitmap,
+                                        ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
                                         Text = alg.AlgorithmName + " (" + alg.MinerBaseTypeName + ")"
                                     };
-                                    //copyOverclockDropDownItem.Click += ToolStripMenuItemCopyOverclock_Click;
+
                                     copyOverclockDropDownItem.Click += (sender1, e1) => ToolStripMenuItem_ClickOverclock(sender, _computeDevice.Uuid, l.AlgorithmStringID, alg.AlgorithmStringID);
                                     copyOverclockDropDownItem.Tag = _computeDevice.Uuid;
                                     copyOverClockItem.DropDownItems.Add(copyOverclockDropDownItem);
+                                    copyOverClockItem.Image = _CopyBitmap;
+                                    copyOverClockItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
                                     copyOverClockItem.Text = International.GetText("DeviceListView_ContextMenu_CopyOverClock");
-                                    contextMenuStrip1.Items.Add(copyOverClockItem);
+
                                 }
+                                break;
                             }
                         }
+                        contextMenuStrip1.Items.Add(copyOverClockItem);
                     }
 
                     this.contextMenuStrip1.Items.Add(new ToolStripSeparator());
                     {
                         var MSIABDEFAULT = new ToolStripMenuItem
                         {
+                            Image = _ResetBitmap,
+                            ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None,
                             Text = International.GetText("DeviceListView_ContextMenu_ResetToDefault")
                         };
                         MSIABDEFAULT.Click += ToolStripMenuItemDefault_Click;
@@ -508,7 +547,7 @@ namespace NiceHashMiner.Forms.Components
         private void ToolStripMenuItem_ClickOverclock(object sender, string uuid, string to, string from)
         {
             var copyOverclockCDev = ComputeDeviceManager.Available.GetDeviceWithUuid(uuid);
-
+            /*
             var result = MessageBox.Show(
                 string.Format(
                     International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"),
@@ -517,31 +556,38 @@ namespace NiceHashMiner.Forms.Components
                 MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
-                try
+            */
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+            {
+                if (lvi.Tag is Algorithm algorithm)
                 {
-                    string fNameSrc = "temp\\" + uuid + "_" + from + ".gputmp";
-                    string fNameDst = "temp\\" + uuid + "_" + to + ".gputmp";
-                    if (!File.Exists(fNameSrc))
+                    try
                     {
-                        MSIAfterburner.SaveDefaultDeviceData(_computeDevice.BusID, fNameSrc);
-                    }
-                    if (File.Exists(fNameDst)) File.Delete(fNameDst);
+                        string fNameSrc = "temp\\" + uuid + "_" + from + ".gputmp";
+                        string fNameDst = "temp\\" + uuid + "_" + algorithm.MinerBaseTypeName + "_" + algorithm.AlgorithmName + ".gputmp";
+                        if (!File.Exists(fNameSrc))
+                        {
+                            MSIAfterburner.SaveDefaultDeviceData(_computeDevice.BusID, fNameSrc);
+                        }
+                        if (File.Exists(fNameDst)) File.Delete(fNameDst);
 
-                    //File.Copy(fNameSrc, fNameDst);
-                    MSIAfterburner.ApplyFromFile(_computeDevice.BusID, fNameSrc);
-                    Thread.Sleep(100);
-                    MSIAfterburner.CommitChanges(_computeDevice.BusID);
-                    Thread.Sleep(100);
-                    ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
-                    MSIAfterburner.SaveDeviceData(_abdata, fNameDst);
+                        //File.Copy(fNameSrc, fNameDst);
+                        MSIAfterburner.ApplyFromFile(_computeDevice.BusID, fNameSrc);
+                        Thread.Sleep(100);
+                        MSIAfterburner.CommitChanges(_computeDevice.BusID);
+                        Thread.Sleep(100);
+                        ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
+                        MSIAfterburner.SaveDeviceData(_abdata, fNameDst);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("ToolStripMenuItem_ClickOverclock", "Error: " + ex.ToString());
+                    }
+                    SetAlgorithms(_computeDevice, _computeDevice.Enabled);
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                 }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("ToolStripMenuItem_ClickOverclock", "Error: " + ex.ToString());
-                }
-                SetAlgorithms(_computeDevice, _computeDevice.Enabled);
-                RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
             }
+           // }
 
         }
 
@@ -611,7 +657,8 @@ namespace NiceHashMiner.Forms.Components
             if (!MSIAfterburner.Initialized) return;
             if (_computeDevice != null)
             {
-                foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                //foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+                ListViewItem lvi = listViewAlgorithms.SelectedItems[0];
                 {
                     if (lvi.Tag is Algorithm algorithm)
                     {
@@ -620,6 +667,12 @@ namespace NiceHashMiner.Forms.Components
                         MSIAfterburner.CommitChanges(_computeDevice.BusID);
                         ControlMemoryGpuEntry _abdata = MSIAfterburner.GetDeviceData(_computeDevice.BusID);
                         MSIAfterburner.SaveDeviceData(_abdata, fName);
+                        /*
+                        if (listViewAlgorithms.SelectedItems.Count > 1)
+                        {
+                            Thread.Sleep(1000);
+                        }
+                        */
                     }
                 }
                 SetAlgorithms(_computeDevice, _computeDevice.Enabled);
@@ -695,6 +748,14 @@ namespace NiceHashMiner.Forms.Components
 
         private void listViewAlgorithms_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            if (mouseDown)
+            {
+                e.NewValue = e.CurrentValue;
+            }
+            if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Shift || (ModifierKeys == (Keys.Control | Keys.Shift)))
+            {
+                e.NewValue = e.CurrentValue;
+            }
             if (!isListViewEnabled)
             {
                 listViewAlgorithms.SelectedItems.Clear();
@@ -795,8 +856,10 @@ namespace NiceHashMiner.Forms.Components
 
         }
 
+        bool mouseDown = false;
         private void listViewAlgorithms_MouseDown(object sender, MouseEventArgs e)
         {
+            mouseDown = true;
             if (e.Clicks > 1)
             {
                 ListViewItem item = listViewAlgorithms.GetItemAt(e.X, e.Y);
@@ -1203,6 +1266,16 @@ namespace NiceHashMiner.Forms.Components
             if (inputChar == 27)
                 DisposeTextBox((sender as TextBox), null);
 
+        }
+
+        private void listViewAlgorithms_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseDown = false;
+        }
+
+        private void listViewAlgorithms_MouseLeave(object sender, EventArgs e)
+        {
+            mouseDown = false;
         }
     }
     class ListViewColumnComparerOverClock : IComparer

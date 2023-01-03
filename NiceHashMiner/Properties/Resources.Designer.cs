@@ -83,6 +83,16 @@ namespace NiceHashMiner.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Copy {
+            get {
+                object obj = ResourceManager.GetObject("Copy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Delete_hot {
             get {
                 object obj = ResourceManager.GetObject("Delete-hot", resourceCulture);
@@ -107,6 +117,16 @@ namespace NiceHashMiner.Properties {
             get {
                 object obj = ResourceManager.GetObject("dnscache", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Down {
+            get {
+                object obj = ResourceManager.GetObject("Down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -317,6 +337,16 @@ namespace NiceHashMiner.Properties {
             get {
                 object obj = ResourceManager.GetObject("rootCA", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Run {
+            get {
+                object obj = ResourceManager.GetObject("Run", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

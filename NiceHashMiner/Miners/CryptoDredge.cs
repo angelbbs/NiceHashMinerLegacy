@@ -137,7 +137,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             var apiBind = " --api-bind 127.0.0.1:" + ApiPort;
-            var algo = "--algo " + MiningSetup.MinerName;
+            var algo = "--algo " + MiningSetup.AlgorithmName;
             var commandLine = "";
             _benchmarkTimeWait = time;
             TotalCount = _benchmarkTimeWait / 60;

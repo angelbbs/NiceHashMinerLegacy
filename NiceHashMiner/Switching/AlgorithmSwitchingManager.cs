@@ -183,7 +183,8 @@ namespace NiceHashMiner.Switching
                     double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
                     //Helpers.ConsolePrint("**********", "MiningSession._ticks[0]: " + MiningSession._ticks[0].ToString() +
                     //    " algo: " + algo + " p1: " + p1.ToString());
-                    if (MiningSession._ticks[0] != 0 && p1 >= 20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
+                    /*
+                    if (MiningSession._ticks[0] != 0 && p1 >= 50 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
                         algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash ||
                         algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB))
                     {
@@ -194,17 +195,19 @@ namespace NiceHashMiner.Switching
                         updated = true;
                         if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
                         {
-                            MiningSession._ticks[0] = 999;
+                            //MiningSession._ticks[0] = 999;
                         } else
                         {
                             for (int d = 0; d < MiningSession._ticks.Length; d++)
                             {
-                                MiningSession._ticks[d] = 999;
+                                //MiningSession._ticks[d] = 999;
                             }
                         }
                         break;
                     }
-                    if (MiningSession._ticks[0] != 0 && p1 <= -20 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
+                    */
+                    /*
+                    if (MiningSession._ticks[0] != 0 && p1 <= -50 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
                         algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash ||
                         algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB))
                     {
@@ -215,17 +218,18 @@ namespace NiceHashMiner.Switching
                         updated = true;
                         if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
                         {
-                            MiningSession._ticks[0] = 999;
+                            //MiningSession._ticks[0] = 999;
                         }
                         else
                         {
                             for (int d = 0; d < MiningSession._ticks.Length; d++)
                             {
-                                MiningSession._ticks[d] = 999;
+                                //MiningSession._ticks[d] = 999;
                             }
                         }
                         break;
                     }
+                    */
                     
                     if (paying > _lastLegitPaying[algo])
                     {

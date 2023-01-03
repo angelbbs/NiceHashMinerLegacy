@@ -718,6 +718,7 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from github");
                     client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "configs//ProxyList.tmp");
                     string tmp = File.ReadAllText("configs//ProxyList.tmp");
+                    FileAttributes atr = File.GetAttributes("configs//ProxyList.json");
                     tmp = new string(tmp.Where(c => !char.IsControl(c)).ToArray());
                     //Helpers.ConsolePrint("**********", tmp);
                     if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
@@ -731,7 +732,7 @@ namespace NiceHashMiner
                         {
 
                         }
-                    } else if (tmp.Contains("[]"))
+                    } else if (tmp.Contains("[]") & !atr.HasFlag(FileAttributes.ReadOnly))
                     {
                         Helpers.ConsolePrint("CheckProxyList", "All proxy disabled");
                         Array.Resize(ref Globals.MiningLocation, 1);
@@ -1441,10 +1442,12 @@ namespace NiceHashMiner
                     {
                         if (Updater.Updater.GetGITHUBVersion() > 0)
                         {
+                            //new Task(() => Updater.Updater.EmergencyDownloader(Form_Main.miners_url)).Start();
                             Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
                         }
                         else if (Updater.Updater.GetGITLABVersion() > 0)
                         {
+                            //new Task(() => Updater.Updater.EmergencyDownloader(Form_Main.miners_url)).Start();
                             Updater.Updater.EmergencyDownloader(Form_Main.miners_url);
                         }
                     }
@@ -1452,10 +1455,10 @@ namespace NiceHashMiner
                     /*
                     do
                     {
-                        Thread.Sleep(1);
+                        Thread.Sleep(100);
                     } while (DownloadingInProgress);
-                    _autostartTimerDelay.Start();
-                    _autostartTimer.Start();
+                    //_autostartTimerDelay.Start();
+                    //_autostartTimer.Start();
                     */
                 }
             }
@@ -1718,6 +1721,7 @@ namespace NiceHashMiner
 
         private void AutoStartTimer_TickDelay(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
             if (ConfigManager.GeneralConfig.AutoStartMining)
             {
                 _AutoStartMiningDelay--;
@@ -1746,6 +1750,7 @@ namespace NiceHashMiner
         }
         private void AutoStartTimer_Tick(object sender, EventArgs e)
         {
+            if (DownloadingInProgress) return;
             _autostartTimer.Stop();
             _autostartTimer = null;
 
