@@ -93,6 +93,12 @@
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HidSharp.2.1.0\lib\net35\HidSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="LibreHardwareMonitorLib, Version=0.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LibreHardwareMonitorLib.0.9.1\lib\net472\LibreHardwareMonitorLib.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
@@ -106,10 +112,6 @@
     </Reference>
     <Reference Include="NvidiaGPUGetDataHost">
       <HintPath>..\Debug\common\NvidiaGPUGetDataHost.exe</HintPath>
-    </Reference>
-    <Reference Include="OpenHardwareMonitorLib, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Debug\OpenHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress">
       <HintPath>..\3rdparty\sharpcompress-0.11\SharpCompress.dll</HintPath>

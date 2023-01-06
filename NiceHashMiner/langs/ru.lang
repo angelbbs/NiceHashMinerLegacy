@@ -525,7 +525,7 @@
 "Form_Settings_DisableAlgos": "Выключить * для всех устройств",
 "Form_Settings_EnableAlgosSelectedAll": "Включить выбранные алгоритмы для всех устройств",
 "Form_Settings_DisableAlgosSelectedAll": "Выключить выбранные алгоритмы для всех устройств",
-"Form_Settings_checkbox_Use_OpenHardwareMonitor": "Использовать OpenHardwareMonitor (CPU, AMD)",
+"Form_Settings_checkbox_Use_OpenHardwareMonitor": "Использовать LibreHardwareMonitor (CPU, AMD)",
 "Form_Main_Uptime": "Время работы:",
 "Form_Main_Miner": "Майнер: ",
 "Form_Settings_checkBox_ShowUptime": "Показывать время работы",

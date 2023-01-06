@@ -1,8 +1,9 @@
 using ATI.ADL;
+using LibreHardwareMonitor.Hardware;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
-using OpenHardwareMonitor.Hardware;
+//using OpenHardwareMonitor.Hardware;
 using System;
 using System.Runtime.InteropServices;
 
@@ -39,13 +40,13 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            if (hardware.HardwareType == HardwareType.GpuAmd)
                             {
                                 //hardware.Update();
-                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -97,13 +98,13 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            if (hardware.HardwareType == HardwareType.GpuAmd)
                             {
                                 //hardware.Update();
-                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -152,13 +153,13 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            if (hardware.HardwareType == HardwareType.GpuAmd)
                             {
                                 //hardware.Update();
-                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -218,13 +219,13 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            if (hardware.HardwareType == HardwareType.GpuAmd)
                             {
                                 //hardware.Update();
-                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -274,13 +275,13 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
-                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            if (hardware.HardwareType == HardwareType.GpuAmd)
                             {
                                 //hardware.Update();
-                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)
@@ -347,6 +348,13 @@ namespace NiceHashMiner.Devices
                         if (result == ADL.ADL_SUCCESS)
                         {
                             return (double)(power / (1 << 8)) + addAMD;
+                        } else
+                        {
+                            result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex, 0, ref power); //0
+                            if (result == ADL.ADL_SUCCESS)
+                            {
+                                return (double)(power / (1 << 8)) + addAMD;
+                            }
                         }
                     }
                 }
@@ -354,14 +362,13 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
                         {
-
                             //hardware.Update();
-                            if (hardware.HardwareType == HardwareType.GpuAti)
+                            if (hardware.HardwareType == HardwareType.GpuAmd)
                             {
                                 //hardware.Update();
-                                int.TryParse(hardware.Identifier.ToString().Replace("/atigpu/", ""), out var gpuId);
+                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
                                 if (gpuId == _adapterIndex)
                                 {
                                     foreach (var sensor in hardware.Sensors)

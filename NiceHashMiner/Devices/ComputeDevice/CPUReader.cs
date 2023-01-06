@@ -1,5 +1,6 @@
+using LibreHardwareMonitor.Hardware;
 using NiceHashMiner;
-using OpenHardwareMonitor.Hardware;
+//using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
 
@@ -7,8 +8,8 @@ namespace ComputeDeviceCPU
 {
     public class CpuReader
     {
-        private static readonly Computer _computer = new Computer { CPUEnabled = true };
-        private static readonly Computer _mainboard = new Computer { MainboardEnabled = true };
+        private static readonly Computer _computer = new Computer { IsCpuEnabled = true };
+        private static readonly Computer _mainboard = new Computer { IsMotherboardEnabled = true };
         /*
         public static CpuTemperatureReader()
         {
@@ -80,7 +81,7 @@ namespace ComputeDeviceCPU
             {
                 //hardware.Update(); //use hardware.Name to get CPU model
 
-                if (hardware.HardwareType == HardwareType.Mainboard)
+                if (hardware.HardwareType == HardwareType.Motherboard)
                 {
                     hardware.Update();
                     //  Helpers.ConsolePrint("!all CPU:", hardware.Name + " " + hardware.HardwareType.ToString());

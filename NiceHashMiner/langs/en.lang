@@ -549,7 +549,7 @@
 "Form_Settings_DisableAlgos": "Disable * for all devices",
 "Form_Settings_EnableAlgosSelectedAll": "Enable selected algorithms for all devices",
 "Form_Settings_DisableAlgosSelectedAll": "Disable selected algorithms for all devices",
-"Form_Settings_checkbox_Use_OpenHardwareMonitor": "Use OpenHardwareMonitor",
+"Form_Settings_checkbox_Use_OpenHardwareMonitor": "Use LibreHardwareMonitor",
 "Form_Main_Uptime": "Uptime:",
 "Form_Main_Miner": "Miner: ",
 "Form_Settings_checkBox_ShowUptime": "Show uptime",

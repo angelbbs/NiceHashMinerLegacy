@@ -22,11 +22,12 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner
 {
+    using LibreHardwareMonitor.Hardware;
     using Microsoft.Win32;
     using Newtonsoft.Json;
     using NiceHashMiner.Miners.Grouping;
     using NiceHashMinerLegacy.Divert;
-    using OpenHardwareMonitor.Hardware;
+    //using OpenHardwareMonitor.Hardware;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data;
@@ -1307,9 +1308,9 @@ namespace NiceHashMiner
             new Task(() => FlushCache()).Start();
             if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {
-                thisComputer = new OpenHardwareMonitor.Hardware.Computer();
-                thisComputer.GPUEnabled = true;
-                thisComputer.CPUEnabled = true;
+                thisComputer = new LibreHardwareMonitor.Hardware.Computer();
+                thisComputer.IsGpuEnabled = true;
+                thisComputer.IsCpuEnabled = true;
                 thisComputer.Open();
             }
 
@@ -1645,7 +1646,7 @@ namespace NiceHashMiner
                 }
             } catch (Exception ex)
             {
-                Helpers.ConsolePrint("MinersGetVersionWatchdog", ex.ToString());
+                //Helpers.ConsolePrint("MinersGetVersionWatchdog", ex.ToString());
             }
         }
 
@@ -3724,7 +3725,7 @@ public static void CloseChilds(Process parentId)
                     {
                         foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAti || hardware.HardwareType == HardwareType.CPU)
+                            if (hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.Cpu)
                             {
                                 new Task(() => hardware.Update()).Start();
                             }

@@ -2,6 +2,9 @@
 {
     public enum AlgorithmType
     {
+        //triple
+        AutolykosKHeavyHashZil = -120,
+
         // dual algos for grouping
         AutolykosZil = -73,
         AutolykosKHeavyHash = -20,
