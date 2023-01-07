@@ -25,11 +25,11 @@ namespace NiceHashMiner.Forms.Components {
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
-            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.TextBox();
             this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.secondaryFieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.field_PowerUsage = new NiceHashMiner.Forms.Components.Field();
+            this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
+            this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.TextBox();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
@@ -64,13 +64,49 @@ namespace NiceHashMiner.Forms.Components {
             this.flowLayoutPanel1.Size = new System.Drawing.Size(276, 191);
             this.flowLayoutPanel1.TabIndex = 12;
             // 
+            // fieldBoxBenchmarkSpeed
+            // 
+            this.fieldBoxBenchmarkSpeed.AutoSize = true;
+            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.fieldBoxBenchmarkSpeed.EntryText = "";
+            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
+            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 0);
+            this.fieldBoxBenchmarkSpeed.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
+            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(269, 26);
+            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
+            // 
+            // secondaryFieldBoxBenchmarkSpeed
+            // 
+            this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
+            this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
+            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Speed (H/s):";
+            this.secondaryFieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 26);
+            this.secondaryFieldBoxBenchmarkSpeed.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
+            this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(269, 26);
+            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
+            // 
+            // field_PowerUsage
+            // 
+            this.field_PowerUsage.AutoSize = true;
+            this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
+            this.field_PowerUsage.EntryText = "";
+            this.field_PowerUsage.LabelText = "Power Usage (W):";
+            this.field_PowerUsage.Location = new System.Drawing.Point(3, 52);
+            this.field_PowerUsage.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.field_PowerUsage.Name = "field_PowerUsage";
+            this.field_PowerUsage.Size = new System.Drawing.Size(269, 26);
+            this.field_PowerUsage.TabIndex = 15;
+            // 
             // groupBoxExtraLaunchParameters
             // 
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
             this.groupBoxExtraLaunchParameters.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 99);
+            this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 81);
             this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
-            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(270, 84);
+            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(270, 54);
             this.groupBoxExtraLaunchParameters.TabIndex = 14;
             this.groupBoxExtraLaunchParameters.TabStop = false;
             this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
@@ -85,41 +121,8 @@ namespace NiceHashMiner.Forms.Components {
             this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(6, 16);
             this.richTextBoxExtraLaunchParameters.Multiline = true;
             this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
-            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(258, 62);
+            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(258, 32);
             this.richTextBoxExtraLaunchParameters.TabIndex = 17;
-            // 
-            // fieldBoxBenchmarkSpeed
-            // 
-            this.fieldBoxBenchmarkSpeed.AutoSize = true;
-            this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.fieldBoxBenchmarkSpeed.EntryText = "";
-            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
-            this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 3);
-            this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
-            this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
-            this.fieldBoxBenchmarkSpeed.TabIndex = 1;
-            // 
-            // secondaryFieldBoxBenchmarkSpeed
-            // 
-            this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
-            this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
-            this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
-            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Speed (H/s):";
-            this.secondaryFieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 35);
-            this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
-            this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(278, 26);
-            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
-            // 
-            // field_PowerUsage
-            // 
-            this.field_PowerUsage.AutoSize = true;
-            this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
-            this.field_PowerUsage.EntryText = "";
-            this.field_PowerUsage.LabelText = "Power Usage (W):";
-            this.field_PowerUsage.Location = new System.Drawing.Point(3, 67);
-            this.field_PowerUsage.Name = "field_PowerUsage";
-            this.field_PowerUsage.Size = new System.Drawing.Size(278, 26);
-            this.field_PowerUsage.TabIndex = 15;
             // 
             // AlgorithmSettingsControl
             // 

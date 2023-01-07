@@ -619,6 +619,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_pec", "--pec", "--pec", "1", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_Intensity", "-i", "--intensity", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_DualIntensity", "-di", "--dual_intensity", "-1", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("GMiner_ZilDualIntensity", "-zildi", "--zildual_intensity", "-1", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_OC", "--oc", "--oc", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("GMiner_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("GMiner_mt", "--mt", "--mt", "0", MinerOptionFlagType.MultiParam, " "),

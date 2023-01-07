@@ -178,6 +178,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Use_OpenHardwareMonitor = true;
         public bool Disable_extra_launch_parameter_checking = false;
         public bool Hide_unused_algorithms = false;
+        public bool Zilliqua_GMiner = true;
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
         public bool StrongDeviceName = true;

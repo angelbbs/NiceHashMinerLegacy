@@ -2,6 +2,11 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Management;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices
 {
@@ -9,7 +14,7 @@ namespace NiceHashMiner.Devices
     public class CpuComputeDevice : ComputeDevice
     {
         //private readonly PerformanceCounter _cpuCounter;
-
+        private static int cpuLoad = 0;
         public override float Load
         {
             get
@@ -29,11 +34,27 @@ namespace NiceHashMiner.Devices
                     {
                         //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
                     }
+                } else
+                {
+                    new Task(() => GetLoad()).Start();
+                    return cpuLoad;
                 }
                 return -1;
             }
         }
+        private static void GetLoad()
+        {
+            PerformanceCounter cpuCounter;
+            cpuCounter = new PerformanceCounter();
+            cpuCounter.CategoryName = "Processor";
+            cpuCounter.CounterName = "% Processor Time";
+            cpuCounter.InstanceName = "_Total";
 
+
+            float cpu = cpuCounter.NextValue();
+            Thread.Sleep(1000);
+            cpuLoad = (int)cpuCounter.NextValue();
+        }
         public override float Temp
         {
             get
@@ -51,6 +72,18 @@ namespace NiceHashMiner.Devices
                     catch (Exception)
                     {
                         //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                    }
+                } else
+                {
+                    ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_PerfFormattedData_Counters_ThermalZoneInformation");
+
+                    foreach (ManagementObject queryObj in searcher.Get())
+                    {
+                        Double temperature = Convert.ToDouble(queryObj["HighPrecisionTemperature"].ToString());
+                        temperature = (temperature - 2732) / 10.0;
+                        return (float)temperature;
                     }
                 }
                 return -1;

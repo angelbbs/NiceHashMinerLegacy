@@ -29,10 +29,17 @@ namespace NiceHashMiner.Devices
                     {
                         SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_PERCENT
                     };
-                    var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
-                    if (result == ADL.ADL_SUCCESS)
+                    try
                     {
-                        return adlf.FanSpeed;
+                        var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
+                        if (result == ADL.ADL_SUCCESS)
+                        {
+                            return adlf.FanSpeed;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return -1;
                     }
                 }
                 else
@@ -40,7 +47,7 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAmd)
@@ -87,10 +94,18 @@ namespace NiceHashMiner.Devices
                     {
                         SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_RPM
                     };
-                    var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
-                    if (result == ADL.ADL_SUCCESS)
+                    try
                     {
-                        return adlf.FanSpeed;
+                        var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
+
+                        //if (result == ADL.ADL_SUCCESS)
+                        {
+                            return adlf.FanSpeed;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return -1;
                     }
                 }
                 else
@@ -98,7 +113,7 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAmd)
@@ -116,6 +131,11 @@ namespace NiceHashMiner.Devices
                                                 return (int)sensor.Value;
                                             }
                                             else return -1;
+                                        }
+                                        if (sensor.SensorType == SensorType.Control && 
+                                            sensor.Name == "GPU Fan" && sensor.Value != null)
+                                        {
+                                            return 0;
                                         }
                                     }
                                 }
@@ -142,10 +162,16 @@ namespace NiceHashMiner.Devices
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var adlt = new ADLTemperature();
-                    var result = ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt);
-                    if (result == ADL.ADL_SUCCESS)
+                    try
                     {
-                        return adlt.Temperature * 0.001f;
+                        var result = ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt);
+                        if (result == ADL.ADL_SUCCESS)
+                        {
+                            return adlt.Temperature * 0.001f;
+                        }
+                    } catch (Exception ex)
+                    {
+                        return -1;
                     }
                 }
                 else
@@ -153,7 +179,7 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAmd)
@@ -219,7 +245,7 @@ namespace NiceHashMiner.Devices
 
                     try
                     {
-                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAmd)
@@ -265,17 +291,24 @@ namespace NiceHashMiner.Devices
                 if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     var adlp = new ADLPMActivity();
-                    var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp);
-                    if (result == ADL.ADL_SUCCESS)
+                    try
                     {
-                        return adlp.ActivityPercent;
+                        var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp);
+                        if (result == ADL.ADL_SUCCESS)
+                        {
+                            return adlp.ActivityPercent;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return -1;
                     }
                 }
                 else
                 {
                     try
                     {
-                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAmd)
@@ -286,7 +319,7 @@ namespace NiceHashMiner.Devices
                                 {
                                     foreach (var sensor in hardware.Sensors)
                                     {
-                                        if (sensor.SensorType == SensorType.Load)
+                                        if (sensor.Name.ToLower().Contains("gpu core") & sensor.SensorType == SensorType.Load)
                                         {
                                             if ((int)sensor.Value >= 0)
                                             {
@@ -317,16 +350,23 @@ namespace NiceHashMiner.Devices
                     return 0;
                 }
                 var aDLPMLogDataOutput = new ADLPMLogDataOutput();
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
-                if (result == ADL.ADL_SUCCESS)
+                try
+                {
+                    var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                    if (result == ADL.ADL_SUCCESS)
                     {
-                    int i = (int)ADLSensorType.PMLOG_INFO_ACTIVITY_MEM;
-                    if (i < aDLPMLogDataOutput.sensors.Length && aDLPMLogDataOutput.sensors[i].supported != 0)
-                    {
-                        return aDLPMLogDataOutput.sensors[i].value;
+                        int i = (int)ADLSensorType.PMLOG_INFO_ACTIVITY_MEM;
+                        if (i < aDLPMLogDataOutput.sensors.Length && aDLPMLogDataOutput.sensors[i].supported != 0)
+                        {
+                            return aDLPMLogDataOutput.sensors[i].value;
+                        }
                     }
+                    return 0;
                 }
-                return 0;
+                catch (Exception ex)
+                {
+                    return 0;
+                }
             }
         }
 
@@ -348,13 +388,6 @@ namespace NiceHashMiner.Devices
                         if (result == ADL.ADL_SUCCESS)
                         {
                             return (double)(power / (1 << 8)) + addAMD;
-                        } else
-                        {
-                            result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex, 0, ref power); //0
-                            if (result == ADL.ADL_SUCCESS)
-                            {
-                                return (double)(power / (1 << 8)) + addAMD;
-                            }
                         }
                     }
                 }
@@ -362,8 +395,26 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        foreach (IHardware hardware in Form_Main.thisComputer.Hardware)
+                        foreach (var hardware in Form_Main.thisComputer.Hardware)
                         {
+                            /*
+                            Helpers.ConsolePrint("*********", hardware.Identifier.ToString());
+                            Helpers.ConsolePrint("*********", "Hardware: " + hardware.Name);
+                            foreach (IHardware subhardware in hardware.SubHardware)
+                            {
+                                Helpers.ConsolePrint("*********", "\tSubhardware: " + subhardware.Name);
+                                foreach (ISensor sensor in subhardware.Sensors)
+                                {
+                                    Helpers.ConsolePrint("*********", "\t\tSensor: " + sensor.Name + " Value: " + sensor.Value);
+                                }
+                            }
+                            foreach (ISensor sensor in hardware.Sensors)
+                            {
+                                Helpers.ConsolePrint("*********", "\tSensor: " + sensor.Name + " Value: " + sensor.Value);
+                            }
+                            */
+
+
                             //hardware.Update();
                             if (hardware.HardwareType == HardwareType.GpuAmd)
                             {

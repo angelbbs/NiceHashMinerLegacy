@@ -149,35 +149,6 @@ namespace NiceHashMiner.Forms
         private void UpdateLvi_Tick(object sender, EventArgs e)
         {
             algorithmsListView1.UpdateLvi();
-            if (Form_Main.DaggerHashimoto3GBVisible && Form_Main.DaggerHashimotoMaxEpochUpdated)
-            {
-                labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch") + "3GB";
-                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto3GBMaxEpoch.ToString();
-                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
-                Form_Main.DaggerHashimotoMaxEpochUpdated = false;
-            }
-            else
-            if (Form_Main.DaggerHashimoto4GBVisible && Form_Main.DaggerHashimotoMaxEpochUpdated)
-            {
-                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString();
-                labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch") + "4GB";
-                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
-                Form_Main.DaggerHashimotoMaxEpochUpdated = false;
-            }
-            else
-            if (Form_Main.DaggerHashimoto1070Visible && Form_Main.DaggerHashimotoMaxEpochUpdated)
-            {
-                textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto1070MaxEpoch.ToString();
-                labelMaxEpoch.Text = International.GetText("Form_Settings_MaxEpoch") + "1070";
-                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = true;
-                Form_Main.DaggerHashimotoMaxEpochUpdated = false;
-            }
-            if (!Form_Main.DaggerHashimoto1070Visible && !Form_Main.DaggerHashimoto4GBVisible &&
-                !Form_Main.DaggerHashimoto3GBVisible && !Form_Main.DaggerHashimotoMaxEpochUpdated)
-            {
-                labelMaxEpoch.Visible = textBoxMaxEpoch.Visible = false;
-                Form_Main.DaggerHashimotoMaxEpochUpdated = true;
-            }
         }
 
         #region Initializations
@@ -460,6 +431,7 @@ namespace NiceHashMiner.Forms
             checkBox_Disable_extra_launch_parameter_checking.Text = International.GetText("Form_Settings_checkBox_Disable_extra_launch_parameter_checking");
             checkBoxHideUnused.Text = International.GetText("Form_Settings_checkBox_Hide_Unused");
             checkBoxHideUnused2.Text = International.GetText("Form_Settings_checkBox_Hide_Unused");
+            checkBox_Zil_GMiner.Text = International.GetText("Form_Settings_checkBox_Zil_GMiner");
             checkBox_DisableDetectionCPU.Text = International.GetText("Form_Settings_checkBox_DisableDetectionCPU");
             label_AutoStartMiningDelay.Text = International.GetText("Form_Settings_label_AutoStartMiningDelay");
             groupBox1.Text = International.GetText("Form_Settings_groupBox1");
@@ -881,6 +853,9 @@ namespace NiceHashMiner.Forms
                 checkBoxHideUnused2.BackColor = Form_Main._backColor;
                 checkBoxHideUnused2.ForeColor = Form_Main._textColor;
 
+                checkBox_Zil_GMiner.BackColor = Form_Main._backColor;
+                checkBox_Zil_GMiner.ForeColor = Form_Main._textColor;
+
                 checkBox_ABEnableOverclock.BackColor = Form_Main._backColor;
                 checkBox_ABEnableOverclock.ForeColor = Form_Main._textColor;
                 checkBox_ABDefault_mining_stopped.BackColor = Form_Main._backColor;
@@ -988,10 +963,6 @@ namespace NiceHashMiner.Forms
                 textBox_SwitchProfitabilityThreshold.ForeColor = Form_Main._foreColor;
                 textBox_SwitchProfitabilityThreshold.BorderStyle = BorderStyle.FixedSingle;
 
-                textBoxMaxEpoch.BackColor = Form_Main._backColor;
-                textBoxMaxEpoch.ForeColor = Form_Main._foreColor;
-                textBoxMaxEpoch.BorderStyle = BorderStyle.FixedSingle;
-
                 labelRestartProgram.BackColor = Form_Main._backColor;
                 labelRestartProgram.ForeColor = Form_Main._foreColor;
 
@@ -1035,8 +1006,6 @@ namespace NiceHashMiner.Forms
 
             label_SwitchProfitabilityThreshold.Text =
                 International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
-            textBoxMaxEpoch.Visible = false;
-            labelMaxEpoch.Visible = false;
         }
 
         private void InitializeGeneralTabCallbacks()
@@ -1100,6 +1069,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxHideUnused.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxHideUnused2.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_Zil_GMiner.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABEnableOverclock.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_mining_stopped.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_program_closing.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1120,7 +1090,6 @@ namespace NiceHashMiner.Forms
                 textBox_mb.Leave += GeneralTextBoxes_Leave;
                 textBoxAddAMD.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchProfitabilityThreshold.Leave += GeneralTextBoxes_Leave;
-                textBoxMaxEpoch.Leave += GeneralTextBoxes_Leave;
 
                 textBoxScheduleFrom1.Leave += GeneralTextBoxes_Leave;
                 textBoxScheduleTo1.Leave += GeneralTextBoxes_Leave;
@@ -1252,6 +1221,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBoxHideUnused.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
                 checkBoxHideUnused2.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
+                checkBox_Zil_GMiner.Checked = ConfigManager.GeneralConfig.Zilliqua_GMiner;
                 checkBox_ABEnableOverclock.Checked = ConfigManager.GeneralConfig.ABEnableOverclock;
                 checkBox_ABDefault_mining_stopped.Checked = ConfigManager.GeneralConfig.ABDefaultMiningStopped;
                 checkBox_ABDefault_program_closing.Checked = ConfigManager.GeneralConfig.ABDefaultProgramClosing;
@@ -1599,6 +1569,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused.Checked;
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused2.Checked;
+            ConfigManager.GeneralConfig.Zilliqua_GMiner = checkBox_Zil_GMiner.Checked;
             ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
             ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
             ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;
@@ -1660,19 +1631,6 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ZoneSchedule2 = Form_Main.ZoneSchedule2;
             ConfigManager.GeneralConfig.ZoneSchedule3 = Form_Main.ZoneSchedule3;
 
-            if (Form_Main.DaggerHashimoto3GBVisible)
-            {
-                ConfigManager.GeneralConfig.DaggerHashimoto3GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
-            }
-            if (Form_Main.DaggerHashimoto4GBVisible)
-            {
-                ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
-            }
-            if (Form_Main.DaggerHashimoto1070Visible)
-            {
-                ConfigManager.GeneralConfig.DaggerHashimoto1070MaxEpoch = Helpers.ParseInt(textBoxMaxEpoch.Text);
-            }
-
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
             // update strings
@@ -1687,7 +1645,6 @@ namespace NiceHashMiner.Forms
             textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString("");
             textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString("");
             textBoxAddAMD.Text = ConfigManager.GeneralConfig.PowerAddAMD.ToString("");
-            textBoxMaxEpoch.Text = ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch.ToString("");
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)

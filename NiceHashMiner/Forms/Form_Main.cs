@@ -1637,7 +1637,7 @@ namespace NiceHashMiner
                     string m = process.ProcessName;
                     string p = process.StartInfo.WorkingDirectory;
                     if (m.Contains("MSIAfterburner") || m.Contains("NvidiaGPUGetDataHost") ||
-                        m.Contains("netsh") || m.Contains("cports") || m.Contains("sc"))
+                        m.Contains("netsh") || m.Contains("cports") || m.Contains("sc") || m.Contains("igfx"))
                     {
                         continue;
                     }

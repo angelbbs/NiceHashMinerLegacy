@@ -52,8 +52,9 @@ namespace NiceHashMiner.Forms.Components {
             this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.labelFieldIndicator);
             this.Controls.Add(this.textBox);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "Field";
-            this.Size = new System.Drawing.Size(278, 28);
+            this.Size = new System.Drawing.Size(278, 20);
             this.ResumeLayout(false);
             this.PerformLayout();
 

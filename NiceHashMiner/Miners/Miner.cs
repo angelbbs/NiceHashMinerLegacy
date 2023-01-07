@@ -37,6 +37,7 @@ namespace NiceHashMiner
         public double Speed;
         public double SecondarySpeed;
         public double PowerUsage;
+        public bool GMinerZil;
 
         public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE, MiningPair mpairs = null)
         {

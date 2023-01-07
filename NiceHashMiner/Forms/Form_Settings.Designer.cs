@@ -176,8 +176,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_DisableDetectionAMD = new System.Windows.Forms.CheckBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.checkBoxHideUnused = new System.Windows.Forms.CheckBox();
-            this.textBoxMaxEpoch = new System.Windows.Forms.TextBox();
-            this.labelMaxEpoch = new System.Windows.Forms.Label();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
@@ -211,6 +209,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.checkBox_Zil_GMiner = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxServer.SuspendLayout();
@@ -2088,9 +2087,8 @@ namespace NiceHashMiner.Forms
             // tabPageDevicesAlgos
             // 
             this.tabPageDevicesAlgos.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageDevicesAlgos.Controls.Add(this.checkBox_Zil_GMiner);
             this.tabPageDevicesAlgos.Controls.Add(this.checkBoxHideUnused);
-            this.tabPageDevicesAlgos.Controls.Add(this.textBoxMaxEpoch);
-            this.tabPageDevicesAlgos.Controls.Add(this.labelMaxEpoch);
             this.tabPageDevicesAlgos.Controls.Add(this.checkBox_Disable_extra_launch_parameter_checking);
             this.tabPageDevicesAlgos.Controls.Add(this.groupBoxAlgorithmSettings);
             this.tabPageDevicesAlgos.Controls.Add(this.algorithmSettingsControl1);
@@ -2109,7 +2107,7 @@ namespace NiceHashMiner.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxHideUnused.AutoSize = true;
             this.checkBoxHideUnused.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxHideUnused.Location = new System.Drawing.Point(378, 233);
+            this.checkBoxHideUnused.Location = new System.Drawing.Point(12, 225);
             this.checkBoxHideUnused.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxHideUnused.Name = "checkBoxHideUnused";
             this.checkBoxHideUnused.Size = new System.Drawing.Size(136, 17);
@@ -2118,31 +2116,13 @@ namespace NiceHashMiner.Forms
             this.checkBoxHideUnused.UseVisualStyleBackColor = true;
             this.checkBoxHideUnused.CheckedChanged += new System.EventHandler(this.checkBoxHideUnused_CheckedChanged);
             // 
-            // textBoxMaxEpoch
-            // 
-            this.textBoxMaxEpoch.Location = new System.Drawing.Point(233, 220);
-            this.textBoxMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBoxMaxEpoch.Name = "textBoxMaxEpoch";
-            this.textBoxMaxEpoch.Size = new System.Drawing.Size(32, 20);
-            this.textBoxMaxEpoch.TabIndex = 408;
-            // 
-            // labelMaxEpoch
-            // 
-            this.labelMaxEpoch.AutoSize = true;
-            this.labelMaxEpoch.Location = new System.Drawing.Point(5, 223);
-            this.labelMaxEpoch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelMaxEpoch.Name = "labelMaxEpoch";
-            this.labelMaxEpoch.Size = new System.Drawing.Size(206, 13);
-            this.labelMaxEpoch.TabIndex = 407;
-            this.labelMaxEpoch.Text = "Maximum Epoch of DaggerHashimoto4GB";
-            // 
             // checkBox_Disable_extra_launch_parameter_checking
             // 
             this.checkBox_Disable_extra_launch_parameter_checking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_Disable_extra_launch_parameter_checking.AutoSize = true;
             this.checkBox_Disable_extra_launch_parameter_checking.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Disable_extra_launch_parameter_checking.Location = new System.Drawing.Point(378, 210);
+            this.checkBox_Disable_extra_launch_parameter_checking.Location = new System.Drawing.Point(391, 156);
             this.checkBox_Disable_extra_launch_parameter_checking.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Disable_extra_launch_parameter_checking.Name = "checkBox_Disable_extra_launch_parameter_checking";
             this.checkBox_Disable_extra_launch_parameter_checking.Size = new System.Drawing.Size(219, 17);
@@ -2189,7 +2169,7 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
             this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 215);
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 188);
             this.algorithmSettingsControl1.TabIndex = 396;
             // 
             // devicesListViewEnableControl1
@@ -2204,7 +2184,7 @@ namespace NiceHashMiner.Forms
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 198);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 204);
             this.devicesListViewEnableControl1.TabIndex = 397;
             // 
             // tabPageOverClock
@@ -2577,6 +2557,20 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
+            // checkBox_Zil_GMiner
+            // 
+            this.checkBox_Zil_GMiner.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_Zil_GMiner.AutoSize = true;
+            this.checkBox_Zil_GMiner.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_Zil_GMiner.Location = new System.Drawing.Point(378, 195);
+            this.checkBox_Zil_GMiner.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_Zil_GMiner.Name = "checkBox_Zil_GMiner";
+            this.checkBox_Zil_GMiner.Size = new System.Drawing.Size(246, 17);
+            this.checkBox_Zil_GMiner.TabIndex = 401;
+            this.checkBox_Zil_GMiner.Text = "Enable Ziliqua (ZIL) round mining using GMiner";
+            this.checkBox_Zil_GMiner.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2737,8 +2731,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxNVMonitoring;
         private System.Windows.Forms.CheckBox checkBoxAMDmonitoring;
         private System.Windows.Forms.CheckBox checkBoxDriverWarning;
-        private System.Windows.Forms.TextBox textBoxMaxEpoch;
-        private System.Windows.Forms.Label labelMaxEpoch;
         private System.Windows.Forms.CheckBox checkBox_show_NVdevice_manufacturer;
         private System.Windows.Forms.CheckBox checkBox_ShowDeviceMemSize;
         private System.Windows.Forms.CheckBox checkBox_show_AMDdevice_manufacturer;
@@ -2833,5 +2825,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxShowMinersVersions;
         private System.Windows.Forms.CheckBox checkBoxHideUnused;
         private System.Windows.Forms.CheckBox checkBoxHideUnused2;
+        private System.Windows.Forms.CheckBox checkBox_Zil_GMiner;
     }
 }

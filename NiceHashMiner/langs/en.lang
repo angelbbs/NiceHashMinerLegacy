@@ -495,6 +495,7 @@
                 "Form_Settings_label_MBpower": "Power consumption of Motherboard, HDD(SSD) etc (W)",
                 "Form_Settings_checkBox_Disable_extra_launch_parameter_checking": "Disable extra launch parameter checking",
 		  "Form_Settings_checkBox_Hide_Unused": "Hide unused algorithms",
+		  "Form_Settings_checkBox_Zil_GMiner": "Enable Zilliqua (ZIL) round mining using GMiner",
                 "Form_Settings_checkBox_DisableDetectionCPU": "Disable CPU detection",
                 "Form_Settings_label_AutoStartMiningDelay": "seconds",
                 "Form_Settings_groupBoxMOPA": "Method of obtaining profitability of algorithms:",

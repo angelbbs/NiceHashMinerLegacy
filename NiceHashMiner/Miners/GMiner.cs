@@ -81,12 +81,21 @@ namespace NiceHashMiner.Miners
             string port = "";
             string port2 = "";
             string username = GetUsername(btcAddress, worker);
+            
+            string ZilMining = "";
+            if (ConfigManager.GeneralConfig.Zilliqua_GMiner)
+            {
+                //прокси не используется
+                ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 algo = "144_5";
                 algoName = "zhash";
                 pers = " --pers auto ";
                 port = "3369";
+                //ConfigManager.GeneralConfig.Zilliqua_GMiner
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
@@ -174,7 +183,7 @@ namespace NiceHashMiner.Miners
 
                 return GetDevicesCommandString() + nicehashstratum +
                       " --algo " + algo + " --dalgo " + algo2 + pers +
-                      GetServerDual(algoName, algoName2, username, port, port2) +
+                      GetServerDual(algoName, algoName2, username, port, port2) + ZilMining +
                       " --api " + ApiPort;
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
@@ -214,7 +223,7 @@ namespace NiceHashMiner.Miners
 
             return GetDevicesCommandString() + nicehashstratum +
                   " --algo " + algo + pers +
-                  GetServer(algoName, username, port) +
+                  GetServer(algoName, username, port) + ZilMining +
                   " --api " + ApiPort;
         }
 
@@ -786,8 +795,11 @@ namespace NiceHashMiner.Miners
                 public double speed2 { get; set; }
                 public string speed_unit { get; set; }
                 public string speed_unit2 { get; set; }
+
             }
             public Devices[] devices { get; set; }
+            public string miner { get; set; }
+            public string algorithm { get; set; }
         }
 
         public override async Task<ApiData> GetSummaryAsync()
@@ -828,11 +840,15 @@ namespace NiceHashMiner.Miners
 
             ResponseFromGMiner = ResponseFromGMiner.Replace("-nan", "0.00");
             //Helpers.ConsolePrint("->", ResponseFromGMiner);
+            string _algo = "";
+            string _miner = "";
             try
             {
                 dynamic resp = JsonConvert.DeserializeObject<JsonApiResponse>(ResponseFromGMiner);
                 if (resp != null)
                 {
+                    _miner = resp.miner;
+                    _algo = resp.algorithm;
                     double[] hashrates = new double[resp.devices.Length];
                     double[] hashrates2 = new double[resp.devices.Length];
                     for (var i = 0; i < resp.devices.Length; i++)
@@ -863,12 +879,18 @@ namespace NiceHashMiner.Miners
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Helpers.ConsolePrint("GMiner API:", "Error JSON parsing");
+                Helpers.ConsolePrint("GMiner API:", ex.ToString());
             }
             finally
             {
+                ad.GMinerZil = true;
+                if (_algo.ToLower().Contains("zil") && total2 > 0)
+                {
+                    Helpers.ConsolePrint("*******", "zil mining: " + total2.ToString());
+                    ad.GMinerZil = true;
+                }
                 ad.Speed = total;
                 ad.SecondarySpeed = total2;
 
