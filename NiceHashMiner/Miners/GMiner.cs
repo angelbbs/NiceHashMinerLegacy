@@ -86,7 +86,7 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.GeneralConfig.Zilliqua_GMiner)
             {
                 //прокси не используется
-                ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
+                //ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
@@ -126,6 +126,7 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
                 nicehashstratum = " --proto stratum";
                 port = "3353";
+                ZilMining = "";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
             {
@@ -133,6 +134,7 @@ namespace NiceHashMiner.Miners
                 algoName = "etchash";
                 nicehashstratum = " --proto stratum";
                 port = "3393";
+                ZilMining = "";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
             {
