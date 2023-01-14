@@ -170,6 +170,8 @@ namespace NiceHashMiner
         public static int apiConnectionsErrors = 0;
         public static byte[] desktop = new byte[0];
         public static int SwitchCount = 0;
+        public static bool ZilMonitorRunning = false;
+        public static bool isZilRound = false;
 
         //**
         public static string[] ZoneSchedule1 = { "00:00", "23:59", "0.00" };
@@ -1353,6 +1355,8 @@ namespace NiceHashMiner
             }
 
             _loadingScreen.SetValueAndMsg(30, "Checking server: nicehash.com");
+            this.Update();
+            this.Refresh();
             //****************
             Links.CheckDNS("https://nicehash.com");
             List<string> algos = Enum.GetNames(typeof(AlgorithmType)).ToList();
@@ -2371,7 +2375,7 @@ public static void CloseChilds(Process parentId)
         private async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
             ticks++;
-            if (ticks > 5)//100*20=2sec
+            if (ticks > 5)
             {
                 _minerStatsCheck.Interval = 1000 * 5;
             }
@@ -2492,11 +2496,22 @@ public static void CloseChilds(Process parentId)
         {
             var apiGetExceptionString = isApiGetException ? " **" : "";
             string speedString = "";
-            speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID, iApiData.DualAlgorithmID()) +
+            speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.ThirdSpeed,
+                iApiData.AlgorithmID, iApiData.DualAlgorithmID(), iApiData.ThirdAlgorithmID) +
                           iApiData.AlgorithmName + apiGetExceptionString;
             speedString = speedString.Replace("--", "0.000 H/s ");
             //еще больше костылей понаделал. Надо это всё, что от найса осталось, переделывать.
+            if (iApiData.AlgorithmID == AlgorithmType.NONE)
+            {
+                speedString = "...";
+            }
 
+            
+            if (iApiData.GMinerZil)
+            {
+                speedString = speedString + "+ZIL";
+            }
+            
             string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
             speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + speedString + "\\b\\par}";
             if (iApiData.AlgorithmID == AlgorithmType.AutolykosZil || (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto))

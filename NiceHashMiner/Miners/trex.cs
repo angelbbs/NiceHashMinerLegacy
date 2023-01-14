@@ -530,10 +530,15 @@ namespace NiceHashMiner.Miners
             return true;
         }
 
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             string resp = null;
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             if (Form_Main.NVIDIA_orderBug)

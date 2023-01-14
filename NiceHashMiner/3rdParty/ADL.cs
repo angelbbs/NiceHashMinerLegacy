@@ -507,6 +507,7 @@ namespace ATI.ADL
         internal const int ADL_SUCCESS = 0;
         /// <summary> Define the failure</summary>
         internal const int ADL_FAIL = -1;
+        internal const int ADL_ERR_INVALID_ADL_IDX = -5;
         internal const int ADL_NOT_SUPPORTED = -8;
         /// <summary> Define the driver ok</summary>
         internal const int ADL_DRIVER_OK = 0;

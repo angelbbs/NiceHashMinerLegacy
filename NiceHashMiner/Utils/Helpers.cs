@@ -220,12 +220,18 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed = 0, AlgorithmType algo = AlgorithmType.NONE, AlgorithmType algo2 = AlgorithmType.NONE)
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed = 0, double thirdSpeed = 0,
+            AlgorithmType algo = AlgorithmType.NONE, AlgorithmType algo2 = AlgorithmType.NONE, AlgorithmType algo3 = AlgorithmType.NONE)
         {
+            //Helpers.ConsolePrint("*****", " algo: " + algo.ToString() + " primarySpeed: " + primarySpeed.ToString());
+            //Helpers.ConsolePrint("*****", " algo2: " + algo2.ToString() + " secondarySpeed: " + secondarySpeed.ToString());
+            //Helpers.ConsolePrint("*****", " algo3: " + algo3.ToString() + " thirdSpeed: " + thirdSpeed.ToString());
             string ret;
-            string first;
-            string second;
+            string first = "";
+            string second = "";
+            string third = "";
             string separator = "";
+
             if (algo2 == AlgorithmType.NONE || algo == algo2)
             {
                 ret = FormatSpeedOutput(primarySpeed);
@@ -239,6 +245,7 @@ namespace NiceHashMiner
                 {
                     first = FormatSpeedOutput(primarySpeed, "", true);
                 }
+
                 if (secondarySpeed == 0)
                 {
                     second = "0";
@@ -247,42 +254,28 @@ namespace NiceHashMiner
                 {
                     second = FormatSpeedOutput(secondarySpeed, "", true);
                 }
+
+                if (thirdSpeed == 0)
+                {
+                    third = "0";
+                }
+                else
+                {
+                    third = FormatSpeedOutput(thirdSpeed, "", true);
+                }
                 ret = first + "/" + second;
                 separator = " ";
 
-                if (primarySpeed == 0 && secondarySpeed == 0)
+                if (primarySpeed == 0 && secondarySpeed == 0 && thirdSpeed == 0)
                 {
                     ret = "--";
                     return ret;
                 }
             }
 
-            /*
-            if (algo != algo2)//dual
-            {
-                if (primarySpeed == 0)
-                {
-                    first = "--";
-                } else
-                {
-                    first = FormatSpeedOutput(primarySpeed, "", true);
-                }
-                if (secondarySpeed == 0)
-                {
-                    second = "--";
-                }
-                else
-                {
-                    second = FormatSpeedOutput(secondarySpeed, "", true);
-                }
-                ret = first + "/" + second;
-            }
-            else
-            {
-                ret = FormatSpeedOutput(primarySpeed);
-            }
-            */
-            string unit;
+            string unit = "";
+            string unit2 = "";
+            string unit3 = "";
             switch (algo)
             {
                 case AlgorithmType.ZHash:
@@ -298,6 +291,52 @@ namespace NiceHashMiner
                     unit = "H/s ";
                     break;
             }
+            switch (algo2)
+            {
+                case AlgorithmType.ZHash:
+                case AlgorithmType.ZelHash:
+                case AlgorithmType.BeamV3:
+                    unit2 = "Sol/s ";
+                    break;
+                case AlgorithmType.CuckooCycle:
+                case AlgorithmType.GrinCuckatoo32:
+                    unit2 = "G/s ";
+                    break;
+                default:
+                    unit2 = "H/s ";
+                    break;
+            }
+            switch (algo3)
+            {
+                case AlgorithmType.ZHash:
+                case AlgorithmType.ZelHash:
+                case AlgorithmType.BeamV3:
+                    unit2 = "Sol/s ";
+                    break;
+                case AlgorithmType.CuckooCycle:
+                case AlgorithmType.GrinCuckatoo32:
+                    unit3 = "G/s ";
+                    break;
+                default:
+                    unit3 = "H/s ";
+                    break;
+            }
+
+            if (unit.Equals(unit2) & unit2.Equals(unit3))
+            {
+                return ret + separator + unit;
+            }
+
+            if (!unit.Equals(unit2) && secondarySpeed > 0)
+            {
+                return first + separator + unit + " + " + second + separator + unit2;
+            }
+
+            if (unit.Equals(unit2) && !unit.Equals(unit3) && thirdSpeed > 0)
+            {
+                return ret + " + " + third + separator + unit3;
+            }
+
             return ret + separator + unit;
         }
 

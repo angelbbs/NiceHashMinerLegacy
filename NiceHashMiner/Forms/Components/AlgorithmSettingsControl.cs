@@ -126,6 +126,7 @@ namespace NiceHashMiner.Forms.Components
                 }
                 else
                 {
+                    secondaryFieldBoxBenchmarkSpeed.EntryText = "";
                     secondaryFieldBoxBenchmarkSpeed.Enabled = false;
                 }
 
@@ -209,7 +210,7 @@ namespace NiceHashMiner.Forms.Components
             var speed = _currentlySelectedAlgorithm.BenchmarkSpeed;
             //var secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryBenchmarkSpeed : 0;
             var secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? _currentlySelectedAlgorithm.BenchmarkSecondarySpeed : 0;
-            var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, secondarySpeed, _currentlySelectedAlgorithm.NiceHashID, _currentlySelectedAlgorithm.DualNiceHashID);
+            var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, secondarySpeed, 0, _currentlySelectedAlgorithm.NiceHashID, _currentlySelectedAlgorithm.DualNiceHashID);
             speedString = speedString.Replace("--", "");
             AlgorithmType algo = AlgorithmType.NONE;
             /*

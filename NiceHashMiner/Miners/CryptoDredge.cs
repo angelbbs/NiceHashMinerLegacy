@@ -298,10 +298,15 @@ namespace NiceHashMiner.Miners
         }
         #endregion // Decoupled benchmarking routines
 
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             double tmp = 0;
 
             string resp = null;

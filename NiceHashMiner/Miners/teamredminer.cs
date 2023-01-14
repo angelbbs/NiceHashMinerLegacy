@@ -421,10 +421,15 @@ namespace NiceHashMiner.Miners
 
         #endregion // Decoupled benchmarking routines
 
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             var resp2 = await GetApiDataAsync(ApiPort, "devs");
             if (resp2 == null)
             {

@@ -866,18 +866,30 @@ namespace NiceHashMiner.Miners
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
             try
             {
-                Miner m;
                 foreach (var groupMiners in checks)
                 {
-                    m = groupMiners.Miner;
+                    Miner m = groupMiners.Miner;
                     // skip if not running or if await already in progress
                     // if (!Miner.IsRunning || m.IsUpdatingApi) continue;
-                    if (!m.IsRunning || m.IsUpdatingApi) continue;
+                    //m.TicksForApiUpdate++;
+                    //if (m.TicksForApiUpdate >= 5) m.TicksForApiUpdate = 0;
+                    if (!m.IsRunning || m.IsUpdatingApi || m == null) continue;
                     // continue;
 
                     m.IsUpdatingApi = true;
-                    var ad = await m.GetSummaryAsync();
+                    try
+                    {
+                        new Task(() => m.GetSummaryAsync()).Start();
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        Helpers.ConsolePrint("MinerStatsCheck", ex.ToString());
+                    }
+
+                    var ad = m.GetApiData();
+                    //var ad = await m.GetSummaryAsync();
                     m.IsUpdatingApi = false;
+                    /*
                     if (ad == null)
                     {
                         Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
@@ -887,7 +899,7 @@ namespace NiceHashMiner.Miners
                         m.IsUpdatingApi = false;
 
                     }
-
+                    */
                     // set rates
                     //if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     if (ad != null)
@@ -926,7 +938,7 @@ namespace NiceHashMiner.Miners
                         groupMiners.CurrentRate, groupMiners.PowerRate, groupMiners.StartMinerTime,
                         m.IsApiReadException, m.ProcessTag());
                 }
-                m = null;
+                //m = null;
             }
             catch (Exception e)
             {

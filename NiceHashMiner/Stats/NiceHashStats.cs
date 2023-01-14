@@ -1425,6 +1425,7 @@ namespace NiceHashMiner.Stats
             string nuuid = "";
             double HashRate = 0.0d;
             double SecondHashRate = 0.0d;
+            double ThirdHashRate = 0.0d;
 
             if (state != null)
                 rigStatus = state.ToString();
@@ -1648,6 +1649,7 @@ namespace NiceHashMiner.Stats
 
                         HashRate = device.MiningHashrate;
                         SecondHashRate = device.MiningHashrateSecond;
+                        ThirdHashRate = device.MiningHashrateThird;
                         
                         if (rigs == 1 & device.AlgorithmID > 0)
                         {
@@ -1655,6 +1657,10 @@ namespace NiceHashMiner.Stats
                             if (device.SecondAlgorithmID > 0)
                             {
                                 speedsJson.Add(new JArray(device.SecondAlgorithmID, SecondHashRate)); 
+                            }
+                            if (device.ThirdAlgorithmID > 0)
+                            {
+                                speedsJson.Add(new JArray(device.ThirdAlgorithmID, ThirdHashRate));
                             }
                         }
                         if (rigs == 1 & (device.AlgorithmID == -9) || device.AlgorithmID == -12) //dagger 3-4

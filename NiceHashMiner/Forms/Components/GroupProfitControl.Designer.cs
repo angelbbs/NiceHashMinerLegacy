@@ -107,6 +107,8 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // richTextBoxSpeedValue
             // 
+            this.richTextBoxSpeedValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxSpeedValue.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxSpeedValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.richTextBoxSpeedValue.ForeColor = System.Drawing.Color.Red;

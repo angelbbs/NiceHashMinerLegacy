@@ -337,6 +337,11 @@ namespace NiceHashMiner.Miners
         #endregion // Decoupled benchmarking routines
 
 
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
@@ -344,7 +349,7 @@ namespace NiceHashMiner.Miners
             {
                 sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             }
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             string dataToSend;
 
             dataToSend = GetHttpRequestNhmAgentStrin("summary?gpuinfo=1");

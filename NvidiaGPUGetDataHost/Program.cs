@@ -15,18 +15,12 @@ namespace NvidiaGPUGetDataHost
 {
     class Program
     {
-        public static List<NvData> gpuList;
         private static bool isclosing = false;
         [Serializable]
-        public struct NvData
+        public struct GpuData
         {
-            public uint nGpu;
-            public uint power;
-            public uint fan;
-            public uint load;
-            public uint loadMem;
-            public uint temp;
-            public uint tempMem;
+            public uint busID;
+            public string Name;
         }
 
         private readonly nvmlDevice _nvmlDevice;
@@ -95,9 +89,21 @@ namespace NvidiaGPUGetDataHost
                     Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetCount error: " + ret.ToString());
                     return;
                 }
-                Logger.ConsolePrint("NvidiaGPUGetDataHost", "NVIDIA devices: " + devCount.ToString());
-
-                List<NvData> gpuList = new List<NvData>();
+                Logger.ConsolePrint("NvidiaGPUGetDataHost", "NVIDIA devices count: " + devCount.ToString());
+                nvmlDevice device = new nvmlDevice();
+                nvmlPciInfo devPci = new nvmlPciInfo();
+                List<GpuData> GpuDataList = new List<GpuData>();
+                for (uint dev = 0; dev < devCount; dev++)
+                {
+                    NvmlNativeMethods.nvmlDeviceGetHandleByIndex(dev, ref device);
+                    NvmlNativeMethods.nvmlDeviceGetName(device, out string devName);
+                    NvmlNativeMethods.nvmlDeviceGetPciInfo(device, ref devPci);
+                    GpuData _GpuData = new GpuData();
+                    _GpuData.busID = devPci.bus;
+                    _GpuData.Name = devName;
+                    GpuDataList.Add(_GpuData);
+                    Logger.ConsolePrint("NvidiaGPUGetDataHost", "NVIDIA device: " + devName + " busID: " + devPci.bus.ToString()); ;
+                }
 
                 int ticks = 0;
                 int errors = 0;
@@ -200,7 +206,24 @@ namespace NvidiaGPUGetDataHost
                             var gpus = NvAPIWrapper.GPU.PhysicalGPU.GetPhysicalGPUs();
                             var sorted = gpus.OrderBy(x => x.GPUId).ToArray();
 
+                            if (sorted.Count() != devCount)
+                            {
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost", "GetPhysicalGPUs count missmath: " + sorted.Count().ToString());
 
+                                List<int> busIds = new List<int>();
+                                foreach (var _g in sorted)
+                                {
+                                    busIds.Add(_g.BusInformation.BusId);
+                                }
+
+                                foreach (var g in GpuDataList)
+                                {
+                                    if (!busIds.Contains((int)g.busID))
+                                    {
+                                        Logger.ConsolePrint("NvidiaGPUGetDataHost", "Stuck GPU: " + g.Name + " BusId: " + g.busID.ToString());
+                                    }
+                                }
+                            }
                             var gpu = sorted[dev];
                             NvmlNativeMethods.nvmlDeviceGetName(_nvmlDevice, out string name);
                             //Logger.ConsolePrint("NvidiaGPUGetDataHost", "dev: " + dev + " nvml.name: " + name + " api.FullName: " + gpu.FullName + " api.GPUId: " + gpu.GPUId.ToString());

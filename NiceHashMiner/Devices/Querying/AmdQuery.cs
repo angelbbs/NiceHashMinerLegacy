@@ -181,7 +181,7 @@ namespace NiceHashMiner.Devices.Querying
                         var deviceName = _busIdInfos[busID].Name;
                         var manufacturer = _busIdInfos[busID].MF;
 
-                        var newAmdDev = new AmdGpuDevice(dev, false,
+                        AmdGpuDevice newAmdDev = new AmdGpuDevice(dev, false,
                             _busIdInfos[busID].InfSection, false)
                         {
                             DeviceName = deviceName,
@@ -190,7 +190,8 @@ namespace NiceHashMiner.Devices.Querying
                             AMDManufacturer = _busIdInfos[busID].MF,
                             DeviceGlobalMemory = gpuRAM
                         };
-
+                        
+                        int _prevmonitorRefreshRate = 0;
                         //*************
                         string PnpDeviceID = "";
                         ulong gpumem = 0;
@@ -201,7 +202,7 @@ namespace NiceHashMiner.Devices.Querying
                         foreach (var manObj in moc)
                         {
                             ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
-                            int.TryParse(SafeGetProperty(manObj, "CurrentRefreshRate"), out var _monitorConnected);
+                            int.TryParse(SafeGetProperty(manObj, "CurrentRefreshRate"), out var _monitorRefreshRate);
                             PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
                             gpumem = memTmp + gpumemadd‬;
 
@@ -209,7 +210,17 @@ namespace NiceHashMiner.Devices.Querying
 
                             if (PnpDeviceID.Split('&')[4].Equals(newAmdDev.UUID.Split('_')[4]))
                             {
-                                if (_monitorConnected > 0) newAmdDev.MonitorConnected = true;
+                                if (_monitorRefreshRate > 0 & _monitorRefreshRate > _prevmonitorRefreshRate)
+                                {
+                                    /*
+                                    foreach (var d in ComputeDeviceManager.Available.Devices)
+                                    {
+                                        d.MonitorConnected = false;
+                                    }
+                                    */
+                                    //_prevmonitorRefreshRate = _monitorRefreshRate;
+                                    newAmdDev.MonitorConnected = true;
+                                }
                                 if (newAmdDev.DeviceGlobalMemory < gpumem)
                                 {
                                     Helpers.ConsolePrint("AMDQUERY", deviceName + " GPU mem size is not equal: " + newAmdDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());

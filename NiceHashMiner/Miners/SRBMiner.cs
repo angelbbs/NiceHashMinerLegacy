@@ -32,6 +32,7 @@ namespace NiceHashMiner.Miners
 
         public SRBMiner() : base("SRBMiner")
         {
+            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             GPUPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
         }
 
@@ -332,10 +333,14 @@ namespace NiceHashMiner.Miners
         {
             return 60 * 1000 * 5;  // 5 min
         }
-        public override async Task<ApiData> GetSummaryAsync()
-        {
 
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
+        private ApiData ad = new ApiData(AlgorithmType.NONE);
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
+        public override async Task<ApiData> GetSummaryAsync()
+        {            
             string ResponseFromSRBMiner;
             try
             {
@@ -362,6 +367,7 @@ namespace NiceHashMiner.Miners
 
             dynamic resp = JsonConvert.DeserializeObject(ResponseFromSRBMiner);
             //Helpers.ConsolePrint("API ResponseFromSRBMiner:", ResponseFromSRBMiner.ToString());
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
 
             if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
             {
@@ -512,7 +518,7 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("API error", ex.Message);
+                //Helpers.ConsolePrint("API error", ex.Message);
                 Helpers.ConsolePrint("API error", ex.ToString());
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = 0;

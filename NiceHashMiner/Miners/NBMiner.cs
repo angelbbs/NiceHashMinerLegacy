@@ -429,10 +429,15 @@ namespace NiceHashMiner.Miners
             return third == 0x7d && second == 0xa && last == 0x7d;
         }
 
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-            ApiData ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
 
             ad = new ApiData(MiningSetup.CurrentAlgorithmType);

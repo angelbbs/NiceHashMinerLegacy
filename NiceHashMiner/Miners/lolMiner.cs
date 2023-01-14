@@ -761,9 +761,15 @@ namespace NiceHashMiner.Miners
             public double sol_ps { get; set; } = 0;
         }
         // TODO _currentMinerReadStatus
+
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
             string ResponseFromlolMiner;
             try
             {

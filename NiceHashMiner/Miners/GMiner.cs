@@ -66,6 +66,10 @@ namespace NiceHashMiner.Miners
         protected override void _Stop(MinerStopType willswitch)
         {
             Helpers.ConsolePrint("GMINER Stop", "");
+            if (ConfigManager.GeneralConfig.Zilliqua_GMiner && Form_Main.ZilMonitorRunning)
+            {
+                ZilClient.needConnectionZIL = false;
+            }
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             KillGminer();
         }
@@ -86,7 +90,7 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.GeneralConfig.Zilliqua_GMiner)
             {
                 //прокси не используется
-                //ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
+                ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
@@ -95,7 +99,6 @@ namespace NiceHashMiner.Miners
                 algoName = "zhash";
                 pers = " --pers auto ";
                 port = "3369";
-                //ConfigManager.GeneralConfig.Zilliqua_GMiner
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
@@ -795,8 +798,10 @@ namespace NiceHashMiner.Miners
                 public int gpu_id { get; set; }
                 public double speed { get; set; }
                 public double speed2 { get; set; }
+                public double speed3 { get; set; }
                 public string speed_unit { get; set; }
                 public string speed_unit2 { get; set; }
+                public string speed_unit3 { get; set; }
 
             }
             public Devices[] devices { get; set; }
@@ -804,20 +809,27 @@ namespace NiceHashMiner.Miners
             public string algorithm { get; set; }
         }
 
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             //Helpers.ConsolePrint("try API...........", "");
-            ApiData ad;
+            //ApiData ad;
+
             ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             string ResponseFromGMiner;
             double total = 0;
             double total2 = 0;
+            double total3 = 0;
             try
             {
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/stat");
                 WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
-                WR.Timeout = 30 * 1000;
+                WR.Timeout = 3 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
@@ -835,12 +847,9 @@ namespace NiceHashMiner.Miners
                 return null;
             }
 
-            if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
-            {
-                ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
-            }
-
+            
             ResponseFromGMiner = ResponseFromGMiner.Replace("-nan", "0.00");
+            ResponseFromGMiner = ResponseFromGMiner.Replace("(ind)", "");
             //Helpers.ConsolePrint("->", ResponseFromGMiner);
             string _algo = "";
             string _miner = "";
@@ -853,12 +862,18 @@ namespace NiceHashMiner.Miners
                     _algo = resp.algorithm;
                     double[] hashrates = new double[resp.devices.Length];
                     double[] hashrates2 = new double[resp.devices.Length];
+                    double[] hashrates3 = new double[resp.devices.Length];
                     for (var i = 0; i < resp.devices.Length; i++)
                     {
                         total = total + resp.devices[i].speed;
                         total2 = total2 + resp.devices[i].speed2;
+                        total3 = total3 + resp.devices[i].speed3;
                         hashrates[i] = resp.devices[i].speed;
                         hashrates2[i] = resp.devices[i].speed2;
+                        hashrates3[i] = resp.devices[i].speed3;
+                        Helpers.ConsolePrint("****", " dev: " + i.ToString() + " hr1: " + hashrates[i].ToString() +
+                            " hr2: " + hashrates2[i].ToString() +
+                            " hr3: " + hashrates3[i].ToString());
                     }
                     int dev = 0;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
@@ -872,6 +887,35 @@ namespace NiceHashMiner.Miners
                         _power = mPair.Device.PowerUsage;
                         mPair.Device.MiningHashrate = hashrates[dev];
                         mPair.Device.MiningHashrateSecond = hashrates2[dev];
+                        mPair.Device.MiningHashrateThird = hashrates3[dev];
+
+                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+                        {
+                            if (Form_Main.isZilRound)
+                            {
+                                mPair.Device.MiningHashrate = 0;
+                                mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.DaggerHashimoto;
+                            }
+                            else
+                            {
+                                mPair.Device.MiningHashrateThird = 0;
+                                mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
+                            }
+                        }
+                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)
+                        {
+                            if (Form_Main.isZilRound)
+                            {
+                                mPair.Device.MiningHashrate = 0;
+                                mPair.Device.SecondAlgorithmID = (int)AlgorithmType.DaggerHashimoto;
+                            }
+                            else
+                            {
+                                mPair.Device.MiningHashrateSecond = 0;
+                                mPair.Device.MiningHashrateThird = 0;
+                                mPair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                            }
+                        }
                         dev++;
                     }
                 }
@@ -887,23 +931,84 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
-                ad.GMinerZil = true;
-                if (_algo.ToLower().Contains("zil") && total2 > 0)
+                if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))//???
                 {
-                    Helpers.ConsolePrint("*******", "zil mining: " + total2.ToString());
-                    ad.GMinerZil = true;
+                    ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
                 }
+
+                ad.GMinerZil = false;
                 ad.Speed = total;
                 ad.SecondarySpeed = total2;
+                ad.ThirdSpeed = total3;
 
-                if (ad.Speed == 0)
+                if (Form_Main.isZilRound)
+                {
+                    if (MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE)//dual
+                    {
+                        if (_algo.ToLower().Contains("zil") && total3 > 0)//dual+zil
+                        {
+                            ad.Speed = 0;
+                            ad.SecondarySpeed = total2;
+                            ad.ThirdSpeed = total3;
+                            ad.GMinerZil = true;
+                            ad.ThirdAlgorithmID = AlgorithmType.DaggerHashimoto;
+                        }
+                    }
+                    else
+                    {
+                        if (_algo.ToLower().Contains("zil") && total2 > 0)//+zil
+                        {
+                            ad.Speed = 0;
+                            ad.SecondarySpeed = total2;
+                            ad.ThirdSpeed = 0;
+                            ad.GMinerZil = true;
+                            ad.SecondaryAlgorithmID = AlgorithmType.DaggerHashimoto;
+                        }
+                    }
+                }
+                else
+                {
+                    if (MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE)//dual
+                    {
+                        if (_algo.ToLower().Contains("zil"))//dual
+                        {
+                            ad.Speed = total;
+                            ad.SecondarySpeed = total2;
+                            ad.ThirdSpeed = 0;
+                            ad.GMinerZil = false;
+                            ad.ThirdAlgorithmID = AlgorithmType.NONE;
+                        }
+                    }
+                    else
+                    {
+                        if (_algo.ToLower().Contains("zil"))
+                        {
+                            ad.Speed = total;
+                            ad.SecondarySpeed = 0;
+                            ad.ThirdSpeed = 0;
+                            ad.GMinerZil = false;
+                            ad.SecondaryAlgorithmID = AlgorithmType.NONE;
+                            ad.ThirdAlgorithmID = AlgorithmType.NONE;
+                        }
+                    }
+                }
+
+                if (ad.Speed == 0 && ad.SecondarySpeed == 0 && ad.ThirdSpeed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }
                 else
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                    if (ConfigManager.GeneralConfig.Zilliqua_GMiner && !Form_Main.ZilMonitorRunning &&
+                        _algo.ToLower().Contains("zil"))
+                    {
+                        ZilClient.needConnectionZIL = true;
+                        Form_Main.ZilMonitorRunning = true;
+                        new Task(() => ZilClient.StartZilMonitor()).Start();
+                    }
                 }
+
             }
 
             Thread.Sleep(100);

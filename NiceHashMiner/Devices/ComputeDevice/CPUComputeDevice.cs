@@ -15,6 +15,7 @@ namespace NiceHashMiner.Devices
     {
         //private readonly PerformanceCounter _cpuCounter;
         private static int cpuLoad = 0;
+        private static float cpuTemp = -1;
         public override float Load
         {
             get
@@ -55,6 +56,26 @@ namespace NiceHashMiner.Devices
             Thread.Sleep(1000);
             cpuLoad = (int)cpuCounter.NextValue();
         }
+        private static void GetTemp()
+        {
+            try
+            {
+                ManagementObjectSearcher searcher =
+                new ManagementObjectSearcher("root\\CIMV2",
+                "SELECT * FROM Win32_PerfFormattedData_Counters_ThermalZoneInformation");
+
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    Double temperature = Convert.ToDouble(queryObj["HighPrecisionTemperature"].ToString());
+                    temperature = (temperature - 2732) / 10.0;
+                    cpuTemp = (float)temperature;
+                }
+            }
+            catch (Exception ex)
+            {
+                cpuTemp = -1;
+            }
+        }
         public override float Temp
         {
             get
@@ -75,16 +96,8 @@ namespace NiceHashMiner.Devices
                     }
                 } else
                 {
-                    ManagementObjectSearcher searcher =
-                    new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_PerfFormattedData_Counters_ThermalZoneInformation");
-
-                    foreach (ManagementObject queryObj in searcher.Get())
-                    {
-                        Double temperature = Convert.ToDouble(queryObj["HighPrecisionTemperature"].ToString());
-                        temperature = (temperature - 2732) / 10.0;
-                        return (float)temperature;
-                    }
+                    new Task(() => GetTemp()).Start();
+                    return cpuTemp;
                 }
                 return -1;
             }

@@ -316,7 +316,7 @@ namespace NiceHashMiner.Algorithms
 
             if (BenchmarkSpeed > 0)
             {
-                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, NiceHashID);
+                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, 0,  NiceHashID);
             }
             //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
             return International.GetText("BenchmarkSpeedStringNone");
@@ -325,7 +325,7 @@ namespace NiceHashMiner.Algorithms
         {
             if (BenchmarkSecondarySpeed > 0)
             {
-                return Helpers.FormatDualSpeedOutput(BenchmarkSecondarySpeed, 0, DualNiceHashID);
+                return Helpers.FormatDualSpeedOutput(BenchmarkSecondarySpeed, 0, 0, DualNiceHashID);
             }
             //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
             if (!string.IsNullOrEmpty(BenchmarkStatus) && BenchmarkActive)

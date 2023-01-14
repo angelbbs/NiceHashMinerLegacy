@@ -70,6 +70,7 @@ namespace NiceHashMiner.Devices
 
         public double MiningHashrate = 0.0d;
         public double MiningHashrateSecond = 0.0d;
+        public double MiningHashrateThird = 0.0d;
 
         public string InfSection { get; protected set; }
 
@@ -82,6 +83,7 @@ namespace NiceHashMiner.Devices
         public string TuningCopyUuid { get; set; }
         public int AlgorithmID = -1;
         public int SecondAlgorithmID = -1;
+        public int ThirdAlgorithmID = -1;
         public string MinerName = "";
         public string MinerVersion = "";
 

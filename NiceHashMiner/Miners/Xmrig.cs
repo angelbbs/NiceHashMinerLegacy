@@ -169,7 +169,7 @@ namespace NiceHashMiner.Miners
 
         protected async Task<ApiData> GetSummaryCpuAsyncXMRig(string method = "", bool overrideLoop = false)
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             try
             {
@@ -234,7 +234,11 @@ namespace NiceHashMiner.Miners
             return ad;
         }
 
-
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             return await GetSummaryCpuAsyncXMRig();

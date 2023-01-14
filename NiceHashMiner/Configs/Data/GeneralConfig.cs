@@ -23,6 +23,7 @@ namespace NiceHashMiner.Configs.Data
         public int DaggerHashimoto3GBMaxEpoch = 235;
         public int DaggerHashimoto4GBMaxEpoch = 352;
         public int DaggerHashimoto1070MaxEpoch = 371;
+        public int ZILMaxEpoch = 0;
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";
         public bool Show_displayConected = false;

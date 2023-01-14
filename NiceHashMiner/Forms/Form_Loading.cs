@@ -103,6 +103,8 @@ namespace NiceHashMiner
             this.Update();
             progressBar2.Update();
             progressBar2.Refresh();
+            this.Update();
+            this.Refresh();
             Thread.Sleep(10);
             /*
             if (progressBar2.Value >= progressBar2.Maximum)

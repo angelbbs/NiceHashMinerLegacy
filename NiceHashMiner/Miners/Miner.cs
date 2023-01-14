@@ -32,10 +32,12 @@ namespace NiceHashMiner
     {
         public AlgorithmType AlgorithmID;
         public AlgorithmType SecondaryAlgorithmID;
+        public AlgorithmType ThirdAlgorithmID;
         public string AlgorithmName;
         public string AlgorithmNameCustom;
         public double Speed;
         public double SecondarySpeed;
+        public double ThirdSpeed;
         public double PowerUsage;
         public bool GMinerZil;
 
@@ -204,6 +206,7 @@ namespace NiceHashMiner
         private bool _isEnded;
 
         public bool IsUpdatingApi = false;
+        public int TicksForApiUpdate = 0;
 
         protected const string HttpHeaderDelimiter = "\r\n\r\n";
 
@@ -680,50 +683,6 @@ namespace NiceHashMiner
             return 0.0d;
         }
 
-        protected async Task<ApiData> GetSummaryCPU_hsrneoscryptAsync()
-        {
-            string resp;
-            // TODO aname
-            string aname = null;
-            ApiData ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-            string DataToSend = GetHttpRequestNhmAgentStrin("summary");
-
-            resp = await GetApiDataAsync(ApiPort, DataToSend);
-            if (resp == null)
-            {
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " summary is null");
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                return null;
-            }
-
-            try
-            {
-                string[] resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < resps.Length; i++)
-                {
-                    string[] optval = resps[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (optval.Length != 2) continue;
-                    if (optval[0] == "ALGO")
-                        aname = optval[1];
-                    else if (optval[0] == "KHS")
-                        ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
-                }
-            }
-            catch
-            {
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Could not read data from API bind port");
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                return null;
-            }
-
-            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-            // check if speed zero
-            if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-
-            return ad;
-        }
-
         public int BenchmarkTimeoutInSeconds(int timeInSeconds)
         {
             if (TimeoutStandard) return timeInSeconds;
@@ -1062,12 +1021,12 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint(MinerTag() + " BENCHMARK-finish",
                     "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed,
-                        BenchmarkAlgorithm.BenchmarkSecondarySpeed, dualAlg.NiceHashID, dualAlg.DualNiceHashID));
+                        BenchmarkAlgorithm.BenchmarkSecondarySpeed, 0, dualAlg.NiceHashID, dualAlg.DualNiceHashID));
             }
             else
             {
                 Helpers.ConsolePrint(MinerTag() + " BENCHMARK-finish",
-                    "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, 0,
+                    "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, 0, 0,
                         BenchmarkAlgorithm.NiceHashID, BenchmarkAlgorithm.DualNiceHashID));
             }
 
@@ -1856,66 +1815,9 @@ namespace NiceHashMiner
         }
 
         public abstract Task<ApiData> GetSummaryAsync();
+        public abstract ApiData GetApiData();
 
-        protected async Task<ApiData> GetSummaryCpuAsync(string method = "", bool overrideLoop = false)
-        {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-            try
-            {
-                CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
-                var dataToSend = GetHttpRequestNhmAgentStrin(method);
-                var respStr = await GetApiDataAsync(ApiPort, dataToSend);
-
-                if (string.IsNullOrEmpty(respStr))
-                {
-                    CurrentMinerReadStatus = MinerApiReadStatus.NETWORK_EXCEPTION;
-                    throw new Exception("Response is empty!");
-                }
-
-                if (respStr.IndexOf("HTTP/1.1 200 OK") > -1)
-                {
-                    respStr = respStr.Substring(respStr.IndexOf(HttpHeaderDelimiter) + HttpHeaderDelimiter.Length);
-                }
-                else
-                {
-                    throw new Exception("Response not HTTP formed! " + respStr);
-                }
-
-                dynamic resp = JsonConvert.DeserializeObject(respStr);
-
-                if (resp != null)
-                {
-                    JArray totals = resp.hashrate.total;
-                    foreach (var total in totals)
-                    {
-                        if (total.Value<string>() == null) continue;
-                        ad.Speed = total.Value<double>();
-                        break;
-                    }
-
-                    if (ad.Speed == 0)
-                    {
-                        CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                    }
-                    else
-                    {
-                        CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                    }
-                }
-                else
-                {
-                    throw new Exception($"Response does not contain speed data: {respStr.Trim()}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint(MinerTag(), ex.Message);
-            }
-
-            return ad;
-        }
-
+        
         protected string GetHttpRequestNhmAgentStrin(string cmd)
         {
             return "GET /" + cmd + " HTTP/1.1\r\n" +
@@ -1924,48 +1826,7 @@ namespace NiceHashMiner
                    "\r\n";
         }
 
-        protected async Task<ApiData> GetSummaryCpuCcminerAsync()
-        {
-            // TODO aname
-            string aname = null;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-            var dataToSend = GetHttpRequestNhmAgentStrin("summary");
-            var resp = await GetApiDataAsync(ApiPort, dataToSend);
-            if (resp == null)
-            {
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " summary is null");
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                return null;
-            }
-
-            try
-            {
-                var resps = resp.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var res in resps)
-                {
-                    var optval = res.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (optval.Length != 2) continue;
-                    if (optval[0] == "ALGO")
-                        aname = optval[1];
-                    else if (optval[0] == "KHS")
-                        ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
-                }
-            }
-            catch
-            {
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Could not read data from API bind port");
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                return null;
-            }
-
-            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-            // check if speed zero
-            if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-
-            return ad;
-        }
-
+        
 
         #region Cooldown/retry logic
 

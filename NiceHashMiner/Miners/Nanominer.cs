@@ -812,6 +812,11 @@ namespace NiceHashMiner.Miners
             return true;
         }
 
+        private ApiData ad;
+        public override ApiData GetApiData()
+        {
+            return ad;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
@@ -819,7 +824,7 @@ namespace NiceHashMiner.Miners
             int dSpeed2 = 0;
             bool IsZil = false;
             int gpu_hr = 0;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             if (Form_Main.NVIDIA_orderBug)
             {

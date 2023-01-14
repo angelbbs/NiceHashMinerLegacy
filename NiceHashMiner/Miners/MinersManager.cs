@@ -72,6 +72,7 @@ namespace NiceHashMiner.Miners
         public static async Task MinerStatsCheck()
         {
             if (_curMiningSession != null) await _curMiningSession.MinerStatsCheck();
+            //if (_curMiningSession != null) new Task(() => _curMiningSession.MinerStatsCheck()).Start(); 
         }
     }
 }
