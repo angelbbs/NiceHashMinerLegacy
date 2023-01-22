@@ -72,8 +72,7 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
-
+            
             JsonApiResponse resp = null;
             try
             {
@@ -92,6 +91,8 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
             }
+
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             if (resp != null && resp.error == null)
             {

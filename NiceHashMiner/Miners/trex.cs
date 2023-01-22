@@ -538,7 +538,6 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             string resp = null;
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             if (Form_Main.NVIDIA_orderBug)
@@ -567,6 +566,8 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("API", ex.Message);
                 return null;
             }
+
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             if (resp != null)
             {

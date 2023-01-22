@@ -62,6 +62,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("trex_lhr-low-power", "-lhr-low-power", "--lhr-low-power", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("trex_dag-build-mode", "--dag-build-mode", "--dag-build-mode", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("LogPath", "-l", "--log-path", "-1", MinerOptionFlagType.SingleParam),
+                    new MinerOption("trex_reconnect-on-fail-shares", "--reconnect-on-fail-shares", "--reconnect-on-fail-shares", "-1", MinerOptionFlagType.SingleParam),
                     new MinerOption("trex-no-watchdog", "--no-watchdog", "--no-watchdog", "", MinerOptionFlagType.Uni),
                     new MinerOption("trex-validate-shares", "--validate-shares", "--validate-shares", null, MinerOptionFlagType.Uni),
                     //new MinerOption("trex_reconnect-on-fail-shares", "--reconnect-on-fail-shares", "--reconnect-on-fail-shares", "", MinerOptionFlagType.Uni),
@@ -652,6 +653,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_watchdog_mode", "--watchdog_mode", "--watchdog_mode", "0", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_min_rig_speed", "--min_rig_speed", "--min_rig_speed", "-1", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_dag_gen_limit", "--dag_gen_limit", "--dag_gen_limit", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_dataset_mode", "--dataset_mode", "--dataset_mode", "0", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()
             ),

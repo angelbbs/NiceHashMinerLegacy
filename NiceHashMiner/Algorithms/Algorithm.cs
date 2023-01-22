@@ -1,4 +1,5 @@
 using NiceHashMiner.Configs;
+using NiceHashMiner.Forms;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
@@ -41,6 +42,7 @@ namespace NiceHashMiner.Algorithms
         /// Used for miner ALGO flag parameter
         /// </summary>
         public readonly string AlgorithmNameCustom;
+        public DeviceType DeviceType;
 
         #endregion
 
@@ -180,9 +182,7 @@ namespace NiceHashMiner.Algorithms
             {
                 var ratio = International.GetText("BenchmarkRatioRateN_A");
                 AlgorithmType _NiceHashID = NiceHashID;
-                //if (NiceHashID == AlgorithmType.AutolykosKHeavyHash) _NiceHashID = AlgorithmType.Autolykos;
-                //if (NiceHashID == AlgorithmType.DaggerKHeavyHash) _NiceHashID = AlgorithmType.DaggerHashimoto;
-                //if (NiceHashID == AlgorithmType.ETCHashKHeavyHash) _NiceHashID = AlgorithmType.ETCHash;
+
                 if (NHSmaData.TryGetPaying(_NiceHashID, out var paying))
                 {
                     ratio = paying.ToString("F8");
@@ -213,9 +213,7 @@ namespace NiceHashMiner.Algorithms
                 var rate = "0.00";
                 var payingRate = 0.0d;
                 AlgorithmType _NiceHashID = NiceHashID;
-                //if (NiceHashID == AlgorithmType.AutolykosKHeavyHash) _NiceHashID = AlgorithmType.Autolykos;
-                //if (NiceHashID == AlgorithmType.DaggerKHeavyHash) _NiceHashID = AlgorithmType.DaggerHashimoto;
-                //if (NiceHashID == AlgorithmType.ETCHashKHeavyHash) _NiceHashID = AlgorithmType.ETCHash;
+
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(_NiceHashID, out var paying))
                 {
                     payingRate = BenchmarkSpeed * paying * Mult;
@@ -227,9 +225,7 @@ namespace NiceHashMiner.Algorithms
             {
                 var rate = International.GetText("BenchmarkRatioRateN_A");
                 AlgorithmType _NiceHashID = NiceHashID;
-                //if (NiceHashID == AlgorithmType.AutolykosKHeavyHash) _NiceHashID = AlgorithmType.Autolykos;
-                //if (NiceHashID == AlgorithmType.DaggerKHeavyHash) _NiceHashID = AlgorithmType.DaggerHashimoto;
-                //if (NiceHashID == AlgorithmType.ETCHashKHeavyHash) _NiceHashID = AlgorithmType.ETCHash;
+
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(_NiceHashID, out var paying))
                 {
                     double.TryParse(value, out var valueBench);
@@ -318,7 +314,6 @@ namespace NiceHashMiner.Algorithms
             {
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, 0,  NiceHashID);
             }
-            //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
             return International.GetText("BenchmarkSpeedStringNone");
         }
         public string SecondaryBenchmarkSpeedString()
@@ -327,7 +322,7 @@ namespace NiceHashMiner.Algorithms
             {
                 return Helpers.FormatDualSpeedOutput(BenchmarkSecondarySpeed, 0, 0, DualNiceHashID);
             }
-            //if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
+
             if (!string.IsNullOrEmpty(BenchmarkStatus) && BenchmarkActive)
             {
                 return BenchmarkStatus;
@@ -339,7 +334,7 @@ namespace NiceHashMiner.Algorithms
 
         #region Profitability methods
 
-        public virtual void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
+        public virtual void UpdateCurProfit(Dictionary<AlgorithmType, double> profits, DeviceType devtype, MinerBaseType mbt)
         {
             profits.TryGetValue(NiceHashID, out var paying);
             profits.TryGetValue(SecondaryNiceHashID, out var payingSecond);
@@ -351,6 +346,15 @@ namespace NiceHashMiner.Algorithms
             else
             {
                 CurrentProfit = (CurNhmSmaDataVal * AvaragedSpeed + payingSecond * BenchmarkSecondarySpeed) * Mult;
+            }
+            if (mbt == MinerBaseType.GMiner &&
+                                   devtype == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
+                                    NiceHashID != AlgorithmType.DaggerHashimoto &&
+                                    NiceHashID != AlgorithmType.DaggerKHeavyHash &&
+                                    NiceHashID != AlgorithmType.ETCHash &&
+                                    NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+            {
+                CurrentProfit += CurrentProfit * ConfigManager.GeneralConfig.ZilFactor;
             }
             CurrentProfitWithoutPower = CurrentProfit;
             if (ConfigManager.GeneralConfig.with_power)

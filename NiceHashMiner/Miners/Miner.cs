@@ -213,9 +213,10 @@ namespace NiceHashMiner
         protected bool IsMultiType;
         public static string BenchmarkStringAdd = "";
         public static string InBenchmark = "";
+        public bool needChildRestart;
 
-        
-        
+
+
         protected virtual int GetMaxCooldownTimeInMilliseconds()
         {
             return 60 * 1000 * 10;  // 10 min
@@ -389,6 +390,41 @@ namespace NiceHashMiner
         public string ProcessTag()
         {
             return _currentPidData == null ? "PidData is NULL" : ProcessTag(_currentPidData);
+        }
+
+        private static int ChildProcess(MinerPidData pidData)
+        {
+            return GetChildProcess(pidData.Pid);
+        }
+        public int ChildProcess()
+        {
+            return _currentPidData == null ? -1 : ChildProcess(_currentPidData);
+        }
+
+        private static int GetParentProcess(int Id)
+        {
+            int parentPid = 0;
+            using (ManagementObject mo = new ManagementObject("win32_process.handle='" + Id.ToString() + "'"))
+            {
+                mo.Get();
+                parentPid = Convert.ToInt32(mo["ParentProcessId"]);
+            }
+            return parentPid;
+        }
+
+        public static int GetChildProcess(int ProcessId, string fname = "miner")
+        {
+            Process[] localByName = Process.GetProcessesByName(fname);
+            foreach (var processName in localByName)
+            {
+                int t = Process.GetProcessById(processName.Id).Id;
+                int p = GetParentProcess(t);
+                if (p == ProcessId)
+                {
+                    return t;
+                }
+            }
+            return -1;
         }
 
         public void KillAllUsedMinerProcesses()
@@ -1345,7 +1381,7 @@ namespace NiceHashMiner
                         break;
                     }
                 }
-                if (minerrunning) Thread.Sleep(2000);
+                if (minerrunning) Thread.Sleep(3000);
             }
             catch (Exception ex)
             {

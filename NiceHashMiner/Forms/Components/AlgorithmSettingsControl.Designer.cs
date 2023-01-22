@@ -24,15 +24,15 @@ namespace NiceHashMiner.Forms.Components {
         /// </summary>
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
             this.richTextBoxExtraLaunchParameters = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.secondaryFieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.field_PowerUsage = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxSelectedAlgorithmSettings.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxExtraLaunchParameters.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxSelectedAlgorithmSettings
@@ -50,30 +50,16 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxSelectedAlgorithmSettings.TabStop = false;
             this.groupBoxSelectedAlgorithmSettings.Text = "Selected Algorithm Settings:";
             this.groupBoxSelectedAlgorithmSettings.UseCompatibleTextRendering = true;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
-            this.flowLayoutPanel1.Controls.Add(this.secondaryFieldBoxBenchmarkSpeed);
-            this.flowLayoutPanel1.Controls.Add(this.field_PowerUsage);
-            this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(276, 191);
-            this.flowLayoutPanel1.TabIndex = 12;
+            this.groupBoxSelectedAlgorithmSettings.Resize += new System.EventHandler(this.groupBoxSelectedAlgorithmSettings_Resize);
             // 
             // groupBoxExtraLaunchParameters
             // 
-            this.groupBoxExtraLaunchParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxExtraLaunchParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxExtraLaunchParameters.Controls.Add(this.richTextBoxExtraLaunchParameters);
             this.groupBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 81);
             this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
-            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(269, 54);
+            this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(268, 54);
             this.groupBoxExtraLaunchParameters.TabIndex = 14;
             this.groupBoxExtraLaunchParameters.TabStop = false;
             this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
@@ -81,18 +67,32 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // richTextBoxExtraLaunchParameters
             // 
-            this.richTextBoxExtraLaunchParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxExtraLaunchParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBoxExtraLaunchParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(6, 16);
             this.richTextBoxExtraLaunchParameters.Multiline = true;
             this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
-            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(257, 32);
+            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(256, 32);
             this.richTextBoxExtraLaunchParameters.TabIndex = 17;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
+            this.flowLayoutPanel1.Controls.Add(this.secondaryFieldBoxBenchmarkSpeed);
+            this.flowLayoutPanel1.Controls.Add(this.field_PowerUsage);
+            this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(276, 191);
+            this.flowLayoutPanel1.TabIndex = 12;
             // 
             // fieldBoxBenchmarkSpeed
             // 
+            this.fieldBoxBenchmarkSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.fieldBoxBenchmarkSpeed.AutoSize = true;
             this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
             this.fieldBoxBenchmarkSpeed.EntryText = "";
@@ -135,10 +135,10 @@ namespace NiceHashMiner.Forms.Components {
             this.Name = "AlgorithmSettingsControl";
             this.Size = new System.Drawing.Size(285, 220);
             this.groupBoxSelectedAlgorithmSettings.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
             this.groupBoxExtraLaunchParameters.ResumeLayout(false);
             this.groupBoxExtraLaunchParameters.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }

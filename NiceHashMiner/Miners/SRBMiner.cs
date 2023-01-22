@@ -334,7 +334,7 @@ namespace NiceHashMiner.Miners
             return 60 * 1000 * 5;  // 5 min
         }
 
-        private ApiData ad = new ApiData(AlgorithmType.NONE);
+        private ApiData ad;
         public override ApiData GetApiData()
         {
             return ad;
@@ -495,7 +495,14 @@ namespace NiceHashMiner.Miners
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX) ||
                         MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
                     {
-                        totalsMain = resp.algorithms[0].hashrate.cpu.total;
+                        try
+                        {
+                            totalsMain = resp.algorithms[0].hashrate.cpu.total;
+                        }
+                        catch (Exception ex)
+                        {
+                            totalsMain = 0;
+                        }
                         foreach (var mPair in sortedMinerPairs)
                         {
                             mPair.Device.MiningHashrate = totalsMain;

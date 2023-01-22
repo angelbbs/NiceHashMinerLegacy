@@ -349,12 +349,11 @@ namespace NiceHashMiner.Miners
             {
                 sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             }
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             string dataToSend;
 
             dataToSend = GetHttpRequestNhmAgentStrin("summary?gpuinfo=1");
             var resp = await GetApiDataAsync(ApiPort, dataToSend, true);
-
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             if (resp == null || !resp.Contains("dev_id"))
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " summary is null");

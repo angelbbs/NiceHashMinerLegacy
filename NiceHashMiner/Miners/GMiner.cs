@@ -33,6 +33,7 @@ namespace NiceHashMiner.Miners
         private double _power = 0.0d;
         double _powerUsage = 0;
         int addTime = 0;
+        int _apiErrors = 0;
 
         public GMiner(AlgorithmType secondaryAlgorithmType) : base("GMiner")
         {
@@ -89,8 +90,15 @@ namespace NiceHashMiner.Miners
             string ZilMining = "";
             if (ConfigManager.GeneralConfig.Zilliqua_GMiner)
             {
-                //прокси не используется
-                ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
+                var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+                foreach (var mPair in sortedMinerPairs)
+                {
+                    if (mPair.Device.DeviceType == DeviceType.NVIDIA)
+                    {
+                        //прокси не используется
+                        ZilMining = " --zilserver stratum+tcp://etchash.auto.nicehash.com:9200 --ziluser " + username + " ";
+                    }
+                }
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
@@ -307,7 +315,7 @@ namespace NiceHashMiner.Miners
         }
         protected override string GetDevicesCommandString()
         {
-            var deviceStringCommand = " --devices ";
+            var deviceStringCommand = "  --watchdog_restart_delay 5 --devices ";
             var ids = new List<string>();
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             var extra = "";
@@ -818,8 +826,8 @@ namespace NiceHashMiner.Miners
         {
             //Helpers.ConsolePrint("try API...........", "");
             //ApiData ad;
-
             ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            ad.ThirdAlgorithmID = AlgorithmType.NONE;
 
             string ResponseFromGMiner;
             double total = 0;
@@ -830,13 +838,15 @@ namespace NiceHashMiner.Miners
                 HttpWebRequest WR = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:" + ApiPort.ToString() + "/stat");
                 WR.UserAgent = "GET / HTTP/1.1\r\n\r\n";
                 WR.Timeout = 3 * 1000;
+                WR.ReadWriteTimeout = 3 * 1000;
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
                 SS.ReadTimeout = 2 * 1000;
                 StreamReader Reader = new StreamReader(SS);
+                Reader.BaseStream.ReadTimeout = 3 * 1000;
                 ResponseFromGMiner = await Reader.ReadToEndAsync();
-                //Helpers.ConsolePrint("GMiner API:", ResponseFromGMiner);
+                //Helpers.ConsolePrint("->", ResponseFromGMiner);
                 if (ResponseFromGMiner.Length == 0 || (ResponseFromGMiner[0] != '{' && ResponseFromGMiner[0] != '['))
                     throw new Exception("Not JSON!");
                 Reader.Close();
@@ -844,10 +854,22 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception)
             {
-                return null;
+                _apiErrors++;
+                Helpers.ConsolePrint("GetSummaryAsync", "GMINER-API ERRORs count: " + _apiErrors.ToString());
+                if (_apiErrors > 60)
+                {
+                    Helpers.ConsolePrint("GetSummaryAsync", "RESTART GMINER");
+                    Restart();
+                }
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                ad.Speed = 0;
+                ad.SecondarySpeed = 0;
+                ad.ThirdSpeed = 0;
+                return ad;
             }
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            ad.ThirdAlgorithmID = AlgorithmType.NONE;
 
-            
             ResponseFromGMiner = ResponseFromGMiner.Replace("-nan", "0.00");
             ResponseFromGMiner = ResponseFromGMiner.Replace("(ind)", "");
             //Helpers.ConsolePrint("->", ResponseFromGMiner);
@@ -871,9 +893,11 @@ namespace NiceHashMiner.Miners
                         hashrates[i] = resp.devices[i].speed;
                         hashrates2[i] = resp.devices[i].speed2;
                         hashrates3[i] = resp.devices[i].speed3;
+                        /*
                         Helpers.ConsolePrint("****", " dev: " + i.ToString() + " hr1: " + hashrates[i].ToString() +
                             " hr2: " + hashrates2[i].ToString() +
                             " hr3: " + hashrates3[i].ToString());
+                        */
                     }
                     int dev = 0;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
@@ -888,12 +912,24 @@ namespace NiceHashMiner.Miners
                         mPair.Device.MiningHashrate = hashrates[dev];
                         mPair.Device.MiningHashrateSecond = hashrates2[dev];
                         mPair.Device.MiningHashrateThird = hashrates3[dev];
+                        //duals
+                        if ((MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
+                            MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash) &&
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+                        {
+                            mPair.Device.MiningHashrate = hashrates[dev];
+                            mPair.Device.MiningHashrateSecond = hashrates2[dev];
+                            mPair.Device.MiningHashrateThird = 0;
+                            mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
+                        }
 
-                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+                        if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
                         {
                             if (Form_Main.isZilRound)
                             {
                                 mPair.Device.MiningHashrate = 0;
+                                mPair.Device.MiningHashrateSecond = 0;
                                 mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.DaggerHashimoto;
                             }
                             else
@@ -902,18 +938,23 @@ namespace NiceHashMiner.Miners
                                 mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                             }
                         }
+                        //
+
+
                         if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)
                         {
                             if (Form_Main.isZilRound)
                             {
                                 mPair.Device.MiningHashrate = 0;
                                 mPair.Device.SecondAlgorithmID = (int)AlgorithmType.DaggerHashimoto;
+                                mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                             }
                             else
                             {
                                 mPair.Device.MiningHashrateSecond = 0;
                                 mPair.Device.MiningHashrateThird = 0;
                                 mPair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                                mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                             }
                         }
                         dev++;
@@ -923,7 +964,7 @@ namespace NiceHashMiner.Miners
                 {
                     Helpers.ConsolePrint("GMiner:", "resp - null");
                 }
-
+                _apiErrors = 0;
             }
             catch (Exception ex)
             {
@@ -931,6 +972,7 @@ namespace NiceHashMiner.Miners
             }
             finally
             {
+                
                 if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))//???
                 {
                     ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
@@ -968,27 +1010,25 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
+                    ad.GMinerZil = false;
+                    ad.ThirdSpeed = 0;
+                    ad.ThirdAlgorithmID = AlgorithmType.NONE;
+
                     if (MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE)//dual
                     {
-                        if (_algo.ToLower().Contains("zil"))//dual
+                        //if (_algo.ToLower().Contains("zil"))//dual
                         {
                             ad.Speed = total;
                             ad.SecondarySpeed = total2;
-                            ad.ThirdSpeed = 0;
-                            ad.GMinerZil = false;
-                            ad.ThirdAlgorithmID = AlgorithmType.NONE;
                         }
                     }
                     else
                     {
-                        if (_algo.ToLower().Contains("zil"))
+                        //if (_algo.ToLower().Contains("zil"))
                         {
                             ad.Speed = total;
                             ad.SecondarySpeed = 0;
-                            ad.ThirdSpeed = 0;
-                            ad.GMinerZil = false;
                             ad.SecondaryAlgorithmID = AlgorithmType.NONE;
-                            ad.ThirdAlgorithmID = AlgorithmType.NONE;
                         }
                     }
                 }
@@ -1010,7 +1050,11 @@ namespace NiceHashMiner.Miners
                 }
 
             }
-
+            /*
+            Helpers.ConsolePrint("*******", "CurrentAlgorithmType: " + MiningSetup.CurrentAlgorithmType.ToString() +
+       " CurrentSecondaryAlgorithmType: " + MiningSetup.CurrentSecondaryAlgorithmType.ToString() +
+       " Form_Main.isZilRound: " + Form_Main.isZilRound.ToString());
+            */
             Thread.Sleep(100);
             /*
             //костыль из-за бага в Anti-hacking

@@ -449,11 +449,11 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
+            
             if (firstStart)
             //          if (ad.Speed <= 0.0001)
             {
+                ad = new ApiData(MiningSetup.CurrentAlgorithmType);
                 Thread.Sleep(5000);
                 ad.Speed = 0;
                 firstStart = false;
@@ -499,6 +499,9 @@ namespace NiceHashMiner.Miners
                     Restart();
                 }
             }
+
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+
             try
             {
                 if (resp != null && resp.error == null)

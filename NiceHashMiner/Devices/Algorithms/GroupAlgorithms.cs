@@ -35,6 +35,17 @@ namespace NiceHashMiner.Devices.Algorithms
                 });
             }
 
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner)) 
+            {
+                if (device.DeviceType == DeviceType.NVIDIA)
+                {
+                    foreach (var algo in algoSettings[MinerBaseType.GMiner])
+                    {
+                        algo.DeviceType = device.DeviceType;
+                    }
+                }
+            }
+
             Helpers.ConsolePrint("GPU MEMORY: ", device.GpuRam.ToString() + " bytes - " + device.Name);
 
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))

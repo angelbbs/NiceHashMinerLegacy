@@ -824,7 +824,6 @@ namespace NiceHashMiner.Miners
             int dSpeed2 = 0;
             bool IsZil = false;
             int gpu_hr = 0;
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             if (Form_Main.NVIDIA_orderBug)
             {
@@ -851,6 +850,7 @@ namespace NiceHashMiner.Miners
                 return null;
             }
 
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
 
             try
             {

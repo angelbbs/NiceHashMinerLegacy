@@ -172,6 +172,13 @@ namespace NiceHashMiner
         public static int SwitchCount = 0;
         public static bool ZilMonitorRunning = false;
         public static bool isZilRound = false;
+        public static double RateZil = 0.0d;
+        public static int RateZilCount = 0;
+        public static double RateNoZil = 0.0d;
+        public static int RateNoZilCount = 0;
+        public static double ZilFactor = 0.0d;
+        public static int ZilCount = -1;
+        public static bool needGMinerRestart = false;
 
         //**
         public static string[] ZoneSchedule1 = { "00:00", "23:59", "0.00" };
@@ -212,7 +219,7 @@ namespace NiceHashMiner
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
-                if (ConfigManager.GeneralConfig.FormLeft + ConfigManager.GeneralConfig.FormWidth <= screenSize.Size.Width)
+                //if (ConfigManager.GeneralConfig.FormLeft + ConfigManager.GeneralConfig.FormWidth <= screenSize.Size.Width)
                 {
                     if (ConfigManager.GeneralConfig.FormTop + ConfigManager.GeneralConfig.FormLeft >= 1)
                     {
@@ -224,10 +231,12 @@ namespace NiceHashMiner
                     //this.Height = ConfigManager.GeneralConfig.FormHeight;
                     this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
                 }
+                /*
                 else
                 {
                     // this.Width = 660; // min width
                 }
+                */
             }
 
             //WindowState = FormWindowState.Minimized;
@@ -594,7 +603,7 @@ namespace NiceHashMiner
                     if (chart != null)
                     {
                         Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
-                        if (ConfigManager.GeneralConfig.ProfitFormLeft + ConfigManager.GeneralConfig.ProfitFormWidth <= screenSize.Size.Width)
+                        //if (ConfigManager.GeneralConfig.ProfitFormLeft + ConfigManager.GeneralConfig.ProfitFormWidth <= screenSize.Size.Width)
                         {
                             if (ConfigManager.GeneralConfig.ProfitFormTop + ConfigManager.GeneralConfig.ProfitFormLeft >= 1)
                             {
@@ -605,10 +614,12 @@ namespace NiceHashMiner
                             chart.Width = ConfigManager.GeneralConfig.ProfitFormWidth;
                             chart.Height = ConfigManager.GeneralConfig.ProfitFormHeight;
                         }
+                        /*
                         else
                         {
                             // chart.Width = 660; // min width
                         }
+                        */
                     }
                     if (chart != null) chart.Show();
                 }
@@ -1622,6 +1633,11 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
+            
+            ZilClient.needConnectionZIL = true;
+            Form_Main.ZilMonitorRunning = true;
+            new Task(() => ZilClient.StartZilMonitor()).Start();
+            
         }
 
         private static void MinersGetVersionWatchdog()
@@ -1807,7 +1823,7 @@ namespace NiceHashMiner
             if (this != null)
             {
                 Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
-                if (ConfigManager.GeneralConfig.FormLeft + ConfigManager.GeneralConfig.FormWidth <= screenSize.Size.Width)
+                //if (ConfigManager.GeneralConfig.FormLeft + ConfigManager.GeneralConfig.FormWidth <= screenSize.Size.Width)
                 {
                     if (ConfigManager.GeneralConfig.FormTop + ConfigManager.GeneralConfig.FormLeft >= 1)
                     {
@@ -1819,11 +1835,12 @@ namespace NiceHashMiner
                     //this.Height = ConfigManager.GeneralConfig.FormHeight;
                     this.Height = this.MinimumSize.Height + ConfigManager.GeneralConfig.DevicesCountIndex * 17 + 1;
                 }
+                /*
                 else
                 {
                     // this.Width = 660; // min width
                 }
-
+                */
             }
 
             if (!Configs.ConfigManager.GeneralConfig.MinimizeToTray)
@@ -2496,20 +2513,19 @@ public static void CloseChilds(Process parentId)
         {
             var apiGetExceptionString = isApiGetException ? " **" : "";
             string speedString = "";
+            string algoName = iApiData.AlgorithmName;
+            if (iApiData.GMinerZil)
+            {
+                algoName = "ZIL";
+            }
             speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.ThirdSpeed,
-                iApiData.AlgorithmID, iApiData.DualAlgorithmID(), iApiData.ThirdAlgorithmID) +
-                          iApiData.AlgorithmName + apiGetExceptionString;
+                iApiData.AlgorithmID, iApiData.SecondaryAlgorithmID, iApiData.ThirdAlgorithmID) +
+                          algoName + apiGetExceptionString;
             speedString = speedString.Replace("--", "0.000 H/s ");
             //еще больше костылей понаделал. Надо это всё, что от найса осталось, переделывать.
             if (iApiData.AlgorithmID == AlgorithmType.NONE)
             {
                 speedString = "...";
-            }
-
-            
-            if (iApiData.GMinerZil)
-            {
-                speedString = speedString + "+ZIL";
             }
             
             string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";

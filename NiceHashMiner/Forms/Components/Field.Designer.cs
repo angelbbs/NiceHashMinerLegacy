@@ -39,6 +39,7 @@ namespace NiceHashMiner.Forms.Components {
             // 
             // textBox
             // 
+            this.textBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox.Location = new System.Drawing.Point(147, 3);
             this.textBox.Name = "textBox";
             this.textBox.Size = new System.Drawing.Size(119, 20);
@@ -54,7 +55,7 @@ namespace NiceHashMiner.Forms.Components {
             this.Controls.Add(this.textBox);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "Field";
-            this.Size = new System.Drawing.Size(278, 20);
+            this.Size = new System.Drawing.Size(278, 26);
             this.ResumeLayout(false);
             this.PerformLayout();
 

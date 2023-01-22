@@ -46,6 +46,7 @@ namespace NiceHashMiner.Forms
         private bool _isStartupChanged = false;
         private static Timer UpdateListView_timer;
         public static bool FormSettingsMoved = false;
+        public static bool Zil_GMiner = false;
         public Form_Settings()
         {
             Process thisProc = Process.GetCurrentProcess();
@@ -212,6 +213,30 @@ namespace NiceHashMiner.Forms
 
             toolTip1.SetToolTip(checkBoxLast24hours,
                 International.GetText("Form_Settings_ToolTip_Last24hours"));
+
+            string zilalgolist = AlgorithmType.Autolykos.ToString() + ", " +
+                AlgorithmType.AutolykosKHeavyHash.ToString() + ", " +
+                AlgorithmType.BeamV3.ToString() + ", " +
+                AlgorithmType.CuckooCycle.ToString() + ", " +
+                AlgorithmType.GrinCuckatoo32.ToString() + ", " +
+                AlgorithmType.KAWPOW.ToString() + ", " +
+                AlgorithmType.KHeavyHash.ToString() + ", " +
+                AlgorithmType.Octopus.ToString() + ", " +
+                AlgorithmType.ZelHash.ToString() + ", " +
+                AlgorithmType.ZHash.ToString() + "\r\n" +
+                "(NVIDIA)";
+
+            if (ConfigManager.GeneralConfig.ZilFactor == 0.000d)
+            {
+                toolTip1.SetToolTip(checkBox_Zil_GMiner,
+                    string.Format(International.GetText("Form_Settings_ToolTip_ZilFactor"), zilalgolist));
+            } else
+            {
+                toolTip1.SetToolTip(checkBox_Zil_GMiner,
+                                    string.Format(International.GetText("Form_Settings_ToolTip_ZilFactorP"),
+                                    (ConfigManager.GeneralConfig.ZilFactor * 100).ToString() + "%",
+                                    zilalgolist));
+            }
 
             // Electricity cost
             toolTip1.SetToolTip(label_Schedules, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
@@ -1006,6 +1031,10 @@ namespace NiceHashMiner.Forms
 
             label_SwitchProfitabilityThreshold.Text =
                 International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
+            if (!ComputeDeviceManager.Available.HasNvidia)
+            {
+                checkBox_Zil_GMiner.Enabled = false;
+            }
         }
 
         private void InitializeGeneralTabCallbacks()
@@ -1230,6 +1259,8 @@ namespace NiceHashMiner.Forms
                 checkBoxEnableProxy.Checked = ConfigManager.GeneralConfig.EnableProxy;
                 //checkBoxProxyAsFailover.Checked = ConfigManager.GeneralConfig.ProxyAsFailover;
                 //checkBoxStale.Checked = ConfigManager.GeneralConfig.StaleProxy;
+
+                Zil_GMiner = ConfigManager.GeneralConfig.Zilliqua_GMiner;
 
                 ConfigManager.GeneralConfig.ProxyAsFailover = false; //отключим до лучших времён
                 ConfigManager.GeneralConfig.StaleProxy = false;
@@ -1570,6 +1601,11 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused.Checked;
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused2.Checked;
             ConfigManager.GeneralConfig.Zilliqua_GMiner = checkBox_Zil_GMiner.Checked;
+            Zil_GMiner = checkBox_Zil_GMiner.Checked;
+            if (!checkBox_Zil_GMiner.Checked)
+            {
+                //ConfigManager.GeneralConfig.ZilFactor = 0.000d;
+            }
             ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
             ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
             ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;

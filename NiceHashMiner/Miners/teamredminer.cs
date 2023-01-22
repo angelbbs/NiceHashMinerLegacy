@@ -139,7 +139,7 @@ namespace NiceHashMiner.Miners
             string algo2 = "";
             string port = "";
 
-            var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
+            var apiBind = " --watchdog_disabled --api_listen=127.0.0.1:" + ApiPort;
 
             var sc = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
@@ -428,9 +428,10 @@ namespace NiceHashMiner.Miners
         }
         public override async Task<ApiData> GetSummaryAsync()
         {
+            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             var resp2 = await GetApiDataAsync(ApiPort, "devs");
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             if (resp2 == null)
             {
                 CurrentMinerReadStatus = MinerApiReadStatus.NONE;

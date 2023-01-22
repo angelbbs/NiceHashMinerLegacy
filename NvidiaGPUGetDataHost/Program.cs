@@ -283,7 +283,7 @@ namespace NvidiaGPUGetDataHost
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_loadMem) + Marshal.SizeOf(_temp), BitConverter.GetBytes(_tempMem), 0, Marshal.SizeOf(_tempMem));
                         }
                     }
-                    Thread.Sleep(200);
+                    Thread.Sleep(100);
                     //sharedMemory.Dispose();
 
                     Process currentProc = Process.GetCurrentProcess();
@@ -308,6 +308,7 @@ namespace NvidiaGPUGetDataHost
                         System.Environment.Exit(1);
                     }
                     ticks++;
+                    Thread.Sleep(100);
                 } while (true);
 
             }

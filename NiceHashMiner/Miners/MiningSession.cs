@@ -66,7 +66,7 @@ namespace NiceHashMiner.Miners
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
         public static int[] _ticks;
-        private static int APIerrors = 0;
+
         public List<int> ActiveDeviceIndexes
         {
             get
@@ -562,6 +562,25 @@ namespace NiceHashMiner.Miners
                     }
                 } else 
                 {
+                    if (Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98)
+                    {
+                        Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected");
+                        needSwitch = false;
+                        return;
+                    }
+                    if (Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0)
+                    {
+                        Helpers.ConsolePrint(Tag, "Switching disabled during ZIL round");
+                        needSwitch = false;
+                        return;
+                    }
+                    if (Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2)
+                    {
+                        Helpers.ConsolePrint(Tag, "Switching disabled after ZIL round");
+                        needSwitch = false;
+                        return;
+                    }
+
                     //if (AlgorithmSwitchingManager.newProfit)
                     //if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable || Math.Round(percDiff * 100, 2) > 20)
                     if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable)
@@ -611,6 +630,29 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
+                        //if (Form_Main.isZilRound && device.Device.DeviceType == DeviceType.NVIDIA)
+                        if (Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98)
+                        {
+                            Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected for " + device.Device.Name);
+                            needSwitch = false;
+                            device.RestoreOldProfitsState();
+                            continue;
+                        }
+                        if (Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0)
+                        {
+                            Helpers.ConsolePrint(Tag, "Switching disabled during ZIL round for " + device.Device.Name);
+                            needSwitch = false;
+                            device.RestoreOldProfitsState();
+                            continue;
+                        }
+                        if (Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2)
+                        {
+                            Helpers.ConsolePrint(Tag, "Switching disabled after ZIL round for " + device.Device.Name);
+                            needSwitch = false;
+                            device.RestoreOldProfitsState();
+                            continue;
+                        }
+
                         //if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable || Math.Round(percDiff * 100, 2) > 20)
                         if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                         {
@@ -859,11 +901,34 @@ namespace NiceHashMiner.Miners
             return AlgorithmType.NONE;
         }
 
+        private void GMinersRestart(List<Miner> _checks)
+        {
+            foreach (Miner m in _checks)
+            {
+                try
+                {
+                    if (m.needChildRestart)
+                    {
+                        Thread.Sleep(6000);
+                        Helpers.ConsolePrint(m.MinerTag(), "Restart gminer process after ZIL round");
+                        Process proc = Process.GetProcessById(m.ChildProcess());
+                        if (proc != new Process()) proc.Kill();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process already exited.
+                }
+            }
+            _checks.Clear();
+        }
+
         public async Task MinerStatsCheck()
         {
             var currentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
+            var _checks = new List<Miner>();
             try
             {
                 foreach (var groupMiners in checks)
@@ -873,6 +938,7 @@ namespace NiceHashMiner.Miners
                     // if (!Miner.IsRunning || m.IsUpdatingApi) continue;
                     //m.TicksForApiUpdate++;
                     //if (m.TicksForApiUpdate >= 5) m.TicksForApiUpdate = 0;
+
                     if (!m.IsRunning || m.IsUpdatingApi || m == null) continue;
                     // continue;
 
@@ -907,11 +973,69 @@ namespace NiceHashMiner.Miners
                         //ComputeDevice.HashRate = ad.Speed;
                         NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
                         groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
-                        NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
-                        //double CurrentRateSec = secPaying * ad.SecondarySpeed * 0.000000001;
-                        groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
+
+                        if (ad.GMinerZil)
+                        {
+                            NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
+                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001 * 0.8;
+
+                            NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
+                            groupMiners.CurrentRate += thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.8;
+                        }
+                        else
+                        {
+                            NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
+                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
+
+                            NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
+                            groupMiners.CurrentRate += thirdPaying * ad.ThirdSpeed * 0.000000001;
+                        }
+
                         // Deduct power costs
                         double powerUsage = 0;
+
+                        if (ConfigManager.GeneralConfig.Zilliqua_GMiner)
+                        {
+                            if (ad.GMinerZil & (ad.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto ||
+                                ad.ThirdAlgorithmID == AlgorithmType.DaggerHashimoto))
+                            {
+                                Form_Main.RateZil += groupMiners.CurrentRate;
+                                Form_Main.RateZilCount++;
+
+                                m.needChildRestart = true;
+                                _checks.Add(m);
+                            }
+                            if (m.MinerTag().ToLower().Contains("gminer") && !ad.GMinerZil &&
+                                (ad.AlgorithmID != AlgorithmType.DaggerHashimoto &&
+                                ad.AlgorithmID != AlgorithmType.DaggerKHeavyHash &&
+                                ad.AlgorithmID != AlgorithmType.ETCHash &&
+                                ad.AlgorithmID != AlgorithmType.ETCHashKHeavyHash))
+                            {
+                                Form_Main.RateNoZil += groupMiners.CurrentRate;
+                                Form_Main.RateNoZilCount++;
+                            }
+                            double RateNoZil = (Form_Main.RateNoZil / Form_Main.RateNoZilCount);
+                            double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
+                            Form_Main.ZilFactor = Math.Round((RateZil * 0.03) / RateNoZil, 3);
+                            
+                            if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
+                            if (double.IsNaN(RateZil)) RateZil = 0.0d;
+                            if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
+
+                            if (m.MinerTag().ToLower().Contains("gminer"))
+                            {
+                                if (ad.AlgorithmID != AlgorithmType.DaggerHashimoto &&
+                                    ad.AlgorithmID != AlgorithmType.DaggerKHeavyHash &&
+                                    ad.AlgorithmID != AlgorithmType.ETCHash &&
+                                    ad.AlgorithmID != AlgorithmType.ETCHashKHeavyHash &&
+                                    m.MiningSetup.MiningPairs[m.MiningSetup.MiningPairs.Count - 1].Device.DeviceType ==
+                                    DeviceType.NVIDIA && ConfigManager.GeneralConfig.Zilliqua_GMiner)
+                                {
+                                    groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
+                                }
+                            }
+                        } 
+
                         /*
                         // если групп > 1, то задваивается
                         foreach (var computeDevice in Available.Devices)
@@ -938,11 +1062,15 @@ namespace NiceHashMiner.Miners
                         groupMiners.CurrentRate, groupMiners.PowerRate, groupMiners.StartMinerTime,
                         m.IsApiReadException, m.ProcessTag());
                 }
-                //m = null;
             }
             catch (Exception e)
             {
                 Helpers.ConsolePrint("Exception: ", e.ToString());
+            }
+            if (Form_Main.needGMinerRestart)
+            {
+                Form_Main.needGMinerRestart = false;
+                new Task(() => GMinersRestart(_checks)).Start();
             }
         }
     }

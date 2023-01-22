@@ -769,7 +769,7 @@ namespace NiceHashMiner.Miners
         }
         public override async Task<ApiData> GetSummaryAsync()
         {
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
+            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO; 
             string ResponseFromlolMiner;
             try
             {
@@ -792,6 +792,8 @@ namespace NiceHashMiner.Miners
             {
                 return null;
             }
+
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
 
             if (ResponseFromlolMiner == null)
             {

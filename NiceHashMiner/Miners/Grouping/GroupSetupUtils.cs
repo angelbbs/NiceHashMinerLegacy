@@ -199,6 +199,7 @@ namespace NiceHashMiner.Miners.Grouping
                             if (index > -1)
                             {
                                 miningDevs[minerDevIndex].Algorithms[index].AvaragedSpeed = avaragedSpeed;
+                                miningDevs[minerDevIndex].Algorithms[index].DeviceType = miningDevs[minerDevIndex].Device.DeviceType;
                                 if (miningDevs[minerDevIndex].Algorithms[index] is DualAlgorithm dualAlgo)
                                 {
                                     dualAlgo.SecondaryAveragedSpeed = secondaryAveragedSpeed;

@@ -220,12 +220,74 @@ namespace NiceHashMiner
             return ret;
         }
 
+        private static string GetAlgorithmSpeedUnit(AlgorithmType algo)
+        {
+            string unit = "";
+            switch (algo)
+            {
+                case AlgorithmType.ZHash:
+                case AlgorithmType.ZelHash:
+                case AlgorithmType.BeamV3:
+                    unit = "Sol/s ";
+                    break;
+                case AlgorithmType.CuckooCycle:
+                case AlgorithmType.GrinCuckatoo32:
+                    unit = "G/s ";
+                    break;
+                default:
+                    unit = "H/s ";
+                    break;
+            }
+            return unit;
+        }
+
         public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed = 0, double thirdSpeed = 0,
             AlgorithmType algo = AlgorithmType.NONE, AlgorithmType algo2 = AlgorithmType.NONE, AlgorithmType algo3 = AlgorithmType.NONE)
         {
-            //Helpers.ConsolePrint("*****", " algo: " + algo.ToString() + " primarySpeed: " + primarySpeed.ToString());
-            //Helpers.ConsolePrint("*****", " algo2: " + algo2.ToString() + " secondarySpeed: " + secondarySpeed.ToString());
-            //Helpers.ConsolePrint("*****", " algo3: " + algo3.ToString() + " thirdSpeed: " + thirdSpeed.ToString());
+            //Helpers.ConsolePrint("!!", "algo: " + algo.ToString() + " primarySpeed: " + primarySpeed.ToString());
+            //Helpers.ConsolePrint("!!", "algo2: " + algo2.ToString() + " secondarySpeed: " + secondarySpeed.ToString());
+            //Helpers.ConsolePrint("!!", "algo3: " + algo3.ToString() + " thirdSpeed: " + thirdSpeed.ToString());
+            string unit = "";
+            string ret = "";
+            string first = "";
+            string second = "";
+            string third = "";
+
+            if (algo2 == AlgorithmType.NONE || algo == algo2)
+            {
+                ret = FormatSpeedOutput(primarySpeed) + GetAlgorithmSpeedUnit(algo); 
+            } else
+            {
+                first = FormatSpeedOutput(primarySpeed, " ", true);
+                second = FormatSpeedOutput(secondarySpeed, " ", true);
+                third = FormatSpeedOutput(thirdSpeed, " ", true);
+                
+                if (algo2 == AlgorithmType.DaggerHashimoto)
+                {
+                    ret = second + GetAlgorithmSpeedUnit(algo2);
+                } 
+                if (algo2 == AlgorithmType.KHeavyHash)
+                {
+                    ret = first + GetAlgorithmSpeedUnit(algo) + "/ " + second + GetAlgorithmSpeedUnit(algo2);
+                }
+                if (algo3 == AlgorithmType.DaggerHashimoto)
+                {
+                    ret = third + GetAlgorithmSpeedUnit(algo3);
+                }
+
+                if (primarySpeed == 0 && secondarySpeed == 0 && thirdSpeed == 0)
+                {
+                    ret = "--";
+                    return ret;
+                }
+            }
+
+            return ret;
+        }
+
+        public static string FormatDualSpeedOutput0(double primarySpeed, double secondarySpeed = 0, double thirdSpeed = 0,
+            AlgorithmType algo = AlgorithmType.NONE, AlgorithmType algo2 = AlgorithmType.NONE, AlgorithmType algo3 = AlgorithmType.NONE)
+        {
             string ret;
             string first = "";
             string second = "";
@@ -235,7 +297,8 @@ namespace NiceHashMiner
             if (algo2 == AlgorithmType.NONE || algo == algo2)
             {
                 ret = FormatSpeedOutput(primarySpeed);
-            } else
+            }
+            else
             {
                 if (primarySpeed == 0)
                 {
@@ -257,13 +320,20 @@ namespace NiceHashMiner
 
                 if (thirdSpeed == 0)
                 {
-                    third = "0";
+                    third = "";
                 }
                 else
                 {
-                    third = FormatSpeedOutput(thirdSpeed, "", true);
+                    third = " + " + FormatSpeedOutput(thirdSpeed, "", true);
                 }
-                ret = first + "/" + second;
+                if (algo2 == AlgorithmType.DaggerHashimoto)
+                {
+                    ret = first + " + " + second;
+                }
+                else
+                {
+                    ret = first + "/" + second + third;
+                }
                 separator = " ";
 
                 if (primarySpeed == 0 && secondarySpeed == 0 && thirdSpeed == 0)
@@ -321,7 +391,6 @@ namespace NiceHashMiner
                     unit3 = "H/s ";
                     break;
             }
-
             if (unit.Equals(unit2) & unit2.Equals(unit3))
             {
                 return ret + separator + unit;
@@ -334,9 +403,8 @@ namespace NiceHashMiner
 
             if (unit.Equals(unit2) && !unit.Equals(unit3) && thirdSpeed > 0)
             {
-                return ret + " + " + third + separator + unit3;
+                return ret + third + separator + unit3;
             }
-
             return ret + separator + unit;
         }
 

@@ -437,11 +437,7 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-
-            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
+            
             string ResponseFromNBMiner;
             try
             {
@@ -463,6 +459,9 @@ namespace NiceHashMiner.Miners
             {
                 return null;
             }
+
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+
             //Helpers.ConsolePrint("NBMiner:", ResponseFromNBMiner);
             dynamic resp = JsonConvert.DeserializeObject<JsonApiResponse>(ResponseFromNBMiner);
 

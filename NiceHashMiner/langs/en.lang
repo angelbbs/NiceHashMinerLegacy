@@ -299,7 +299,8 @@
 	 "Form_Settings_ToolTip_Last24hours": "When checked, it will reduce the frequency of switching algorithms.",
         "Form_Settings_ToolTip_ElectricityCost": "Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.", 
         "Form_Settings_ToolTip_PowerUsage": "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.", 
-
+"Form_Settings_ToolTip_ZilFactor": "Increases profitability by several percent \r\n for algorithms {0}", 
+"Form_Settings_ToolTip_ZilFactorP": "Increases profitability by {0} \r\n for algorithms {1}",
         "Form_Settings_ToolTip_AlgoSkip": "Check it if you would like to skip & disable a particular algorithm.\nBenchmarking as well as actual mining will be disabled for this particular algorithm.\nThat said, auto-switching will skip this algorithm when mining will be running.",
         "Form_Settings_ToolTip_AlgoUsePassword": "Use this password when launching miner and this algorithm. If not set, Groups's UsePassword is used.",
         "Form_Settings_ToolTip_AlgoBenchmarkSpeed": "Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.",

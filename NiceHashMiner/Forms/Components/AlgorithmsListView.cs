@@ -351,6 +351,16 @@ namespace NiceHashMiner.Forms.Components
                     double.TryParse(alg.CurPayingRate, out var valueRate);
                     double.TryParse(alg.CurSecondPayingRate, out var valueRateSecond);
 
+                    if (alg.MinerBaseType == MinerBaseType.GMiner &&
+                        alg.DeviceType == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
+                        alg.NiceHashID != AlgorithmType.DaggerHashimoto &&
+                        alg.NiceHashID != AlgorithmType.DaggerKHeavyHash &&
+                        alg.NiceHashID != AlgorithmType.ETCHash &&
+                        alg.NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+                    {
+                        valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
+                    }
+                    
                     double WithPowerRate = 0;
                     WithPowerRate = (valueRate + valueRateSecond) - ExchangeRateApi.GetKwhPriceInBtc() * alg.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
 
@@ -462,6 +472,16 @@ namespace NiceHashMiner.Forms.Components
                                 }
                                 double.TryParse(algorithm.CurPayingRate, out var valueRate);
                                 double.TryParse(algorithm.CurSecondPayingRate, out var valueRateSecond);
+
+                                if (algo.MinerBaseType == MinerBaseType.GMiner &&
+                                    algo.DeviceType == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
+                                    algo.NiceHashID != AlgorithmType.DaggerHashimoto &&
+                                    algo.NiceHashID != AlgorithmType.DaggerKHeavyHash &&
+                                    algo.NiceHashID != AlgorithmType.ETCHash &&
+                                    algo.NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+                                {
+                                    valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
+                                }
                                 double WithPowerRate = 0;
                                 WithPowerRate = (valueRate + valueRateSecond) - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
 
@@ -661,6 +681,17 @@ namespace NiceHashMiner.Forms.Components
                             }
 
                             double.TryParse(algorithm.CurPayingRate, out var valueRate);
+
+                            if (algo.MinerBaseType == MinerBaseType.GMiner &&
+                                    algo.DeviceType == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
+                                    algo.NiceHashID != AlgorithmType.DaggerHashimoto &&
+                                    algo.NiceHashID != AlgorithmType.DaggerKHeavyHash &&
+                                    algo.NiceHashID != AlgorithmType.ETCHash &&
+                                    algo.NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+                            {
+                                valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
+                            }
+
                             var WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
 
                             if (ConfigManager.GeneralConfig.DecreasePowerCost)

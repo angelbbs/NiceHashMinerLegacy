@@ -137,10 +137,10 @@ namespace NiceHashMiner.Miners.Grouping
                 if (algo is DualAlgorithm algoDual)
                 {
                     //Helpers.ConsolePrint("*********", algo.ToString());
-                    algoDual.UpdateCurProfit(profits);
+                    algoDual.UpdateCurProfit(profits, algo.DeviceType, algo.MinerBaseType);
                 }
   //                  Helpers.ConsolePrint("*********", "algo.NiceHashID: " + algo.NiceHashID + " algo.DualNiceHashID: " + algo.DualNiceHashID);
-                algo.UpdateCurProfit(profits);
+                algo.UpdateCurProfit(profits, algo.DeviceType, algo.MinerBaseType);
             }
 
             // find max paying value and save key

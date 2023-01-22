@@ -2121,7 +2121,7 @@ namespace NiceHashMiner.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxHideUnused.AutoSize = true;
             this.checkBoxHideUnused.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxHideUnused.Location = new System.Drawing.Point(12, 220);
+            this.checkBoxHideUnused.Location = new System.Drawing.Point(8, 220);
             this.checkBoxHideUnused.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxHideUnused.Name = "checkBoxHideUnused";
             this.checkBoxHideUnused.Size = new System.Drawing.Size(136, 17);
@@ -2136,7 +2136,7 @@ namespace NiceHashMiner.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_Disable_extra_launch_parameter_checking.AutoSize = true;
             this.checkBox_Disable_extra_launch_parameter_checking.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Disable_extra_launch_parameter_checking.Location = new System.Drawing.Point(391, 156);
+            this.checkBox_Disable_extra_launch_parameter_checking.Location = new System.Drawing.Point(387, 156);
             this.checkBox_Disable_extra_launch_parameter_checking.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Disable_extra_launch_parameter_checking.Name = "checkBox_Disable_extra_launch_parameter_checking";
             this.checkBox_Disable_extra_launch_parameter_checking.Size = new System.Drawing.Size(219, 17);

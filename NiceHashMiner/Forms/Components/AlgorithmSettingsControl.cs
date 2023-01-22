@@ -271,6 +271,12 @@ namespace NiceHashMiner.Forms.Components
             _currentlySelectedAlgorithm.ExtraLaunchParameters = extraLaunchParams;
         }
 
+        private void groupBoxSelectedAlgorithmSettings_Resize(object sender, EventArgs e)
+        {
+            groupBoxExtraLaunchParameters.Width = groupBoxSelectedAlgorithmSettings.Width - 14;
+            richTextBoxExtraLaunchParameters.Width = groupBoxSelectedAlgorithmSettings.Width - 26;
+        }
+
         #endregion
 
         //private void buttonBenchmark_Click(object sender, EventArgs e) {
