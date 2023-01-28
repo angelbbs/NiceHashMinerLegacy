@@ -93,7 +93,7 @@ namespace NiceHashMiner.Miners
                 var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                 foreach (var mPair in sortedMinerPairs)
                 {
-                    if (mPair.Device.DeviceType == DeviceType.NVIDIA)
+                    //if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                     {
                         //прокси не используется
                         ZilMining = " --zilserver stratum+tcp://etchash.auto.nicehash.com:9200 --ziluser " + username + " ";
@@ -826,6 +826,7 @@ namespace NiceHashMiner.Miners
         {
             //Helpers.ConsolePrint("try API...........", "");
             //ApiData ad;
+            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
             ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             ad.ThirdAlgorithmID = AlgorithmType.NONE;
 
@@ -990,7 +991,7 @@ namespace NiceHashMiner.Miners
                         if (_algo.ToLower().Contains("zil") && total3 > 0)//dual+zil
                         {
                             ad.Speed = 0;
-                            ad.SecondarySpeed = total2;
+                            ad.SecondarySpeed = 0;
                             ad.ThirdSpeed = total3;
                             ad.GMinerZil = true;
                             ad.ThirdAlgorithmID = AlgorithmType.DaggerHashimoto;
@@ -1045,7 +1046,7 @@ namespace NiceHashMiner.Miners
                     {
                         ZilClient.needConnectionZIL = true;
                         Form_Main.ZilMonitorRunning = true;
-                        new Task(() => ZilClient.StartZilMonitor()).Start();
+                        ZilClient.StartZilMonitor();
                     }
                 }
 

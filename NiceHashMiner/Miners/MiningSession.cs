@@ -562,22 +562,37 @@ namespace NiceHashMiner.Miners
                     }
                 } else 
                 {
-                    if (Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98)
+                    if ((Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
                     {
                         Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected");
                         needSwitch = false;
+                        // RESTORE OLD PROFITS STATE
+                        foreach (var device in _miningDevices)
+                        {
+                            device.RestoreOldProfitsState();
+                        }
                         return;
                     }
-                    if (Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0)
+                    if ((Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0) && !Form_Main._NeedMiningStart)
                     {
                         Helpers.ConsolePrint(Tag, "Switching disabled during ZIL round");
                         needSwitch = false;
+                        // RESTORE OLD PROFITS STATE
+                        foreach (var device in _miningDevices)
+                        {
+                            device.RestoreOldProfitsState();
+                        }
                         return;
                     }
-                    if (Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2)
+                    if ((Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2) && !Form_Main._NeedMiningStart)
                     {
                         Helpers.ConsolePrint(Tag, "Switching disabled after ZIL round");
                         needSwitch = false;
+                        // RESTORE OLD PROFITS STATE
+                        foreach (var device in _miningDevices)
+                        {
+                            device.RestoreOldProfitsState();
+                        }
                         return;
                     }
 
@@ -630,29 +645,30 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
-                        //if (Form_Main.isZilRound && device.Device.DeviceType == DeviceType.NVIDIA)
-                        if (Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98)
+                        //if (device.Device.DeviceType == DeviceType.NVIDIA)
                         {
-                            Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected for " + device.Device.Name);
-                            needSwitch = false;
-                            device.RestoreOldProfitsState();
-                            continue;
+                            if ((Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
+                            {
+                                Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected for " + device.Device.Name);
+                                needSwitch = false;
+                                device.RestoreOldProfitsState();
+                                continue;
+                            }
+                            if ((Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0) && !Form_Main._NeedMiningStart)
+                            {
+                                Helpers.ConsolePrint(Tag, "Switching disabled during ZIL round for " + device.Device.Name);
+                                needSwitch = false;
+                                device.RestoreOldProfitsState();
+                                continue;
+                            }
+                            if ((Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2) && !Form_Main._NeedMiningStart)
+                            {
+                                Helpers.ConsolePrint(Tag, "Switching disabled after ZIL round for " + device.Device.Name);
+                                needSwitch = false;
+                                device.RestoreOldProfitsState();
+                                continue;
+                            }
                         }
-                        if (Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0)
-                        {
-                            Helpers.ConsolePrint(Tag, "Switching disabled during ZIL round for " + device.Device.Name);
-                            needSwitch = false;
-                            device.RestoreOldProfitsState();
-                            continue;
-                        }
-                        if (Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2)
-                        {
-                            Helpers.ConsolePrint(Tag, "Switching disabled after ZIL round for " + device.Device.Name);
-                            needSwitch = false;
-                            device.RestoreOldProfitsState();
-                            continue;
-                        }
-
                         //if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable || Math.Round(percDiff * 100, 2) > 20)
                         if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                         {
@@ -678,7 +694,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
-
+            Form_Main._NeedMiningStart = false;
             /*
             if (AlgorithmSwitchingManager.forceZIL)
             {
@@ -977,10 +993,10 @@ namespace NiceHashMiner.Miners
                         if (ad.GMinerZil)
                         {
                             NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
-                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001 * 0.8;
+                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001 * 0.5;
 
                             NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
-                            groupMiners.CurrentRate += thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.8;
+                            groupMiners.CurrentRate += thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.5;
                         }
                         else
                         {

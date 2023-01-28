@@ -105,10 +105,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
+                            /*
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3"
                             },
+                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"

@@ -366,7 +366,7 @@ namespace NiceHashMiner.Miners
             }
 
             dynamic resp = JsonConvert.DeserializeObject(ResponseFromSRBMiner);
-            //Helpers.ConsolePrint("API ResponseFromSRBMiner:", ResponseFromSRBMiner.ToString());
+            Helpers.ConsolePrint("API ->:", ResponseFromSRBMiner.ToString());
             ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
 
             if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
@@ -459,6 +459,7 @@ namespace NiceHashMiner.Miners
                         }
                         */
                     }
+
                     if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                     {
                         devs = 0;

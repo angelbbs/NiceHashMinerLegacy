@@ -29,7 +29,63 @@ namespace NiceHashMiner.Miners
 
         public static void StartZilMonitor()
         {
-            while (true)//zil round monitor via NH connection
+            new Task(() => StartZilMonitorAPI()).Start();
+            new Task(() => StartZilMonitorNiceHash()).Start();
+        }
+        public static void StartZilMonitorNiceHash()
+        {
+            try
+            {
+                while (true)//zil round monitor via NH connection
+                {
+                    if (!needConnectionZIL) break;
+                    Form_Main.ZilMonitorRunning = true;
+
+                    if (tcpClient == null)
+                    {
+                        Thread.Sleep(5000);
+                        Helpers.ConsolePrint("ZILNiceHash", "Start monitor");
+                        new Task(() => ConnectToPool()).Start();
+                    }
+                    else
+                    {
+
+                    }
+                    if (tcpClient != null && !tcpClient.Connected)
+                    {
+                        if (needConnectionZIL)
+                        {
+                            Helpers.ConsolePrint("ZILNiceHash", "Reconnect wait: " + waitReconnect.ToString() + " sec");
+                            Thread.Sleep(1000 * waitReconnect);
+                            new Task(() => ConnectToPool()).Start();
+                        }
+                    }
+                    else
+                    {
+                        //Helpers.ConsolePrint("ZILNiceHash", "tcpClient.Connected");
+                    }
+                    Thread.Sleep(1000);
+                }
+
+                if (tcpClient != null)
+                {
+                    tcpClient.Close();
+                    tcpClient.Dispose();
+                    tcpClient = null;
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("ZILNiceHash", ex.ToString());
+            }
+
+            Form_Main.ZilMonitorRunning = false;
+            Helpers.ConsolePrint("ZILNiceHash", "Stop monitor");
+        }
+
+        public static void StartZilMonitorAPI()
+        {
+            Helpers.ConsolePrint("ZilAPI", "Start monitor");
+            while (true)//zil round monitor via ZIL API
             {
                 if (!needConnectionZIL) break;
                 Form_Main.ZilMonitorRunning = true;
@@ -53,79 +109,54 @@ namespace NiceHashMiner.Miners
                     WebResponse response = request.GetResponse();
                     if (((HttpWebResponse)response).StatusCode != HttpStatusCode.OK)
                     {
-                        Helpers.ConsolePrint("ZilMonitor", "ERROR: " + ((HttpWebResponse)response).StatusDescription);
+                        Helpers.ConsolePrint("ZilAPI", "ERROR: " + ((HttpWebResponse)response).StatusDescription);
                         continue;
                     }
 
                     dataStream = response.GetResponseStream();
                     StreamReader reader = new StreamReader(dataStream);
                     string responseFromServer = reader.ReadToEnd();
-                    //Helpers.ConsolePrint("ZilMonitor", responseFromServer);
+                    //Helpers.ConsolePrint("ZilAPI", responseFromServer);
                     dynamic resp = JsonConvert.DeserializeObject(responseFromServer);
                     if (resp != null)
                     {
                         string result = resp.result;
-                        //Helpers.ConsolePrint("ZilMonitor", result);
                         string _zil = result.Substring(result.Length - 2, 2);
                         int.TryParse(_zil, out int zil);
-                        //Helpers.ConsolePrint("ZilMonitor", zil.ToString());
                         Form_Main.ZilCount = zil;
                         if (zil > 0 & zil < 70)
                         {
                             _delay = 60 * 10;
-                            Helpers.ConsolePrint("ZilMonitor", "ZilCount: " + zil.ToString());
                         }
                         if (zil >= 70 & zil < 95)
                         {
-                            _delay = 60 * 1;
-                            Helpers.ConsolePrint("ZilMonitor", "ZilCount: " + zil.ToString());
+                            _delay = 60 * 2;
                         }
-                        if (zil >= 95 & zil < 98)
+                        if (zil >= 95 & zil < 97)
                         {
                             _delay = 30;
-                            Helpers.ConsolePrint("ZilMonitor", "ZilCount: " + zil.ToString());
                         }
-                        if (zil >= 98 & zil <= 99)
+                        if (zil == 97 || zil == 98)
                         {
                             _delay = 5;
-                            Helpers.ConsolePrint("ZilMonitor", "ZilCount: " + zil.ToString());
                         }
-                        if (zil == 99)
+                        if (zil == 99 || zil == 0)
                         {
                             _delay = 15;
-                            Helpers.ConsolePrint("ZilMonitor", "ZilCount: " + zil.ToString());
                             if (!Form_Main.isZilRound)
                             {
-                                Helpers.ConsolePrint("ZilMonitor", "Start ZIL round");
-                                new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
+                                //Helpers.ConsolePrint("ZilAPI", "ZIL round");
                                 if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                 ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
                             }
                             new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
                             MinersManager.MinerStatsCheck();
-                            Form_Main.isZilRound = true;
-                        }
-                        if (zil == 0)
-                        {
-                            _delay = 15;
-                            Helpers.ConsolePrint("ZilMonitor", "ZilCount: " + zil.ToString());
-                            if (!Form_Main.isZilRound)
-                            {
-                                Helpers.ConsolePrint("ZilMonitor", "Start ZIL round");
-                                new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
-                                if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                                ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
-                            }
-                            new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
-                            MinersManager.MinerStatsCheck();
-                            Form_Main.isZilRound = true;
                         }
                         if (zil > 0 & zil < 99)
                         {
                             if (Form_Main.isZilRound)
                             {
-                                Form_Main.isZilRound = false;
-                                Helpers.ConsolePrint("ZilMonitor", "End ZIL round");
+                                //Helpers.ConsolePrint("ZilAPI", "End ZIL round");
                                 new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
                                 if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                 ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
@@ -135,6 +166,7 @@ namespace NiceHashMiner.Miners
                                 }
                             }
                         }
+                        //Helpers.ConsolePrint("ZilAPI", zil.ToString());
                     }
 
                     reader.Close();
@@ -143,63 +175,26 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("ZilMonitor", ex.ToString());
+                    Helpers.ConsolePrint("ZilAPI", ex.ToString());
                 }
-
-
-
-                Thread.Sleep(1000 * _delay);
-            }
-
-                /*
-                while (true)//zil round monitor via NH connection
+                //sleep
+                int InjectTickSleep = 0;
+                do
                 {
-                    if (!needConnectionZIL) break;
-                    Form_Main.ZilMonitorRunning = true;
-
-                    if (tcpClient == null)
-                    {
-                        Thread.Sleep(5000);
-                        Helpers.ConsolePrint("ZIL", "Start monitor");
-                        new Task(() => ConnectToPool()).Start();
-                    }
-                    else
-                    {
-
-                    }
-                    if (tcpClient != null && !tcpClient.Connected)
-                    {
-                        if (needConnectionZIL)
-                        {
-                            Helpers.ConsolePrint("ZIL", "Reconnect wait: " + waitReconnect.ToString() + " sec");
-                            Thread.Sleep(1000 * waitReconnect);
-                            new Task(() => ConnectToPool()).Start();
-                        }
-                    }
-                    else
-                    {
-                        //Helpers.ConsolePrint("ZIL", "tcpClient.Connected");
-                    }
                     Thread.Sleep(1000);
-                }
-
-                if (tcpClient != null)
-                {
-                    tcpClient.Close();
-                    tcpClient.Dispose();
-                    tcpClient = null;
-                }
-                */
-
-
-                Form_Main.ZilMonitorRunning = false;
-            Helpers.ConsolePrint("ZIL", "Stop monitor");
+                    InjectTickSleep++;
+                } while (InjectTickSleep < _delay && needConnectionZIL);
+                InjectTickSleep = 0;
+                //Thread.Sleep(1000 * _delay);
+            }
+            Form_Main.ZilMonitorRunning = false;
+            Helpers.ConsolePrint("ZilAPI", "Stop monitor");
         }
 
 
         public static void ConnectToPool()
         {
-            Helpers.ConsolePrint("ZIL", "Start connection");
+            Helpers.ConsolePrint("ZILNiceHash", "Start connection");
             LingerOption lingerOption = new LingerOption(true, 0);
             while (needConnectionZIL)
             {
@@ -216,7 +211,6 @@ namespace NiceHashMiner.Miners
                 IPAddress addrl = IPAddress.Parse("0.0.0.0");
 
                 Reconnect:
-                //serverStream = null;
                 if (tcpClient != null)
                 {
                     tcpClient.Close();
@@ -261,26 +255,23 @@ namespace NiceHashMiner.Miners
                     }
                     catch (Exception ex)
                     {
-                        Helpers.ConsolePrint("ZIL", "Exception: " + ex);
+                        Helpers.ConsolePrint("ZILNiceHash", "Exception: " + ex);
                     }
                 }
                 else
                 {
-                    Helpers.ConsolePrint("ZIL", "Already connected");
+                    Helpers.ConsolePrint("ZILNiceHash", "Already connected");
                     ReadFromServer(serverStream, tcpClient);
                 }
 
                 if (!needConnectionZIL)
                 {
-                    Helpers.ConsolePrint("ZIL", "Disconnected. Stop connecting");
+                    Helpers.ConsolePrint("ZILNiceHash", "Disconnected. Stop connecting");
                     break;
                 }
                 else
                 {
-                    Helpers.ConsolePrint("ZIL", "Disconnected. Need reconnect");
-                    //Thread.Sleep(5000);
-                    //goto Reconnect;
-                    //Thread.Sleep(1000);
+                    Helpers.ConsolePrint("ZILNiceHash", "Disconnected. Need reconnect");
                     break;
                 }
                 Thread.Sleep(5 * 1000);
@@ -292,7 +283,6 @@ namespace NiceHashMiner.Miners
                 tcpClient.Dispose();
                 tcpClient = null;
             }
-            //Helpers.ConsolePrint("ZIL", "Disconnected. End connection");
         }
 
         public static byte[] StringToByteArray(String hex)
@@ -348,7 +338,7 @@ namespace NiceHashMiner.Miners
 
             if (serverStream == null)
             {
-                Helpers.ConsolePrint("ZIL", "Error in serverStream");
+                Helpers.ConsolePrint("ZILNiceHash", "Error in serverStream");
                 return;
             }
             serverStream.Write(subscribeBytes, 0, subscribeBytes.Length);
@@ -384,16 +374,13 @@ namespace NiceHashMiner.Miners
                         }
                         if (clientZero)
                         {
-                            //   continue;
-                            Helpers.ConsolePrint("ZIL", "clientZero");
+                            Helpers.ConsolePrint("ZILNiceHash", "clientZero");
                             break;
                         }
 
-                        // jsonrpc
                         var poolData = Encoding.ASCII.GetString(messagePool);
-
                         var poolAnswer = poolData.Split((char)0)[0];
-                        //Helpers.ConsolePrint("ZIL", "<- " + poolAnswer);
+                        //Helpers.ConsolePrint("ZILNiceHash", "<- " + poolAnswer);
 
                         if (poolAnswer.Contains("mining.notify") && !poolAnswer.Contains("method"))
                         {
@@ -404,7 +391,7 @@ namespace NiceHashMiner.Miners
                         {
                             poolAnswer = poolAnswer.Replace("}{", "}" + (char)10 + "{");
                             int amount = poolAnswer.Split(new char[] { (char)10 }, StringSplitOptions.None).Count() - 1;
-                            //Helpers.ConsolePrint("ZIL", amount.ToString());
+
                             for (var i = 0; i <= amount; i++)
                             {
                                 if (poolAnswer.Split((char)10)[i].Contains("mining.notify"))
@@ -412,18 +399,18 @@ namespace NiceHashMiner.Miners
                                     dynamic json = JsonConvert.DeserializeObject(poolAnswer.Split((char)10)[i]);
                                     string seedhash = json.@params[1];
                                     epoch = Epoch(seedhash);
-                                    //Helpers.ConsolePrint("ZIL", "Epoch = " + epoch.ToString());
+                                    //Helpers.ConsolePrint("ZILNiceHash", "Epoch = " + epoch.ToString());
                                     bool previousEpoch = EpochZIL;
                                     if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch)
                                     {
                                         if (!Form_Main.isZilRound)
                                         {
-                                            Helpers.ConsolePrint("ZIL", "Start ZIL round");
+                                            Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round");
                                             new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
                                             if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                             ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
                                         }
-                                        new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
+                                        //new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
                                         MinersManager.MinerStatsCheck();
                                         Form_Main.isZilRound = true;
                                     }
@@ -436,7 +423,7 @@ namespace NiceHashMiner.Miners
                                             {
                                                 Form_Main.isZilRound = false;
                                                 epochCount = 0;
-                                                Helpers.ConsolePrint("ZIL", "End ZIL round");
+                                                Helpers.ConsolePrint("ZILNiceHash", "End ZIL round");
                                                 new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
                                                 if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                                 ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
@@ -458,7 +445,7 @@ namespace NiceHashMiner.Miners
 
                         if (poolAnswer.Contains("false"))
                         {
-                            //Helpers.ConsolePrint("ZIL", tosend);
+                            //Helpers.ConsolePrint("ZILNiceHash", tosend);
                             //break;
                         }
 
@@ -482,17 +469,16 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
-                        Helpers.ConsolePrint("ZIL", "Disconnected");
+                        Helpers.ConsolePrint("ZILNiceHash", "Disconnected");
                         break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("ZIL", "Disconnected ex: " + ex.Message);
+                    Helpers.ConsolePrint("ZILNiceHash", "Disconnected ex: " + ex.Message);
                     break;
                 }
             }
         }
     }
-
 }

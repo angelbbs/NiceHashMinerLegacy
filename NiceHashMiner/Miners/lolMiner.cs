@@ -668,7 +668,7 @@ namespace NiceHashMiner.Miners
                     }
                     if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//dual
                     {
-                        delay_before_calc_hashrate = 180;
+                        delay_before_calc_hashrate = 70;
                         MinerStartDelay = 30;
                     }
                     var ad = GetSummaryAsync();

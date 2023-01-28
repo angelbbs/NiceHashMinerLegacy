@@ -79,7 +79,8 @@ namespace NiceHashMiner
 
         private bool _isDeviceDetectionInitialized = false;
 
-        private bool _isManuallyStarted = false;
+        public static bool _isManuallyStarted = false;
+        public static bool _NeedMiningStart = false;
         private bool _isNotProfitable = false;
 
         private Process mainproc = Process.GetCurrentProcess();
@@ -1633,11 +1634,6 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
-            
-            ZilClient.needConnectionZIL = true;
-            Form_Main.ZilMonitorRunning = true;
-            new Task(() => ZilClient.StartZilMonitor()).Start();
-            
         }
 
         private static void MinersGetVersionWatchdog()
@@ -3334,6 +3330,7 @@ public static void CloseChilds(Process parentId)
 
         public StartMiningReturnType StartMining(bool showWarnings)
         {
+            _NeedMiningStart = true;
             try
             {
                 MiningStarted = true;

@@ -161,7 +161,7 @@ namespace NiceHashMiner.Forms.Components
                     }
                     else
                     {
-                        secondaryFieldBoxBenchmarkSpeed.EntryText = "0";
+                        secondaryFieldBoxBenchmarkSpeed.EntryText = "";
                     }
                 }
             }
@@ -240,7 +240,7 @@ namespace NiceHashMiner.Forms.Components
             // update lvi speed
             if (_currentlySelectedLvi != null)
             {
-                _currentlySelectedLvi.SubItems[SPEED].Text = speedString;
+                //_currentlySelectedLvi.SubItems[SPEED].Text = speedString;
                 //_currentlySelectedLvi.SubItems[RATE].Text = rate;
                 if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
                 {

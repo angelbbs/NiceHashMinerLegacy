@@ -224,7 +224,12 @@ namespace NiceHashMiner.Forms
                 AlgorithmType.Octopus.ToString() + ", " +
                 AlgorithmType.ZelHash.ToString() + ", " +
                 AlgorithmType.ZHash.ToString() + "\r\n" +
-                "(NVIDIA)";
+                "(NVIDIA)" + "\r\n" +
+                AlgorithmType.KAWPOW.ToString() + ", " +
+                AlgorithmType.ZelHash.ToString() + ", " +
+                AlgorithmType.ZHash.ToString() + "\r\n" +
+                "(AMD)";
+
 
             if (ConfigManager.GeneralConfig.ZilFactor == 0.000d)
             {
@@ -1033,7 +1038,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
             if (!ComputeDeviceManager.Available.HasNvidia)
             {
-                checkBox_Zil_GMiner.Enabled = false;
+                //checkBox_Zil_GMiner.Enabled = false;
             }
         }
 

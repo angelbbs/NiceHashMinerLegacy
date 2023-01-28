@@ -503,7 +503,7 @@ namespace NiceHashMiner.Miners
             }
             catch
             {
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return null;
             }
 

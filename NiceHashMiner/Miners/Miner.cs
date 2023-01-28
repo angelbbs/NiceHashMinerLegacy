@@ -1381,7 +1381,7 @@ namespace NiceHashMiner
                         break;
                     }
                 }
-                if (minerrunning) Thread.Sleep(3000);
+                if (minerrunning) Thread.Sleep(5000);
             }
             catch (Exception ex)
             {
@@ -1844,6 +1844,7 @@ namespace NiceHashMiner
             catch (Exception ex)
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " GetAPIData reason: " + ex.Message);
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return null;
             }
 
