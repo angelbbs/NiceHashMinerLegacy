@@ -1,8 +1,10 @@
 ﻿using HashLib;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Stats;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -227,6 +229,17 @@ namespace NiceHashMiner.Miners
                     port = 13393;
                 }
                 var iep = new IPEndPoint(addrl, port);
+
+                List<string> IPsList = new List<string>();
+                var heserver = Dns.GetHostEntry(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation].Replace("auto.", ""));
+                foreach (IPAddress curAdd in heserver.AddressList)
+                {
+                    IPsList.Add(curAdd.ToString());
+                }
+                foreach (var ip in IPsList)
+                {
+                    NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, ip, (uint)port);
+                }
 
                 if (tcpClient == null)
                 {

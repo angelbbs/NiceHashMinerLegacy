@@ -182,6 +182,9 @@ namespace NiceHashMiner.Configs.Data
         public bool Zilliqua_GMiner = true;
         public bool RestartGMinerAfterZilRound = false;
         public double ZilFactor = 0.000d;
+        public ZILConfigGMiner ZILConfigGMiner = new ZILConfigGMiner();
+        public ZILConfigSRBMiner ZILConfigSRBMiner = new ZILConfigSRBMiner();
+        public ZILConfigNanominer ZILConfigNanominer = new ZILConfigNanominer();
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
         public bool StrongDeviceName = true;
@@ -274,7 +277,7 @@ namespace NiceHashMiner.Configs.Data
             MinimizeToTray = false;
             AlwaysOnTop = false;
             //            BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
-            DeviceDetection = new DeviceDetectionConfig();
+            DeviceDetection = new DeviceDetectionConfig(); 
             DisableAMDTempControl = false;
             DisableDefaultOptimizations = false;
             AutoScaleBTCValues = true;

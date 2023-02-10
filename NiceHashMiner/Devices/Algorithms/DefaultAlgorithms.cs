@@ -255,10 +255,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.Nanominer, AlgorithmType.Autolykos, "Autolykos")
                     {
                         ExtraLaunchParameters = "memTweak=1"
-                    },
-                    new DualAlgorithm(MinerBaseType.Nanominer, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
-                    {
-                        ExtraLaunchParameters = "memTweak=1"
                     }
                 }
             },

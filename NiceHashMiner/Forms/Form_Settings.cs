@@ -46,7 +46,7 @@ namespace NiceHashMiner.Forms
         private bool _isStartupChanged = false;
         private static Timer UpdateListView_timer;
         public static bool FormSettingsMoved = false;
-        public static bool Zil_GMiner = false;
+        //public static bool Zil_GMiner = false;
         public Form_Settings()
         {
             Process thisProc = Process.GetCurrentProcess();
@@ -214,33 +214,15 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(checkBoxLast24hours,
                 International.GetText("Form_Settings_ToolTip_Last24hours"));
 
-            string zilalgolist = AlgorithmType.Autolykos.ToString() + ", " +
-                AlgorithmType.AutolykosKHeavyHash.ToString() + ", " +
-                AlgorithmType.BeamV3.ToString() + ", " +
-                AlgorithmType.CuckooCycle.ToString() + ", " +
-                AlgorithmType.GrinCuckatoo32.ToString() + ", " +
-                AlgorithmType.KAWPOW.ToString() + ", " +
-                AlgorithmType.KHeavyHash.ToString() + ", " +
-                AlgorithmType.Octopus.ToString() + ", " +
-                AlgorithmType.ZelHash.ToString() + ", " +
-                AlgorithmType.ZHash.ToString() + "\r\n" +
-                "(NVIDIA)" + "\r\n" +
-                AlgorithmType.KAWPOW.ToString() + ", " +
-                AlgorithmType.ZelHash.ToString() + ", " +
-                AlgorithmType.ZHash.ToString() + "\r\n" +
-                "(AMD)";
-
-
             if (ConfigManager.GeneralConfig.ZilFactor == 0.000d)
             {
-                toolTip1.SetToolTip(checkBox_Zil_GMiner,
-                    string.Format(International.GetText("Form_Settings_ToolTip_ZilFactor"), zilalgolist));
+                toolTip1.SetToolTip(button_ZIL_additional_mining,
+                    string.Format(International.GetText("Form_Settings_ToolTip_ZilFactor")));
             } else
             {
-                toolTip1.SetToolTip(checkBox_Zil_GMiner,
+                toolTip1.SetToolTip(button_ZIL_additional_mining,
                                     string.Format(International.GetText("Form_Settings_ToolTip_ZilFactorP"),
-                                    (ConfigManager.GeneralConfig.ZilFactor * 100).ToString() + "%",
-                                    zilalgolist));
+                                    (ConfigManager.GeneralConfig.ZilFactor * 100).ToString() + "%"));
             }
 
             // Electricity cost
@@ -461,7 +443,7 @@ namespace NiceHashMiner.Forms
             checkBox_Disable_extra_launch_parameter_checking.Text = International.GetText("Form_Settings_checkBox_Disable_extra_launch_parameter_checking");
             checkBoxHideUnused.Text = International.GetText("Form_Settings_checkBox_Hide_Unused");
             checkBoxHideUnused2.Text = International.GetText("Form_Settings_checkBox_Hide_Unused");
-            checkBox_Zil_GMiner.Text = International.GetText("Form_Settings_checkBox_Zil_GMiner");
+            button_ZIL_additional_mining.Text = International.GetText("Form_Settings_button_ZIL_additional_mining");
             checkBox_DisableDetectionCPU.Text = International.GetText("Form_Settings_checkBox_DisableDetectionCPU");
             label_AutoStartMiningDelay.Text = International.GetText("Form_Settings_label_AutoStartMiningDelay");
             groupBox1.Text = International.GetText("Form_Settings_groupBox1");
@@ -883,8 +865,8 @@ namespace NiceHashMiner.Forms
                 checkBoxHideUnused2.BackColor = Form_Main._backColor;
                 checkBoxHideUnused2.ForeColor = Form_Main._textColor;
 
-                checkBox_Zil_GMiner.BackColor = Form_Main._backColor;
-                checkBox_Zil_GMiner.ForeColor = Form_Main._textColor;
+                //checkBox_Zil_GMiner.BackColor = Form_Main._backColor;
+                //checkBox_Zil_GMiner.ForeColor = Form_Main._textColor;
 
                 checkBox_ABEnableOverclock.BackColor = Form_Main._backColor;
                 checkBox_ABEnableOverclock.ForeColor = Form_Main._textColor;
@@ -1103,7 +1085,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxHideUnused.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxHideUnused2.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_Zil_GMiner.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                //checkBox_Zil_GMiner.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABEnableOverclock.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_mining_stopped.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_program_closing.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1255,7 +1237,7 @@ namespace NiceHashMiner.Forms
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBoxHideUnused.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
                 checkBoxHideUnused2.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
-                checkBox_Zil_GMiner.Checked = ConfigManager.GeneralConfig.Zilliqua_GMiner;
+                //checkBox_Zil_GMiner.Checked = ConfigManager.GeneralConfig.Zilliqua_GMiner;
                 checkBox_ABEnableOverclock.Checked = ConfigManager.GeneralConfig.ABEnableOverclock;
                 checkBox_ABDefault_mining_stopped.Checked = ConfigManager.GeneralConfig.ABDefaultMiningStopped;
                 checkBox_ABDefault_program_closing.Checked = ConfigManager.GeneralConfig.ABDefaultProgramClosing;
@@ -1265,7 +1247,7 @@ namespace NiceHashMiner.Forms
                 //checkBoxProxyAsFailover.Checked = ConfigManager.GeneralConfig.ProxyAsFailover;
                 //checkBoxStale.Checked = ConfigManager.GeneralConfig.StaleProxy;
 
-                Zil_GMiner = ConfigManager.GeneralConfig.Zilliqua_GMiner;
+                //Zil_GMiner = ConfigManager.GeneralConfig.Zilliqua_GMiner;
 
                 ConfigManager.GeneralConfig.ProxyAsFailover = false; //отключим до лучших времён
                 ConfigManager.GeneralConfig.StaleProxy = false;
@@ -1605,12 +1587,14 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused.Checked;
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused2.Checked;
-            ConfigManager.GeneralConfig.Zilliqua_GMiner = checkBox_Zil_GMiner.Checked;
+            //ConfigManager.GeneralConfig.Zilliqua_GMiner = checkBox_Zil_GMiner.Checked;
+            /*
             Zil_GMiner = checkBox_Zil_GMiner.Checked;
             if (!checkBox_Zil_GMiner.Checked)
             {
                 //ConfigManager.GeneralConfig.ZilFactor = 0.000d;
             }
+            */
             ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
             ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
             ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;
@@ -3244,6 +3228,21 @@ namespace NiceHashMiner.Forms
             {
 
             }
+        }
+
+        private void button_ZIL_additional_mining_Click(object sender, EventArgs e)
+        {
+            var settings = new Form_additional_mining();
+            try
+            {
+                //   SetChildFormCenter(settings);
+                settings.ShowDialog();
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("settings", er.ToString());
+            }
+            //Form_additional_mining.ActiveForm.ShowDialog();
         }
     }
 

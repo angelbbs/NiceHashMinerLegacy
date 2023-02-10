@@ -2507,25 +2507,31 @@ public static void CloseChilds(Process parentId)
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying, double power,
            DateTime StartMinerTime, bool isApiGetException, string processTag)
         {
+            //Helpers.ConsolePrint("trace", new System.Diagnostics.StackTrace().ToString());
+
             var apiGetExceptionString = isApiGetException ? " **" : "";
             string speedString = "";
             string algoName = iApiData.AlgorithmName;
-            if (iApiData.GMinerZil)
+            if (isZilRound && iApiData.AlgorithmID == AlgorithmType.NONE)
             {
                 algoName = "ZIL";
             }
             speedString = Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.ThirdSpeed,
                 iApiData.AlgorithmID, iApiData.SecondaryAlgorithmID, iApiData.ThirdAlgorithmID) +
                           algoName + apiGetExceptionString;
+            //Helpers.ConsolePrint("AddRateInfo", speedString);
             speedString = speedString.Replace("--", "0.000 H/s ");
             //еще больше костылей понаделал. Надо это всё, что от найса осталось, переделывать.
-            if (iApiData.AlgorithmID == AlgorithmType.NONE)
+            if (iApiData.AlgorithmID == AlgorithmType.NONE &&
+                iApiData.SecondaryAlgorithmID == AlgorithmType.NONE &&
+                iApiData.ThirdAlgorithmID == AlgorithmType.NONE)
             {
                 speedString = "...";
             }
             
             string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
             speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + speedString + "\\b\\par}";
+            /*
             if (iApiData.AlgorithmID == AlgorithmType.AutolykosZil || (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto))
             {
                 if (iApiData.SecondarySpeed > 0)
@@ -2537,7 +2543,7 @@ public static void CloseChilds(Process parentId)
                     speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.Speed) + "H/s Autolykos\\b0 +Zilliqa\\b\\par}";
                 }
             }
-
+            */
             var rateBtcString = FormatPayingOutput(paying, power);
             if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
@@ -3744,7 +3750,9 @@ public static void CloseChilds(Process parentId)
                     var timenow = DateTime.Now;
                     Uptime = timenow.Subtract(StartTime);
                     label_Uptime.Visible = true;
-                    label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
+                    label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " +
+                                        Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
+                        //" Блок зилики: " + ZilCount.ToString();
                 }
 
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)

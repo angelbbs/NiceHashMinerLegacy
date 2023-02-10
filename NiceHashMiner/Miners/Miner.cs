@@ -39,7 +39,7 @@ namespace NiceHashMiner
         public double SecondarySpeed;
         public double ThirdSpeed;
         public double PowerUsage;
-        public bool GMinerZil;
+        public bool ZilRound;
 
         public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE, MiningPair mpairs = null)
         {
@@ -1490,8 +1490,9 @@ namespace NiceHashMiner
                         strPlatform = "CPU";
                     }
                 }
-                /*
+                
                 GC.Collect();
+                /*
                 try
                 {
                     byte[] cache = File.ReadAllBytes(Path);
@@ -1500,8 +1501,8 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("Caching", ex.ToString());
                 }
-                */
-                /*
+                
+                
                 if (Path.ToLower().Contains("gminer"))
                 {
                     if (MinerVersion.GetMinerVersion("GMiner").Length > 2)
@@ -1533,17 +1534,23 @@ namespace NiceHashMiner
                 */
 
                 MinerDelayStart(Path);
+
                 if (P.Start())
                 {
+                    Helpers.ConsolePrint(MinerTag(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
                     IsRunning = true;
                     IsRunningNew = IsRunning;
-                    //  NiceHashStats.SetDeviceStatus("MINING");
 
                     if (Form_Main.DivertAvailable)
                     {
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
-
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
+                        string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
+                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, Path,
+                            strPlatform, w, false,
+                            false,
+                            false, ConfigManager.GeneralConfig.DivertRun,
+                            ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch);
                         if (Form_Main.DaggerHashimoto3GB && algo != -9 && Form_Main.DaggerHashimoto3GBEnabled)
                         {
                             if (DHClient.serverStream == null)
@@ -1580,13 +1587,7 @@ namespace NiceHashMiner
                                 new Task(() => DHClient4gb.StartConnection()).Start();
                             }
                         }
-                        string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
-                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, Path,
-                            strPlatform, w, false,
-                            false,
-                            false, ConfigManager.GeneralConfig.DivertRun,
-                            ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch);
-
+                        
                         _currentPidData = new MinerPidData
                         {
                             MinerBinPath = P.StartInfo.FileName,
@@ -1603,9 +1604,7 @@ namespace NiceHashMiner
                         };
                     }
                     _allPidData.Add(_currentPidData);
-
-                    Helpers.ConsolePrint(MinerTag(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
-
+                    
                     StartCoolDownTimerChecker();
                     return P;
                 }

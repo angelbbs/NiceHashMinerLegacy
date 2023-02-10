@@ -306,7 +306,7 @@ namespace NiceHashMiner.Forms.Components
                     name = dualAlg.DualAlgorithmNameCustom;
                     miner = alg.MinerBaseTypeName;
                     secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
-                    totalSpeed = alg.BenchmarkSpeedString() + "/" + secondarySpeed;
+                    totalSpeed = alg.BenchmarkSpeedString() + "/ " + secondarySpeed;
                     payingRatio = alg.CurPayingRatio + "/" + alg.CurSecondPayingRatio;
                 }
                 else
@@ -324,7 +324,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     miner = miner + MinerVersion.GetMinerVersion(miner);
                 }
-
+                
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
@@ -351,12 +351,7 @@ namespace NiceHashMiner.Forms.Components
                     double.TryParse(alg.CurPayingRate, out var valueRate);
                     double.TryParse(alg.CurSecondPayingRate, out var valueRateSecond);
 
-                    if (alg.MinerBaseType == MinerBaseType.GMiner &&
-                        alg.DeviceType == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
-                        alg.NiceHashID != AlgorithmType.DaggerHashimoto &&
-                        alg.NiceHashID != AlgorithmType.DaggerKHeavyHash &&
-                        alg.NiceHashID != AlgorithmType.ETCHash &&
-                        alg.NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+                    if (Form_additional_mining.isAlgoZIL(alg.AlgorithmName, alg.MinerBaseType, alg.DeviceType))
                     {
                         valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
                     }
@@ -463,22 +458,28 @@ namespace NiceHashMiner.Forms.Components
 
                                 if (algorithm is DualAlgorithm dualAlg)
                                 {
-                                    //lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
+
                                     lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + algorithm.CurSecondPayingRatio;
+                                    if (IsInBenchmark && algorithm.BenchmarkSecondarySpeed == 0)
+                                    {
+                                        lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                                    }
+                                    else
+                                    {
+                                        lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString() +
+                                                                   "/ " + algorithm.SecondaryBenchmarkSpeedString();
+                                    }
+
                                 }
                                 else
                                 {
+                                    lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
                                     lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
                                 }
                                 double.TryParse(algorithm.CurPayingRate, out var valueRate);
                                 double.TryParse(algorithm.CurSecondPayingRate, out var valueRateSecond);
 
-                                if (algo.MinerBaseType == MinerBaseType.GMiner &&
-                                    algo.DeviceType == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
-                                    algo.NiceHashID != AlgorithmType.DaggerHashimoto &&
-                                    algo.NiceHashID != AlgorithmType.DaggerKHeavyHash &&
-                                    algo.NiceHashID != AlgorithmType.ETCHash &&
-                                    algo.NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+                                if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, algo.DeviceType))
                                 {
                                     valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
                                 }
@@ -548,9 +549,15 @@ namespace NiceHashMiner.Forms.Components
                     {
                         if (algo is DualAlgorithm dualAlg)
                         {
-                            //   lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
-                            lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() + "/" + dualAlg.SecondaryBenchmarkSpeedString();
-                            //lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() + "/" + algo.SecondaryBenchmarkSpeedString();
+                            if (IsInBenchmark && algo.BenchmarkSecondarySpeed == 0)
+                            {
+                                lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                            }
+                            else
+                            {
+                                lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() +
+                                                           "/ " + dualAlg.SecondaryBenchmarkSpeedString();
+                            }
                         }
                         else
                         {
@@ -669,9 +676,10 @@ namespace NiceHashMiner.Forms.Components
                             if (algo != null)
                             {
                                 //lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
-                                if (algo is DualAlgorithm dualAlgo && !algo.BenchmarkSpeedString().Contains("%"))
+                                if (algo is DualAlgorithm dualAlgo && algo.BenchmarkSecondarySpeed > 0)
                                 {
-                                    lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() + "/" + dualAlgo.SecondaryBenchmarkSpeedString();
+                                    lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString() +
+                                                               "/ " + algo.SecondaryBenchmarkSpeedString();
                                 }
                                 else
                                 {
@@ -682,12 +690,7 @@ namespace NiceHashMiner.Forms.Components
 
                             double.TryParse(algorithm.CurPayingRate, out var valueRate);
 
-                            if (algo.MinerBaseType == MinerBaseType.GMiner &&
-                                    algo.DeviceType == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
-                                    algo.NiceHashID != AlgorithmType.DaggerHashimoto &&
-                                    algo.NiceHashID != AlgorithmType.DaggerKHeavyHash &&
-                                    algo.NiceHashID != AlgorithmType.ETCHash &&
-                                    algo.NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+                            if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, algo.DeviceType))
                             {
                                 valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
                             }

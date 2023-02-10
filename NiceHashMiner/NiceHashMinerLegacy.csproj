@@ -165,6 +165,7 @@
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
+    <Compile Include="Configs\Data\ZILConfig.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
@@ -179,6 +180,12 @@
     </Compile>
     <Compile Include="Forms\Components\AlgorithmsListViewOverClock.Designer.cs">
       <DependentUpon>AlgorithmsListViewOverClock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_additional_mining.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_additional_mining.Designer.cs">
+      <DependentUpon>Form_additional_mining.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form_API_keys.cs">
       <SubType>Form</SubType>
@@ -428,6 +435,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_additional_mining.resx">
+      <DependentUpon>Form_additional_mining.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_API_keys.resx">
       <DependentUpon>Form_API_keys.cs</DependentUpon>

@@ -122,8 +122,14 @@ namespace NiceHashMiner.Stats
                 listen = false;
                 Helpers.ConsolePrint("NiceHashAPIServer", "Already started?");
                 Helpers.ConsolePrint("NiceHashAPIServer", ex.ToString());
-                client.Close();
-                RemoteListener.Server.Close();
+                if (client != null)
+                {
+                    client.Close();
+                }
+                if (RemoteListener != null)
+                {
+                    RemoteListener.Server.Close();
+                }
                 NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "127.0.0.1", (uint)Port, false);
                 NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, "0.0.0.0", (uint)Port, false);
                 return;

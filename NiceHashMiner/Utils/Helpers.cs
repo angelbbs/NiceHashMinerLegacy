@@ -203,12 +203,9 @@ namespace NiceHashMiner
             }
         }
 
-        public static string FormatSpeedOutput(double speed, string separator = " ", bool _isDual = false)
+        public static string FormatSpeedOutput(double speed, string separator = " ", string format = "F3")
         {
             string ret;
-            string format = "F3";
-            if (_isDual) format = "F2";
-
             if (speed < 1000)
                 ret = (speed).ToString(format, CultureInfo.InvariantCulture) + separator;
             else if (speed < 100000)
@@ -220,7 +217,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        private static string GetAlgorithmSpeedUnit(AlgorithmType algo)
+        public static string GetAlgorithmSpeedUnit(AlgorithmType algo)
         {
             string unit = "";
             switch (algo)
@@ -244,170 +241,55 @@ namespace NiceHashMiner
         public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed = 0, double thirdSpeed = 0,
             AlgorithmType algo = AlgorithmType.NONE, AlgorithmType algo2 = AlgorithmType.NONE, AlgorithmType algo3 = AlgorithmType.NONE)
         {
-            //Helpers.ConsolePrint("!!", "algo: " + algo.ToString() + " primarySpeed: " + primarySpeed.ToString());
-            //Helpers.ConsolePrint("!!", "algo2: " + algo2.ToString() + " secondarySpeed: " + secondarySpeed.ToString());
-            //Helpers.ConsolePrint("!!", "algo3: " + algo3.ToString() + " thirdSpeed: " + thirdSpeed.ToString());
-            string unit = "";
+            //Helpers.ConsolePrint("FormatDualSpeedOutput", "algo: " + algo.ToString() + " primarySpeed: " + primarySpeed.ToString());
+            //Helpers.ConsolePrint("FormatDualSpeedOutput", "algo2: " + algo2.ToString() + " secondarySpeed: " + secondarySpeed.ToString());
+            //Helpers.ConsolePrint("FormatDualSpeedOutput", "algo3: " + algo3.ToString() + " thirdSpeed: " + thirdSpeed.ToString());
             string ret = "";
             string first = "";
             string second = "";
             string third = "";
+            string format = "F3";
+            if (algo2 == AlgorithmType.Scrypt_UNUSED) algo2 = AlgorithmType.NONE;
+            if (algo3 == AlgorithmType.Scrypt_UNUSED) algo3 = AlgorithmType.NONE;
+            if (algo == AlgorithmType.BeamV3) format = "F1";
+            if (algo == AlgorithmType.ZelHash) format = "F1";
+            if (algo == AlgorithmType.ZHash) format = "F1";
 
-            if (algo2 == AlgorithmType.NONE || algo == algo2)
+            if (algo != AlgorithmType.NONE && algo2 == AlgorithmType.NONE && algo3 == AlgorithmType.NONE)
             {
-                ret = FormatSpeedOutput(primarySpeed) + GetAlgorithmSpeedUnit(algo); 
+                ret = FormatSpeedOutput(primarySpeed, " ", format) + GetAlgorithmSpeedUnit(algo); 
             } else
             {
-                first = FormatSpeedOutput(primarySpeed, " ", true);
-                second = FormatSpeedOutput(secondarySpeed, " ", true);
-                third = FormatSpeedOutput(thirdSpeed, " ", true);
+                first = FormatSpeedOutput(primarySpeed, " ", format);
+                second = FormatSpeedOutput(secondarySpeed, " ", format);
+                third = FormatSpeedOutput(thirdSpeed, " ", format);
                 
-                if (algo2 == AlgorithmType.DaggerHashimoto)
+                if (algo == AlgorithmType.NONE && algo2 != AlgorithmType.NONE)
                 {
                     ret = second + GetAlgorithmSpeedUnit(algo2);
                 } 
-                if (algo2 == AlgorithmType.KHeavyHash)
+                
+                if (algo != AlgorithmType.NONE && algo2 != AlgorithmType.NONE)
                 {
                     ret = first + GetAlgorithmSpeedUnit(algo) + "/ " + second + GetAlgorithmSpeedUnit(algo2);
                 }
-                if (algo3 == AlgorithmType.DaggerHashimoto)
+                if (algo == AlgorithmType.NONE && algo2 == AlgorithmType.NONE && algo3 != AlgorithmType.NONE)
                 {
                     ret = third + GetAlgorithmSpeedUnit(algo3);
                 }
 
-                if (primarySpeed == 0 && secondarySpeed == 0 && thirdSpeed == 0)
+                double allhash = primarySpeed + secondarySpeed + thirdSpeed;
+                if (allhash == 0)
                 {
-                    ret = "--";
-                    return ret;
+                    //ret = "--";
+                    //return ret;
                 }
             }
-
+            //Helpers.ConsolePrint("FormatDualSpeedOutput", ret);
             return ret;
         }
 
-        public static string FormatDualSpeedOutput0(double primarySpeed, double secondarySpeed = 0, double thirdSpeed = 0,
-            AlgorithmType algo = AlgorithmType.NONE, AlgorithmType algo2 = AlgorithmType.NONE, AlgorithmType algo3 = AlgorithmType.NONE)
-        {
-            string ret;
-            string first = "";
-            string second = "";
-            string third = "";
-            string separator = "";
-
-            if (algo2 == AlgorithmType.NONE || algo == algo2)
-            {
-                ret = FormatSpeedOutput(primarySpeed);
-            }
-            else
-            {
-                if (primarySpeed == 0)
-                {
-                    first = "0";
-                }
-                else
-                {
-                    first = FormatSpeedOutput(primarySpeed, "", true);
-                }
-
-                if (secondarySpeed == 0)
-                {
-                    second = "0";
-                }
-                else
-                {
-                    second = FormatSpeedOutput(secondarySpeed, "", true);
-                }
-
-                if (thirdSpeed == 0)
-                {
-                    third = "";
-                }
-                else
-                {
-                    third = " + " + FormatSpeedOutput(thirdSpeed, "", true);
-                }
-                if (algo2 == AlgorithmType.DaggerHashimoto)
-                {
-                    ret = first + " + " + second;
-                }
-                else
-                {
-                    ret = first + "/" + second + third;
-                }
-                separator = " ";
-
-                if (primarySpeed == 0 && secondarySpeed == 0 && thirdSpeed == 0)
-                {
-                    ret = "--";
-                    return ret;
-                }
-            }
-
-            string unit = "";
-            string unit2 = "";
-            string unit3 = "";
-            switch (algo)
-            {
-                case AlgorithmType.ZHash:
-                case AlgorithmType.ZelHash:
-                case AlgorithmType.BeamV3:
-                    unit = "Sol/s ";
-                    break;
-                case AlgorithmType.CuckooCycle:
-                case AlgorithmType.GrinCuckatoo32:
-                    unit = "G/s ";
-                    break;
-                default:
-                    unit = "H/s ";
-                    break;
-            }
-            switch (algo2)
-            {
-                case AlgorithmType.ZHash:
-                case AlgorithmType.ZelHash:
-                case AlgorithmType.BeamV3:
-                    unit2 = "Sol/s ";
-                    break;
-                case AlgorithmType.CuckooCycle:
-                case AlgorithmType.GrinCuckatoo32:
-                    unit2 = "G/s ";
-                    break;
-                default:
-                    unit2 = "H/s ";
-                    break;
-            }
-            switch (algo3)
-            {
-                case AlgorithmType.ZHash:
-                case AlgorithmType.ZelHash:
-                case AlgorithmType.BeamV3:
-                    unit2 = "Sol/s ";
-                    break;
-                case AlgorithmType.CuckooCycle:
-                case AlgorithmType.GrinCuckatoo32:
-                    unit3 = "G/s ";
-                    break;
-                default:
-                    unit3 = "H/s ";
-                    break;
-            }
-            if (unit.Equals(unit2) & unit2.Equals(unit3))
-            {
-                return ret + separator + unit;
-            }
-
-            if (!unit.Equals(unit2) && secondarySpeed > 0)
-            {
-                return first + separator + unit + " + " + second + separator + unit2;
-            }
-
-            if (unit.Equals(unit2) && !unit.Equals(unit3) && thirdSpeed > 0)
-            {
-                return ret + third + separator + unit3;
-            }
-            return ret + separator + unit;
-        }
-
+        
         public static string GetMotherboardID()
         {
             var mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");

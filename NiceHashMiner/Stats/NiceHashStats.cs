@@ -1650,10 +1650,13 @@ namespace NiceHashMiner.Stats
                         HashRate = device.MiningHashrate;
                         SecondHashRate = device.MiningHashrateSecond;
                         ThirdHashRate = device.MiningHashrateThird;
-                        
-                        if (rigs == 1 & device.AlgorithmID > 0)
+
+                        if (rigs == 1)
                         {
-                            speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
+                            if (device.AlgorithmID > 0)
+                            {
+                                speedsJson.Add(new JArray(device.AlgorithmID, HashRate)); //  номер алгоритма, хешрейт
+                            }
                             if (device.SecondAlgorithmID > 0)
                             {
                                 speedsJson.Add(new JArray(device.SecondAlgorithmID, SecondHashRate)); 

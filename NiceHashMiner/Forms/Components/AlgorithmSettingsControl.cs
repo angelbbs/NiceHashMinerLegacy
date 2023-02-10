@@ -182,6 +182,10 @@ namespace NiceHashMiner.Forms.Components
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
                 //_currentlySelectedAlgorithm.CurPayingRate = value.ToString();
             }
+            else
+            {
+                _currentlySelectedAlgorithm.BenchmarkSpeed = 0;
+            }
             UpdateSpeedText();
         }
         private void TextChangedPowerUsage(object sender, EventArgs e)
@@ -190,6 +194,10 @@ namespace NiceHashMiner.Forms.Components
             if (double.TryParse(field_PowerUsage.EntryText, out var value))
             {
                 _currentlySelectedAlgorithm.PowerUsage = Math.Round(value, 0);
+            }
+            else
+            {
+                _currentlySelectedAlgorithm.PowerUsage = 0;
             }
             UpdateSpeedText();
         }
@@ -201,6 +209,10 @@ namespace NiceHashMiner.Forms.Components
             {
                 //dualAlgo.SecondaryBenchmarkSpeed = secondaryValue;
                 _currentlySelectedAlgorithm.BenchmarkSecondarySpeed = secondaryValue;
+            }
+            else
+            {
+                _currentlySelectedAlgorithm.BenchmarkSecondarySpeed = 0;
             }
             UpdateSpeedText();
         }

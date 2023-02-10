@@ -130,6 +130,7 @@ namespace NiceHashMiner.Forms.Components {
             this.AutoSize = true;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Controls.Add(this.groupBoxMinerGroup);
+            this.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.Name = "GroupProfitControl";
             this.Size = new System.Drawing.Size(548, 43);
             this.groupBoxMinerGroup.ResumeLayout(false);

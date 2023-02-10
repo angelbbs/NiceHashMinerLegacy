@@ -175,7 +175,8 @@ namespace NiceHashMiner.Forms
             this.checkBox_DisableDetectionNVIDIA = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDetectionAMD = new System.Windows.Forms.CheckBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
-            this.checkBox_Zil_GMiner = new System.Windows.Forms.CheckBox();
+            this.button_ZIL_additional_mining = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.checkBoxHideUnused = new System.Windows.Forms.CheckBox();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
@@ -2087,7 +2088,8 @@ namespace NiceHashMiner.Forms
             // tabPageDevicesAlgos
             // 
             this.tabPageDevicesAlgos.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPageDevicesAlgos.Controls.Add(this.checkBox_Zil_GMiner);
+            this.tabPageDevicesAlgos.Controls.Add(this.button_ZIL_additional_mining);
+            this.tabPageDevicesAlgos.Controls.Add(this.button1);
             this.tabPageDevicesAlgos.Controls.Add(this.checkBoxHideUnused);
             this.tabPageDevicesAlgos.Controls.Add(this.checkBox_Disable_extra_launch_parameter_checking);
             this.tabPageDevicesAlgos.Controls.Add(this.groupBoxAlgorithmSettings);
@@ -2101,19 +2103,24 @@ namespace NiceHashMiner.Forms
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             // 
-            // checkBox_Zil_GMiner
+            // button_ZIL_additional_mining
             // 
-            this.checkBox_Zil_GMiner.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_Zil_GMiner.AutoSize = true;
-            this.checkBox_Zil_GMiner.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Zil_GMiner.Location = new System.Drawing.Point(378, 195);
-            this.checkBox_Zil_GMiner.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_Zil_GMiner.Name = "checkBox_Zil_GMiner";
-            this.checkBox_Zil_GMiner.Size = new System.Drawing.Size(246, 17);
-            this.checkBox_Zil_GMiner.TabIndex = 401;
-            this.checkBox_Zil_GMiner.Text = "Enable Ziliqua (ZIL) round mining using GMiner";
-            this.checkBox_Zil_GMiner.UseVisualStyleBackColor = true;
+            this.button_ZIL_additional_mining.Location = new System.Drawing.Point(378, 189);
+            this.button_ZIL_additional_mining.Name = "button_ZIL_additional_mining";
+            this.button_ZIL_additional_mining.Size = new System.Drawing.Size(285, 23);
+            this.button_ZIL_additional_mining.TabIndex = 403;
+            this.button_ZIL_additional_mining.Text = "Additional Zilliqua (ZIL) mining settings";
+            this.button_ZIL_additional_mining.UseVisualStyleBackColor = true;
+            this.button_ZIL_additional_mining.Click += new System.EventHandler(this.button_ZIL_additional_mining_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(11, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 402;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // checkBoxHideUnused
             // 
@@ -2825,6 +2832,7 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxShowMinersVersions;
         private System.Windows.Forms.CheckBox checkBoxHideUnused;
         private System.Windows.Forms.CheckBox checkBoxHideUnused2;
-        private System.Windows.Forms.CheckBox checkBox_Zil_GMiner;
+        private System.Windows.Forms.Button button_ZIL_additional_mining;
+        private System.Windows.Forms.Button button1;
     }
 }

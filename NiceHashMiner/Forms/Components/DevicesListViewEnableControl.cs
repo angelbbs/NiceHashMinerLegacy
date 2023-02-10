@@ -281,9 +281,15 @@ namespace NiceHashMiner.Forms.Components
 
             foreach (var computeDevice in _computeDevices)
             {
-                string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, computeDevice.MiningHashrateSecond, 
-                    computeDevice.MiningHashrateThird, (AlgorithmType)computeDevice.AlgorithmID, 
-                    (AlgorithmType)computeDevice.SecondAlgorithmID, (AlgorithmType)computeDevice.ThirdAlgorithmID);
+                //if (computeDevice == null || !computeDevice.Enabled) continue;
+
+                string cHashrate = Helpers.FormatDualSpeedOutput(computeDevice.MiningHashrate, computeDevice.MiningHashrateSecond,
+                computeDevice.MiningHashrateThird, (AlgorithmType)computeDevice.AlgorithmID,
+                (AlgorithmType)computeDevice.SecondAlgorithmID, (AlgorithmType)computeDevice.ThirdAlgorithmID);
+                if (computeDevice.MiningHashrate + computeDevice.MiningHashrateSecond + computeDevice.MiningHashrateThird == 0)
+                {
+                    cHashrate = "--";
+                }
                 string cTemp = "";
                 if (computeDevice.TempMemory > 0 )
                 {
@@ -337,7 +343,8 @@ namespace NiceHashMiner.Forms.Components
                         }
                         else
                         {
-                            listViewDevices.Items[index].SubItems[1].Text = cHashrate.Contains("0.00") ? "--" : cHashrate;
+                            listViewDevices.Items[index].SubItems[1].Text = cHashrate;
+                            //listViewDevices.Items[index].SubItems[1].Text = cHashrate.Contains("0.00") ? "--" : cHashrate;
                         }
                         listViewDevices.Items[index].Checked = computeDevice.Enabled;
                         listViewDevices.Items[index].SubItems[2].Text = cTemp.Contains("-1") ? "--" : cTemp;

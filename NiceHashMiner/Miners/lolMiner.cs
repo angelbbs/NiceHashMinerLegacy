@@ -201,6 +201,13 @@ namespace NiceHashMiner.Miners
                     apiBind + " " + param +
                               " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
+            {
+                LastCommandLine = "--algo C32" +
+                GetServer("cuckoocycle", username, null, "3383") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + 
@@ -312,6 +319,13 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--algo C29AE " +
                 " --pool " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.lolMiner --pass x" +
                 " --pool " + Links.CheckDNS("stratum+tcp://cuckoocycle.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                              param +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
+            {
+                CommandLine = "--algo C32 " +
+                " --pool " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030").Replace("stratum+tcp://", "") + " --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -489,13 +503,14 @@ namespace NiceHashMiner.Miners
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.lolMinerBusID).ToList();
             foreach (var mPair in sortedMinerPairs)
             {
+                /*
                 Helpers.ConsolePrint("lolMinerIndexing", "Index: " + mPair.Device.Index);
                 Helpers.ConsolePrint("lolMinerIndexing", "Name: " + mPair.Device.Name);
                 Helpers.ConsolePrint("lolMinerIndexing", "ID: " + mPair.Device.ID);
                 Helpers.ConsolePrint("lolMinerIndexing", "IDbybus: " + mPair.Device.IDByBus);
                 Helpers.ConsolePrint("lolMinerIndexing", "busid: " + mPair.Device.BusID);
                 Helpers.ConsolePrint("lolMinerIndexing", "lol: " + mPair.Device.lolMinerBusID);
-
+                */
                 //список карт выводить --devices 999
                 //double id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
                 int id = (int)mPair.Device.lolMinerBusID;
@@ -563,6 +578,10 @@ namespace NiceHashMiner.Miners
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
@@ -662,6 +681,11 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
+                    {
+                        delay_before_calc_hashrate = 40;
+                        MinerStartDelay = 5;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
                     {
                         delay_before_calc_hashrate = 40;
                         MinerStartDelay = 5;
@@ -833,6 +857,7 @@ namespace NiceHashMiner.Miners
                                 //Helpers.ConsolePrint("API: ", "hashrates: " + hashrates[w].ToString());
                             }
                         }
+                        //ad.SecondaryAlgorithmID = AlgorithmType.NONE;
                     }
                     else //duals
                     {
@@ -858,19 +883,11 @@ namespace NiceHashMiner.Miners
                                 }
                             }
                         }
+
+                        ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
+                        ad.ThirdAlgorithmID = AlgorithmType.NONE;
                     }
 
-
-                    /*
-                    if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto || MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
-                    {
-                        mult = 1000000;
-                    }
-                    else
-                    {
-                        mult = 1;
-                    }
-                    */
                     ad.Speed = totals;
                     ad.SecondarySpeed = totals2;
                     if (Num_Workers > 0)

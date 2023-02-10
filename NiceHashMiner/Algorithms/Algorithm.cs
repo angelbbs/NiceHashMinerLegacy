@@ -309,7 +309,7 @@ namespace NiceHashMiner.Algorithms
             {
                 return BenchmarkStatus;
             }
-
+            
             if (BenchmarkSpeed > 0)
             {
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, 0,  NiceHashID);
@@ -347,12 +347,7 @@ namespace NiceHashMiner.Algorithms
             {
                 CurrentProfit = (CurNhmSmaDataVal * AvaragedSpeed + payingSecond * BenchmarkSecondarySpeed) * Mult;
             }
-            if (mbt == MinerBaseType.GMiner &&
-                                   devtype == DeviceType.NVIDIA && Form_Settings.Zil_GMiner &&
-                                    NiceHashID != AlgorithmType.DaggerHashimoto &&
-                                    NiceHashID != AlgorithmType.DaggerKHeavyHash &&
-                                    NiceHashID != AlgorithmType.ETCHash &&
-                                    NiceHashID != AlgorithmType.ETCHashKHeavyHash)
+            if (Form_additional_mining.isAlgoZIL(AlgorithmName, mbt, devtype))
             {
                 CurrentProfit += CurrentProfit * ConfigManager.GeneralConfig.ZilFactor;
             }
