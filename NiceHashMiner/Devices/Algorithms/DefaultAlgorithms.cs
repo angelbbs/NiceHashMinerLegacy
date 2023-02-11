@@ -99,26 +99,22 @@ namespace NiceHashMiner.Devices.Algorithms
 
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
-                                //ExtraLaunchParameters = "--gpu-boost 3"
                             },
+                            //до тех пор, пока autolykos не починят
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
-                            /*
-                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.DaggerHashimoto, "Autolykos+Zilliqa")
-                            {
-                                //ExtraLaunchParameters = "--gpu-boost 3"
-                            },
                             */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
-                                //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
+                            /*
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
                             {
-                                ExtraLaunchParameters = "--gpu-auto-tune 1 --gpu-autolykos2-preload 1"
                             },
+                            */
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
                             {
                                 ExtraLaunchParameters = "--gpu-auto-tune 1"
@@ -187,10 +183,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--enablezilcache=1"
                             },
-                            //new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
-                            //{
-                            //    ExtraLaunchParameters = ""
-                            //},
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = ""

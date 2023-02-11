@@ -1,3 +1,4 @@
+using NiceHashMiner.Miners.Grouping;
 using System;
 
 namespace NiceHashMiner.Interfaces
@@ -7,7 +8,7 @@ namespace NiceHashMiner.Interfaces
         void ClearRatesAll();
 
         void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying, double power,
-           DateTime StartMinerTime, bool isApiGetException, string ProcessTag);
+           DateTime StartMinerTime, bool isApiGetException, string ProcessTag, GroupMiner groupMiners);
         //void RaiseAlertSharesNotAccepted(string algoName);
 
         // The following four must use an invoker since they may be called from non-UI thread

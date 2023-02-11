@@ -3237,6 +3237,7 @@ namespace NiceHashMiner.Forms
             {
                 //   SetChildFormCenter(settings);
                 settings.ShowDialog();
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
             }
             catch (Exception er)
             {

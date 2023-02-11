@@ -176,7 +176,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_DisableDetectionAMD = new System.Windows.Forms.CheckBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.button_ZIL_additional_mining = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.checkBoxHideUnused = new System.Windows.Forms.CheckBox();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
@@ -2089,7 +2088,6 @@ namespace NiceHashMiner.Forms
             // 
             this.tabPageDevicesAlgos.BackColor = System.Drawing.SystemColors.Control;
             this.tabPageDevicesAlgos.Controls.Add(this.button_ZIL_additional_mining);
-            this.tabPageDevicesAlgos.Controls.Add(this.button1);
             this.tabPageDevicesAlgos.Controls.Add(this.checkBoxHideUnused);
             this.tabPageDevicesAlgos.Controls.Add(this.checkBox_Disable_extra_launch_parameter_checking);
             this.tabPageDevicesAlgos.Controls.Add(this.groupBoxAlgorithmSettings);
@@ -2112,15 +2110,6 @@ namespace NiceHashMiner.Forms
             this.button_ZIL_additional_mining.Text = "Additional Zilliqua (ZIL) mining settings";
             this.button_ZIL_additional_mining.UseVisualStyleBackColor = true;
             this.button_ZIL_additional_mining.Click += new System.EventHandler(this.button_ZIL_additional_mining_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(11, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 402;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // checkBoxHideUnused
             // 
@@ -2833,6 +2822,5 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxHideUnused;
         private System.Windows.Forms.CheckBox checkBoxHideUnused2;
         private System.Windows.Forms.Button button_ZIL_additional_mining;
-        private System.Windows.Forms.Button button1;
     }
 }

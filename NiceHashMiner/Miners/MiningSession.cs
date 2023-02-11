@@ -958,7 +958,7 @@ namespace NiceHashMiner.Miners
 
                     if (!m.IsRunning || m.IsUpdatingApi || m == null) continue;
                     // continue;
-
+                    
                     m.IsUpdatingApi = true;
                     try
                     {
@@ -992,12 +992,12 @@ namespace NiceHashMiner.Miners
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
                             {
                                 NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
-                                groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 0.7;  
+                                groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 0.5;  
                             }
                             if (ad.ThirdAlgorithmID != AlgorithmType.NONE)//dual
                             {
                                 NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
-                                groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.7;
+                                groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.5;
                             }
                         }
                         else
@@ -1126,7 +1126,7 @@ namespace NiceHashMiner.Miners
                     // Update GUI
                     _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad,
                         groupMiners.CurrentRate, groupMiners.PowerRate, groupMiners.StartMinerTime,
-                        m.IsApiReadException, m.ProcessTag());
+                        m.IsApiReadException, m.ProcessTag(), groupMiners);
                 }
             }
             catch (Exception e)

@@ -270,6 +270,11 @@ namespace NiceHashMiner.Forms.Components
                     {
                         name = alg.AlgorithmNameCustom;
                     }
+                    if (Form_additional_mining.isAlgoZIL(name, alg.MinerBaseType, computeDevice.DeviceType) &&
+                        ConfigManager.GeneralConfig.AdditionalMiningPlusSymbol)
+                    {
+                        name = name + "+";
+                    }
                     miner = alg.MinerBaseTypeName;
                     if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
                     {
@@ -307,7 +312,7 @@ namespace NiceHashMiner.Forms.Components
                         lvi.SubItems.Add("Curve");
                     }
                     else if (dev.Flags.HasFlag(MACM_SHARED_MEMORY_GPU_ENTRY_FLAG.MACM_SHARED_MEMORY_GPU_ENTRY_FLAG_VF_CURVE_ENABLED) &&
-                        _computeDevice.DeviceType == DeviceType.NVIDIA && dev.CurveLockIndex !=0)
+                        _computeDevice.DeviceType == DeviceType.NVIDIA && dev.CurveLockIndex != 0)
                     {
                         lvi.SubItems.Add("CurveLock");
                     }
@@ -340,8 +345,8 @@ namespace NiceHashMiner.Forms.Components
                     lvi.Checked = alg.Enabled;
                     listViewAlgorithms.Items.Add(lvi);
                 }
-                listViewAlgorithms.EndUpdate();
             }
+            listViewAlgorithms.EndUpdate();
             isListViewEnabled = isEnabled;
             listViewAlgorithms.CheckBoxes = isEnabled;
         }

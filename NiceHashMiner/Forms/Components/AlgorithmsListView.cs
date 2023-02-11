@@ -10,6 +10,7 @@ using System.Collections;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -282,16 +283,18 @@ namespace NiceHashMiner.Forms.Components
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled, bool fromBenchmark = false)
         {
+            bool hideUnused = ConfigManager.GeneralConfig.Hide_unused_algorithms;
             _computeDevice = computeDevice;
 
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
+
             Font fontRegular = new Font(this.Font, FontStyle.Regular);
             Font fontBold = new Font(this.Font, FontStyle.Bold);
 
             foreach (var alg in computeDevice.GetAlgorithmSettings())
             {
-                if (ConfigManager.GeneralConfig.Hide_unused_algorithms && !alg.Enabled)
+                if (hideUnused && !alg.Enabled)
                 {
                     continue;
                 }
@@ -316,6 +319,11 @@ namespace NiceHashMiner.Forms.Components
                     totalSpeed = alg.BenchmarkSpeedString();
                     payingRatio = alg.CurPayingRatio;
                 }
+                if (Form_additional_mining.isAlgoZIL(name, alg.MinerBaseType, computeDevice.DeviceType) &&
+                        ConfigManager.GeneralConfig.AdditionalMiningPlusSymbol)
+                {
+                    name = name + "+";
+                }
                 if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
                 {
                     miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
@@ -324,14 +332,13 @@ namespace NiceHashMiner.Forms.Components
                 {
                     miner = miner + MinerVersion.GetMinerVersion(miner);
                 }
-                
+
                 if (!alg.Hidden)
                 {
                     var lvi = new ListViewItem();
                     lvi.SubItems.Add(name);
                     lvi.SubItems.Add(miner);
                     lvi.SubItems.Add(totalSpeed);
-                    //lvi.SubItems.Add(secondarySpeed);
                     if (alg.PowerUsage <= 0)
                     {
                         lvi.SubItems.Add("--");
@@ -355,7 +362,7 @@ namespace NiceHashMiner.Forms.Components
                     {
                         valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
                     }
-                    
+
                     double WithPowerRate = 0;
                     WithPowerRate = (valueRate + valueRateSecond) - ExchangeRateApi.GetKwhPriceInBtc() * alg.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
 
@@ -419,8 +426,8 @@ namespace NiceHashMiner.Forms.Components
                     }
 
                 }
-                listViewAlgorithms.EndUpdate();
             }
+            listViewAlgorithms.EndUpdate();
             isListViewEnabled = isEnabled;
             listViewAlgorithms.CheckBoxes = isEnabled;
         }

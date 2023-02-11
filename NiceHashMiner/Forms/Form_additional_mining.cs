@@ -75,6 +75,12 @@ namespace NiceHashMiner.Forms
 
 
             checkBox_NANOMINER_AMD_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD;
+
+            //до тех пор, пока autolykos не починят
+            checkBox_SRBMINER_AMD_Autolykos.Checked = false;
+            checkBox_SRBMINER_AMD_Autolykos.Enabled = false;
+            checkBox_SRBMINER_AMD_AutolykosKHeavyHash.Checked = false;
+            checkBox_SRBMINER_AMD_AutolykosKHeavyHash.Enabled = false;
         }
 
         public static bool isAlgoZIL(string algo, MinerBaseType minerBaseType, DeviceType deviceType)

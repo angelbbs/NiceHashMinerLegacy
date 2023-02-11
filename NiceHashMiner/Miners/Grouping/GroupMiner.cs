@@ -17,6 +17,7 @@ namespace NiceHashMiner.Miners.Grouping
 
         // for now used only for dagger identification AMD or NVIDIA
         public DeviceType DeviceType { get; }
+        public MinerBaseType MinerBaseType { get; }
 
         public double CurrentRate { get; set; }
         public double PowerRate { get; set; }
@@ -55,6 +56,7 @@ namespace NiceHashMiner.Miners.Grouping
                         MaxDevices = Math.Max(MaxDevices, deviceNames.Count);
                         //TotalPower += pair.Device.PowerUsage;
                         TotalPower += pair.Algorithm.PowerUsage;
+                        MinerBaseType = pair.Algorithm.MinerBaseType;
                     }
 
                     if (MaxDevices >= 6)

@@ -2505,13 +2505,20 @@ public static void CloseChilds(Process parentId)
 
 
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying, double power,
-           DateTime StartMinerTime, bool isApiGetException, string processTag)
+           DateTime StartMinerTime, bool isApiGetException, string processTag, GroupMiner groupMiners)
         {
             //Helpers.ConsolePrint("trace", new System.Diagnostics.StackTrace().ToString());
 
             var apiGetExceptionString = isApiGetException ? " **" : "";
             string speedString = "";
             string algoName = iApiData.AlgorithmName;
+
+            if (Form_additional_mining.isAlgoZIL(algoName, groupMiners.MinerBaseType, groupMiners.DeviceType) &&
+                        ConfigManager.GeneralConfig.AdditionalMiningPlusSymbol)
+            {
+                algoName = algoName + "+";
+            }
+
             if (isZilRound && iApiData.AlgorithmID == AlgorithmType.NONE)
             {
                 algoName = "ZIL";

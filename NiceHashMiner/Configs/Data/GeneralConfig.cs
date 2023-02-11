@@ -185,6 +185,7 @@ namespace NiceHashMiner.Configs.Data
         public ZILConfigGMiner ZILConfigGMiner = new ZILConfigGMiner();
         public ZILConfigSRBMiner ZILConfigSRBMiner = new ZILConfigSRBMiner();
         public ZILConfigNanominer ZILConfigNanominer = new ZILConfigNanominer();
+        public bool AdditionalMiningPlusSymbol = true;
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;
         public bool StrongDeviceName = true;

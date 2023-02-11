@@ -204,7 +204,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 LastCommandLine = "--algo C32" +
-                GetServer("cuckoocycle", username, null, "3383") +
+                GetServer("grincuckatoo32", username, null, "3383") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -827,7 +827,7 @@ namespace NiceHashMiner.Miners
             try
             {
                 dynamic resp = JsonConvert.DeserializeObject(ResponseFromlolMiner);
-                //Helpers.ConsolePrint("->", ResponseFromlolMiner);
+                Helpers.ConsolePrint("->", ResponseFromlolMiner);
                 int mult = 1;
                 if (resp != null)
                 {
