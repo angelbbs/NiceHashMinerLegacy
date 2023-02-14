@@ -47,7 +47,8 @@ namespace NiceHashMiner.Miners
                     return new miniZ();
                 case MinerBaseType.Nanominer:
                     return new Nanominer();
-
+                //case MinerBaseType.Rigel:
+                  //  return new Rigel();
             }
 
             return null;

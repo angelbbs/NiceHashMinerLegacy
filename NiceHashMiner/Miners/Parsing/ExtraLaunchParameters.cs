@@ -636,6 +636,27 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>()
             ),
             new MinerOptionPackage(
+                MinerType.Rigel,
+                new List<MinerOption>
+                {
+                    new MinerOption("Rigel-temp-limit-tc", "--temp-limit tc", "--temp-limit tc", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-temp-limit-tm", "--temp-limit tm", "--temp-limit tm", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-cpu-check", "--cpu-check", "--cpu-check", null, MinerOptionFlagType.Uni),
+                    new MinerOption("Rigel-no-tui", "--no-tui", "--no-tui", null, MinerOptionFlagType.Uni),
+                    new MinerOption("Rigel-dns-over-https", "--dns-over-https", "--dns-over-https", null, MinerOptionFlagType.Uni),
+                    new MinerOption("Rigel-hashrate-avg", "--hashrate-avg", "--hashrate-avg", "10", MinerOptionFlagType.SingleParam),
+                    new MinerOption("Rigel-cclock", "--cclock", "--cclock", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-mclock", "--mclock", "--mclock", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-lock-cclock", "--lock-cclock", "--lock-cclock", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-lock-mclock", "--lock-mclock", "--lock-mclock", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-pl", "--pl", "--pl", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-mt", "--mt", "--mt", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-fan-control", "--fan-control", "--fan-control", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-dual-mode", "--dual-mode", "--dual-mode", "_", MinerOptionFlagType.MultiParam, ","),
+                },
+                new List<MinerOption>()
+            ),
+            new MinerOptionPackage(
                 MinerType.GMiner,
                 new List<MinerOption>
                 {

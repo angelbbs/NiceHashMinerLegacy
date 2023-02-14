@@ -19,6 +19,16 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             this.Text = International.GetText("Form_Settings_button_ZIL_additional_mining");
 
+            checkBox_ZIL_Mining_Enable.Text = International.GetText("Form_Settings_checkBox_ZIL_Mining_Enable");
+
+            if (!ConfigManager.GeneralConfig.ZIL_Mining_Enable)
+            {
+                TabControlZILadditionalMining.Enabled = false;
+            } else
+            {
+                TabControlZILadditionalMining.Enabled = true;
+            }
+
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
                 this.BackColor = Form_Main._backColor;
@@ -48,7 +58,12 @@ namespace NiceHashMiner.Forms
                 tabPageSRBMiner.ForeColor = Form_Main._foreColor;
                 tabPageNanominer.BackColor = Form_Main._backColor;
                 tabPageNanominer.ForeColor = Form_Main._foreColor;
+                tabPageRigel.BackColor = Form_Main._backColor;
+                tabPageRigel.ForeColor = Form_Main._foreColor;
             }
+
+            checkBox_ZIL_Mining_Enable.Checked =
+                ConfigManager.GeneralConfig.ZIL_Mining_Enable;
 
             checkBox_GMINER_NVIDIA_Autolykos.Checked =
                 ConfigManager.GeneralConfig.ZILConfigGMiner.Autolykos_NVIDIA;
@@ -75,16 +90,23 @@ namespace NiceHashMiner.Forms
 
 
             checkBox_NANOMINER_AMD_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD;
+            
+            checkBox_Rigel_NVIDIA_KHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
 
             //до тех пор, пока autolykos не починят
             checkBox_SRBMINER_AMD_Autolykos.Checked = false;
             checkBox_SRBMINER_AMD_Autolykos.Enabled = false;
             checkBox_SRBMINER_AMD_AutolykosKHeavyHash.Checked = false;
             checkBox_SRBMINER_AMD_AutolykosKHeavyHash.Enabled = false;
+
+            //
+            TabControlZILadditionalMining.TabPages.RemoveByKey("tabPageRigel");
         }
 
         public static bool isAlgoZIL(string algo, MinerBaseType minerBaseType, DeviceType deviceType)
         {
+            if (!ConfigManager.GeneralConfig.ZIL_Mining_Enable) return false;
+
             if (minerBaseType == MinerBaseType.GMiner)
             {
                 if (deviceType == DeviceType.NVIDIA)
@@ -162,6 +184,19 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
+            if (minerBaseType == MinerBaseType.Rigel)
+            {
+                if (deviceType == DeviceType.NVIDIA)
+                {
+                    switch (algo)
+                    {
+                        case "KHeavyHash":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
+                        default:
+                            return false;
+                    }
+                }
+            }
 
             return false;
         }
@@ -172,6 +207,9 @@ namespace NiceHashMiner.Forms
 
         private void button_Save_Click(object sender, EventArgs e)
         {
+            ConfigManager.GeneralConfig.ZIL_Mining_Enable =
+                checkBox_ZIL_Mining_Enable.Checked;
+
             ConfigManager.GeneralConfig.ZILConfigGMiner.Autolykos_NVIDIA =
                 checkBox_GMINER_NVIDIA_Autolykos.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.AutolykosKHeavyHash_NVIDIA =
@@ -199,6 +237,13 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD = checkBox_NANOMINER_AMD_Autolykos.Checked;
 
             this.Close();
+        }
+
+        private void checkBox_ZIL_Mining_Enable_CheckedChanged(object sender, EventArgs e)
+        {
+
+            TabControlZILadditionalMining.Enabled = checkBox_ZIL_Mining_Enable.Checked;
+
         }
     }
 }

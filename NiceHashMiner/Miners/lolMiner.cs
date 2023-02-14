@@ -52,7 +52,7 @@ namespace NiceHashMiner.Miners
             string psw = "x";
             string _worker = "";
             if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
-            if (ConfigManager.GeneralConfig.ProxySSL)
+            if (ConfigManager.GeneralConfig.ProxySSL && Globals.MiningLocation.Length > 1)
             {
                 port = "4" + port;
                 ssl = "--tls on ";
@@ -827,7 +827,7 @@ namespace NiceHashMiner.Miners
             try
             {
                 dynamic resp = JsonConvert.DeserializeObject(ResponseFromlolMiner);
-                Helpers.ConsolePrint("->", ResponseFromlolMiner);
+                //Helpers.ConsolePrint("->", ResponseFromlolMiner);
                 int mult = 1;
                 if (resp != null)
                 {

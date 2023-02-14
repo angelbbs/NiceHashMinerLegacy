@@ -40,7 +40,7 @@ namespace NiceHashMiner.Miners
             string ssl = "";
             string psw = "x";
             if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
-            if (ConfigManager.GeneralConfig.ProxySSL)
+            if (ConfigManager.GeneralConfig.ProxySSL && Globals.MiningLocation.Length > 1)
             {
                 port = "4" + port;
                 ssl = "stratum+ssl://";

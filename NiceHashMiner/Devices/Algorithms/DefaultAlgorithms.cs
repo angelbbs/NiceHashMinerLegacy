@@ -428,13 +428,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, AlgorithmType.ETCHashKHeavyHash.ToString())
                     {
                     }
-                    //triple
-                    /*
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHashZil.ToString())
-                    {
-                        ExtraLaunchParameters = "--mt 1"
-                    }
-                    */
                 }
             },
             {
@@ -458,6 +451,18 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                         }
             },
+            /*
+            {
+                MinerBaseType.Rigel,
+                new List<Algorithm>()
+                {
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.KHeavyHash, "KHeavyHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui"
+                    }
+                }
+            }
+            */
         }.ConcatDictList(All, Gpu);
 
         #endregion

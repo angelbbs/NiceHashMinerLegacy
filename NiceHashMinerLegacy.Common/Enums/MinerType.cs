@@ -45,6 +45,7 @@
         miniZ,
         Nanominer,
         Kawpowminer,
+        Rigel,
         END
     }
 }

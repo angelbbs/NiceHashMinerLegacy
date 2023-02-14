@@ -666,7 +666,8 @@ namespace NiceHashMiner.Devices
                 MinerBaseType.NBMiner,
                 MinerBaseType.miniZ,
                 MinerBaseType.Nanominer,
-                MinerBaseType.Kawpowminer
+                MinerBaseType.Kawpowminer,
+                MinerBaseType.Rigel
             };
 
             return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);

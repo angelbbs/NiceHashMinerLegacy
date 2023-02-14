@@ -46,6 +46,12 @@ namespace NiceHashMiner.Forms
             this.checkBox_GMINER_AMD_ZHash = new System.Windows.Forms.CheckBox();
             this.checkBox_GMINER_AMD_ZelHash = new System.Windows.Forms.CheckBox();
             this.checkBox_GMINER_AMD_KAWPOW = new System.Windows.Forms.CheckBox();
+            this.tabPageNanominer = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox_NANOMINER_AMD_Autolykos = new System.Windows.Forms.CheckBox();
+            this.tabPageRigel = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBox_Rigel_NVIDIA_KHeavyHash = new System.Windows.Forms.CheckBox();
             this.tabPageSRBMiner = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBox_SRBMINER_AMD_KHeavyHash = new System.Windows.Forms.CheckBox();
@@ -53,24 +59,25 @@ namespace NiceHashMiner.Forms
             this.checkBox_SRBMINER_AMD_AutolykosKHeavyHash = new System.Windows.Forms.CheckBox();
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Cancel = new System.Windows.Forms.Button();
-            this.tabPageNanominer = new System.Windows.Forms.TabPage();
-            this.checkBox_NANOMINER_AMD_Autolykos = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox_ZIL_Mining_Enable = new System.Windows.Forms.CheckBox();
             this.TabControlZILadditionalMining.SuspendLayout();
             this.tabPageGMiner.SuspendLayout();
             this.groupBox_NVIDIA.SuspendLayout();
             this.groupBox_AMD.SuspendLayout();
-            this.tabPageSRBMiner.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.tabPageNanominer.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPageRigel.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.tabPageSRBMiner.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabControlZILadditionalMining
             // 
             this.TabControlZILadditionalMining.Controls.Add(this.tabPageGMiner);
-            this.TabControlZILadditionalMining.Controls.Add(this.tabPageSRBMiner);
             this.TabControlZILadditionalMining.Controls.Add(this.tabPageNanominer);
+            this.TabControlZILadditionalMining.Controls.Add(this.tabPageRigel);
+            this.TabControlZILadditionalMining.Controls.Add(this.tabPageSRBMiner);
             // 
             // 
             // 
@@ -269,6 +276,66 @@ namespace NiceHashMiner.Forms
             this.checkBox_GMINER_AMD_KAWPOW.Text = "KAWPOW";
             this.checkBox_GMINER_AMD_KAWPOW.UseVisualStyleBackColor = true;
             // 
+            // tabPageNanominer
+            // 
+            this.tabPageNanominer.Controls.Add(this.groupBox2);
+            this.tabPageNanominer.Location = new System.Drawing.Point(4, 23);
+            this.tabPageNanominer.Name = "tabPageNanominer";
+            this.tabPageNanominer.Size = new System.Drawing.Size(364, 162);
+            this.tabPageNanominer.TabIndex = 2;
+            this.tabPageNanominer.Text = "Nanominer";
+            this.tabPageNanominer.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBox_NANOMINER_AMD_Autolykos);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(348, 51);
+            this.groupBox2.TabIndex = 2;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "AMD";
+            // 
+            // checkBox_NANOMINER_AMD_Autolykos
+            // 
+            this.checkBox_NANOMINER_AMD_Autolykos.AutoSize = true;
+            this.checkBox_NANOMINER_AMD_Autolykos.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_NANOMINER_AMD_Autolykos.Name = "checkBox_NANOMINER_AMD_Autolykos";
+            this.checkBox_NANOMINER_AMD_Autolykos.Size = new System.Drawing.Size(72, 17);
+            this.checkBox_NANOMINER_AMD_Autolykos.TabIndex = 1;
+            this.checkBox_NANOMINER_AMD_Autolykos.Text = "Autolykos";
+            this.checkBox_NANOMINER_AMD_Autolykos.UseVisualStyleBackColor = true;
+            // 
+            // tabPageRigel
+            // 
+            this.tabPageRigel.Controls.Add(this.groupBox3);
+            this.tabPageRigel.Location = new System.Drawing.Point(4, 23);
+            this.tabPageRigel.Name = "tabPageRigel";
+            this.tabPageRigel.Size = new System.Drawing.Size(364, 162);
+            this.tabPageRigel.TabIndex = 3;
+            this.tabPageRigel.Text = "Rigel";
+            this.tabPageRigel.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_KHeavyHash);
+            this.groupBox3.Location = new System.Drawing.Point(6, 6);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(348, 92);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "NVIDIA";
+            // 
+            // checkBox_Rigel_NVIDIA_KHeavyHash
+            // 
+            this.checkBox_Rigel_NVIDIA_KHeavyHash.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_KHeavyHash.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_Rigel_NVIDIA_KHeavyHash.Name = "checkBox_Rigel_NVIDIA_KHeavyHash";
+            this.checkBox_Rigel_NVIDIA_KHeavyHash.Size = new System.Drawing.Size(89, 17);
+            this.checkBox_Rigel_NVIDIA_KHeavyHash.TabIndex = 5;
+            this.checkBox_Rigel_NVIDIA_KHeavyHash.Text = "KHeavyHash";
+            this.checkBox_Rigel_NVIDIA_KHeavyHash.UseVisualStyleBackColor = true;
+            // 
             // tabPageSRBMiner
             // 
             this.tabPageSRBMiner.Controls.Add(this.groupBox1);
@@ -344,41 +411,23 @@ namespace NiceHashMiner.Forms
             this.button_Cancel.UseVisualStyleBackColor = true;
             this.button_Cancel.Click += new System.EventHandler(this.button_Cancel_Click);
             // 
-            // tabPageNanominer
+            // checkBox_ZIL_Mining_Enable
             // 
-            this.tabPageNanominer.Controls.Add(this.groupBox2);
-            this.tabPageNanominer.Location = new System.Drawing.Point(4, 23);
-            this.tabPageNanominer.Name = "tabPageNanominer";
-            this.tabPageNanominer.Size = new System.Drawing.Size(364, 162);
-            this.tabPageNanominer.TabIndex = 2;
-            this.tabPageNanominer.Text = "Nanominer";
-            this.tabPageNanominer.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_NANOMINER_AMD_Autolykos
-            // 
-            this.checkBox_NANOMINER_AMD_Autolykos.AutoSize = true;
-            this.checkBox_NANOMINER_AMD_Autolykos.Location = new System.Drawing.Point(6, 19);
-            this.checkBox_NANOMINER_AMD_Autolykos.Name = "checkBox_NANOMINER_AMD_Autolykos";
-            this.checkBox_NANOMINER_AMD_Autolykos.Size = new System.Drawing.Size(72, 17);
-            this.checkBox_NANOMINER_AMD_Autolykos.TabIndex = 1;
-            this.checkBox_NANOMINER_AMD_Autolykos.Text = "Autolykos";
-            this.checkBox_NANOMINER_AMD_Autolykos.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.checkBox_NANOMINER_AMD_Autolykos);
-            this.groupBox2.Location = new System.Drawing.Point(6, 6);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(348, 51);
-            this.groupBox2.TabIndex = 2;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "AMD";
+            this.checkBox_ZIL_Mining_Enable.AutoSize = true;
+            this.checkBox_ZIL_Mining_Enable.Location = new System.Drawing.Point(16, 207);
+            this.checkBox_ZIL_Mining_Enable.Name = "checkBox_ZIL_Mining_Enable";
+            this.checkBox_ZIL_Mining_Enable.Size = new System.Drawing.Size(162, 17);
+            this.checkBox_ZIL_Mining_Enable.TabIndex = 3;
+            this.checkBox_ZIL_Mining_Enable.Text = "Enable ZIL mining on all algo";
+            this.checkBox_ZIL_Mining_Enable.UseVisualStyleBackColor = true;
+            this.checkBox_ZIL_Mining_Enable.CheckedChanged += new System.EventHandler(this.checkBox_ZIL_Mining_Enable_CheckedChanged);
             // 
             // Form_additional_mining
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(374, 238);
+            this.Controls.Add(this.checkBox_ZIL_Mining_Enable);
             this.Controls.Add(this.button_Cancel);
             this.Controls.Add(this.button_Save);
             this.Controls.Add(this.TabControlZILadditionalMining);
@@ -395,13 +444,17 @@ namespace NiceHashMiner.Forms
             this.groupBox_NVIDIA.PerformLayout();
             this.groupBox_AMD.ResumeLayout(false);
             this.groupBox_AMD.PerformLayout();
-            this.tabPageSRBMiner.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabPageNanominer.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabPageRigel.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.tabPageSRBMiner.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -434,5 +487,9 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.TabPage tabPageNanominer;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBox_NANOMINER_AMD_Autolykos;
+        private System.Windows.Forms.TabPage tabPageRigel;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_KHeavyHash;
+        private System.Windows.Forms.CheckBox checkBox_ZIL_Mining_Enable;
     }
 }

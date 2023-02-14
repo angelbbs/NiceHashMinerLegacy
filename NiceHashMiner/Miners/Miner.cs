@@ -1537,6 +1537,13 @@ namespace NiceHashMiner
 
                 if (P.Start())
                 {
+                    _currentPidData = new MinerPidData
+                    {
+                        MinerBinPath = P.StartInfo.FileName,
+                        Pid = P.Id
+                    };
+                    _allPidData.Add(_currentPidData);
+
                     Helpers.ConsolePrint(MinerTag(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
                     IsRunning = true;
                     IsRunningNew = IsRunning;
@@ -1546,6 +1553,8 @@ namespace NiceHashMiner
                         int algo = (int)MiningSetup.CurrentAlgorithmType;
                         int algo2 = (int)MiningSetup.CurrentSecondaryAlgorithmType;
                         string w = ConfigManager.GeneralConfig.WorkerName + "$" + NiceHashMiner.Stats.NiceHashSocket.RigID;
+                        
+
                         P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, Path,
                             strPlatform, w, false,
                             false,
@@ -1587,23 +1596,7 @@ namespace NiceHashMiner
                                 new Task(() => DHClient4gb.StartConnection()).Start();
                             }
                         }
-                        
-                        _currentPidData = new MinerPidData
-                        {
-                            MinerBinPath = P.StartInfo.FileName,
-                            Pid = P.Id,
-                            DivertHandle = P.DivertHandle
-                        };
                     }
-                    else
-                    {
-                        _currentPidData = new MinerPidData
-                        {
-                            MinerBinPath = P.StartInfo.FileName,
-                            Pid = P.Id
-                        };
-                    }
-                    _allPidData.Add(_currentPidData);
                     
                     StartCoolDownTimerChecker();
                     return P;

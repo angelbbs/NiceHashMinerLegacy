@@ -177,8 +177,10 @@ namespace NiceHashMiner.Miners.Parsing
 
             // check if is all defaults
             var isAllDefault = true;
+            var minerBaseType = MinerBaseType.NONE;
             foreach (var pair in miningPairs)
             {
+                minerBaseType = pair.Algorithm.MinerBaseType;
                 foreach (var option in options)
                 {
                     if (option.Default != cdevOptions[pair.Device.Uuid][option.Type])
@@ -259,7 +261,10 @@ namespace NiceHashMiner.Miners.Parsing
                     }
                 }
             }
-
+            if (minerBaseType == MinerBaseType.Rigel)
+            {
+                retVal = retVal.ToLower().Replace(",[1]", ",").Replace(",[2]", ",").Replace(",[3]", ",");
+            }
             LogParser($"Final extra launch params parse \"{retVal}\"");
             return retVal;
         }
@@ -330,6 +335,8 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.Nanominer;
                 case MinerBaseType.Kawpowminer:
                     return MinerType.Kawpowminer;
+                case MinerBaseType.Rigel:
+                    return MinerType.Rigel;
 
 
                 case MinerBaseType.Claymore:

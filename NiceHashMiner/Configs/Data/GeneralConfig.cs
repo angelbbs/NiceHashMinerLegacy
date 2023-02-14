@@ -182,9 +182,11 @@ namespace NiceHashMiner.Configs.Data
         public bool Zilliqua_GMiner = true;
         public bool RestartGMinerAfterZilRound = false;
         public double ZilFactor = 0.000d;
+        public bool ZIL_Mining_Enable = true;
         public ZILConfigGMiner ZILConfigGMiner = new ZILConfigGMiner();
         public ZILConfigSRBMiner ZILConfigSRBMiner = new ZILConfigSRBMiner();
         public ZILConfigNanominer ZILConfigNanominer = new ZILConfigNanominer();
+        public ZILConfigRigel ZILConfigRigel = new ZILConfigRigel();
         public bool AdditionalMiningPlusSymbol = true;
         public bool Save_windows_size_and_position = true;
         public bool Group_same_devices = true;

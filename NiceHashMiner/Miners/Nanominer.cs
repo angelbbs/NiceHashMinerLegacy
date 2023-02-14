@@ -62,7 +62,7 @@ namespace NiceHashMiner.Miners
         {
             string ret = "";
             string ssl = "";
-            if (ConfigManager.GeneralConfig.ProxySSL)
+            if (ConfigManager.GeneralConfig.ProxySSL && Globals.MiningLocation.Length > 1)
             {
                 port = "4" + port;
                 ssl = "useSSL = true\n";

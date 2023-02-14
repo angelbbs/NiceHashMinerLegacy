@@ -1545,6 +1545,10 @@ namespace NiceHashMiner
                 minerdata = MinerVersion.Get_XMRig();
                 MinerVersion.MinerDataList.Add(minerdata);
 
+                _loadingScreen.SetValueAndMsg(88, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Rigel");
+                minerdata = MinerVersion.Get_Rigel();
+                MinerVersion.MinerDataList.Add(minerdata);
+
                 string json = JsonConvert.SerializeObject(MinerDataList, Formatting.Indented);
                 try
                 {
@@ -3758,8 +3762,8 @@ public static void CloseChilds(Process parentId)
                     Uptime = timenow.Subtract(StartTime);
                     label_Uptime.Visible = true;
                     label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " +
-                                        Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
-                        //" Блок зилики: " + ZilCount.ToString();
+                                        Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss")+
+                        " Блок зилики: " + ZilCount.ToString();
                 }
 
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)

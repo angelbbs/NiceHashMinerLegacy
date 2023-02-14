@@ -497,6 +497,7 @@
                 "Form_Settings_checkBox_Disable_extra_launch_parameter_checking": "Disable extra launch parameter checking",
 		  "Form_Settings_checkBox_Hide_Unused": "Hide unused algorithms",
 		  "Form_Settings_button_ZIL_additional_mining": "Additional Zilliqua (ZIL) mining settings",
+		  "Form_Settings_checkBox_ZIL_Mining_Enable": "Enable ZIL mining",
                 "Form_Settings_checkBox_DisableDetectionCPU": "Disable CPU detection",
                 "Form_Settings_label_AutoStartMiningDelay": "seconds",
                 "Form_Settings_groupBoxMOPA": "Method of obtaining profitability of algorithms:",

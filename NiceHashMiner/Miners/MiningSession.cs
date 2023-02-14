@@ -1102,6 +1102,36 @@ namespace NiceHashMiner.Miners
                             groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
                         }
 
+                        if (m.MinerTag().ToLower().Contains("rigel") &&
+                            Form_additional_mining.isAlgoZIL(ad.AlgorithmName, MinerBaseType.Rigel,
+                                groupMiners.DeviceType))
+                        {
+                            if (ad.ZilRound & (ad.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto ||
+                                               ad.ThirdAlgorithmID == AlgorithmType.DaggerHashimoto))
+                            {
+                                Form_Main.RateZil += groupMiners.CurrentRate;
+                                Form_Main.RateZilCount++;
+
+                                m.needChildRestart = true;
+                                _checks.Add(m);
+                            }
+
+                            if (!ad.ZilRound)
+                            {
+                                Form_Main.RateNoZil += groupMiners.CurrentRate;
+                                Form_Main.RateNoZilCount++;
+                            }
+
+                            double RateNoZil = (Form_Main.RateNoZil / Form_Main.RateNoZilCount);
+                            double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
+                            Form_Main.ZilFactor = Math.Round((RateZil * 0.03) / RateNoZil, 3);
+
+                            if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
+                            if (double.IsNaN(RateZil)) RateZil = 0.0d;
+                            if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
+                            groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
+                        }
+
                         /*
                         // если групп > 1, то задваивается
                         foreach (var computeDevice in Available.Devices)

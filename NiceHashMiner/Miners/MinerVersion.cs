@@ -270,6 +270,91 @@ namespace NiceHashMiner.Miners
             }
             return ret;
         }
+        public static MinerData Get_Rigel()
+        {
+            List<MinerData> _MinerDataList = new List<MinerData>();
+            string path = MinerPaths.Data.Rigel;
+            long filesize = 0l;
+            string version = "";
+            MinerData ret = new MinerData();
+            ret.MinerName = "rigel";
+            try
+            {
+                if (!File.Exists(path)) return ret;
+                if (File.Exists("Configs\\MinersData.json"))
+                {
+                    string json = File.ReadAllText("Configs\\MinersData.json");
+                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
+                    if (md != null)
+                    {
+                        foreach (var m in md)
+                        {
+                            string _path = m.MinerPath;
+                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
+                            {
+                                filesize = m.MinerSize;
+                                version = m.MinerVersion;
+                                ret.MinerPath = path;
+                                ret.MinerSize = filesize;
+                                ret.MinerVersion = version;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+            }
+            if (filesize != new System.IO.FileInfo(path).Length)
+            {
+                try
+                {
+                    var P = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = path,
+                                Arguments = "-V",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                    };
+                    P.Start();
+                    P.WaitForExit(2 * 1000);
+
+                    var stdOut = P.StandardOutput.ReadToEnd();
+                    var stdErr = P.StandardError.ReadToEnd();
+
+                    const string findString = "rigel";
+                    using (var reader = new StringReader(stdOut))
+                    {
+                        var line = string.Empty;
+                        do
+                        {
+                            line = reader.ReadLine();
+                            if (line != null && line.Contains(findString))
+                            {
+                                var index = line.IndexOf(findString);
+                                ret.MinerPath = path;
+                                ret.MinerSize = new System.IO.FileInfo(path).Length;
+                                ret.MinerVersion = line.Substring(index + findString.Length).
+                                    Replace(System.Environment.NewLine, string.Empty);
+                                return ret;
+                            }
+                        } while (line != null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    return ret;
+                }
+            }
+            return ret;
+        }
         public static MinerData Get_lolMiner()
         {
             List<MinerData> _MinerDataList = new List<MinerData>();

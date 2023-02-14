@@ -19,7 +19,7 @@ namespace NiceHashMiner.Miners
         {
             string ret = "";
             string ssl = "";
-            if (ConfigManager.GeneralConfig.ProxySSL)
+            if (ConfigManager.GeneralConfig.ProxySSL && Globals.MiningLocation.Length > 1)
             {
                 port = "1" + port;//не подключается почему-то
                 ssl = "stratum+tcp://";

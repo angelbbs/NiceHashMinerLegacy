@@ -75,6 +75,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string teamredminer = minersBins + @"\teamredminer\teamredminer.exe";
             public const string Phoenix = minersBins + @"\Phoenix\PhoenixMiner.exe";
             public const string Nanominer = minersBins + @"\Nanominer\nanominer.exe";
+            public const string Rigel = minersBins + @"\Rigel\rigel.exe";
             public const string lolMiner = minersBins + @"\lolMiner\lolMiner.exe";
 
             public const string EthLargement = minersBins + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
@@ -174,6 +175,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.Nanominer;
                 case MinerBaseType.Kawpowminer:
                     return Data.Kawpowminer;
+                case MinerBaseType.Rigel:
+                    return Data.Rigel;
             }
             return Data.None;
         }

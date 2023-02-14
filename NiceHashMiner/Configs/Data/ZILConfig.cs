@@ -62,4 +62,13 @@ namespace NiceHashMiner.Configs.Data
             Autolykos_AMD = true;
         }
     }
+    [Serializable]
+    public class ZILConfigRigel
+    {
+        public bool KHeavyHash_NVIDIA { get; set; }
+        public ZILConfigRigel()
+        {
+            KHeavyHash_NVIDIA = true;
+        }
+    }
 }

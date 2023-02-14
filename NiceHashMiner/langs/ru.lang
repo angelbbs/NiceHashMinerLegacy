@@ -474,6 +474,7 @@
                 "Form_Settings_checkBox_Disable_extra_launch_parameter_checking": "Отключить проверку дополнительных параметров",
 		  "Form_Settings_checkBox_Hide_Unused": "Скрыть неиспользуемые алгоритмы",
 		  "Form_Settings_button_ZIL_additional_mining": "Настройки дополнительного майнинга Zilliqua (ZIL)",
+		  "Form_Settings_checkBox_ZIL_Mining_Enable": "Включить майнинг ZIL",
                 "Form_Settings_checkBox_DisableDetectionCPU": "Отключить определение CPU",
                 "Form_Settings_label_AutoStartMiningDelay": "секунд",
                 "Form_Settings_groupBoxMOPA": "Метод получения прибыльности алгоритмов",
