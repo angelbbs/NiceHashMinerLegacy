@@ -71,4 +71,23 @@ namespace NiceHashMiner.Configs.Data
             KHeavyHash_NVIDIA = true;
         }
     }
+    [Serializable]
+    public class ZILConfigminiZ
+    {
+        public bool BeamV3_NVIDIA { get; set; }
+        public bool ZelHash_NVIDIA { get; set; }
+        public bool ZHash_NVIDIA { get; set; }
+        public bool Octopus_NVIDIA { get; set; }
+        public bool ZelHash_AMD { get; set; }
+        public bool ZHash_AMD { get; set; }
+        public ZILConfigminiZ()
+        {
+            BeamV3_NVIDIA = true;
+            ZelHash_NVIDIA = true;
+            ZHash_NVIDIA = true;
+            Octopus_NVIDIA = true;
+            ZelHash_AMD = true;
+            ZHash_AMD = true;
+        }
+    }
 }

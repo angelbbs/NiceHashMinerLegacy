@@ -1,36 +1,40 @@
-The MIT License (MIT)
+MIT License
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Copyright (c) 2023 angelbbs
 
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-THE SOFTWARE IS PROVIDED <AS IS>, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
-THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-Лицензия MIT
+Р›РёС†РµРЅР·РёСЏ MIT
 
-Данная лицензия разрешает лицам, получившим копию данного программного обеспечения и сопутствующей
-документации (в дальнейшем именуемыми <Программное Обеспечение>), безвозмездно использовать
-Программное Обеспечение без ограничений, включая неограниченное право на использование, копирование,
-изменение, слияние, публикацию, распространение, сублицензирование и/или продажу копий Программного
-Обеспечения, а также лицам, которым предоставляется данное Программное Обеспечение, при соблюдении
-следующих условий:
+Р”Р°РЅРЅР°СЏ Р»РёС†РµРЅР·РёСЏ СЂР°Р·СЂРµС€Р°РµС‚ Р»РёС†Р°Рј, РїРѕР»СѓС‡РёРІС€РёРј РєРѕРїРёСЋ РґР°РЅРЅРѕРіРѕ РїСЂРѕРіСЂР°РјРјРЅРѕРіРѕ РѕР±РµСЃРїРµС‡РµРЅРёСЏ Рё СЃРѕРїСѓС‚СЃС‚РІСѓСЋС‰РµР№
+РґРѕРєСѓРјРµРЅС‚Р°С†РёРё (РІ РґР°Р»СЊРЅРµР№С€РµРј РёРјРµРЅСѓРµРјС‹РјРё <РџСЂРѕРіСЂР°РјРјРЅРѕРµ РћР±РµСЃРїРµС‡РµРЅРёРµ>), Р±РµР·РІРѕР·РјРµР·РґРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+РџСЂРѕРіСЂР°РјРјРЅРѕРµ РћР±РµСЃРїРµС‡РµРЅРёРµ Р±РµР· РѕРіСЂР°РЅРёС‡РµРЅРёР№, РІРєР»СЋС‡Р°СЏ РЅРµРѕРіСЂР°РЅРёС‡РµРЅРЅРѕРµ РїСЂР°РІРѕ РЅР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ, РєРѕРїРёСЂРѕРІР°РЅРёРµ,
+РёР·РјРµРЅРµРЅРёРµ, СЃР»РёСЏРЅРёРµ, РїСѓР±Р»РёРєР°С†РёСЋ, СЂР°СЃРїСЂРѕСЃС‚СЂР°РЅРµРЅРёРµ, СЃСѓР±Р»РёС†РµРЅР·РёСЂРѕРІР°РЅРёРµ Рё/РёР»Рё РїСЂРѕРґР°Р¶Сѓ РєРѕРїРёР№ РџСЂРѕРіСЂР°РјРјРЅРѕРіРѕ
+РћР±РµСЃРїРµС‡РµРЅРёСЏ, Р° С‚Р°РєР¶Рµ Р»РёС†Р°Рј, РєРѕС‚РѕСЂС‹Рј РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚СЃСЏ РґР°РЅРЅРѕРµ РџСЂРѕРіСЂР°РјРјРЅРѕРµ РћР±РµСЃРїРµС‡РµРЅРёРµ, РїСЂРё СЃРѕР±Р»СЋРґРµРЅРёРё
+СЃР»РµРґСѓСЋС‰РёС… СѓСЃР»РѕРІРёР№:
 
-Указанное выше уведомление об авторском праве и данные условия должны быть включены во все копии или
-значимые части данного Программного Обеспечения.
+РЈРєР°Р·Р°РЅРЅРѕРµ РІС‹С€Рµ СѓРІРµРґРѕРјР»РµРЅРёРµ РѕР± Р°РІС‚РѕСЂСЃРєРѕРј РїСЂР°РІРµ Рё РґР°РЅРЅС‹Рµ СѓСЃР»РѕРІРёСЏ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІРєР»СЋС‡РµРЅС‹ РІРѕ РІСЃРµ РєРѕРїРёРё РёР»Рё
+Р·РЅР°С‡РёРјС‹Рµ С‡Р°СЃС‚Рё РґР°РЅРЅРѕРіРѕ РџСЂРѕРіСЂР°РјРјРЅРѕРіРѕ РћР±РµСЃРїРµС‡РµРЅРёСЏ.
 
-ДАННОЕ ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ "КАК ЕСТЬ", БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ ИЛИ
-ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ ГАРАНТИИ ТОВАРНОЙ ПРИГОДНОСТИ, СООТВЕТСТВИЯ ПО ЕГО КОНКРЕТНОМУ НАЗНАЧЕНИЮ И
-ОТСУТСТВИЯ НАРУШЕНИЙ, НО НЕ ОГРАНИЧИВАЯСЬ ИМИ. НИ В КАКОМ СЛУЧАЕ АВТОРЫ ИЛИ ПРАВООБЛАДАТЕЛИ НЕ НЕСУТ
-ОТВЕТСТВЕННОСТИ ПО КАКИМ-ЛИБО ИСКАМ, ЗА УЩЕРБ ИЛИ ПО ИНЫМ ТРЕБОВАНИЯМ, В ТОМ ЧИСЛЕ, ПРИ ДЕЙСТВИИ
-КОНТРАКТА, ДЕЛИКТЕ ИЛИ ИНОЙ СИТУАЦИИ, ВОЗНИКШИМ ИЗ-ЗА ИСПОЛЬЗОВАНИЯ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ ИЛИ ИНЫХ
-ДЕЙСТВИЙ С ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ.
+Р”РђРќРќРћР• РџР РћР“Р РђРњРњРќРћР• РћР‘Р•РЎРџР•Р§Р•РќРР• РџР Р•Р”РћРЎРўРђР’Р›РЇР•РўРЎРЇ "РљРђРљ Р•РЎРўР¬", Р‘Р•Р— РљРђРљРРҐ-Р›РР‘Рћ Р“РђР РђРќРўРР™, РЇР’РќРћ Р’Р«Р РђР–Р•РќРќР«РҐ РР›Р
+РџРћР”Р РђР—РЈРњР•Р’РђР•РњР«РҐ, Р’РљР›Р®Р§РђРЇ Р“РђР РђРќРўРР РўРћР’РђР РќРћР™ РџР РР“РћР”РќРћРЎРўР, РЎРћРћРўР’Р•РўРЎРўР’РРЇ РџРћ Р•Р“Рћ РљРћРќРљР Р•РўРќРћРњРЈ РќРђР—РќРђР§Р•РќРР® Р
+РћРўРЎРЈРўРЎРўР’РРЇ РќРђР РЈРЁР•РќРР™, РќРћ РќР• РћР“Р РђРќРР§РР’РђРЇРЎР¬ РРњР. РќР Р’ РљРђРљРћРњ РЎР›РЈР§РђР• РђР’РўРћР Р« РР›Р РџР РђР’РћРћР‘Р›РђР”РђРўР•Р›Р РќР• РќР•РЎРЈРў
+РћРўР’Р•РўРЎРўР’Р•РќРќРћРЎРўР РџРћ РљРђРљРРњ-Р›РР‘Рћ РРЎРљРђРњ, Р—Рђ РЈР©Р•Р Р‘ РР›Р РџРћ РРќР«Рњ РўР Р•Р‘РћР’РђРќРРЇРњ, Р’ РўРћРњ Р§РРЎР›Р•, РџР Р Р”Р•Р™РЎРўР’РР
+РљРћРќРўР РђРљРўРђ, Р”Р•Р›РРљРўР• РР›Р РРќРћР™ РЎРРўРЈРђР¦РР, Р’РћР—РќРРљРЁРРњ РР—-Р—Рђ РРЎРџРћР›Р¬Р—РћР’РђРќРРЇ РџР РћР“Р РђРњРњРќРћР“Рћ РћР‘Р•РЎРџР•Р§Р•РќРРЇ РР›Р РРќР«РҐ
+Р”Р•Р™РЎРўР’РР™ РЎ РџР РћР“Р РђРњРњРќР«Рњ РћР‘Р•РЎРџР•Р§Р•РќРР•Рњ.

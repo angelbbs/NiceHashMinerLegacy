@@ -215,6 +215,7 @@
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Miners\ClaymoreNeoscryptMiner.cs" />
     <Compile Include="Miners\CryptoDredge.cs" />
+    <Compile Include="Miners\Rigel.cs" />
     <Compile Include="Miners\ZilClient.cs" />
     <Compile Include="Miners\DHClient4gb.cs" />
     <Compile Include="Miners\DHClient.cs" />

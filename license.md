@@ -1,36 +1,40 @@
-The MIT License (MIT)
+MIT License
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Copyright (c) 2023 angelbbs
 
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-THE SOFTWARE IS PROVIDED <AS IS>, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
-THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-Лицензия MIT
+╦шЎхэчш  MIT
 
-Данная лицензия разрешает лицам, получившим копию данного программного обеспечения и сопутствующей
-документации (в дальнейшем именуемыми <Программное Обеспечение>), безвозмездно использовать
-Программное Обеспечение без ограничений, включая неограниченное право на использование, копирование,
-изменение, слияние, публикацию, распространение, сублицензирование и/или продажу копий Программного
-Обеспечения, а также лицам, которым предоставляется данное Программное Обеспечение, при соблюдении
-следующих условий:
+─рээр  ышЎхэчш  ЁрчЁх°рхЄ ышЎрь, яюыєўшт°шь ъюяш■ фрээюую яЁюуЁрььэюую юсхёяхўхэш  ш ёюяєЄёЄтє■∙хщ
+фюъєьхэЄрЎшш (т фры№эхщ°хь шьхэєхь√ьш <╧ЁюуЁрььэюх ╬схёяхўхэшх>), схчтючьхчфэю шёяюы№чютрЄ№
+╧ЁюуЁрььэюх ╬схёяхўхэшх схч юуЁрэшўхэшщ, тъы■ўр  эхюуЁрэшўхээюх яЁртю эр шёяюы№чютрэшх, ъюяшЁютрэшх,
+шчьхэхэшх, ёыш эшх, яєсышърЎш■, ЁрёяЁюёЄЁрэхэшх, ёєсышЎхэчшЁютрэшх ш/шыш яЁюфрцє ъюяшщ ╧ЁюуЁрььэюую
+╬схёяхўхэш , р Єръцх ышЎрь, ъюЄюЁ√ь яЁхфюёЄрты хЄё  фрээюх ╧ЁюуЁрььэюх ╬схёяхўхэшх, яЁш ёюсы■фхэшш
+ёыхфє■∙шї єёыютшщ:
 
-Указанное выше уведомление об авторском праве и данные условия должны быть включены во все копии или
-значимые части данного Программного Обеспечения.
+╙ърчрээюх т√°х єтхфюьыхэшх юс ртЄюЁёъюь яЁртх ш фрээ√х єёыютш  фюыцэ√ с√Є№ тъы■ўхэ√ тю тёх ъюяшш шыш
+чэрўшь√х ўрёЄш фрээюую ╧ЁюуЁрььэюую ╬схёяхўхэш .
 
-ДАННОЕ ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ "КАК ЕСТЬ", БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ ИЛИ
-ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ ГАРАНТИИ ТОВАРНОЙ ПРИГОДНОСТИ, СООТВЕТСТВИЯ ПО ЕГО КОНКРЕТНОМУ НАЗНАЧЕНИЮ И
-ОТСУТСТВИЯ НАРУШЕНИЙ, НО НЕ ОГРАНИЧИВАЯСЬ ИМИ. НИ В КАКОМ СЛУЧАЕ АВТОРЫ ИЛИ ПРАВООБЛАДАТЕЛИ НЕ НЕСУТ
-ОТВЕТСТВЕННОСТИ ПО КАКИМ-ЛИБО ИСКАМ, ЗА УЩЕРБ ИЛИ ПО ИНЫМ ТРЕБОВАНИЯМ, В ТОМ ЧИСЛЕ, ПРИ ДЕЙСТВИИ
-КОНТРАКТА, ДЕЛИКТЕ ИЛИ ИНОЙ СИТУАЦИИ, ВОЗНИКШИМ ИЗ-ЗА ИСПОЛЬЗОВАНИЯ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ ИЛИ ИНЫХ
-ДЕЙСТВИЙ С ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ.
+─└══╬┼ ╧╨╬├╨└╠╠═╬┼ ╬┴┼╤╧┼╫┼═╚┼ ╧╨┼─╬╤╥└┬╦▀┼╥╤▀ "╩└╩ ┼╤╥▄", ┴┼╟ ╩└╩╚╒-╦╚┴╬ ├└╨└═╥╚╔, ▀┬═╬ ┬█╨└╞┼══█╒ ╚╦╚
+╧╬─╨└╟╙╠┼┬└┼╠█╒, ┬╩╦▐╫└▀ ├└╨└═╥╚╚ ╥╬┬└╨═╬╔ ╧╨╚├╬─═╬╤╥╚, ╤╬╬╥┬┼╥╤╥┬╚▀ ╧╬ ┼├╬ ╩╬═╩╨┼╥═╬╠╙ ═└╟═└╫┼═╚▐ ╚
+╬╥╤╙╥╤╥┬╚▀ ═└╨╙╪┼═╚╔, ═╬ ═┼ ╬├╨└═╚╫╚┬└▀╤▄ ╚╠╚. ═╚ ┬ ╩└╩╬╠ ╤╦╙╫└┼ └┬╥╬╨█ ╚╦╚ ╧╨└┬╬╬┴╦└─└╥┼╦╚ ═┼ ═┼╤╙╥
+╬╥┬┼╥╤╥┬┼══╬╤╥╚ ╧╬ ╩└╩╚╠-╦╚┴╬ ╚╤╩└╠, ╟└ ╙┘┼╨┴ ╚╦╚ ╧╬ ╚═█╠ ╥╨┼┴╬┬└═╚▀╠, ┬ ╥╬╠ ╫╚╤╦┼, ╧╨╚ ─┼╔╤╥┬╚╚
+╩╬═╥╨└╩╥└, ─┼╦╚╩╥┼ ╚╦╚ ╚═╬╔ ╤╚╥╙└╓╚╚, ┬╬╟═╚╩╪╚╠ ╚╟-╟└ ╚╤╧╬╦▄╟╬┬└═╚▀ ╧╨╬├╨└╠╠═╬├╬ ╬┴┼╤╧┼╫┼═╚▀ ╚╦╚ ╚═█╒
+─┼╔╤╥┬╚╔ ╤ ╧╨╬├╨└╠╠═█╠ ╬┴┼╤╧┼╫┼═╚┼╠.

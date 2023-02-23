@@ -147,9 +147,8 @@ namespace NiceHashMiner.Miners
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype))
             {
                 //прокси не используется
-                var dl = DateTime.Now.ToString("hh:mm:ss").Replace(":", "-");
                 ZilMining = " --zil-enable --zil-pool stratum+tcp://etchash.auto.nicehash.com:9200 --zil-wallet " + 
-                            username + " --zil-esm 2 --log-file "+ dl + ".txt --extended-log --log-file-mode 1 --disable-worker-watchdog ";
+                            username + " --zil-esm 2 --disable-worker-watchdog ";
             }
             if (devtype == DeviceType.AMD)
             {

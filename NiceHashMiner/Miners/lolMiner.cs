@@ -279,12 +279,12 @@ namespace NiceHashMiner.Miners
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     platform = "nvidia";
-                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
+                    param = " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
                 }
                 else
                 {
                     platform = "amd";
-                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
+                    param = " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
                 }
             }
             // demo for benchmark

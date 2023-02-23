@@ -60,6 +60,15 @@ namespace NiceHashMiner.Forms
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Cancel = new System.Windows.Forms.Button();
             this.checkBox_ZIL_Mining_Enable = new System.Windows.Forms.CheckBox();
+            this.tabPageminiZ = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBox_MINIZ_NVIDIA_ZHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_MINIZ_NVIDIA_ZelHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_MINIZ_NVIDIA_Octopus = new System.Windows.Forms.CheckBox();
+            this.checkBox_MINIZ_NVIDIA_BeamV3 = new System.Windows.Forms.CheckBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.checkBox_MINIZ_AMD_ZHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_MINIZ_AMD_ZelHash = new System.Windows.Forms.CheckBox();
             this.TabControlZILadditionalMining.SuspendLayout();
             this.tabPageGMiner.SuspendLayout();
             this.groupBox_NVIDIA.SuspendLayout();
@@ -70,11 +79,15 @@ namespace NiceHashMiner.Forms
             this.groupBox3.SuspendLayout();
             this.tabPageSRBMiner.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPageminiZ.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabControlZILadditionalMining
             // 
             this.TabControlZILadditionalMining.Controls.Add(this.tabPageGMiner);
+            this.TabControlZILadditionalMining.Controls.Add(this.tabPageminiZ);
             this.TabControlZILadditionalMining.Controls.Add(this.tabPageNanominer);
             this.TabControlZILadditionalMining.Controls.Add(this.tabPageRigel);
             this.TabControlZILadditionalMining.Controls.Add(this.tabPageSRBMiner);
@@ -127,7 +140,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_NVIDIA.Controls.Add(this.checkBox_GMINER_NVIDIA_CuckooCycle);
             this.groupBox_NVIDIA.Controls.Add(this.checkBox_GMINER_NVIDIA_BeamV3);
             this.groupBox_NVIDIA.Controls.Add(this.checkBox_GMINER_NVIDIA_AutolykosKHeavyHash);
-            this.groupBox_NVIDIA.Location = new System.Drawing.Point(6, 63);
+            this.groupBox_NVIDIA.Location = new System.Drawing.Point(6, 60);
             this.groupBox_NVIDIA.Name = "groupBox_NVIDIA";
             this.groupBox_NVIDIA.Size = new System.Drawing.Size(348, 92);
             this.groupBox_NVIDIA.TabIndex = 1;
@@ -241,7 +254,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_AMD.Controls.Add(this.checkBox_GMINER_AMD_KAWPOW);
             this.groupBox_AMD.Location = new System.Drawing.Point(6, 6);
             this.groupBox_AMD.Name = "groupBox_AMD";
-            this.groupBox_AMD.Size = new System.Drawing.Size(348, 51);
+            this.groupBox_AMD.Size = new System.Drawing.Size(348, 48);
             this.groupBox_AMD.TabIndex = 0;
             this.groupBox_AMD.TabStop = false;
             this.groupBox_AMD.Text = "AMD";
@@ -422,6 +435,101 @@ namespace NiceHashMiner.Forms
             this.checkBox_ZIL_Mining_Enable.UseVisualStyleBackColor = true;
             this.checkBox_ZIL_Mining_Enable.CheckedChanged += new System.EventHandler(this.checkBox_ZIL_Mining_Enable_CheckedChanged);
             // 
+            // tabPageminiZ
+            // 
+            this.tabPageminiZ.Controls.Add(this.groupBox5);
+            this.tabPageminiZ.Controls.Add(this.groupBox4);
+            this.tabPageminiZ.Location = new System.Drawing.Point(4, 23);
+            this.tabPageminiZ.Name = "tabPageminiZ";
+            this.tabPageminiZ.Size = new System.Drawing.Size(364, 162);
+            this.tabPageminiZ.TabIndex = 4;
+            this.tabPageminiZ.Text = "miniZ";
+            this.tabPageminiZ.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.checkBox_MINIZ_NVIDIA_ZHash);
+            this.groupBox4.Controls.Add(this.checkBox_MINIZ_NVIDIA_ZelHash);
+            this.groupBox4.Controls.Add(this.checkBox_MINIZ_NVIDIA_Octopus);
+            this.groupBox4.Controls.Add(this.checkBox_MINIZ_NVIDIA_BeamV3);
+            this.groupBox4.Location = new System.Drawing.Point(6, 60);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(348, 48);
+            this.groupBox4.TabIndex = 2;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "NVIDIA";
+            // 
+            // checkBox_MINIZ_NVIDIA_ZHash
+            // 
+            this.checkBox_MINIZ_NVIDIA_ZHash.AutoSize = true;
+            this.checkBox_MINIZ_NVIDIA_ZHash.Location = new System.Drawing.Point(222, 19);
+            this.checkBox_MINIZ_NVIDIA_ZHash.Name = "checkBox_MINIZ_NVIDIA_ZHash";
+            this.checkBox_MINIZ_NVIDIA_ZHash.Size = new System.Drawing.Size(58, 17);
+            this.checkBox_MINIZ_NVIDIA_ZHash.TabIndex = 8;
+            this.checkBox_MINIZ_NVIDIA_ZHash.Text = "ZHash";
+            this.checkBox_MINIZ_NVIDIA_ZHash.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_MINIZ_NVIDIA_ZelHash
+            // 
+            this.checkBox_MINIZ_NVIDIA_ZelHash.AutoSize = true;
+            this.checkBox_MINIZ_NVIDIA_ZelHash.Location = new System.Drawing.Point(150, 19);
+            this.checkBox_MINIZ_NVIDIA_ZelHash.Name = "checkBox_MINIZ_NVIDIA_ZelHash";
+            this.checkBox_MINIZ_NVIDIA_ZelHash.Size = new System.Drawing.Size(66, 17);
+            this.checkBox_MINIZ_NVIDIA_ZelHash.TabIndex = 7;
+            this.checkBox_MINIZ_NVIDIA_ZelHash.Text = "ZelHash";
+            this.checkBox_MINIZ_NVIDIA_ZelHash.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_MINIZ_NVIDIA_Octopus
+            // 
+            this.checkBox_MINIZ_NVIDIA_Octopus.AutoSize = true;
+            this.checkBox_MINIZ_NVIDIA_Octopus.Location = new System.Drawing.Point(78, 19);
+            this.checkBox_MINIZ_NVIDIA_Octopus.Name = "checkBox_MINIZ_NVIDIA_Octopus";
+            this.checkBox_MINIZ_NVIDIA_Octopus.Size = new System.Drawing.Size(66, 17);
+            this.checkBox_MINIZ_NVIDIA_Octopus.TabIndex = 6;
+            this.checkBox_MINIZ_NVIDIA_Octopus.Text = "Octopus";
+            this.checkBox_MINIZ_NVIDIA_Octopus.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_MINIZ_NVIDIA_BeamV3
+            // 
+            this.checkBox_MINIZ_NVIDIA_BeamV3.AutoSize = true;
+            this.checkBox_MINIZ_NVIDIA_BeamV3.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_MINIZ_NVIDIA_BeamV3.Name = "checkBox_MINIZ_NVIDIA_BeamV3";
+            this.checkBox_MINIZ_NVIDIA_BeamV3.Size = new System.Drawing.Size(66, 17);
+            this.checkBox_MINIZ_NVIDIA_BeamV3.TabIndex = 1;
+            this.checkBox_MINIZ_NVIDIA_BeamV3.Text = "BeamV3";
+            this.checkBox_MINIZ_NVIDIA_BeamV3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.checkBox_MINIZ_AMD_ZHash);
+            this.groupBox5.Controls.Add(this.checkBox_MINIZ_AMD_ZelHash);
+            this.groupBox5.Location = new System.Drawing.Point(6, 6);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(348, 48);
+            this.groupBox5.TabIndex = 3;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "AMD";
+            // 
+            // checkBox_MINIZ_AMD_ZHash
+            // 
+            this.checkBox_MINIZ_AMD_ZHash.AutoSize = true;
+            this.checkBox_MINIZ_AMD_ZHash.Location = new System.Drawing.Point(78, 19);
+            this.checkBox_MINIZ_AMD_ZHash.Name = "checkBox_MINIZ_AMD_ZHash";
+            this.checkBox_MINIZ_AMD_ZHash.Size = new System.Drawing.Size(58, 17);
+            this.checkBox_MINIZ_AMD_ZHash.TabIndex = 8;
+            this.checkBox_MINIZ_AMD_ZHash.Text = "ZHash";
+            this.checkBox_MINIZ_AMD_ZHash.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_MINIZ_AMD_ZelHash
+            // 
+            this.checkBox_MINIZ_AMD_ZelHash.AutoSize = true;
+            this.checkBox_MINIZ_AMD_ZelHash.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_MINIZ_AMD_ZelHash.Name = "checkBox_MINIZ_AMD_ZelHash";
+            this.checkBox_MINIZ_AMD_ZelHash.Size = new System.Drawing.Size(66, 17);
+            this.checkBox_MINIZ_AMD_ZelHash.TabIndex = 7;
+            this.checkBox_MINIZ_AMD_ZelHash.Text = "ZelHash";
+            this.checkBox_MINIZ_AMD_ZelHash.UseVisualStyleBackColor = true;
+            // 
             // Form_additional_mining
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -453,6 +561,11 @@ namespace NiceHashMiner.Forms
             this.tabPageSRBMiner.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPageminiZ.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -491,5 +604,14 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_KHeavyHash;
         private System.Windows.Forms.CheckBox checkBox_ZIL_Mining_Enable;
+        private System.Windows.Forms.TabPage tabPageminiZ;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox checkBox_MINIZ_NVIDIA_ZHash;
+        private System.Windows.Forms.CheckBox checkBox_MINIZ_NVIDIA_ZelHash;
+        private System.Windows.Forms.CheckBox checkBox_MINIZ_NVIDIA_Octopus;
+        private System.Windows.Forms.CheckBox checkBox_MINIZ_NVIDIA_BeamV3;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.CheckBox checkBox_MINIZ_AMD_ZHash;
+        private System.Windows.Forms.CheckBox checkBox_MINIZ_AMD_ZelHash;
     }
 }

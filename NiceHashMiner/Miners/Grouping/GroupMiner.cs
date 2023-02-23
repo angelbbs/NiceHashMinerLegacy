@@ -101,7 +101,7 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 Miner.Stop();
                 // wait before going on
-                //System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+                System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             }
             CurrentRate = 0;
             PowerRate = 0;

@@ -1030,7 +1030,7 @@ namespace NiceHashMiner.Stats
         }
         public static void SetAlgorithmRates(JArray data, int multipl = 1, double treshold = 12.0, bool average = true)
         {
-            double mult = multipl * 0.98;
+            double mult = multipl * 0.98;//nicehash mining fee
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();

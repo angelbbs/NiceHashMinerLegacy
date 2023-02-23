@@ -3369,13 +3369,13 @@ public static void CloseChilds(Process parentId)
 
             if (NiceHashStats._socket == null)
             {
-                Thread.Sleep(200);
+                //Thread.Sleep(200);
             }
 
             NiceHashStats._deviceUpdateTimer.Stop();
-            new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+            //new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
-            //NiceHashStats.SetDeviceStatus("MINING");
+
             if (textBoxBTCAddress_new.Text.Equals(""))
             {
                 if (showWarnings)
@@ -3409,7 +3409,6 @@ public static void CloseChilds(Process parentId)
                 NiceHashStats._deviceUpdateTimer.Stop();
                 new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
                 NiceHashStats._deviceUpdateTimer.Start();
-                //NiceHashStats.SetDeviceStatus("STOPPED");
                 return StartMiningReturnType.IgnoreMsg;
             }
             var hasData = NHSmaData.HasData;
@@ -3434,60 +3433,7 @@ public static void CloseChilds(Process parentId)
                 }
                 return StartMiningReturnType.IgnoreMsg;
             }
-            /*
-            foreach (var cdev in ComputeDeviceManager.Available.Devices)
-            {
-                if (cdev.Enabled)
-                {
-                    if (cdev.GetAlgorithmSettings().Where(algo => algo.Enabled).Any(algo => algo.BenchmarkSpeed == 0))
-                    {
-                    }
-                }
-            }
-            */
-
-            // Check if the user has run benchmark first
-            /*
-            if (!isBenchInit)
-            {
-                var result = DialogResult.No;
-                if (showWarnings)
-                {
-                    result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
-                        International.GetText("Warning_with_Exclamation"),
-                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                }
-                if (result == DialogResult.Yes)
-                {
-                    _benchmarkForm = new Form_Benchmark(
-                        BenchmarkPerformanceType.Standard,
-                        true);
-                    _benchmarkForm.ShowDialog();
-                    _benchmarkForm = null;
-                    InitMainConfigGuiData();
-                }
-                else if (result == DialogResult.No)
-                {
-                    // check devices without benchmarks
-                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
-                    {
-                        if (cdev.Enabled)
-                        {
-                            var enabled = cdev.GetAlgorithmSettings().Any(algo => algo.BenchmarkSpeed > 0);
-                            cdev.Enabled = enabled;
-                        }
-                    }
-                }
-                else
-                {
-                    NiceHashStats._deviceUpdateTimer.Stop();
-                    new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
-                    NiceHashStats._deviceUpdateTimer.Start();
-                    //NiceHashStats.SetDeviceStatus("STOPPED");
-                    return StartMiningReturnType.IgnoreMsg;
-                }
-            }
-            */
+            
             // textBoxBTCAddress.Enabled = false;
             textBoxBTCAddress_new.Enabled = false;
             textBoxWorkerName.Enabled = false;

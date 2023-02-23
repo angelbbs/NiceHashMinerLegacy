@@ -58,6 +58,8 @@ namespace NiceHashMiner.Forms
                 tabPageSRBMiner.ForeColor = Form_Main._foreColor;
                 tabPageNanominer.BackColor = Form_Main._backColor;
                 tabPageNanominer.ForeColor = Form_Main._foreColor;
+                tabPageminiZ.BackColor = Form_Main._backColor;
+                tabPageminiZ.ForeColor = Form_Main._foreColor;
                 tabPageRigel.BackColor = Form_Main._backColor;
                 tabPageRigel.ForeColor = Form_Main._foreColor;
             }
@@ -92,6 +94,13 @@ namespace NiceHashMiner.Forms
             checkBox_NANOMINER_AMD_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD;
             
             checkBox_Rigel_NVIDIA_KHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
+
+            checkBox_MINIZ_NVIDIA_BeamV3.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.BeamV3_NVIDIA;
+            checkBox_MINIZ_NVIDIA_Octopus.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.Octopus_NVIDIA;
+            checkBox_MINIZ_NVIDIA_ZelHash.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_NVIDIA;
+            checkBox_MINIZ_NVIDIA_ZHash.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_NVIDIA;
+            checkBox_MINIZ_AMD_ZelHash.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_AMD;
+            checkBox_MINIZ_AMD_ZHash.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_AMD;
 
             //до тех пор, пока autolykos не починят
             checkBox_SRBMINER_AMD_Autolykos.Checked = false;
@@ -197,6 +206,37 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
+            if (minerBaseType == MinerBaseType.miniZ)
+            {
+                if (deviceType == DeviceType.NVIDIA)
+                {
+                    switch (algo)
+                    {
+                        case "ZelHash":
+                            return ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_NVIDIA;
+                        case "ZHash":
+                            return ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_NVIDIA;
+                        case "BeamV3":
+                            return ConfigManager.GeneralConfig.ZILConfigminiZ.BeamV3_NVIDIA;
+                        case "Octopus":
+                            return ConfigManager.GeneralConfig.ZILConfigminiZ.Octopus_NVIDIA;
+                        default:
+                            return false;
+                    }
+                }
+                if (deviceType == DeviceType.NVIDIA)
+                {
+                    switch (algo)
+                    {
+                        case "ZelHash":
+                            return ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_AMD;
+                        case "ZHash":
+                            return ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_AMD;
+                        default:
+                            return false;
+                    }
+                }
+            }
 
             return false;
         }
@@ -235,6 +275,13 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ZILConfigSRBMiner.KHeavyHash_AMD = checkBox_SRBMINER_AMD_KHeavyHash.Checked;
 
             ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD = checkBox_NANOMINER_AMD_Autolykos.Checked;
+
+            ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA = checkBox_Rigel_NVIDIA_KHeavyHash.Checked;
+
+            ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_AMD = checkBox_MINIZ_AMD_ZelHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_AMD = checkBox_MINIZ_AMD_ZHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_NVIDIA = checkBox_MINIZ_NVIDIA_ZelHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_NVIDIA = checkBox_MINIZ_NVIDIA_ZHash.Checked;
 
             this.Close();
         }

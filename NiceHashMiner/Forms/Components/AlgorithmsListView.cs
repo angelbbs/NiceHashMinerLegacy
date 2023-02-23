@@ -358,7 +358,7 @@ namespace NiceHashMiner.Forms.Components
                     double.TryParse(alg.CurPayingRate, out var valueRate);
                     double.TryParse(alg.CurSecondPayingRate, out var valueRateSecond);
 
-                    if (Form_additional_mining.isAlgoZIL(alg.AlgorithmName, alg.MinerBaseType, alg.DeviceType))
+                    if (Form_additional_mining.isAlgoZIL(alg.AlgorithmName, alg.MinerBaseType, computeDevice.DeviceType))
                     {
                         valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
                     }
@@ -486,7 +486,7 @@ namespace NiceHashMiner.Forms.Components
                                 double.TryParse(algorithm.CurPayingRate, out var valueRate);
                                 double.TryParse(algorithm.CurSecondPayingRate, out var valueRateSecond);
 
-                                if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, algo.DeviceType))
+                                if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, _computeDevice.DeviceType))
                                 {
                                     valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
                                 }
@@ -697,7 +697,7 @@ namespace NiceHashMiner.Forms.Components
 
                             double.TryParse(algorithm.CurPayingRate, out var valueRate);
 
-                            if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, algo.DeviceType))
+                            if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, computeDevice.DeviceType))
                             {
                                 valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
                             }
