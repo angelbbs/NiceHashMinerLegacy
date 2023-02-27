@@ -108,7 +108,7 @@ namespace NiceHashMiner.Stats
                     dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
                     Helpers.ConsolePrint("SOCKET", "Using previous SMA");
                     JArray smadata = (JArray.Parse(jsonData));
-                    SetAlgorithmRates(smadata);
+                    SetAlgorithmRates(smadata);//LoadCachedSMAData
                 }
                 catch (Exception er)
                 {
@@ -541,7 +541,7 @@ namespace NiceHashMiner.Stats
                 }
                 outProf = outProf.Remove(outProf.Length - 2) + "]";
                 JArray smadata = (JArray.Parse(outProf));
-                NiceHashStats.SetAlgorithmRates(smadata, 1, 15, true);
+                NiceHashStats.SetAlgorithmRates(smadata, 1, 15, true, "Order");//GetSmaAPIOrder
                 return true;
             }
             catch (Exception ex)
@@ -609,7 +609,7 @@ namespace NiceHashMiner.Stats
                     // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15, true, "Current");//GetSmaAPICurrent
 
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
@@ -682,7 +682,7 @@ namespace NiceHashMiner.Stats
                     // Helpers.ConsolePrint("SMA-DATA-APICurrent: ", outProf);
                     JArray smadata = (JArray.Parse(outProf));
 
-                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15);
+                    NiceHashStats.SetAlgorithmRates(smadata, 10, 15, false, "24h");//GetSmaAPI24h
 
                     if (!ConfigManager.GeneralConfig.NoShowApiInLog)
                     {
@@ -970,14 +970,14 @@ namespace NiceHashMiner.Stats
                         dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
                         Helpers.ConsolePrint("LoadSMA", "Using previous SMA");
                         JArray smadata = (JArray.Parse(jsonData));
-                        SetAlgorithmRates(smadata);
+                        SetAlgorithmRates(smadata);//LoadSMA
                     }
                     else
                     {
                         Helpers.ConsolePrint("LoadSMA", "Using default SMA");
                         dynamic defsma = "[[21,\"1.1637063156e-08\"],[50,\"1.5700000000e+04\"],[5,\"2.3910000000e-07\"],[54,\"9.9593453508e+02\"],[56,\"8.3154640439e-04\"],[23,\"8.8917404737e-08\"],[32,\"4.1550000000e-04\"],[43,\"4.1000000000e+03\"],[42,\"1.9636363636e+00\"],[8,\"6.6641064511e-03\"],[47,\"8.7152481058e-01\"],[36,\"3.1534919293e+02\"],[52,\"1.4753894679e-03\"],[14,\"7.0010000000e-07\"],[28,\"1.3914259087e-09\"],[46,\"3.5115871886e-04\"],[57,\"2.6596125572e-04\"],[33,\"1.2604450871e-04\"],[39,\"4.9647058824e+03\"],[24,\"9.3575041979e-01\"],[20,\"9.3350169094e-04\"],[51,\"5.2500182871e-08\"],[48,\"1.8300000000e-08\"],[58,\"9.2579601837e+02\"]]";
                         JArray smadata = (JArray.Parse(defsma));
-                        SetAlgorithmRates(smadata);
+                        SetAlgorithmRates(smadata);//LoadSMA
                     }
                 }
             }
@@ -987,7 +987,7 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", "Using default SMA");
                 dynamic defsma = "[[21,\"1.1637063156e-08\"],[50,\"1.5700000000e+04\"],[5,\"2.3910000000e-07\"],[54,\"9.9593453508e+02\"],[56,\"8.3154640439e-04\"],[23,\"8.8917404737e-08\"],[32,\"4.1550000000e-04\"],[43,\"4.1000000000e+03\"],[42,\"1.9636363636e+00\"],[8,\"6.6641064511e-03\"],[47,\"8.7152481058e-01\"],[36,\"3.1534919293e+02\"],[52,\"1.4753894679e-03\"],[14,\"7.0010000000e-07\"],[28,\"1.3914259087e-09\"],[46,\"3.5115871886e-04\"],[57,\"2.6596125572e-04\"],[33,\"1.2604450871e-04\"],[39,\"4.9647058824e+03\"],[24,\"9.3575041979e-01\"],[20,\"9.3350169094e-04\"],[51,\"5.2500182871e-08\"],[48,\"1.8300000000e-08\"],[58,\"9.2579601837e+02\"]]";
                 JArray smadata = (JArray.Parse(defsma));
-                SetAlgorithmRates(smadata);
+                SetAlgorithmRates(smadata);//LoadSMA
                 Helpers.ConsolePrint("OLDSMA", ex.ToString());
             }
         }
@@ -1028,50 +1028,134 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", e.Message);
             }
         }
-        public static void SetAlgorithmRates(JArray data, int multipl = 1, double treshold = 12.0, bool average = true)
+        public static void SetAlgorithmRates(JArray data, int multipl = 1, double treshold = 12.0,
+            bool average = true, string type = "WS")
         {
             double mult = multipl * 0.98;//nicehash mining fee
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();
+                payingDict.Add(AlgorithmType.DaggerHashimoto3GB, 0.0d);
+                payingDict.Add(AlgorithmType.DaggerHashimoto4GB, 0.0d);
                 if (data != null)
                 {
                     foreach (var algo in data)
                     {
                         if (algo == null) return;
                         var algoKey = (AlgorithmType)algo[0].Value<int>();
+
+                        if (algoKey.ToString().Contains("UNUSED"))
+                        {
+                            continue;
+                        }
+
                         if (!NHSmaData.TryGetPaying(algoKey, out double paying))
                         {
                             Helpers.ConsolePrint("SMA API", "ERROR! Unknown algo: " + algoKey.ToString());
                         }
 
+                        if (!ConfigManager.GeneralConfig.Use_Last24hours)
+                        {
+                            if (paying == 0 && !algoKey.ToString().Contains("UNUSED")
+                                && type.ToLower().Contains("ws"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), false);//first init?
+                            }
+
+                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED")
+                                && type.ToLower().Equals("current"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                            }
+
+                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED")
+                                && type.ToLower().Equals("order"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                            }
+                        }
+                        else
+                        {
+                            if (paying == 0 && !algoKey.ToString().Contains("UNUSED")
+                                && type.ToLower().Equals("ws"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), false);//first init?
+                            }
+
+                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED") &&
+                                !type.ToLower().Equals("ws"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                                
+                                if ((algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash) &&
+                                    type.ToLower().Contains("24h"))
+                                {
+                                    //double average
+                                    //NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                                }                                
+                            }
+                        }
+                        
+
+                        /*
+                        Helpers.ConsolePrint(algoKey.ToString() + " - " + type, (Math.Abs(algo[1].Value<double>() * mult)).ToString() +
+                                    " - " + paying.ToString());
+
+                        Helpers.ConsolePrint("****", type.ToLower().Contains("24h").ToString() +
+                            ", " + (algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash).ToString() +
+                            ", " + ConfigManager.GeneralConfig.Use_Last24hours);
+                        */
+                        /*
+                        if (!type.ToLower().Contains("24h") &&
+                            (algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash) &&
+                            ConfigManager.GeneralConfig.Use_Last24hours)
+                        {
+                            //Helpers.ConsolePrint(algoKey.ToString() + " - " + type, "skip");
+                            //continue;
+                        }
+
                         if (paying == 0)
                         {
-                            payingDict[algoKey] = Math.Abs(algo[1].Value<double>());
+                            payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
+                        }
+
+                        if (type.ToLower().Contains("24h"))
+                        {
+                            if (algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash)
+                            {
+                                //Helpers.ConsolePrint(type, (Math.Abs(algo[1].Value<double>() * mult)).ToString() +
+                                  //  " - " + paying.ToString());
+                                payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
+                            }
                         }
 
                         if (paying != 0 && !algoKey.ToString().Contains("UNUSED"))
                         {
-                            if (ConfigManager.GeneralConfig.MOPA5 && paying < Math.Abs(algo[1].Value<double>() * mult))
+                            if (ConfigManager.GeneralConfig.Use_Last24hours && paying < Math.Abs(algo[1].Value<double>() * mult))
                             {
                                 payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
                             }
-                            if (!ConfigManager.GeneralConfig.MOPA5)
+                            if (!ConfigManager.GeneralConfig.Use_Last24hours)
                             {
                                 payingDict[algoKey] = Math.Abs(algo[1].Value<double>() * mult);
                             }
                         }
+                        */
                     }
                 }
 
                 //testing
                 //payingDict[AlgorithmType.ZelHash] = 12345;
 
+                //Helpers.ConsolePrint("*** 1", payingDict[AlgorithmType.DaggerHashimoto3GB].ToString());
+                //Helpers.ConsolePrint("*** 2", payingDict[AlgorithmType.DaggerHashimoto4GB].ToString());
+                //Helpers.ConsolePrint("*** 3", payingDict[AlgorithmType.DaggerHashimoto].ToString());
+                /*
                 payingDict[AlgorithmType.DaggerHashimoto3GB] = payingDict[AlgorithmType.DaggerHashimoto];
                 payingDict[AlgorithmType.DaggerHashimoto4GB] = payingDict[AlgorithmType.DaggerHashimoto];
 
                 NHSmaData.UpdateSmaPaying(payingDict, average);
-
+                */
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);
 

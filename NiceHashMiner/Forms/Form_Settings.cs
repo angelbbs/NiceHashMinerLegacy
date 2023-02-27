@@ -481,7 +481,6 @@ namespace NiceHashMiner.Forms
                 checkBoxProxySSL.Enabled = false;
             }
 
-
             richTextBoxInfo.ReadOnly = true;
             richTextBoxInfo.SelectionFont = new Font(richTextBoxInfo.Font, FontStyle.Bold);
             richTextBoxInfo.AppendText("Miner Legacy Fork Fix");
@@ -1611,6 +1610,8 @@ namespace NiceHashMiner.Forms
             {
                 textBox_LogMaxFileSize.Enabled = false;
             }
+
+            
         }
 
 
@@ -2676,6 +2677,10 @@ namespace NiceHashMiner.Forms
                 MessageBox.Show(International.GetText("Form_Settings_checkBox_orderPrice_Warning1"),
         International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
+            if (checkBox_orderPrice.Checked) checkBoxLast24hours.Checked = false;
+            checkBoxLast24hours.Enabled = !checkBox_orderPrice.Checked;
+            ConfigManager.GeneralConfig.Use_Last24hours = false;
         }
 
         private void buttonSetupAPI_Click(object sender, EventArgs e)
@@ -3244,6 +3249,13 @@ namespace NiceHashMiner.Forms
                 Helpers.ConsolePrint("settings", er.ToString());
             }
             //Form_additional_mining.ActiveForm.ShowDialog();
+        }
+
+        private void checkBoxLast24hours_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxLast24hours.Checked) checkBox_orderPrice.Checked = false;
+            checkBox_orderPrice.Enabled = !checkBoxLast24hours.Checked;
+            ConfigManager.GeneralConfig.Use_orders_price = false;
         }
     }
 

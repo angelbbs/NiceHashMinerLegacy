@@ -993,12 +993,12 @@ namespace NiceHashMiner.Miners
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
                             {
                                 NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
-                                groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 0.8;
+                                groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 0.75;
                             }
                             if (ad.ThirdAlgorithmID != AlgorithmType.NONE)//dual
                             {
                                 NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
-                                groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.8;
+                                groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.75;
                             }
                         }
                         else
@@ -1153,8 +1153,8 @@ namespace NiceHashMiner.Miners
                             double RateNoZil = (Form_Main.RateNoZil / Math.Max(12 * 70, Form_Main.RateNoZilCount));
                             double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
                             Form_Main.ZilFactor = Math.Round((RateZil * _zilRate) / RateNoZil, 3);
-                            Helpers.ConsolePrint("miniz", "RateZilCount: " + Form_Main.RateZilCount.ToString() + " RateNoZilCount: " + Form_Main.RateNoZilCount.ToString());
-                            Helpers.ConsolePrint("miniz", "RateZil: " + RateZil.ToString() + " RateNoZil: " + RateNoZil.ToString());
+                            //Helpers.ConsolePrint("miniz", "RateZilCount: " + Form_Main.RateZilCount.ToString() + " RateNoZilCount: " + Form_Main.RateNoZilCount.ToString());
+                            //Helpers.ConsolePrint("miniz", "RateZil: " + RateZil.ToString() + " RateNoZil: " + RateNoZil.ToString());
 
                             if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                             if (double.IsNaN(RateZil)) RateZil = 0.0d;

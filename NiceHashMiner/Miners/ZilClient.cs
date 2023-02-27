@@ -152,6 +152,12 @@ namespace NiceHashMiner.Miners
                                 ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
                             }
                             new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
+                            Thread.Sleep(500);
+                            if (ConfigManager.GeneralConfig.Use_Last24hours)
+                            {
+                                new Task(() => Stats.NiceHashStats.GetSmaAPI24h()).Start();
+                                Thread.Sleep(500);
+                            }
                             MinersManager.MinerStatsCheck();
                         }
                         if (zil > 0 & zil < 99)
@@ -160,6 +166,12 @@ namespace NiceHashMiner.Miners
                             {
                                 //Helpers.ConsolePrint("ZilAPI", "End ZIL round");
                                 new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
+                                Thread.Sleep(500);
+                                if (ConfigManager.GeneralConfig.Use_Last24hours)
+                                {
+                                    new Task(() => Stats.NiceHashStats.GetSmaAPI24h()).Start();
+                                    Thread.Sleep(500);
+                                }
                                 if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                 ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
                                 if (ConfigManager.GeneralConfig.RestartGMinerAfterZilRound)
@@ -420,10 +432,15 @@ namespace NiceHashMiner.Miners
                                         {
                                             Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round");
                                             new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
+                                            Thread.Sleep(500);
+                                            if (ConfigManager.GeneralConfig.Use_Last24hours)
+                                            {
+                                                new Task(() => Stats.NiceHashStats.GetSmaAPI24h()).Start();
+                                                Thread.Sleep(500);
+                                            }
                                             if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                             ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
                                         }
-                                        //new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
                                         MinersManager.MinerStatsCheck();
                                         Form_Main.isZilRound = true;
                                     }
@@ -438,6 +455,12 @@ namespace NiceHashMiner.Miners
                                                 epochCount = 0;
                                                 Helpers.ConsolePrint("ZILNiceHash", "End ZIL round");
                                                 new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
+                                                Thread.Sleep(500);
+                                                if (ConfigManager.GeneralConfig.Use_Last24hours)
+                                                {
+                                                    new Task(() => Stats.NiceHashStats.GetSmaAPI24h()).Start();
+                                                    Thread.Sleep(500);
+                                                }
                                                 if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                                 ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
                                                 if (ConfigManager.GeneralConfig.RestartGMinerAfterZilRound)

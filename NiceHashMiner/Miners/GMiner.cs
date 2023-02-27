@@ -263,7 +263,7 @@ namespace NiceHashMiner.Miners
             else
             {
                 port = "1" + port;
-                port = "1" + port;
+                port2 = "1" + port2;
                 ssl = "--ssl 0 ";
                 dssl = "--dssl 0 ";
             }

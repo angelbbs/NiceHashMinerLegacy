@@ -212,14 +212,20 @@ namespace NiceHashMiner.Switching
         /// <summary>
         /// Change SMA profit for one algo
         /// </summary>
-        public static void UpdatePayingForAlgo(AlgorithmType algo, double paying)
+        public static void UpdatePayingForAlgo(AlgorithmType algo, double paying, bool average = false)
         {
             CheckInit();
             lock (_currentSma)
             {
                 if (!_currentSma.ContainsKey(algo))
                     throw new ArgumentException("Algo not setup in SMA");
-                _currentSma[algo].Paying = paying;
+                if (average)
+                {
+                    _currentSma[algo].Paying = (paying + _currentSma[algo].Paying) / 2;
+                } else
+                {
+                    _currentSma[algo].Paying = paying;
+                }
             }
             //Helpers.ConsolePrint("UpdatePayingForAlgo", "algo: " + algo.ToString() + " paying: " + paying.ToString());
             HasData = true;

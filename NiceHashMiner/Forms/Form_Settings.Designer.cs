@@ -1695,6 +1695,7 @@ namespace NiceHashMiner.Forms
             this.checkBoxLast24hours.TabIndex = 420;
             this.checkBoxLast24hours.Text = "Use the average price for the last 24 hours";
             this.checkBoxLast24hours.UseVisualStyleBackColor = true;
+            this.checkBoxLast24hours.CheckedChanged += new System.EventHandler(this.checkBoxLast24hours_CheckedChanged);
             // 
             // checkBox_orderPrice
             // 

@@ -3708,8 +3708,8 @@ public static void CloseChilds(Process parentId)
                     Uptime = timenow.Subtract(StartTime);
                     label_Uptime.Visible = true;
                     label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " +
-                                        Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss")+
-                        " Блок зилики: " + ZilCount.ToString();
+                                        Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
+                        //" Блок зилики: " + ZilCount.ToString();
                 }
 
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)

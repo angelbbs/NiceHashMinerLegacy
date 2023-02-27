@@ -204,11 +204,13 @@ namespace NiceHashMiner.Forms.Components
 
         private void SecondaryTextChangedBenchmarkSpeed(object sender, EventArgs e)
         {
-            if (double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out var secondaryValue)
-                && _currentlySelectedAlgorithm is DualAlgorithm dualAlgo)
+            if (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo)
             {
                 //dualAlgo.SecondaryBenchmarkSpeed = secondaryValue;
-                _currentlySelectedAlgorithm.BenchmarkSecondarySpeed = secondaryValue;
+                if (double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out var secondaryValue))
+                {
+                    _currentlySelectedAlgorithm.BenchmarkSecondarySpeed = secondaryValue;
+                }
             }
             else
             {
