@@ -179,6 +179,8 @@ namespace NiceHashMiner.Forms
                 string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
             toolTip1.SetToolTip(checkBox_DisableDetectionAMD,
                 string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
+            toolTip1.SetToolTip(checkBox_DisableDetectionINTEL,
+                string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "INTEL"));
 
             toolTip1.SetToolTip(checkBox_AutoScaleBTCValues,
                 International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
@@ -257,6 +259,10 @@ namespace NiceHashMiner.Forms
             checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
+            labelDisableDetection.Text = International.GetText("Form_Settings_General_DisableDetection");
+            labelDisableMonitoring.Text = International.GetText("Form_Settings_General_monitoring");
+
+            /*
             checkBox_DisableDetectionNVIDIA.Text =
                 string.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA");
             checkBox_DisableDetectionAMD.Text =
@@ -264,6 +270,7 @@ namespace NiceHashMiner.Forms
             checkBoxAMDmonitoring.Text = International.GetText("Form_Settings_General_AMDmonitoring");
             checkBoxNVMonitoring.Text = International.GetText("Form_Settings_General_NVMonitoring");
             checkBoxCPUmonitoring.Text = International.GetText("Form_Settings_General_CPUmonitoring");
+            */
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
 
@@ -283,8 +290,9 @@ namespace NiceHashMiner.Forms
             checkBox_EnableAPI.Text = International.GetText("Form_Settings_checkBox_EnableAPI");
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
-                checkBox_show_NVdevice_manufacturer.Location = new Point(checkBox_show_NVdevice_manufacturer.Location.X + 74, checkBox_show_NVdevice_manufacturer.Location.Y); ;
-                checkBox_show_AMDdevice_manufacturer.Location = new Point(checkBox_show_AMDdevice_manufacturer.Location.X + 74, checkBox_show_AMDdevice_manufacturer.Location.Y);
+                checkBox_show_NVdevice_manufacturer.Location = new Point(checkBox_show_NVdevice_manufacturer.Location.X + 26, checkBox_show_NVdevice_manufacturer.Location.Y); ;
+                checkBox_show_AMDdevice_manufacturer.Location = new Point(checkBox_show_AMDdevice_manufacturer.Location.X + 26, checkBox_show_AMDdevice_manufacturer.Location.Y);
+                checkBox_show_INTELdevice_manufacturer.Location = new Point(checkBox_show_INTELdevice_manufacturer.Location.X + 26, checkBox_show_INTELdevice_manufacturer.Location.Y);
 
                 checkBoxRestartDriver.Location = new Point(checkBoxRestartDriver.Location.X + 26, checkBoxRestartDriver.Location.Y);
                 checkBoxRestartWindows.Location = new Point(checkBoxRestartWindows.Location.X + 26, checkBoxRestartWindows.Location.Y);
@@ -418,6 +426,7 @@ namespace NiceHashMiner.Forms
             label_show_manufacturer.Text = International.GetText("Form_Settings_label_show_manufacturer");
             label_restart_nv_lost.Text = International.GetText("Form_Settings_label_restart_nv_lost");
             checkBox_show_AMDdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_AMDdevice_manufacturer");
+            checkBox_show_INTELdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_INTELdevice_manufacturer");
             checkBox_ShowDeviceMemSize.Text = International.GetText("Form_Settings_checkBox_show_device_memsize");
             //checkBox_ShowDeviceBusId.Text = International.GetText("Form_Settings_checkBox_show_device_busId");
 
@@ -820,6 +829,9 @@ namespace NiceHashMiner.Forms
                 checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
                 checkBox_show_AMDdevice_manufacturer.ForeColor = Form_Main._textColor;
 
+                checkBox_show_INTELdevice_manufacturer.BackColor = Form_Main._backColor;
+                checkBox_show_INTELdevice_manufacturer.ForeColor = Form_Main._textColor;
+
                 checkBox_ShowDeviceMemSize.BackColor = Form_Main._backColor;
                 checkBox_ShowDeviceMemSize.ForeColor = Form_Main._textColor;
                 /*
@@ -1031,9 +1043,11 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionCPU.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableDetectionAMD.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableDetectionNVIDIA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_DisableDetectionINTEL.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxCPUmonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxNVMonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxAMDmonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxINTELmonitoring.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_HideMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AlwaysOnTop.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1065,6 +1079,7 @@ namespace NiceHashMiner.Forms
                 checkBoxShortTerm.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_memory_temp.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_AMDdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_show_INTELdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowDeviceMemSize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 //checkBox_ShowDeviceBusId.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_Use_OpenHardwareMonitor.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1175,9 +1190,11 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionNVIDIA.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 checkBox_DisableDetectionCPU.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU;
                 checkBox_DisableDetectionAMD.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                checkBox_DisableDetectionINTEL.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionINTEL;
                 checkBoxCPUmonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringCPU;
                 checkBoxNVMonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringNVIDIA;
                 checkBoxAMDmonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringAMD;
+                checkBoxINTELmonitoring.Checked = ConfigManager.GeneralConfig.DisableMonitoringINTEL;
                 checkBox_AutoScaleBTCValues.Checked = ConfigManager.GeneralConfig.AutoScaleBTCValues;
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
                 //checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
@@ -1218,6 +1235,7 @@ namespace NiceHashMiner.Forms
                 checkBoxShortTerm.Checked = ConfigManager.GeneralConfig.ShortTerm;
                 checkBox_Show_memory_temp.Checked = ConfigManager.GeneralConfig.Show_memory_temperature;
                 checkBox_show_AMDdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer;
+                checkBox_show_INTELdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer;
                 checkBox_ShowDeviceMemSize.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceMemSize;
                 //checkBox_ShowDeviceBusId.Checked = ConfigManager.GeneralConfig.Show_ShowDeviceBusId;
                 checkbox_Use_OpenHardwareMonitor.Checked = ConfigManager.GeneralConfig.Use_OpenHardwareMonitor;
@@ -1537,9 +1555,11 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionNVIDIA.Checked;
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD = checkBox_DisableDetectionAMD.Checked;
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionCPU = checkBox_DisableDetectionCPU.Checked;
+            ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionINTEL = checkBox_DisableDetectionINTEL.Checked;
             ConfigManager.GeneralConfig.DisableMonitoringAMD = checkBoxAMDmonitoring.Checked;
             ConfigManager.GeneralConfig.DisableMonitoringCPU = checkBoxCPUmonitoring.Checked;
             ConfigManager.GeneralConfig.DisableMonitoringNVIDIA = checkBoxNVMonitoring.Checked;
+            ConfigManager.GeneralConfig.DisableMonitoringINTEL = checkBoxINTELmonitoring.Checked;
             ConfigManager.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
             ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
             //ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
@@ -1568,6 +1588,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ShortTerm = checkBoxShortTerm.Checked;
             ConfigManager.GeneralConfig.Show_memory_temperature = checkBox_Show_memory_temp.Checked;
             ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer = checkBox_show_AMDdevice_manufacturer.Checked;
+            ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer = checkBox_show_INTELdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;
             //ConfigManager.GeneralConfig.Show_ShowDeviceBusId = checkBox_ShowDeviceBusId.Checked;
             ConfigManager.GeneralConfig.Use_OpenHardwareMonitor = checkbox_Use_OpenHardwareMonitor.Checked;
@@ -3256,6 +3277,25 @@ namespace NiceHashMiner.Forms
             if (checkBoxLast24hours.Checked) checkBox_orderPrice.Checked = false;
             checkBox_orderPrice.Enabled = !checkBoxLast24hours.Checked;
             ConfigManager.GeneralConfig.Use_orders_price = false;
+        }
+
+        private void checkBox_DisableDetectionINTEL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_DisableDetectionINTEL.Checked)
+            {
+                checkBoxINTELmonitoring.Enabled = false;
+                checkBox_show_INTELdevice_manufacturer.Enabled = false;
+            }
+            else
+            {
+                checkBoxINTELmonitoring.Enabled = true;
+                checkBox_show_INTELdevice_manufacturer.Enabled = true;
+            }
+        }
+
+        private void checkBox_show_INTELdevice_manufacturer_CheckedChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 

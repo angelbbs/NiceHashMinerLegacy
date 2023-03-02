@@ -12,12 +12,14 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableDetectionCPU { get; set; }
         public bool DisableDetectionAMD { get; set; }
         public bool DisableDetectionNVIDIA { get; set; }
+        public bool DisableDetectionINTEL { get; set; }
 
         public DeviceDetectionConfig()
         {
             DisableDetectionCPU = false;
             DisableDetectionAMD = false;
             DisableDetectionNVIDIA = false;
+            DisableDetectionINTEL = false;
         }
     }
 }

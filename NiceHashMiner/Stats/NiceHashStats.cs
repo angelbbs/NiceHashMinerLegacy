@@ -1556,6 +1556,13 @@ namespace NiceHashMiner.Stats
                             b64Web = UUID.GetB64UUID(device.Uuid);
                             nuuid = $"{type}-{b64Web}";
                         }
+                        if (device.DeviceType == DeviceType.INTEL)
+                        {
+                            type = "4";
+                            status = 24;
+                            b64Web = UUID.GetB64UUID(device.Uuid);
+                            nuuid = $"{type}-{b64Web}";
+                        }
                         device.DevUuid = nuuid;
                         var deviceName = device.Name;
 

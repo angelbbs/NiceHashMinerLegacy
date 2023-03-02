@@ -167,11 +167,14 @@
     <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
     <Compile Include="Configs\Data\ZILConfig.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
+    <Compile Include="Devices\ComputeDevice\IntelComputeDevice.cs" />
+    <Compile Include="Devices\IntelGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CPUReader.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="Devices\MSIAfterburner.cs" />
+    <Compile Include="Devices\Querying\IntelQuery.cs" />
     <Compile Include="Devices\Querying\AmdQuery.cs" />
     <Compile Include="Devices\Querying\OpenCLJsonData.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
@@ -568,6 +571,10 @@
     <ProjectReference Include="..\CustomTabControl\CustomTabControl.csproj">
       <Project>{4DBFE2CF-45E4-4594-8E6A-5EBC2EEF85AE}</Project>
       <Name>CustomTabControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IGCL\IGCL.csproj">
+      <Project>{eb2d6d7f-07b4-4c95-9974-02db7ba1710f}</Project>
+      <Name>IGCL</Name>
     </ProjectReference>
     <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>

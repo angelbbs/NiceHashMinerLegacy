@@ -518,6 +518,9 @@ namespace NiceHashMiner.Devices.Algorithms
                 case DeviceGroupType.AMD_OpenCL:
                     return DefaultAlgorithms.Amd;
 
+                case DeviceGroupType.INTEL_OpenCL:
+                    return DefaultAlgorithms.Intel;
+
                 case DeviceGroupType.NVIDIA_2_1:
                 case DeviceGroupType.NVIDIA_3_x:
                 case DeviceGroupType.NVIDIA_5_x:

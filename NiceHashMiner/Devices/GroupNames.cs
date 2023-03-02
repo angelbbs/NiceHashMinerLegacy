@@ -8,6 +8,7 @@ namespace NiceHashMiner.Devices
         {
             "CPU", // we can have more then one CPU
             "AMD_OpenCL",
+            "INTEL_OpenCL",
             "NVIDIA2.1",
             "NVIDIA3.x",
             "NVIDIA5.x",
@@ -37,6 +38,8 @@ namespace NiceHashMiner.Devices
                     return "NVIDIA";
                 case DeviceType.AMD:
                     return "AMD";
+                case DeviceType.INTEL:
+                    return "INTEL";
             }
             return "UnknownDeviceType";
         }

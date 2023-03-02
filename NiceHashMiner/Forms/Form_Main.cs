@@ -341,7 +341,6 @@ namespace NiceHashMiner
             thisProc.PriorityClass = ProcessPriorityClass.High;
 
             InitializeComponent();
-
             Icon = Properties.Resources.logo;
             Helpers.ConsolePrint("NICEHASH", "Start InitLocalization");
 

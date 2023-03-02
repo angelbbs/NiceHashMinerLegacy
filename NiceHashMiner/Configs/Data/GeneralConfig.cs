@@ -174,6 +174,7 @@ namespace NiceHashMiner.Configs.Data
         public bool ShortTerm = false;
         public bool Show_memory_temperature = true;
         public bool Show_AMDdevice_manufacturer = true;
+        public bool Show_INTELdevice_manufacturer = true;
         public bool Show_ShowDeviceMemSize = true;
         public bool Show_ShowDeviceBusId = false;
         public bool Use_OpenHardwareMonitor = true;
@@ -199,6 +200,7 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableMonitoringCPU = false;
         public bool DisableMonitoringAMD = false;
         public bool DisableMonitoringNVIDIA = false;
+        public bool DisableMonitoringINTEL = false;
 
 
         // 3rd party miners
