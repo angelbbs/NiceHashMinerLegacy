@@ -248,6 +248,36 @@ namespace NiceHashMiner.Forms.Components
                     }
                 }
 
+                if (computeDevice.DeviceType == DeviceType.INTEL)
+                {
+                    if (ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer)
+                    {
+                        if (!devInfo.Contains(ComputeDevice.GetManufacturer(computeDevice.Manufacturer)))
+                        {
+                            devInfo = devInfo.Replace("Intel ", "");
+                            Manufacturer = ComputeDevice.GetManufacturer(computeDevice.Manufacturer);
+                        }
+                    }
+                    else
+                    {
+                        devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(computeDevice.Manufacturer) + " ", "");
+                    }
+
+                    GpuRam = (computeDevice.GpuRam / 1073741824).ToString() + "GB";
+                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
+                    {
+                        if (devInfo.Contains(GpuRam))
+                        {
+                            GpuRam = "";
+                        }
+                    }
+                    else
+                    {
+                        devInfo = devInfo.Replace(GpuRam, "");
+                        GpuRam = "";
+                    }
+                }
+
 
                 var lvi = new ListViewItem
                 {
