@@ -450,18 +450,20 @@ namespace NiceHashMiner.Devices
                     Nvidia.QueryCudaDevices();
                 }
 
-                OpenCL.QueryOpenCLDevices();
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
                 }
                 else
                 {
-                    SetValueAndMsg(13, International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
-                    //OpenCL.QueryOpenCLDevices();
                     SetValueAndMsg(13, International.GetText("Compute_Device_Query_Manager_AMD_Query"));
-                    var amd = new AmdQuery(AvaliableVideoControllers);
-                    AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
+                    OpenCL.QueryOpenCLDevices();
+                    if (WindowsDisplayAdapters.HasAMDVideoController())
+                    {
+                        var amd = new AmdQuery(AvaliableVideoControllers);
+                        AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
+                        AmdComputeDevice.AMDDevicesListInit(AmdDevices);
+                    }
                 }
 
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionINTEL)
@@ -470,13 +472,12 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    SetValueAndMsg(14, International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
-                    //OpenCL.QueryOpenCLDevices();
-                    SetValueAndMsg(14, International.GetText("Compute_Device_Query_Manager_AMD_Query"));
-
-                    var intel = new IntelQuery(AvaliableVideoControllers);
-                    
-                    IntelDevices = intel.QueryIntel(_isOpenCLQuerySuccess, _openCLJsonData);
+                    SetValueAndMsg(14, International.GetText("Compute_Device_Query_Manager_Intel_Query"));
+                    if (WindowsDisplayAdapters.HasIntelVideoController())
+                    {
+                        IntelDevices = IntelQuery.ProcessDevices(AvaliableVideoControllers);
+                        IntelComputeDevice.IntelDevicesListInit(IntelDevices);
+                    }
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
                 Group.UncheckedCpu();
@@ -504,10 +505,12 @@ namespace NiceHashMiner.Devices
                         }
                         else if (vidCtrl.Name.ToLower().Contains("intel"))
                         {
-                            intelCount += (vidCtrl.Name.ToLower().Contains("intel")) ? 1 : 0;
+                            intelCount += (vidCtrl.Name.ToLower().Contains("arc")) ? 1 : 0;
+                            intelCount += (vidCtrl.Name.ToLower().Contains("iris")) ? 1 : 0;
                         }
 
                     }
+
                     Helpers.ConsolePrint(Tag,
                         nvidiaCount == _cudaDevices.CudaDevices.Count
                             ? "Cuda NVIDIA/CUDA device count GOOD"
@@ -999,9 +1002,13 @@ break;
                 }
                 public static bool HasIntelVideoController()
                 {
-                    return AvaliableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("intel"));
+                    return AvaliableVideoControllers.Any(vctrl => (vctrl.Name.ToLower().Contains("intel") &&
+                    (vctrl.Name.ToLower().Contains("arc") || vctrl.Name.ToLower().Contains("iris"))));
                 }
-
+                public static bool HasAMDVideoController()
+                {
+                    return AvaliableVideoControllers.Any(vctrl => (vctrl.Name.ToLower().Contains("amd") || vctrl.Name.ToLower().Contains("radeon")));
+                }
             }
 
 
@@ -1076,7 +1083,7 @@ break;
                 }
             }
 
-            private static CudaDevicesList _cudaDevices = new CudaDevicesList();
+            public static CudaDevicesList _cudaDevices = new CudaDevicesList();
 
             public static class Nvidia
             {
@@ -1473,6 +1480,7 @@ break;
                         stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
                         foreach (var oclPlat in _openCLJsonData.Platforms)
                         {
+                            if (oclPlat.PlatformName.ToLower().Contains("intel")) continue;
                             stringBuilder.AppendLine($"\tFound devices for platform: {oclPlat.PlatformName}");
                             foreach (var oclDev in oclPlat.Devices)
                             {

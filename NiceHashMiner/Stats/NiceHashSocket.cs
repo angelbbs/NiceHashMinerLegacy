@@ -499,7 +499,7 @@ namespace NiceHashMiner.Stats
                     dynamic dataJson = JsonConvert.DeserializeObject(data);
                     if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "login" || dataJson.method == "executed")
                     {
-                        Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
+                        Helpers.ConsolePrint("SOCKET SendData", "Sending data: " + data);
                         ForceReconnectCount = 0;
                         _webSocket.Send(data);
                         dataJson = null;

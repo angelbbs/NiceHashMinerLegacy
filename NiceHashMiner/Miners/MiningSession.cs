@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
@@ -942,6 +943,26 @@ namespace NiceHashMiner.Miners
 
         public async Task MinerStatsCheck()
         {
+            Zil _zil = null;
+            try
+            {
+                _zil = JsonConvert.DeserializeObject<Zil>(File.ReadAllText("configs\\zil.json"), Globals.JsonSettings);
+                if (_zil == null) throw new ArgumentNullException("_zil = null");
+            }
+            catch (Exception ex)
+            {
+                _zil = new Zil
+                {
+                    RateNoZilCount = 50000,
+                    RateZilCount = 2000,
+                    ZilRatio = 0.04
+                };
+                Helpers.ConsolePrint("MinerStatsCheck", ex.ToString());
+                Helpers.WriteAllTextWithBackup("configs\\zil.json", JsonConvert.SerializeObject(_zil, Formatting.Indented));
+                _zil = null;
+                _zil = JsonConvert.DeserializeObject<Zil>(File.ReadAllText("configs\\zil.json"), Globals.JsonSettings);
+            }
+
             var currentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
@@ -958,7 +979,7 @@ namespace NiceHashMiner.Miners
 
                     if (!m.IsRunning || m.IsUpdatingApi || m == null) continue;
                     // continue;
-                    
+
                     m.IsUpdatingApi = true;
                     try
                     {
@@ -984,8 +1005,6 @@ namespace NiceHashMiner.Miners
                     }
                     */
                     // set rates
-                    double _zilRate = 0.027;
-                    //if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     if (ad != null)
                     {
                         if (ad.ZilRound)
@@ -993,12 +1012,17 @@ namespace NiceHashMiner.Miners
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
                             {
                                 NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
-                                groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 0.75;
+                                groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 1;
                             }
                             if (ad.ThirdAlgorithmID != AlgorithmType.NONE)//dual
                             {
                                 NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
-                                groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 0.75;
+                                groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 1;
+                            }
+                            if (Form_additional_mining.isAlgoZIL(ad.AlgorithmName, groupMiners.MinerBaseType, groupMiners.DeviceType))
+                            {
+                                _zil.RateZil += groupMiners.CurrentRate;
+                                _zil.RateZilCount++;
                             }
                         }
                         else
@@ -1018,150 +1042,31 @@ namespace NiceHashMiner.Miners
                                 NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
                                 groupMiners.CurrentRate += thirdPaying * ad.ThirdSpeed * 0.000000001;
                             }
+                            if (Form_additional_mining.isAlgoZIL(ad.AlgorithmName, groupMiners.MinerBaseType, groupMiners.DeviceType))
+                            {
+                                _zil.RateNoZil += groupMiners.CurrentRate;
+                                _zil.RateNoZilCount++;
+                            }
                         }
+
+                        double RateNoZil = _zil.RateNoZil / _zil.RateNoZilCount;
+                        double RateZil = (_zil.RateZil / _zil.RateZilCount);
+                        _zil.RateNoZil = RateNoZil;
+                        _zil.RateZil = RateZil;
+                        Form_Main.ZilFactor = Math.Round((RateZil * _zil.ZilRatio) / RateNoZil, 3);
+
+                        if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
+                        if (double.IsNaN(RateZil)) RateZil = 0.0d;
+                        if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
+                        groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
 
                         // Deduct power costs
                         double powerUsage = 0;
-                        
-                        if (m.MinerTag().ToLower().Contains("gminer") &&
-                            Form_additional_mining.isAlgoZIL(ad.AlgorithmName, MinerBaseType.GMiner, groupMiners.DeviceType))
+
+                        if (_zil.RateNoZilCount != 0)
                         {
-                            if (ad.ZilRound & (ad.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto ||
-                                               ad.ThirdAlgorithmID == AlgorithmType.DaggerHashimoto))
-                            {
-                                Form_Main.RateZil += groupMiners.CurrentRate;
-                                Form_Main.RateZilCount++;
-
-                                m.needChildRestart = true;
-                                _checks.Add(m);
-                            }
-                            if (!ad.ZilRound)
-                            {
-                                Form_Main.RateNoZil += groupMiners.CurrentRate;
-                                Form_Main.RateNoZilCount++;
-                            }
-                            //double RateNoZil = (Form_Main.RateNoZil / Math.Max(12 * 60, Form_Main.RateNoZilCount));
-                            double RateNoZil = Form_Main.RateNoZil / Form_Main.RateNoZilCount;
-                            double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
-                            Form_Main.ZilFactor = Math.Round((RateZil * _zilRate) / RateNoZil, 3);
-                            //Helpers.ConsolePrint("gminer", "RateZilCount: " + Form_Main.RateZilCount.ToString() + " RateNoZilCount: " + Form_Main.RateNoZilCount.ToString());
-                            //Helpers.ConsolePrint("gminer", "RateZil: " + RateZil.ToString() + " RateNoZil: " + RateNoZil.ToString());
-                            
-                            if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                            if (double.IsNaN(RateZil)) RateZil = 0.0d;
-                            if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
-                            groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
+                            _zil.ZilRatio = (double)((double)_zil.RateZilCount / (double)_zil.RateNoZilCount);
                         }
-
-                        if (m.MinerTag().ToLower().Contains("srbminer") &&
-                            Form_additional_mining.isAlgoZIL(ad.AlgorithmName, MinerBaseType.SRBMiner,
-                                groupMiners.DeviceType))
-                        {
-                            if (ad.ZilRound & (ad.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto ||
-                                               ad.ThirdAlgorithmID == AlgorithmType.DaggerHashimoto))
-                            {
-                                Form_Main.RateZil += groupMiners.CurrentRate;
-                                Form_Main.RateZilCount++;
-                            }
-
-                            if (!ad.ZilRound)
-                            {
-                                Form_Main.RateNoZil += groupMiners.CurrentRate;
-                                Form_Main.RateNoZilCount++;
-                            }
-
-                            double RateNoZil = (Form_Main.RateNoZil / Math.Max(12 * 60, Form_Main.RateNoZilCount));
-                            double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
-                            Form_Main.ZilFactor = Math.Round((RateZil * _zilRate) / RateNoZil, 3);
-
-                            if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                            if (double.IsNaN(RateZil)) RateZil = 0.0d;
-                            if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
-                            groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
-                        }
-
-                        if (m.MinerTag().ToLower().Contains("nanominer") &&
-                            Form_additional_mining.isAlgoZIL(ad.AlgorithmName, MinerBaseType.Nanominer,
-                                groupMiners.DeviceType))
-                        {
-                            if (ad.ZilRound & (ad.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto ||
-                                               ad.ThirdAlgorithmID == AlgorithmType.DaggerHashimoto))
-                            {
-                                Form_Main.RateZil += groupMiners.CurrentRate;
-                                Form_Main.RateZilCount++;
-                            }
-
-                            if (!ad.ZilRound)
-                            {
-                                Form_Main.RateNoZil += groupMiners.CurrentRate;
-                                Form_Main.RateNoZilCount++;
-                            }
-
-                            double RateNoZil = (Form_Main.RateNoZil / Math.Max(12 * 60, Form_Main.RateNoZilCount));
-                            double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
-                            Form_Main.ZilFactor = Math.Round((RateZil * _zilRate) / RateNoZil, 3);
-
-                            if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                            if (double.IsNaN(RateZil)) RateZil = 0.0d;
-                            if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
-                            groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
-                        }
-
-                        if (m.MinerTag().ToLower().Contains("rigel") &&
-                            Form_additional_mining.isAlgoZIL(ad.AlgorithmName, MinerBaseType.Rigel,
-                                groupMiners.DeviceType))
-                        {
-                            if (ad.ZilRound & (ad.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto ||
-                                               ad.ThirdAlgorithmID == AlgorithmType.DaggerHashimoto))
-                            {
-                                Form_Main.RateZil += groupMiners.CurrentRate;
-                                Form_Main.RateZilCount++;
-                            }
-
-                            if (!ad.ZilRound)
-                            {
-                                Form_Main.RateNoZil += groupMiners.CurrentRate;
-                                Form_Main.RateNoZilCount++;
-                            }
-
-                            double RateNoZil = (Form_Main.RateNoZil / Math.Max(12 * 60, Form_Main.RateNoZilCount));
-                            double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
-                            Form_Main.ZilFactor = Math.Round((RateZil * _zilRate) / RateNoZil, 3);
-
-                            if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                            if (double.IsNaN(RateZil)) RateZil = 0.0d;
-                            if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
-                            groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
-                        }
-                        if (m.MinerTag().ToLower().Contains("miniz") &&
-                            Form_additional_mining.isAlgoZIL(ad.AlgorithmName, MinerBaseType.miniZ,
-                                groupMiners.DeviceType))
-                        {
-                            if (ad.ZilRound & (ad.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto ||
-                                               ad.ThirdAlgorithmID == AlgorithmType.DaggerHashimoto))
-                            {
-                                Form_Main.RateZil += groupMiners.CurrentRate;
-                                Form_Main.RateZilCount++;
-                            }
-
-                            if (!ad.ZilRound)
-                            {
-                                Form_Main.RateNoZil += groupMiners.CurrentRate;
-                                Form_Main.RateNoZilCount++;
-                            }
-
-                            double RateNoZil = (Form_Main.RateNoZil / Math.Max(12 * 70, Form_Main.RateNoZilCount));
-                            double RateZil = (Form_Main.RateZil / Form_Main.RateZilCount);
-                            Form_Main.ZilFactor = Math.Round((RateZil * _zilRate) / RateNoZil, 3);
-                            //Helpers.ConsolePrint("miniz", "RateZilCount: " + Form_Main.RateZilCount.ToString() + " RateNoZilCount: " + Form_Main.RateNoZilCount.ToString());
-                            //Helpers.ConsolePrint("miniz", "RateZil: " + RateZil.ToString() + " RateNoZil: " + RateNoZil.ToString());
-
-                            if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                            if (double.IsNaN(RateZil)) RateZil = 0.0d;
-                            if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
-                            groupMiners.CurrentRate += groupMiners.CurrentRate * ConfigManager.GeneralConfig.ZilFactor;
-                        }
-
                         /*
                         // если групп > 1, то задваивается
                         foreach (var computeDevice in Available.Devices)
@@ -1198,6 +1103,26 @@ namespace NiceHashMiner.Miners
                 Form_Main.needGMinerRestart = false;
                 new Task(() => GMinersRestart(_checks)).Start();
             }
+
+            try
+            {
+                var s = JsonConvert.SerializeObject(_zil, Formatting.Indented);
+                File.WriteAllText("configs\\zil.json", s);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MinerStatsCheck", ex.ToString());
+            }
+            GC.Collect();
         }
+        private class Zil
+        {
+            public double RateZil; 
+            public int RateZilCount; 
+            public double RateNoZil; 
+            public int RateNoZilCount; 
+            public double ZilRatio; 
+        }
+
     }
 }

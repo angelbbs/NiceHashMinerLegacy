@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Management;
 using System.Security.Principal;
+using System.Text;
 
 namespace NiceHashMiner
 {
@@ -545,6 +546,54 @@ namespace NiceHashMiner
             }
 
             return primary;
+        }
+        public static void WriteAllTextWithBackup(string FilePath, string contents)
+        {
+            string path = FilePath;
+            var tempPath = FilePath + ".tmp";
+
+            // create the backup name
+            var backup = FilePath + ".backup";
+
+            // delete any existing backups
+            try
+            {
+                if (File.Exists(backup))
+                    File.Delete(backup);
+            }
+            catch (Exception ex)
+            {
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
+
+            // get the bytes
+            var data = Encoding.ASCII.GetBytes(contents);
+
+            // write the data to a temp file
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                tempFile.Write(data, 0, data.Length);
+
+            //copy file
+            try
+            {
+                if (File.Exists(path)) File.Delete(path);
+                File.Copy(tempPath, path);
+            }
+            catch (Exception ex)
+            {
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
+
+            // replace the contents
+            try
+            {
+                File.Replace(tempPath, path, backup);
+                if (File.Exists(backup)) File.Delete(backup);
+            }
+            catch (Exception ex)
+            {
+                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
         }
     }
 }

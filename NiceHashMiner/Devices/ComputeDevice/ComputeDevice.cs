@@ -113,6 +113,7 @@ namespace NiceHashMiner.Devices
             public string ModelName;
             public int NumberOfCores;
         }
+
         public class BaseDevice
         {
             public BaseDevice(BaseDevice bd)

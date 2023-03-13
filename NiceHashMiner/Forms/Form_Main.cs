@@ -40,6 +40,7 @@ namespace NiceHashMiner
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
+    using static NiceHashMiner.Devices.ComputeDeviceManager.Query;
     using static NiceHashMiner.Miners.MinerVersion;
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
@@ -47,6 +48,7 @@ namespace NiceHashMiner
         public static string platform = "Nicehash";
         public static string version = "";
         public Timer _minerStatsCheck;
+        public Timer _deviceTelemetryTimer;
         private Timer _startupTimer;
         private Timer _remoteTimer;
         private System.Timers.Timer _statusTimer;
@@ -54,6 +56,7 @@ namespace NiceHashMiner
         public static Timer _autostartTimerDelay;
         public static Timer _deviceStatusTimer;
         private Timer _updateTimer;
+        private Timer _chartTimer;
         private Timer _GetProxyListTimer;
         private int _updateTimerCount;
         private int _updateTimerRestartProgramCount;
@@ -61,7 +64,7 @@ namespace NiceHashMiner
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
         public static bool needRestart = false;
-        public static int SMAdelayTick = 30;
+        public static int SMAdelayTick = 31;
         public static bool ShouldRunEthlargement = false;
 
         private bool _demoMode;
@@ -732,7 +735,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("CheckProxyList", "Try download proxylist from github");
                     client.DownloadFile(new Uri("https://raw.githubusercontent.com/angelbbs/stratum-proxy/main/List.json"), "configs//ProxyList.tmp");
                     string tmp = File.ReadAllText("configs//ProxyList.tmp");
-                    FileAttributes atr = File.GetAttributes("configs//ProxyList.json");
+                    FileAttributes atr = FileAttributes.Normal;
+                    if (File.Exists("configs//ProxyList.json"))
+                    {
+                        atr = File.GetAttributes("configs//ProxyList.json");
+                    }
                     tmp = new string(tmp.Where(c => !char.IsControl(c)).ToArray());
                     //Helpers.ConsolePrint("**********", tmp);
                     if (tmp.Contains("NameRU") && tmp.Contains("NameEN") && tmp.Contains("Url"))
@@ -1281,6 +1288,11 @@ namespace NiceHashMiner
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_CPU"));
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//10-15
 
+            _deviceTelemetryTimer = new Timer();
+            _deviceTelemetryTimer.Tick += DeviceTelemetryTimer_Tick;
+            _deviceTelemetryTimer.Interval = 1000;
+            _deviceTelemetryTimer.Start();
+
             _isDeviceDetectionInitialized = true;
 
             _loadingScreen.SetValueAndMsg(15, International.GetText("Form_Main_loadtext_LoadProxyList"));
@@ -1392,21 +1404,22 @@ namespace NiceHashMiner
 
             //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
 
-            _loadingScreen.SetValueAndMsg(60, International.GetText("Form_Main_loadtext_SetWindowsErrorReporting"));
+            _loadingScreen.SetValueAndMsg(60, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
             NiceHashStats.LoadSMA();//load old sma data if nh down
 
             _loadingScreen.SetValueAndMsg(65, International.GetText("Form_Main_loadtext_CheckLatestVersion"));
+            _loadingScreen.Update();
             //new Task(() => CheckUpdates()).Start();
             CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
 
             label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
             label_NH_ConnectStatus.Update();
-            _loadingScreen.SetValueAndMsg(70, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
+            //_loadingScreen.SetValueAndMsg(70, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
 
             _loadingScreen.SetValueAndMsg(75, International.GetText("Form_Main_loadtext_CheckMiners"));
             Thread.Sleep(10);
@@ -1739,6 +1752,21 @@ namespace NiceHashMiner
             }
         }
 
+        private static void DeviceTelemetryTimer_Tick(object sender, EventArgs e)
+        {
+            if (WindowsDisplayAdapters.HasIntelVideoController())
+            {
+                IntelComputeDevice.SetTelemetry();
+            }
+            if (WindowsDisplayAdapters.HasAMDVideoController())
+            {
+                AmdComputeDevice.SetTelemetry();
+            }
+            if (WindowsDisplayAdapters.HasNvidiaVideoController())
+            {
+                GetNVMLData();
+            }
+        }
         private void AutoStartTimer_TickDelay(object sender, EventArgs e)
         {
             if (DownloadingInProgress) return;
@@ -1978,6 +2006,13 @@ namespace NiceHashMiner
             _loadingScreen.Show();
             _loadingScreen.SetValueAndMsg(0, "Starting...");
 
+            //Devices.Querying.IntelQuery.GetPower(0);
+            //this.Close();
+
+            if (ConfigManager.GeneralConfig.Use_Last24hours & ConfigManager.GeneralConfig.Use_orders_price)
+            {
+                ConfigManager.GeneralConfig.Use_orders_price = false;
+            }
 
             _startupTimer = new Timer();
             _startupTimer.Tick += StartupTimer_Tick;
@@ -2006,9 +2041,14 @@ namespace NiceHashMiner
 
             _updateTimer = new Timer();
             _updateTimer.Tick += UpdateTimer_Tick;
-            _updateTimer.Interval = 1000 * 60;//1 min
+            _updateTimer.Interval = 1000 * 30;
             _updateTimerCount = 0;
             _updateTimer.Start();
+
+            _chartTimer = new Timer();
+            _chartTimer.Tick += ChartTimer_Tick;
+            _chartTimer.Interval = 1000 * 60;
+            _chartTimer.Start();
 
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (!ConfigManager.GeneralConfig.ChartEnable)
@@ -2032,38 +2072,12 @@ namespace NiceHashMiner
 
         }
 
-        private void UpdateTimer_Tick(object sender, EventArgs e)
+        private void ChartTimer_Tick(object sender, EventArgs e)
         {
-            GC.Collect(GC.MaxGeneration);
-            GC.WaitForPendingFinalizers();
-            Process currentProc = Process.GetCurrentProcess();
-            double bytesInUse = currentProc.PrivateMemorySize64;
-            Helpers.ConsolePrint("MEMORY", "Mem used: " + Math.Round(bytesInUse / 1048576, 2).ToString() + "MB");
-
-            Helpers.ConsolePrint("POWER", "TotalPowerConsumption: " + TotalPowerConsumption.ToString("F0") + "W");
-            if (GetKwhPrice() > 0)
-            {
-                Helpers.ConsolePrint("POWER", "TotalPowerConsumptionRate: " + (GetKwhPrice()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
-                Helpers.ConsolePrint("POWER", "TotalPowerConsumptionCost: " + (TotalPowerConsumption * 0.001 * GetKwhPrice()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
-            }
-            if (ConfigManager.GeneralConfig.ChartEnable)
-            {
-                Helpers.ConsolePrint("POWER", "TotalActualProfit: " + ExchangeRateApi.ConvertToActiveCurrency(TotalProfitabilityFromNH * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency);
-            }
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
-
-            NiceHashStats.GetSmaAPI();
-            if (ConfigManager.GeneralConfig.Use_orders_price)
-            {
-                //NiceHashStats.GetSmaAPIOrder();
-            }
-
-            GetBTCwalletType();
-
             if (ConfigManager.GeneralConfig.ChartEnable)
             {
                 Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
-                //Form_Main.lastRigProfit.currentPower = MinersManager.GetTotalPowerRate() + PowerAllDevices;
                 Form_Main.lastRigProfit.totalPowerRate = totalPowerRate;
                 //if (Form_Main.walletType.Equals("P2SH"))
                 {
@@ -2088,7 +2102,26 @@ namespace NiceHashMiner
             {
                 ChartDataAvail = RigProfit.currentProfitAPI + RigProfit.totalRate;
             }
+        }
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            //GC.Collect(GC.MaxGeneration);
+            //GC.WaitForPendingFinalizers();
+            Process currentProc = Process.GetCurrentProcess();
+            double bytesInUse = currentProc.PrivateMemorySize64;
+            Helpers.ConsolePrint("MEMORY", "Mem used: " + Math.Round(bytesInUse / 1048576, 2).ToString() + "MB");
 
+            new Task(() => NiceHashStats.GetSmaAPI()).Start();
+
+            if (ConfigManager.GeneralConfig.Use_orders_price)
+            {
+                //NiceHashStats.GetSmaAPIOrder();
+            }
+
+            new Task(() => GetBTCwalletType()).Start();
+
+
+            
             new Task(() => TaskNHApiFlag()).Start();
 
             Helpers.ConsolePrint("NiceHash status", string.IsNullOrEmpty(NHApiFlag) ? "OK" : "NHApiFlag");
@@ -3733,8 +3766,6 @@ public static void CloseChilds(Process parentId)
                 ExchangeCallback(null, null);
                 UpdateGlobalRate();
 
-                GetNVMLData();
-
                 if (needRestart)
                 {
                     needRestart = false;
@@ -3772,7 +3803,7 @@ public static void CloseChilds(Process parentId)
             }
         }
 
-        private void GetNVMLData()
+        private static void GetNVMLData()
         {
             if (!ComputeDeviceManager.Available.HasNvidia)
             {

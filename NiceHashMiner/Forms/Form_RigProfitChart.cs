@@ -260,7 +260,6 @@ namespace NiceHashMiner.Forms
             {
                 buttonClear.BackgroundImage = Properties.Resources.recycle1;
             }
-
         }
 
         private void chartRigProfit_Click(object sender, EventArgs e)
@@ -327,7 +326,9 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Series["Series3"].ChartType = SeriesChartType.Spline;
             chartRigProfit.Series["Series3"].Color = Color.Blue;
 
-
+            //chartRigProfit.Series["Series1"].SetCustomProperty("LineTension", "0.1");
+            //chartRigProfit.Series["Series2"].SetCustomProperty("LineTension", "0.1");
+            //chartRigProfit.Series["Series3"].SetCustomProperty("LineTension", "0.1");
             //chartRigProfit.Series["Series1"].SetCustomProperty("LineTension", "0.9");//0.8 by default
             //chartRigProfit.Series["Series3"].Color = Color.Aqua;
 

@@ -5,6 +5,8 @@ using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 //using OpenHardwareMonitor.Hardware;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace NiceHashMiner.Devices
@@ -13,9 +15,9 @@ namespace NiceHashMiner.Devices
     {
         private readonly int _adapterIndex; // For ADL
         private readonly int _adapterIndex2; // For ADL2
-        private readonly IntPtr _adlContext;
+        private static IntPtr _adlContext;
 
-        private int FanSpeedInternal()
+        private static int FanSpeedInternal(int _AdapterIndex, int _AdapterIndex2)
         {
             var adlf = new ADLFanSpeedValue
             {
@@ -23,7 +25,7 @@ namespace NiceHashMiner.Devices
             };
             try
             {
-                var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
+                var result = ADL.ADL_Overdrive5_FanSpeed_Get(_AdapterIndex, 0, ref adlf);
 
                 if (result == ADL.ADL_SUCCESS)
                 {
@@ -40,12 +42,12 @@ namespace NiceHashMiner.Devices
             }
             return -1;
         }
-        private int FanSpeedInternal8()
+        private static int FanSpeedInternal8(int _AdapterIndex, int _AdapterIndex2)
         {
             var aDLPMLogDataOutput = new ADLPMLogDataOutput();
             try
             {
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex2, ref aDLPMLogDataOutput);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     int i = (int)ADLSensorType.PMLOG_FAN_PERCENTAGE;
@@ -56,7 +58,7 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex, ref aDLPMLogDataOutput);
+                    result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex, ref aDLPMLogDataOutput);
                     if (result == ADL.ADL_SUCCESS)
                     {
                         int i = (int)ADLSensorType.PMLOG_FAN_PERCENTAGE;
@@ -78,65 +80,80 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringAMD) return -1;
+                    return AMDDevicesList.Single(p => p.DeviceID == _adapterIndex).FanSpeed;
+                }
+                catch (Exception ex)
                 {
                     return -1;
                 }
-                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            }
+        }
+
+        private static int GetFan(int _AdapterIndex, int _AdapterIndex2)
+        {
+            if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+            {
+                return -1;
+            }
+            if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                int valueFanSpeed = FanSpeedInternal(_AdapterIndex, _AdapterIndex2);
+                if (valueFanSpeed >= 0)
                 {
-                    int valueFanSpeed = FanSpeedInternal();
-                    if (valueFanSpeed >= 0)
-                    {
-                        return valueFanSpeed;
-                    } else
-                    {
-                        return FanSpeedInternal8();
-                    }
+                    return valueFanSpeed;
                 }
                 else
                 {
-                    try
+                    return FanSpeedInternal8(_AdapterIndex, _AdapterIndex2);
+                }
+            }
+            else
+            {
+                try
+                {
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        if (hardware.HardwareType == HardwareType.GpuAmd)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAmd)
+                            int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
+                            if (gpuId == _AdapterIndex)
                             {
-                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
-                                if (gpuId == _adapterIndex)
+                                foreach (var sensor in hardware.Sensors)
                                 {
-                                    foreach (var sensor in hardware.Sensors)
+                                    if (sensor.Name.Contains("GPU Fan") &&
+                                        sensor.SensorType == SensorType.Control && sensor.Value != null)
                                     {
-                                        if (sensor.Name.Contains("GPU Fan") &&
-                                            sensor.SensorType == SensorType.Control && sensor.Value != null)
+                                        if ((int)sensor.Value >= 0)
                                         {
-                                            if ((int)sensor.Value >= 0)
-                                            {
-                                                return (int)sensor.Value;
-                                            }
+                                            return (int)sensor.Value;
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    catch (Exception er)
-                    {
-                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
-                    }
                 }
-                int value = FanSpeedInternal();
-                if (value >= 0)
+                catch (Exception er)
                 {
-                    return value;
-                }
-                else
-                {
-                    return FanSpeedInternal8();
+                    Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                 }
             }
+            int value = FanSpeedInternal(_AdapterIndex, _AdapterIndex2);
+            if (value >= 0)
+            {
+                return value;
+            }
+            else
+            {
+                return FanSpeedInternal8(_AdapterIndex, _AdapterIndex2);
+            }
         }
+    //************************************************************************
 
-        private int FanSpeedRPMInternal()
+        private static int FanSpeedRPMInternal(int _AdapterIndex, int _AdapterIndex2)
         {
             var adlf = new ADLFanSpeedValue
             {
@@ -144,7 +161,7 @@ namespace NiceHashMiner.Devices
             };
             try
             {
-                var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
+                var result = ADL.ADL_Overdrive5_FanSpeed_Get(_AdapterIndex, 0, ref adlf);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     return adlf.FanSpeed;
@@ -159,12 +176,12 @@ namespace NiceHashMiner.Devices
             }
             return -1;
         }
-        private int FanSpeedRPMInternal8()
+        private static int FanSpeedRPMInternal8(int _AdapterIndex, int _AdapterIndex2)
         {
             var aDLPMLogDataOutput = new ADLPMLogDataOutput();
             try
             {
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex2, ref aDLPMLogDataOutput);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     int i = (int)ADLSensorType.PMLOG_FAN_RPM;
@@ -175,7 +192,7 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex, ref aDLPMLogDataOutput);
+                    result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex, ref aDLPMLogDataOutput);
                     if (result == ADL.ADL_SUCCESS)
                     {
                         int i = (int)ADLSensorType.PMLOG_FAN_RPM;
@@ -197,78 +214,92 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringAMD) return -1;
+                    return AMDDevicesList.Single(p => p.DeviceID == _adapterIndex).FanSpeedRPM;
+                }
+                catch (Exception ex)
                 {
                     return -1;
                 }
-                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            }
+        }
+
+        private static int GetFanRPM(int _AdapterIndex, int _AdapterIndex2)
+        {
+            if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+            {
+                return -1;
+            }
+            if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                int valueFanSpeedRPM = FanSpeedRPMInternal(_AdapterIndex, _AdapterIndex2);
+                if (valueFanSpeedRPM >= 0)
                 {
-                    int valueFanSpeedRPM = FanSpeedRPMInternal();
-                    if (valueFanSpeedRPM >= 0)
-                    {
-                        return valueFanSpeedRPM;
-                    } else
-                    {
-                        return FanSpeedRPMInternal8();
-                    }
+                    return valueFanSpeedRPM;
                 }
                 else
                 {
-                    try
+                    return FanSpeedRPMInternal8(_AdapterIndex, _AdapterIndex2);
+                }
+            }
+            else
+            {
+                try
+                {
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        if (hardware.HardwareType == HardwareType.GpuAmd)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAmd)
+                            int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
+                            if (gpuId == _AdapterIndex)
                             {
-                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
-                                if (gpuId == _adapterIndex)
+                                foreach (var sensor in hardware.Sensors)
                                 {
-                                    foreach (var sensor in hardware.Sensors)
+                                    if (sensor.Name.Contains("GPU Fan") &&
+                                        sensor.SensorType == SensorType.Fan && sensor.Value != null)
                                     {
-                                        if (sensor.Name.Contains("GPU Fan") && 
-                                            sensor.SensorType == SensorType.Fan && sensor.Value != null)
+                                        if ((int)sensor.Value >= 0)
                                         {
-                                            if ((int)sensor.Value >= 0)
-                                            {
-                                                return (int)sensor.Value;
-                                            }
+                                            return (int)sensor.Value;
                                         }
-                                        /*
-                                        if (sensor.SensorType == SensorType.Control && 
-                                            sensor.Name == "GPU Fan" && sensor.Value != null)
-                                        {
-                                            return 0;
-                                        }
-                                        */
                                     }
+                                    /*
+                                    if (sensor.SensorType == SensorType.Control && 
+                                        sensor.Name == "GPU Fan" && sensor.Value != null)
+                                    {
+                                        return 0;
+                                    }
+                                    */
                                 }
                             }
                         }
                     }
-                    catch (Exception er)
-                    {
-                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
-                    }
                 }
-                int value = FanSpeedRPMInternal();
-                if (value >= 0)
+                catch (Exception er)
                 {
-                    return value;
+                    Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                 }
-                else
-                {
-                    return FanSpeedRPMInternal8();
-                }
-                return -1;
             }
+            int value = FanSpeedRPMInternal(_AdapterIndex, _AdapterIndex2);
+            if (value >= 0)
+            {
+                return value;
+            }
+            else
+            {
+                return FanSpeedRPMInternal8(_AdapterIndex, _AdapterIndex2);
+            }
+            return -1;
         }
-
-        private float TempInternal()
+        //**************************************************************
+        private static float TempInternal(int _AdapterIndex, int _AdapterIndex2)
         {
             var adlt = new ADLTemperature();
             try
             {
-                var result = ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt);
+                var result = ADL.ADL_Overdrive5_Temperature_Get(_AdapterIndex, 0, ref adlt);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     return adlt.Temperature * 0.001f;
@@ -283,12 +314,12 @@ namespace NiceHashMiner.Devices
             }
             return -1;
         }
-        private int TempInternalN()
+        private static int TempInternalN(int _AdapterIndex, int _AdapterIndex2)
         {
             var temperature = -1;
             if (_adlContext != IntPtr.Zero && ADL.ADL2_OverdriveN_Temperature_Get != null)
             {
-                var result = ADL.ADL2_OverdriveN_Temperature_Get(_adlContext, _adapterIndex2, ADLODNTemperatureType.CORE, ref temperature);
+                var result = ADL.ADL2_OverdriveN_Temperature_Get(_adlContext, _AdapterIndex2, ADLODNTemperatureType.CORE, ref temperature);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     //if (temperature > 1000)
@@ -307,12 +338,12 @@ namespace NiceHashMiner.Devices
             }
             return -1;
         }
-        private int TempInternal8()
+        private static int TempInternal8(int _AdapterIndex, int _AdapterIndex2)
         {
             var aDLPMLogDataOutput = new ADLPMLogDataOutput();
             try
             {
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex2, ref aDLPMLogDataOutput);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     int i = (int)ADLSensorType.PMLOG_TEMPERATURE_EDGE;
@@ -335,87 +366,102 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringAMD) return -1;
+                    return AMDDevicesList.Single(p => p.DeviceID == _adapterIndex).Temp;
+                }
+                catch (Exception ex)
                 {
                     return -1;
                 }
-                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            }
+        }
+
+        private static int GetTemp(int _AdapterIndex, int _AdapterIndex2)
+        {
+            if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+            {
+                return -1;
+            }
+            if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                int valueTemp = (int)TempInternal(_AdapterIndex, _AdapterIndex2);
+                if (valueTemp >= 0)
                 {
-                    int valueTemp = (int)TempInternal();
-                    if (valueTemp >= 0)
-                    {
-                        return valueTemp;
-                    } else
-                    {
-                        valueTemp = (int)TempInternalN();
-                        if (valueTemp >= 0)
-                        {
-                            return valueTemp;
-                        }
-                        else
-                        {
-                            return TempInternal8();
-                        }
-                    }
+                    return valueTemp;
                 }
                 else
                 {
-
-                    try
+                    valueTemp = (int)TempInternalN(_AdapterIndex, _AdapterIndex2);
+                    if (valueTemp >= 0)
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        return valueTemp;
+                    }
+                    else
+                    {
+                        return TempInternal8(_AdapterIndex, _AdapterIndex2);
+                    }
+                }
+            }
+            else
+            {
+
+                try
+                {
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
+                    {
+                        if (hardware.HardwareType == HardwareType.GpuAmd)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAmd)
+                            int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
+                            if (gpuId == _AdapterIndex)
                             {
-                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
-                                if (gpuId == _adapterIndex)
+                                foreach (var sensor in hardware.Sensors)
                                 {
-                                    foreach (var sensor in hardware.Sensors)
+                                    if (sensor.SensorType == SensorType.Temperature && sensor.Name.Contains("GPU Core"))
                                     {
-                                        if (sensor.SensorType == SensorType.Temperature && sensor.Name.Contains("GPU Core"))
+                                        if ((int)sensor.Value > 0)
                                         {
-                                            if ((int)sensor.Value > 0)
-                                            {
-                                                return (int)sensor.Value;
-                                            }
+                                            return (int)sensor.Value;
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    catch (Exception er)
-                    {
-                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
-                    }
                 }
-                int value = (int)TempInternal();
+                catch (Exception er)
+                {
+                    Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
+                }
+            }
+            int value = (int)TempInternal(_AdapterIndex, _AdapterIndex2);
+            if (value >= 0)
+            {
+                return value;
+            }
+            else
+            {
+                value = (int)TempInternalN(_AdapterIndex, _AdapterIndex2);
                 if (value >= 0)
                 {
                     return value;
                 }
                 else
                 {
-                    value = (int)TempInternalN();
-                    if (value >= 0)
-                    {
-                        return value;
-                    }
-                    else
-                    {
-                        return TempInternal8();
-                    }
+                    return TempInternal8(_AdapterIndex, _AdapterIndex2);
                 }
-                return -1;
             }
+            return -1;
         }
+        //****************************************************************
 
-        private int TempMemoryInternal()
+        private static int TempMemoryInternal(int _AdapterIndex, int _AdapterIndex2)
         {
             var temperature = -1;
             if (_adlContext != IntPtr.Zero && ADL.ADL2_OverdriveN_Temperature_Get != null)
             {
-                var result = ADL.ADL2_OverdriveN_Temperature_Get(_adlContext, _adapterIndex2, ADLODNTemperatureType.MEMORY, ref temperature);
+                var result = ADL.ADL2_OverdriveN_Temperature_Get(_adlContext, _AdapterIndex2, ADLODNTemperatureType.MEMORY, ref temperature);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     if (temperature >= 1000)
@@ -433,12 +479,12 @@ namespace NiceHashMiner.Devices
             }
             return -1;
         }
-        private int TempMemoryInternal8()
+        private static int TempMemoryInternal8(int _AdapterIndex, int _AdapterIndex2)
         {
             var aDLPMLogDataOutput = new ADLPMLogDataOutput();
             try
             {
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex2, ref aDLPMLogDataOutput);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     int i = (int)ADLSensorType.PMLOG_TEMPERATURE_MEM;
@@ -459,70 +505,85 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringAMD) return -1;
+                    return AMDDevicesList.Single(p => p.DeviceID == _adapterIndex).TempMemory;
+                }
+                catch (Exception ex)
                 {
                     return -1;
                 }
-                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            }
+        }
+
+        private static int GetTempMemory(int _AdapterIndex, int _AdapterIndex2)
+        {
+            if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+            {
+                return -1;
+            }
+            if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                int valueTempMemory = TempMemoryInternal(_AdapterIndex, _AdapterIndex2);
+                if (valueTempMemory >= 0)
                 {
-                    int valueTempMemory = TempMemoryInternal();
-                    if (valueTempMemory >= 0)
-                    {
-                        return valueTempMemory;
-                    } else
-                    {
-                        return TempMemoryInternal8();
-                    }
+                    return valueTempMemory;
                 }
                 else
                 {
-                    try
+                    return TempMemoryInternal8(_AdapterIndex, _AdapterIndex2);
+                }
+            }
+            else
+            {
+                try
+                {
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        if (hardware.HardwareType == HardwareType.GpuAmd)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAmd)
+                            int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
+                            if (gpuId == _AdapterIndex)
                             {
-                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
-                                if (gpuId == _adapterIndex)
+                                foreach (var sensor in hardware.Sensors)
                                 {
-                                    foreach (var sensor in hardware.Sensors)
+                                    if (sensor.SensorType == SensorType.Temperature && sensor.Name.Contains("GPU Memory"))
                                     {
-                                        if (sensor.SensorType == SensorType.Temperature && sensor.Name.Contains("GPU Memory"))
+                                        if (sensor.Value > 0 && sensor.Value < 1)
                                         {
-                                            if (sensor.Value > 0 && sensor.Value < 1)
-                                            {
-                                                return (int)(sensor.Value * 1000);
-                                            }
+                                            return (int)(sensor.Value * 1000);
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    catch (Exception er)
-                    {
-                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
-                    }
                 }
-                int value = TempMemoryInternal();
-                if (value >= 0)
+                catch (Exception er)
                 {
-                    return value;
+                    Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                 }
-                else
-                {
-                    return TempMemoryInternal8();
-                }
-                return -1;
             }
+            int value = TempMemoryInternal(_AdapterIndex, _AdapterIndex2);
+            if (value >= 0)
+            {
+                return value;
+            }
+            else
+            {
+                return TempMemoryInternal8(_AdapterIndex, _AdapterIndex2);
+            }
+            return -1;
         }
+        //************************************************
 
-        private int LoadInternal()
+        private static int LoadInternal(int _AdapterIndex, int _AdapterIndex2)
         {
             var adlp = new ADLPMActivity();
             try
             {
-                var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp);
+                var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_AdapterIndex, ref adlp);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     return adlp.ActivityPercent;
@@ -537,12 +598,12 @@ namespace NiceHashMiner.Devices
             }
             return -1;
         }
-        private int LoadInternal8()
+        private static int LoadInternal8(int _AdapterIndex, int _AdapterIndex2)
         {
             var aDLPMLogDataOutput = new ADLPMLogDataOutput();
             try
             {
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex2, ref aDLPMLogDataOutput);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     int i = (int)ADLSensorType.PMLOG_INFO_ACTIVITY_GFX;
@@ -563,70 +624,84 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringAMD) return -1;
+                    return AMDDevicesList.Single(p => p.DeviceID == _adapterIndex).Load;
+                }
+                catch (Exception ex)
                 {
                     return -1;
                 }
-                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            }
+        }
+        private static int GetLoad(int _AdapterIndex, int _AdapterIndex2)
+        {
+            if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+            {
+                return -1;
+            }
+            if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                int valueLoad = LoadInternal(_AdapterIndex, _AdapterIndex2);
+                if (valueLoad >= 0)
                 {
-                    int valueLoad = LoadInternal();
-                    if (valueLoad >= 0)
-                    {
-                        return valueLoad;
-                    } else
-                    {
-                        return LoadInternal8();
-                    }
+                    return valueLoad;
                 }
                 else
                 {
-                    try
+                    return LoadInternal8(_AdapterIndex, _AdapterIndex2);
+                }
+            }
+            else
+            {
+                try
+                {
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        if (hardware.HardwareType == HardwareType.GpuAmd)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAmd)
+                            int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
+                            if (gpuId == _AdapterIndex)
                             {
-                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
-                                if (gpuId == _adapterIndex)
+                                foreach (var sensor in hardware.Sensors)
                                 {
-                                    foreach (var sensor in hardware.Sensors)
+                                    if (sensor.Name.ToLower().Contains("gpu core") & sensor.SensorType == SensorType.Load)
                                     {
-                                        if (sensor.Name.ToLower().Contains("gpu core") & sensor.SensorType == SensorType.Load)
+                                        if ((int)sensor.Value >= 0)
                                         {
-                                            if ((int)sensor.Value >= 0)
-                                            {
-                                                return (int)sensor.Value;
-                                            }
+                                            return (int)sensor.Value;
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    catch (Exception er)
-                    {
-                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
-                    }
                 }
-                int value = LoadInternal();
-                if (value >= 0)
+                catch (Exception er)
                 {
-                    return value;
+                    Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                 }
-                else
-                {
-                    return LoadInternal8();
-                }
-                return -1;
             }
+            int value = LoadInternal(_AdapterIndex, _AdapterIndex2);
+            if (value >= 0)
+            {
+                return value;
+            }
+            else
+            {
+                return LoadInternal8(_AdapterIndex, _AdapterIndex2);
+            }
+            return -1;
         }
+        //*************************
 
-        private int MemLoadInternal()
+        private static int MemLoadInternal(int _AdapterIndex, int _AdapterIndex2)
         {
             var aDLPMLogDataOutput = new ADLPMLogDataOutput();
             try
             {
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex2, ref aDLPMLogDataOutput);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     int i = (int)ADLSensorType.PMLOG_INFO_ACTIVITY_MEM;
@@ -647,21 +722,34 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                try
                 {
-                    return 0;
+                    if (ConfigManager.GeneralConfig.DisableMonitoringAMD) return -1;
+                    return AMDDevicesList.Single(p => p.DeviceID == _adapterIndex).MemLoad;
                 }
-                return MemLoadInternal();
+                catch (Exception ex)
+                {
+                    return -1;
+                }
             }
         }
+        private static int GetLoadMemory(int _AdapterIndex, int _AdapterIndex2)
+        {
+            if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+            {
+                return 0;
+            }
+            return MemLoadInternal(_AdapterIndex, _AdapterIndex2);
+        }
+        //*****************************
 
-        private double PowerUsageInternal()
+        private static double PowerUsageInternal(int _AdapterIndex, int _AdapterIndex2)
         {
             double addAMD = ConfigManager.GeneralConfig.PowerAddAMD;
             var power = -1;
             if (_adlContext != IntPtr.Zero && ADL.ADL2_Overdrive6_CurrentPower_Get != null)
             {
-                var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex2, 0, ref power); //0
+                var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _AdapterIndex2, 0, ref power); //0
                 if (result == ADL.ADL_SUCCESS)
                 {
                     //Helpers.ConsolePrint("PowerUsageInternal1", "(power / (1 << 8)) + addAMD: " + ((power / (1 << 8)) + addAMD).ToString());
@@ -671,14 +759,14 @@ namespace NiceHashMiner.Devices
             }
             return -1;
         }
-        private double PowerUsageInternal8()
+        private static double PowerUsageInternal8(int _AdapterIndex, int _AdapterIndex2)
         {
             var aDLPMLogDataOutput = new ADLPMLogDataOutput();
             double addAMD = ConfigManager.GeneralConfig.PowerAddAMD;
             int power = -1;
             try
             {
-                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _adapterIndex2, ref aDLPMLogDataOutput);
+                var result = ADL.ADL2_New_QueryPMLogData_Get(_adlContext, _AdapterIndex2, ref aDLPMLogDataOutput);
                 if (result == ADL.ADL_SUCCESS)
                 {
                     int i = (int)ADLSensorType.PMLOG_ASIC_POWER;
@@ -701,82 +789,134 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                double addAMD = ConfigManager.GeneralConfig.PowerAddAMD;
-                if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringAMD) return -1;
+                    return AMDDevicesList.Single(p => p.DeviceID == _adapterIndex).PowerUsage;
+                }
+                catch (Exception ex)
                 {
                     return -1;
                 }
-                if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            }
+        }
+        private static int GetPower(int _AdapterIndex, int _AdapterIndex2)
+        {
+            double addAMD = ConfigManager.GeneralConfig.PowerAddAMD;
+            if (ConfigManager.GeneralConfig.DisableMonitoringAMD)
+            {
+                return -1;
+            }
+            if (!ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                int valuePowerUsage = (int)PowerUsageInternal(_AdapterIndex, _AdapterIndex2);
+                
+                if (valuePowerUsage > 0)
                 {
-                    int valuePowerUsage = (int)PowerUsageInternal();
-                    if (valuePowerUsage > 0)
-                    {
-                        return valuePowerUsage;
-                    } else
-                    {
-                        return PowerUsageInternal8();
-                    }
+                    return valuePowerUsage;
                 }
                 else
                 {
-                    try
+                    return (int)PowerUsageInternal8(_AdapterIndex, _AdapterIndex2);
+                }
+            }
+            else
+            {
+                try
+                {
+                    foreach (var hardware in Form_Main.thisComputer.Hardware)
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        /*
+                        Helpers.ConsolePrint("*********", hardware.Identifier.ToString());
+                        Helpers.ConsolePrint("*********", "Hardware: " + hardware.Name);
+                        foreach (IHardware subhardware in hardware.SubHardware)
                         {
-                            /*
-                            Helpers.ConsolePrint("*********", hardware.Identifier.ToString());
-                            Helpers.ConsolePrint("*********", "Hardware: " + hardware.Name);
-                            foreach (IHardware subhardware in hardware.SubHardware)
+                            Helpers.ConsolePrint("*********", "\tSubhardware: " + subhardware.Name);
+                            foreach (ISensor sensor in subhardware.Sensors)
                             {
-                                Helpers.ConsolePrint("*********", "\tSubhardware: " + subhardware.Name);
-                                foreach (ISensor sensor in subhardware.Sensors)
-                                {
-                                    Helpers.ConsolePrint("*********", "\t\tSensor: " + sensor.Name + " Value: " + sensor.Value);
-                                }
+                                Helpers.ConsolePrint("*********", "\t\tSensor: " + sensor.Name + " Value: " + sensor.Value);
                             }
-                            foreach (ISensor sensor in hardware.Sensors)
-                            {
-                                Helpers.ConsolePrint("*********", "\tSensor: " + sensor.Name + " Value: " + sensor.Value);
-                            }
-                            */
+                        }
+                        foreach (ISensor sensor in hardware.Sensors)
+                        {
+                            Helpers.ConsolePrint("*********", "\tSensor: " + sensor.Name + " Value: " + sensor.Value);
+                        }
+                        */
 
-                            if (hardware.HardwareType == HardwareType.GpuAmd)
+                        if (hardware.HardwareType == HardwareType.GpuAmd)
+                        {
+                            int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
+                            if (gpuId == _AdapterIndex)
                             {
-                                int.TryParse(hardware.Identifier.ToString().Replace("/gpu-amd/", ""), out var gpuId);
-                                if (gpuId == _adapterIndex)
+                                foreach (var sensor in hardware.Sensors)
                                 {
-                                    foreach (var sensor in hardware.Sensors)
+                                    if (sensor.Name.ToLower().Contains("gpu package") & sensor.SensorType == SensorType.Power)
                                     {
-                                        if (sensor.Name.ToLower().Contains("gpu package") & sensor.SensorType == SensorType.Power)
+                                        if ((int)sensor.Value >= 0)
                                         {
-                                            if ((int)sensor.Value >= 0)
-                                            {
-                                                return (int)sensor.Value + addAMD;
-                                            }
+                                            return (int)((int)sensor.Value + addAMD);
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    catch (Exception er)
-                    {
-                        Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
-                    }
                 }
-                int value = (int)PowerUsageInternal();
-                if (value > 0)
+                catch (Exception er)
                 {
-                    return value;
+                    Helpers.ConsolePrint("AmdComputeDevice", er.ToString());
                 }
-                else
-                {
-                    return PowerUsageInternal8();
-                }
-                return -1;
             }
+            int value = (int)PowerUsageInternal(_AdapterIndex, _AdapterIndex2);
+            if (value > 0)
+            {
+                return value;
+            }
+            else
+            {
+                return (int)PowerUsageInternal8(_AdapterIndex, _AdapterIndex2);
+            }
+            return -1;
         }
 
+        private class AMDDev
+        {
+            public int DeviceID;
+            public int DeviceID2;
+            public float Load;
+            public float MemLoad;
+            public float Temp;
+            public float TempMemory;
+            public int FanSpeed;
+            public int FanSpeedRPM;
+            public double PowerUsage;
+        }
+        private static List<AMDDev> AMDDevicesList;
+        public static void AMDDevicesListInit(List<OpenCLDevice> oclList)
+        {
+            AMDDevicesList = new List<AMDDev>();
+            foreach (var dev in oclList)
+            {
+                AMDDev _dev = new AMDDev();
+                _dev.DeviceID = Querying.AmdQuery._busIdInfos[dev.BUS_ID].Adl1Index;
+                _dev.DeviceID2 = Querying.AmdQuery._busIdInfos[dev.BUS_ID].Adl2Index;
+                AMDDevicesList.Add(_dev);
+            }
+        }
+        public static void SetTelemetry()
+        {
+            if (AMDDevicesList == null) return;
+            foreach (AMDDev dev in AMDDevicesList)
+            {
+                dev.FanSpeed = GetFan(dev.DeviceID, dev.DeviceID2);
+                dev.FanSpeedRPM = GetFanRPM(dev.DeviceID, dev.DeviceID2);
+                dev.Load = GetLoad(dev.DeviceID, dev.DeviceID2);
+                dev.MemLoad = GetLoadMemory(dev.DeviceID, dev.DeviceID2);
+                dev.PowerUsage = GetPower(dev.DeviceID, dev.DeviceID2);
+                dev.Temp = GetTemp(dev.DeviceID, dev.DeviceID2);
+                dev.TempMemory = GetTempMemory(dev.DeviceID, dev.DeviceID2);
+            }
+        }
         public AmdComputeDevice(AmdGpuDevice amdDevice, int gpuCount, bool isDetectionFallback, int adl2Index)
             : base(amdDevice.DeviceID,
                 amdDevice.DeviceName,
@@ -797,7 +937,6 @@ namespace NiceHashMiner.Devices
             DriverDisableAlgos = amdDevice.DriverDisableAlgos;
             Index = ID + ComputeDeviceManager.Available.AvailCpus + ComputeDeviceManager.Available.AvailNVGpus;
             _adapterIndex = amdDevice.AdapterIndex;
-
             ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
             _adapterIndex2 = adl2Index;
         }

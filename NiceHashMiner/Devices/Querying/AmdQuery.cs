@@ -17,7 +17,7 @@ namespace NiceHashMiner.Devices.Querying
         private const int AmdVendorID = 1002;
 
         private readonly List<VideoControllerData> _availableControllers;
-        private readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
+        public static readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
         //private readonly SortedDictionary<int, BusIdInfo> _busIdInfos = new SortedDictionary<int, BusIdInfo>();
         private readonly List<string> _amdDeviceUuid = new List<string>();
 
@@ -448,7 +448,6 @@ namespace NiceHashMiner.Devices.Querying
                                 var uuid = udid.Substring(0, pciVenIDStrSize) + "_" + serial;
                                 var busId = osAdapterInfoData.ADLAdapterInfo[i].BusNumber;
                                 var index = osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex;
-
                                 if (_amdDeviceUuid.Contains(uuid)) continue;
 
                                 try
@@ -481,10 +480,9 @@ namespace NiceHashMiner.Devices.Querying
                                     MF = mf,
                                     Uuid = uuid,
                                     InfSection = infSection,
-                                    Adl1Index = index,
+                                    Adl1Index = i,
                                     Adl2Index = adl2Index
                                 };
-
                                 _busIdInfos.Add(busId, info);
                             }
                         }
@@ -524,7 +522,7 @@ namespace NiceHashMiner.Devices.Querying
             return isAdlInit;
         }
 
-        private struct BusIdInfo
+        public struct BusIdInfo
         {
             public string Name;
             public string MF;
