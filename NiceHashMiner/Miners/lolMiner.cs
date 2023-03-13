@@ -158,10 +158,15 @@ namespace NiceHashMiner.Miners
                     platform = "nvidia";
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
                 }
-                else
+                if (pair.Device.DeviceType == DeviceType.AMD)
                 {
                     platform = "amd";
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
+                }
+                if (pair.Device.DeviceType == DeviceType.INTEL)
+                {
+                    platform = "intel";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.INTEL).Trim();
                 }
             }
             //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.lolMiner;
@@ -213,6 +218,13 @@ namespace NiceHashMiner.Miners
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + 
                 //LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + " " +
                 GetServer("daggerhashimoto", btcAdress, worker, "3353") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
+            {
+                LastCommandLine = "--algo ETCHASH --ethstratum=ETHV1" +
+                GetServer("daggerhashimoto", btcAdress, worker, "3393") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -281,10 +293,15 @@ namespace NiceHashMiner.Miners
                     platform = "nvidia";
                     param = " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
                 }
-                else
+                if (pair.Device.DeviceType == DeviceType.AMD)
                 {
                     platform = "amd";
                     param = " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
+                }
+                if (pair.Device.DeviceType == DeviceType.INTEL)
+                {
+                    platform = "intel";
+                    param = " " + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.INTEL).Trim();
                 }
             }
             // demo for benchmark
@@ -334,6 +351,13 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--algo ETHASH " +
                 " --pool " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.lolMiner --pass x" +
                 " --pool " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                              param +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
+            {
+                CommandLine = "--algo ETCHASH " +
+                " --pool " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -495,9 +519,11 @@ namespace NiceHashMiner.Miners
             var deviceStringCommand = " ";
             var ids = new List<string>();
             var amdDeviceCount = ComputeDeviceManager.Query.AmdDevices.Count;
+            var intelDeviceCount = ComputeDeviceManager.Query.IntelDevices.Count;
             var allDeviceCount = ComputeDeviceManager.Query.GpuCount;
             Helpers.ConsolePrint("lolMinerIndexing", $"Found {allDeviceCount} Total GPU devices");
             Helpers.ConsolePrint("lolMinerIndexing", $"Found {amdDeviceCount} AMD devices");
+            Helpers.ConsolePrint("lolMinerIndexing", $"Found {intelDeviceCount} INTEL devices");
             //   var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.ID.ToString()).ToList();
             //var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.DeviceType).ToList();
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.lolMinerBusID).ToList();
@@ -554,7 +580,7 @@ namespace NiceHashMiner.Miners
             double summspeed = 0.0d;
             double secsummspeed = 0.0d;
 
-            int delay_before_calc_hashrate = 10;
+            int delay_before_calc_hashrate = 15;
             int MinerStartDelay = 10;
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
@@ -575,7 +601,11 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                 {
@@ -587,7 +617,7 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 20;
                 }
                 
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//+dual
@@ -661,8 +691,8 @@ namespace NiceHashMiner.Miners
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
                     {
-                        delay_before_calc_hashrate = 10;
-                        MinerStartDelay = 30;
+                        delay_before_calc_hashrate = 50;
+                        MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
                     {
@@ -744,6 +774,7 @@ namespace NiceHashMiner.Miners
                 }
                 BenchmarkAlgorithm.BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);
                 BenchmarkAlgorithm.BenchmarkSecondarySpeed = Math.Round(secsummspeed / (repeats - delay_before_calc_hashrate), 2);
+                BenchmarkAlgorithm.PowerUsageBenchmark = (_powerUsage / repeats);
                 /*
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
@@ -919,6 +950,7 @@ namespace NiceHashMiner.Miners
                         if (Num_Algorithms == 2 && ad.SecondarySpeed == 0)
                         {
                             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                            APIerrorsCount++;
                         }
                     }
 

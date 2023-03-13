@@ -422,7 +422,7 @@
         "Form_Main_x64_Support_Only": "Miner Legacy Fork Fix supports only x64 platforms. You will not be able to use Miner Legacy Fork Fix with x86",
         "Compute_Device_Query_Manager_VideoControllers": "GPU checking",
         "Compute_Device_Query_Manager_CUDA_Query": "Querying NVIDIA devices",
-        "Compute_Device_Query_Manager_OpenCL_Query": "Querying OpenCL devices",
+        "Compute_Device_Query_Manager_Intel_Query": "Querying INTEL devices",
         "Compute_Device_Query_Manager_AMD_Query": "Checking AMD OpenCL GPUs",
         "Compute_Device_Query_Manager_AMD_Query_Skip": "Skip check for AMD OpenCL GPUs",
         "Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title": "Nvidia Recomended driver",

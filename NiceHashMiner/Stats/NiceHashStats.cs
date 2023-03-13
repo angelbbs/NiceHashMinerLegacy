@@ -155,6 +155,7 @@ namespace NiceHashMiner.Stats
         {
             new Task(() => SocketReceive(sender, e)).Start();
         }
+        private static bool firstSMA = true;
         private static void SocketReceive(object sender, MessageEventArgs e)
         {
             try
@@ -206,7 +207,11 @@ namespace NiceHashMiner.Stats
                                     return;
                                 } else
                                 {
-                                    SetAlgorithmRates(message.data);
+                                    if (firstSMA)
+                                    {
+                                        SetAlgorithmRates(message.data, 1, 12, true, "WS");
+                                        firstSMA = false;
+                                    }
                                 }
 
                                 if (Miner.IsRunningNew)
@@ -938,6 +943,7 @@ namespace NiceHashMiner.Stats
         [HandleProcessCorruptedStateExceptions]
         public static bool GetSmaAPI()
         {
+            Thread.Sleep(1000 * 5);
             try
             {
                 //new Task(() => GetSmaAPICurrent()).Start();
@@ -956,6 +962,7 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("SOCKET", ex.Message);
             }
+
             return true;
         }
 
@@ -1051,48 +1058,61 @@ namespace NiceHashMiner.Stats
 
                         if (!NHSmaData.TryGetPaying(algoKey, out double paying))
                         {
-                            Helpers.ConsolePrint("SMA API", "ERROR! Unknown algo: " + algoKey.ToString());
+                            Helpers.ConsolePrint("SetAlgorithmRates", "ERROR! Unknown algo: " + algoKey.ToString());
                         }
 
                         if (!ConfigManager.GeneralConfig.Use_Last24hours)
                         {
-                            if (paying == 0 && !algoKey.ToString().Contains("UNUSED")
-                                && type.ToLower().Contains("ws"))
+                            if (!algoKey.ToString().Contains("UNUSED") && type.ToLower().Contains("ws"))
                             {
+                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
                                 NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), false);//first init?
                             }
 
                             if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED")
                                 && type.ToLower().Equals("current"))
                             {
+                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
                                 NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
                             }
 
                             if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED")
                                 && type.ToLower().Equals("order"))
                             {
+                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
                                 NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
                             }
                         }
                         else
                         {
-                            if (paying == 0 && !algoKey.ToString().Contains("UNUSED")
-                                && type.ToLower().Equals("ws"))
+                            if (!algoKey.ToString().Contains("UNUSED") && type.ToLower().Equals("ws"))
                             {
+                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
                                 NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), false);//first init?
                             }
 
                             if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED") &&
-                                !type.ToLower().Equals("ws"))
+                                type.ToLower().Equals("current"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);                               
+                            }
+
+                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED") &&
+                                type.ToLower().Equals("order"))
                             {
                                 NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
-                                
-                                if ((algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash) &&
-                                    type.ToLower().Contains("24h"))
+                            }
+
+                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED") &&
+                                type.ToLower().Equals("24h"))
+                            {
+                                if ((algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash))
                                 {
-                                    //double average
-                                    //NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
-                                }                                
+                                    NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), false);
+                                } else
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                                }
                             }
                         }
                         
@@ -1619,6 +1639,40 @@ namespace NiceHashMiner.Stats
                             {
                                 if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
                                 {
+                                    Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
+                                }
+                            }
+                            else
+                            {
+                                deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer) + " ", "");
+                            }
+
+                            GpuRam = (device.GpuRam / 1073741824).ToString() + "GB";
+                            if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
+                            {
+                                if (deviceName.Contains(GpuRam))
+                                {
+                                    GpuRam = "";
+                                }
+                                else
+                                {
+                                    deviceName = deviceName + " " + GpuRam;
+                                }
+                            }
+                            else
+                            {
+                                deviceName = deviceName.Replace(GpuRam, "");
+                                GpuRam = "";
+                            }
+                        }
+
+                        if (device.DeviceType == DeviceType.INTEL)
+                        {
+                            if (ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer)
+                            {
+                                if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                                {
+                                    deviceName = deviceName.Replace("Intel ", "");
                                     Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer) + " ";
                                 }
                             }

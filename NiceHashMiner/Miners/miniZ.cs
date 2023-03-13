@@ -217,7 +217,7 @@ namespace NiceHashMiner.Miners
                 }
             } catch (Exception ex)
             {
-                Helpers.ConsolePrint("*********", ex.ToString());
+                Helpers.ConsolePrint("GetDevicesCommandString", ex.ToString());
             }
             return deviceStringCommand;
         }

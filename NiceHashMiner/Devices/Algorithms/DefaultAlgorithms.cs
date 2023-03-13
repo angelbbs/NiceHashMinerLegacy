@@ -92,6 +92,7 @@ namespace NiceHashMiner.Devices.Algorithms
         #region INTEL
         public static Dictionary<MinerBaseType, List<Algorithm>> Intel => new Dictionary<MinerBaseType, List<Algorithm>>
         {
+            /*
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
@@ -99,28 +100,16 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
-                            //до тех пор, пока autolykos не починят
-                            /*
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
-                            {
-                                //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
-                            },
-                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                             },
-                            /*
-                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
-                            {
-                            },
-                            */
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
                             {
                                 ExtraLaunchParameters = "--gpu-auto-tune 1"
                             }
                         }
             },
-            
+            */
             {
                 MinerBaseType.lolMiner,
                         new List<Algorithm>() {
@@ -132,32 +121,29 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.BeamV3, "BeamV3")
-                            {
-                                ExtraLaunchParameters = ""
-                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, "ETCHashKHeavyHash")
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.ETCHash, "ETCHash")
                             {
+                                ExtraLaunchParameters = ""
                             }
                         }
             },
-            
+
             {
                 MinerBaseType.Nanominer,
                 new List<Algorithm>()
                 {
-                    new Algorithm(MinerBaseType.Nanominer, AlgorithmType.Autolykos, "Autolykos")
+                    new Algorithm(MinerBaseType.Nanominer, AlgorithmType.ETCHash, "ETCHash")
                     {
                         ExtraLaunchParameters = "memTweak=1"
                     }
                 }
             },
-            
-        }.ConcatDictList(All, Gpu);
+
+        };
 
         #endregion
 

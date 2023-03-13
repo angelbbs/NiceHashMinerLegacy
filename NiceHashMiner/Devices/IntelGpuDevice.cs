@@ -27,6 +27,7 @@ namespace NiceHashMiner.Devices
         public string IntelManufacturer = "";
 
         public int AdapterIndex; // init this with the ADL
+        public long DeviceHandle; 
 
         public IntelGpuDevice(OpenCLDevice openClSubset, bool isOldDriver, string infSection, bool driverDisableAlgo)
         {

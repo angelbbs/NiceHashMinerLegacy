@@ -25,7 +25,7 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
         string ResponseFromNanominer;
         public string platform = "";
-        public string[] devices;
+        //public string[] devices;
         public FileStream fs;
         private int offset = 0;
         private bool zilRound = false;
@@ -104,10 +104,15 @@ namespace NiceHashMiner.Miners
                     platform = "nvidia";
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).Trim();
                 }
-                else
+                if (pair.Device.DeviceType == DeviceType.AMD)
                 {
                     platform = "amd";
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).Trim();
+                }
+                if (pair.Device.DeviceType == DeviceType.INTEL)
+                {
+                    platform = "intel";
+                    param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.INTEL).Trim();
                 }
             }
 
@@ -152,6 +157,34 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + GetServer("daggerhashimoto", username, "3353");
+
+                if (ConfigManager.GeneralConfig.StaleProxy)
+                {
+                    cfgFile = cfgFile + "rigPassword = stale\n";
+                }
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
+            {
+                try
+                {
+                    if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                        File.Delete("miners\\Nanominer\\" + GetLogFileName());
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                }
+                cfgFile =
+                   String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
+                   + String.Format("logPath=" + GetLogFileName() + "\n")
+                   + String.Format("protocol = stratum\n")
+                   + String.Format(param) + "\n"
+                   + String.Format("[Etchash]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
+                   + String.Format("wallet = {0}", btcAdress) + "\n"
+                   + String.Format("rigName = \"{0}\"", rigName) + "\n"
+                   + GetServer("daggerhashimoto", username, "3393");
 
                 if (ConfigManager.GeneralConfig.StaleProxy)
                 {
@@ -254,6 +287,8 @@ namespace NiceHashMiner.Miners
             var deviceStringCommand = " ";
             var ids = new List<string>();
             var amdDeviceCount = ComputeDeviceManager.Query.AmdDevices.Count;
+            var intelDeviceCount = ComputeDeviceManager.Query.IntelDevices.Count;
+            var nvidiaDeviceCount = ComputeDeviceManager.Query._cudaDevices.CudaDevices.Count;
             var allDeviceCount = ComputeDeviceManager.Query.GpuCount;
             Helpers.ConsolePrint("NanominerIndexing", "platform: " + platform);
             int dev = 0;
@@ -262,22 +297,50 @@ namespace NiceHashMiner.Miners
             {
                 sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             }
-            devices = new string[sortedMinerPairs.Count];
+            
+            //devices = new string[sortedMinerPairs.Count];
+            Helpers.ConsolePrint("NanominerIndexing", $"Found {allDeviceCount} Total GPU devices");
+            Helpers.ConsolePrint("NanominerIndexing", $"Found {nvidiaDeviceCount} NVIDIA devices");
+            Helpers.ConsolePrint("NanominerIndexing", $"Found {amdDeviceCount} AMD devices");
+            Helpers.ConsolePrint("NanominerIndexing", $"Found {intelDeviceCount} INTEL devices");
             if (platform.Contains("amd"))
             {
-                Helpers.ConsolePrint("NanominerIndexing", $"Found {allDeviceCount} Total GPU devices");
-                Helpers.ConsolePrint("NanominerIndexing", $"Found {amdDeviceCount} AMD devices");
-
                 foreach (var mPair in sortedMinerPairs)
                 {
-                    Helpers.ConsolePrint("NanominerIndexing", "Index: " + mPair.Device.Index);
-                    Helpers.ConsolePrint("NanominerIndexing", "Name: " + mPair.Device.Name);
-                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + mPair.Device.ID);
-                    Helpers.ConsolePrint("NanominerIndexing", "IDbybus: " + mPair.Device.IDByBus);
-                    Helpers.ConsolePrint("NanominerIndexing", "busid: " + mPair.Device.BusID);
-                    Helpers.ConsolePrint("NanominerIndexing", "lol: " + mPair.Device.lolMinerBusID);
-                    //int id = mPair.Device.IDByBus + allDeviceCount - amdDeviceCount;
-                    int id = (int)mPair.Device.lolMinerBusID;
+                    int id = (int)mPair.Device.lolMinerBusID + intelDeviceCount + nvidiaDeviceCount;
+
+                    if (id < 0)
+                    {
+                        Helpers.ConsolePrint("NanominerIndexing", "ID too low: " + id + " skipping device");
+                        continue;
+                    }
+                    /*
+                    if (mPair.Device.DeviceType == DeviceType.NVIDIA)
+                    {
+                        Helpers.ConsolePrint("NanominerIndexing", "NVIDIA found. Increasing index");
+                        id++;
+                    }
+                    if (mPair.Device.DeviceType == DeviceType.INTEL)
+                    {
+                        Helpers.ConsolePrint("NanominerIndexing", "INTEL found. Increasing index");
+                        id++;
+                    }
+                    */
+                    Helpers.ConsolePrint("NanominerIndexing", "Mining ID: " + id);
+                    {
+                        //devices[dev] = id.ToString();
+                        ids.Add(id.ToString());
+                        //dev++;
+                    }
+
+                }
+                deviceStringCommand += string.Join(",", ids);
+            }
+            if (platform.Contains("intel"))
+            {
+                foreach (var mPair in sortedMinerPairs)
+                {
+                    int id = (int)mPair.Device.ID;
 
                     if (id < 0)
                     {
@@ -285,32 +348,20 @@ namespace NiceHashMiner.Miners
                         continue;
                     }
 
-                    if (mPair.Device.DeviceType == DeviceType.NVIDIA)
-                    {
-                        Helpers.ConsolePrint("NanominerIndexing", "NVIDIA found. Increasing index");
-                        id++;
-                    }
-
                     Helpers.ConsolePrint("NanominerIndexing", "Mining ID: " + id);
                     {
-                        devices[dev] = id.ToString();
-                        dev++;
+                        //devices[dev] = id.ToString();
+                        //dev++;
                         ids.Add(id.ToString());
                     }
 
                 }
                 deviceStringCommand += string.Join(",", ids);
             }
-            else
+            if (platform.Contains("nvidia"))
             {
                 foreach (var mPair in sortedMinerPairs)
                 {
-                    Helpers.ConsolePrint("NanominerIndexing", "Index: " + mPair.Device.Index);
-                    Helpers.ConsolePrint("NanominerIndexing", "Name: " + mPair.Device.Name);
-                    Helpers.ConsolePrint("NanominerIndexing", "ID: " + mPair.Device.ID);
-                    Helpers.ConsolePrint("NanominerIndexing", "IDbybus: " + mPair.Device.IDByBus);
-                    Helpers.ConsolePrint("NanominerIndexing", "busid: " + mPair.Device.BusID);
-                    Helpers.ConsolePrint("NanominerIndexing", "lol: " + mPair.Device.lolMinerBusID);
                     int id = mPair.Device.IDByBus;
 
                     if (id < 0)
@@ -321,8 +372,8 @@ namespace NiceHashMiner.Miners
 
                     Helpers.ConsolePrint("NanominerIndexing", "Mining ID: " + id);
                     {
-                        devices[dev] = id.ToString();
-                        dev++;
+                        //devices[dev] = id.ToString();
+                        //dev++;
                     }
                 }
                 var ids2 = MiningSetup.MiningPairs.Select(mPair => (mPair.Device.lolMinerBusID).ToString()).ToList();
@@ -377,9 +428,13 @@ namespace NiceHashMiner.Miners
                 {
                     platform = "nvidia";
                 }
-                else
+                if (pair.Device.DeviceType == DeviceType.AMD)
                 {
                     platform = "amd";
+                }
+                if (pair.Device.DeviceType == DeviceType.INTEL)
+                {
+                    platform = "intel";
                 }
             }
 
@@ -410,6 +465,36 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = 0x266b27bd794d1A65ab76842ED85B067B415CD505") + "\n"
                    + String.Format("rigName = Nanominer") + "\n"
                    + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "")) + "\n";
+
+                try
+                {
+                    FileStream fs = new FileStream("miners\\Nanominer\\bench_nh_" + platform + GetDevicesCommandString().Trim(' ') + ".ini", FileMode.Create, FileAccess.Write);
+                    StreamWriter w = new StreamWriter(fs);
+                    w.WriteAsync(cfgFile);
+                    w.Flush();
+                    w.Close();
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", e.ToString());
+                }
+                //Thread.Sleep(1000);
+                _benchmarkTimeWait = time;
+            }
+
+            if (algorithm.NiceHashID == AlgorithmType.ETCHash)
+            {
+                var cfgFile =
+                   String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
+                   + String.Format("protocol = stratum\n")
+                   + String.Format("watchdog = false\n")
+                   + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.INTEL).TrimStart(' ') + (char)10
+                   + String.Format("[Etchash]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
+                   + String.Format("wallet = 0x266b27bd794d1A65ab76842ED85B067B415CD505") + "\n"
+                   + String.Format("rigName = Nanominer") + "\n"
+                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "")) + "\n";
 
                 try
                 {
@@ -709,6 +794,28 @@ namespace NiceHashMiner.Miners
                     {
                         string gpu = mPair.Device.lolMinerBusID.ToString();
                         string token = $"Algorithms[0].Ethash.GPU{gpu}.Hashrate";
+                        var hash = (string)json.SelectToken(token);
+                        gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
+                        sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                        _power = mPair.Device.PowerUsage;
+                        //Helpers.ConsolePrint("API", "dev: " + i.ToString() + " hr: " + gpu_hr.ToString());
+                        i++;
+                    }
+                }
+                i = 0;
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
+                {
+                    dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
+                    if (json == null) return ad;
+                    var cSpeed1 = (json.Algorithms[0].Etchash);
+                    if (cSpeed1 == null) return ad;
+                    var cSpeed = (json.Algorithms[0].Etchash.Total.Hashrate);
+                    dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
+
+                    foreach (var mPair in sortedMinerPairs)
+                    {
+                        string gpu = mPair.Device.lolMinerBusID.ToString();
+                        string token = $"Algorithms[0].Etchash.GPU{gpu}.Hashrate";
                         var hash = (string)json.SelectToken(token);
                         gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
                         sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;

@@ -5,6 +5,8 @@ using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 //using OpenHardwareMonitor.Hardware;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace NiceHashMiner.Devices
@@ -12,119 +14,150 @@ namespace NiceHashMiner.Devices
     public class IntelComputeDevice : ComputeDevice
     {
         private readonly int _adapterIndex;
+        private readonly long _adapterHandle;
 
-        
         private int FanSpeedInternal()
         {
             return -1;
         }
-        private int FanSpeedInternal8()
-        {
-            return -1;
-        }
+
         public override int FanSpeed //percent
         {
             get
             {
-                return -1;
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringINTEL) return -1;
+                    return IntelDevicesList.Single(p => p.DeviceHandle == _adapterHandle).FanSpeed;
+                } catch (Exception ex)
+                {
+                    return -1;
+                }
             }
-        }
-
-        private int FanSpeedRPMInternal()
-        {
-            return -1;
-        }
-        private int FanSpeedRPMInternal8()
-        {
-            return -1;
         }
         public override int FanSpeedRPM
         {
             get
             {
-                return -1;
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringINTEL) return -1;
+                    return IntelDevicesList.Single(p => p.DeviceHandle == _adapterHandle).FanSpeedRPM;
+                }
+                catch (Exception ex)
+                {
+                    return -1;
+                }
             }
         }
-
-        private float TempInternal()
-        {
-            return -1;
-        }
-        private int TempInternalN()
-        {
-            return -1;
-        }
-        private int TempInternal8()
-        {
-            return -1;
-        }
-
 
         public override float Temp
         {
             get
             {
-                return -1;
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringINTEL) return -1;
+                    return IntelDevicesList.Single(p => p.DeviceHandle == _adapterHandle).Temp;
+                }
+                catch (Exception ex)
+                {
+                    return -1;
+                }
             }
         }
 
-        private int TempMemoryInternal()
-        {
-            return -1;
-        }
-        private int TempMemoryInternal8()
-        {
-            return -2;
-        }
         public override float TempMemory
         {
             get
             {
-                return -1;
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringINTEL) return -1;
+                    return IntelDevicesList.Single(p => p.DeviceHandle == _adapterHandle).TempMemory;
+                }
+                catch (Exception ex)
+                {
+                    return -1;
+                }
             }
         }
 
-        private int LoadInternal()
-        {
-            return -1;
-        }
-        private int LoadInternal8()
-        {
-            return -1;
-        }
         public override float Load
         {
             get
             {
-                return -1;
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringINTEL) return -1;
+                    return IntelDevicesList.Single(p => p.DeviceHandle == _adapterHandle).Load;
+                }
+                catch (Exception ex)
+                {
+                    return -1;
+                }
             }
         }
 
-        private int MemLoadInternal()
-        {
-            return 0;
-        }
         public override float MemLoad
         {
             get
             {
-                return MemLoadInternal();
+                if (ConfigManager.GeneralConfig.DisableMonitoringINTEL) return -1;
+                return -1;
             }
         }
 
-        private double PowerUsageInternal()
-        {
-            return -1;
-        }
-        private double PowerUsageInternal8()
-        {
-            return -1;
-        }
         public override double PowerUsage
         {
             get
             {
-                return -1;
+                try
+                {
+                    if (ConfigManager.GeneralConfig.DisableMonitoringINTEL) return -1;
+                    return IntelDevicesList.Single(p => p.DeviceHandle == _adapterHandle).PowerUsage;
+                }
+                catch (Exception ex)
+                {
+                    return -1;
+                }
+            }
+        }
+
+        private class IntelDev
+        {
+            public long DeviceHandle;
+            public float Load;
+            public float MemLoad;
+            public float Temp;
+            public float TempMemory;
+            public int FanSpeed;
+            public int FanSpeedRPM;
+            public double PowerUsage;
+        }
+        private static List<IntelDev> IntelDevicesList;
+        public static void IntelDevicesListInit(List<OpenCLDevice> oclList)
+        {
+            IntelDevicesList = new List<IntelDev>();
+            foreach (var dev in oclList)
+            {
+                IntelDev _dev = new IntelDev();
+                _dev.DeviceHandle = dev.DeviceHandle;
+                IntelDevicesList.Add(_dev);
+            }
+        }
+        public static void SetTelemetry()
+        {
+            if (IntelDevicesList == null) return;
+            foreach (IntelDev dev in IntelDevicesList)
+            {
+                dev.FanSpeed = Devices.Querying.IntelQuery.GetFan(dev.DeviceHandle, true);
+                dev.FanSpeedRPM = Devices.Querying.IntelQuery.GetFan(dev.DeviceHandle, false);
+                dev.Load = Devices.Querying.IntelQuery.GetLoad(dev.DeviceHandle);
+                dev.MemLoad = Devices.Querying.IntelQuery.GetLoad(dev.DeviceHandle);
+                dev.PowerUsage = Devices.Querying.IntelQuery.GetPower(dev.DeviceHandle);
+                dev.Temp = (float)Devices.Querying.IntelQuery.GetTemperature(dev.DeviceHandle, false);
+                dev.TempMemory = (float)Devices.Querying.IntelQuery.GetTemperature(dev.DeviceHandle, true);
             }
         }
 
@@ -146,8 +179,9 @@ namespace NiceHashMiner.Devices
             InfSection = intelDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             DriverDisableAlgos = intelDevice.DriverDisableAlgos;
-            Index = ID + ComputeDeviceManager.Available.AvailCpus + ComputeDeviceManager.Available.AvailNVGpus;
+            Index = ID + ComputeDeviceManager.Available.AvailCpus + ComputeDeviceManager.Available.AvailNVGpus + ComputeDeviceManager.Available.AvailAmdGpus + ComputeDeviceManager.Available.AvailIntelGpus;
             _adapterIndex = intelDevice.AdapterIndex;
+            _adapterHandle = intelDevice.DeviceHandle;
         }
     }
 

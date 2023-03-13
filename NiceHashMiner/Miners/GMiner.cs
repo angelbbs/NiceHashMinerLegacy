@@ -104,7 +104,7 @@ namespace NiceHashMiner.Miners
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
             {
                 //прокси не используется
-                ZilMining = " --zilserver stratum+tcp://etchash.auto.nicehash.com:9200 --ziluser " + username + " ";
+                ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
