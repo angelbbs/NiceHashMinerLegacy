@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+п»їusing Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
@@ -103,8 +103,8 @@ namespace NiceHashMiner.Miners
 
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
             {
-                //прокси не используется
-                //etchash, пока не поправят ложное определение зилики
+                //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                //etchash, РїРѕРєР° РЅРµ РїРѕРїСЂР°РІСЏС‚ Р»РѕР¶РЅРѕРµ РѕРїСЂРµРґРµР»РµРЅРёРµ Р·РёР»РёРєРё
                 ZilMining = " --zilserver stratum+tcp://etchash.auto.nicehash.com:9200 --ziluser " + username + " ";
             }
 
@@ -1013,7 +1013,7 @@ namespace NiceHashMiner.Miners
             */
             Thread.Sleep(100);
             /*
-            //костыль из-за бага в Anti-hacking
+            //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ Anti-hacking
             if (fs.Length > offset)
             {
                 int count = (int)(fs.Length - offset);

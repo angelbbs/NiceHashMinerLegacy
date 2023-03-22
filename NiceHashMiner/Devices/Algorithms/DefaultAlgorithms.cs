@@ -1,4 +1,4 @@
-using NiceHashMiner.Algorithms;
+п»їusing NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 using System.Collections.Generic;
@@ -92,6 +92,7 @@ namespace NiceHashMiner.Devices.Algorithms
         #region INTEL
         public static Dictionary<MinerBaseType, List<Algorithm>> Intel => new Dictionary<MinerBaseType, List<Algorithm>>
         {
+            /*
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
@@ -155,8 +156,8 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
-                            //до тех пор, пока autolykos не починят
-                            //2.2.3 не починили
+                            //пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ autolykos пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                            //2.2.3 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                             /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
@@ -392,7 +393,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         }
             },
             
-             //тоже, extranonce2 не поддерживает
+             //пїЅпїЅпїЅпїЅ, extranonce2 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
              /*
             { MinerBaseType.ZEnemy,
                         new List<Algorithm>() {
@@ -424,7 +425,7 @@ namespace NiceHashMiner.Devices.Algorithms
             },
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
-                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),//майнер не поддерживает extranonce найса
+                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ extranonce пїЅпїЅпїЅпїЅпїЅ
                             //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
