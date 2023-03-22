@@ -416,34 +416,6 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        private void ReceiveCallback(object sender, MessageEventArgs e)
-        {
-            OnDataReceived?.Invoke(this, e);
-        }
-
-        private static void ErrorCallback(object sender, ErrorEventArgs e)
-        {
-            Helpers.ConsolePrint("SOCKET", e.ToString());
-        }
-
-        private void CloseCallback(object sender, CloseEventArgs e)
-        {
-            if (!_restartConnection)
-            {
-                Helpers.ConsolePrint("SOCKET", $"Connection closed code {e.Code}: {e.Reason}");
-                AttemptReconnect();
-            }
-        }
-        private Task<bool> SendAsync(string data)
-        {
-            return Task.Run(() =>
-            {
-                var t = new TaskCompletionSource<bool>();
-                _webSocket.SendAsync(data, b => t.TrySetResult(b));
-                return t.Task;
-            });
-        }
-
         public static void DropIPPort(int processId, string IP, uint port, bool message = true)
         {
             ProcessStartInfo cports;
@@ -499,7 +471,7 @@ namespace NiceHashMiner.Stats
                     dynamic dataJson = JsonConvert.DeserializeObject(data);
                     if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "login" || dataJson.method == "executed")
                     {
-                        Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
+                        Helpers.ConsolePrint("SOCKET SendData", "Sending data: " + data);
                         ForceReconnectCount = 0;
                         _webSocket.Send(data);
                         dataJson = null;
@@ -551,31 +523,7 @@ namespace NiceHashMiner.Stats
             }
             return false;
         }
-        private bool AttemptReconnect()
-        {
-            attemptReconnect_Tick();
-            NiceHashStats.GetSmaAPICurrent();
-            if (ConfigManager.GeneralConfig.Use_Last24hours || ConfigManager.GeneralConfig.ShortTerm)
-            {
-                NiceHashStats.GetSmaAPI24h();
-            } 
-            if (ConfigManager.GeneralConfig.Use_orders_price)
-            {
-                //NiceHashStats.GetSmaAPIOrder();
-                new Task(() => NiceHashStats.GetSmaAPIOrder()).Start();
-            }
-            ExchangeRateApi.GetNewBTCRate();
-            if (_attemptingReconnect)
-            {
-                return false;
-            }
-            if (IsAlive)
-            {
-                // no reconnect needed
-                return true;
-            }
-            return false;
-        }
+        
         private async void attemptReconnect_Tick()
         {
             _attemptingReconnect = true;

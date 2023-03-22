@@ -10,7 +10,6 @@ using System.Collections;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
@@ -360,7 +359,7 @@ namespace NiceHashMiner.Forms.Components
 
                     if (Form_additional_mining.isAlgoZIL(alg.AlgorithmName, alg.MinerBaseType, computeDevice.DeviceType))
                     {
-                        valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
+                        valueRate += valueRate * Form_Main.ZilFactor;
                     }
 
                     double WithPowerRate = 0;
@@ -488,7 +487,7 @@ namespace NiceHashMiner.Forms.Components
 
                                 if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, _computeDevice.DeviceType))
                                 {
-                                    valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
+                                    valueRate += valueRate * Form_Main.ZilFactor;
                                 }
                                 double WithPowerRate = 0;
                                 WithPowerRate = (valueRate + valueRateSecond) - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
@@ -699,7 +698,7 @@ namespace NiceHashMiner.Forms.Components
 
                             if (Form_additional_mining.isAlgoZIL(algo.AlgorithmName, algo.MinerBaseType, computeDevice.DeviceType))
                             {
-                                valueRate += valueRate * ConfigManager.GeneralConfig.ZilFactor;
+                                valueRate += valueRate * Form_Main.ZilFactor;
                             }
 
                             var WithPowerRate = valueRate - ExchangeRateApi.GetKwhPriceInBtc() * algorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;

@@ -78,7 +78,7 @@ namespace NiceHashMiner.Forms
                     Form_Main.orgId = jsonAPIdata.orgId;
                     Form_Main.apiKey = jsonAPIdata.apiKey;
                     Form_Main.apiSecret = jsonAPIdata.apiSecret;
-                    return NiceHashStats.GetRigProfitInternal(true);
+                    return NiceHashStats.GetRigProfitInternal();
                 }
             }
             catch (Exception ex)
@@ -107,14 +107,14 @@ namespace NiceHashMiner.Forms
         {
             if (string.IsNullOrEmpty(textBox_Organization_ID.Text) || string.IsNullOrEmpty(textBox_APIkey.Text) || string.IsNullOrEmpty(textBox_APIsecret.Text))
             {
-                MessageBox.Show(International.GetText("Form_Settings_errorAPI_ notfilled"), International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(International.GetText("Form_Settings_errorAPI_notfilled"), International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             } else
             {
                 Form_Main.orgId = textBox_Organization_ID.Text;
                 Form_Main.apiKey = textBox_APIkey.Text;
                 Form_Main.apiSecret = textBox_APIsecret.Text;
-                if (NiceHashStats.GetRigProfitInternal(true))
+                if (NiceHashStats.GetRigProfitInternal())
                 {
                     Form_Main.API_key_validity = true;
                     _jsonAPIdata.Warning = "Do not share this file!";

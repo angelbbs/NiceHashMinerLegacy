@@ -104,6 +104,7 @@ namespace NiceHashMiner.Miners
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
             {
                 //прокси не используется
+                //etchash, пока не поправят ложное определение зилики
                 ZilMining = " --zilserver stratum+tcp://etchash.auto.nicehash.com:9200 --ziluser " + username + " ";
             }
 

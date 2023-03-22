@@ -216,7 +216,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(checkBoxLast24hours,
                 International.GetText("Form_Settings_ToolTip_Last24hours"));
 
-            if (ConfigManager.GeneralConfig.ZilFactor == 0.000d)
+            if (Form_Main.ZilFactor == 0.000d)
             {
                 toolTip1.SetToolTip(button_ZIL_additional_mining,
                     string.Format(International.GetText("Form_Settings_ToolTip_ZilFactor")));
@@ -224,7 +224,7 @@ namespace NiceHashMiner.Forms
             {
                 toolTip1.SetToolTip(button_ZIL_additional_mining,
                                     string.Format(International.GetText("Form_Settings_ToolTip_ZilFactorP"),
-                                    (ConfigManager.GeneralConfig.ZilFactor * 100).ToString() + "%"));
+                                    (Form_Main.ZilFactor * 100).ToString() + "%"));
             }
 
             // Electricity cost
@@ -422,6 +422,7 @@ namespace NiceHashMiner.Forms
             checkBox_orderPrice.Text = International.GetText("Form_Settings_checkBox_orderPrice");
             checkBoxLast24hours.Text = International.GetText("Form_Settings_checkBox_Last24hours");
             checkBoxShortTerm.Text = International.GetText("Form_Settings_checkBox_ShortTerm");
+            checkBoxMiningFee.Text = International.GetText("Form_Settings_checkBox_checkBoxMiningFee");
             checkBox_Show_memory_temp.Text = International.GetText("Form_Settings_checkBox_show_memory_temp");
             label_show_manufacturer.Text = International.GetText("Form_Settings_label_show_manufacturer");
             label_restart_nv_lost.Text = International.GetText("Form_Settings_label_restart_nv_lost");
@@ -824,6 +825,9 @@ namespace NiceHashMiner.Forms
                 checkBoxShortTerm.BackColor = Form_Main._backColor;
                 checkBoxShortTerm.ForeColor = Form_Main._textColor;
 
+                checkBoxMiningFee.BackColor = Form_Main._backColor;
+                checkBoxMiningFee.ForeColor = Form_Main._textColor;
+
                 checkBox_Show_memory_temp.BackColor = Form_Main._backColor;
                 checkBox_Show_memory_temp.ForeColor = Form_Main._textColor;
                 checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
@@ -1077,6 +1081,7 @@ namespace NiceHashMiner.Forms
                 checkBox_orderPrice.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxLast24hours.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxShortTerm.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxMiningFee.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_memory_temp.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_AMDdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_INTELdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1233,6 +1238,7 @@ namespace NiceHashMiner.Forms
                 checkBox_orderPrice.Checked = ConfigManager.GeneralConfig.Use_orders_price;
                 checkBoxLast24hours.Checked = ConfigManager.GeneralConfig.Use_Last24hours;
                 checkBoxShortTerm.Checked = ConfigManager.GeneralConfig.ShortTerm;
+                checkBoxMiningFee.Checked = ConfigManager.GeneralConfig.NicehashMiningFee;
                 checkBox_Show_memory_temp.Checked = ConfigManager.GeneralConfig.Show_memory_temperature;
                 checkBox_show_AMDdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer;
                 checkBox_show_INTELdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer;
@@ -1316,7 +1322,7 @@ namespace NiceHashMiner.Forms
                 textBox_psu.Text = ConfigManager.GeneralConfig.PowerPSU.ToString();
                 textBox_mb.Text = ConfigManager.GeneralConfig.PowerMB.ToString();
                 textBoxAddAMD.Text = ConfigManager.GeneralConfig.PowerAddAMD.ToString();
-                
+
                 SetZoneTable(ConfigManager.GeneralConfig.PowerTarif);
             }
 
@@ -1331,7 +1337,7 @@ namespace NiceHashMiner.Forms
                 devicesListViewEnableControl2.SetAlgorithmsListViewOverClock(algorithmsListViewOverClock1);
                 devicesListViewEnableControl2.IsSettingsCopyEnabled = true;
             }
-
+            
             // Add language selections list
             {
                 var lang = International.GetAvailableLanguages();
@@ -1342,7 +1348,6 @@ namespace NiceHashMiner.Forms
                     comboBox_Language.Items.Add(lang[(LanguageType)i]);
                 }
             }
-
             // Add time unit selection list
             {
                 var timeunits = new Dictionary<TimeUnitType, string>();
@@ -1586,6 +1591,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Use_orders_price = checkBox_orderPrice.Checked;
             ConfigManager.GeneralConfig.Use_Last24hours = checkBoxLast24hours.Checked;
             ConfigManager.GeneralConfig.ShortTerm = checkBoxShortTerm.Checked;
+            ConfigManager.GeneralConfig.NicehashMiningFee = checkBoxMiningFee.Checked;
             ConfigManager.GeneralConfig.Show_memory_temperature = checkBox_Show_memory_temp.Checked;
             ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer = checkBox_show_AMDdevice_manufacturer.Checked;
             ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer = checkBox_show_INTELdevice_manufacturer.Checked;
@@ -1632,7 +1638,7 @@ namespace NiceHashMiner.Forms
                 textBox_LogMaxFileSize.Enabled = false;
             }
 
-            
+
         }
 
 
@@ -1789,7 +1795,7 @@ namespace NiceHashMiner.Forms
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             IsChange = true;
             IsChangeSaved = true;
-            NiceHashStats.GetRigProfit();
+            new Task(() => NiceHashStats.GetRigProfit()).Start();
             if (_isCredChange)
             {
                 NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddressNew.Trim(), ConfigManager.GeneralConfig.WorkerName.Trim());
@@ -2716,7 +2722,8 @@ namespace NiceHashMiner.Forms
             {
                 if (!Form_API_keys.GetSavedAPIkeyData())
                 {
-                    MessageBox.Show(International.GetText("Form_Settings_firstAPI"));
+                    MessageBox.Show(International.GetText("Form_Settings_firstAPI") + "\n" +
+                        Form_Main.lastRigProfit.Message);
                     checkBox_EnableAPI.Checked = false;
                     //Form_Main.checkBox_EnableAPI = false;
                 } else
@@ -3295,7 +3302,7 @@ namespace NiceHashMiner.Forms
 
         private void checkBox_show_INTELdevice_manufacturer_CheckedChanged(object sender, EventArgs e)
         {
-            
+
         }
     }
 

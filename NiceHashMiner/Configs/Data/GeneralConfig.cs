@@ -172,6 +172,8 @@ namespace NiceHashMiner.Configs.Data
         public bool Use_orders_price = false;
         public bool Use_Last24hours = true;
         public bool ShortTerm = false;
+        public bool NicehashMiningFee = true;
+
         public bool Show_memory_temperature = true;
         public bool Show_AMDdevice_manufacturer = true;
         public bool Show_INTELdevice_manufacturer = true;
@@ -182,7 +184,6 @@ namespace NiceHashMiner.Configs.Data
         public bool Hide_unused_algorithms = false;
         public bool Zilliqua_GMiner = true;
         public bool RestartGMinerAfterZilRound = false;
-        public double ZilFactor = 0.000d;
         public bool ZIL_Mining_Enable = true;
         public ZILConfigGMiner ZILConfigGMiner = new ZILConfigGMiner();
         public ZILConfigSRBMiner ZILConfigSRBMiner = new ZILConfigSRBMiner();
@@ -283,7 +284,7 @@ namespace NiceHashMiner.Configs.Data
             MinimizeToTray = false;
             AlwaysOnTop = false;
             //            BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
-            DeviceDetection = new DeviceDetectionConfig(); 
+            DeviceDetection = new DeviceDetectionConfig();
             DisableAMDTempControl = false;
             DisableDefaultOptimizations = false;
             AutoScaleBTCValues = true;

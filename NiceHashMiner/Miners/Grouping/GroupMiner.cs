@@ -69,6 +69,10 @@ namespace NiceHashMiner.Miners.Grouping
                         {
                             DevicesInfoString = "NVIDIA GPU " + ("{ " + string.Join(", ", deviceNames) + " }").Replace("GPU", "");
                         }
+                        if (deviceType == DeviceType.INTEL)
+                        {
+                            DevicesInfoString = "INTEL GPU " + ("{ " + string.Join(", ", deviceNames) + " }").Replace("GPU", "");
+                        }
                         if (deviceType == DeviceType.CPU)
                         {
                             DevicesInfoString = "CPU " + ("{ " + string.Join(", ", deviceNames) + " }").Replace("CPU", "");

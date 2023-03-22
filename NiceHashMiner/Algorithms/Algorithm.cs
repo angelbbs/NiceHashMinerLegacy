@@ -309,7 +309,7 @@ namespace NiceHashMiner.Algorithms
             {
                 return BenchmarkStatus;
             }
-            
+
             if (BenchmarkSpeed > 0)
             {
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, 0,  NiceHashID);
@@ -349,7 +349,7 @@ namespace NiceHashMiner.Algorithms
             }
             if (Form_additional_mining.isAlgoZIL(AlgorithmName, mbt, devtype))
             {
-                CurrentProfit += CurrentProfit * ConfigManager.GeneralConfig.ZilFactor;
+                CurrentProfit += CurrentProfit * Form_Main.ZilFactor;
             }
             CurrentProfitWithoutPower = CurrentProfit;
             if (ConfigManager.GeneralConfig.with_power)

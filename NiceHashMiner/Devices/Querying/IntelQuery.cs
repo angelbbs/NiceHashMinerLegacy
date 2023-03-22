@@ -1,16 +1,21 @@
-using ATI.ADL;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.UUID;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 using static IGCL.IGCL;
+using static NiceHashMiner.Devices.ComputeDeviceManager.Query;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -19,9 +24,9 @@ namespace NiceHashMiner.Devices.Querying
         private const string Tag = "IntelQuery";
         private const int IntelVendorID = 8086;
 
-        private readonly List<VideoControllerData> _availableControllers;
-        private readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
-        private readonly List<string> _IntelDeviceUuid = new List<string>();
+        private static List<VideoControllerData> _availableControllers;
+        private static readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
+        private static readonly List<string> _IntelDeviceUuid = new List<string>();
 
         private static string SafeGetProperty(ManagementBaseObject mbo, string key)
         {
@@ -37,12 +42,13 @@ namespace NiceHashMiner.Devices.Querying
 
             return "key is null";
         }
-
+        /*
         public IntelQuery(List<VideoControllerData> availControllers)
         {
             _availableControllers = availControllers;
         }
-
+        */
+        /*
         public List<OpenCLDevice> QueryIntel(bool openCLSuccess, OpenCLJsonData openCLData)
         {
             Helpers.ConsolePrint(Tag, "QueryIntel START");
@@ -50,31 +56,47 @@ namespace NiceHashMiner.Devices.Querying
             Helpers.ConsolePrint(Tag, "QueryIntel END");
             return IntelDevices;
         }
-
-        private List<OpenCLDevice> ProcessDevices(OpenCLJsonData openCLData)
+        */
+        //private List<OpenCLDevice> ProcessDevices(OpenCLJsonData openCLData)
+        public static List<OpenCLDevice> ProcessDevices(List<VideoControllerData> availControllers)
         {
-            var IntelOclDevices = new List<OpenCLDevice>();
-            var IntelDevices = new List<OpenCLDevice>();
+            _availableControllers = availControllers;
+            List<OpenCLDevice> IntelOclDevices = IntelDetection();
 
-            var IntelPlatformNumFound = false;
+            var IntelDevices = new List<OpenCLDevice>();
+            var IntelPlatformNumFound = WindowsDisplayAdapters.HasIntelVideoController();
+            /*
             foreach (var oclEl in openCLData.Platforms)
             {
-                /*
                 if (!oclEl.PlatformName.ToLower().Contains("intel")) continue;
                 if (!oclEl.PlatformName.ToLower().Contains("arc")) continue;
                 if (!oclEl.PlatformName.ToLower().Contains("iris")) continue;
-                */
+
                 IntelPlatformNumFound = true;
                 var IntelOpenCLPlatformStringKey = oclEl.PlatformName;
                 ComputeDeviceManager.Available.IntelOpenCLPlatformNum = oclEl.PlatformNum;
                 IntelOclDevices = oclEl.Devices;
                 Helpers.ConsolePrint(Tag,
-                    $"Intel platform found: Key: {IntelOpenCLPlatformStringKey}, Num: {ComputeDeviceManager.Available.IntelOpenCLPlatformNum}");
+                    $"Intel Arc or Iris OpenCL platform found: Key: {IntelOpenCLPlatformStringKey}, Num: {ComputeDeviceManager.Available.IntelOpenCLPlatformNum}");
                 break;
             }
-
-            if (!IntelPlatformNumFound) return IntelDevices;
-
+            */
+            /*
+            foreach (var vc in ComputeDeviceManager.Query.AvaliableVideoControllers)
+            {
+                if (vc.Name.ToLower().Contains("intel") && 
+                    (vc.Name.ToLower().Contains("arc") || vc.Name.ToLower().Contains("iris")))
+                {
+                    IntelPlatformNumFound = true;
+                    break;
+                }
+            }
+            */
+            if (!IntelPlatformNumFound)
+            {
+                Helpers.ConsolePrint("IntelQuery", "Intel Arc or Iris OpenCL platform not found");
+                return IntelDevices;
+            }
             // get only Intel gpus
             string PNPDeviceID = "";
             string[] _PNPDeviceID;
@@ -93,6 +115,8 @@ namespace NiceHashMiner.Devices.Querying
                             _PNPDeviceID = vc.PnpDeviceID.Split('\\');
                             UUID = vc.PnpDeviceID.Split('&')[0] + "&" + vc.PnpDeviceID.Split('&')[1] + "_" + vc.PnpDeviceID.Split('&')[4];
                             UUID = UUID.Replace("\\", "_");
+
+                            _IntelDeviceUuid.Add(UUID);
 
                             _mf = vc.Manufacturer;
                             _InfSection = vc.InfSection;
@@ -129,17 +153,20 @@ namespace NiceHashMiner.Devices.Querying
                         MF = _mf,
                         Uuid = UUID,
                         InfSection = _InfSection,
-                        Adl1Index = (int)oclDev.DeviceID
+                        DeviceIndex = (int)oclDev.DeviceID,
+                        DeviceHandle = oclDev.DeviceHandle
                     };
 
                     _busIdInfos.Add(oclDev.BUS_ID, info);
                 }
             }
+          
+
 
             if (IntelDevices.Count == 0)
             {
                 Helpers.ConsolePrint(Tag, "Intel GPUs count is 0");
-                return IntelDevices;
+                return IntelOclDevices;
             }
 
             Helpers.ConsolePrint(Tag, "Intel GPUs count : " + IntelDevices.Count);
@@ -150,9 +177,9 @@ namespace NiceHashMiner.Devices.Querying
                 var busIDs = new HashSet<int>();
                 // Override Intel bus IDs
                 //var overrides = ConfigManager.GeneralConfig.OverrideIntelBusIds.Split(',');
-                for (var i = 0; i < IntelDevices.Count; i++)
+                for (var i = 0; i < IntelOclDevices.Count; i++)
                 {
-                    var IntelOclDev = IntelDevices[i];
+                    var IntelOclDev = IntelOclDevices[i];
                     /*
                     if (overrides.Count() > i &&
                         int.TryParse(overrides[i], out var overrideBus) &&
@@ -171,7 +198,7 @@ namespace NiceHashMiner.Devices.Querying
                 }
 
                 // check if unique
-                isBusIDOk = isBusIDOk && busIDs.Count == IntelDevices.Count;
+                isBusIDOk = isBusIDOk && busIDs.Count == IntelOclDevices.Count;
             }
             // print BUS id status
             Helpers.ConsolePrint(Tag,
@@ -183,75 +210,50 @@ namespace NiceHashMiner.Devices.Querying
             // Intel device creation (in NHM context)
             if (isBusIDOk)
             {
-                return IntelDeviceCreationPrimary(IntelDevices);
+                return IntelDeviceCreationPrimary(IntelOclDevices);
             }
 
-            return IntelDeviceCreationFallback(IntelDevices);
+            return IntelDeviceCreationFallback(IntelOclDevices);
         }
 
-        private List<OpenCLDevice> IntelDeviceCreationPrimary(List<OpenCLDevice> IntelDevices)
+        static byte[] StreamToByteArray(Stream inputStream)
         {
-            ctl_init_args_t CtlInitArgs = new ctl_init_args_t();
-            CtlInitArgs.AppVersion = (1 << 16) | (1 & 0x0000ffff);
-            CtlInitArgs.flags = (1 << 0);
-            CtlInitArgs.Size = (uint)Marshal.SizeOf(typeof(ctl_init_args_t));
-            CtlInitArgs.Version = 0;
-            var auid = new ctl_application_id_t();
-            auid.Data1 = 0;
-            auid.Data2 = 0;
-            auid.Data3 = 0;
-            auid.Data40 = 0;
-            auid.Data41 = 0;
-            CtlInitArgs.ApplicationUID = auid;
-            ulong hAPIHandle = 0;
-            uint Adapter_count = 0;
-            ulong[] hDevices = new ulong[1];
-            //var r = IGCL.IGCL.TestIntel(ref CtlInitArgs, ref hAPIHandle);
-            var r = IGCL.IGCL.ctlInit(ref CtlInitArgs, ref hAPIHandle);
-            if (r == IGCL.IGCL._ctl_result_t.CTL_RESULT_SUCCESS)
+            if (!inputStream.CanRead)
             {
-                Helpers.ConsolePrint("IGCL **********", "Handle: " + hAPIHandle.ToString());
-                //Helpers.ConsolePrint("IGCL **********", "ApplicationUID: " + CtlInitArgs.ApplicationUID);
-                //Helpers.ConsolePrint("IGCL **********", "SupportedVersion: " + CtlInitArgs.SupportedVersion.ToString());
-                //Helpers.ConsolePrint("IGCL **********", "flags: " + CtlInitArgs.flags);
-                r = IGCL.IGCL.ctlEnumerateDevices(hAPIHandle, out Adapter_count, hDevices);
-                //r = IGCL.IGCL.ctlEnumerateDevices(hAPIHandle, ref Adapter_count);
-                Helpers.ConsolePrint("IGCL **********", "Adapter_count: " + Adapter_count.ToString());
-                Helpers.ConsolePrint("IGCL **********", "hDevices count: " + hDevices.Count().ToString());
-                Helpers.ConsolePrint("IGCL **********", "result: " + r.ToString());
-                Helpers.ConsolePrint("IGCL **********", "device handle: " + hDevices[0].ToString());
-                /*
-                foreach(var d in hDevices)
-                {
-                    Helpers.ConsolePrint("IGCL **********", "device handle: " + d.ToString());
-                }
-                */
+                throw new ArgumentException();
             }
-            else
+
+            // This is optional
+            if (inputStream.CanSeek)
             {
-                Helpers.ConsolePrint("IGCL **********", r.ToString());
+                inputStream.Seek(0, SeekOrigin.Begin);
             }
-            
-            //Process.GetCurrentProcess().Kill();
 
+            byte[] output = new byte[inputStream.Length];
+            int bytesRead = inputStream.Read(output, 0, output.Length);
+            Debug.Assert(bytesRead == output.Length, "Bytes read from stream matches stream length");
+            return output;
+        }
 
-            Helpers.ConsolePrint(Tag, "Using Intel device creation DEFAULT Reliable mappings");
+        private static List<OpenCLDevice> IntelDeviceCreationPrimary(List<OpenCLDevice> intelDevices)
+        {
+            Helpers.ConsolePrint(Tag, "Using INTEL device creation DEFAULT Reliable mappings");
             Helpers.ConsolePrint(Tag,
-                IntelDevices.Count == _IntelDeviceUuid.Count
-                    ? "Intel OpenCL query COUNTS GOOD/SAME"
-                    : "Intel OpenCL query COUNTS DIFFERENT/BAD");
+                intelDevices.Count == _IntelDeviceUuid.Count
+                    ? "INTEL OpenCL query COUNTS GOOD/SAME"
+                    : "INTEL OpenCL query COUNTS DIFFERENT/BAD");
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("");
-            stringBuilder.AppendLine("QueryIntel [DEFAULT query] devices: ");
+            stringBuilder.AppendLine("QueryINTEL [DEFAULT query] devices: ");
             try
             {
-                foreach (var dev in IntelDevices.OrderBy(i => i.BUS_ID))//****************************************************
-                //foreach (var dev in IntelDevices)
+                foreach (var dev in intelDevices.OrderBy(i => i.BUS_ID))//****************************************************
+                //foreach (var dev in amdDevices)
                 {
                     ComputeDeviceManager.Available.HasIntel = true;
 
                     var busID = dev.BUS_ID;
-                    var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE + 16384 * 1024 + 1375731712;//6442450944
+                    var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE + 16384 * 1024;
                     //var man = dev._CL_DEVICE_VENDOR_ID;
 
                     if (busID != -1 && _busIdInfos.ContainsKey(busID))
@@ -264,16 +266,17 @@ namespace NiceHashMiner.Devices.Querying
                         {
                             DeviceName = deviceName,
                             UUID = _busIdInfos[busID].Uuid,
-                            AdapterIndex = _busIdInfos[busID].Adl1Index,
+                            AdapterIndex = _busIdInfos[busID].DeviceIndex,
+                            DeviceHandle = _busIdInfos[busID].DeviceHandle,
                             IntelManufacturer = _busIdInfos[busID].MF,
                             DeviceGlobalMemory = gpuRAM
                         };
-                        
+
                         int _prevmonitorRefreshRate = 0;
                         //*************
                         string PnpDeviceID = "";
                         ulong gpumem = 0;
-                        ulong gpumemadd = 1048576;//add 1MB to gpumem
+                        ulong gpumemadd = 1048576; //add 1MB to gpumem
                         var moc = new ManagementObjectSearcher("root\\CIMV2",
                             "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
 
@@ -284,8 +287,6 @@ namespace NiceHashMiner.Devices.Querying
                             PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
                             gpumem = memTmp + gpumemadd‬;
 
-
-
                             if (PnpDeviceID.Split('&')[4].Equals(newIntelDev.UUID.Split('_')[4]))
                             {
                                 if (_monitorRefreshRate > 0 & _monitorRefreshRate > _prevmonitorRefreshRate)
@@ -294,7 +295,7 @@ namespace NiceHashMiner.Devices.Querying
                                 }
                                 if (newIntelDev.DeviceGlobalMemory < gpumem)
                                 {
-                                    Helpers.ConsolePrint("IntelQUERY", deviceName + " GPU mem size is not equal: " + newIntelDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
+                                    Helpers.ConsolePrint("INTELQUERY", deviceName + " GPU mem size is not equal: " + newIntelDev.DeviceGlobalMemory.ToString() + " < " + gpumem.ToString());
                                     newIntelDev.DeviceGlobalMemory = gpumem;
                                     dev._CL_DEVICE_GLOBAL_MEM_SIZE = gpumem;
                                 }
@@ -304,12 +305,12 @@ namespace NiceHashMiner.Devices.Querying
                         var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
                             .DisableDetectionINTEL;
                         var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
-                        var isDisabledGroupStr = isDisabledGroup ? " (Intel group disabled)" : "";
+                        var isDisabledGroupStr = isDisabledGroup ? " (INTEL group disabled)" : "";
                         var etherumCapableStr = newIntelDev.IsEtherumCapable() ? "YES" : "NO";
 
                         ComputeDeviceManager.Available.Devices.Add(
                             new IntelComputeDevice(newIntelDev, ++ComputeDeviceManager.Query.GpuCount, false,
-                                _busIdInfos[busID].Adl2Index));
+                                _busIdInfos[busID].DeviceIndex));
                         var infSection = newIntelDev.InfSection;
                         //var PnpDeviceID = dev.PnpDeviceID;
                         //var PnpDeviceID = vidController.PnpDeviceID;
@@ -317,7 +318,7 @@ namespace NiceHashMiner.Devices.Querying
                         infoToHashed += newIntelDev.UUID.Replace("PCI_", "PCI/");//PnpDeviceID неверный!
 
                         var uuidHEX = UUID.GetHexUUID(infoToHashed);
-                        var Newuuid = $"Intel-{uuidHEX}";
+                        var Newuuid = $"INTEL-{uuidHEX}";
                         newIntelDev.NewUUID = Newuuid;
                         // just in case
                         try
@@ -347,15 +348,391 @@ namespace NiceHashMiner.Devices.Querying
             }
             catch (Exception er)
             {
-                Helpers.ConsolePrint("IntelDeviceCreationPrimary", er.ToString());
+                Helpers.ConsolePrint("iNTELDeviceCreationPrimary", er.ToString());
             }
 
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
+            return intelDevices;
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate _ctl_result_t ctlEnumerateDevices(ulong hAPIHandle, IntPtr _Adapter_count, ulong[] hDevices);
+        public static List<OpenCLDevice> IntelDetection()
+        {
+            List<OpenCLDevice> IntelDevices = new List<OpenCLDevice>();
+
+            _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+            ctl_init_args_t CtlInitArgs = new ctl_init_args_t();
+            CtlInitArgs.AppVersion = CTL_MAKE_VERSION(CTL_IMPL_MAJOR_VERSION, CTL_IMPL_MINOR_VERSION);
+            CtlInitArgs.flags = CTL_INIT_FLAG_USE_LEVEL_ZERO; 
+            CtlInitArgs.Size = (uint)Marshal.SizeOf(typeof(ctl_init_args_t));
+            CtlInitArgs.Version = 0;
+            CtlInitArgs.SupportedVersion = 0; 
+
+            IntPtr hAPIHandle = new IntPtr(0);
+            _ctl_result_t r = (_ctl_result_t)ctlInit(ref CtlInitArgs, ref hAPIHandle);
+            if (r == _ctl_result_t.CTL_RESULT_SUCCESS)
+            {
+                string sv = (CtlInitArgs.SupportedVersion & 0xFFFF).ToString() + "." + (CtlInitArgs.SupportedVersion >> 16).ToString();
+                uint Adapter_count = 0;
+
+                r = (_ctl_result_t)ctlEnumerateDevices(hAPIHandle, ref Adapter_count, null);
+                if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                {
+                    Helpers.ConsolePrint("IntelDeviceCreationPrimary", "ctlEnumerateDevices 1 ERROR: " + r.ToString());
+                    return IntelDevices;
+                }
+                Helpers.ConsolePrint("IntelDeviceCreationPrimary", "Adapter_count: " + Adapter_count.ToString("X"));
+
+                long[] hDevices = new long[(int)Adapter_count];
+                r = (_ctl_result_t)ctlEnumerateDevices(hAPIHandle, ref Adapter_count, hDevices);
+                if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                {
+                    Helpers.ConsolePrint("IntelDeviceCreationPrimary", "ctlEnumerateDevices 2 ERROR: " + r.ToString());
+                    return IntelDevices;
+                }
+
+                for (int dev = 0; dev < Adapter_count; dev++)
+                {
+                    OpenCLDevice intelOpenCLDevice = new OpenCLDevice();
+                    Luid AdapterID;
+                    ctl_device_adapter_properties_t StDeviceAdapterProperties = new ctl_device_adapter_properties_t();
+                    StDeviceAdapterProperties.Size = Marshal.SizeOf(typeof(ctl_device_adapter_properties_t));
+                    StDeviceAdapterProperties.pDeviceID = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Luid)));
+                    StDeviceAdapterProperties.device_id_size = Marshal.SizeOf(typeof(Luid));
+                    StDeviceAdapterProperties.Version = 2;
+
+                    r = ctlGetDeviceProperties(hDevices[dev], ref StDeviceAdapterProperties);
+                    if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                    {
+                        Helpers.ConsolePrint("IntelDeviceCreationPrimary", "ctlGetDeviceProperties ERROR: " + r.ToString());
+                        return IntelDevices;
+                    }
+                    if (StDeviceAdapterProperties.device_type != ctl_device_type_t.CTL_DEVICE_TYPE_GRAPHICS) continue;
+
+                    intelOpenCLDevice._CL_DEVICE_TYPE = "GPU";
+                    string n = new string(StDeviceAdapterProperties.name);
+                    intelOpenCLDevice._CL_DEVICE_NAME = n.TrimEnd('\u0000');
+                    intelOpenCLDevice._CL_DEVICE_VENDOR_ID = StDeviceAdapterProperties.pci_subsys_vendor_id;
+                    intelOpenCLDevice._CL_DEVICE_VERSION = StDeviceAdapterProperties.rev_id.ToString();
+                    intelOpenCLDevice._CL_DRIVER_VERSION = StDeviceAdapterProperties.driver_version.ToString();
+                    intelOpenCLDevice.DeviceHandle = hDevices[dev];
+
+                    ctl_pci_properties_t Pci_properties = new ctl_pci_properties_t();
+                    Pci_properties.Size = Marshal.SizeOf(typeof(ctl_pci_properties_t));
+                    r = ctlPciGetProperties(hDevices[dev], ref Pci_properties);
+                    if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                    {
+                        Helpers.ConsolePrint("IntelDeviceCreationPrimary", "ctlPciGetProperties ERROR: " + r.ToString());
+                        //ctlClose(hAPIHandle);
+                        return IntelDevices;
+                    }
+                    intelOpenCLDevice.BUS_ID = Pci_properties.address.bus;
+                    intelOpenCLDevice.DeviceID = Pci_properties.address.device;
+
+                    //*************************
+                    uint MemoryHandlerCount = 0;
+
+                    r = (_ctl_result_t)ctlEnumMemoryModules(hDevices[dev], ref MemoryHandlerCount, null);
+                    if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                    {
+                        Helpers.ConsolePrint("IntelDeviceCreationPrimary", "ctlEnumMemoryModules 1 ERROR: " + r.ToString());
+                        //ctlClose(hAPIHandle);
+                        return IntelDevices;
+                    }
+
+                    long[] pMemoryHandle = new long[(int)MemoryHandlerCount];
+                    r = (_ctl_result_t)ctlEnumMemoryModules(hDevices[dev], ref MemoryHandlerCount, pMemoryHandle);
+                    if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                    {
+                        Helpers.ConsolePrint("IntelDeviceCreationPrimary", "ctlEnumMemoryModules 2 ERROR: " + r.ToString());
+                        //ctlClose(hAPIHandle);
+                        return IntelDevices;
+                    }
+
+                    for (int mem = 0; mem < MemoryHandlerCount; mem++)
+                    {
+                        ctl_mem_properties_t memoryProperties = new ctl_mem_properties_t();
+                        memoryProperties.Size = Marshal.SizeOf(typeof(ctl_mem_properties_t));
+                        r = (_ctl_result_t)ctlMemoryGetProperties(pMemoryHandle[mem], ref memoryProperties);
+                        if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                        {
+                            Helpers.ConsolePrint("IntelDeviceCreationPrimary", "ctlMemoryGetProperties ERROR: " + r.ToString());
+                            //ctlClose(hAPIHandle);
+                            return IntelDevices;
+                        }
+
+                        if (memoryProperties.location == ctl_mem_loc_t.CTL_MEM_LOC_DEVICE)
+                        {
+                            intelOpenCLDevice._CL_DEVICE_GLOBAL_MEM_SIZE = memoryProperties.physicalSize;
+                            break;
+                        }
+                    }
+                    IntelDevices.Add(intelOpenCLDevice);
+                }
+            }
+            else
+            {
+                Helpers.ConsolePrint("IntelDeviceCreationPrimary", r.ToString());
+            }
+            //ctlClose(hAPIHandle);
             return IntelDevices;
         }
 
-        private List<OpenCLDevice> IntelDeviceCreationFallback(List<OpenCLDevice> IntelDevices)
+        public static double GetTemperature(long hDevice, bool isMemTemp = false)
+        {
+            uint TemperatureHandlerCount = 0;
+            IGCL.IGCL._ctl_result_t r = (_ctl_result_t)ctlEnumTemperatureSensors(hDevice, ref TemperatureHandlerCount, null);
+            if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+            {
+                Helpers.ConsolePrint("GetTemperature", "ctlEnumTemperatureSensors 1 ERROR: " + r.ToString());
+                return -1;
+            }
+
+            long[] pTtemperatureHandle = new long[(int)TemperatureHandlerCount];
+            r = (_ctl_result_t)ctlEnumTemperatureSensors(hDevice, ref TemperatureHandlerCount, pTtemperatureHandle);
+            if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+            {
+                Helpers.ConsolePrint("GetTemperature", "ctlEnumTemperatureSensors 2 ERROR: " + r.ToString());
+                return -1;
+            }
+            for (uint t = 0; t < TemperatureHandlerCount; t++)
+            {
+                ctl_temp_properties_t temperatureProperties = new ctl_temp_properties_t();
+                    temperatureProperties.Size = Marshal.SizeOf(typeof(ctl_temp_properties_t));
+
+                r = (_ctl_result_t)ctlTemperatureGetProperties(pTtemperatureHandle[t], ref temperatureProperties);
+                if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                {
+                    Helpers.ConsolePrint("GetTemperature", "ctlTemperatureGetProperties ERROR: " + r.ToString());
+                    return -1;
+                }
+
+                if (isMemTemp)
+                {
+                    if (temperatureProperties.type == ctl_temp_sensors_t.CTL_TEMP_SENSORS_MEMORY)
+                    {
+                        double temperature = 0;
+                        r = ctlTemperatureGetState(pTtemperatureHandle[t], ref temperature);
+                        if (r == _ctl_result_t.CTL_RESULT_SUCCESS)
+                        {
+                            if (double.IsNaN(temperature)) temperature = 0.0d;
+                            return temperature;
+                        }
+                    }
+                } else
+                {
+                    if (temperatureProperties.type == ctl_temp_sensors_t.CTL_TEMP_SENSORS_GPU)
+                    {
+                        double temperature = 0;
+                        r = ctlTemperatureGetState(pTtemperatureHandle[t], ref temperature);
+                        if (r == _ctl_result_t.CTL_RESULT_SUCCESS)
+                        {
+                            if (double.IsNaN(temperature)) temperature = 0.0d;
+                            return temperature;
+                        }
+                    }
+                }
+            }
+
+                return -1;
+        }
+
+        public static int GetFan(long hDevice, bool isPercent = false)
+        {
+            uint FanHandlerCount = 0;
+            IGCL.IGCL._ctl_result_t r = ctlEnumFans(hDevice, ref FanHandlerCount, null);
+            if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+            {
+                Helpers.ConsolePrint("GetFan", "ctlEnumFans 1 ERROR: " + r.ToString());
+                return -1;
+            }
+
+            long[] pFanHandle = new long[FanHandlerCount];
+            r = (_ctl_result_t)ctlEnumFans(hDevice, ref FanHandlerCount, pFanHandle);
+            if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+            {
+                Helpers.ConsolePrint("GetFan", "ctlEnumFans 2 ERROR: " + r.ToString());
+                return -1;
+            }
+
+            ctl_fan_speed_units_t units = ctl_fan_speed_units_t.CTL_FAN_SPEED_UNITS_RPM;
+            if (isPercent)
+            {
+                units = ctl_fan_speed_units_t.CTL_FAN_SPEED_UNITS_PERCENT;
+            }
+            int speed = 0;
+            r = ctlFanGetState(pFanHandle[FanHandlerCount - 1], units, ref speed);
+            if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+            {
+                if (r == _ctl_result_t.CTL_RESULT_ERROR_UNSUPPORTED_FEATURE)
+                {
+                    //return -1;
+                }
+                else
+                {
+                    Helpers.ConsolePrint("GetFan", "ctlFanGetState ERROR: " + r.ToString());
+                    return -1;
+                }
+            } else
+            {
+                if (double.IsNaN(speed)) speed = 0;
+                return speed;
+            }
+
+            return -1;
+        }
+
+        static double deltatimestampPower = 0;
+        static double prevtimestampPower = 0;
+        static double curtimestampPower = 0;
+        static double prevgpuEnergyCounterPower = 0;
+        static double curgpuEnergyCounterPower = 0;
+
+        static SortedList<long, double> powerList = new SortedList<long, double>();
+        static DateTime prev;
+        public static double GetPower(long hDevice)
+        {
+            double power = 0;
+            try
+            {
+                DateTime now = DateTime.Now;
+                prev = now;
+                ctl_power_telemetry_t pPowerTelemetry = new ctl_power_telemetry_t();
+                pPowerTelemetry.Size = Marshal.SizeOf(typeof(ctl_power_telemetry_t));
+
+                IGCL.IGCL._ctl_result_t r = (_ctl_result_t)ctlPowerTelemetryGet(hDevice, out pPowerTelemetry);
+                if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                {
+                    Helpers.ConsolePrint("GetPower", "ctlPowerTelemetryGet: " + r.ToString());
+                    return -1;
+                }
+
+                //ctl_power_telemetry_t _pPowerTelemetry = BytesToStructure<ctl_power_telemetry_t>(getBytes(pPowerTelemetry));
+                //byte[] d = getBytes(pPowerTelemetry);
+                //File.WriteAllBytes("logs\\pPowerTelemetry.bin", d);
+
+                prevtimestampPower = curtimestampPower;
+                curtimestampPower = pPowerTelemetry.timeStamp.value.datadouble;
+                deltatimestampPower = curtimestampPower - prevtimestampPower;
+
+                if (pPowerTelemetry.gpuEnergyCounter.bSupported)
+                {
+                    prevgpuEnergyCounterPower = curgpuEnergyCounterPower;
+                    curgpuEnergyCounterPower = pPowerTelemetry.gpuEnergyCounter.value.datadouble;
+                    power = (curgpuEnergyCounterPower - prevgpuEnergyCounterPower) / deltatimestampPower;
+                    if (power > 500) power = -1;
+                    if (double.IsNaN(power))
+                    {
+                        /*
+                        byte[] d = getBytes(pPowerTelemetry);
+                        File.WriteAllBytes("logs\\pPowerTelemetry.bin", d);
+                        Helpers.ConsolePrint("GetPower", "curgpuEnergyCounter: " + curgpuEnergyCounterPower.ToString());
+                        Helpers.ConsolePrint("GetPower", "prevgpuEnergyCounter: " + prevgpuEnergyCounterPower.ToString());
+                        Helpers.ConsolePrint("GetPower", "curtimestamp: " + curtimestampPower.ToString());
+                        Helpers.ConsolePrint("GetPower", "prevtimestamp: " + prevtimestampPower.ToString());
+                        Helpers.ConsolePrint("GetPower", "deltatimestamp: " + deltatimestampPower.ToString());
+                        */
+                        power = 0;
+                    }
+                    return Math.Round(power);
+                }
+                
+                
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetPower", ex.ToString());
+            }
+
+            return -1;
+        }
+
+        static double deltatimestampLoad = 0;
+        static double prevtimestampLoad = 0;
+        static double curtimestampLoad = 0;
+        static double prevrenderComputeActivityCounter = 0;
+        static double currenderComputeActivityCounter = 0;
+        public static float GetLoad(long hDevice)
+        {
+            double load = 0;
+            try
+            {
+                ctl_power_telemetry_t pPowerTelemetry = new ctl_power_telemetry_t();
+                pPowerTelemetry.Size = Marshal.SizeOf(typeof(ctl_power_telemetry_t));
+
+                IGCL.IGCL._ctl_result_t r = (_ctl_result_t)ctlPowerTelemetryGet(hDevice, out pPowerTelemetry);
+                if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
+                {
+                    Helpers.ConsolePrint("GetLoad", "ctlPowerTelemetryGet: " + r.ToString());
+                    return -1;
+                }
+
+                prevtimestampLoad = curtimestampLoad;
+                curtimestampLoad = pPowerTelemetry.timeStamp.value.datadouble;
+                deltatimestampLoad = curtimestampLoad - prevtimestampLoad;
+
+                if (pPowerTelemetry.renderComputeActivityCounter.bSupported)
+                {
+                    prevrenderComputeActivityCounter = currenderComputeActivityCounter;
+                    currenderComputeActivityCounter = pPowerTelemetry.renderComputeActivityCounter.value.datadouble;
+                    load = ((currenderComputeActivityCounter - prevrenderComputeActivityCounter) / deltatimestampLoad) * 100;
+                    if (double.IsNaN(load)) load = 0;
+                    return (float)(Math.Round(load));
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetPower", ex.ToString());
+            }
+            return -1;
+        }
+
+        static T BytesToStructure<T>(byte[] bytes)
+        {
+            int size = Marshal.SizeOf(typeof(T));
+            if (bytes.Length < size)
+                throw new Exception("Invalid parameter");
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.Copy(bytes, 0, ptr, size);
+                return (T)Marshal.PtrToStructure(ptr, typeof(T));
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+
+        public static byte[] getBytes(ctl_power_telemetry_t str)
+        {
+            int size = Marshal.SizeOf(str);
+            byte[] arr = new byte[size];
+            IntPtr ptr = IntPtr.Zero;
+            try
+            {
+                ptr = Marshal.AllocHGlobal(size);
+                Marshal.StructureToPtr(str, ptr, true);
+                Marshal.Copy(ptr, arr, 0, size);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+            return arr;
+        }
+        public static byte[] ObjectToByteArray(Object obj)
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, obj);
+                return ms.ToArray();
+            }
+        }
+
+        private static List<OpenCLDevice> IntelDeviceCreationFallback(List<OpenCLDevice> IntelDevices)
         {
             Helpers.ConsolePrint(Tag, "Using Intel device creation FALLBACK UnReliable mappings");
             var stringBuilder = new StringBuilder();
@@ -409,7 +786,6 @@ namespace NiceHashMiner.Devices.Querying
                     stringBuilder.AppendLine($"\t\tUUID: {newIntelDev.UUID}");
                     stringBuilder.AppendLine(
                         $"\t\tMEMORY: {newIntelDev.DeviceGlobalMemory}");
-                    stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
                 }
                 catch
                 {
@@ -428,8 +804,8 @@ namespace NiceHashMiner.Devices.Querying
             public string MF;
             public string Uuid;
             public string InfSection;
-            public int Adl1Index;
-            public int Adl2Index;
+            public int DeviceIndex;
+            public long DeviceHandle;
         }
     }
 }

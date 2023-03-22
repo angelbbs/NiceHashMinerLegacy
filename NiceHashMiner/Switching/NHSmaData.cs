@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace NiceHashMiner.Switching
 {
@@ -27,20 +28,23 @@ namespace NiceHashMiner.Switching
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
 
         // Global list of SMA data, should be accessed with a lock since callbacks/timers update it
-        public static Dictionary<AlgorithmType, NiceHashSma> _currentSma;
+        private static Dictionary<AlgorithmType, NiceHashSmaTmp> _currentSma;
+        private static Dictionary<AlgorithmType, NiceHashSma> _finalSma;
         // Global list of stable algorithms, should be accessed with a lock
         private static HashSet<AlgorithmType> _stableAlgorithms;
 
         // Public for tests only
-        public static void Initialize()
+        private static void Initialize()
         {
-            //if (!Initialized)
+            if (Initialized) return;
             Helpers.ConsolePrint("NHSMA", "Try initialize SMA");
             _currentSma = null;
+            _finalSma = null;
             _stableAlgorithms = null;
-            _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+            _currentSma = new Dictionary<AlgorithmType, NiceHashSmaTmp>();
+            _finalSma = new Dictionary<AlgorithmType, NiceHashSma>();
             _stableAlgorithms = new HashSet<AlgorithmType>();
-
+            /*
             Dictionary<AlgorithmType, double> cacheDict = null;
             try
             {
@@ -54,90 +58,105 @@ namespace NiceHashMiner.Switching
             {
                 Helpers.ConsolePrint(Tag, e.ToString());
             }
-
+            */
             // _recentPaying = new Dictionary<AlgorithmType, List<double>>();
             foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
             {
                 if (algo >= 0)
                 {
                     var paying = 0d;
-                    if (cacheDict?.TryGetValue(algo, out paying) ?? false)
                         HasData = true;
 
-                    _currentSma[algo] = new NiceHashSma
+                    _currentSma[algo] = new NiceHashSmaTmp
                     {
                         Port = (int)algo + 3333,
                         Name = algo.ToString().ToLower(),
                         Algo = (int)algo,
                         Paying = paying
                     };
-                    //_recentPaying[algo] = new List<double>
-                    //{
-                    //    0
-                    //};
+                   
+                    _finalSma[algo] = new NiceHashSma
+                    {
+                        Port = (int)algo + 3333,
+                        Name = algo.ToString().ToLower(),
+                        Algo = (int)algo,
+                        Paying = paying
+                    };
+                    
+                }
+
+                if (algo == AlgorithmType.ZIL)
+                {
+                    var paying = 0d;
+                    HasData = true;
+
+                    _currentSma[algo] = new NiceHashSmaTmp
+                    {
+                        Port = (int)0,
+                        Name = algo.ToString().ToLower(),
+                        Algo = (int)algo,
+                        Paying = paying
+                    };
+
+                    _finalSma[algo] = new NiceHashSma
+                    {
+                        Port = (int)0,
+                        Name = algo.ToString().ToLower(),
+                        Algo = (int)algo,
+                        Paying = paying
+                    };
+
                 }
 
                 if (algo == AlgorithmType.DaggerHashimoto3GB)
                 {
                     var paying = 0d;
-                    if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
+                    //if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
                         HasData = true;
 
-                    //if (Divert.DaggerHashimoto3GBProfit)
+                    _currentSma[algo] = new NiceHashSmaTmp
                     {
-                        _currentSma[algo] = new NiceHashSma
-                        {
-                            Port = 3353,
-                            Name = algo.ToString().ToLower(),
-                            Algo = (int)algo,
-                            Paying = paying
-                        };
-                    }
+                        Port = 3353,
+                        Name = algo.ToString().ToLower(),
+                        Algo = (int)algo,
+                        Paying = paying
+                    };
                     /*
-                    else
+                    _finalSma[algo] = new NiceHashSma
                     {
-                        _currentSma[algo] = new NiceHashSma
-                        {
-                            Port = 3353,
-                            Name = algo.ToString().ToLower(),
-                            Algo = (int)algo,
-                            Paying = 0.0d
-                        };
-                    }
+                        Port = 3353,
+                        Name = algo.ToString().ToLower(),
+                        Algo = (int)algo,
+                        Paying = paying
+                    };
                     */
                 }
                 if (algo == AlgorithmType.DaggerHashimoto4GB)
                 {
                     var paying = 0d;
-                    if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
+                    //if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
                         HasData = true;
 
-                    //if (Divert.DaggerHashimoto4GBProfit)
-                    {
-                        _currentSma[algo] = new NiceHashSma
+                        _currentSma[algo] = new NiceHashSmaTmp
                         {
                             Port = 3353,
                             Name = algo.ToString().ToLower(),
                             Algo = (int)algo,
                             Paying = paying
                         };
-                    }
                     /*
-                    else
+                    _finalSma[algo] = new NiceHashSma
                     {
-                        _currentSma[algo] = new NiceHashSma
-                        {
-                            Port = 3353,
-                            Name = algo.ToString().ToLower(),
-                            Algo = (int)algo,
-                            Paying = 0.0d
-                        };
-                    }
+                        Port = 3353,
+                        Name = algo.ToString().ToLower(),
+                        Algo = (int)algo,
+                        Paying = paying
+                    };
                     */
                 }
             }
-
             Initialized = true;
+            FinalizeSma();
         }
 
         public static void InitializeIfNeeded()
@@ -153,7 +172,9 @@ namespace NiceHashMiner.Switching
         /// <param name="newSma">Algorithm/profit dictionary with new values</param>
         public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma, bool average = true)
         {
+            InitializeIfNeeded();
             CheckInit();
+
             lock (_currentSma)
             {
                 try
@@ -164,7 +185,6 @@ namespace NiceHashMiner.Switching
                         {
                             if (average)
                             {
-                                //Helpers.ConsolePrint("UpdateSmaPaying", algo.ToString() + " " + _currentSma[algo].Paying.ToString() + " " + newSma[algo].ToString());
                                 if (_currentSma[algo].Paying > 0 && newSma[algo] > 0)
                                 {
                                     _currentSma[algo].Paying = (_currentSma[algo].Paying + newSma[algo]) / 2;
@@ -194,6 +214,7 @@ namespace NiceHashMiner.Switching
                 if (ConfigManager.GeneralConfig.UseSmaCache)
                 {
                     // Cache while in lock so file is not accessed on multiple threads
+                    /*
                     try
                     {
                         var cache = JsonConvert.SerializeObject(newSma);
@@ -203,6 +224,7 @@ namespace NiceHashMiner.Switching
                     {
                         Helpers.ConsolePrint(Tag, e.ToString());
                     }
+                    */
                 }
             }
 
@@ -214,6 +236,7 @@ namespace NiceHashMiner.Switching
         /// </summary>
         public static void UpdatePayingForAlgo(AlgorithmType algo, double paying, bool average = false)
         {
+            InitializeIfNeeded();
             CheckInit();
             lock (_currentSma)
             {
@@ -227,7 +250,6 @@ namespace NiceHashMiner.Switching
                     _currentSma[algo].Paying = paying;
                 }
             }
-            //Helpers.ConsolePrint("UpdatePayingForAlgo", "algo: " + algo.ToString() + " paying: " + paying.ToString());
             HasData = true;
         }
 
@@ -282,18 +304,53 @@ namespace NiceHashMiner.Switching
         /// <returns>True iff we know about this algo</returns>
         public static bool TryGetSma(AlgorithmType algo, out NiceHashSma sma)
         {
+            InitializeIfNeeded();
             CheckInit();
-            lock (_currentSma)
+            lock (_finalSma)
             {
-                if (_currentSma.ContainsKey(algo))
+                if (_finalSma.ContainsKey(algo))
                 {
-                    sma = _currentSma[algo];
+                    sma = _finalSma[algo];
                     return true;
                 }
             }
 
             sma = null;
             return false;
+        }
+
+        public static void FinalizeSma()
+        {
+            Helpers.ConsolePrint("NHSMA", "FinalizeSma");
+            InitializeIfNeeded();
+            CheckInit();
+            
+            _finalSma.Clear();
+
+            lock (_finalSma)
+            {
+                foreach (var final_sma in _currentSma)
+                {
+                    NiceHashSma v = new NiceHashSma();
+                    v.Algo = final_sma.Value.Algo;
+                    v.Name = final_sma.Value.Name;
+                    v.Paying = final_sma.Value.Paying;
+                    v.Port = final_sma.Value.Port;
+                    _finalSma.Add(final_sma.Key, v);
+                }
+            }
+            
+            /*
+            try
+            {
+                var cache = JsonConvert.SerializeObject(_finalSma);
+                File.WriteAllText(CachedFile, cache);
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(Tag, e.ToString());
+            }
+            */
         }
 
         /// <summary>
@@ -307,7 +364,7 @@ namespace NiceHashMiner.Switching
             InitializeIfNeeded();
             CheckInit();
 
-            if (TryGetSma(algo, out var sma))
+            if (TryGetSma(algo, out NiceHashSma sma))
             {
                 paying = sma.Paying;
                 return true;
@@ -339,9 +396,9 @@ namespace NiceHashMiner.Switching
         {
             CheckInit();
             var dict = new Dictionary<AlgorithmType, double>();
-            lock (_currentSma)
+            lock (_finalSma)
             {
-                foreach (var kvp in _currentSma)
+                foreach (var kvp in _finalSma)
                 {
                     //if (_stableAlgorithms.Contains(kvp.Key) == Enabled)
                     //{
@@ -363,68 +420,5 @@ namespace NiceHashMiner.Switching
             if (!Initialized)
                 throw new InvalidOperationException("NHSmaData cannot be used before initialization");
         }
-
-        #region Obsolete
-
-        //[Obsolete]
-        //public void AppendPayingForAlgo(AlgorithmType algo, double paying)
-        //{
-        //    if (algo >= 0 && _recentPaying.ContainsKey(algo))
-        //    {
-        //        if (_recentPaying[algo].Count >= ConfigManager.GeneralConfig.NormalizedProfitHistory || CurrentPayingForAlgo(algo) == 0)
-        //        {
-        //            _recentPaying[algo].RemoveAt(0);
-        //        }
-        //        _recentPaying[algo].Add(paying);
-        //    }
-        //}
-
-        //[Obsolete]
-        //public Dictionary<AlgorithmType, NiceHashSma> NormalizedSma()
-        //{
-        //    foreach (var algo in _recentPaying.Keys)
-        //    {
-        //        if (_currentSma.ContainsKey(algo))
-        //        {
-        //            var current = CurrentPayingForAlgo(algo);
-
-        //            if (ConfigManager.GeneralConfig.NormalizedProfitHistory > 0
-        //                && _recentPaying[algo].Count >= ConfigManager.GeneralConfig.NormalizedProfitHistory)
-        //            {
-        //                // Find IQR
-        //                var quartiles = _recentPaying[algo].Quartiles();
-        //                var IQR = quartiles.Item3 - quartiles.Item1;
-        //                var TQ = quartiles.Item3;
-
-        //                if (current > (IQR * ConfigManager.GeneralConfig.IQROverFactor) + TQ)
-        //                {
-        //                    // result is deviant over
-        //                    var norm = (IQR * ConfigManager.GeneralConfig.IQRNormalizeFactor) + TQ;
-        //                    Helpers.ConsolePrint("PROFITNORM",
-        //                        $"Algorithm {_currentSma[algo].name} profit deviant, {(current - TQ) / IQR} IQRs over ({current} actual, {TQ} 3Q). Normalizing to {norm}");
-        //                    _currentSma[algo].paying = norm;
-        //                }
-        //                else
-        //                {
-        //                    _currentSma[algo].paying = current;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                _currentSma[algo].paying = current;
-        //            }
-        //        }
-        //    }
-
-        //    return _currentSma;
-        //}
-
-        //[Obsolete]
-        //private double CurrentPayingForAlgo(AlgorithmType algo)
-        //{
-        //    return _recentPaying.ContainsKey(algo) ? _recentPaying[algo].LastOrDefault() : 0;
-        //}
-
-        #endregion
     }
 }

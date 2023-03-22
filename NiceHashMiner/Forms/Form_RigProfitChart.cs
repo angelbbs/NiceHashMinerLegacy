@@ -98,169 +98,174 @@ namespace NiceHashMiner.Forms
         }
         void ChartData(object sender, EventArgs e)
         {
-            if (!ConfigManager.GeneralConfig.EnableAPIkeys && Form_Main.walletType.Equals("P2SH"))
+            try
             {
-                checkBox_EnableChart.Checked = false;
-                checkBox_EnableChart.Update();
-                //this.Close();
-                //return;
-            }
-            totalRateLocal = totalRateLocal + MinersManager.GetTotalRate();
-            LocalProfitsCount++;
-            if (FormChartMoved || Form_Main.FormMainMoved || Form_Settings.FormSettingsMoved || Form_Benchmark.FormBenchmarkMoved) return;
-
-            if (ConfigManager.GeneralConfig.ChartFiat)
-            {
-                CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(MinersManager.GetTotalRate() * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
-            }
-            else
-            {
-                CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                    ": " + MinersManager.GetTotalRate() * 1000 + " " + CurrencyName;
-            }
-
-            if (Form_Main.RigProfits.Count <= ProfitsCount)
-            {
-                return;
-            }
-            if (Form_Main.RigProfits.Count == 0)
-            {
-                return;
-            }
-
-            Form_Main.RigProfitList lastRigProfit = new Form_Main.RigProfitList();
-            lastRigProfit.currentPower = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].currentPower;
-            lastRigProfit.currentProfit = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].currentProfit;
-            lastRigProfit.currentProfitAPI = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].currentProfitAPI;
-            lastRigProfit.DateTime = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].DateTime;
-            lastRigProfit.totalPowerRate = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].totalPowerRate;
-            //lastRigProfit.totalRate = totalRateLocal / LocalProfitsCount;//усредняем за прошедшую минуту
-            lastRigProfit.totalRate = MinersManager.GetTotalRate();
-            lastRigProfit.unpaidAmount = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].unpaidAmount;
-
-
-
-            Form_Main.RigProfits[Form_Main.RigProfits.Count - 1] = lastRigProfit;
-            LocalProfitsCount = 0;
-            totalRateLocal = 0;
-            
-            //Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
-
-            if (ConfigManager.GeneralConfig.ChartFiat)
-            {
-                chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalPowerRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
-                chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
-                chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
-
-            }
-            else
-            {
-                chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalPowerRate * 1000);
-                chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalRate * 1000);
-                chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
-            }
-
-            //chartRigProfit.Series["Series3"].Enabled = false;
-            chartRigProfit.ChartAreas[0].AxisX.Maximum = ProfitsCount;
-            if (ProfitsCount > 60 * 24)
-            {
-                chartRigProfit.ChartAreas[0].AxisX.ScaleView.Size = 60 * 24;//размер скрола
-                chartRigProfit.ChartAreas[0].AxisX.ScaleView.Scroll(ProfitsCount);//скролл
-            }
-
-            int h = ProfitsCount / 60;
-            if (ProfitsCount / 60 == Math.Truncate((double)(ProfitsCount / 60)))
-            {
-                if (Form_Main.lastRigProfit.DateTime.Hour == 0)
+                if (!ConfigManager.GeneralConfig.EnableAPIkeys && Form_Main.walletType.Equals("P2SH"))
                 {
-                    chartRigProfit.Series[0].Points[ProfitsCount].AxisLabel = Form_Main.RigProfits[0].DateTime.AddHours((double)h).ToString("dd-MM-yyyy HH:mm:ss");
+                    checkBox_EnableChart.Checked = false;
+                    checkBox_EnableChart.Update();
+                    //this.Close();
+                    //return;
+                }
+                totalRateLocal = totalRateLocal + MinersManager.GetTotalRate();
+                LocalProfitsCount++;
+                if (FormChartMoved || Form_Main.FormMainMoved || Form_Settings.FormSettingsMoved || Form_Benchmark.FormBenchmarkMoved) return;
+
+                if (ConfigManager.GeneralConfig.ChartFiat)
+                {
+                    CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                    chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
+                        ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(MinersManager.GetTotalRate() * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
                 }
                 else
                 {
-                    chartRigProfit.Series[0].Points[ProfitsCount].AxisLabel = Form_Main.RigProfits[0].DateTime.AddHours((double)h).ToString("HH:mm:ss");
+                    CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                    chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
+                        ": " + MinersManager.GetTotalRate() * 1000 + " " + CurrencyName;
                 }
-            }
 
-            totalRateAll = 0;
-            //currentProfitAll = 0;
-            currentProfitAllAPI = 0;
-            //            Helpers.ConsolePrint("ChartData", "totalPowerRate: " + Form_Main.lastRigProfit.totalPowerRate.ToString());
+                if (Form_Main.RigProfits.Count <= ProfitsCount)
+                {
+                    return;
+                }
+                if (Form_Main.RigProfits.Count == 0)
+                {
+                    return;
+                }
+
+                Form_Main.RigProfitList lastRigProfit = new Form_Main.RigProfitList();
+                lastRigProfit.currentPower = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].currentPower;
+                lastRigProfit.currentProfit = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].currentProfit;
+                lastRigProfit.currentProfitAPI = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].currentProfitAPI;
+                lastRigProfit.DateTime = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].DateTime;
+                lastRigProfit.totalPowerRate = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].totalPowerRate;
+                //lastRigProfit.totalRate = totalRateLocal / LocalProfitsCount;//усредняем за прошедшую минуту
+                lastRigProfit.totalRate = MinersManager.GetTotalRate();
+                lastRigProfit.unpaidAmount = Form_Main.RigProfits[Form_Main.RigProfits.Count - 1].unpaidAmount;
 
 
-            //Helpers.ConsolePrint("***********", (Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000 * ExchangeRateApi.GetUsdExchangeRate()).ToString());
-            for (int i = 0; i < Form_Main.RigProfits.Count; i++)
-            {
-                totalRateAll = totalRateAll + Form_Main.RigProfits[i].totalRate * 1000;
-                //currentProfitAll = currentProfitAll + Form_Main.RigProfits[i].currentProfit * 1000;
-                currentProfitAllAPI = currentProfitAllAPI + Form_Main.RigProfits[i].currentProfitAPI * 1000;
-            }
 
-            ProfitsCount++;
+                Form_Main.RigProfits[Form_Main.RigProfits.Count - 1] = lastRigProfit;
+                LocalProfitsCount = 0;
+                totalRateLocal = 0;
 
-            var cpAPI = currentProfitAllAPI / totalRateAll;
-            ce = currentProfitAllAPI / (Form_Main.RigProfits.Count);
-            cel = totalRateAll / (Form_Main.RigProfits.Count);
-            string ces = "";
-            string cesl = "";
+                //Form_Main.lastRigProfit.totalRate = Math.Round(MinersManager.GetTotalRate(), 9);
 
-            if (ConfigManager.GeneralConfig.ChartFiat)
-            {
-                CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                ces = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(ce * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
-                cesl = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(cel * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
-                chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
-                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
-                chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
-                chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power") +
-                    ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalPowerRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
-            }
-            else
-            {
-                CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                ces = Math.Round((ce), 5).ToString();
-                cesl = Math.Round((cel), 5).ToString();
-                chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
-                    ": " + Form_Main.lastRigProfit.currentProfitAPI * 1000 + " " + CurrencyName;
-                chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                    ": " + Form_Main.lastRigProfit.totalRate * 1000 + " " + CurrencyName;
-                chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power") +
-                    ": " + Form_Main.lastRigProfit.totalPowerRate * 1000 + " " + CurrencyName;
-            }
+                if (ConfigManager.GeneralConfig.ChartFiat)
+                {
+                    chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalPowerRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
+                    chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
+                    chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2));
 
-            if (currentProfitAllAPI == 0 || totalRateAll == 0)
-            {
-                label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " --";
-                label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " --";
-                label_Total_local_profit.Text = International.GetText("Form_Profit_Total_local_profitabilities") + " --";
-            }
-            if (currentProfitAllAPI != 0 && totalRateAll != 0)
-            {
-                label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " " +
-                    Math.Round((cpAPI * 100), 1).ToString() + "%";
-            }
-            if (ce != 0)
-            {
-                label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " " + ces + " " + CurrencyName;
-            }
-            if (cel != 0)
-            {
-                label_Total_local_profit.Text = International.GetText("Form_Profit_Total_local_profitabilities") + " " + cesl + " " + CurrencyName;
-            }
-            //chartRigProfit.Update();
-            //GC.Collect();
-            if (Form_Main.ChartDataAvail > 0)
-            {
-                buttonClear.BackgroundImage = Properties.Resources.recycle2;
-            }
-            else
-            {
-                buttonClear.BackgroundImage = Properties.Resources.recycle1;
-            }
+                }
+                else
+                {
+                    chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalPowerRate * 1000);
+                    chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalRate * 1000);
+                    chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
+                }
 
+                //chartRigProfit.Series["Series3"].Enabled = false;
+                chartRigProfit.ChartAreas[0].AxisX.Maximum = ProfitsCount;
+                if (ProfitsCount > 60 * 24)
+                {
+                    chartRigProfit.ChartAreas[0].AxisX.ScaleView.Size = 60 * 24;//размер скрола
+                    chartRigProfit.ChartAreas[0].AxisX.ScaleView.Scroll(ProfitsCount);//скролл
+                }
+
+                int h = ProfitsCount / 60;
+                if (ProfitsCount / 60 == Math.Truncate((double)(ProfitsCount / 60)))
+                {
+                    if (Form_Main.lastRigProfit.DateTime.Hour == 0)
+                    {
+                        chartRigProfit.Series[0].Points[ProfitsCount].AxisLabel = Form_Main.RigProfits[0].DateTime.AddHours((double)h).ToString("dd-MM-yyyy HH:mm:ss");
+                    }
+                    else
+                    {
+                        chartRigProfit.Series[0].Points[ProfitsCount].AxisLabel = Form_Main.RigProfits[0].DateTime.AddHours((double)h).ToString("HH:mm:ss");
+                    }
+                }
+
+                totalRateAll = 0;
+                //currentProfitAll = 0;
+                currentProfitAllAPI = 0;
+                //            Helpers.ConsolePrint("ChartData", "totalPowerRate: " + Form_Main.lastRigProfit.totalPowerRate.ToString());
+
+
+                //Helpers.ConsolePrint("***********", (Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000 * ExchangeRateApi.GetUsdExchangeRate()).ToString());
+                for (int i = 0; i < Form_Main.RigProfits.Count; i++)
+                {
+                    totalRateAll = totalRateAll + Form_Main.RigProfits[i].totalRate * 1000;
+                    //currentProfitAll = currentProfitAll + Form_Main.RigProfits[i].currentProfit * 1000;
+                    currentProfitAllAPI = currentProfitAllAPI + Form_Main.RigProfits[i].currentProfitAPI * 1000;
+                }
+
+                ProfitsCount++;
+
+                var cpAPI = currentProfitAllAPI / totalRateAll;
+                ce = currentProfitAllAPI / (Form_Main.RigProfits.Count);
+                cel = totalRateAll / (Form_Main.RigProfits.Count);
+                string ces = "";
+                string cesl = "";
+
+                if (ConfigManager.GeneralConfig.ChartFiat)
+                {
+                    CurrencyName = $"{ExchangeRateApi.ActiveDisplayCurrency}/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                    ces = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(ce * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
+                    cesl = Math.Round((ExchangeRateApi.ConvertToActiveCurrency(cel * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit / 1000)), 2).ToString();
+                    chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
+                        ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.currentProfitAPI * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
+                    chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
+                        ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
+                    chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power") +
+                        ": " + Math.Round((ExchangeRateApi.ConvertToActiveCurrency(Form_Main.lastRigProfit.totalPowerRate * ExchangeRateApi.GetUsdExchangeRate() * Form_Main._factorTimeUnit)), 2).ToString() + " " + CurrencyName;
+                }
+                else
+                {
+                    CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                    ces = Math.Round((ce), 5).ToString();
+                    cesl = Math.Round((cel), 5).ToString();
+                    chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
+                        ": " + Form_Main.lastRigProfit.currentProfitAPI * 1000 + " " + CurrencyName;
+                    chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
+                        ": " + Form_Main.lastRigProfit.totalRate * 1000 + " " + CurrencyName;
+                    chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power") +
+                        ": " + Form_Main.lastRigProfit.totalPowerRate * 1000 + " " + CurrencyName;
+                }
+
+                if (currentProfitAllAPI == 0 || totalRateAll == 0)
+                {
+                    label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " --";
+                    label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " --";
+                    label_Total_local_profit.Text = International.GetText("Form_Profit_Total_local_profitabilities") + " --";
+                }
+                if (currentProfitAllAPI != 0 && totalRateAll != 0)
+                {
+                    label_totalEfficiency.Text = International.GetText("Form_Profit_Total_efficiency") + " " +
+                        Math.Round((cpAPI * 100), 1).ToString() + "%";
+                }
+                if (ce != 0)
+                {
+                    label_Total_actual_profitabilities.Text = International.GetText("Form_Profit_Total_actual_profitabilities") + " " + ces + " " + CurrencyName;
+                }
+                if (cel != 0)
+                {
+                    label_Total_local_profit.Text = International.GetText("Form_Profit_Total_local_profitabilities") + " " + cesl + " " + CurrencyName;
+                }
+                //chartRigProfit.Update();
+                //GC.Collect();
+                if (Form_Main.ChartDataAvail > 0)
+                {
+                    buttonClear.BackgroundImage = Properties.Resources.recycle2;
+                }
+                else
+                {
+                    buttonClear.BackgroundImage = Properties.Resources.recycle1;
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("ChartData", ex.ToString());
+            }
         }
 
         private void chartRigProfit_Click(object sender, EventArgs e)
@@ -327,7 +332,9 @@ namespace NiceHashMiner.Forms
             chartRigProfit.Series["Series3"].ChartType = SeriesChartType.Spline;
             chartRigProfit.Series["Series3"].Color = Color.Blue;
 
-
+            //chartRigProfit.Series["Series1"].SetCustomProperty("LineTension", "0.1");
+            //chartRigProfit.Series["Series2"].SetCustomProperty("LineTension", "0.1");
+            //chartRigProfit.Series["Series3"].SetCustomProperty("LineTension", "0.1");
             //chartRigProfit.Series["Series1"].SetCustomProperty("LineTension", "0.9");//0.8 by default
             //chartRigProfit.Series["Series3"].Color = Color.Aqua;
 
