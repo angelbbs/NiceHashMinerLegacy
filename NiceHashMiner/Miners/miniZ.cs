@@ -545,11 +545,11 @@ namespace NiceHashMiner.Miners
                     ad.SecondarySpeed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_is) * 1000000;
                     pers = resp.pers;
                     double[] hashrates = new double[resp.result.Count];
-                    double[] hashrates2 = new double[resp.result.Count];
+                    //double[] hashrates2 = new double[resp.result.Count];
                     for (var i = 0; i < resp.result.Count; i++)
                     {
                         hashrates[i] = resp.result[i].speed_sps;
-                        hashrates2[i] = resp.result[i].speed_is * 1000000;
+                        //hashrates2[i] = resp.result[i].speed_sps;
                     }
                     int dev = 0;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
@@ -562,18 +562,19 @@ namespace NiceHashMiner.Miners
                     {
                         _power = mPair.Device.PowerUsage;
                         mPair.Device.MiningHashrate = hashrates[dev];
-                        mPair.Device.MiningHashrateSecond = hashrates2[dev];
+                        mPair.Device.MiningHashrateSecond = 0;
 
                         if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
                         {
+                            //if (Form_Main.isZilRound)
                             if (Form_Main.isZilRound)
                             {
-                                double hashrate = readCSV(mPair.Device.ID);
-                                total = total + hashrate;
+                                //double hashrate = readCSV(mPair.Device.ID);
+                                total = total + hashrates[dev];
                                 mPair.Device.MiningHashrate = 0;
-                                if (hashrate > 0)
+                                if (hashrates[dev] > 0)
                                 {
-                                    mPair.Device.MiningHashrateSecond = hashrate;
+                                    mPair.Device.MiningHashrateSecond = hashrates[dev];
                                 }
                                 mPair.Device.AlgorithmID = (int)AlgorithmType.NONE;
                                 mPair.Device.SecondAlgorithmID = (int)AlgorithmType.DaggerHashimoto;

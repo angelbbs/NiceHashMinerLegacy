@@ -203,8 +203,16 @@ namespace NiceHashMiner.Forms
                 ProfitsCount++;
 
                 var cpAPI = currentProfitAllAPI / totalRateAll;
+                if (double.IsInfinity(cpAPI)) cpAPI = 0;
+                if (double.IsNaN(cpAPI)) cpAPI = 0;
+
                 ce = currentProfitAllAPI / (Form_Main.RigProfits.Count);
+                if (double.IsInfinity(ce)) ce = 0;
+                if (double.IsNaN(ce)) ce = 0;
+
                 cel = totalRateAll / (Form_Main.RigProfits.Count);
+                if (double.IsInfinity(cel)) cel = 0;
+                if (double.IsNaN(cel)) cel = 0;
                 string ces = "";
                 string cesl = "";
 

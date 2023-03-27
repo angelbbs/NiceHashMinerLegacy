@@ -92,7 +92,6 @@ namespace NiceHashMiner.Devices.Algorithms
         #region INTEL
         public static Dictionary<MinerBaseType, List<Algorithm>> Intel => new Dictionary<MinerBaseType, List<Algorithm>>
         {
-            /*
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
@@ -471,6 +470,9 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                     {
                     },
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Octopus, "Octopus")
+                    {
+                    },
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, "Autolykos")
                     {
                         ExtraLaunchParameters = "--mt 1"
@@ -483,6 +485,9 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                     },
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, AlgorithmType.ETCHashKHeavyHash.ToString())
+                    {
+                    },
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Octopus, AlgorithmType.KHeavyHash, AlgorithmType.OctopusKHeavyHash.ToString())
                     {
                     }
                 }

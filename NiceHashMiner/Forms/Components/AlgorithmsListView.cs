@@ -927,14 +927,17 @@ namespace NiceHashMiner.Forms.Components
                             " (" + listViewAlgorithms.SelectedItems[0].SubItems[2].Text + ")"
                         };
                         forceItem.Click += ToolStripMenuItemForce_Click;
+                        forceItem.Enabled = !IsForced();
+                        /*
                         if (IsForceEnabled())
                         {
-                            forceItem.Enabled = false;
+                          forceItem.Enabled = false;
                         }
                         else
                         {
                             forceItem.Enabled = !IsForced();
                         }
+                        */
                         contextMenuStrip1.Items.Add(forceItem);
 
                         var DisableforceItem = new ToolStripMenuItem
@@ -1275,6 +1278,17 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
             }
             return false;
         }
+        private void DisableAllForces()
+        {
+            foreach (ListViewItem lvi in listViewAlgorithms.Items)
+            {
+                if (lvi.Tag is Algorithm algorithm)
+                {
+                    algorithm.Forced = false;
+                }
+            }
+            return;
+        }
 
         private void ToolStripMenuItemForce_Click(object sender, EventArgs e)
         {
@@ -1286,6 +1300,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         if (algorithm.BenchmarkSpeed > 0)
                         {
+                            DisableAllForces();
                             algorithm.Forced = true;
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                             BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();

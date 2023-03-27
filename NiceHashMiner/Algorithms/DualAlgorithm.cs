@@ -66,6 +66,14 @@ namespace NiceHashMiner.Algorithms
                             return AlgorithmType.AutolykosKHeavyHash;
                     }
                 }
+                if (NiceHashID == AlgorithmType.Octopus)
+                {
+                    switch (SecondaryNiceHashID)
+                    {
+                        case AlgorithmType.KHeavyHash:
+                            return AlgorithmType.OctopusKHeavyHash;
+                    }
+                }
                 if (NiceHashID == AlgorithmType.ETCHash)
                 {
                     switch (SecondaryNiceHashID)
@@ -321,114 +329,6 @@ namespace NiceHashMiner.Algorithms
             IntensityPowers = new Dictionary<int, double>();
         }
 
-        #region Benchmark info
-        /*
-        public override string CurPayingRate
-        {
-            get
-            {
-                var rate = International.GetText("BenchmarkRatioRateN_A");
-                var payingRate = 0.0d;
-
-                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
-                {
-                    payingRate += BenchmarkSpeed * paying * Mult;
-                    rate = payingRate.ToString("F8");
-                }
-
-                if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying2))//ZIL
-                {
-
-                    payingRate += SecondaryBenchmarkSpeed * (secPaying2 / 30) * Mult;
-                    rate = payingRate.ToString("F8");
-                }
-                else if (SecondaryBenchmarkSpeed > 0 && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying))
-                {
-                    payingRate += SecondaryBenchmarkSpeed * secPaying * Mult;
-                    rate = payingRate.ToString("F8");
-                }
-
-                return rate;
-            }
-        }
-        */
-        /*
-        public string SecondaryCurPayingRatio
-        {
-            get
-            {
-                var ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))//ZIL
-                {
-                    ratio = (paying / 30).ToString("F8");
-                } else if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying2))
-                {
-                    ratio = paying2.ToString("F8");
-                }
-
-                return ratio;
-            }
-        }
-        */
-        /*
-        public string SecondaryBenchmarkSpeedString()
-        {
-            const string dcriStatus = " (dcri:{0})";
-            if (Enabled && IsBenchmarkPending && TuningEnabled && !string.IsNullOrEmpty(BenchmarkStatus))
-            {
-                return CurrentIntensity >= 0 ? string.Format(dcriStatus, CurrentIntensity) : BenchmarkSpeedString();
-            }
-
-            if (SecondaryBenchmarkSpeed > 0)
-            {
-                return Helpers.FormatDualSpeedOutput(SecondaryBenchmarkSpeed)
-                       + ((TuningEnabled) ? string.Format(dcriStatus, MostProfitableIntensity) : "");
-            }
-
-            return International.GetText("BenchmarkSpeedStringNone");
-        }
-        */
-        #endregion
-        /*
-        public override void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
-        {
-            base.UpdateCurProfit(profits);
-            if (NiceHashID == AlgorithmType.Autolykos && SecondaryNiceHashID == AlgorithmType.DaggerHashimoto)//ZIL
-            {
-                profits.TryGetValue(SecondaryNiceHashID, out var secPaying2);
-                SecondaryCurNhmSmaDataVal = secPaying2 / 30;
-
-            }
-            else
-            {
-                profits.TryGetValue(SecondaryNiceHashID, out var secPaying);
-                SecondaryCurNhmSmaDataVal = secPaying;
-            }
-            
-
-            IntensityUpToDate = false;
-
-            CurrentProfit = (CurNhmSmaDataVal * BenchmarkSpeed + SecondaryCurNhmSmaDataVal * SecondaryBenchmarkSpeed) * Mult;
-
-            SubtractPowerFromProfit();
-        }
-        */
-        #region ClaymoreDual Tuning
-
-        public void SetIntensitySpeedsForCurrent(double speed, double secondarySpeed)
-        {
-            IntensitySpeeds[CurrentIntensity] = speed;
-            SecondaryIntensitySpeeds[CurrentIntensity] = secondarySpeed;
-            Helpers.ConsolePrint("CDTUNING", $"Speeds set for intensity {CurrentIntensity}: {speed} / {secondarySpeed}");
-            IntensityUpToDate = false;
-        }
-
-        public void SetPowerForCurrent(double power)
-        {
-            IntensityPowers[CurrentIntensity] = power;
-            IntensityUpToDate = false;
-        }
-
         private void UpdateProfitableIntensity()
         {
             if (!NHSmaData.HasData)
@@ -491,23 +391,7 @@ namespace NiceHashMiner.Algorithms
             CurrentIntensity = -1;
         }
 
-        public double ProfitForIntensity(int intensity)
-        {
-            var profit = 0d;
-            if (NHSmaData.TryGetPaying(NiceHashID, out var paying) &&
-                IntensitySpeeds.TryGetValue(intensity, out var speed))
-            {
-                profit += speed * paying * Mult;
-            }
-
-            if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying) &&
-                SecondaryIntensitySpeeds.TryGetValue(intensity, out var secSpeed))
-            {
-                profit += secSpeed * secPaying * Mult;
-            }
-
-            return profit;
-        }
+        
 
         public double SpeedForIntensity(int intensity)
         {
@@ -521,44 +405,5 @@ namespace NiceHashMiner.Algorithms
             return speed;
         }
 
-        public string SpeedStringForIntensity(int intensity)
-        {
-            var speed = SpeedForIntensity(intensity);
-            if (speed > 0) return Helpers.FormatSpeedOutput(speed) + "H/s";
-            return International.GetText("BenchmarkSpeedStringNone");
-        }
-
-        public string SecondarySpeedStringForIntensity(int intensity)
-        {
-            var speed = SecondarySpeedForIntensity(intensity);
-            if (speed > 0) return Helpers.FormatSpeedOutput(speed) + "H/s";
-            return International.GetText("BenchmarkSpeedStringNone");
-        }
-
-        public void MakeIntensityBackup()
-        {
-            _intensitySpeedsBack = new Dictionary<int, double>(IntensitySpeeds);
-            _secondaryIntensitySpeedsBack = new Dictionary<int, double>(SecondaryIntensitySpeeds);
-            _tuningEnabledBack = TuningEnabled;
-            _tuningStartBack = TuningStart;
-            _tuningEndBack = TuningEnd;
-            _tuningIntervalBack = TuningInterval;
-            _intensityPowersBack = new Dictionary<int, double>(IntensityPowers);
-            _useIntensityPowersBack = UseIntensityPowers;
-        }
-
-        public void RestoreIntensityBackup()
-        {
-            IntensitySpeeds = new Dictionary<int, double>(_intensitySpeedsBack);
-            SecondaryIntensitySpeeds = new Dictionary<int, double>(_secondaryIntensitySpeedsBack);
-            TuningEnabled = _tuningEnabledBack;
-            TuningStart = _tuningStartBack;
-            TuningEnd = _tuningEndBack;
-            TuningInterval = _tuningIntervalBack;
-            IntensityPowers = new Dictionary<int, double>(_intensityPowersBack);
-            UseIntensityPowers = _useIntensityPowersBack;
-        }
-
-        #endregion
     }
 }

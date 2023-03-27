@@ -78,6 +78,7 @@ namespace NiceHashMiner.Forms
             checkBox_GMINER_NVIDIA_KAWPOW.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.KAWPOW_NVIDIA;
             checkBox_GMINER_NVIDIA_KHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.KHeavyHash_NVIDIA;
             checkBox_GMINER_NVIDIA_Octopus.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.Octopus_NVIDIA;
+            checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusKHeavyHash_NVIDIA;
             checkBox_GMINER_NVIDIA_ZelHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.ZelHash_NVIDIA;
             checkBox_GMINER_NVIDIA_ZHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.ZHash_NVIDIA;
 
@@ -138,6 +139,8 @@ namespace NiceHashMiner.Forms
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.KHeavyHash_NVIDIA;
                         case "Octopus":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.Octopus_NVIDIA;
+                        case "OctopusKHeavyHash":
+                            return ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusKHeavyHash_NVIDIA;
                         case "ZelHash":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.ZelHash_NVIDIA;
                         case "ZHash":
@@ -261,6 +264,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ZILConfigGMiner.KAWPOW_NVIDIA = checkBox_GMINER_NVIDIA_KAWPOW.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.KHeavyHash_NVIDIA = checkBox_GMINER_NVIDIA_KHeavyHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.Octopus_NVIDIA = checkBox_GMINER_NVIDIA_Octopus.Checked;
+            ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusKHeavyHash_NVIDIA = checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.ZelHash_NVIDIA = checkBox_GMINER_NVIDIA_ZelHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.ZHash_NVIDIA = checkBox_GMINER_NVIDIA_ZHash.Checked;
 

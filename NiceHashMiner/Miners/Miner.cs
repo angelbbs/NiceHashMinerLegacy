@@ -106,6 +106,14 @@ namespace NiceHashMiner
                         return AlgorithmType.AutolykosKHeavyHash;
                 }
             }
+            if (AlgorithmID == AlgorithmType.Octopus)
+            {
+                switch (SecondaryAlgorithmID)
+                {
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.OctopusKHeavyHash;
+                }
+            }
 
             return AlgorithmID;
         }
@@ -1377,7 +1385,44 @@ namespace NiceHashMiner
                     if (p.ToLower().Contains(minerpath) && (p.ToLower().Contains("gminer") || p.ToLower().Contains("miniz")))
                     {
                         minerrunning = true;
-                        //Helpers.ConsolePrint("++++++++++++++", minerpath);
+                        /*
+                        try
+                        {
+                            var P = new Process
+                            {
+                                StartInfo =
+                            {
+                                FileName = MinerPaths.Data.GMiner,
+                                Arguments = "--list_devices",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            }
+                            };
+                            P.Start();
+                            P.WaitForExit(2 * 1000);
+
+                            var stdOut = P.StandardOutput.ReadToEnd();
+                            var stdErr = P.StandardError.ReadToEnd();
+                            
+                            using (var reader = new StringReader(stdOut))
+                            {
+                                var line = string.Empty;
+                                do
+                                {
+                                    line = reader.ReadLine();
+                                    Helpers.ConsolePrint("*******", line);
+                                } while (line != null);
+                            }
+                            
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("MinerDelayStart", ex.ToString());
+                        }
+                        */
+
                         break;
                     }
                 }
@@ -1492,6 +1537,11 @@ namespace NiceHashMiner
                 }
                 
                 GC.Collect();
+                P.DivertHandle = Divert.DivertStart(P.Id, -1, -1, Path,
+                            strPlatform, "", false,
+                            false,
+                            false, ConfigManager.GeneralConfig.DivertRun,
+                            ConfigManager.GeneralConfig.DaggerHashimoto4GBMaxEpoch);
                 /*
                 try
                 {
@@ -2001,7 +2051,8 @@ namespace NiceHashMiner
                         pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerAutolykos ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKHeavyHash ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashKHeavyHash ||
-                        pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKHeavyHash)
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKHeavyHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusKHeavyHash)
                     {
                         strDual = "DUAL";
                     }

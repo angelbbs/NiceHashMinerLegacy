@@ -1010,9 +1010,6 @@ namespace NiceHashMiner.Miners
                     // set rates
                     if (ad != null)
                     {
-                        Form_Main.RateNoZil = _zil.RateNoZil;
-                        Form_Main.RateZil = _zil.RateZil;
-                        Form_Main.ZilFactor = _zil.ZilFactor;
                         if (ad.ZilRound)
                         {
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
@@ -1054,8 +1051,19 @@ namespace NiceHashMiner.Miners
                             {
                                 Form_Main.RateNoZil += groupMiners.CurrentRate;
                                 _zil.RateNoZilCount++;
+
+                                if (_zil.RateNoZilCount >= 100000)
+                                {
+                                    _zil.RateNoZilCount = _zil.RateNoZilCount / 20;
+                                    _zil.RateZilCount = _zil.RateZilCount / 20;
+                                    _zil.RateNoZil = _zil.RateNoZil / 20d;
+                                    _zil.RateZil = _zil.RateZil / 20d;
+                                }
                             }
                         }
+                        Form_Main.RateNoZil = _zil.RateNoZil;
+                        Form_Main.RateZil = _zil.RateZil;
+                        Form_Main.ZilFactor = _zil.ZilFactor;
 
                         _zil.RateNoZil = Form_Main.RateNoZil;
                         _zil.RateZil = Form_Main.RateZil;

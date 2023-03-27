@@ -17,6 +17,7 @@ namespace NiceHashMiner.Configs.Data
         public bool KAWPOW_NVIDIA { get; set; }
         public bool KHeavyHash_NVIDIA { get; set; }
         public bool Octopus_NVIDIA { get; set; }
+        public bool OctopusKHeavyHash_NVIDIA { get; set; }
         public bool ZelHash_NVIDIA { get; set; }
         public bool ZHash_NVIDIA { get; set; }
         public bool KAWPOW_AMD { get; set; }
@@ -33,6 +34,7 @@ namespace NiceHashMiner.Configs.Data
             KAWPOW_NVIDIA = true;
             KHeavyHash_NVIDIA = true;
             Octopus_NVIDIA = true;
+            OctopusKHeavyHash_NVIDIA = true;
             ZelHash_NVIDIA = true;
             ZHash_NVIDIA = true;
             KAWPOW_AMD = true;

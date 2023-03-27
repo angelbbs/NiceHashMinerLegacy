@@ -2057,11 +2057,6 @@ namespace NiceHashMiner
             _chartTimer.Interval = 1000 * 60;
             _chartTimer.Start();
 
-            _chartTimer = new Timer();
-            _chartTimer.Tick += ChartTimer_Tick;
-            _chartTimer.Interval = 1000 * 60;
-            _chartTimer.Start();
-
             Form_Main.lastRigProfit.DateTime = DateTime.Now;
             if (!ConfigManager.GeneralConfig.ChartEnable)
             {

@@ -528,6 +528,14 @@ namespace NiceHashMiner
                         return AlgorithmType.AutolykosKHeavyHash;
                 }
             }
+            if (primary == AlgorithmType.Octopus)
+            {
+                switch (secondary)
+                {
+                    case AlgorithmType.KHeavyHash:
+                        return AlgorithmType.OctopusKHeavyHash;
+                }
+            }
             if (primary == AlgorithmType.DaggerHashimoto)
             {
                 switch (secondary)

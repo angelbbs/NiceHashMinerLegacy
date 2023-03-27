@@ -6,6 +6,7 @@
 
         // dual algos for grouping
         AutolykosZil = -73,
+        OctopusKHeavyHash = -21,
         AutolykosKHeavyHash = -20,
         DaggerKHeavyHash = -19,
         ETCHashKHeavyHash = -18,

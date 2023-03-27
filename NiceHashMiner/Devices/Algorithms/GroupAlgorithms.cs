@@ -150,27 +150,36 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.NBMiner) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            if (device.Name.ToLower().Contains("gtx 10") && device.DeviceType == DeviceType.NVIDIA)
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.Octopus
                     });
             }
-            if (algoSettings.ContainsKey(MinerBaseType.trex) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            if (device.Name.ToLower().Contains("gtx 10") && device.DeviceType == DeviceType.NVIDIA)
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.OctopusKHeavyHash
+                    });
+            }
+
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.Octopus
                     });
             }
-            if (algoSettings.ContainsKey(MinerBaseType.miniZ) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.Octopus
+                        AlgorithmType.OctopusKHeavyHash
                     });
             }
+
 
             if (algoSettings.ContainsKey(MinerBaseType.Bminer) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7))
             {
