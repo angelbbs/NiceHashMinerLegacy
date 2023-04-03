@@ -953,17 +953,23 @@ namespace NiceHashMiner.Miners
             {
                 _zil = new Zil
                 {
-                    RateNoZil = 0,
+                    RateNoZil = 0.5,
                     RateNoZilCount = 50000,
-                    RateZil = 0,
+                    RateZil = 0.02,
                     RateZilCount = 2000,
                     ZilRatio = 0.04,
-                    ZilFactor = 0
+                    ZilFactor = 0.04
                 };
-                Helpers.ConsolePrint("MinerStatsCheck", ex.ToString());
-                Helpers.WriteAllTextWithBackup("configs\\zil.json", JsonConvert.SerializeObject(_zil, Formatting.Indented));
-                _zil = null;
-                _zil = JsonConvert.DeserializeObject<Zil>(File.ReadAllText("configs\\zil.json"), Globals.JsonSettings);
+                try
+                {
+                    Helpers.ConsolePrint("MinerStatsCheck", ex.ToString());
+                    Helpers.WriteAllTextWithBackup("configs\\zil.json", JsonConvert.SerializeObject(_zil, Formatting.Indented));
+                    _zil = null;
+                    _zil = JsonConvert.DeserializeObject<Zil>(File.ReadAllText("configs\\zil.json"), Globals.JsonSettings);
+                } catch (Exception ex2)
+                {
+                    Helpers.ConsolePrint("MinerStatsCheck", ex.ToString());
+                }
             }
 
             var currentProfit = 0.0d;
@@ -1010,6 +1016,9 @@ namespace NiceHashMiner.Miners
                     // set rates
                     if (ad != null)
                     {
+                        Form_Main.RateNoZil = _zil.RateNoZil;
+                        Form_Main.RateZil = _zil.RateZil;
+
                         if (ad.ZilRound)
                         {
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
@@ -1056,20 +1065,18 @@ namespace NiceHashMiner.Miners
                                 {
                                     _zil.RateNoZilCount = _zil.RateNoZilCount / 20;
                                     _zil.RateZilCount = _zil.RateZilCount / 20;
-                                    _zil.RateNoZil = _zil.RateNoZil / 20d;
-                                    _zil.RateZil = _zil.RateZil / 20d;
+                                    _zil.RateNoZil = _zil.RateNoZil / 20;
+                                    _zil.RateZil = _zil.RateZil / 20;
                                 }
                             }
                         }
-                        Form_Main.RateNoZil = _zil.RateNoZil;
-                        Form_Main.RateZil = _zil.RateZil;
                         Form_Main.ZilFactor = _zil.ZilFactor;
 
                         _zil.RateNoZil = Form_Main.RateNoZil;
                         _zil.RateZil = Form_Main.RateZil;
 
-                        double RateNoZil = Form_Main.RateNoZil / _zil.RateNoZilCount;
-                        double RateZil = Form_Main.RateZil   / _zil.RateZilCount;
+                        double _RateNoZil = Form_Main.RateNoZil / _zil.RateNoZilCount;
+                        double _RateZil = Form_Main.RateZil   / _zil.RateZilCount;
 
                         if (_zil.RateNoZilCount != 0)
                         {
@@ -1077,12 +1084,12 @@ namespace NiceHashMiner.Miners
                         }
                         double _zilRatio = _zil.ZilRatio;
 
-                        Form_Main.ZilFactor = Math.Round((RateZil * _zilRatio) / RateNoZil, 3);
+                        Form_Main.ZilFactor = Math.Round((_RateZil * _zilRatio) / _RateNoZil, 3);
                         _zil.ZilFactor = Form_Main.ZilFactor;
 
                         if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                        if (double.IsNaN(RateZil)) RateZil = 0.0d;
-                        if (double.IsNaN(RateNoZil)) RateZil = 0.0d;
+                        if (double.IsNaN(_RateZil)) _RateZil = 0.0d;
+                        if (double.IsNaN(_RateNoZil)) _RateZil = 0.0d;
                         if (Form_additional_mining.isAlgoZIL(ad.AlgorithmName, groupMiners.MinerBaseType, groupMiners.DeviceType))
                         {
                             groupMiners.CurrentRate += groupMiners.CurrentRate * Form_Main.ZilFactor;

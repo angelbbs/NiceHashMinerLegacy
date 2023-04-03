@@ -478,7 +478,8 @@ namespace NiceHashMiner.Miners
         }
         public override async Task<ApiData> GetSummaryAsync()
         {
-            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+            ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             /*
             if (firstStart)
             //          if (ad.Speed <= 0.0001)
@@ -544,7 +545,16 @@ namespace NiceHashMiner.Miners
                     ad.Speed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_sps);
                     ad.SecondarySpeed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_is) * 1000000;
                     pers = resp.pers;
-                    double[] hashrates = new double[resp.result.Count];
+                    /*
+                    if (pers.Contains("zil"))
+                    {
+                        Form_Main.isZilRound = true;
+                    } else
+                    {
+                        Form_Main.isZilRound = false;
+                    }
+                    */
+                        double[] hashrates = new double[resp.result.Count];
                     //double[] hashrates2 = new double[resp.result.Count];
                     for (var i = 0; i < resp.result.Count; i++)
                     {
@@ -566,7 +576,6 @@ namespace NiceHashMiner.Miners
 
                         if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
                         {
-                            //if (Form_Main.isZilRound)
                             if (Form_Main.isZilRound)
                             {
                                 //double hashrate = readCSV(mPair.Device.ID);

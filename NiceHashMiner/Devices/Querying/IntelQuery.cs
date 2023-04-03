@@ -42,22 +42,7 @@ namespace NiceHashMiner.Devices.Querying
 
             return "key is null";
         }
-        /*
-        public IntelQuery(List<VideoControllerData> availControllers)
-        {
-            _availableControllers = availControllers;
-        }
-        */
-        /*
-        public List<OpenCLDevice> QueryIntel(bool openCLSuccess, OpenCLJsonData openCLData)
-        {
-            Helpers.ConsolePrint(Tag, "QueryIntel START");
-            var IntelDevices = openCLSuccess ? ProcessDevices(openCLData) : new List<OpenCLDevice>();
-            Helpers.ConsolePrint(Tag, "QueryIntel END");
-            return IntelDevices;
-        }
-        */
-        //private List<OpenCLDevice> ProcessDevices(OpenCLJsonData openCLData)
+       
         public static List<OpenCLDevice> ProcessDevices(List<VideoControllerData> availControllers)
         {
             _availableControllers = availControllers;
@@ -65,33 +50,7 @@ namespace NiceHashMiner.Devices.Querying
 
             var IntelDevices = new List<OpenCLDevice>();
             var IntelPlatformNumFound = WindowsDisplayAdapters.HasIntelVideoController();
-            /*
-            foreach (var oclEl in openCLData.Platforms)
-            {
-                if (!oclEl.PlatformName.ToLower().Contains("intel")) continue;
-                if (!oclEl.PlatformName.ToLower().Contains("arc")) continue;
-                if (!oclEl.PlatformName.ToLower().Contains("iris")) continue;
-
-                IntelPlatformNumFound = true;
-                var IntelOpenCLPlatformStringKey = oclEl.PlatformName;
-                ComputeDeviceManager.Available.IntelOpenCLPlatformNum = oclEl.PlatformNum;
-                IntelOclDevices = oclEl.Devices;
-                Helpers.ConsolePrint(Tag,
-                    $"Intel Arc or Iris OpenCL platform found: Key: {IntelOpenCLPlatformStringKey}, Num: {ComputeDeviceManager.Available.IntelOpenCLPlatformNum}");
-                break;
-            }
-            */
-            /*
-            foreach (var vc in ComputeDeviceManager.Query.AvaliableVideoControllers)
-            {
-                if (vc.Name.ToLower().Contains("intel") && 
-                    (vc.Name.ToLower().Contains("arc") || vc.Name.ToLower().Contains("iris")))
-                {
-                    IntelPlatformNumFound = true;
-                    break;
-                }
-            }
-            */
+            
             if (!IntelPlatformNumFound)
             {
                 Helpers.ConsolePrint("IntelQuery", "Intel Arc or Iris OpenCL platform not found");
@@ -172,22 +131,11 @@ namespace NiceHashMiner.Devices.Querying
             Helpers.ConsolePrint(Tag, "Intel GPUs count : " + IntelDevices.Count);
 
             var isBusIDOk = true;
-            // check if buss ids are unique and different from -1
             {
                 var busIDs = new HashSet<int>();
-                // Override Intel bus IDs
-                //var overrides = ConfigManager.GeneralConfig.OverrideIntelBusIds.Split(',');
                 for (var i = 0; i < IntelOclDevices.Count; i++)
                 {
                     var IntelOclDev = IntelOclDevices[i];
-                    /*
-                    if (overrides.Count() > i &&
-                        int.TryParse(overrides[i], out var overrideBus) &&
-                        overrideBus >= 0)
-                    {
-                        IntelOclDev.BUS_ID = overrideBus;
-                    }
-                    */
                     if (IntelOclDev.BUS_ID < 0 || !_busIdInfos.ContainsKey(IntelOclDev.BUS_ID))
                     {
                         isBusIDOk = false;
@@ -197,17 +145,14 @@ namespace NiceHashMiner.Devices.Querying
                     busIDs.Add(IntelOclDev.BUS_ID);
                 }
 
-                // check if unique
                 isBusIDOk = isBusIDOk && busIDs.Count == IntelOclDevices.Count;
             }
-            // print BUS id status
             Helpers.ConsolePrint(Tag,
                 isBusIDOk
                     ? "Intel Bus IDs are unique and valid. OK"
                     : "Intel Bus IDs IS INVALID. Using fallback Intel detection mode");
 
-            ///////
-            // Intel device creation (in NHM context)
+
             if (isBusIDOk)
             {
                 return IntelDeviceCreationPrimary(IntelOclDevices);
@@ -254,7 +199,6 @@ namespace NiceHashMiner.Devices.Querying
 
                     var busID = dev.BUS_ID;
                     var gpuRAM = dev._CL_DEVICE_GLOBAL_MEM_SIZE + 16384 * 1024;
-                    //var man = dev._CL_DEVICE_VENDOR_ID;
 
                     if (busID != -1 && _busIdInfos.ContainsKey(busID))
                     {

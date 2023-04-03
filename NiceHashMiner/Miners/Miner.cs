@@ -971,7 +971,10 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint(MinerTag(), ProcessTag() + " SendCtrlC to stop miner");
                     try
                     {
-                        ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id);
+                        if (Process.GetCurrentProcess() != null)
+                        {
+                            ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id);
+                        }
                     }
                     catch (Exception ex)
                     {

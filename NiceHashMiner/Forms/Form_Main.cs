@@ -181,9 +181,10 @@ namespace NiceHashMiner
         public static int RateZilCount = 0;
         public static double RateNoZil = 0.0d;
         public static int RateNoZilCount = 0;
-        public static double ZilFactor = 0.0d;
+        public static double ZilFactor = 0.04d;
         public static int ZilCount = -1;
         public static bool needGMinerRestart = false;
+        public static string NicehashAPIerrorDescription = "";
 
         //**
         public static string[] ZoneSchedule1 = { "00:00", "23:59", "0.00" };
@@ -1430,7 +1431,7 @@ namespace NiceHashMiner
             CheckUpdates();
             //new Task(() => ResetProtocols()).Start();
 
-            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected");
+            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NicehashAPIerrorDescription;
             label_NH_ConnectStatus.Update();
             //_loadingScreen.SetValueAndMsg(70, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
@@ -3530,25 +3531,25 @@ public static void CloseChilds(Process parentId)
 
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
+            _NHApiFlag = NHApiFlag + " " + NicehashAPIerrorDescription;
             if (NiceHashSocket._webSocket != null)
             {
                 var _curState = NiceHashSocket._webSocket.ReadyState;
                 if (_curState != _oldState || NHApiFlag != _NHApiFlag)
                 {
                     _oldState = _curState;
-                    _NHApiFlag = NHApiFlag;
                     if (_curState == WebSocketSharp.WebSocketState.Closed || _curState == WebSocketSharp.WebSocketState.Closing)
                     {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NHApiFlag;
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + _NHApiFlag;
                     }
                     if (_curState == WebSocketSharp.WebSocketState.Connecting || NHConnectingInProgress)
                     {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + NHApiFlag;
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + _NHApiFlag;
                         textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
                     }
                     if (_curState == WebSocketSharp.WebSocketState.Open)
                     {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected") + " " + NHApiFlag;
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected") + " " + _NHApiFlag;
                         wssConnectionsErrors = 0;
                     }
                     label_NH_ConnectStatus.Update();
@@ -3558,12 +3559,12 @@ public static void CloseChilds(Process parentId)
             {
                 if (NHConnectingInProgress)
                 {
-                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + NHApiFlag;
+                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + _NHApiFlag;
                     label_NH_ConnectStatus.Update();
                 }
                 else
                 {
-                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NHApiFlag;
+                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + _NHApiFlag;
                 }
             }
         }

@@ -219,17 +219,9 @@ namespace NiceHashMiner.Miners
             LingerOption lingerOption = new LingerOption(true, 0);
             while (needConnectionZIL)
             {
-                /*
-                int _location = ConfigManager.GeneralConfig.ServiceLocation;
-                if (ConfigManager.GeneralConfig.ServiceLocation >= Globals.MiningLocation.Length)
-                {
-                    _location = ConfigManager.GeneralConfig.ServiceLocation - 1;
-                }
-                */
-                var serv = Links.CheckDNS("etchash." +
+                var serv = Links.CheckDNS("daggerhashimoto." +
                     Globals.MiningLocation[0], true).Replace("stratum+tcp://", "");
                 IPAddress addr = IPAddress.Parse(serv);
-                IPAddress addrl = IPAddress.Parse("0.0.0.0");
 
                 Reconnect:
                 if (tcpClient != null)
@@ -239,25 +231,29 @@ namespace NiceHashMiner.Miners
                     tcpClient = null;
                 }
 
-                int port = 3393;
+                int port = 3353;
                 if (Globals.MiningLocation[0].ToLower().Contains("auto"))
                 {
                     port = 9200;
+                    serv = Links.CheckDNS("daggerhashimoto." + Globals.MiningLocation[0], true).Replace("stratum+tcp://", "");
+                    addr = IPAddress.Parse(serv);
                 } else
                 {
-                    port = 13393;
+                    port = 13353;
+                    serv = Links.CheckDNS("daggerhashimoto." +
+                    Globals.MiningLocation[0], true).Replace("stratum+tcp://", "");
+                    addr = IPAddress.Parse(serv);
                 }
-                var iep = new IPEndPoint(addrl, port);
 
                 List<string> IPsList = new List<string>();
-                var heserver = Dns.GetHostEntry(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation].Replace("auto.", ""));
+                var heserver = Dns.GetHostEntry(Globals.MiningLocation[0].Replace("auto.", ""));
                 foreach (IPAddress curAdd in heserver.AddressList)
                 {
                     IPsList.Add(curAdd.ToString());
                 }
                 foreach (var ip in IPsList)
                 {
-                    NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, ip, (uint)port);
+                    //NiceHashSocket.DropIPPort(Process.GetCurrentProcess().Id, ip, (uint)port);
                 }
 
                 if (tcpClient == null)
@@ -268,7 +264,6 @@ namespace NiceHashMiner.Miners
                         {
                             tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                             tcpClient.ConnectAsync(addr, port);
-
                             //Thread.Sleep(1000 * 5);
                             while (!tcpClient.Connected)
                             {
@@ -367,7 +362,6 @@ namespace NiceHashMiner.Miners
             int epoch = 999;
             waitReconnect = 10;
             int GoodEpochCount = 0;
-
             if (serverStream == null)
             {
                 Helpers.ConsolePrint("ZILNiceHash", "Error in serverStream");

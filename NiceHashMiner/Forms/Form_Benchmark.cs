@@ -866,9 +866,9 @@ namespace NiceHashMiner.Forms
         {
             //algorithmSettingsControl1.Deselect();
             // show algorithms
-            var selectedComputeDevice =
+            _selectedComputeDevice =
                 ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
-            algorithmsListView1.SetAlgorithms(selectedComputeDevice, selectedComputeDevice.Enabled);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
         }
 
         private void RadioButton_SelectedUnbenchmarked_CheckedChanged_1(object sender, EventArgs e)

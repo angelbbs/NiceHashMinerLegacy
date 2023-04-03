@@ -880,6 +880,15 @@ namespace NiceHashMiner.Miners
                             " hr3: " + hashrates3[i].ToString());
                         */
                     }
+                    /*
+                    if (_algo.ToLower().Contains("zil") && total2 + total3 > 0)
+                    {
+                        Form_Main.isZilRound = true;
+                    } else
+                    {
+                        Form_Main.isZilRound = false;
+                    }
+                    */
                     int dev = 0;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                     if (Form_Main.NVIDIA_orderBug)

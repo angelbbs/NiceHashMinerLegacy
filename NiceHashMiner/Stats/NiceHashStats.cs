@@ -124,9 +124,10 @@ namespace NiceHashMiner.Stats
                 _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
                 _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
                 _deviceUpdateTimer.Start();
-
                 NHSmaData.InitializeIfNeeded();
-                //LoadCachedSMAData();
+                //Thread.Sleep(1000);
+                LoadSMA();
+
                 _socket = null;
                 _socket = new NiceHashSocket(address);
 
@@ -222,7 +223,7 @@ namespace NiceHashMiner.Stats
                                         {
                                             Thread.Sleep(500);
                                         } while (Form_Main.Uptime.Seconds != 5 && Form_Main.Uptime.Seconds != 35);
-                                        //SetAlgorithmRates(message.data, 1, 12, true, "WS");
+                                        SetAlgorithmRates(message.data, 1, 12, true, "WS");
                                     }
                                 }
 
@@ -1007,31 +1008,27 @@ namespace NiceHashMiner.Stats
 
         public static void LoadSMA()
         {
+            string defsma = "[[46,\"2.2546252877e-05\"],[20,\"1.1387477623e-04\"],[47,\"9.1086414342e-01\"],[50,\"1.7406077348e+04\"],[21,\"2.5000000000e-09\"],[62,\"2.7613822484e-05\"],[48,\"1.0112168714e-08\"],[60,\"1.0179830311e-04\"],[5,\"5.3030000000e-07\"],[32,\"1.3000000000e-03\"],[42,\"1.0000000000e-01\"],[23,\"5.1948323410e-08\"],[24,\"3.8460079677e-01\"],[39,\"1.0000000000e+02\"],[56,\"2.1799406971e-04\"],[57,\"5.8912717827e-05\"],[52,\"3.4559911985e-04\"],[43,\"1.3005183421e+03\"],[54,\"2.6833765269e+02\"],[33,\"6.2358921162e-06\"],[36,\"1.1025005778e+02\"],[28,\"7.4205507607e-09\"],[8,\"3.4233713066e-03\"],[14,\"2.4701000000e-06\"],[61,\"3.1005608253e-04\"],[58,\"1.6037806480e+02\"]]";
             try
             {
-                if (!GetSmaAPI(true))
+                if (System.IO.File.Exists("configs\\sma.dat"))
                 {
-                    if (System.IO.File.Exists("configs\\sma.dat"))
-                    {
-                        dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
-                        Helpers.ConsolePrint("LoadSMA", "Using previous SMA");
-                        JArray smadata = (JArray.Parse(jsonData));
-                        SetAlgorithmRates(smadata);//LoadSMA
-                    }
-                    else
-                    {
-                        Helpers.ConsolePrint("LoadSMA", "Using default SMA");
-                        dynamic defsma = "[[21,\"1.1637063156e-08\"],[50,\"1.5700000000e+04\"],[5,\"2.3910000000e-07\"],[54,\"9.9593453508e+02\"],[56,\"8.3154640439e-04\"],[23,\"8.8917404737e-08\"],[32,\"4.1550000000e-04\"],[43,\"4.1000000000e+03\"],[42,\"1.9636363636e+00\"],[8,\"6.6641064511e-03\"],[47,\"8.7152481058e-01\"],[36,\"3.1534919293e+02\"],[52,\"1.4753894679e-03\"],[14,\"7.0010000000e-07\"],[28,\"1.3914259087e-09\"],[46,\"3.5115871886e-04\"],[57,\"2.6596125572e-04\"],[33,\"1.2604450871e-04\"],[39,\"4.9647058824e+03\"],[24,\"9.3575041979e-01\"],[20,\"9.3350169094e-04\"],[51,\"5.2500182871e-08\"],[48,\"1.8300000000e-08\"],[58,\"9.2579601837e+02\"]]";
-                        JArray smadata = (JArray.Parse(defsma));
-                        SetAlgorithmRates(smadata);//LoadSMA
-                    }
+                    dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
+                    Helpers.ConsolePrint("LoadSMA", "Using previous SMA");
+                    JArray smadata = (JArray.Parse(jsonData));
+                    SetAlgorithmRates(smadata);//LoadSMA
+                }
+                else
+                {
+                    Helpers.ConsolePrint("LoadSMA", "Using default SMA");
+                    JArray smadata = (JArray.Parse(defsma));
+                    SetAlgorithmRates(smadata);//LoadSMA
                 }
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("SOCKET", ex.Message);
                 Helpers.ConsolePrint("SOCKET", "Using default SMA");
-                dynamic defsma = "[[21,\"1.1637063156e-08\"],[50,\"1.5700000000e+04\"],[5,\"2.3910000000e-07\"],[54,\"9.9593453508e+02\"],[56,\"8.3154640439e-04\"],[23,\"8.8917404737e-08\"],[32,\"4.1550000000e-04\"],[43,\"4.1000000000e+03\"],[42,\"1.9636363636e+00\"],[8,\"6.6641064511e-03\"],[47,\"8.7152481058e-01\"],[36,\"3.1534919293e+02\"],[52,\"1.4753894679e-03\"],[14,\"7.0010000000e-07\"],[28,\"1.3914259087e-09\"],[46,\"3.5115871886e-04\"],[57,\"2.6596125572e-04\"],[33,\"1.2604450871e-04\"],[39,\"4.9647058824e+03\"],[24,\"9.3575041979e-01\"],[20,\"9.3350169094e-04\"],[51,\"5.2500182871e-08\"],[48,\"1.8300000000e-08\"],[58,\"9.2579601837e+02\"]]";
                 JArray smadata = (JArray.Parse(defsma));
                 SetAlgorithmRates(smadata);//LoadSMA
                 Helpers.ConsolePrint("OLDSMA", ex.ToString());
@@ -2079,6 +2076,7 @@ namespace NiceHashMiner.Stats
         }
         public static string GetNiceHashApiDataWithSecret(string url, bool auth)
         {
+            Form_Main.NicehashAPIerrorDescription = "";
             bool proxy = false;//test
             string proxyUrl = "";
             if (ConfigManager.GeneralConfig.ServiceLocation > 0)
@@ -2156,6 +2154,7 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("GetNiceHashApiDataWithSecret", wex.Message);
                 Form_Main.errorAPIkeystring = wex.Message;
                 Form_Main.apiConnectionsErrors++;
+                Form_Main.NicehashAPIerrorDescription = "API error on Nicehash side";
                 return null;
             }
             catch (Exception ex)
@@ -2166,6 +2165,7 @@ namespace NiceHashMiner.Stats
                 return null;
             }
             Form_Main.apiConnectionsErrors = 0;
+            //Form_Main.NicehashAPIerrorDescription = "";
             return responseFromServer;
         }
 

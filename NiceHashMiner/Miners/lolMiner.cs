@@ -574,6 +574,8 @@ namespace NiceHashMiner.Miners
 
             int delay_before_calc_hashrate = 15;
             int MinerStartDelay = 10;
+            
+            //уменьшим время на бенчмарк
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
@@ -581,40 +583,40 @@ namespace NiceHashMiner.Miners
             {
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 45;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 45;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 45;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 45;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 45;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
                 
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//+dual
                 {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 120;
+                    _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
                 
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");

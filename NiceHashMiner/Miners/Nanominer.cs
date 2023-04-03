@@ -307,7 +307,8 @@ namespace NiceHashMiner.Miners
             {
                 foreach (var mPair in sortedMinerPairs)
                 {
-                    int id = (int)mPair.Device.lolMinerBusID + intelDeviceCount + nvidiaDeviceCount;
+                    //int id = (int)mPair.Device.lolMinerBusID + intelDeviceCount + nvidiaDeviceCount;
+                    int id = (int)mPair.Device.lolMinerBusID;
 
                     if (id < 0)
                     {

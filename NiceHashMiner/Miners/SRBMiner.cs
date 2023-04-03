@@ -450,7 +450,16 @@ namespace NiceHashMiner.Miners
             int totalsMain = 0;
             int totalsSecond = 0;
             int totalsThird = 0;
-
+            /*
+            if (ResponseFromSRBMiner.ToLower().Contains("\"name\": \"zil\""))
+            {
+                Form_Main.isZilRound = true;
+            }
+            else
+            {
+                Form_Main.isZilRound = false;
+            }
+            */
             try
             {
                 ad.ZilRound = false;

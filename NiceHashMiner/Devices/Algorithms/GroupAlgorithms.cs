@@ -48,6 +48,20 @@ namespace NiceHashMiner.Devices.Algorithms
 
             Helpers.ConsolePrint("GPU MEMORY: ", device.GpuRam.ToString() + " bytes - " + device.Name);
 
+            //Autolykos на 3х гиговых картах всё...
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.7))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.Autolykos,
+                        AlgorithmType.AutolykosKHeavyHash,
+                        AlgorithmType.AutolykosZil
+
+                    });
+            }
+           
+
+
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
