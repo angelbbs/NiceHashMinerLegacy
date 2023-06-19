@@ -748,6 +748,9 @@ namespace NiceHashMiner.Devices
                 case "103C":
                     man = "HP";
                     break;
+                case "1565":
+                    man = "Biostar";
+                    break;
                 case "1569":
                     man = "Palit";
                     break;

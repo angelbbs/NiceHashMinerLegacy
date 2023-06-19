@@ -251,6 +251,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
                             {
                             },
@@ -513,7 +517,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             },
                         }
             },
-            /*
+            
             {
                 MinerBaseType.Rigel,
                 new List<Algorithm>()
@@ -521,10 +525,14 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.KHeavyHash, "KHeavyHash")
                     {
                         ExtraLaunchParameters = "--no-tui"
+                    },
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.NexaPow, "NexaPow")
+                    {
+                        ExtraLaunchParameters = "--no-tui"
                     }
                 }
             }
-            */
+            
         }.ConcatDictList(All, Gpu);
 
         #endregion

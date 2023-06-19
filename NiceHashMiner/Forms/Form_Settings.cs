@@ -1727,6 +1727,10 @@ namespace NiceHashMiner.Forms
 
         private void DevicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
+            if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Shift || (ModifierKeys == (Keys.Control | Keys.Shift)))
+            {
+                return;
+            }
             algorithmSettingsControl1.Deselect();
             // show algorithms
             _selectedComputeDevice =
@@ -1737,6 +1741,10 @@ namespace NiceHashMiner.Forms
         }
         private void DevicesListView2_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
+            if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Shift || (ModifierKeys == (Keys.Control | Keys.Shift)))
+            {
+                return;
+            }
             algorithmSettingsControl1.Deselect();
             // show algorithms
             _selectedComputeDevice =
@@ -2392,8 +2400,7 @@ namespace NiceHashMiner.Forms
         private void buttonRestoreBackup_Click(object sender, EventArgs e)
         {
             //stop openhardwaremonitor
-            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-            {
+
                 var CMDconfigHandleOHM = new Process
 
                 {
@@ -2407,7 +2414,36 @@ namespace NiceHashMiner.Forms
                 CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
                 CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleOHM.Start();
-            }
+
+             CMDconfigHandleOHM = new Process
+
+                {
+                    StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+                };
+
+                CMDconfigHandleOHM.StartInfo.Arguments = "stop R0NiceHashMinerLegacy";
+                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleOHM.Start();
+
+            CMDconfigHandleOHM = new Process
+
+            {
+                StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+            };
+
+            CMDconfigHandleOHM.StartInfo.Arguments = "delete R0NiceHashMinerLegacy";
+            CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+            CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+            CMDconfigHandleOHM.Start();
+
+
             MinersManager.StopAllMiners();
             System.Threading.Thread.Sleep(1000);
             Process.Start("backup\\restore.cmd");

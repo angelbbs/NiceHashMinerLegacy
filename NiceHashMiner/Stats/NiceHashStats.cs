@@ -206,18 +206,20 @@ namespace NiceHashMiner.Stats
                                 {
                                     Helpers.ConsolePrint("SMA WS", "All algos zero!");
                                     return;
-                                } else
+                                }
+                                else
                                 {
                                     if (firstSMA)
                                     {
                                         firstSMA = false;
-                                        
+
                                         Thread.Sleep(500);
                                         SetAlgorithmRates(message.data, 1, 12, false, "WS");
                                         NiceHashStats.GetSmaAPI(true);
                                         NHSmaData.FinalizeSma();
 
-                                    } else
+                                    }
+                                    else
                                     {
                                         do
                                         {
@@ -226,7 +228,7 @@ namespace NiceHashMiner.Stats
                                         SetAlgorithmRates(message.data, 1, 12, true, "WS");
                                     }
                                 }
-
+                                /*
                                 if (Miner.IsRunningNew)
                                 {
                                     Form_Main.smaCount++;
@@ -250,7 +252,7 @@ namespace NiceHashMiner.Stats
                                     Form_Main.MakeRestart(0);
                                     return;
                                 }
-
+                                */
                                 break;
                             }
 
@@ -856,6 +858,7 @@ namespace NiceHashMiner.Stats
                         {
                             Form_Main.TotalProfitabilityFromNH = 0;
                         }
+                        Form_Main.NicehashAPIerrorDescription = "";
                     }
                     else
                     {
@@ -1103,6 +1106,11 @@ namespace NiceHashMiner.Stats
                         if (!NHSmaData.TryGetPaying(algoKey, out double paying))
                         {
                             Helpers.ConsolePrint("SetAlgorithmRates", "ERROR! Unknown algo: " + algoKey.ToString());
+                        }
+
+                        if (double.IsNaN(paying))
+                        {
+                            paying = 0;
                         }
 
                         if (!ConfigManager.GeneralConfig.Use_Last24hours)
@@ -1840,29 +1848,13 @@ namespace NiceHashMiner.Stats
                         // Hardware monitoring
                         if (!Form_Main.NVIDIA_orderBug)
                         {
-                            /*
-                            if (ConfigManager.GeneralConfig.QM_mode)
-                            {
-                                array.Add(Math.Round(TempMemory * 65536 + Math.Round(device.Temp)));
-                            } else
-                            */
-                            {
-                                array.Add(Math.Round(Math.Round(device.Temp)));
-                            }
+                            array.Add(Math.Round(Math.Round(device.Temp)));
                             array.Add(device.FanSpeedRPM);
                             array.Add((int)Math.Round(device.PowerUsage));
                         }
                         else
                         {
-                            /*
-                            if (ConfigManager.GeneralConfig.QM_mode)
-                            {
-                                array.Add(Math.Round(TempMemoryResort * 65536 + Math.Round(deviceResort.Temp)));
-                            } else
-                            */
-                            {
-                                array.Add(Math.Round(Math.Round(deviceResort.Temp)));
-                            }
+                            array.Add(Math.Round(Math.Round(deviceResort.Temp)));
                             array.Add(deviceResort.FanSpeedRPM);
                             array.Add((int)Math.Round(deviceResort.PowerUsage));
                         }
@@ -2153,8 +2145,11 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("GetNiceHashApiDataWithSecret", wex.Message);
                 Form_Main.errorAPIkeystring = wex.Message;
-                Form_Main.apiConnectionsErrors++;
-                Form_Main.NicehashAPIerrorDescription = "API error on Nicehash side";
+                if (auth)
+                {
+                    Form_Main.apiConnectionsErrors++;
+                    Form_Main.NicehashAPIerrorDescription = "API error: " + wex.Message.Split(':')[1];
+                }
                 return null;
             }
             catch (Exception ex)
@@ -2164,8 +2159,11 @@ namespace NiceHashMiner.Stats
                 Form_Main.apiConnectionsErrors++;
                 return null;
             }
-            Form_Main.apiConnectionsErrors = 0;
-            //Form_Main.NicehashAPIerrorDescription = "";
+            if (auth)
+            {
+                Form_Main.apiConnectionsErrors = 0;
+                Form_Main.NicehashAPIerrorDescription = "";
+            }
             return responseFromServer;
         }
 

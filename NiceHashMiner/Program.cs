@@ -95,8 +95,6 @@ namespace NiceHashMiner
                 var dialogRes = Utils.MessageBoxEx.Show("Restore from backup?", "Restore", MessageBoxButtons.YesNo, MessageBoxIcon.Question, 15000);
                 if (dialogRes == System.Windows.Forms.DialogResult.Yes)
                 {
-                    if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-                    {
                         var CMDconfigHandleOHM = new Process
 
                         {
@@ -110,7 +108,35 @@ namespace NiceHashMiner
                         CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
                         CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
                         CMDconfigHandleOHM.Start();
-                    }
+
+                     CMDconfigHandleOHM = new Process
+
+                        {
+                            StartInfo =
+                            {
+                                FileName = "sc.exe"
+                            }
+                        };
+
+                        CMDconfigHandleOHM.StartInfo.Arguments = "stop R0NiceHashMinerLegacy";
+                        CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                        CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                        CMDconfigHandleOHM.Start();
+
+                    CMDconfigHandleOHM = new Process
+
+                    {
+                        StartInfo =
+                            {
+                                FileName = "sc.exe"
+                            }
+                    };
+
+                    CMDconfigHandleOHM.StartInfo.Arguments = "delete R0NiceHashMinerLegacy";
+                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleOHM.Start();
+
                     MinersManager.StopAllMiners();
                     System.Threading.Thread.Sleep(5000);
                     Process.Start("backup\\restore.cmd");

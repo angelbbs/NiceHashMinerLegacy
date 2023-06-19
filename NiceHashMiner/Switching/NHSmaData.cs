@@ -181,8 +181,20 @@ namespace NiceHashMiner.Switching
                 {
                     foreach (var algo in newSma.Keys)
                     {
+                        if (!(algo).ToString().Contains("UNUSED"))
+                        {
+                            //Helpers.ConsolePrint("UpdateSmaPaying", algo.ToString() + ": " +
+                              //      "old value:\t" + _currentSma[algo].Paying.ToString() + " new value:\t" + newSma[algo]);
+                        }
                         if (_currentSma.ContainsKey(algo))
                         {
+                            if (_currentSma[algo].Paying > 0 && newSma[algo] > _currentSma[algo].Paying * 100)
+                            {
+                                //Helpers.ConsolePrint("UpdateSmaPaying", "NH API bug. " + algo.ToString() + ": " +
+                                  //  "old value: " + _currentSma[algo].Paying.ToString() + " new value: " + newSma[algo]);
+                                continue;
+                            }
+                            
                             if (average)
                             {
                                 if (_currentSma[algo].Paying > 0 && newSma[algo] > 0)
@@ -238,16 +250,35 @@ namespace NiceHashMiner.Switching
         {
             InitializeIfNeeded();
             CheckInit();
+            if (double.IsNaN(paying)) return;
             lock (_currentSma)
             {
                 if (!_currentSma.ContainsKey(algo))
                     throw new ArgumentException("Algo not setup in SMA");
-                if (average)
+
+                if (!(algo).ToString().Contains("UNUSED"))
                 {
-                    _currentSma[algo].Paying = (paying + _currentSma[algo].Paying) / 2;
-                } else
+                    //Helpers.ConsolePrint("UpdateSmaPaying", algo.ToString() + ": " +
+                      //      "old value:\t" + _currentSma[algo].Paying.ToString() + " new value:\t" + paying);
+                }
+
+                if (paying != 0)
                 {
-                    _currentSma[algo].Paying = paying;
+                    if (_currentSma[algo].Paying > 0 && paying > _currentSma[algo].Paying * 100)
+                    {
+                        Helpers.ConsolePrint("UpdatePayingForAlgo", "NH API bug. " + algo.ToString() + ": " +
+                            "old value: " + _currentSma[algo].Paying.ToString() + " new value: " + paying);
+                        return;
+                    }
+
+                    if (average)
+                    {
+                        _currentSma[algo].Paying = (paying + _currentSma[algo].Paying) / 2;
+                    }
+                    else
+                    {
+                        _currentSma[algo].Paying = paying;
+                    }
                 }
             }
             HasData = true;
@@ -322,24 +353,33 @@ namespace NiceHashMiner.Switching
         public static void FinalizeSma()
         {
             Helpers.ConsolePrint("NHSMA", "FinalizeSma");
-            InitializeIfNeeded();
-            CheckInit();
-            
-            _finalSma.Clear();
-
-            lock (_finalSma)
+            try
             {
-                foreach (var final_sma in _currentSma)
+                InitializeIfNeeded();
+                CheckInit();
+
+                _finalSma.Clear();
+
+                lock (_finalSma)
                 {
-                    NiceHashSma v = new NiceHashSma();
-                    v.Algo = final_sma.Value.Algo;
-                    v.Name = final_sma.Value.Name;
-                    v.Paying = final_sma.Value.Paying;
-                    v.Port = final_sma.Value.Port;
-                    _finalSma.Add(final_sma.Key, v);
+                    foreach (var final_sma in _currentSma)
+                    {
+                        NiceHashSma v = new NiceHashSma();
+                        v.Algo = final_sma.Value.Algo;
+                        v.Name = final_sma.Value.Name;
+                        v.Paying = final_sma.Value.Paying;
+                        v.Port = final_sma.Value.Port;
+                        if (!((AlgorithmType)v.Algo).ToString().Contains("UNUSED"))
+                        {
+                            //Helpers.ConsolePrint("FinalizeSma", ((AlgorithmType)v.Algo).ToString() + ":\t" + v.Paying.ToString());
+                        }
+                        _finalSma.Add(final_sma.Key, v);
+                    }
                 }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint(Tag, ex.ToString());
             }
-            
             /*
             try
             {

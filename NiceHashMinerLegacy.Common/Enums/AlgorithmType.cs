@@ -99,7 +99,8 @@
         Kadena_UNUSED = 59,
         ETCHash = 60,
         VerusHash = 61,
-        KHeavyHash = 62
+        KHeavyHash = 62,
+        NexaPow = 63
         #endregion // NiceHashAPI
     }
 }

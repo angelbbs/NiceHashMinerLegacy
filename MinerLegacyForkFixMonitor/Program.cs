@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.MemoryMappedFiles;
 using System.Management;
 using System.Threading;
 using System.Windows.Forms;
@@ -11,6 +12,8 @@ namespace MinerLegacyForkFixMonitor
     static class Program
     {
         private static List<int> processIdList = new List<int>();
+        private static int prevUptimeSec = -1;
+        private static int stuckCount = 0;
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -44,11 +47,12 @@ namespace MinerLegacyForkFixMonitor
                 }
             }
 
+            Process p;
             while (true)
             {
                 try
                 {
-                    var p = Process.GetProcessById(int.Parse(argv[0]));
+                    p = Process.GetProcessById(int.Parse(argv[0]));
                     //Helpers.ConsolePrint("Monitor", "Process exist");
                 }
                 catch
@@ -128,6 +132,43 @@ namespace MinerLegacyForkFixMonitor
                         // Process already exited.
                     }
                 }
+
+                MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("MinerLegacyForkFixMonitor");
+                byte[] b1 = { (byte)'0', (byte)'0', (byte)'0' };
+                using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 100, MemoryMappedFileAccess.Read))
+                {
+                    int b = reader.ReadArray<byte>(0, b1, 0, 3);
+                    int res = b1[0];
+                    if (prevUptimeSec == res) stuckCount++;
+                    if (prevUptimeSec != res) stuckCount = 0;
+                    prevUptimeSec = res;
+                    //Helpers.ConsolePrint("Monitor", "stuckCount: " + stuckCount.ToString());
+                }
+
+                if (stuckCount > 20)
+                {
+                    Helpers.ConsolePrint("Monitor", "Main process stuck. Trying restart");
+                    try
+                    {
+                        var tkHandle = new Process
+                        {
+                            StartInfo =
+                {
+                    FileName = "taskkill.exe"
+                }
+                        };
+                        tkHandle.StartInfo.Arguments = "/PID " + p.Id.ToString() + " /F /T";
+                        tkHandle.StartInfo.UseShellExecute = false;
+                        tkHandle.StartInfo.CreateNoWindow = true;
+                        tkHandle.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("taskkill", ex.ToString());
+                    }
+
+                }
+
                 Thread.Sleep(1000 * 5);
             }
             Helpers.ConsolePrint("Monitor", "Stop");

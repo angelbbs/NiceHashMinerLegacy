@@ -152,11 +152,11 @@ namespace NiceHashMiner.Miners
             }
             if (devtype == DeviceType.AMD)
             {
-                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-intel";
+                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-intel ";
             }
             if (devtype == DeviceType.INTEL)
             {
-                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-amd";
+                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-amd ";
             }
             try
             {
@@ -271,11 +271,11 @@ namespace NiceHashMiner.Miners
 
             if (devtype == DeviceType.AMD)
             {
-                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-intel";
+                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-intel ";
             }
             if (devtype == DeviceType.INTEL)
             {
-                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-amd";
+                disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-amd ";
             }
 
             IsInBenchmark = true;

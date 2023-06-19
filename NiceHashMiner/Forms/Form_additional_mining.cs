@@ -95,6 +95,7 @@ namespace NiceHashMiner.Forms
             checkBox_NANOMINER_AMD_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD;
             
             checkBox_Rigel_NVIDIA_KHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
+            checkBox_Rigel_NVIDIA_Nexapow.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA;
 
             checkBox_MINIZ_NVIDIA_BeamV3.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.BeamV3_NVIDIA;
             checkBox_MINIZ_NVIDIA_Octopus.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.Octopus_NVIDIA;
@@ -110,7 +111,7 @@ namespace NiceHashMiner.Forms
             checkBox_SRBMINER_AMD_AutolykosKHeavyHash.Enabled = false;
 
             //
-            TabControlZILadditionalMining.TabPages.RemoveByKey("tabPageRigel");
+            //TabControlZILadditionalMining.TabPages.RemoveByKey("tabPageRigel");
         }
 
         public static bool isAlgoZIL(string algo, MinerBaseType minerBaseType, DeviceType deviceType)
@@ -204,6 +205,8 @@ namespace NiceHashMiner.Forms
                     {
                         case "KHeavyHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
+                        case "NexaPow":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA;
                         default:
                             return false;
                     }
@@ -281,6 +284,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD = checkBox_NANOMINER_AMD_Autolykos.Checked;
 
             ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA = checkBox_Rigel_NVIDIA_KHeavyHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA = checkBox_Rigel_NVIDIA_Nexapow.Checked;
 
             ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_AMD = checkBox_MINIZ_AMD_ZelHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_AMD = checkBox_MINIZ_AMD_ZHash.Checked;

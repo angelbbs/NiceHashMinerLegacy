@@ -68,9 +68,11 @@ namespace NiceHashMiner.Configs.Data
     public class ZILConfigRigel
     {
         public bool KHeavyHash_NVIDIA { get; set; }
+        public bool Nexapow_NVIDIA { get; set; }
         public ZILConfigRigel()
         {
             KHeavyHash_NVIDIA = true;
+            Nexapow_NVIDIA = true;
         }
     }
     [Serializable]

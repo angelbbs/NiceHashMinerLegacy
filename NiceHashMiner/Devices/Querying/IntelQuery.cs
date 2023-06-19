@@ -63,13 +63,12 @@ namespace NiceHashMiner.Devices.Querying
             {
                 if (oclDev._CL_DEVICE_TYPE.Contains("GPU"))
                 {
-                    uint devNum = oclDev.DeviceID;
                     string UUID = "";
                     string _mf = "";
                     string _InfSection = "";
                     foreach (var vc in ComputeDeviceManager.Query.AvaliableVideoControllers)
                     {
-                        if (vc.ID == devNum)
+                        if (vc.BusID == oclDev.BUS_ID)
                         {
                             _PNPDeviceID = vc.PnpDeviceID.Split('\\');
                             UUID = vc.PnpDeviceID.Split('&')[0] + "&" + vc.PnpDeviceID.Split('&')[1] + "_" + vc.PnpDeviceID.Split('&')[4];
@@ -94,7 +93,7 @@ namespace NiceHashMiner.Devices.Querying
                                 int.TryParse(r, out int _busID);
                                 if (_busID >= 0)
                                 {
-                                    oclDev.BUS_ID = _busID;
+                                    //oclDev.BUS_ID = _busID;
                                     break;
                                 }
                             }
@@ -109,7 +108,7 @@ namespace NiceHashMiner.Devices.Querying
                     var info = new BusIdInfo
                     {
                         Name = oclDev._CL_DEVICE_NAME.Replace("(R)", "").Replace("(TM)", ""),
-                        MF = _mf,
+                        MF_Intel = _mf,
                         Uuid = UUID,
                         InfSection = _InfSection,
                         DeviceIndex = (int)oclDev.DeviceID,
@@ -203,7 +202,7 @@ namespace NiceHashMiner.Devices.Querying
                     if (busID != -1 && _busIdInfos.ContainsKey(busID))
                     {
                         var deviceName = _busIdInfos[busID].Name;
-                        var manufacturer = _busIdInfos[busID].MF;
+                        var manufacturer = _busIdInfos[busID].MF_Intel;
 
                         IntelGpuDevice newIntelDev = new IntelGpuDevice(dev, false,
                             _busIdInfos[busID].InfSection, false)
@@ -212,7 +211,7 @@ namespace NiceHashMiner.Devices.Querying
                             UUID = _busIdInfos[busID].Uuid,
                             AdapterIndex = _busIdInfos[busID].DeviceIndex,
                             DeviceHandle = _busIdInfos[busID].DeviceHandle,
-                            IntelManufacturer = _busIdInfos[busID].MF,
+                            IntelManufacturer = _busIdInfos[busID].MF_Intel,
                             DeviceGlobalMemory = gpuRAM
                         };
 
@@ -374,7 +373,7 @@ namespace NiceHashMiner.Devices.Querying
                     }
                     intelOpenCLDevice.BUS_ID = Pci_properties.address.bus;
                     intelOpenCLDevice.DeviceID = Pci_properties.address.device;
-
+                    Helpers.ConsolePrint("StDeviceAdapterProperties*********", StDeviceAdapterProperties.pci_device_id.ToString()); ;
                     //*************************
                     uint MemoryHandlerCount = 0;
 
@@ -746,6 +745,7 @@ namespace NiceHashMiner.Devices.Querying
         {
             public string Name;
             public string MF;
+            public string MF_Intel;
             public string Uuid;
             public string InfSection;
             public int DeviceIndex;

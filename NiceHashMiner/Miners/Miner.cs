@@ -358,6 +358,7 @@ namespace NiceHashMiner
             IsInit = MiningSetup.IsInit;
             SetApiPort();
             SetWorkingDirAndProgName(MiningSetup.MinerPath);
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
         }
 
         public void InitBenchmarkSetup(MiningPair benchmarkPair)
@@ -1962,7 +1963,7 @@ namespace NiceHashMiner
             }
 
             //_currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
-            if (CooldownCheck > 30)//150 sec
+            if (CooldownCheck > 60)//300 sec
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + "API Error. Restart miner");
                 CooldownCheck = 0;

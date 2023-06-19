@@ -86,7 +86,7 @@ namespace NiceHashMiner.Miners
                 //прокси не используется
                 ZilAlgo = "+zil";
                 MainMining = "[1]";
-                ZilMining = " -o [2]ethstratum+tcp://etchash.auto.nicehash.com:9200 -u [2]" + username + " ";
+                ZilMining = " -o [2]ethstratum+tcp://daggerhashimoto.auto.nicehash.com:9200 -u [2]" + username + " ";
             }
             
             
@@ -113,13 +113,20 @@ namespace NiceHashMiner.Miners
                 nicehashstratum = "";
                 port = "3395";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
+            {
+                algo = "nexapow" + ZilAlgo;
+                algoName = "nexapow";
+                nicehashstratum = "";
+                port = "3396";
+            }
 
-            
+
 
             return GetDevicesCommandString() + nicehashstratum +
-                  " -a " + algo + 
+                  " -a " + algo +
                   GetServer(algoName, username, port, MainMining) + ZilMining +
-                  " --no-strict-ssl --api-bind 127.0.0.1:" + ApiPort;
+                  " --api-bind 127.0.0.1:" + ApiPort;
         }
 
         
@@ -322,7 +329,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " -a etchash" +
                 " -o " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010") + " -uer 0x266b27bd794d1A65ab76842ED85B067B415CD505.Rigel -p x" +
-                " -o " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " -u " + Globals.DemoUser + " -p x" +
+                " -o " + Links.CheckDNS("stratum+tcp://etchash.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " -u " + Globals.DemoUser + " -p x" +
                 GetDevicesCommandString();
             }
             
@@ -330,6 +337,13 @@ namespace NiceHashMiner.Miners
             {
                 ret = " -a kheavyhash" +
                 " -o " + Links.CheckDNS("pool.eu.woolypooly.com:3112") + " -u kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 -p x" +
+                GetDevicesCommandString();
+            }
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
+            {
+                ret = " -a nexapow" +
+                " -o " + Links.CheckDNS("stratum-eu.rplant.xyz:7092") + " -u nexa:nqtsq5g5hs6sqrm7v6ydx3vqvh0ee3tgdrme5sn8h93gxugr.Rigel -p x" +
                 GetDevicesCommandString();
             }
             
@@ -535,7 +549,16 @@ namespace NiceHashMiner.Miners
                         int id = d.id;
                         string name = d.name;
                         bool selected = d.selected;
-                        var _hashrate = d.hashrate.kheavyhash;
+                        dynamic _hashrate = null;
+                        if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
+                        {
+                            _hashrate = d.hashrate.kheavyhash;
+                        }
+                        if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
+                        {
+                            _hashrate = d.hashrate.nexapow;
+                        }
+
                         var _hashrate2 = d.hashrate.zil;
                         double hashrate = 0.0d;
                         double hashrate2 = 0.0d;
@@ -596,7 +619,18 @@ namespace NiceHashMiner.Miners
                             mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                         }
 
-                        
+                        if ((MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
+                            MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash) &&
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NexaPow)
+                        {
+                            mPair.Device.MiningHashrate = hashrates[mPair.Device.ID];
+                            mPair.Device.MiningHashrateSecond = hashrates2[mPair.Device.ID];
+                            mPair.Device.MiningHashrateThird = 0;
+                            mPair.Device.AlgorithmID = (int)MiningSetup.CurrentAlgorithmType;
+                            mPair.Device.SecondAlgorithmID = (int)MiningSetup.CurrentSecondaryAlgorithmType;
+                            mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
+                        }
+
                         if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
                         {
                             if (Form_Main.isZilRound)
@@ -691,30 +725,9 @@ namespace NiceHashMiner.Miners
                 }
 
             }
-            /*
-            Helpers.ConsolePrint("*******", "CurrentAlgorithmType: " + MiningSetup.CurrentAlgorithmType.ToString() +
-       " CurrentSecondaryAlgorithmType: " + MiningSetup.CurrentSecondaryAlgorithmType.ToString() +
-       " Form_Main.isZilRound: " + Form_Main.isZilRound.ToString());
-            */
+
             Thread.Sleep(100);
-            /*
-            //костыль из-за бага в Anti-hacking
-            if (fs.Length > offset)
-            {
-                int count = (int)(fs.Length - offset);
-                byte[] array = new byte[count];
-                fs.Read(array, 0, count);
-                offset = (int)fs.Length;
-                string textFromFile = System.Text.Encoding.Default.GetString(array).Trim();
-                //Helpers.ConsolePrint(MinerTag(), textFromFile);
-                if (textFromFile.Contains("Anti-hacking"))
-                {
-                    Helpers.ConsolePrint(MinerTag(), "Rigel Anti-hacking bug detected.");
-                    ad.Speed = 0;
-                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
-                }
-            }
-            */
+            
             return ad;
         }
     }

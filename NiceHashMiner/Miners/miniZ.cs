@@ -543,6 +543,15 @@ namespace NiceHashMiner.Miners
                 if (resp != null && resp.error == null)
                 {
                     ad.Speed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_sps);
+                    //Helpers.ConsolePrint("************", "prevSpeed: " + prevSpeed.ToString() +  " ad.Speed: " + ad.Speed.ToString());
+                    if (ad.Speed == 0 && prevSpeed > 0)
+                    {
+                        ad.Speed = prevSpeed;
+                    }
+                    if (ad.Speed > prevSpeed * 10000 && prevSpeed > 0)
+                    {
+                        ad.Speed = prevSpeed;
+                    }
                     ad.SecondarySpeed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_is) * 1000000;
                     pers = resp.pers;
                     /*
@@ -600,13 +609,7 @@ namespace NiceHashMiner.Miners
                         }
                         dev++;
                     }
-
-                    if (Form_Main.isZilRound && total > 0)
-                    {
-                        ad.SecondarySpeed = total;
-                    }
-
-                    prevSpeed = ad.Speed;
+                    
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                     if (ad.Speed == 0)
                     {
@@ -628,6 +631,13 @@ namespace NiceHashMiner.Miners
                             Form_Main.ZilMonitorRunning = true;
                             ZilClient.StartZilMonitor();
                         }
+                    }
+
+                    prevSpeed = ad.Speed;
+                    if (Form_Main.isZilRound && total > 0)
+                    {
+                        ad.SecondarySpeed = total;
+                        ad.Speed = 0;
                     }
                 }
             }

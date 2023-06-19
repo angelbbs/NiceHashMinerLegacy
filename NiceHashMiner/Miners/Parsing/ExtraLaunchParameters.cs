@@ -250,7 +250,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("lolMiner_fan", "", "--fan", "*", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_ergo-prebuild", "--ergo-prebuild", "--ergo-prebuild", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("lolMiner_lhrwait", "--lhrwait", "--lhrwait", "0", MinerOptionFlagType.SingleParam, "")
+                    new MinerOption("lolMiner_lhrwait", "--lhrwait", "--lhrwait", "0", MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("lolMiner_screen ", "--screen ", "--screen", "0", MinerOptionFlagType.SingleParam, ""),
                 },
                 // TemperatureOptions
                 new List<MinerOption>() {
@@ -647,8 +648,10 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Rigel-temp-limit-tm", "--temp-limit tm", "--temp-limit tm", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-cpu-check", "--cpu-check", "--cpu-check", null, MinerOptionFlagType.Uni),
                     new MinerOption("Rigel-no-tui", "--no-tui", "--no-tui", null, MinerOptionFlagType.Uni),
+                    new MinerOption("Rigel-zil-countdown", "--zil-countdown", "--zil-countdown", null, MinerOptionFlagType.Uni),
                     new MinerOption("Rigel-dns-over-https", "--dns-over-https", "--dns-over-https", null, MinerOptionFlagType.Uni),
                     new MinerOption("Rigel-hashrate-avg", "--hashrate-avg", "--hashrate-avg", "10", MinerOptionFlagType.SingleParam),
+                    new MinerOption("Rigel-log-file", "--log-file", "--log-file", "", MinerOptionFlagType.SingleParam),
                     new MinerOption("Rigel-cclock", "--cclock", "--cclock", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-mclock", "--mclock", "--mclock", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-lock-cclock", "--lock-cclock", "--lock-cclock", "_", MinerOptionFlagType.MultiParam, ","),
@@ -706,6 +709,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("GMiner_min_rig_speed", "--min_rig_speed", "--min_rig_speed", "-1", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_dag_gen_limit", "--dag_gen_limit", "--dag_gen_limit", "0", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_dataset_mode", "--dataset_mode", "--dataset_mode", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_log_pool_efficiency", "--log_pool_efficiency", "--log_pool_efficiency", "0", MinerOptionFlagType.SingleParam, " "),
                 },
                 new List<MinerOption>()
             ),

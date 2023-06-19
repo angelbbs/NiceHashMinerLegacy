@@ -59,8 +59,6 @@ namespace NiceHashMiner.Devices.Algorithms
 
                     });
             }
-           
-
 
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
             {
@@ -179,14 +177,14 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
-            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 6.8))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.Octopus
                     });
             }
-            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 6.8))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {

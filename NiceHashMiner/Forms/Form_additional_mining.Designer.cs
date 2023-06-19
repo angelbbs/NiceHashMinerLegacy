@@ -32,6 +32,7 @@ namespace NiceHashMiner.Forms
             this.TabControlZILadditionalMining = new System.Windows.Forms.CustomTabControl();
             this.tabPageGMiner = new System.Windows.Forms.TabPage();
             this.groupBox_NVIDIA = new System.Windows.Forms.GroupBox();
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash = new System.Windows.Forms.CheckBox();
             this.checkBox_GMINER_NVIDIA_Autolykos = new System.Windows.Forms.CheckBox();
             this.checkBox_GMINER_NVIDIA_ZHash = new System.Windows.Forms.CheckBox();
             this.checkBox_GMINER_NVIDIA_ZelHash = new System.Windows.Forms.CheckBox();
@@ -69,7 +70,7 @@ namespace NiceHashMiner.Forms
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Cancel = new System.Windows.Forms.Button();
             this.checkBox_ZIL_Mining_Enable = new System.Windows.Forms.CheckBox();
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_Rigel_NVIDIA_Nexapow = new System.Windows.Forms.CheckBox();
             this.TabControlZILadditionalMining.SuspendLayout();
             this.tabPageGMiner.SuspendLayout();
             this.groupBox_NVIDIA.SuspendLayout();
@@ -148,6 +149,16 @@ namespace NiceHashMiner.Forms
             this.groupBox_NVIDIA.TabIndex = 1;
             this.groupBox_NVIDIA.TabStop = false;
             this.groupBox_NVIDIA.Text = "NVIDIA";
+            // 
+            // checkBox_GMINER_NVIDIA_OctopusKHeavyHash
+            // 
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.AutoSize = true;
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Location = new System.Drawing.Point(193, 65);
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Name = "checkBox_GMINER_NVIDIA_OctopusKHeavyHash";
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Size = new System.Drawing.Size(129, 17);
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.TabIndex = 10;
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Text = "OctopusKHeavyHash";
+            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.UseVisualStyleBackColor = true;
             // 
             // checkBox_GMINER_NVIDIA_Autolykos
             // 
@@ -297,7 +308,7 @@ namespace NiceHashMiner.Forms
             this.tabPageminiZ.Controls.Add(this.groupBox4);
             this.tabPageminiZ.Location = new System.Drawing.Point(4, 23);
             this.tabPageminiZ.Name = "tabPageminiZ";
-            this.tabPageminiZ.Size = new System.Drawing.Size(364, 201);
+            this.tabPageminiZ.Size = new System.Drawing.Size(364, 179);
             this.tabPageminiZ.TabIndex = 4;
             this.tabPageminiZ.Text = "miniZ";
             this.tabPageminiZ.UseVisualStyleBackColor = true;
@@ -391,7 +402,7 @@ namespace NiceHashMiner.Forms
             this.tabPageNanominer.Controls.Add(this.groupBox2);
             this.tabPageNanominer.Location = new System.Drawing.Point(4, 23);
             this.tabPageNanominer.Name = "tabPageNanominer";
-            this.tabPageNanominer.Size = new System.Drawing.Size(364, 201);
+            this.tabPageNanominer.Size = new System.Drawing.Size(364, 179);
             this.tabPageNanominer.TabIndex = 2;
             this.tabPageNanominer.Text = "Nanominer";
             this.tabPageNanominer.UseVisualStyleBackColor = true;
@@ -421,13 +432,14 @@ namespace NiceHashMiner.Forms
             this.tabPageRigel.Controls.Add(this.groupBox3);
             this.tabPageRigel.Location = new System.Drawing.Point(4, 23);
             this.tabPageRigel.Name = "tabPageRigel";
-            this.tabPageRigel.Size = new System.Drawing.Size(364, 201);
+            this.tabPageRigel.Size = new System.Drawing.Size(364, 179);
             this.tabPageRigel.TabIndex = 3;
             this.tabPageRigel.Text = "Rigel";
             this.tabPageRigel.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_Nexapow);
             this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_KHeavyHash);
             this.groupBox3.Location = new System.Drawing.Point(6, 6);
             this.groupBox3.Name = "groupBox3";
@@ -452,7 +464,7 @@ namespace NiceHashMiner.Forms
             this.tabPageSRBMiner.Location = new System.Drawing.Point(4, 23);
             this.tabPageSRBMiner.Name = "tabPageSRBMiner";
             this.tabPageSRBMiner.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSRBMiner.Size = new System.Drawing.Size(364, 201);
+            this.tabPageSRBMiner.Size = new System.Drawing.Size(364, 179);
             this.tabPageSRBMiner.TabIndex = 1;
             this.tabPageSRBMiner.Text = "SRBMiner";
             this.tabPageSRBMiner.UseVisualStyleBackColor = true;
@@ -532,15 +544,15 @@ namespace NiceHashMiner.Forms
             this.checkBox_ZIL_Mining_Enable.UseVisualStyleBackColor = true;
             this.checkBox_ZIL_Mining_Enable.CheckedChanged += new System.EventHandler(this.checkBox_ZIL_Mining_Enable_CheckedChanged);
             // 
-            // checkBox_GMINER_NVIDIA_OctopusKHeavyHash
+            // checkBox_Rigel_NVIDIA_Nexapow
             // 
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.AutoSize = true;
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Location = new System.Drawing.Point(193, 65);
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Name = "checkBox_GMINER_NVIDIA_OctopusKHeavyHash";
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Size = new System.Drawing.Size(129, 17);
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.TabIndex = 10;
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Text = "OctopusKHeavyHash";
-            this.checkBox_GMINER_NVIDIA_OctopusKHeavyHash.UseVisualStyleBackColor = true;
+            this.checkBox_Rigel_NVIDIA_Nexapow.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_Nexapow.Location = new System.Drawing.Point(101, 19);
+            this.checkBox_Rigel_NVIDIA_Nexapow.Name = "checkBox_Rigel_NVIDIA_Nexapow";
+            this.checkBox_Rigel_NVIDIA_Nexapow.Size = new System.Drawing.Size(72, 17);
+            this.checkBox_Rigel_NVIDIA_Nexapow.TabIndex = 6;
+            this.checkBox_Rigel_NVIDIA_Nexapow.Text = "NexaPow";
+            this.checkBox_Rigel_NVIDIA_Nexapow.UseVisualStyleBackColor = true;
             // 
             // Form_additional_mining
             // 
@@ -626,5 +638,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_MINIZ_AMD_ZHash;
         private System.Windows.Forms.CheckBox checkBox_MINIZ_AMD_ZelHash;
         private System.Windows.Forms.CheckBox checkBox_GMINER_NVIDIA_OctopusKHeavyHash;
+        private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_Nexapow;
     }
 }

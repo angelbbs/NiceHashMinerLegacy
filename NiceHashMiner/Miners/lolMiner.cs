@@ -243,6 +243,14 @@ namespace NiceHashMiner.Miners
                     apiBind + " " + param +
                               " --devices ";
             }
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
+            {
+                LastCommandLine = "--algo NEXA" +
+                GetServer("nexapow", username, null, "3396") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
             //duals
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
@@ -372,6 +380,13 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo KASPA " +
                 " --pool " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --user kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.lolMiner --pass x" +
+                              param +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
+            {
+                CommandLine = "--algo NEXA " +
+                " --pool " + Links.CheckDNS("stratum-eu.rplant.xyz:7092").Replace("stratum+tcp://", "") + " --user nexa:nqtsq5g5hs6sqrm7v6ydx3vqvh0ee3tgdrme5sn8h93gxugr.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -555,7 +570,7 @@ namespace NiceHashMiner.Miners
 
             deviceStringCommand += string.Join(",", ids);
 
-            return deviceStringCommand;
+            return deviceStringCommand + " --watchdog exit ";
         }
         protected override bool BenchmarkParseLine(string outdata)
         {
@@ -610,6 +625,10 @@ namespace NiceHashMiner.Miners
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NexaPow))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
@@ -700,6 +719,11 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                    {
+                        delay_before_calc_hashrate = 20;
+                        MinerStartDelay = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NexaPow))
                     {
                         delay_before_calc_hashrate = 20;
                         MinerStartDelay = 10;
@@ -816,6 +840,8 @@ namespace NiceHashMiner.Miners
         {
             return ad;
         }
+
+        private int[] errors = new int[0];
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO; 
@@ -849,14 +875,19 @@ namespace NiceHashMiner.Miners
                 CurrentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
+            //CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             try
             {
-                dynamic resp = JsonConvert.DeserializeObject(ResponseFromlolMiner);
+                dynamic resp = JsonConvert.DeserializeObject(ResponseFromlolMiner.Replace("\"-nan(ind)\"", "0.0"));
                 //Helpers.ConsolePrint("->", ResponseFromlolMiner);
                 int mult = 1;
                 if (resp != null)
                 {
                     int Num_Workers = resp.Num_Workers;
+                    if (errors.Length != Num_Workers)
+                    {
+                        Array.Resize<int>(ref errors, Num_Workers);
+                    }
                     if (Num_Workers == 0) return null;
                     int Num_Algorithms = resp.Num_Algorithms;
                     //Helpers.ConsolePrint("API: ", "Num_Workers: " + Num_Workers.ToString());
@@ -928,24 +959,40 @@ namespace NiceHashMiner.Miners
                             _power = mPair.Device.PowerUsage;
                             mPair.Device.MiningHashrate = hashrates[dev];
                             mPair.Device.MiningHashrateSecond = hashrates2[dev];
-                            dev++;
-                        }
 
-                        if (ad.Speed == 0)
-                        {
-                            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                            APIerrorsCount++;
-                        }
-                        else
-                        {
-                            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                            APIerrorsCount = 0;
-                        }
-                        if (Num_Algorithms == 2 && ad.SecondarySpeed == 0)
-                        {
-                            CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                            APIerrorsCount++;
-                        }
+                            if (Num_Algorithms == 1 && hashrates[dev] == 0)
+                            {
+                                //CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                                //Helpers.ConsolePrint("lolMiner API", "Device " + dev.ToString() + " zero hashrate");
+                                errors[dev]++;
+                            }
+                            if (Num_Algorithms == 2 && hashrates[dev] == 0)
+                            {
+                                //CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                                //Helpers.ConsolePrint("lolMiner API", "Device " + dev.ToString() + " zero main hashrate");
+                                errors[dev]++;
+                            }
+                            if (Num_Algorithms == 2 && hashrates2[dev] == 0)
+                            {
+                                //CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                                //Helpers.ConsolePrint("lolMiner API", "Device " + dev.ToString() + " zero second hashrate");
+                                errors[dev]++;
+                            }
+
+                            if (Num_Algorithms == 1 && hashrates[dev] != 0)
+                            {
+                                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                                errors[dev] = 0;
+                            }
+                            if (Num_Algorithms == 2 && hashrates[dev] != 0 && hashrates2[dev] != 0)
+                            {
+                                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                                errors[dev] = 0;
+                            }
+
+
+                            dev++;
+                        }  
                     }
 
                 }
@@ -955,11 +1002,13 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint(MinerTag(), e.ToString());
             }
 
-            if (APIerrorsCount >= 100)
+            foreach (var d in errors)
             {
-                Helpers.ConsolePrint(MinerTag(), "Too many API errors. Restarting miner");
-                APIerrorsCount = 0;
-                Restart();
+                if (d >= 100)
+                {
+                    Helpers.ConsolePrint(MinerTag(), "Too many API errors. Restarting miner");
+                    Restart();
+                }
             }
 
             Thread.Sleep(100);

@@ -122,6 +122,7 @@ namespace NiceHashMiner.Forms.Components
             this.listViewDevices.ItemCheck += new ItemCheckEventHandler(listViewDevices_ItemCheck);
             IsMining = false;
             BenchmarkCalculation = null;
+            listViewDevices.MultiSelect = false;
             //  listViewDevices.OwnerDraw = true;
         }
 
@@ -841,10 +842,7 @@ namespace NiceHashMiner.Forms.Components
         {
             //  CheckBox checkbox = (CheckBox)sender;
         }
-        private void listViewDevices_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
 
-        }
         private void listViewDevices_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             /*

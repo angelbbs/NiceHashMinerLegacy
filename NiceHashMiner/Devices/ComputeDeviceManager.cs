@@ -1,4 +1,5 @@
 using ManagedCuda.Nvml;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Querying;
@@ -704,6 +705,9 @@ namespace NiceHashMiner.Devices
                         case "1043":
                             man = "ASUS";
                             break;
+                        case "1565":
+                            man = "Biostar";
+                            break;
                         case "103C":
                             man = "HP";
                             break;
@@ -874,9 +878,39 @@ break;
                         {
                             ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
                             var man = SafeGetProperty(manObj, "PNPDeviceID").Split('&')[2];
+                            //******************************************
+                            int _busID = -1;
+                            var PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID");
+                            string[] _PNPDeviceID = PnpDeviceID.Split('\\');
+                            string UUID = PnpDeviceID.Split('&')[0] + "&" + PnpDeviceID.Split('&')[1] + "_" + PnpDeviceID.Split('&')[4];
+                            UUID = UUID.Replace("\\", "_");
+
+                            const string hklm = "HKEY_LOCAL_MACHINE";
+                            string keyPath = hklm + @"\SYSTEM\CurrentControlSet\Enum\PCI\" + _PNPDeviceID[1] + "\\" + _PNPDeviceID[2];
+                            const string value = "LocationInformation";
+
+                            try
+                            {
+                                var readValue = Registry.GetValue(keyPath, value, new object());
+                                //@System32\drivers\pci.sys,#65536;PCI-шина %1, устройство %2, функция %3;(6,0,0)
+                                int s = readValue.ToString().LastIndexOf(';') + 2;
+                                string t = readValue.ToString().Substring(s, readValue.ToString().Length - s);
+                                string r = t.Split(',')[0];
+                                int.TryParse(r, out int busID);
+                                if (busID >= 0)
+                                {
+                                    _busID = busID;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("ProcessDevices", ex.ToString());
+                            }
+                            //******************************************
                             var vidController = new VideoControllerData
                             {
                                 ID = _id,
+                                BusID = _busID,
                                 Name = SafeGetProperty(manObj, "Name"),
                                 Description = SafeGetProperty(manObj, "Description"),
                                 Manufacturer = man.Substring(man.Length - 4),
@@ -929,6 +963,7 @@ break;
                             }
                             stringBuilder.AppendLine("\tWin32_VideoController detected:");
                             stringBuilder.AppendLine($"\t\tID {vidController.ID}");
+                            stringBuilder.AppendLine($"\t\tBusID {vidController.BusID}");
                             stringBuilder.AppendLine($"\t\tName {vidController.Name}");
                             stringBuilder.AppendLine($"\t\tNVIDIA LHR? {vidController.NvidiaLHR}");
                             stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");

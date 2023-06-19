@@ -1018,7 +1018,6 @@ namespace NiceHashMiner.Miners
                     {
                         Form_Main.RateNoZil = _zil.RateNoZil;
                         Form_Main.RateZil = _zil.RateZil;
-
                         if (ad.ZilRound)
                         {
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
@@ -1072,19 +1071,32 @@ namespace NiceHashMiner.Miners
                         }
                         Form_Main.ZilFactor = _zil.ZilFactor;
 
+                        if (Form_Main.RateZil * 100 < Form_Main.RateNoZil)//fix overprice from api
+                        {
+                            Form_Main.RateNoZil = Form_Main.RateNoZil / 100;
+                        }
+
                         _zil.RateNoZil = Form_Main.RateNoZil;
                         _zil.RateZil = Form_Main.RateZil;
 
-                        double _RateNoZil = Form_Main.RateNoZil / _zil.RateNoZilCount;
+                        double _RateNoZil = Form_Main.RateNoZil / _zil.RateNoZilCount;//0.0067
                         double _RateZil = Form_Main.RateZil   / _zil.RateZilCount;
 
                         if (_zil.RateNoZilCount != 0)
                         {
                             _zil.ZilRatio = (double)((double)_zil.RateZilCount / (double)_zil.RateNoZilCount);
                         }
-                        double _zilRatio = _zil.ZilRatio;
+                        double _zilRatio = _zil.ZilRatio * 0.75;
 
                         Form_Main.ZilFactor = Math.Round((_RateZil * _zilRatio) / _RateNoZil, 3);
+
+                        if (Form_Main.ZilFactor > 0.1)
+                        {
+                            _RateZil = _RateZil * 0.5;
+                            Form_Main.RateZil = Form_Main.RateZil * 0.5;
+                            Form_Main.ZilFactor = Form_Main.ZilFactor * 0.5;
+                            _zil.RateZil = Form_Main.RateZil;
+                        }
                         _zil.ZilFactor = Form_Main.ZilFactor;
 
                         if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
@@ -1121,7 +1133,7 @@ namespace NiceHashMiner.Miners
                     // Update GUI
                     _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad,
                         groupMiners.CurrentRate, groupMiners.PowerRate, groupMiners.StartMinerTime,
-                        m.IsApiReadException, m.ProcessTag(), groupMiners);
+                        m.IsApiReadException, m.ProcessTag(), groupMiners, checks.Count);
                 }
             }
             catch (Exception e)

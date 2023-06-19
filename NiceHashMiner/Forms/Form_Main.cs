@@ -38,6 +38,7 @@ namespace NiceHashMiner
     using System.Net.Sockets;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Threading.Tasks;
     using static NiceHashMiner.Devices.ComputeDeviceManager;
     using static NiceHashMiner.Devices.ComputeDeviceManager.Query;
@@ -185,6 +186,8 @@ namespace NiceHashMiner
         public static int ZilCount = -1;
         public static bool needGMinerRestart = false;
         public static string NicehashAPIerrorDescription = "";
+
+        public MemoryMappedFile MonitorSharedMemory = MemoryMappedFile.CreateOrOpen("MinerLegacyForkFixMonitor", 100);
 
         //**
         public static string[] ZoneSchedule1 = { "00:00", "23:59", "0.00" };
@@ -1433,6 +1436,7 @@ namespace NiceHashMiner
 
             label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NicehashAPIerrorDescription;
             label_NH_ConnectStatus.Update();
+            label_NH_ConnectStatus.Refresh();
             //_loadingScreen.SetValueAndMsg(70, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
@@ -1573,11 +1577,11 @@ namespace NiceHashMiner
                 _loadingScreen.SetValueAndMsg(87, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
                 minerdata = MinerVersion.Get_XMRig();
                 MinerVersion.MinerDataList.Add(minerdata);
-                /*
+                
                 _loadingScreen.SetValueAndMsg(88, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Rigel");
                 minerdata = MinerVersion.Get_Rigel();
                 MinerVersion.MinerDataList.Add(minerdata);
-                */
+                
                 string json = JsonConvert.SerializeObject(MinerDataList, Formatting.Indented);
                 try
                 {
@@ -1664,6 +1668,7 @@ namespace NiceHashMiner
             }
 
             if (ConfigManager.GeneralConfig.AlwaysOnTop) this.TopMost = true;
+
         }
 
         private static void MinersGetVersionWatchdog()
@@ -2020,9 +2025,6 @@ namespace NiceHashMiner
             _loadingScreen.Show();
             _loadingScreen.SetValueAndMsg(0, "Starting...");
 
-            //Devices.Querying.IntelQuery.GetPower(0);
-            //this.Close();
-
             if (ConfigManager.GeneralConfig.Use_Last24hours & ConfigManager.GeneralConfig.Use_orders_price)
             {
                 ConfigManager.GeneralConfig.Use_orders_price = false;
@@ -2126,6 +2128,7 @@ namespace NiceHashMiner
 
         private void UpdateSMATimer_Tick(object sender, EventArgs e)
         {
+            GC.Collect(GC.MaxGeneration);
             //GC.Collect(GC.MaxGeneration);
             //GC.WaitForPendingFinalizers();
             Process currentProc = Process.GetCurrentProcess();
@@ -2297,8 +2300,6 @@ namespace NiceHashMiner
 
                 }
                 //stop openhardwaremonitor
-                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-                {
                     var CMDconfigHandleOHM = new Process
 
                     {
@@ -2312,7 +2313,34 @@ namespace NiceHashMiner
                     CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
                     CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
                     CMDconfigHandleOHM.Start();
-                }
+
+                CMDconfigHandleOHM = new Process
+
+                    {
+                        StartInfo =
+                        {
+                            FileName = "sc.exe"
+                        }
+                    };
+                    CMDconfigHandleOHM.StartInfo.Arguments = "stop R0NiceHashMinerLegacy";
+                    CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                    CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                    CMDconfigHandleOHM.Start();
+
+                CMDconfigHandleOHM = new Process
+
+                {
+                    StartInfo =
+                        {
+                            FileName = "sc.exe"
+                        }
+                };
+                CMDconfigHandleOHM.StartInfo.Arguments = "delete R0NiceHashMinerLegacy";
+                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleOHM.Start();
+
+
                 if (GetWinVer(Environment.OSVersion.Version) == 10)
                 {
                     var CMDconfigHandleWD = new Process
@@ -2555,7 +2583,7 @@ public static void CloseChilds(Process parentId)
 
 
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying, double power,
-           DateTime StartMinerTime, bool isApiGetException, string processTag, GroupMiner groupMiners)
+           DateTime StartMinerTime, bool isApiGetException, string processTag, GroupMiner groupMiners, int groupCount)
         {
             //Helpers.ConsolePrint("trace", new System.Diagnostics.StackTrace().ToString());
 
@@ -2612,9 +2640,9 @@ public static void CloseChilds(Process parentId)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-           // Helpers.ConsolePrint("*****", "rateCurrencyString: " + rateCurrencyString);
             try
             {
+                if (_flowLayoutPanelRatesIndex >= groupCount) return;
                 // flowLayoutPanelRatesIndex may be OOB, so catch
                 ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
                     .UpdateProfitStats(groupName, deviceStringInfo, speedString, StartMinerTime, rateBtcString, rateCurrencyString, processTag);
@@ -2624,8 +2652,6 @@ public static void CloseChilds(Process parentId)
             {
                 Helpers.ConsolePrint("AddRateInfo", ex.ToString());
             }
-            //new Task(() => UpdateGlobalRate()).Start();
-            //UpdateGlobalRate();
         }
 
         public void ShowNotProfitable(string msg)
@@ -3143,8 +3169,6 @@ public static void CloseChilds(Process parentId)
             }
 
             //stop openhardwaremonitor
-            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-            {
                 var CMDconfigHandleOHM = new Process
 
                 {
@@ -3158,7 +3182,35 @@ public static void CloseChilds(Process parentId)
                 CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
                 CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleOHM.Start();
-            }
+
+            CMDconfigHandleOHM = new Process
+
+                {
+                    StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+                };
+
+                CMDconfigHandleOHM.StartInfo.Arguments = "stop R0NiceHashMinerLegacy";
+                CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+                CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleOHM.Start();
+
+            CMDconfigHandleOHM = new Process
+
+            {
+                StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+            };
+
+            CMDconfigHandleOHM.StartInfo.Arguments = "delete R0NiceHashMinerLegacy";
+            CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
+            CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
+            CMDconfigHandleOHM.Start();
+
             if (GetWinVer(Environment.OSVersion.Version) == 10)
             {
                 var CMDconfigHandleWD = new Process
@@ -3531,11 +3583,18 @@ public static void CloseChilds(Process parentId)
 
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
-            _NHApiFlag = NHApiFlag + " " + NicehashAPIerrorDescription;
+            if (!string.IsNullOrEmpty(NicehashAPIerrorDescription))
+            {
+                _NHApiFlag = NHApiFlag + " " + NicehashAPIerrorDescription;
+            } else
+            {
+                _NHApiFlag = NHApiFlag;
+            }
             if (NiceHashSocket._webSocket != null)
             {
                 var _curState = NiceHashSocket._webSocket.ReadyState;
-                if (_curState != _oldState || NHApiFlag != _NHApiFlag)
+                //if (_curState != _oldState || NHApiFlag != _NHApiFlag)
+                if (_curState != _oldState)
                 {
                     _oldState = _curState;
                     if (_curState == WebSocketSharp.WebSocketState.Closed || _curState == WebSocketSharp.WebSocketState.Closing)
@@ -3745,9 +3804,21 @@ public static void CloseChilds(Process parentId)
                          International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
             SMAdelayTick++;
-
+            byte[] b1 = { (byte)254, (byte)254, (byte)254 };//1,2 - reserved
             try
             {
+                if (ConfigManager.GeneralConfig.ProgramMonitoring)
+                {
+                    using (MemoryMappedViewAccessor writer = MonitorSharedMemory.CreateViewAccessor(0, 3))
+                    {
+                        string s = label_Uptime.Text.Substring(label_Uptime.Text.Length - 2, 2);
+                        if (int.TryParse(s, out int sec))
+                        {
+                            b1[0] = (byte)sec;
+                            writer.WriteArray<byte>(0, b1, 0, 3);
+                        }
+                    }
+                }
                 if (ConfigManager.GeneralConfig.ShowUptime)
                 {
                     var timenow = DateTime.Now;
@@ -3755,7 +3826,7 @@ public static void CloseChilds(Process parentId)
                     label_Uptime.Visible = true;
                     label_Uptime.Text = International.GetText("Form_Main_Uptime") + " " +
                                         Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
-                        //" Блок зилики: " + ZilCount.ToString();
+                        //" Блок зилики: " + ZilCount.ToString();blockzil
                 }
 
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)

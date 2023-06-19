@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +23,7 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
         private double _power = 0.0d;
         double _powerUsage = 0;
+        int _apiErrors = 0;
 
         public teamredminer()
             : base("teamredminer")
@@ -139,7 +142,7 @@ namespace NiceHashMiner.Miners
             string algo2 = "";
             string port = "";
 
-            var apiBind = " --watchdog_disabled --api_listen=127.0.0.1:" + ApiPort;
+            var apiBind = " --api_listen=127.0.0.1:" + ApiPort;
 
             var sc = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
@@ -172,7 +175,7 @@ namespace NiceHashMiner.Miners
                 algo = "autolykos2";
                 algo2 = "autolykos";
                 port = "3390";
-                LastCommandLine = sc + " --watchdog_script " +
+                LastCommandLine = sc + "" +
                     " -d " + GetDevicesCommandString() +
                     " -a " + algo + " " +
             GetServerDual(algo2, "kheavyhash", username, port, "3395") +
@@ -186,7 +189,7 @@ namespace NiceHashMiner.Miners
                 return;
             }
             
-            LastCommandLine = sc + " --watchdog_script " + "-a " + algo + " " +
+            LastCommandLine = sc + "" + "-a " + algo + " " +
             GetServer(algo2, username, port) +
                               apiBind +
                               " " +
@@ -426,6 +429,81 @@ namespace NiceHashMiner.Miners
         {
             return ad;
         }
+
+        protected async Task<string> GetApiDataAsync(int port, string dataToSend, bool exitHack = false,
+            bool overrideLoop = false)
+        {
+            string responseFromServer = null;
+            try
+            {
+                var tcpc = new TcpClient("127.0.0.1", port);
+                var nwStream = tcpc.GetStream();
+                nwStream.ReadTimeout = 2 * 1000;
+                nwStream.WriteTimeout = 2 * 1000;
+
+                var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+
+                var incomingBuffer = new byte[tcpc.ReceiveBufferSize];
+                var prevOffset = -1;
+                var offset = 0;
+                var fin = false;
+
+                while (!fin && tcpc.Client.Connected)
+                {
+                    var r = await nwStream.ReadAsync(incomingBuffer, offset, tcpc.ReceiveBufferSize - offset);
+                    for (var i = offset; i < offset + r; i++)
+                    {
+                        if (incomingBuffer[i] == 0x7C || incomingBuffer[i] == 0x00
+                                                      || (i > 2 && IsApiEof(incomingBuffer[i - 2],
+                                                              incomingBuffer[i - 1], incomingBuffer[i]))
+                                                      || overrideLoop)
+                        {
+                            fin = true;
+                            break;
+                        }
+
+                        // Not working
+                        //if (IncomingBuffer[i] == 0x5d || IncomingBuffer[i] == 0x5e) {
+                        //    fin = true;
+                        //    break;
+                        //}
+                    }
+
+                    offset += r;
+                    if (exitHack)
+                    {
+                        if (prevOffset == offset)
+                        {
+                            fin = true;
+                            break;
+                        }
+
+                        prevOffset = offset;
+                    }
+                }
+
+                tcpc.Close();
+
+                if (offset > 0)
+                    responseFromServer = Encoding.ASCII.GetString(incomingBuffer);
+            }
+            catch (Exception ex)
+            {
+                _apiErrors++;
+                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " GetAPIData reason: " + ex.Message);
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                if (_apiErrors > 60)
+                {
+                    _apiErrors = 0;
+                    Helpers.ConsolePrint("GetApiDataAsync", "RESTART TEAMREDMINER");
+                    Restart();
+                }
+                return null;
+            }
+            _apiErrors = 0;
+            return responseFromServer;
+        }
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
@@ -440,6 +518,13 @@ namespace NiceHashMiner.Miners
             }
             resp2 = resp2.Trim('\x00');
             //Helpers.ConsolePrint("API: ", resp2.Trim());
+            if (resp2.Contains("Status=Dead"))
+            {
+                Helpers.ConsolePrint("GetSummaryAsync", "Dead GPU detected. Restart miner.");
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                Thread.Sleep(1000);
+                Restart();
+            }
             try
             {
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
