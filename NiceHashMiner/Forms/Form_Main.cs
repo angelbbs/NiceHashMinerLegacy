@@ -735,7 +735,8 @@ namespace NiceHashMiner
                     noproxyfile = true;
                 }
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                WebClient client = new WebClient();
+                MyWebClient client = new MyWebClient();
+
                 client.UseDefaultCredentials = false;
                 try
                 {
@@ -4463,6 +4464,15 @@ public static void CloseChilds(Process parentId)
 
             return time >= startTime &&
                 time <= endTime;
+        }
+    }
+    public class MyWebClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            WebRequest w = base.GetWebRequest(uri);
+            w.Timeout = 5 * 60 * 1000;
+            return w;
         }
     }
 }

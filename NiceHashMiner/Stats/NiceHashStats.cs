@@ -638,6 +638,7 @@ namespace NiceHashMiner.Stats
                     return true;
                 }
                 Helpers.ConsolePrint("NHM_API_info", "GetSmaAPICurrent ERROR");
+                //Form_Main.NicehashAPIerrorDescription = "ERROR";
                 return false;
 
             }

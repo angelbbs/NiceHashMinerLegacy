@@ -1,6 +1,4 @@
 using LibreHardwareMonitor.Hardware;
-using NiceHashMiner;
-//using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
 

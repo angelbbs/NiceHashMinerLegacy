@@ -42,7 +42,7 @@ namespace NiceHashMiner.Devices.Querying
 
             return "key is null";
         }
-       
+
         public static List<OpenCLDevice> ProcessDevices(List<VideoControllerData> availControllers)
         {
             _availableControllers = availControllers;
@@ -50,7 +50,7 @@ namespace NiceHashMiner.Devices.Querying
 
             var IntelDevices = new List<OpenCLDevice>();
             var IntelPlatformNumFound = WindowsDisplayAdapters.HasIntelVideoController();
-            
+
             if (!IntelPlatformNumFound)
             {
                 Helpers.ConsolePrint("IntelQuery", "Intel Arc or Iris OpenCL platform not found");
@@ -118,7 +118,7 @@ namespace NiceHashMiner.Devices.Querying
                     _busIdInfos.Add(oclDev.BUS_ID, info);
                 }
             }
-          
+
 
 
             if (IntelDevices.Count == 0)
@@ -308,10 +308,10 @@ namespace NiceHashMiner.Devices.Querying
             _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
             ctl_init_args_t CtlInitArgs = new ctl_init_args_t();
             CtlInitArgs.AppVersion = CTL_MAKE_VERSION(CTL_IMPL_MAJOR_VERSION, CTL_IMPL_MINOR_VERSION);
-            CtlInitArgs.flags = CTL_INIT_FLAG_USE_LEVEL_ZERO; 
+            CtlInitArgs.flags = CTL_INIT_FLAG_USE_LEVEL_ZERO;
             CtlInitArgs.Size = (uint)Marshal.SizeOf(typeof(ctl_init_args_t));
             CtlInitArgs.Version = 0;
-            CtlInitArgs.SupportedVersion = 0; 
+            CtlInitArgs.SupportedVersion = 0;
 
             IntPtr hAPIHandle = new IntPtr(0);
             _ctl_result_t r = (_ctl_result_t)ctlInit(ref CtlInitArgs, ref hAPIHandle);
@@ -373,7 +373,7 @@ namespace NiceHashMiner.Devices.Querying
                     }
                     intelOpenCLDevice.BUS_ID = Pci_properties.address.bus;
                     intelOpenCLDevice.DeviceID = Pci_properties.address.device;
-                    Helpers.ConsolePrint("StDeviceAdapterProperties*********", StDeviceAdapterProperties.pci_device_id.ToString()); ;
+//                    Helpers.ConsolePrint("StDeviceAdapterProperties*********", StDeviceAdapterProperties.pci_device_id.ToString()); ;
                     //*************************
                     uint MemoryHandlerCount = 0;
 
@@ -581,8 +581,8 @@ namespace NiceHashMiner.Devices.Querying
                     }
                     return Math.Round(power);
                 }
-                
-                
+
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("GetPower", ex.ToString());
@@ -740,7 +740,7 @@ namespace NiceHashMiner.Devices.Querying
             return IntelDevices;
         }
 
-        
+
         private struct BusIdInfo
         {
             public string Name;

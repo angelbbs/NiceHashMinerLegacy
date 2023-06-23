@@ -343,7 +343,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
             {
                 ret = " -a nexapow" +
-                " -o " + Links.CheckDNS("stratum-eu.rplant.xyz:7092") + " -u nexa:nqtsq5g5hs6sqrm7v6ydx3vqvh0ee3tgdrme5sn8h93gxugr.Rigel -p x" +
+                " -o " + Links.CheckDNS("stratum-eu.rplant.xyz:7092") + " -u nexa:nqtsq5g55l2jhuazhre8zfzfnyxle543wjlapt4huup3x9gy.Rigel -p x" +
                 GetDevicesCommandString();
             }
             
@@ -371,11 +371,6 @@ namespace NiceHashMiner.Miners
 
             try
             {
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) ||
-                    MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.AutolykosKHeavyHash))
-                {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 30;
-                }
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
@@ -399,7 +394,7 @@ namespace NiceHashMiner.Miners
                     // wait a second due api request
                     Thread.Sleep(1000);
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 15;

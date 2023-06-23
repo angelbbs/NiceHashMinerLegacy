@@ -386,7 +386,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
             {
                 CommandLine = "--algo NEXA " +
-                " --pool " + Links.CheckDNS("stratum-eu.rplant.xyz:7092").Replace("stratum+tcp://", "") + " --user nexa:nqtsq5g5hs6sqrm7v6ydx3vqvh0ee3tgdrme5sn8h93gxugr.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("stratum-eu.rplant.xyz:7092").Replace("stratum+tcp://", "") + " --user nexa:nqtsq5g55l2jhuazhre8zfzfnyxle543wjlapt4huup3x9gy.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -699,33 +699,33 @@ namespace NiceHashMiner.Miners
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
                     {
-                        delay_before_calc_hashrate = 50;
+                        delay_before_calc_hashrate = 40;
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
                     {
-                        delay_before_calc_hashrate = 50;
+                        delay_before_calc_hashrate = 40;
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZelHash))
                     {
-                        delay_before_calc_hashrate = 50;
+                        delay_before_calc_hashrate = 40;
                         MinerStartDelay = 20;
                     }
                     
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
                     {
-                        delay_before_calc_hashrate = 20;
+                        delay_before_calc_hashrate = 10;
                         MinerStartDelay = 20;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
                     {
-                        delay_before_calc_hashrate = 20;
+                        delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NexaPow))
                     {
-                        delay_before_calc_hashrate = 20;
+                        delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))

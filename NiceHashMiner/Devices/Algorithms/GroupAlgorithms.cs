@@ -176,6 +176,13 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.OctopusKHeavyHash
                     });
             }
+            if (device.Name.ToLower().Contains("gtx 10") && device.DeviceType == DeviceType.NVIDIA)
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.NexaPow
+                    });
+            }
 
             if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 6.8))
             {

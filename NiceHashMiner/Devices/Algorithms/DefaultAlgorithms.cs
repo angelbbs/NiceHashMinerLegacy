@@ -512,6 +512,10 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
                             {
                             },
