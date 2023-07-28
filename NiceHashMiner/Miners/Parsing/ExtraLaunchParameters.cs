@@ -212,8 +212,10 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     // SingleParam
                     new MinerOption("Platform", "", "--platform=", null, MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("TRM_kas_start", "", "-kas_start", null, MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("TRM_kas_end", "", "-kas_end", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRM_kas_start", "", "--kas_start", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRM_kas_end", "", "--kas_end", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRM_iron_start", "", "--iron_start", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRM_iron_end", "", "--iron_end", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("TRMintensity", "", "--cn_config=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMtemp_limit", "", "--temp_limit=", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMtemp_resume", "", "--temp_resume=", "-1", MinerOptionFlagType.MultiParam, ","),
@@ -648,6 +650,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Rigel-temp-limit-tm", "--temp-limit tm", "--temp-limit tm", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-cpu-check", "--cpu-check", "--cpu-check", null, MinerOptionFlagType.Uni),
                     new MinerOption("Rigel-no-tui", "--no-tui", "--no-tui", null, MinerOptionFlagType.Uni),
+                    new MinerOption("Rigel---log-network", "--log-network", "--log-network", null, MinerOptionFlagType.Uni),
                     new MinerOption("Rigel-zil-countdown", "--zil-countdown", "--zil-countdown", null, MinerOptionFlagType.Uni),
                     new MinerOption("Rigel-dns-over-https", "--dns-over-https", "--dns-over-https", null, MinerOptionFlagType.Uni),
                     new MinerOption("Rigel-hashrate-avg", "--hashrate-avg", "--hashrate-avg", "10", MinerOptionFlagType.SingleParam),

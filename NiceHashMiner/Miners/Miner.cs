@@ -88,6 +88,8 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerOctopus;
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.DaggerKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.DaggerIronFish;
                 }
             }
             if (AlgorithmID == AlgorithmType.ETCHash)
@@ -96,6 +98,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.ETCHashKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.ETCHashIronFish;
                 }
             }
             if (AlgorithmID == AlgorithmType.Autolykos)
@@ -104,6 +108,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.AutolykosKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.AutolykosIronFish;
                 }
             }
             if (AlgorithmID == AlgorithmType.Octopus)
@@ -112,6 +118,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.OctopusKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.OctopusIronFish;
                 }
             }
 
@@ -2056,6 +2064,10 @@ namespace NiceHashMiner
                         pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKHeavyHash ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashKHeavyHash ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKHeavyHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosIronFish ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerIronFish ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashIronFish ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusIronFish ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusKHeavyHash)
                     {
                         strDual = "DUAL";

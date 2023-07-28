@@ -6,6 +6,10 @@
 
         // dual algos for grouping
         AutolykosZil = -73,
+        OctopusIronFish = -25,
+        AutolykosIronFish = -24,
+        DaggerIronFish = -23,
+        ETCHashIronFish = -22,
         OctopusKHeavyHash = -21,
         AutolykosKHeavyHash = -20,
         DaggerKHeavyHash = -19,
@@ -100,7 +104,8 @@
         ETCHash = 60,
         VerusHash = 61,
         KHeavyHash = 62,
-        NexaPow = 63
+        NexaPow = 63,
+        IronFish = 64
         #endregion // NiceHashAPI
     }
 }

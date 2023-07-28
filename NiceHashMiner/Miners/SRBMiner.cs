@@ -240,7 +240,16 @@ namespace NiceHashMiner.Miners
                     GetServer(algo, username, port) + ZilMining +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
-                
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
+                {
+                    var port = "3397";
+                    var algo = "ironfish";
+
+                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm blake3_ironfish --api-enable --api-port {ApiPort} " +
+                    GetServer(algo, username, port) + ZilMining +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("GetStartCommand", ex.ToString());
@@ -360,7 +369,16 @@ namespace NiceHashMiner.Miners
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 _benchmarkTimeWait = 30;
             }
-            
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
+            {
+                return $" " + disablePlatform + " --algorithm blake3_ironfish" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
+                    $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                _benchmarkTimeWait = 30;
+            }
+
             return "unknown";
         }
 
@@ -444,12 +462,12 @@ namespace NiceHashMiner.Miners
 
             if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
             {
-                ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
+                ad.SecondaryAlgorithmID = MiningSetup.CurrentSecondaryAlgorithmType;
             }
 
-            int totalsMain = 0;
-            int totalsSecond = 0;
-            int totalsThird = 0;
+            double totalsMain = 0;
+            double totalsSecond = 0;
+            double totalsThird = 0;
             /*
             if (ResponseFromSRBMiner.ToLower().Contains("\"name\": \"zil\""))
             {
@@ -477,7 +495,7 @@ namespace NiceHashMiner.Miners
                             {
                                 string token = $"algorithms[0].hashrate.gpu.gpu{mPair.Device.IDByBus}";
                                 var hash = resp.SelectToken(token);
-                                int gpu_hr = (int)Convert.ToInt32(hash, CultureInfo.InvariantCulture.NumberFormat);
+                                int gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
                                 mPair.Device.MiningHashrate = gpu_hr;
                                 _power = mPair.Device.PowerUsage;
                                 mPair.Device.AlgorithmID = (int)MiningSetup.CurrentAlgorithmType;
@@ -539,7 +557,7 @@ namespace NiceHashMiner.Miners
                         totalsSecond = resp.algorithms[1].hashrate.gpu.total;
                     }
 
-                    if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//dual no zil
+                    if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))//dual no zil
                     {
                         foreach (var mPair in sortedMinerPairs)
                         {
@@ -575,7 +593,7 @@ namespace NiceHashMiner.Miners
                         }
                     }
 
-                    if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash) &&
+                    if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE) &&
                         ResponseFromSRBMiner.ToLower().Contains("\"name\": \"zil\""))//dual + zil
                     {
                         foreach (var mPair in sortedMinerPairs)
@@ -822,6 +840,25 @@ namespace NiceHashMiner.Miners
                     }
                     // wait a second due api request
                     Thread.Sleep(1000);
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 15;
+                        _benchmarkTimeWait = _benchmarkTimeWait - 90;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                    {
+                        MinerStartDelay = 5;
+                        delay_before_calc_hashrate = 5;
+                        _benchmarkTimeWait = _benchmarkTimeWait - 90;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
+                    {
+                        MinerStartDelay = 5;
+                        delay_before_calc_hashrate = 5;
+                        _benchmarkTimeWait = _benchmarkTimeWait - 90;
+                    }
 
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)

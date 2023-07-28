@@ -526,6 +526,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.AutolykosKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.AutolykosIronFish;
                 }
             }
             if (primary == AlgorithmType.Octopus)
@@ -534,6 +536,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.OctopusKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.OctopusIronFish;
                 }
             }
             if (primary == AlgorithmType.DaggerHashimoto)
@@ -542,6 +546,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.DaggerKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.DaggerIronFish;
                 }
             }
             if (primary == AlgorithmType.ETCHash)
@@ -550,6 +556,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.KHeavyHash:
                         return AlgorithmType.ETCHashKHeavyHash;
+                    case AlgorithmType.IronFish:
+                        return AlgorithmType.ETCHashIronFish;
                 }
             }
 

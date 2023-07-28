@@ -87,9 +87,9 @@ namespace MinerLegacyForkFixMonitor
                         var MonitorProc = new Process
                         {
                             StartInfo =
-                {
-                    FileName = "NiceHashMinerLegacy.exe"
-                }
+                            {
+                                FileName = "NiceHashMinerLegacy.exe"
+                            }
                         };
 
                         if (MonitorProc.Start())
@@ -145,7 +145,7 @@ namespace MinerLegacyForkFixMonitor
                     //Helpers.ConsolePrint("Monitor", "stuckCount: " + stuckCount.ToString());
                 }
 
-                if (stuckCount > 20)
+                if (stuckCount > 720)
                 {
                     Helpers.ConsolePrint("Monitor", "Main process stuck. Trying restart");
                     try
@@ -153,9 +153,9 @@ namespace MinerLegacyForkFixMonitor
                         var tkHandle = new Process
                         {
                             StartInfo =
-                {
-                    FileName = "taskkill.exe"
-                }
+                            {
+                                FileName = "taskkill.exe"
+                            }
                         };
                         tkHandle.StartInfo.Arguments = "/PID " + p.Id.ToString() + " /F /T";
                         tkHandle.StartInfo.UseShellExecute = false;

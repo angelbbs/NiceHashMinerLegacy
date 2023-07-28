@@ -17,6 +17,7 @@ namespace NiceHashMiner.Forms
         public Form_additional_mining()
         {
             InitializeComponent();
+            this.TopMost = true;
             this.Text = International.GetText("Form_Settings_button_ZIL_additional_mining");
 
             checkBox_ZIL_Mining_Enable.Text = International.GetText("Form_Settings_checkBox_ZIL_Mining_Enable");
@@ -71,14 +72,18 @@ namespace NiceHashMiner.Forms
                 ConfigManager.GeneralConfig.ZILConfigGMiner.Autolykos_NVIDIA;
             checkBox_GMINER_NVIDIA_AutolykosKHeavyHash.Checked =
                 ConfigManager.GeneralConfig.ZILConfigGMiner.AutolykosKHeavyHash_NVIDIA;
+            checkBox_GMINER_NVIDIA_AutolykosIronFish.Checked =
+                ConfigManager.GeneralConfig.ZILConfigGMiner.AutolykosIronFish_NVIDIA;
             checkBox_GMINER_NVIDIA_BeamV3.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.BeamV3_NVIDIA;
             checkBox_GMINER_NVIDIA_CuckooCycle.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.CuckooCycle_NVIDIA;
             checkBox_GMINER_NVIDIA_GrinCuckatoo32.Checked =
                 ConfigManager.GeneralConfig.ZILConfigGMiner.GrinCuckatoo32_NVIDIA;
             checkBox_GMINER_NVIDIA_KAWPOW.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.KAWPOW_NVIDIA;
             checkBox_GMINER_NVIDIA_KHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.KHeavyHash_NVIDIA;
+            checkBox_GMINER_NVIDIA_IronFish.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.IronFish_NVIDIA;
             checkBox_GMINER_NVIDIA_Octopus.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.Octopus_NVIDIA;
             checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusKHeavyHash_NVIDIA;
+            checkBox_GMINER_NVIDIA_OctopusIronFish.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusIronFish_NVIDIA;
             checkBox_GMINER_NVIDIA_ZelHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.ZelHash_NVIDIA;
             checkBox_GMINER_NVIDIA_ZHash.Checked = ConfigManager.GeneralConfig.ZILConfigGMiner.ZHash_NVIDIA;
 
@@ -95,7 +100,10 @@ namespace NiceHashMiner.Forms
             checkBox_NANOMINER_AMD_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD;
             
             checkBox_Rigel_NVIDIA_KHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
+            checkBox_Rigel_NVIDIA_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
+            checkBox_Rigel_NVIDIA_AutolykosKHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
             checkBox_Rigel_NVIDIA_Nexapow.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA;
+            checkBox_Rigel_NVIDIA_IronFish.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.IronFish_NVIDIA;
 
             checkBox_MINIZ_NVIDIA_BeamV3.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.BeamV3_NVIDIA;
             checkBox_MINIZ_NVIDIA_Octopus.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.Octopus_NVIDIA;
@@ -128,6 +136,8 @@ namespace NiceHashMiner.Forms
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.Autolykos_NVIDIA;
                         case "AutolykosKHeavyHash":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.AutolykosKHeavyHash_NVIDIA;
+                        case "AutolykosIronFish":
+                            return ConfigManager.GeneralConfig.ZILConfigGMiner.AutolykosIronFish_NVIDIA;
                         case "BeamV3":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.BeamV3_NVIDIA;
                         case "CuckooCycle":
@@ -138,10 +148,14 @@ namespace NiceHashMiner.Forms
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.KAWPOW_NVIDIA;
                         case "KHeavyHash":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.KHeavyHash_NVIDIA;
+                        case "IronFish":
+                            return ConfigManager.GeneralConfig.ZILConfigGMiner.IronFish_NVIDIA;
                         case "Octopus":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.Octopus_NVIDIA;
                         case "OctopusKHeavyHash":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusKHeavyHash_NVIDIA;
+                        case "OctopusIronFish":
+                            return ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusIronFish_NVIDIA;
                         case "ZelHash":
                             return ConfigManager.GeneralConfig.ZILConfigGMiner.ZelHash_NVIDIA;
                         case "ZHash":
@@ -203,10 +217,16 @@ namespace NiceHashMiner.Forms
                 {
                     switch (algo)
                     {
+                        case "Autolykos":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.Autolykos_NVIDIA;
+                        case "AutolykosKHeavyHash":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosKHeavyHash_NVIDIA;
                         case "KHeavyHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
                         case "NexaPow":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA;
+                        case "IronFish":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.IronFish_NVIDIA;
                         default:
                             return false;
                     }
@@ -260,14 +280,18 @@ namespace NiceHashMiner.Forms
                 checkBox_GMINER_NVIDIA_Autolykos.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.AutolykosKHeavyHash_NVIDIA =
                 checkBox_GMINER_NVIDIA_AutolykosKHeavyHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigGMiner.AutolykosIronFish_NVIDIA =
+                checkBox_GMINER_NVIDIA_AutolykosIronFish.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.BeamV3_NVIDIA = checkBox_GMINER_NVIDIA_BeamV3.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.CuckooCycle_NVIDIA = checkBox_GMINER_NVIDIA_CuckooCycle.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.GrinCuckatoo32_NVIDIA =
                 checkBox_GMINER_NVIDIA_GrinCuckatoo32.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.KAWPOW_NVIDIA = checkBox_GMINER_NVIDIA_KAWPOW.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.KHeavyHash_NVIDIA = checkBox_GMINER_NVIDIA_KHeavyHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigGMiner.IronFish_NVIDIA = checkBox_GMINER_NVIDIA_IronFish.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.Octopus_NVIDIA = checkBox_GMINER_NVIDIA_Octopus.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusKHeavyHash_NVIDIA = checkBox_GMINER_NVIDIA_OctopusKHeavyHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigGMiner.OctopusIronFish_NVIDIA = checkBox_GMINER_NVIDIA_OctopusIronFish.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.ZelHash_NVIDIA = checkBox_GMINER_NVIDIA_ZelHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigGMiner.ZHash_NVIDIA = checkBox_GMINER_NVIDIA_ZHash.Checked;
 
@@ -283,8 +307,11 @@ namespace NiceHashMiner.Forms
 
             ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD = checkBox_NANOMINER_AMD_Autolykos.Checked;
 
+            ConfigManager.GeneralConfig.ZILConfigRigel.Autolykos_NVIDIA = checkBox_Rigel_NVIDIA_Autolykos.Checked;
+            ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosKHeavyHash_NVIDIA = checkBox_Rigel_NVIDIA_AutolykosKHeavyHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA = checkBox_Rigel_NVIDIA_KHeavyHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA = checkBox_Rigel_NVIDIA_Nexapow.Checked;
+            ConfigManager.GeneralConfig.ZILConfigRigel.IronFish_NVIDIA = checkBox_Rigel_NVIDIA_IronFish.Checked;
 
             ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_AMD = checkBox_MINIZ_AMD_ZelHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_AMD = checkBox_MINIZ_AMD_ZHash.Checked;

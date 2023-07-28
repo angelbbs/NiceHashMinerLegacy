@@ -26,7 +26,7 @@ namespace NiceHashMiner.Miners
         private double _power = 0.0d;
         double _powerUsage = 0;
         string platform = "";
-        int APIerrorsCount = 0;
+        private int APIerrorsCount = 0;
         public lolMiner()
             : base("lolMiner")
         {
@@ -251,6 +251,13 @@ namespace NiceHashMiner.Miners
                     apiBind + " " + param +
                               " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
+            {
+                LastCommandLine = "--algo IRONFISH" +
+                GetServer("ironfish", username, null, "3397") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
             //duals
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
@@ -328,7 +335,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 CommandLine = "--algo EQUI144_5 --pers BgoldPoW" +
-                " --pool " + Links.CheckDNS("stratum+tcp://europe.equihash-hub.miningpoolhub.com:20595").Replace("stratum+tcp://", "") + " --user angelbbs.lol --pass x" +
+                " --pool " + Links.CheckDNS("stratum+tcp://btg.2miners.com:4040").Replace("stratum+tcp://", "") + " --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.lol --pass x" +
                                               param +
                 " --devices ";
             }
@@ -387,6 +394,13 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo NEXA " +
                 " --pool " + Links.CheckDNS("stratum-eu.rplant.xyz:7092").Replace("stratum+tcp://", "") + " --user nexa:nqtsq5g55l2jhuazhre8zfzfnyxle543wjlapt4huup3x9gy.lolMiner --pass x" +
+                              param +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
+            {
+                CommandLine = "--algo IRONFISH " +
+                " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -632,7 +646,11 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
-                
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
+                }
+
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//+dual
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
@@ -724,6 +742,11 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NexaPow))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
                     {
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;

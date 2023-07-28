@@ -121,18 +121,24 @@ namespace NiceHashMiner.Miners
                 devtype = mPair.Device.DeviceType;
             }
 
-            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
+            if (!MinerVersion.Get_miniZ().MinerVersion.Trim().Equals("2.1c"))
             {
-                //прокси не используется
-                ZilMining = " --url=zil://" + username + "@daggerhashimoto.auto.nicehash.com:9200";
-                logFile = GetDeviceID() + ".csv";
-                log = " --csv=" + logFile + " --log-period=1";
-                try
+                if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
                 {
+                    //прокси не используется
+                    ZilMining = " --url=zil://" + username + "@daggerhashimoto.auto.nicehash.com:9200";
+                    /*
+                    logFile = GetDeviceID() + ".csv";
+                    log = " --csv=" + logFile + " --log-period=1";
+                    try
+                    {
                     if (File.Exists("miners\\miniz\\" + logFile)) File.Delete("miners\\miniz\\" + logFile);
-                } catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                    }
+                    */
                 }
             }
 
@@ -179,7 +185,7 @@ namespace NiceHashMiner.Miners
             var ret = GetDevicesCommandString()
                       + sColor + " --par=" + algo
                       + GetServer(algoName, username, port)
-                      + ZilMining + log + " --telemetry=" + ApiPort;
+                      + ZilMining + " --telemetry=" + ApiPort;
 
             return ret;
         }
@@ -549,6 +555,12 @@ namespace NiceHashMiner.Miners
                         ad.Speed = prevSpeed;
                     }
                     if (ad.Speed > prevSpeed * 10000 && prevSpeed > 0)
+                    {
+                        ad.Speed = prevSpeed;
+                    }
+                    if ((ad.AlgorithmID == AlgorithmType.ZHash ||
+                        ad.AlgorithmID == AlgorithmType.ZelHash ||
+                        ad.AlgorithmID == AlgorithmType.BeamV3) && ad.Speed > 10000)
                     {
                         ad.Speed = prevSpeed;
                     }

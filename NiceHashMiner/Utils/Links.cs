@@ -118,6 +118,10 @@ namespace NiceHashMiner
                     
                     //resolveError = true;//tesing
                 }
+                if (new System.IO.FileInfo("configs\\dnscache.json").Length == 0)
+                {
+                    File.Delete("configs\\dnscache.json");
+                }
                 if (!File.Exists("configs\\dnscache.json"))
                 {
                     WriteAllBytesWithBackup("configs\\dnscache.json", Properties.Resources.dnscache);
@@ -258,7 +262,9 @@ namespace NiceHashMiner
         {
             IPHostEntry ret = null;
             if (host.ToLower().Contains("daggerautolykos") || host.ToLower().Contains("daggeroctopus") || host.ToLower().Contains("daggerkawpow") ||
-                host.ToLower().Contains("daggerkheavyhash") || host.ToLower().Contains("etckheavyhash") || host.ToLower().Contains("autolykoskheavyhash"))
+                host.ToLower().Contains("daggerkheavyhash") || host.ToLower().Contains("etckheavyhash") || host.ToLower().Contains("autolykoskheavyhash") ||
+                host.ToLower().Contains("daggerironfish") || host.ToLower().Contains("etchashironfish") || host.ToLower().Contains("autolykosironfish") ||
+                host.ToLower().Contains("octopusironfish"))
             {
                 return ret;
             }

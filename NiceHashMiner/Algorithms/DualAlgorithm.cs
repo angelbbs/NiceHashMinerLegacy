@@ -29,41 +29,26 @@ namespace NiceHashMiner.Algorithms
         {
             get
             {
-                if (NiceHashID == AlgorithmType.Autolykos)
-                {
-                    switch (SecondaryNiceHashID)
-                    {
-                        case AlgorithmType.DaggerHashimoto:
-                            return AlgorithmType.AutolykosZil;
-                    }
-                }
-                if (NiceHashID == AlgorithmType.DaggerHashimoto)
-                {
-                    switch (SecondaryNiceHashID)
-                    {
-                        case AlgorithmType.Autolykos:
-                            return AlgorithmType.DaggerAutolykos;
-                        case AlgorithmType.KAWPOW:
-                            return AlgorithmType.DaggerKAWPOW;
-                        case AlgorithmType.Octopus:
-                            return AlgorithmType.DaggerOctopus;
-                    }
-                }
-
                 if (NiceHashID == AlgorithmType.DaggerHashimoto)
                 {
                     switch (SecondaryNiceHashID)
                     {
                         case AlgorithmType.KHeavyHash:
                             return AlgorithmType.DaggerKHeavyHash;
+                        case AlgorithmType.IronFish:
+                            return AlgorithmType.DaggerIronFish;
                     }
                 }
                 if (NiceHashID == AlgorithmType.Autolykos)
                 {
                     switch (SecondaryNiceHashID)
                     {
+                        case AlgorithmType.DaggerHashimoto:
+                            return AlgorithmType.AutolykosZil;
                         case AlgorithmType.KHeavyHash:
                             return AlgorithmType.AutolykosKHeavyHash;
+                        case AlgorithmType.IronFish:
+                            return AlgorithmType.AutolykosIronFish;
                     }
                 }
                 if (NiceHashID == AlgorithmType.Octopus)
@@ -72,6 +57,8 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.KHeavyHash:
                             return AlgorithmType.OctopusKHeavyHash;
+                        case AlgorithmType.IronFish:
+                            return AlgorithmType.OctopusIronFish;
                     }
                 }
                 if (NiceHashID == AlgorithmType.ETCHash)
@@ -80,6 +67,8 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.KHeavyHash:
                             return AlgorithmType.ETCHashKHeavyHash;
+                        case AlgorithmType.IronFish:
+                            return AlgorithmType.ETCHashIronFish;
                     }
                 }
 

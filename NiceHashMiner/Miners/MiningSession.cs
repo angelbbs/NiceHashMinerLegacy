@@ -1044,16 +1044,20 @@ namespace NiceHashMiner.Miners
                             {
                                 NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying);
                                 groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
+                                //Helpers.ConsolePrint("paying * ad.Speed * 0.000000001", (paying * ad.Speed * 0.000000001).ToString());
                             }
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)
                             {
                                 NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
                                 groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
+                                //Helpers.ConsolePrint("ad.SecondaryAlgorithmID", (ad.SecondaryAlgorithmID).ToString());
+                                //Helpers.ConsolePrint("secPaying * ad.SecondarySpeed * 0.000000001", (secPaying * ad.SecondarySpeed * 0.000000001).ToString());
                             }
                             if (ad.ThirdAlgorithmID != AlgorithmType.NONE)
                             {
                                 NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
                                 groupMiners.CurrentRate += thirdPaying * ad.ThirdSpeed * 0.000000001;
+                                //Helpers.ConsolePrint("thirdPaying * ad.ThirdSpeed * 0.000000001", (thirdPaying * ad.ThirdSpeed * 0.000000001).ToString());
                             }
                             if (Form_additional_mining.isAlgoZIL(ad.AlgorithmName, groupMiners.MinerBaseType, groupMiners.DeviceType))
                             {

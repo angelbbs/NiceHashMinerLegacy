@@ -425,13 +425,14 @@ namespace NiceHashMiner.Miners
                                     dynamic json = JsonConvert.DeserializeObject(poolAnswer.Split((char)10)[i]);
                                     string seedhash = json.@params[1];
                                     epoch = Epoch(seedhash);
-                                    //Helpers.ConsolePrint("ZILNiceHash", "Epoch = " + epoch.ToString());
+                                    Helpers.ConsolePrint("ZILNiceHash", "Epoch = " + epoch.ToString() +
+                                        " ZIL block = " + Form_Main.ZilCount.ToString());
                                     bool previousEpoch = EpochZIL;
                                     if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch)
                                     {
                                         if (!Form_Main.isZilRound)
                                         {
-                                            Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round");
+                                            Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round epoch " + epoch.ToString());
                                             /*
                                             new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
                                             Thread.Sleep(500);
