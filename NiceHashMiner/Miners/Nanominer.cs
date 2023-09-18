@@ -95,6 +95,7 @@ namespace NiceHashMiner.Miners
             IsInBenchmark = false;
             var param = "";
             bool zilEnabled = false;
+            bool zilPoolEnabled = false;
             DeviceType devtype = DeviceType.NVIDIA;
             foreach (var pair in MiningSetup.MiningPairs)
             {
@@ -116,9 +117,17 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype))
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 1)
             {
                 zilEnabled = true;
+                zilPoolEnabled = false;
+            }
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+            {
+                zilEnabled = true;
+                zilPoolEnabled = true;
             }
 
 
@@ -184,7 +193,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
-                   + GetServer("daggerhashimoto", username, "3393");
+                   + GetServer("etchash", username, "3393");
 
                 if (ConfigManager.GeneralConfig.StaleProxy)
                 {
@@ -230,7 +239,7 @@ namespace NiceHashMiner.Miners
             {
                 Helpers.ConsolePrint("GetStartCommand", e.ToString());
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && zilEnabled)
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && zilEnabled && !zilPoolEnabled)
             {
                 try
                 {
@@ -257,9 +266,43 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
-                   + String.Format("zilEpoch = 0\n")
-                   //    + String.Format("protocol = JSON-RPC\n")
-                   + GetServer("etchash", username, "3393");
+                   + String.Format("zilEpoch = 1\n")
+                   + GetServer("daggerhashimoto", username, "3353");
+                if (ConfigManager.GeneralConfig.StaleProxy)
+                {
+                    cfgFile = cfgFile + "rigPassword = stale\n";
+                }
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && zilEnabled && zilPoolEnabled)
+            {
+                try
+                {
+                    if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                        File.Delete("miners\\Nanominer\\" + GetLogFileName());
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                }
+                cfgFile =
+                   String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
+                   + String.Format("logPath=" + GetLogFileName() + "\n")
+                   + String.Format(param) + "\n"
+                   + String.Format("[autolykos]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
+                   + String.Format("wallet = {0}", btcAdress) + "\n"
+                   + String.Format("rigName = \"{0}\"", rigName) + "\n"
+                   + String.Format("protocol = stratum\n")
+                   + GetServer("autolykos", username, "3390") + "\n"
+                + String.Format("[zil]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
+                   + String.Format("wallet = {0}", ConfigManager.GeneralConfig.ZIL_mining_wallet) + "\n"
+                   + String.Format("rigName = \"{0}\"", worker) + "\n"
+                   + String.Format("protocol = stratum\n")
+                   + String.Format("zilEpoch = 1\n")
+                   + "pool1 = " + ConfigManager.GeneralConfig.ZIL_mining_pool.Replace("stratum+tcp://", "") + 
+                   ":" + ConfigManager.GeneralConfig.ZIL_mining_port + "\n";
                 if (ConfigManager.GeneralConfig.StaleProxy)
                 {
                     cfgFile = cfgFile + "rigPassword = stale\n";

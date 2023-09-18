@@ -144,12 +144,23 @@ namespace NiceHashMiner.Miners
                 devtype = mPair.Device.DeviceType;
             }
 
-            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype))
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 1)
             {
                 //прокси не используется
                 ZilMining = " --zil-enable --zil-pool stratum+tcp://etchash.auto.nicehash.com:9200 --zil-wallet " + 
                             username + " --zil-esm 2 --disable-worker-watchdog ";
             }
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+            {
+                //прокси не используется
+                ZilMining = " --zil-enable --zil-pool " + ConfigManager.GeneralConfig.ZIL_mining_pool + ":" +
+                    ConfigManager.GeneralConfig.ZIL_mining_port + " --zil-wallet " +
+                            ConfigManager.GeneralConfig.ZIL_mining_wallet + "." + worker + " --zil-esm 2 --disable-worker-watchdog ";
+            }
+
+
             if (devtype == DeviceType.AMD)
             {
                 disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-intel ";
@@ -439,7 +450,7 @@ namespace NiceHashMiner.Miners
                 WR.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse Response = WR.GetResponse();
                 Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 2 * 1000;
+                SS.ReadTimeout = 4 * 1000;
                 StreamReader Reader = new StreamReader(SS);
                 ResponseFromSRBMiner = await Reader.ReadToEndAsync();
 
@@ -838,6 +849,7 @@ namespace NiceHashMiner.Miners
                         }
                         break;
                     }
+
                     // wait a second due api request
                     Thread.Sleep(1000);
 
@@ -845,19 +857,16 @@ namespace NiceHashMiner.Miners
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 15;
-                        _benchmarkTimeWait = _benchmarkTimeWait - 90;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
                     {
-                        MinerStartDelay = 5;
+                        MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
-                        _benchmarkTimeWait = _benchmarkTimeWait - 90;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
                     {
-                        MinerStartDelay = 5;
+                        MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
-                        _benchmarkTimeWait = _benchmarkTimeWait - 90;
                     }
 
                     var ad = GetSummaryAsync();
@@ -877,7 +886,6 @@ namespace NiceHashMiner.Miners
                         {
                             Helpers.ConsolePrint(MinerTag(), "Delayed API Speed: " + ad.Result.Speed.ToString());
                         }
-
                         if (repeats >= _benchmarkTimeWait - MinerStartDelay - 15)
                         {
                             BenchmarkSpeed = Math.Round(summspeed / (repeats - delay_before_calc_hashrate), 2);

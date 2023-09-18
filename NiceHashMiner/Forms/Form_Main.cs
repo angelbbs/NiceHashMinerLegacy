@@ -186,6 +186,7 @@ namespace NiceHashMiner
         public static int ZilCount = -1;
         public static bool needGMinerRestart = false;
         public static string NicehashAPIerrorDescription = "";
+        public static int ZIL_mining_state = 0;
 
         public MemoryMappedFile MonitorSharedMemory = MemoryMappedFile.CreateOrOpen("MinerLegacyForkFixMonitor", 100);
 
@@ -1433,6 +1434,10 @@ namespace NiceHashMiner
             _loadingScreen.Update();
             //new Task(() => CheckUpdates()).Start();
             CheckUpdates();
+            if (ConfigManager.GeneralConfig.ShowHistory)
+            {
+                new Task(() => Updater.Updater.ShowHistory(false)).Start();
+            }
             //new Task(() => ResetProtocols()).Start();
 
             label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + NicehashAPIerrorDescription;
@@ -1689,7 +1694,8 @@ namespace NiceHashMiner
                     string m = process.ProcessName;
                     string p = process.StartInfo.WorkingDirectory;
                     if (m.Contains("MSIAfterburner") || m.Contains("NvidiaGPUGetDataHost") ||
-                        m.Contains("netsh") || m.Contains("cports") || m.Contains("sc") || m.Contains("igfx"))
+                        m.Contains("netsh") || m.Contains("cports") || m.Contains("sc") ||
+                        m.Contains("igfx") || m.Contains("notepad"))
                     {
                         continue;
                     }
@@ -2412,6 +2418,7 @@ public static void CloseChilds(Process parentId)
             }
         }
         */
+
         public bool CheckGithub()
         {
             //Form_Main.currentVersion = 0;//testing проверка загрузки программы
@@ -3829,7 +3836,7 @@ public static void CloseChilds(Process parentId)
                                         Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
                         //" Блок зилики: " + ZilCount.ToString();blockzil
                 }
-
+                
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
                     if (Form_Main.thisComputer != null)
@@ -4471,7 +4478,7 @@ public static void CloseChilds(Process parentId)
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 5 * 60 * 1000;
+            w.Timeout = 5 * 1000;
             return w;
         }
     }

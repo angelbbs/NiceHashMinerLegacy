@@ -88,7 +88,16 @@ namespace NiceHashMiner.Miners
                 //прокси не используется
                 ZilAlgo = "+zil";
                 MainMining = "[1]";
-                ZilMining = " -o [2]ethstratum+tcp://daggerhashimoto.auto.nicehash.com:9200 -u [2]" + username + " ";
+                if (ConfigManager.GeneralConfig.ZIL_mining_state == 1)
+                {
+                    ZilMining = " -o [2]ethstratum+tcp://daggerhashimoto.auto.nicehash.com:9200 -u [2]" + username + " ";
+                }
+                if (ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+                {
+                    ZilMining = " -o [2]ethstratum+tcp://" + 
+                        ConfigManager.GeneralConfig.ZIL_mining_pool.Replace("stratum+tcp://", "") + ":" + ConfigManager.GeneralConfig.ZIL_mining_port +
+                        " -u [2]" + ConfigManager.GeneralConfig.ZIL_mining_wallet + "." + worker + " ";
+                }
             }
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype) &&
                 MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE)//dual
@@ -96,7 +105,16 @@ namespace NiceHashMiner.Miners
                 //прокси не используется
                 ZilAlgo = "+zil";
                 MainMining = "";
-                ZilMining = " -o [3]ethstratum+tcp://daggerhashimoto.auto.nicehash.com:9200 -u [3]" + username + " ";
+                if (ConfigManager.GeneralConfig.ZIL_mining_state == 1)
+                {
+                    ZilMining = " -o [3]ethstratum+tcp://daggerhashimoto.auto.nicehash.com:9200 -u [3]" + username + " ";
+                }
+                if (ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+                {
+                    ZilMining = " -o [3]ethstratum+tcp://" +
+                        ConfigManager.GeneralConfig.ZIL_mining_pool.Replace("stratum+tcp://", "") + ":" + ConfigManager.GeneralConfig.ZIL_mining_port +
+                        " -u [3]" + ConfigManager.GeneralConfig.ZIL_mining_wallet + "." + worker + " ";
+                }
             }
 
             if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
@@ -163,6 +181,16 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3390";
                     port2 = "3395";
+                }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
+                {
+                    algo = "autolykos2+ironfish" + ZilAlgo;
+                    algoName = "autolykos";
+                    algoName2 = "ironfish";
+                    nicehashstratum = "";
+                    port = "3390";
+                    port2 = "3397";
                 }
 
                 return GetDevicesCommandString() + nicehashstratum +
@@ -447,6 +475,13 @@ namespace NiceHashMiner.Miners
                 ret = " -a autolykos2+kheavyhash" +
                 " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3100") + " -u [1]9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel" +
                 " -o [2]" + Links.CheckDNS("pool.eu.woolypooly.com:3112") + " -u [2]kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.Rigel " +
+                GetDevicesCommandString();
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
+            {
+                ret = " -a autolykos2+ironfish" +
+                " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3100") + " -u [1]9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel" +
+                " -o [2]" + Links.CheckDNS("ru.ironfish.herominers.com:1145") + " -u [2]fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.Rigel " +
                 GetDevicesCommandString();
             }
 
@@ -734,6 +769,12 @@ namespace NiceHashMiner.Miners
                                 _hashrate = d.hashrate.autolykos2;
                                 _hashrate2 = d.hashrate.kheavyhash;
                             }
+                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                                MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
+                            {
+                                _hashrate = d.hashrate.autolykos2;
+                                _hashrate2 = d.hashrate.ironfish;
+                            }
 
                             _hashrateZIL = d.hashrate.zil;
 
@@ -815,7 +856,8 @@ namespace NiceHashMiner.Miners
                         mPair.Device.MiningHashrateSecond = hashratesZIL[mPair.Device.ID];
 
                         //duals
-                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
+                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash ||
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                         {
                             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
                             {

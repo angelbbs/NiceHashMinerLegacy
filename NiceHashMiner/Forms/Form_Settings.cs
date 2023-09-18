@@ -227,6 +227,8 @@ namespace NiceHashMiner.Forms
                                     (Form_Main.ZilFactor * 100).ToString() + "%"));
             }
 
+            //button_ZIL_additional_mining.Enabled = !ConfigManager.GeneralConfig.ForceZIL_Mining_Disable;
+
             // Electricity cost
             toolTip1.SetToolTip(label_Schedules, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
             toolTip1.SetToolTip(textBoxScheduleCost1, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
@@ -301,6 +303,7 @@ namespace NiceHashMiner.Forms
             checkBoxDriverWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
 
             checkBoxAutoupdate.Text = International.GetText("Form_Settings_checkBoxAutoupdate");
+            checkBoxHistory.Text = International.GetText("Form_Settings_checkBoxHistory");
             checkBox_BackupBeforeUpdate.Text = International.GetText("Form_Settings_checkBox_backup_before_update");
             checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
             checkBox_ABMinimize.Text = International.GetText("FormSettings_AB_Minimize");
@@ -475,6 +478,7 @@ namespace NiceHashMiner.Forms
             groupBoxUpdates.Text = International.GetText("Form_Settings_groupBoxUpdates");
             groupBoxBackup.Text = International.GetText("Form_Settings_groupBoxBackup");
             buttonLicence.Text = International.GetText("Form_Settings_buttonLicence");
+            buttonHistory.Text = International.GetText("Form_Settings_buttonHistory");
 
             groupBoxConnection.Text = International.GetText("FormSettings_Tab_Advanced_Group_Connection");
             checkBoxProxySSL.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxProxySSL");
@@ -785,6 +789,8 @@ namespace NiceHashMiner.Forms
                 checkBox_BackupBeforeUpdate.ForeColor = Form_Main._textColor;
                 checkBoxAutoupdate.BackColor = Form_Main._backColor;
                 checkBoxAutoupdate.ForeColor = Form_Main._textColor;
+                checkBoxHistory.BackColor = Form_Main._backColor;
+                checkBoxHistory.ForeColor = Form_Main._textColor;
 
                 checkBox_Force_mining_if_nonprofitable.BackColor = Form_Main._backColor;
                 checkBox_Force_mining_if_nonprofitable.ForeColor = Form_Main._textColor;
@@ -1100,6 +1106,7 @@ namespace NiceHashMiner.Forms
                 checkBox_withPower.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_By_profitability_of_all_devices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxAutoupdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxHistory.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_BackupBeforeUpdate.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Disable_extra_launch_parameter_checking.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxHideUnused.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1256,6 +1263,7 @@ namespace NiceHashMiner.Forms
                 checkBox_withPower.Checked = ConfigManager.GeneralConfig.with_power;
                 checkBox_By_profitability_of_all_devices.Checked = ConfigManager.GeneralConfig.By_profitability_of_all_devices;
                 checkBoxAutoupdate.Checked = ConfigManager.GeneralConfig.ProgramAutoUpdate;
+                checkBoxHistory.Checked = ConfigManager.GeneralConfig.ShowHistory;
                 checkBox_BackupBeforeUpdate.Checked = ConfigManager.GeneralConfig.BackupBeforeUpdate;
                 checkBox_Disable_extra_launch_parameter_checking.Checked = ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking;
                 checkBoxHideUnused.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
@@ -1609,6 +1617,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.with_power = checkBox_withPower.Checked;
             ConfigManager.GeneralConfig.By_profitability_of_all_devices = checkBox_By_profitability_of_all_devices.Checked;
             ConfigManager.GeneralConfig.ProgramAutoUpdate = checkBoxAutoupdate.Checked;
+            ConfigManager.GeneralConfig.ShowHistory = checkBoxHistory.Checked;
             ConfigManager.GeneralConfig.BackupBeforeUpdate = checkBox_BackupBeforeUpdate.Checked;
             ConfigManager.GeneralConfig.Disable_extra_launch_parameter_checking = checkBox_Disable_extra_launch_parameter_checking.Checked;
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused.Checked;
@@ -3339,6 +3348,11 @@ namespace NiceHashMiner.Forms
         private void checkBox_show_INTELdevice_manufacturer_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void buttonHistory_Click(object sender, EventArgs e)
+        {
+            new Task(() => Updater.Updater.ShowHistory(true)).Start();
         }
     }
 

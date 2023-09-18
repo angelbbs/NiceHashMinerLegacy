@@ -101,9 +101,17 @@ namespace NiceHashMiner.Miners
                 devtype = mPair.Device.DeviceType;
             }
 
-            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 1)
             {
                 ZilMining = " --zilserver stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --ziluser " + username + " ";
+            }
+
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+            {
+                ZilMining = " --zilserver " + ConfigManager.GeneralConfig.ZIL_mining_pool + ":" + 
+                    ConfigManager.GeneralConfig.ZIL_mining_port + " --ziluser " + ConfigManager.GeneralConfig.ZIL_mining_wallet + "." + worker + " ";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)

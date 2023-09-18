@@ -145,7 +145,7 @@ namespace MinerLegacyForkFixMonitor
                     //Helpers.ConsolePrint("Monitor", "stuckCount: " + stuckCount.ToString());
                 }
 
-                if (stuckCount > 720)
+                if (stuckCount > 1720)
                 {
                     Helpers.ConsolePrint("Monitor", "Main process stuck. Trying restart");
                     try

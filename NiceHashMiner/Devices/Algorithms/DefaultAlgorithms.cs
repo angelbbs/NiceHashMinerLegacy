@@ -160,30 +160,19 @@ namespace NiceHashMiner.Devices.Algorithms
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
-                            //�� ��� ���, ���� autolykos �� �������
-                            //2.2.3 �� ��������
-                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
-                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                             },
-                            //разрывает соединение на найсе
-                            //
-                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.IronFish, "IronFish")
                             {
                             },
-                            */
-
-                            /*
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
                             {
                             },
-                            */
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
                             {
                                 ExtraLaunchParameters = "--gpu-auto-tune 1"
@@ -593,6 +582,10 @@ namespace NiceHashMiner.Devices.Algorithms
                         ExtraLaunchParameters = "--no-tui"
                     },
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
+                    {
+                        ExtraLaunchParameters = "--no-tui"
+                    },
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.IronFish, AlgorithmType.AutolykosIronFish.ToString())
                     {
                         ExtraLaunchParameters = "--no-tui"
                     }

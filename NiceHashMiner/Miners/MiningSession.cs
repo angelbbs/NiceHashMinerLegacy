@@ -1022,14 +1022,14 @@ namespace NiceHashMiner.Miners
                         {
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
                             {
-                                //NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying);
                                 NHSmaData.TryGetPaying(AlgorithmType.ZIL, out var secPaying);
+                                if (Form_Main.ZIL_mining_state != 1) secPaying = 0;
                                 groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 1;
                             }
                             if (ad.ThirdAlgorithmID != AlgorithmType.NONE)//dual
                             {
-                                //NHSmaData.TryGetPaying(ad.ThirdAlgorithmID, out var thirdPaying);
                                 NHSmaData.TryGetPaying(AlgorithmType.ZIL, out var thirdPaying);
+                                if (Form_Main.ZIL_mining_state != 1) thirdPaying = 0;
                                 groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 1;
                             }
                             if (Form_additional_mining.isAlgoZIL(ad.AlgorithmName, groupMiners.MinerBaseType, groupMiners.DeviceType))
@@ -1099,6 +1099,13 @@ namespace NiceHashMiner.Miners
                             _RateZil = _RateZil * 0.5;
                             Form_Main.RateZil = Form_Main.RateZil * 0.5;
                             Form_Main.ZilFactor = Form_Main.ZilFactor * 0.5;
+                            _zil.RateZil = Form_Main.RateZil;
+                        }
+                        if (Form_Main.ZilFactor < 0.01)
+                        {
+                            _RateZil = _RateZil * 2;
+                            Form_Main.RateZil = Form_Main.RateZil * 2;
+                            Form_Main.ZilFactor = Form_Main.ZilFactor * 2;
                             _zil.RateZil = Form_Main.RateZil;
                         }
                         _zil.ZilFactor = Form_Main.ZilFactor;

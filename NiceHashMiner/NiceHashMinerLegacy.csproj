@@ -536,12 +536,6 @@
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DriverVersionConfirmationDialog.Designer.cs">
-      <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
     <Compile Include="Forms\Form_Main.cs">
@@ -618,9 +612,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DriverVersionConfirmationDialog.resx">
-      <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>

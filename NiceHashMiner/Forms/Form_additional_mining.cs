@@ -20,14 +20,56 @@ namespace NiceHashMiner.Forms
             this.TopMost = true;
             this.Text = International.GetText("Form_Settings_button_ZIL_additional_mining");
 
-            checkBox_ZIL_Mining_Enable.Text = International.GetText("Form_Settings_checkBox_ZIL_Mining_Enable");
+            Form_Main.ZIL_mining_state = ConfigManager.GeneralConfig.ZIL_mining_state;
+            switch (Form_Main.ZIL_mining_state)
+            {
+                case 0:
+                    radioButton1.Checked = true; break;
+                case 1:
+                    radioButton2.Checked = true; break;
+                case 2:
+                    radioButton3.Checked = true; break;
+                default:
+                    radioButton1.Checked = true; break;
+            }
 
-            if (!ConfigManager.GeneralConfig.ZIL_Mining_Enable)
+            groupBox6.Text = International.GetText("Form_Settings_groupBox_ZIL_mining");
+            radioButton1.Text = International.GetText("Form_Settings_radioButton1_ZIL_additional_mining");
+            radioButton2.Text = International.GetText("Form_Settings_radioButton2_ZIL_additional_mining");
+            radioButton3.Text = International.GetText("Form_Settings_radioButton3_ZIL_additional_mining");
+            button_Save.Text = International.GetText("Form_Settings_buttonSaveAPI");
+            button_Cancel.Text = International.GetText("Form_Settings_buttonCancelAPI");
+
+            textBox_Pool.Text = ConfigManager.GeneralConfig.ZIL_mining_pool;
+            textBox_Port.Text = ConfigManager.GeneralConfig.ZIL_mining_port;
+            textBox_Wallet.Text = ConfigManager.GeneralConfig.ZIL_mining_wallet;
+            //checkBox_ZIL_Mining_Enable.Text = International.GetText("Form_Settings_checkBox_ZIL_Mining_Enable");
+
+            if (ConfigManager.GeneralConfig.ZIL_mining_state == 0)
             {
                 TabControlZILadditionalMining.Enabled = false;
             } else
             {
                 TabControlZILadditionalMining.Enabled = true;
+            }
+
+            if (ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+            {
+                label_Pool.Enabled = true;
+                textBox_Pool.Enabled = true;
+                labelPort.Enabled = true;
+                textBox_Port.Enabled = true;
+                labelWallet.Enabled = true;
+                textBox_Wallet.Enabled = true;
+            }
+            else
+            {
+                label_Pool.Enabled = false;
+                textBox_Pool.Enabled = false;
+                labelPort.Enabled = false;
+                textBox_Port.Enabled = false;
+                labelWallet.Enabled = false;
+                textBox_Wallet.Enabled = false;
             }
 
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
@@ -63,10 +105,23 @@ namespace NiceHashMiner.Forms
                 tabPageminiZ.ForeColor = Form_Main._foreColor;
                 tabPageRigel.BackColor = Form_Main._backColor;
                 tabPageRigel.ForeColor = Form_Main._foreColor;
+
+                textBox_Pool.BackColor = Form_Main._backColor;
+                textBox_Pool.ForeColor = Form_Main._foreColor;
+                textBox_Pool.BorderStyle = BorderStyle.FixedSingle;
+
+                textBox_Port.BackColor = Form_Main._backColor;
+                textBox_Port.ForeColor = Form_Main._foreColor;
+                textBox_Port.BorderStyle = BorderStyle.FixedSingle;
+
+                textBox_Wallet.BackColor = Form_Main._backColor;
+                textBox_Wallet.ForeColor = Form_Main._foreColor;
+                textBox_Wallet.BorderStyle = BorderStyle.FixedSingle;
             }
 
-            checkBox_ZIL_Mining_Enable.Checked =
-                ConfigManager.GeneralConfig.ZIL_Mining_Enable;
+            //checkBox_ZIL_Mining_Enable.Checked =
+              //  ConfigManager.GeneralConfig.ZIL_Mining_Enable;
+            //checkBox_ZIL_Mining_Enable.Enabled = !ConfigManager.GeneralConfig.ForceZIL_Mining_Disable;
 
             checkBox_GMINER_NVIDIA_Autolykos.Checked =
                 ConfigManager.GeneralConfig.ZILConfigGMiner.Autolykos_NVIDIA;
@@ -100,8 +155,9 @@ namespace NiceHashMiner.Forms
             checkBox_NANOMINER_AMD_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigNanominer.Autolykos_AMD;
             
             checkBox_Rigel_NVIDIA_KHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
-            checkBox_Rigel_NVIDIA_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
-            checkBox_Rigel_NVIDIA_AutolykosKHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
+            checkBox_Rigel_NVIDIA_Autolykos.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.Autolykos_NVIDIA;
+            checkBox_Rigel_NVIDIA_AutolykosKHeavyHash.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosKHeavyHash_NVIDIA;
+            checkBox_Rigel_NVIDIA_AutolykosIronFish.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosIronFish_NVIDIA;
             checkBox_Rigel_NVIDIA_Nexapow.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA;
             checkBox_Rigel_NVIDIA_IronFish.Checked = ConfigManager.GeneralConfig.ZILConfigRigel.IronFish_NVIDIA;
 
@@ -113,18 +169,20 @@ namespace NiceHashMiner.Forms
             checkBox_MINIZ_AMD_ZHash.Checked = ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_AMD;
 
             //до тех пор, пока autolykos не починят
+            /*
             checkBox_SRBMINER_AMD_Autolykos.Checked = false;
             checkBox_SRBMINER_AMD_Autolykos.Enabled = false;
             checkBox_SRBMINER_AMD_AutolykosKHeavyHash.Checked = false;
             checkBox_SRBMINER_AMD_AutolykosKHeavyHash.Enabled = false;
-
+            */
             //
             //TabControlZILadditionalMining.TabPages.RemoveByKey("tabPageRigel");
         }
 
         public static bool isAlgoZIL(string algo, MinerBaseType minerBaseType, DeviceType deviceType)
         {
-            if (!ConfigManager.GeneralConfig.ZIL_Mining_Enable) return false;
+            if (ConfigManager.GeneralConfig.ZIL_mining_state == 0) return false;
+            //if (ConfigManager.GeneralConfig.ZIL_Mining_Enable) return true;
 
             if (minerBaseType == MinerBaseType.GMiner)
             {
@@ -221,6 +279,8 @@ namespace NiceHashMiner.Forms
                             return ConfigManager.GeneralConfig.ZILConfigRigel.Autolykos_NVIDIA;
                         case "AutolykosKHeavyHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosKHeavyHash_NVIDIA;
+                        case "AutolykosIronFish":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosIronFish_NVIDIA;
                         case "KHeavyHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA;
                         case "NexaPow":
@@ -273,8 +333,9 @@ namespace NiceHashMiner.Forms
 
         private void button_Save_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.ZIL_Mining_Enable =
-                checkBox_ZIL_Mining_Enable.Checked;
+            ConfigManager.GeneralConfig.ZIL_mining_state = Form_Main.ZIL_mining_state;
+            //ConfigManager.GeneralConfig.ZIL_Mining_Enable =
+              //  checkBox_ZIL_Mining_Enable.Checked;
 
             ConfigManager.GeneralConfig.ZILConfigGMiner.Autolykos_NVIDIA =
                 checkBox_GMINER_NVIDIA_Autolykos.Checked;
@@ -309,6 +370,7 @@ namespace NiceHashMiner.Forms
 
             ConfigManager.GeneralConfig.ZILConfigRigel.Autolykos_NVIDIA = checkBox_Rigel_NVIDIA_Autolykos.Checked;
             ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosKHeavyHash_NVIDIA = checkBox_Rigel_NVIDIA_AutolykosKHeavyHash.Checked;
+            ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosIronFish_NVIDIA = checkBox_Rigel_NVIDIA_AutolykosIronFish.Checked;
             ConfigManager.GeneralConfig.ZILConfigRigel.KHeavyHash_NVIDIA = checkBox_Rigel_NVIDIA_KHeavyHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigRigel.Nexapow_NVIDIA = checkBox_Rigel_NVIDIA_Nexapow.Checked;
             ConfigManager.GeneralConfig.ZILConfigRigel.IronFish_NVIDIA = checkBox_Rigel_NVIDIA_IronFish.Checked;
@@ -318,14 +380,77 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ZILConfigminiZ.ZelHash_NVIDIA = checkBox_MINIZ_NVIDIA_ZelHash.Checked;
             ConfigManager.GeneralConfig.ZILConfigminiZ.ZHash_NVIDIA = checkBox_MINIZ_NVIDIA_ZHash.Checked;
 
+            if (Form_Main.ZIL_mining_state == 2)
+            {
+                if (string.IsNullOrEmpty(textBox_Pool.Text)) return;
+                if (string.IsNullOrEmpty(textBox_Port.Text)) return;
+                if (string.IsNullOrEmpty(textBox_Wallet.Text)) return;
+                ConfigManager.GeneralConfig.ZIL_mining_pool = textBox_Pool.Text;
+                ConfigManager.GeneralConfig.ZIL_mining_port = textBox_Port.Text;
+                ConfigManager.GeneralConfig.ZIL_mining_wallet = textBox_Wallet.Text;
+            }
+
             this.Close();
         }
 
-        private void checkBox_ZIL_Mining_Enable_CheckedChanged(object sender, EventArgs e)
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
+            RadioButton radioButton = (RadioButton)sender;
+            if (radioButton.Checked)
+            {
+                Form_Main.ZIL_mining_state = 0;
+                TabControlZILadditionalMining.Enabled = false;
 
-            TabControlZILadditionalMining.Enabled = checkBox_ZIL_Mining_Enable.Checked;
+                label_Pool.Enabled = false;
+                textBox_Pool.Enabled = false;
+                labelPort.Enabled = false;
+                textBox_Port.Enabled = false;
+                labelWallet.Enabled = false;
+                textBox_Wallet.Enabled = false;
+            }
+        }
 
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton radioButton = (RadioButton)sender;
+            if (radioButton.Checked)
+            {
+                Form_Main.ZIL_mining_state = 1;
+                TabControlZILadditionalMining.Enabled = true;
+
+                label_Pool.Enabled = false;
+                textBox_Pool.Enabled = false;
+                labelPort.Enabled = false;
+                textBox_Port.Enabled = false;
+                labelWallet.Enabled = false;
+                textBox_Wallet.Enabled = false;
+            }
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton radioButton = (RadioButton)sender;
+            if (radioButton.Checked)
+            {
+                Form_Main.ZIL_mining_state = 2;
+                TabControlZILadditionalMining.Enabled = true;
+
+                label_Pool.Enabled = true;
+                textBox_Pool.Enabled = true;
+                labelPort.Enabled = true;
+                textBox_Port.Enabled = true;
+                labelWallet.Enabled = true;
+                textBox_Wallet.Enabled = true;
+            }
+        }
+
+        private void textBox_Port_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char number = e.KeyChar;
+            if (!Char.IsDigit(number))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

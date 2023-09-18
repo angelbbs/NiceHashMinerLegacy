@@ -15,6 +15,23 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+/*
+ * эпохи монет на 10.09.2023
+ * ALT 60
+ * AVS 62
+ * BLACK 55
+ * BTN 13
+ * CAU 44
+ * CLO 437
+ * EGEM 461
+ * ELH 28
+ * ETHO 413
+ * ETHW 595
+ * EXP 272
+ * OCTA 99
+ * REDE 60
+ * XPB 0 <<!!!
+*/
 
 namespace NiceHashMiner.Miners
 {
@@ -428,7 +445,7 @@ namespace NiceHashMiner.Miners
                                     Helpers.ConsolePrint("ZILNiceHash", "Epoch = " + epoch.ToString() +
                                         " ZIL block = " + Form_Main.ZilCount.ToString());
                                     bool previousEpoch = EpochZIL;
-                                    if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch)
+                                    if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch && Form_Main.ZilCount == 0 )
                                     {
                                         if (!Form_Main.isZilRound)
                                         {

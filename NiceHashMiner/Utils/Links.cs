@@ -39,6 +39,7 @@ namespace NiceHashMiner
         public static string miningStats = ("https://www.nicehash.com/my/mining/stats/");
         public static string githubReleases = ("https://github.com/angelbbs/NiceHashMinerLegacy/releases");
         public static string githubLatestRelease => CheckDNS("https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases/latest");
+        public static string githubAllReleases => CheckDNS("https://api.github.com/repos/angelbbs/NiceHashMinerLegacy/releases");
         public static string githubDownload => CheckDNS("https://github.com0/angelbbs/NiceHashMinerLegacy/releases/download/Fork_Fix_");
         public static string gitlabReleases = ("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
         public static string gitlabRepositoryTags => CheckDNS("https://gitlab.com/api/v4/projects/26404146/repository/tags");

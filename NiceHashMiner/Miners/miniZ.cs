@@ -101,7 +101,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + " --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --pers auto ";
+                    ret = ret + " --pers auto --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                 }
             }
             return ret;
@@ -123,7 +123,8 @@ namespace NiceHashMiner.Miners
 
             if (!MinerVersion.Get_miniZ().MinerVersion.Trim().Equals("2.1c"))
             {
-                if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
+                if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 1)
                 {
                     //прокси не используется
                     ZilMining = " --url=zil://" + username + "@daggerhashimoto.auto.nicehash.com:9200";
@@ -140,6 +141,13 @@ namespace NiceHashMiner.Miners
                     }
                     */
                 }
+            }
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype) &&
+                ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+            {
+                ZilMining = " --url " + ConfigManager.GeneralConfig.ZIL_mining_wallet + "." + worker + "@" +
+                    ConfigManager.GeneralConfig.ZIL_mining_pool.Replace("stratum+tcp://", "") + ":" + 
+                    ConfigManager.GeneralConfig.ZIL_mining_port;
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)

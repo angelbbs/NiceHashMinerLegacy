@@ -141,6 +141,7 @@ namespace NiceHashMiner.Configs.Data
 
         public int MinIdleSeconds = 60;
         public bool LogToFile = true;
+        public bool ShowHistory = true;
 
         // in bytes
         public long LogMaxFileSize = 16777216;
@@ -185,6 +186,10 @@ namespace NiceHashMiner.Configs.Data
         public bool Zilliqua_GMiner = true;
         public bool RestartGMinerAfterZilRound = false;
         public bool ZIL_Mining_Enable = true;
+        public int ZIL_mining_state = 0;
+        public string ZIL_mining_pool = "";
+        public string ZIL_mining_port = "";
+        public string ZIL_mining_wallet = "";
         public ZILConfigGMiner ZILConfigGMiner = new ZILConfigGMiner();
         public ZILConfigSRBMiner ZILConfigSRBMiner = new ZILConfigSRBMiner();
         public ZILConfigNanominer ZILConfigNanominer = new ZILConfigNanominer();

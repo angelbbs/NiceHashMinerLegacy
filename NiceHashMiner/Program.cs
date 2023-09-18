@@ -300,6 +300,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 58;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 59)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 59;
+                }
 
                 if (ConfigManager.GeneralConfig.ZILMaxEpoch < 1) ConfigManager.GeneralConfig.ZILMaxEpoch = 1;
 

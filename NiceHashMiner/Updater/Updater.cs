@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -18,8 +20,6 @@ namespace NiceHashMiner.Updater
         private static bool _autoupdate;
         public static string DownloadedMinersLocation = "temp/miners.zip";
         public static void Downloader(bool autoupdate)
-            //при FATAL, загрузка с моего сервера
-            //потом в майнерах ResolvedIP, как резервный пул
         {
             string link = Links.CheckDNS(Form_Main.browser_download_url);
             string host = new Uri(Form_Main.browser_download_url).Host;
@@ -311,6 +311,140 @@ namespace NiceHashMiner.Updater
             }
         }
 
+        public static string betweenStrings(string text, string start, string end)
+        {
+            int p1 = text.IndexOf(start) + start.Length;
+            int p2 = text.IndexOf(end, p1);
+
+            if (end == "") return (text.Substring(p1));
+            else return text.Substring(p1, p2 - p1);
+        }
+
+        public static void ShowHistory(bool force)
+        {
+            if (File.Exists("Help\\history_ru.txt"))
+            {
+                string history = "";
+                try
+                {
+                    if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+                    {
+                        history = File.ReadAllText("Help\\history_ru.txt");
+                    }
+                    else
+                    {
+                        history = File.ReadAllText("Help\\history_en.txt");
+                    }
+                    if (!history.Contains("Fork Fix " + Form_Main.currentVersion.ToString()))
+                    {
+                        File.Delete("Help\\history_ru.txt");
+                    }
+                } catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("ShowHistory", ex.ToString());
+                }
+            }
+
+            if (!File.Exists("Help\\history_ru.txt"))
+            {
+                string AllReleases = "";
+                try
+                {
+                    AllReleases = GetGITHUBReleases();
+                    if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+                    {
+                        File.WriteAllText("Help\\history_ru.txt", AllReleases);
+                    }
+                    else
+                    {
+                        File.WriteAllText("Help\\history_en.txt", AllReleases);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("ShowHistory", ex.ToString());
+                }
+                force = true;
+            }
+
+            if (force)
+            {
+                try
+                {
+                    var notepadProcess = new Process
+
+                    {
+                        StartInfo =
+                {
+                    FileName = "notepad.exe"
+                }
+                    };
+
+                    if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+                    {
+                        notepadProcess.StartInfo.Arguments = "Help\\history_ru.txt";
+                    }
+                    else
+                    {
+                        notepadProcess.StartInfo.Arguments = "Help\\history_en.txt";
+                    }
+                    notepadProcess.StartInfo.UseShellExecute = false;
+                    notepadProcess.StartInfo.CreateNoWindow = false;
+                    notepadProcess.Start();
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("notepad", ex.Message);
+                }
+            }
+        }
+
+
+        public static string GetGITHUBReleases()
+        {
+            string url = Links.githubAllReleases;
+            string r1 = GetGitHubAPIData(url, "api.github.com");
+            string ret = "";
+            if (r1 != null & !r1.Contains("(404)"))
+            {
+                try
+                {
+                    JArray nhjson = (JArray)JsonConvert.DeserializeObject(r1, Globals.JsonSettings);
+                    foreach (dynamic vers in nhjson)
+                    {
+                        string tag_name = vers.tag_name;
+                        string gitbody = vers.body;
+                        string published_at = vers.published_at;
+                        //Helpers.ConsolePrint(published_at, "*** " + tag_name.Replace("_", " "));
+                        ret = ret + published_at + " *** " + tag_name.Replace("_", " ") + " ***";
+                        if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+                        {
+                            //Helpers.ConsolePrint("****gitbody:", betweenStrings(gitbody, "RUS:", "Обсуждение тут"));
+                            ret = ret + betweenStrings(gitbody, "RUS:", "Обсуждение тут");
+                        } else
+                        {
+                            Helpers.ConsolePrint("****gitbody:", betweenStrings(gitbody, "EN:", "Russian discussion forum"));
+                            ret = ret + betweenStrings(gitbody, "EN:", "Russian discussion forum");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GITHUB", ex.ToString());
+                    Helpers.ConsolePrint("GITHUB", "Dev github account banned or not found!");
+                    return "";
+                }
+            }
+            else
+            {
+                Helpers.ConsolePrint("GITHUB", "ERROR! Dev github account banned or not found!");
+                Form_Main.githubBuild = 0;
+                Form_Main.githubVersion = 0;
+                return "";
+            }
+            return ret;
+        }
+
         public static double GetGITHUBVersion()
         {
             //github
@@ -321,6 +455,7 @@ namespace NiceHashMiner.Updater
             {
                 try
                 {
+                    //Helpers.ConsolePrint("*****", r1);
                     dynamic nhjson = JsonConvert.DeserializeObject(r1, Globals.JsonSettings);
                     //var latest = Array.Find(nhjson, (n) => n.target_commitish == "master-old");
                     var gitassets = nhjson.assets;

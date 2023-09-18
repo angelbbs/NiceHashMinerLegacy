@@ -1,4 +1,7 @@
-﻿using NiceHashMiner.Configs;
+﻿using Newtonsoft.Json;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Miners;
 using NiceHashMiner.Utils;
 using SharpCompress.Archive;
 using SharpCompress.Common;
@@ -14,6 +17,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static NiceHashMiner.Miners.MinerVersion;
 
 namespace NiceHashMiner.Forms
 {
@@ -83,6 +87,8 @@ namespace NiceHashMiner.Forms
             progressBarDownloading.Value = 100;
             UnzipRoutine();
             Thread.Sleep(200);
+            GetMinersVersion();
+            Thread.Sleep(200);
             Form_Main._autostartTimerDelay.Start();
             Thread.Sleep(200);//костыль для очередности запуска таймеров
 
@@ -103,6 +109,121 @@ namespace NiceHashMiner.Forms
             Form_Main._deviceStatusTimer.Start();
             Form_Main.DownloadingInProgress = false;
             this.Close();
+        }
+
+        private void GetMinersVersion()
+        {
+            if (ConfigManager.GeneralConfig.GetMinersVersions)
+            {
+                MinerVersion.MinerDataList.Clear();
+
+                progressBarUnzipping.Maximum = 100;
+                progressBarUnzipping.Value = 0;
+                progressBarUnzipping.Update();
+
+                var minerdata = new MinerData();
+
+                progressBarUnzipping.Value = 7;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "ClaymoreNeoscrypt";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_ClaymoreNeoscrypt();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
+                {
+                    progressBarUnzipping.Value = 15;
+                    UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "CryptoDredge";
+                    UnzippingText.Update();
+                    minerdata = MinerVersion.Get_CryptoDredge();
+                    MinerVersion.MinerDataList.Add(minerdata);
+                }
+
+                progressBarUnzipping.Value = 22;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "GMiner";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_GMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 29;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "lolMiner";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_lolMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 36;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "miniZ";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_miniZ();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 43;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_nanominer();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 50;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner.39.5";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_NBMiner39_5();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 57;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_NBMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 63;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_Phoenix();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 70;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_SRBMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 77;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_TRex();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 85;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_TeamRedMiner();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 92;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_XMRig();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                progressBarUnzipping.Value = 100;
+                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "Rigel";
+                UnzippingText.Update();
+                minerdata = MinerVersion.Get_Rigel();
+                MinerVersion.MinerDataList.Add(minerdata);
+
+                string json = JsonConvert.SerializeObject(MinerDataList, Formatting.Indented);
+                try
+                {
+                    if (File.Exists("Configs\\MinersData.json"))
+                    {
+                        File.Delete("Configs\\MinersData.json");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("CheckMiners", ex.ToString());
+                }
+                File.WriteAllText("Configs\\MinersData.json", json);
+            }
         }
         private void UnzipRoutine()
         {

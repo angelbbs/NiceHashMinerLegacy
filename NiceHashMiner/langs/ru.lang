@@ -475,6 +475,10 @@
 		  "Form_Settings_checkBox_Hide_Unused": "Скрыть неиспользуемые алгоритмы",
 		  "Form_Settings_button_ZIL_additional_mining": "Настройки дополнительного майнинга Zilliqua (ZIL)",
 		  "Form_Settings_checkBox_ZIL_Mining_Enable": "Включить майнинг ZIL",
+"Form_Settings_groupBox_ZIL_mining": "Майнинг ZIL",
+"Form_Settings_radioButton1_ZIL_additional_mining": "Отключен",
+"Form_Settings_radioButton2_ZIL_additional_mining": "Включен на NiceHash (не рекомендуется)",
+"Form_Settings_radioButton3_ZIL_additional_mining": "Включен на ZIL пул",
                 "Form_Settings_checkBox_DisableDetectionCPU": "CPU",
                 "Form_Settings_label_AutoStartMiningDelay": "секунд",
                 "Form_Settings_groupBoxMOPA": "Метод получения прибыльности алгоритмов",
@@ -525,6 +529,7 @@
 "Form_Settings_comboBoxCheckforprogramupdatesevery24": "1 день",
 "Form_Settings_labelCheckforprogramupdatesevery": "Проверять обновления каждый(е)",
 "Form_Settings_checkBoxAutoupdate": "Автоматическое обновление",
+"Form_Settings_checkBoxHistory": "Просмотр истории версий после обновления",
 "Form_Settings_MessageBoxUpdate": "Закрыть программу и начать установку новой версии?",
 "Form_Settings_EnableAlgos": "Включить * для всех устройств",
 "Form_Settings_DisableAlgos": "Выключить * для всех устройств",
@@ -618,6 +623,7 @@
 "MSIAB_Checking": "Проверка MSI Afterburner",
 "MSIAB_Closing": "Завершение MSI Afterburner",
 "listViewDevices_ToolTip": "Нажмите правую кнопку мыши на выбранном GPU\r\nдля получения дополнительных функций",
-"Form_Settings_buttonLicence": "Просмотр лицензии"
+"Form_Settings_buttonLicence": "Просмотр лицензии",
+"Form_Settings_buttonHistory": "Просмотр истории"
   }
 }

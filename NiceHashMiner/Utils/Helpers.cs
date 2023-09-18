@@ -409,7 +409,7 @@ namespace NiceHashMiner
                 var parseText = text.Replace(',', '.');
                 return double.Parse(parseText, CultureInfo.InvariantCulture);
             }
-            catch
+            catch (FormatException ex)
             {
                 return 0;
             }
