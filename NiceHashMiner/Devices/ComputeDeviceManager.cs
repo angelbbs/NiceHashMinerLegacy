@@ -395,11 +395,11 @@ namespace NiceHashMiner.Devices
                     if (TryAddNvmlToEnvPath())
                     {
                         nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
-                        //Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
+                        Helpers.ConsolePrint(Tag, "nvmlLoaded: " + nvmlLoaded);
                         if (nvmlLoaded != nvmlReturn.Success)
                         {
                             int check = ComputeDeviceManager.Query.CheckVideoControllersCountMismath();
-                            Helpers.ConsolePrint(Tag, "NVSMI Error: " + nvmlLoaded);
+                            Helpers.ConsolePrint(Tag, "NVSMI Error: " + (int)nvmlLoaded);
                             if ((int)nvmlLoaded == 6 || (int)nvmlLoaded == 15 || (int)nvmlLoaded == 16)
                             {
                                 if (ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
@@ -426,7 +426,7 @@ namespace NiceHashMiner.Devices
                                     Process.Start(onGpusLost);
                                     Thread.Sleep(2000);
                                 }
-                                MessageBox.Show("NVSMI Error: " + nvmlLoaded + ". Please restart NVIDIA driver", "ERROR!");
+                                //MessageBox.Show("NVSMI Error: " + nvmlLoaded + ". Please restart NVIDIA driver", "ERROR!");
                             }
                         }
                     }
@@ -512,10 +512,13 @@ namespace NiceHashMiner.Devices
 
                     }
 
-                    Helpers.ConsolePrint(Tag,
+                    if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
+                    {
+                        Helpers.ConsolePrint(Tag,
                         nvidiaCount == _cudaDevices.CudaDevices.Count
                             ? "Cuda NVIDIA/CUDA device count GOOD"
                             : "Cuda NVIDIA/CUDA device count BAD!!!");
+                    }
                     Helpers.ConsolePrint(Tag,
                         amdCount == AmdDevices.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!! " +
                         amdCount.ToString() + " " + AmdDevices.Count.ToString());
@@ -550,12 +553,15 @@ namespace NiceHashMiner.Devices
                 var isNvidiaErrorShown = false; // to prevent showing twice
                 var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning &&
                                   WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && _cudaDevices.CudaDevices.Count != nvidiaCount)
+                if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
                 {
-                    isNvidiaErrorShown = true;
-                    new Task(() =>
-                    MessageBox.Show(International.GetText("Compute_Device_Query_Manager_LostDevice"), "Error!",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
+                    if (showWarning && _cudaDevices.CudaDevices.Count != nvidiaCount)
+                    {
+                        isNvidiaErrorShown = true;
+                        new Task(() =>
+                        MessageBox.Show(International.GetText("Compute_Device_Query_Manager_LostDevice"), "Error!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
+                    }
                 }
                 // recomended driver
                 if (showWarning && _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
@@ -976,7 +982,7 @@ break;
                             stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");
                             stringBuilder.AppendLine($"\t\tInfSection {vidController.InfSection}");
                             stringBuilder.AppendLine($"\t\tAdapterRAM {vidController.AdapterRam}");
-
+                            
                             // check if controller ok
                             if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
                             {
@@ -1236,7 +1242,7 @@ break;
                             foreach (var vc in AvaliableVideoControllers)//LHR detection
                             {
                                 bool _equals = false;
-                                //Helpers.ConsolePrint("QueryCudaDevices", "vc.ID: " + vc.ID);
+                                //Helpers.ConsolePrint("QueryCudaDevices", "vc.ID: " + vc.ID + " cudaDev.pciDeviceId.: " + cudaDev.pciDeviceId.ToString("X"));
                                 if (string.IsNullOrEmpty(vc.DEV_ + vc.VEN_))
                                 {
                                     Helpers.ConsolePrint("QueryCudaDevices LHR detection", "Empty VEN_&DEV_");
@@ -1264,6 +1270,17 @@ break;
                                         Helpers.ConsolePrint("QueryCudaDevices LHR detection", "Empty UUID for Device ID: " + cudaDev.DeviceID.ToString() + "Using Fake UUID: " + fakeUUID);
                                     }
                                 }
+                                if (cudaDev.pciBusID == vc.BusID && cudaDev.pciSubSystemId == 0000)
+                                {
+                                    cudaDev.CUDAManufacturer = vc.Manufacturer;
+                                    if (!cudaDev.UUID.Contains("GPU-"))
+                                    {
+                                        idHandles.TryGetValue((int)cudaDev.DeviceID, out handle);
+                                        string fakeUUID = GetFakeUuid((int)cudaDev.DeviceID, vc.SUBSYS_, vc.Name, DeviceGroupType.NVIDIA_6_x);
+                                        cudaDev.UUID = fakeUUID;
+                                        Helpers.ConsolePrint("QueryCudaDevices", "Empty UUID for Device ID: " + cudaDev.DeviceID.ToString() + ". Using Fake UUID: " + fakeUUID);
+                                    }
+                                }
                             }
                             
                             // check sm vesrions
@@ -1274,7 +1291,12 @@ break;
                                 isUnderSM21 = isUnderSM2Major && isUnderSM1Minor;
                             }
                             string Manufacturer = (cudaDev.pciSubSystemId).ToString("X16").Substring((cudaDev.pciSubSystemId).ToString("X16").Length - 4);
-                            cudaDev.CUDAManufacturer = ComputeDevice.GetManufacturer(Manufacturer);
+                            //Helpers.ConsolePrint("********", cudaDev.CUDAManufacturer);
+                            //Helpers.ConsolePrint("********", ComputeDevice.GetManufacturer(Manufacturer));
+                            if (string.IsNullOrEmpty(cudaDev.CUDAManufacturer))
+                            {
+                                cudaDev.CUDAManufacturer = ComputeDevice.GetManufacturer(Manufacturer);
+                            }
                             if (cudaDev.HasMonitorConnected > 0) cudaDev.MonitorConnected = true;
                             //bool isOverSM6 = cudaDev.SM_major > 6;
                             var skip = isUnderSM21;

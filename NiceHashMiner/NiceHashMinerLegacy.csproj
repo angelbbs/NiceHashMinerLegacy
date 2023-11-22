@@ -366,6 +366,12 @@
     <Compile Include="Forms\Form_RigProfitChart.Designer.cs">
       <DependentUpon>Form_RigProfitChart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_Splash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Splash.Designer.cs">
+      <DependentUpon>Form_Splash.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WaitingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -618,6 +624,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Loading.resx">
       <DependentUpon>Form_Loading.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Splash.resx">
+      <DependentUpon>Form_Splash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaitingForm.resx">
       <DependentUpon>WaitingForm.cs</DependentUpon>

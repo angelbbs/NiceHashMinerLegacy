@@ -19,7 +19,7 @@ namespace NiceHashMiner.Miners
             public string MinerName;
             public string MinerPath;
             public long MinerSize;
-            public string MinerVersion;
+            public string MinerVersion = "(Miner error)";
         }
         public static List<MinerData> MinerDataList = new List<MinerData>();
         public static MinerData Get_ClaymoreNeoscrypt()

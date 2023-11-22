@@ -353,14 +353,13 @@ namespace NiceHashMiner.Switching
         public static void FinalizeSma()
         {
             Helpers.ConsolePrint("NHSMA", "FinalizeSma");
-            try
+            InitializeIfNeeded();
+            CheckInit();
+            _finalSma.Clear();
+
+            lock (_finalSma)
             {
-                InitializeIfNeeded();
-                CheckInit();
-
-                _finalSma.Clear();
-
-                lock (_finalSma)
+                try
                 {
                     foreach (var final_sma in _currentSma)
                     {
@@ -376,10 +375,12 @@ namespace NiceHashMiner.Switching
                         _finalSma.Add(final_sma.Key, v);
                     }
                 }
-            } catch (Exception ex)
-            {
-                Helpers.ConsolePrint(Tag, ex.ToString());
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint(Tag, ex.ToString());
+                }
             }
+            
             /*
             try
             {

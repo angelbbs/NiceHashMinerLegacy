@@ -163,6 +163,13 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3397";
                 }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
+                {
+                    algo = "octopus" + ZilAlgo;
+                    algoName = "octopus";
+                    nicehashstratum = "";
+                    port = "3389";
+                }
 
                 return GetDevicesCommandString() + nicehashstratum +
                   " -a " + algo +
@@ -469,6 +476,13 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
+            {
+                ret = " -a octopus" +
+                " -o " + Links.CheckDNS("pool.woolypooly.com:3094") + " -u cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.Rigel -p x" +
+                GetDevicesCommandString();
+            }
+
             //duals
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
@@ -548,6 +562,11 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 30;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 30;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Octopus))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 30;
@@ -724,6 +743,10 @@ namespace NiceHashMiner.Miners
                             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
                             {
                                 _hashrate = d.hashrate.ironfish;
+                            }
+                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
+                            {
+                                _hashrate = d.hashrate.octopus;
                             }
 
                             _hashrateZIL = d.hashrate.zil;

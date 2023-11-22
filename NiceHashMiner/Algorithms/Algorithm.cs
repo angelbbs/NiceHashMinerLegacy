@@ -146,7 +146,7 @@ namespace NiceHashMiner.Algorithms
 
         #endregion
 
-        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string _AlgorithmNameCustom = "WOW!UnknownAlgo", bool enabled = true)
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string _AlgorithmNameCustom = "WOW!UnknownAlgo", bool enabled = true, bool hidden = false)
         {
             NiceHashID = niceHashID;
             AlgorithmName = AlgorithmNiceHashNames.GetName(NiceHashID);
@@ -157,7 +157,7 @@ namespace NiceHashMiner.Algorithms
             ExtraLaunchParameters = "";
             LessThreads = 0;
             Enabled = enabled;
-            Hidden = false;
+            Hidden = hidden;
             Forced = false;
             BenchmarkStatus = "";
             BenchmarkProgressPercent = 0;

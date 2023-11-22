@@ -322,43 +322,41 @@ namespace NiceHashMiner.Updater
 
         public static void ShowHistory(bool force)
         {
-            if (File.Exists("Help\\history_ru.txt"))
+            string fileHistory = "";
+            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+            {
+                fileHistory = "Help\\history_ru.txt";
+            }
+            else
+            {
+                fileHistory = "Help\\history_en.txt";
+            }
+
+            if (File.Exists(fileHistory))
             {
                 string history = "";
                 try
                 {
-                    if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-                    {
-                        history = File.ReadAllText("Help\\history_ru.txt");
-                    }
-                    else
-                    {
-                        history = File.ReadAllText("Help\\history_en.txt");
-                    }
+                    history = File.ReadAllText(fileHistory);
                     if (!history.Contains("Fork Fix " + Form_Main.currentVersion.ToString()))
                     {
-                        File.Delete("Help\\history_ru.txt");
+                        File.Delete(fileHistory);
                     }
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Helpers.ConsolePrint("ShowHistory", ex.ToString());
                 }
             }
 
-            if (!File.Exists("Help\\history_ru.txt"))
+            if (!File.Exists(fileHistory))
             {
                 string AllReleases = "";
                 try
                 {
                     AllReleases = GetGITHUBReleases();
-                    if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-                    {
-                        File.WriteAllText("Help\\history_ru.txt", AllReleases);
-                    }
-                    else
-                    {
-                        File.WriteAllText("Help\\history_en.txt", AllReleases);
-                    }
+
+                    File.WriteAllText(fileHistory, AllReleases);
                 }
                 catch (Exception ex)
                 {
@@ -380,14 +378,7 @@ namespace NiceHashMiner.Updater
                 }
                     };
 
-                    if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
-                    {
-                        notepadProcess.StartInfo.Arguments = "Help\\history_ru.txt";
-                    }
-                    else
-                    {
-                        notepadProcess.StartInfo.Arguments = "Help\\history_en.txt";
-                    }
+                    notepadProcess.StartInfo.Arguments = fileHistory;
                     notepadProcess.StartInfo.UseShellExecute = false;
                     notepadProcess.StartInfo.CreateNoWindow = false;
                     notepadProcess.Start();
@@ -423,6 +414,7 @@ namespace NiceHashMiner.Updater
                             ret = ret + betweenStrings(gitbody, "RUS:", "Обсуждение тут");
                         } else
                         {
+                            Helpers.ConsolePrint("----gitbody:", gitbody);
                             Helpers.ConsolePrint("****gitbody:", betweenStrings(gitbody, "EN:", "Russian discussion forum"));
                             ret = ret + betweenStrings(gitbody, "EN:", "Russian discussion forum");
                         }

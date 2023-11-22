@@ -1604,7 +1604,7 @@ namespace NiceHashMiner.Stats
                         var deviceName = device.Name;
 
                         string NvidiaLHR = "";
-                        if (device.NvidiaLHR && device.DeviceType == DeviceType.NVIDIA)
+                        if (device.NvidiaLHR && device.DeviceType == DeviceType.NVIDIA && ConfigManager.GeneralConfig.Show_NVIDIA_LHR)
                         {
                             NvidiaLHR = "(LHR)";
                         }
@@ -2128,7 +2128,7 @@ namespace NiceHashMiner.Stats
                     wr.Headers.Add("X-User-Lang", "en");
                 }
                 wr.Host = "api2.nicehash.com:443";
-                wr.Timeout = 1 * 1000;
+                wr.Timeout = 2 * 1000;
                 var response = wr.GetResponse();
                 var ss = response.GetResponseStream();
                 if (ss != null)

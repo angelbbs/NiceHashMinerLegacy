@@ -117,6 +117,10 @@ namespace NiceHashMiner.Miners.Grouping
                         {
                             stringBuilder.AppendLine(
                                 $"\t\tALGORITHM {"FORCED  "} ({algo.AlgorithmStringID})");
+                        } else if (algo.Forced && isEnabled && algo.Hidden)
+                        {
+                            stringBuilder.AppendLine(
+                            $"\t\tALGORITHM {"FORCED HIDDEN "} ({algo.AlgorithmStringID})");
                         }
                         else
                         {

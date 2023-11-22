@@ -49,10 +49,18 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.Phoenix,
                 new List<Algorithm>()
                 {
+                    /*
+GPU1: Allocating DAG (5.77) GB; good for epoch up to #610
+GPU1: Generating DAG for epoch #608
+GPU1: Unable to generate DAG for epoch #608; please upgrade to the latest version of PhoenixMiner
+GPU1 initMiner error: Unable to initialize CUDA miner
+Fatal error detected. Restarting.
+                    /*
                     new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                     {
     //                    ExtraLaunchParameters = "-rvram -1 "
                     },
+                    */
                     new Algorithm(MinerBaseType.Phoenix, AlgorithmType.ETCHash, "ETCHash")
                     {
     //                    ExtraLaunchParameters = "-rvram -1 "
@@ -102,9 +110,11 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--gpu-auto-tune 1"
                             },
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                             },
+                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.IronFish, "IronFish")
                             {
                             }
@@ -121,10 +131,12 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            /*
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                                 ExtraLaunchParameters = ""
                             }
+                            */
                             /*
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.ETCHash, "ETCHash")//broken 1.71
                             {
@@ -164,12 +176,15 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                             },
+                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.IronFish, "IronFish")
                             {
-                            },
+                            }
+                            /*
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
                             {
                             },
@@ -177,6 +192,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--gpu-auto-tune 1"
                             }
+                            */
                         }
             },
             {
@@ -205,12 +221,13 @@ namespace NiceHashMiner.Devices.Algorithms
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW"),
-                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, "Autolykos"),
-                            
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, "Autolykos")
+                            /*
                             new DualAlgorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
                             {
                                 ExtraLaunchParameters = "--kas_end"
                             },
+                            */
                             /*
                              //extranonce not supported, worker name not allowed
                             new DualAlgorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, AlgorithmType.IronFish, "AutolykosIronFish")
@@ -255,20 +272,24 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            /*
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            /*
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
                             {
                             },
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, "ETCHashKHeavyHash")
                             {
                             },
+                            */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.IronFish, "IronFish")
                             {
                                 ExtraLaunchParameters = ""
@@ -296,14 +317,6 @@ namespace NiceHashMiner.Devices.Algorithms
                  MinerBaseType.NBMiner,
                  new List<Algorithm>
                  {
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
-                            {
-                                ExtraLaunchParameters = "--mt 1 "
-                            },
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.ETCHash, "ETCHash")
-                            {
-                                ExtraLaunchParameters = "--mt 1 "
-                            },
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW")
                             {
                                 ExtraLaunchParameters = "--mt 1 "
@@ -313,7 +326,6 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = "--mt 1 "
                             }
-
                  }
             },
             {
@@ -360,7 +372,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             },
-
             { MinerBaseType.CryptoDredge,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
@@ -440,12 +451,8 @@ namespace NiceHashMiner.Devices.Algorithms
             },
             { MinerBaseType.NBMiner,
                         new List<Algorithm>() {
-                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle, "CuckooCycle"),//������ �� ������������ extranonce �����
-                            //new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.ETCHash, "ETCHash"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.BeamV3, "BeamV3"),
                             new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos"),
                         }
@@ -483,9 +490,11 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZelHash, "ZelHash")
                     {
                     },
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                     {
                     },
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Octopus, "Octopus")
                     {
                     },
@@ -497,14 +506,17 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
+                    /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
+                    */
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.IronFish, AlgorithmType.AutolykosIronFish.ToString())
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
+                    /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
                     {
                         ExtraLaunchParameters = "--mt 1"
@@ -517,6 +529,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
+                    */
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.IronFish, AlgorithmType.DaggerIronFish.ToString())
                     {
                         ExtraLaunchParameters = "--mt 1"
@@ -542,18 +555,21 @@ namespace NiceHashMiner.Devices.Algorithms
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            
+                            /*
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
                             {
                                 ExtraLaunchParameters = "--keepfree 1024"
                             },
+                            /*
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
                             {
                             },
+                            */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.IronFish, "IronFish")
                             {
                                 ExtraLaunchParameters = ""
@@ -565,10 +581,12 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.Rigel,
                 new List<Algorithm>()
                 {
+                    /*
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.KHeavyHash, "KHeavyHash")
                     {
                         ExtraLaunchParameters = "--no-tui"
                     },
+                    */
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.NexaPow, "NexaPow")
                     {
                         ExtraLaunchParameters = "--no-tui"
@@ -581,10 +599,16 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = "--no-tui"
                     },
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, "Octopus")
+                    {
+                        ExtraLaunchParameters = "--no-tui"
+                    },
+                    /*
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
                     {
                         ExtraLaunchParameters = "--no-tui"
                     },
+                    */
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.IronFish, AlgorithmType.AutolykosIronFish.ToString())
                     {
                         ExtraLaunchParameters = "--no-tui"

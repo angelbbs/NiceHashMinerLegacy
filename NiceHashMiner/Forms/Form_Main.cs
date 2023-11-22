@@ -1288,6 +1288,7 @@ namespace NiceHashMiner
             _loadingScreen.Show();
             _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
+            new Task(() => FlushCache()).Start();
 
             ZoneSchedule1 = ConfigManager.GeneralConfig.ZoneSchedule1;
             ZoneSchedule2 = ConfigManager.GeneralConfig.ZoneSchedule2;
@@ -1339,7 +1340,6 @@ namespace NiceHashMiner
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = 1000;
 
-            new Task(() => FlushCache()).Start();
             if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
             {
                 thisComputer = new LibreHardwareMonitor.Hardware.Computer();
@@ -1555,7 +1555,7 @@ namespace NiceHashMiner
                 _loadingScreen.SetValueAndMsg(81, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer");
                 minerdata = MinerVersion.Get_nanominer();
                 MinerVersion.MinerDataList.Add(minerdata);
-
+                
                 _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner.39.5");
                 minerdata = MinerVersion.Get_NBMiner39_5();
                 MinerVersion.MinerDataList.Add(minerdata);
@@ -1563,7 +1563,7 @@ namespace NiceHashMiner
                 _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
                 minerdata = MinerVersion.Get_NBMiner();
                 MinerVersion.MinerDataList.Add(minerdata);
-
+                
                 _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner");
                 minerdata = MinerVersion.Get_Phoenix();
                 MinerVersion.MinerDataList.Add(minerdata);
@@ -1695,7 +1695,7 @@ namespace NiceHashMiner
                     string p = process.StartInfo.WorkingDirectory;
                     if (m.Contains("MSIAfterburner") || m.Contains("NvidiaGPUGetDataHost") ||
                         m.Contains("netsh") || m.Contains("cports") || m.Contains("sc") ||
-                        m.Contains("igfx") || m.Contains("notepad"))
+                        m.Contains("igfx") || m.Contains("vc_redist") || m.ToLower().Contains("notepad") || m.ToLower().Contains("form_splash"))
                     {
                         continue;
                     }
@@ -1704,7 +1704,7 @@ namespace NiceHashMiner
                 }
             } catch (Exception ex)
             {
-                //Helpers.ConsolePrint("MinersGetVersionWatchdog", ex.ToString());
+                Helpers.ConsolePrint("MinersGetVersionWatchdog", ex.ToString()); 
             }
         }
 
@@ -1718,6 +1718,30 @@ namespace NiceHashMiner
         public static void FlushCache()
         {
             DnsFlushResolverCache();
+            /*
+            try
+            {
+                var vcredistProcess = new Process
+
+                {
+                    StartInfo =
+                {
+                    FileName = "ipconfig.exe"
+                }
+                };
+
+                vcredistProcess.StartInfo.Arguments = "/flushdns";
+                vcredistProcess.StartInfo.UseShellExecute = false;
+                vcredistProcess.StartInfo.CreateNoWindow = true;
+                vcredistProcess.Start();
+                vcredistProcess.WaitForExit();
+
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("ipconfig", e.ToString());
+            }
+            */
         }
 
         public static void FlushCache(string hostName)

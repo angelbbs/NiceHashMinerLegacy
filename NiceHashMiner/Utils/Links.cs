@@ -119,9 +119,12 @@ namespace NiceHashMiner
                     
                     //resolveError = true;//tesing
                 }
-                if (new System.IO.FileInfo("configs\\dnscache.json").Length == 0)
+                if (File.Exists("configs\\dnscache.json"))
                 {
-                    File.Delete("configs\\dnscache.json");
+                    if (new System.IO.FileInfo("configs\\dnscache.json").Length == 0)
+                    {
+                        File.Delete("configs\\dnscache.json");
+                    }
                 }
                 if (!File.Exists("configs\\dnscache.json"))
                 {

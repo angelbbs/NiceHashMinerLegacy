@@ -7,6 +7,7 @@ using NiceHashMiner.Utils;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -16,6 +17,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Permissions;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NiceHashMiner
@@ -25,10 +27,48 @@ namespace NiceHashMiner
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        /// 
+        public class SplashForm : Form
+        {
+            private delegate void CloseDelegate();
+            private static Form splashForm;
+
+            static public void ShowSplashScreen()
+            {  
+                if (splashForm != null) return;
+                splashForm = new Form_Splash();
+                splashForm.Show();
+            }
+
+            static public void CloseForm()
+            {
+                splashForm?.Invoke(new CloseDelegate(SplashForm.CloseFormInternal));
+            }
+
+            static private void CloseFormInternal()
+            {
+                if (splashForm != null)
+                {
+                    splashForm.Close();
+                    splashForm = null;
+                };
+            }
+        }
+        
         [STAThread]
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
         static void Main(string[] argv)
         {
+            string conf = "";
+            try
+            {
+                conf = File.ReadAllText("configs\\General.json");
+            } catch
+            {
+                conf = "\"ShowSplash\": true";
+            }
+            if (conf.Contains("\"ShowSplash\": true") || !conf.Contains("\"ShowSplash")) SplashForm.ShowSplashScreen();
+
             WindowsPrincipal pricipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             bool hasAdministrativeRight = pricipal.IsInRole(WindowsBuiltInRole.Administrator);
             var proc = Process.GetCurrentProcess();
@@ -62,9 +102,17 @@ namespace NiceHashMiner
             pathVar += ";" + Path.Combine(Environment.CurrentDirectory, "common");
             Environment.SetEnvironmentVariable("PATH", pathVar);
 
+            //System.Reflection.Assembly.Load("CustomTabControl");
+            System.Reflection.Assembly.Load("IGCL");
+            System.Reflection.Assembly.Load("MSIAfterburner.NET");
+            System.Reflection.Assembly.Load("NiceHashMinerLegacy");
+            System.Reflection.Assembly.Load("NiceHashMinerLegacy.Divert");
+            System.Reflection.Assembly.Load("NiceHashMinerLegacy.Extensions");
+            System.Reflection.Assembly.Load("NiceHashMinerLegacy.UUID");
+            System.Reflection.Assembly.Load("NvidiaGPUGetDataHost");
 
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            //Application.SetCompatibleTextRenderingDefault(false);
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             //Console.OutputEncoding = System.Text.Encoding.Unicode;
@@ -419,27 +467,22 @@ namespace NiceHashMiner
                     International.Initialize(commandLineArgs.LangValue);
                     ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
                 }
-
                 // check WMI
                 if (Helpers.IsWmiEnabled())
                 {
-                    // if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
+                    try
                     {
-                        try
-                        {
-                            //Application.Run(new Form_Main());
-                            var formmain = new Form_Main();
-                            formmain.Hide();
-                            Application.Run(formmain);
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint("NICEHASH", e.Message);
-                        }
+                        var formmain = new Form_Main();
+                        formmain.Hide();
+                        SplashForm.CloseForm();
+                        Application.Run(formmain);
                     }
-                }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("NICEHASH", e.Message);
+                    }
 
-                else
+                } else
                 {
                     MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
                         International.GetText("Program_WMI_Error_Title"),
@@ -447,6 +490,7 @@ namespace NiceHashMiner
                 }
 
             }
+
         }
     }
 }

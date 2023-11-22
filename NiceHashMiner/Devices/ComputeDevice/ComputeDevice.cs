@@ -469,9 +469,10 @@ namespace NiceHashMiner.Devices
 
         public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config)
         {
+            
+
             if (config != null && config.DeviceUUID == Uuid && config.AlgorithmSettings != null)
             {
-                AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
                 foreach (var conf in config.AlgorithmSettings)
                 {
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
@@ -480,10 +481,27 @@ namespace NiceHashMiner.Devices
                         setAlgo.BenchmarkSpeed = conf.BenchmarkSpeed;
                         setAlgo.BenchmarkSecondarySpeed = conf.BenchmarkSecondarySpeed;
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
-                        setAlgo.Enabled = conf.Enabled;
-                        setAlgo.Hidden = conf.Hidden;
-                        setAlgo.Forced = conf.Forced;
 
+                        var AlgorithmSettingsTemp = GroupAlgorithms.CreateForDeviceList(this);
+                        foreach (var a in AlgorithmSettingsTemp)
+                        {
+                            if (setAlgo.NiceHashID == a.NiceHashID && setAlgo.MinerBaseType == a.MinerBaseType)
+                            {
+                                setAlgo.Hidden = a.Hidden;
+                                if (ConfigManager.GeneralConfig.ShowHiddenAlgos)
+                                {
+                                    setAlgo.Hidden = false;
+                                }
+                                if (a.Hidden)
+                                {
+                                    conf.Enabled = false;
+                                    conf.Forced = false;
+                                }
+                            }
+                        }
+
+                        setAlgo.Enabled = conf.Enabled;
+                        setAlgo.Forced = conf.Forced;
                         setAlgo.LessThreads = conf.LessThreads;
                         setAlgo.PowerUsage = conf.PowerUsage;
 
@@ -589,19 +607,9 @@ namespace NiceHashMiner.Devices
         public List<Algorithm> GetAlgorithmSettings()
         {
             // hello state
-            var algos = GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
+            var algos = GetAlgorithmSettingsThirdParty(Use3rdPartyMiners.YES);
             var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);
-            ;
 
-            // NVIDIA
-            if (DeviceGroupType == DeviceGroupType.NVIDIA_5_x || DeviceGroupType == DeviceGroupType.NVIDIA_6_x)
-            {
-                retAlgos = retAlgos.FindAll(a => a.MinerBaseType != MinerBaseType.nheqminer);
-            }
-            else if (DeviceType == DeviceType.NVIDIA)
-            {
-                retAlgos = retAlgos.FindAll(a => a.MinerBaseType != MinerBaseType.eqm);
-            }
 
             // sort by algo
             retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0
@@ -639,11 +647,11 @@ namespace NiceHashMiner.Devices
 
         private List<Algorithm> GetAlgorithmSettingsThirdParty(Use3rdPartyMiners use3rdParty)
         {
-            if (use3rdParty == Use3rdPartyMiners.YES)
+            //if (use3rdParty == Use3rdPartyMiners.YES)
             {
                 return AlgorithmSettings;
             }
-
+            /*
             var thirdPartyMiners = new List<MinerBaseType>
             {
                 MinerBaseType.Claymore,
@@ -672,6 +680,7 @@ namespace NiceHashMiner.Devices
             };
 
             return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);
+            */
         }
 
         // static methods

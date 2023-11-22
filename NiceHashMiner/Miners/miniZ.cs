@@ -92,12 +92,13 @@ namespace NiceHashMiner.Miners
                 port = "1" + port;
                 ssl = "";
             }
-            foreach (string serverUrl in Globals.MiningLocation)
+            //foreach (string serverUrl in Globals.MiningLocation)
             {
+                string serverUrl = "ru.stratum-proxy.ru";//2.2c daggerhashimoto broken
                 if (serverUrl.Contains("auto"))
                 {
                     ret = ret + " --url " + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --pers auto ";
-                    if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                    //if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
                 else
                 {
@@ -558,11 +559,11 @@ namespace NiceHashMiner.Miners
                 {
                     ad.Speed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_sps);
                     //Helpers.ConsolePrint("************", "prevSpeed: " + prevSpeed.ToString() +  " ad.Speed: " + ad.Speed.ToString());
-                    if (ad.Speed == 0 && prevSpeed > 0)
+                    if (ad.Speed == 0 && prevSpeed > 1)
                     {
                         ad.Speed = prevSpeed;
                     }
-                    if (ad.Speed > prevSpeed * 10000 && prevSpeed > 0)
+                    if (ad.Speed > prevSpeed * 10000 && prevSpeed > 1)
                     {
                         ad.Speed = prevSpeed;
                     }

@@ -11,6 +11,7 @@ namespace NiceHashMiner.Configs.Data
     {
         public Version ConfigFileVersion;
         public double ForkFixVersion;
+        public bool ShowSplash = true;
         public string NHMVersion = "3.0.6.5";
         public bool DecreasePowerCost = false;
         public bool ShowTotalPower = false;
@@ -162,7 +163,7 @@ namespace NiceHashMiner.Configs.Data
         public bool QM_mode = false;
         public bool EnableAPIkeys = false;
         public bool CheckingCUDA = false;
-        public bool RestartDriverOnCUDA_GPU_Lost = false;
+        public bool RestartDriverOnCUDA_GPU_Lost = true;
         public bool RestartWindowsOnCUDA_GPU_Lost = false;
         public bool Allow_remote_management = true;
         public bool Send_actual_version_info = true;

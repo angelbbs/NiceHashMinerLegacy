@@ -808,11 +808,19 @@ namespace NiceHashMiner
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
-
             if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("nbminer") && (commandLine.ToLower().Contains("beam")))
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("nbminer") && (commandLine.ToLower().Contains("kawpow")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("nbminer") && (commandLine.ToLower().Contains("ergo")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
+
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
             Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
             benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -1489,6 +1497,14 @@ namespace NiceHashMiner
                 Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
             if (MiningSetup.MinerPath.ToLower().Contains("nbminer") && (LastCommandLine.ToLower().Contains("beam")))
+            {
+                Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
+            if (MiningSetup.MinerPath.ToLower().Contains("nbminer") && (LastCommandLine.ToLower().Contains("kawpow")))
+            {
+                Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
+            if (MiningSetup.MinerPath.ToLower().Contains("nbminer") && (LastCommandLine.ToLower().Contains("ergo")))
             {
                 Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
             }

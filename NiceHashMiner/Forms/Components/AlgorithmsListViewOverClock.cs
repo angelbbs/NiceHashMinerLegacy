@@ -280,6 +280,14 @@ namespace NiceHashMiner.Forms.Components
                     {
                         miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
                     }
+                    else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("kawpow"))
+                    {
+                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                    }
+                    else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("ergo"))
+                    {
+                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                    }
                     else
                     {
                         miner = miner + MinerVersion.GetMinerVersion(miner);
