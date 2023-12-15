@@ -164,10 +164,11 @@ namespace NiceHashMiner.Devices
 
 
 
-            private static NvidiaSmiDriver GetNvidiaSmiDriver()
+            private static string GetNvidiaSmiDriver()
             {
                 if (WindowsDisplayAdapters.HasNvidiaVideoController())
                 {
+                    string driverVer = null;
                     string stdErr;
                     string args;
                     var stdOut = stdErr = args = string.Empty;
@@ -191,7 +192,7 @@ namespace NiceHashMiner.Devices
                         stdOut = P.StandardOutput.ReadToEnd();
                         stdErr = P.StandardError.ReadToEnd();
 
-                        const string findString = "Driver Version: ";
+                        const string findString = "CUDA Version: ";
                         using (var reader = new StringReader(stdOut))
                         {
                             var line = string.Empty;
@@ -201,24 +202,19 @@ namespace NiceHashMiner.Devices
                                 if (line != null && line.Contains(findString))
                                 {
                                     var start = line.IndexOf(findString);
-                                    var driverVer = line.Substring(start, start + 7);
-                                    driverVer = driverVer.Replace(findString, "").Substring(0, 7).Trim();
-                                    var drVerDouble = double.Parse(driverVer, CultureInfo.InvariantCulture);
-                                    var dot = driverVer.IndexOf(".");
-                                    var leftPart = int.Parse(driverVer.Substring(0, 3));
-                                    var rightPart = int.Parse(driverVer.Substring(4, 2));
-                                    return new NvidiaSmiDriver(leftPart, rightPart);
+                                    driverVer = line.Substring(start + findString.Length, 5).Trim();
+                                    return driverVer;
                                 }
                             } while (line != null);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Helpers.ConsolePrint(Tag, "GetNvidiaSMIDriver Exception: " + ex.Message);
-                        return InvalidSmiDriver;
+                        Helpers.ConsolePrint(Tag, "GetNvidiaSMIDriver Exception: " + ex.Message + " " + smiPath);
+                        return "unknown";
                     }
                 }
-                return InvalidSmiDriver;
+                return "unknown";
             }
 
             private static void SetValueAndMsg(int num, string infoMsg)
@@ -273,80 +269,27 @@ namespace NiceHashMiner.Devices
             {
                 string defaultpath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                    "\\NVIDIA Corporation\\NVSMI";
-                nvmlRootPath = defaultpath;
-                /*
-                nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) +
-               "\\System32";
-                Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
-                if (Directory.Exists(nvmlRootPath))
+
+                var pathVar = Environment.GetEnvironmentVariable("PATH");
+                if (Directory.Exists(defaultpath) && File.Exists("nvidia-smi.exe") && File.Exists("nvml.dll"))
                 {
-                    var pathVar = Environment.GetEnvironmentVariable("PATH");
-                    pathVar += ";" + nvmlRootPath;
+                    nvmlRootPath = defaultpath;
+                    pathVar += ";" + defaultpath;
+                    Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{defaultpath}'");
                     Environment.SetEnvironmentVariable("PATH", pathVar);
                     return true;
-                }
-                */
-
-                if (!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")) || !File.Exists(Path.Combine(nvmlRootPath, "nvidia-smi.exe")))
+                } else
                 {
                     nvmlRootPath = GetNVMLFiles();
-                    if (!Directory.Exists(defaultpath))
+                    if (!string.IsNullOrEmpty(nvmlRootPath))
                     {
-                        try
-                        {
-                            Directory.CreateDirectory(defaultpath);
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "CreateDirectory failed: " + e.Message);
-                        }
-                    }
-                    if (File.Exists(nvmlRootPath + "\\nvidia-smi.exe") || !File.Exists(defaultpath + "\\nvidia-smi.exe"))
-                    {
-                        try
-                        {
-                            var copyToPath = defaultpath + "\\nvidia-smi.exe";
-                            File.Copy(nvmlRootPath + "\\nvidia-smi.exe", copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\nvidia-smi.exe"} to {copyToPath} done");
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy nvidia-smi.exe failed: " + e.Message);
-                        }
-                    }
-                    if (File.Exists(nvmlRootPath + "\\nvml.dll") || !File.Exists(defaultpath + "\\nvml.dll"))
-                    {
-                        try
-                        {
-                            var copyToPath = defaultpath + "\\nvml.dll";
-                            File.Copy(nvmlRootPath + "\\nvml.dll", copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlRootPath + "\\\nvml.dll"} to {copyToPath} done");
-                            nvmlRootPath = defaultpath;
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                        }
-                    }
-                }
-
-                if (File.Exists(defaultpath + "\\nvml.dll"))
-                {
-                    Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
-                    if (Directory.Exists(nvmlRootPath))
-                    {
-                        var pathVar = Environment.GetEnvironmentVariable("PATH");
                         pathVar += ";" + nvmlRootPath;
+                        Helpers.ConsolePrint(Tag, $"Adding NVML to PATH='{nvmlRootPath}'");
                         Environment.SetEnvironmentVariable("PATH", pathVar);
                         return true;
                     }
                 }
-                else
-                {
-                    Helpers.ConsolePrint(Tag, "Warning! nvml.dll not found!");
-                    return false;
-                }
-
+                Helpers.ConsolePrint(Tag, "Warning! nvml.dll or nvidia-smi.exe not found!");
                 return false;
             }
 
@@ -355,6 +298,11 @@ namespace NiceHashMiner.Devices
                 DateTime dt = new DateTime();
                 string pathToFiles = null;
                 string DriverFolder = "C:\\Windows\\System32\\DriverStore\\FileRepository";
+                string nvFolder = "\\nv_dispig.inf_amd64_7e5fd280efaa5445";
+                if (File.Exists(DriverFolder + nvFolder + "\\nvidia-smi.exe"))
+                {
+                    return DriverFolder + nvFolder;
+                }
                 try
                 {
                     string[] folders = Directory.GetDirectories(DriverFolder);
@@ -527,28 +475,9 @@ namespace NiceHashMiner.Devices
                         intelCount.ToString() + " " + IntelDevices.Count.ToString());
                 }
                 // allerts
-                _currentNvidiaSmiDriver = GetNvidiaSmiDriver();
-                if (!_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda111Driver))
-                {
-                    CUDA_version = "CUDA 11.1";
-                }
-                if (!_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda11Driver))
-                {
-                    CUDA_version = "CUDA 11.0";
-                }
-                if (!_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda101Driver))
-                {
-                    CUDA_version = "CUDA 10.1";
-                }
-                if (_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda101Driver) && !_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda10Driver))
-                {
-                    CUDA_version = "CUDA 10.0";
-                }
-                if (_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda10Driver) && !_currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaCuda92Driver))
-                {
-                    CUDA_version = "CUDA 9.2";
-                }
-                Helpers.ConsolePrint("NVIDIA driver", CUDA_version);
+                CUDA_version = GetNvidiaSmiDriver();
+                Helpers.ConsolePrint("CUDA_version ->", CUDA_version);
+                
                 // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
                 var isNvidiaErrorShown = false; // to prevent showing twice
                 var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning &&
@@ -562,22 +491,6 @@ namespace NiceHashMiner.Devices
                         MessageBox.Show(International.GetText("Compute_Device_Query_Manager_LostDevice"), "Error!",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)).Start();
                     }
-                }
-                // recomended driver
-                if (showWarning && _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
-                  !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
-                {
-                    var recomendDrvier = NvidiaRecomendedDriver.ToString();
-                    var nvdriverString = _currentNvidiaSmiDriver.LeftPart > -1
-                        ? string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"),
-                            _currentNvidiaSmiDriver)
-                        : "";
-                    new Task(() => MessageBox.Show(string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
-                            recomendDrvier, nvdriverString, recomendDrvier),
-                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning)).Start();
                 }
 
                 // no devices found
@@ -785,6 +698,9 @@ namespace NiceHashMiner.Devices
                             break;
                         case "154B":
                             man = "PNY";
+                            break;
+                        case "144D":
+                            man = "Samsung";
                             break;
                         case "1569":
                             man = "Palit";

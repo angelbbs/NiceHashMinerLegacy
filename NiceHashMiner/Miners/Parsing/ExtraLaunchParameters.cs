@@ -661,7 +661,9 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Rigel-lock-mclock", "--lock-mclock", "--lock-mclock", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-pl", "--pl", "--pl", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-mt", "--mt", "--mt", "_", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("Rigel-fan-control", "--fan-control", "--fan-control", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-zil", "--zil", "--zil", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-zil", "--zil", "--zil", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-zil-cache-dag", "--zil-cache-dag", "--zil-cache-dag", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-dual-mode", "--dual-mode", "--dual-mode", "_", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>()

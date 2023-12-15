@@ -92,17 +92,23 @@ namespace NiceHashMiner.Miners
                 port = "1" + port;
                 ssl = "";
             }
-            //foreach (string serverUrl in Globals.MiningLocation)
+            foreach (string serverUrl in Globals.MiningLocation)
             {
-                string serverUrl = "ru.stratum-proxy.ru";//2.2c daggerhashimoto broken
                 if (serverUrl.Contains("auto"))
                 {
-                    ret = ret + " --url " + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 --pers auto ";
+                    if (algo.ToLower().Contains("daggerhashimoto"))
+                    {
+                        ret = ret + " --url=stratum1://" + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
+                    }
+                    else
+                    {
+                        ret = ret + " --url " + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
+                    }
                     //if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
                 }
-                else
+                else//не проверено
                 {
-                    ret = ret + " --pers auto --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                    ret = ret + " --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                 }
             }
             return ret;
@@ -112,6 +118,7 @@ namespace NiceHashMiner.Miners
             var algo = "";
             var algoName = "";
             string port = "";
+            string pers = "";
             string username = GetUsername(btcAddress, worker);
             string log = "";
             string ZilMining = "";
@@ -128,7 +135,7 @@ namespace NiceHashMiner.Miners
                 ConfigManager.GeneralConfig.ZIL_mining_state == 1)
                 {
                     //прокси не используется
-                    ZilMining = " --url=zil://" + username + "@daggerhashimoto.auto.nicehash.com:9200";
+                    ZilMining = " --url=zil://" + username + "@daggerhashimoto.auto.nicehash.com:9200";//не работает на найсе
                     /*
                     logFile = GetDeviceID() + ".csv";
                     log = " --csv=" + logFile + " --log-period=1";
@@ -143,7 +150,7 @@ namespace NiceHashMiner.Miners
                     */
                 }
             }
-            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype) &&
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype) && 
                 ConfigManager.GeneralConfig.ZIL_mining_state == 2)
             {
                 ZilMining = " --url " + ConfigManager.GeneralConfig.ZIL_mining_wallet + "." + worker + "@" +
@@ -156,6 +163,7 @@ namespace NiceHashMiner.Miners
                 algo = "144,5";
                 algoName = "zhash";
                 port = "3369";
+                pers = " --pers auto";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
@@ -163,6 +171,7 @@ namespace NiceHashMiner.Miners
                 algo = "125,4";
                 algoName = "zelhash";
                 port = "3391";
+                pers = " --pers ZelProof";
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
@@ -170,6 +179,7 @@ namespace NiceHashMiner.Miners
                 algo = "beam3";
                 algoName = "beamv3";
                 port = "3387";
+                pers = " --pers auto";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
@@ -177,12 +187,14 @@ namespace NiceHashMiner.Miners
                 algoName = "daggerhashimoto";
                 port = "3353";
                 ZilMining = "";
+                pers = " --pers auto";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
                 algo = "octopus";
                 algoName = "octopus";
                 port = "3389";
+                pers = " --pers auto";
             }
             string sColor = "";
             if (GetWinVer(Environment.OSVersion.Version) < 8)
@@ -192,7 +204,7 @@ namespace NiceHashMiner.Miners
             string psw = "x";
             if (ConfigManager.GeneralConfig.StaleProxy) psw = "stale";
             var ret = GetDevicesCommandString()
-                      + sColor + " --par=" + algo
+                      + sColor + pers + " --par=" + algo
                       + GetServer(algoName, username, port)
                       + ZilMining + " --telemetry=" + ApiPort;
 

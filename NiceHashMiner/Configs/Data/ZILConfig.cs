@@ -74,19 +74,19 @@ namespace NiceHashMiner.Configs.Data
     public class ZILConfigRigel
     {
         public bool Autolykos_NVIDIA { get; set; }
-        public bool AutolykosKHeavyHash_NVIDIA { get; set; }
         public bool AutolykosIronFish_NVIDIA { get; set; }
-        public bool KHeavyHash_NVIDIA { get; set; }
+        public bool KAWPOW_NVIDIA { get; set; }
         public bool Nexapow_NVIDIA { get; set; }
         public bool IronFish_NVIDIA { get; set; }
+        public bool Octopus_NVIDIA { get; set; }
         public ZILConfigRigel()
         {
             Autolykos_NVIDIA = true;
-            AutolykosKHeavyHash_NVIDIA = true;
             AutolykosIronFish_NVIDIA = true;
-            KHeavyHash_NVIDIA = true;
+            KAWPOW_NVIDIA = true;
             Nexapow_NVIDIA = true;
             IronFish_NVIDIA = true;
+            Octopus_NVIDIA = true;
         }
     }
     [Serializable]

@@ -38,7 +38,7 @@ namespace NiceHashMiner.Forms
             this.BackgroundImage = global::NiceHashMiner.Properties.Resources.NHM_logo_xsmall_light;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.CausesValidation = false;
-            this.ClientSize = new System.Drawing.Size(284, 98);
+            this.ClientSize = new System.Drawing.Size(219, 88);
             this.ControlBox = false;
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

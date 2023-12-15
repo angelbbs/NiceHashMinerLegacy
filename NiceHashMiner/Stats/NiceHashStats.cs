@@ -1079,6 +1079,7 @@ namespace NiceHashMiner.Stats
             bool average = true, string type = "WS")
         {
             double mult = 1;
+            double paying = 0.0d;
             if (ConfigManager.GeneralConfig.NicehashMiningFee)
             {
                 mult = multipl * 0.98;//nicehash mining fee
@@ -1090,8 +1091,8 @@ namespace NiceHashMiner.Stats
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();
-                payingDict.Add(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-                payingDict.Add(AlgorithmType.DaggerHashimoto4GB, 0.0d);
+                //payingDict.Add(AlgorithmType.DaggerHashimoto3GB, 0.0d);
+                //payingDict.Add(AlgorithmType.DaggerHashimoto4GB, 0.0d);
                 if (data != null)
                 {
                     foreach (var algo in data)
@@ -1104,10 +1105,12 @@ namespace NiceHashMiner.Stats
                             continue;
                         }
 
-                        if (!NHSmaData.TryGetPaying(algoKey, out double paying))
+                        if (!NHSmaData.TryGetPaying(algoKey, out double payingFromDict))
                         {
                             Helpers.ConsolePrint("SetAlgorithmRates", "ERROR! Unknown algo: " + algoKey.ToString());
                         }
+
+                        paying = Math.Abs(algo[1].Value<double>() * mult);
 
                         if (double.IsNaN(paying))
                         {
@@ -1118,62 +1121,85 @@ namespace NiceHashMiner.Stats
                         {
                             if (!algoKey.ToString().Contains("UNUSED") && type.ToLower().Contains("ws"))
                             {
-                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
-                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), average);//first init?
-                            }
-
-                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED")
-                                && type.ToLower().Equals("current"))
-                            {
-                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
-                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
-                                if (algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash)
+                                NHSmaData.UpdatePayingForAlgo(algoKey, paying, average);//first init?
+                                if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, Math.Abs(algo[1].Value<double>() * mult), false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, average);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, average);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, average);
                                 }
                             }
 
-                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED")
+                            if (paying != 0 && !algoKey.ToString().Contains("UNUSED")
+                                && type.ToLower().Equals("current"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, paying, true);
+                                if (algoKey == AlgorithmType.DaggerHashimoto)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, true);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, true);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, true);
+                                }
+                            }
+
+                            if (paying != 0 && !algoKey.ToString().Contains("UNUSED")
                                 && type.ToLower().Equals("order"))
                             {
-                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
-                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                                NHSmaData.UpdatePayingForAlgo(algoKey, paying, true);
+                                if (algoKey == AlgorithmType.DaggerHashimoto)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
                             }
                         }
                         else
                         {
                             if (!algoKey.ToString().Contains("UNUSED") && type.ToLower().Equals("ws"))
                             {
-                                //Helpers.ConsolePrint("SetAlgorithmRates", algoKey.ToString() + " updated. Type: " + type);
-                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), average);//first init?
-                            }
-
-                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED") &&
-                                type.ToLower().Equals("current"))
-                            {
-                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
-                                if (algoKey == AlgorithmType.DaggerHashimoto || algoKey == AlgorithmType.ETCHash)
+                                NHSmaData.UpdatePayingForAlgo(algoKey, paying, average);//first init?
+                                if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, Math.Abs(algo[1].Value<double>() * mult), false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
                                 }
                             }
 
-                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED") &&
-                                type.ToLower().Equals("order"))
+                            if (paying != 0 && !algoKey.ToString().Contains("UNUSED") &&
+                                type.ToLower().Equals("current"))
                             {
-                                NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                                NHSmaData.UpdatePayingForAlgo(algoKey, paying, true);
+                                if (algoKey == AlgorithmType.DaggerHashimoto)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
                             }
 
-                            if ((Math.Abs(algo[1].Value<double>() * mult)) != 0 && !algoKey.ToString().Contains("UNUSED") &&
+                            if (paying != 0 && !algoKey.ToString().Contains("UNUSED") &&
+                                type.ToLower().Equals("order"))
+                            {
+                                NHSmaData.UpdatePayingForAlgo(algoKey, paying, true);
+                                if (algoKey == AlgorithmType.DaggerHashimoto)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
+                            }
+
+                            if (paying != 0 && !algoKey.ToString().Contains("UNUSED") &&
                                 type.ToLower().Equals("24h"))
                             {
-                                if ((algoKey == AlgorithmType.DaggerHashimoto ||
-                                    algoKey == AlgorithmType.ETCHash))
+                                NHSmaData.UpdatePayingForAlgo(algoKey, paying, true);
+                                if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
-                                    NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), false);
-                                } else
-                                {
-                                    NHSmaData.UpdatePayingForAlgo(algoKey, Math.Abs(algo[1].Value<double>() * mult), true);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
                                 }
                             }
                         }
@@ -1181,17 +1207,17 @@ namespace NiceHashMiner.Stats
                 }
 
                 //testing
-                //payingDict[AlgorithmType.ZelHash] = 12345;
+                //payingDict[AlgorithmType.RandomX] = 12345;
 
-                //Helpers.ConsolePrint("*** 1", payingDict[AlgorithmType.DaggerHashimoto3GB].ToString());
-                //Helpers.ConsolePrint("*** 2", payingDict[AlgorithmType.DaggerHashimoto4GB].ToString());
-                //Helpers.ConsolePrint("*** 3", payingDict[AlgorithmType.DaggerHashimoto].ToString());
-                /*
-                payingDict[AlgorithmType.DaggerHashimoto3GB] = payingDict[AlgorithmType.DaggerHashimoto];
-                payingDict[AlgorithmType.DaggerHashimoto4GB] = payingDict[AlgorithmType.DaggerHashimoto];
+                //Helpers.ConsolePrint("*** DaggerHashimoto3GB", payingDict[AlgorithmType.DaggerHashimoto3GB].ToString());
+                //Helpers.ConsolePrint("*** DaggerHashimoto4GB", payingDict[AlgorithmType.DaggerHashimoto4GB].ToString());
+                //Helpers.ConsolePrint("*** DaggerHashimoto", payingDict[AlgorithmType.DaggerHashimoto].ToString());
+                
+                //payingDict[AlgorithmType.DaggerHashimoto3GB] = payingDict[AlgorithmType.DaggerHashimoto];
+                //payingDict[AlgorithmType.DaggerHashimoto4GB] = payingDict[AlgorithmType.DaggerHashimoto];
 
                 NHSmaData.UpdateSmaPaying(payingDict, average);
-                */
+                
 
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);

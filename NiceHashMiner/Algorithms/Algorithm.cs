@@ -363,7 +363,7 @@ namespace NiceHashMiner.Algorithms
             // This is power usage in BTC/hr
             var power = PowerUsage / 1000 * ExchangeRateApi.GetKwhPriceInBtc();
             // Now it is power usage in BTC/day
-            power *= 24;
+            power *= 24 * Form_Main._factorTimeUnit;
             // Now we subtract from profit, which may make profit negative
             CurrentProfit -= power;
         }

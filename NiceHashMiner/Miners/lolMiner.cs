@@ -80,7 +80,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + " --pool " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --user " + 
+                    ret = ret + " --pool " + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " --user " + 
                         //username.Split('.')[0] + " --pass " + psw + " " + ssl;
                         btcAdress + _worker + " --pass " + psw + " " + ssl;
                 }

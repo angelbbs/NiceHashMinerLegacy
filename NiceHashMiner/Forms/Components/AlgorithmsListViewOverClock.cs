@@ -270,12 +270,19 @@ namespace NiceHashMiner.Forms.Components
                     {
                         name = alg.AlgorithmNameCustom;
                     }
+                    miner = alg.MinerBaseTypeName;
                     if (Form_additional_mining.isAlgoZIL(name, alg.MinerBaseType, computeDevice.DeviceType) &&
                         ConfigManager.GeneralConfig.AdditionalMiningPlusSymbol)
                     {
-                        name = name + "+";
+                        //if (miner.ToLower().Contains("miniz") && ConfigManager.GeneralConfig.ZIL_mining_state == 1)
+                        //{
+
+                        //}
+                        //else
+                        {
+                            name = name + "+";
+                        }
                     }
-                    miner = alg.MinerBaseTypeName;
                     if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
                     {
                         miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
@@ -600,8 +607,6 @@ namespace NiceHashMiner.Forms.Components
                     RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                 }
             }
-           // }
-
         }
 
         private void GetDefMinMax()

@@ -37,6 +37,14 @@ namespace NiceHashMiner.Miners.Grouping
                 + Enum.GetName(typeof(AlgorithmType), MostProfitableAlgorithmType);
         }
 
+        public string GetCurrentProfitableString()
+        {
+            return
+                Enum.GetName(typeof(MinerBaseType), PrevProfitableMinerBaseType)
+                + "_"
+                + Enum.GetName(typeof(AlgorithmType), PrevProfitableAlgorithmType);
+        }
+
         public AlgorithmType MostProfitableAlgorithmType { get; private set; }
 
         public MinerBaseType MostProfitableMinerBaseType { get; private set; }
@@ -91,6 +99,19 @@ namespace NiceHashMiner.Miners.Grouping
                 if (prevProfitableIndex > -1)
                 {
                     return Algorithms[prevProfitableIndex].CurrentProfit;
+                }
+
+                return 0;
+            }
+        }
+        public double GetPrevMostProfitValueWithoutPower
+        {
+            get
+            {
+                var prevProfitableIndex = GetPrevProfitableIndex();
+                if (prevProfitableIndex > -1)
+                {
+                    return Algorithms[prevProfitableIndex].CurrentProfitWithoutPower;
                 }
 
                 return 0;

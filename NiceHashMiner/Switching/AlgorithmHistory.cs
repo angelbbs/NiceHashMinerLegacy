@@ -59,6 +59,24 @@ namespace NiceHashMiner.Switching
 
             return count;
         }
+        public int CountDownProfit(double profit)
+        {
+            var count = 0;
+
+            for (var i = _history.Count - 1; i >= 0; i--)
+            {
+                if (_history[i] < profit)
+                {
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return count;
+        }
 
         public IEnumerator<double> GetEnumerator()
         {

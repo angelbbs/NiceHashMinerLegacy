@@ -135,12 +135,12 @@ namespace NiceHashMiner.Miners
                     port = "3393";
                     ZilMining = "";
                 }
-                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
                 {
-                    algo = "kheavyhash" + ZilAlgo;
-                    algoName = "kheavyhash";
+                    algo = "ravencoin" + ZilAlgo;
+                    algoName = "kawpow";
                     nicehashstratum = "";
-                    port = "3395";
+                    port = "3385";
                 }
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
                 {
@@ -179,16 +179,6 @@ namespace NiceHashMiner.Miners
             }
             else //dual
             {
-                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
-                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-                {
-                    algo = "autolykos2+kheavyhash" + ZilAlgo;
-                    algoName = "autolykos";
-                    algoName2 = "kheavyhash";
-                    nicehashstratum = "";
-                    port = "3390";
-                    port2 = "3395";
-                }
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
                     MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                 {
@@ -237,7 +227,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + " -o " + MainMining + stratum + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + MainMining +
+                    ret = ret + " -o " + MainMining + stratum + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + MainMining +
                         username + " -p " + psw + " ";
                 }
             }
@@ -283,9 +273,17 @@ namespace NiceHashMiner.Miners
         {
             var deviceStringCommand = " --no-watchdog -d ";
             var ids = new List<string>();
+            var zil = new List<string>();
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             var extra = "";
             int id;
+
+            DeviceType devtype = DeviceType.NVIDIA;
+            foreach (var mPair in sortedMinerPairs)
+            {
+                devtype = mPair.Device.DeviceType;
+            }
+
             foreach (var mPair in sortedMinerPairs)
             {
                 id = mPair.Device.IDByBus;
@@ -303,9 +301,24 @@ namespace NiceHashMiner.Miners
                     ids.Add(id.ToString());
                 }
 
+                if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype))
+                {
+                    if (mPair.Device.GpuRam / 1024 > 9 * 1024 * 1024)
+                    {
+                        zil.Add("on");
+                    }
+                    else
+                    {
+                        zil.Add("off");
+                    }
+                }
             }
 
             deviceStringCommand += string.Join(",", ids);
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype))
+            {
+                deviceStringCommand += " --zil-cache-dag " + string.Join(",", zil);
+            }
             deviceStringCommand = deviceStringCommand + extra + " ";
 
             return deviceStringCommand;
@@ -448,10 +461,10 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
             
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
-                ret = " -a kheavyhash" +
-                " -o " + Links.CheckDNS("pool.eu.woolypooly.com:3112") + " -u kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 -p x" +
+                ret = " -a ravencoin" +
+                " -o " + Links.CheckDNS("rvn.2miners.com:6060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.Rigel -p x" +
                 GetDevicesCommandString();
             }
 
@@ -484,13 +497,6 @@ namespace NiceHashMiner.Miners
             }
 
             //duals
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                ret = " -a autolykos2+kheavyhash" +
-                " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3100") + " -u [1]9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel" +
-                " -o [2]" + Links.CheckDNS("pool.eu.woolypooly.com:3112") + " -u [2]kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.Rigel " +
-                GetDevicesCommandString();
-            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
             {
                 ret = " -a autolykos2+ironfish" +
@@ -546,10 +552,10 @@ namespace NiceHashMiner.Miners
                     // wait a second due api request
                     Thread.Sleep(1000);
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
                     {
                         MinerStartDelay = 10;
-                        delay_before_calc_hashrate = 10;
+                        delay_before_calc_hashrate = 30;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
                     {
@@ -725,125 +731,120 @@ namespace NiceHashMiner.Miners
                         dynamic _hashrate = null;
                         dynamic _hashrate2 = null;
                         dynamic _hashrateZIL = null;
-
-                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
+                        if (selected)
                         {
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
+                            if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
                             {
-                                _hashrate = d.hashrate.kheavyhash;
-                            }
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
-                            {
-                                _hashrate = d.hashrate.nexapow;
-                            }
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
-                            {
-                                _hashrate = d.hashrate.autolykos2;
-                            }
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
-                            {
-                                _hashrate = d.hashrate.ironfish;
-                            }
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
-                            {
-                                _hashrate = d.hashrate.octopus;
-                            }
-
-                            _hashrateZIL = d.hashrate.zil;
-
-                            if (_hashrate == null)
-                            {
-                                hashrate = 0.0d;
-                            }
-                            else
-                            {
-                                if (selected)
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
                                 {
-                                    hashrate = (double)_hashrate;
+                                    _hashrate = d.hashrate.ravencoin;
+                                }
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
+                                {
+                                    _hashrate = d.hashrate.nexapow;
+                                }
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
+                                {
+                                    _hashrate = d.hashrate.autolykos2;
+                                }
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
+                                {
+                                    _hashrate = d.hashrate.ironfish;
+                                }
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
+                                {
+                                    _hashrate = d.hashrate.octopus;
+                                }
+
+                                _hashrateZIL = d.hashrate.zil;
+
+                                if (_hashrate == null)
+                                {
+                                    hashrate = 0.0d;
+                                }
+                                else
+                                {
+                                    if (selected)
+                                    {
+                                        hashrate = (double)_hashrate;
+                                    }
+                                }
+
+                                if (_hashrateZIL == null)
+                                {
+                                    hashrate2 = 0.0d;
+                                }
+                                else
+                                {
+                                    if (selected)
+                                    {
+                                        hashrateZIL = (double)_hashrateZIL;
+                                    }
+                                }
+                                if (hashrateZIL > 0)
+                                {
+                                    isZILround = true;
+                                }
+                                else
+                                {
+                                    isZILround = false;
                                 }
                             }
-
-                            if (_hashrateZIL == null)
+                            else //dual
                             {
-                                hashrate2 = 0.0d;
-                            }
-                            else
-                            {
-                                if (selected)
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                                 {
-                                    hashrateZIL = (double)_hashrateZIL;
+                                    _hashrate = d.hashrate.autolykos2;
+                                    _hashrate2 = d.hashrate.ironfish;
                                 }
-                            }
-                            if (hashrateZIL != 0)
-                            {
-                                isZILround = true;
-                                //Helpers.ConsolePrint("Rigel", "_hashrateZIL: " + hashrateZIL.ToString());
-                            }
-                            else
-                            {
-                                isZILround = false;
-                                //Helpers.ConsolePrint("Rigel", "isZILround = false");
-                            }
-                        } else //dual
-                        {
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
-                                MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-                            {
-                                _hashrate = d.hashrate.autolykos2;
-                                _hashrate2 = d.hashrate.kheavyhash;
-                            }
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
-                                MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
-                            {
-                                _hashrate = d.hashrate.autolykos2;
-                                _hashrate2 = d.hashrate.ironfish;
-                            }
 
-                            _hashrateZIL = d.hashrate.zil;
+                                _hashrateZIL = d.hashrate.zil;
 
-                            if (_hashrate == null)
-                            {
-                                hashrate = 0.0d;
-                            }
-                            else
-                            {
-                                if (selected)
+                                if (_hashrate == null)
                                 {
-                                    hashrate = (double)_hashrate;
+                                    hashrate = 0.0d;
                                 }
-                            }
-                            if (_hashrate2 == null)
-                            {
-                                hashrate2 = 0.0d;
-                            }
-                            else
-                            {
-                                if (selected)
+                                else
                                 {
-                                    hashrate2 = (double)_hashrate2;
+                                    if (selected)
+                                    {
+                                        hashrate = (double)_hashrate;
+                                    }
                                 }
-                            }
+                                if (_hashrate2 == null)
+                                {
+                                    hashrate2 = 0.0d;
+                                }
+                                else
+                                {
+                                    if (selected)
+                                    {
+                                        hashrate2 = (double)_hashrate2;
+                                    }
+                                }
 
-                            if (_hashrateZIL == null)
-                            {
-                                hashrateZIL = 0.0d;
-                            }
-                            else
-                            {
-                                if (selected)
+                                if (_hashrateZIL == null)
                                 {
-                                    hashrateZIL = (double)_hashrateZIL;
+                                    hashrateZIL = 0.0d;
                                 }
-                            }
-                            if (hashrateZIL != 0)
-                            {
-                                isZILround = true;
-                                //Helpers.ConsolePrint("Rigel", "_hashrateZIL: " + hashrateZIL.ToString());
-                            }
-                            else
-                            {
-                                isZILround = false;
-                                //Helpers.ConsolePrint("Rigel", "isZILround = false");
+                                else
+                                {
+                                    if (selected)
+                                    {
+                                        hashrateZIL = (double)_hashrateZIL;
+                                    }
+                                }
+                                if (hashrateZIL > 0)
+                                {
+                                    isZILround = true;
+                                    //Helpers.ConsolePrint("Rigel", "_hashrateZIL: " + hashrateZIL.ToString());
+                                }
+                                else
+                                {
+                                    isZILround = false;
+                                    //Helpers.ConsolePrint("Rigel", "isZILround = false");
+                                }
                             }
                         }
 
@@ -879,8 +880,7 @@ namespace NiceHashMiner.Miners
                         mPair.Device.MiningHashrateSecond = hashratesZIL[mPair.Device.ID];
 
                         //duals
-                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash ||
-                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
+                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                         {
                             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
                             {

@@ -835,6 +835,9 @@ namespace NiceHashMiner.Devices
                 case "152D":
                     man = "Quanta";
                     break;
+                case "144D":
+                    man = "Samsung";
+                    break;
                 case "154B":
                     man = "PNY";
                     break;

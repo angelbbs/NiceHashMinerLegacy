@@ -826,6 +826,7 @@ namespace NiceHashMiner
             benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
 
             // set sys variables
+            /*
             if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
             {
                 foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path])
@@ -835,6 +836,7 @@ namespace NiceHashMiner
                     benchmarkHandle.StartInfo.EnvironmentVariables[envName] = envValue;
                 }
             }
+            */
             //string cl = Directory.GetCurrentDirectory() + "\\" + benchmarkHandle.StartInfo.FileName;
             //benchmarkHandle.StartInfo.FileName = cl;
 

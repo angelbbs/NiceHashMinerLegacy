@@ -42,9 +42,9 @@ namespace NiceHashMiner.Forms {
             // 
             this.StartStopBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.StartStopBtn.BackColor = System.Drawing.SystemColors.Control;
-            this.StartStopBtn.Location = new System.Drawing.Point(516, 476);
+            this.StartStopBtn.Location = new System.Drawing.Point(474, 476);
             this.StartStopBtn.Name = "StartStopBtn";
-            this.StartStopBtn.Size = new System.Drawing.Size(75, 23);
+            this.StartStopBtn.Size = new System.Drawing.Size(117, 23);
             this.StartStopBtn.TabIndex = 100;
             this.StartStopBtn.Text = "&Start";
             this.StartStopBtn.UseVisualStyleBackColor = false;

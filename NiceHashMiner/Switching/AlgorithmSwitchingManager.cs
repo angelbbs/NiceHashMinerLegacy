@@ -250,7 +250,7 @@ namespace NiceHashMiner.Switching
 
                         if (algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
                         {
-                            _lastLegitPaying[algo] = paying;
+                            //_lastLegitPaying[algo] = paying;
                         }
 
                     }

@@ -59,16 +59,6 @@ namespace NiceHashMiner
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
         static void Main(string[] argv)
         {
-            string conf = "";
-            try
-            {
-                conf = File.ReadAllText("configs\\General.json");
-            } catch
-            {
-                conf = "\"ShowSplash\": true";
-            }
-            if (conf.Contains("\"ShowSplash\": true") || !conf.Contains("\"ShowSplash")) SplashForm.ShowSplashScreen();
-
             WindowsPrincipal pricipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             bool hasAdministrativeRight = pricipal.IsInRole(WindowsBuiltInRole.Administrator);
             var proc = Process.GetCurrentProcess();
@@ -87,6 +77,17 @@ namespace NiceHashMiner
                 }
                 proc.Kill();
             }
+
+            string conf = "";
+            try
+            {
+                conf = File.ReadAllText("configs\\General.json");
+            }
+            catch
+            {
+                conf = "\"ShowSplash\": true";
+            }
+            if (conf.Contains("\"ShowSplash\": true") || !conf.Contains("\"ShowSplash")) SplashForm.ShowSplashScreen();
 
             // Set working directory to exe
             var pathSet = false;
@@ -352,6 +353,11 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 59;
+                }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 59.1)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 59.1;
                 }
 
                 if (ConfigManager.GeneralConfig.ZILMaxEpoch < 1) ConfigManager.GeneralConfig.ZILMaxEpoch = 1;

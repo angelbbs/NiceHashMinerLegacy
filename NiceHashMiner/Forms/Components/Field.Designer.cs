@@ -40,9 +40,9 @@ namespace NiceHashMiner.Forms.Components {
             // textBox
             // 
             this.textBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox.Location = new System.Drawing.Point(147, 3);
+            this.textBox.Location = new System.Drawing.Point(152, 3);
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(119, 20);
+            this.textBox.Size = new System.Drawing.Size(114, 20);
             this.textBox.TabIndex = 7;
             // 
             // Field

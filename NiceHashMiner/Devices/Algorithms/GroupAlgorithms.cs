@@ -85,7 +85,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
             //Helpers.ConsolePrint("GPU MEMORY: ", device.GpuRam.ToString() + " bytes - " + device.Name);
 
-            
+
             if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -118,7 +118,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 Form_Main.DaggerHashimoto4GB = false;
             }
 
-            
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -134,7 +134,6 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.CuckooCycle
                     });
             }
-
             if (device.Name.ToLower().Contains("gtx 10") && device.DeviceType == DeviceType.NVIDIA)
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -142,6 +141,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         AlgorithmType.Octopus
                     });
             }
+
             if (device.Name.ToLower().Contains("gtx 10") && device.DeviceType == DeviceType.NVIDIA)
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -397,27 +397,35 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
-            
+            /*
             if (algoSettings.ContainsKey(MinerBaseType.miniZ))
             {
                 foreach (var algo in algoSettings[MinerBaseType.miniZ])
                 {
-                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto & 
+                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto &
                         (device.DeviceType == DeviceType.AMD || device.DeviceType == DeviceType.NVIDIA))
                     {
                         algo.Enabled = false;
                         if (MinerVersion.Get_miniZ().MinerVersion.Trim().Equals("2.2c"))
                         {
                             algo.Hidden = true;
-                        } else
+                        }
+                        else
                         {
                             algo.Hidden = false;
                         }
-                        //algo.Forced = false;
                     }
                 }
             }
-
+            */
+//не забыть в ригеле сделать kawpow+zil
+            if (!ConfigManager.GeneralConfig.ShowHiddenAlgos)
+            {
+                    algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.X16RV2
+                    });
+            }
             return algoSettings;
         }
 

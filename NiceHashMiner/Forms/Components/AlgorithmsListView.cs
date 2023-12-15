@@ -320,7 +320,13 @@ namespace NiceHashMiner.Forms.Components
                 if (Form_additional_mining.isAlgoZIL(name, alg.MinerBaseType, computeDevice.DeviceType) &&
                         ConfigManager.GeneralConfig.AdditionalMiningPlusSymbol)
                 {
-                    name = name + "+";
+                    //if (miner.ToLower().Contains("miniz") && ConfigManager.GeneralConfig.ZIL_mining_state == 1)
+                    //{
+
+                    //} else
+                    {
+                        name = name + "+";
+                    }
                 }
                 if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
                 {
@@ -366,7 +372,14 @@ namespace NiceHashMiner.Forms.Components
 
                     if (Form_additional_mining.isAlgoZIL(alg.AlgorithmName, alg.MinerBaseType, computeDevice.DeviceType))
                     {
-                        valueRate += valueRate * Form_Main.ZilFactor;
+                        //if (miner.ToLower().Contains("miniz") && ConfigManager.GeneralConfig.ZIL_mining_state == 1)
+                        //{
+
+                        //}
+                        //else
+                        {
+                            valueRate += valueRate * Form_Main.ZilFactor;
+                        }
                     }
 
                     double WithPowerRate = 0;

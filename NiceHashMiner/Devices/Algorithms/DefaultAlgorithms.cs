@@ -502,20 +502,25 @@ Fatal error detected. Restarting.
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
+                    //xnsub не поддерживается
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.IronFish, "IronFish")
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
+                    */
                     /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
                     */
+                    /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.IronFish, AlgorithmType.AutolykosIronFish.ToString())
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
+                    */
                     /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
                     {
@@ -581,12 +586,10 @@ Fatal error detected. Restarting.
                 MinerBaseType.Rigel,
                 new List<Algorithm>()
                 {
-                    /*
-                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.KHeavyHash, "KHeavyHash")
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.KAWPOW, "KAWPOW")
                     {
                         ExtraLaunchParameters = "--no-tui"
                     },
-                    */
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.NexaPow, "NexaPow")
                     {
                         ExtraLaunchParameters = "--no-tui"

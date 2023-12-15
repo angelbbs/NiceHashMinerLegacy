@@ -160,13 +160,6 @@ namespace NiceHashMiner.Miners
                 port = "3393";
                 ZilMining = "";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                algo = "kheavyhash";
-                algoName = "kheavyhash";
-                nicehashstratum = " --proto stratum";
-                port = "3395";
-            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
             {
                 algo = "ironfish";
@@ -210,74 +203,6 @@ namespace NiceHashMiner.Miners
                 port = "3390";
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                algo = "autolykos2";
-                algoName = "autolykos";
-                nicehashstratum = " --proto stratum";
-                port = "3390";
-
-                algo2 = "kheavyhash";
-                algoName2 = "kheavyhash";
-                nicehashstratum = " --proto stratum";
-                port2 = "3395";
-
-                return GetDevicesCommandString() + nicehashstratum +
-                      " --algo " + algo + " --dalgo " + algo2 + pers +
-                      GetServerDual(algoName, algoName2, username, port, port2) + ZilMining +
-                      " --api " + ApiPort;
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                algo = "octopus";
-                algoName = "octopus";
-                //nicehashstratum = " --proto stratum";
-                port = "3389";
-
-                algo2 = "kheavyhash";
-                algoName2 = "kheavyhash";
-                nicehashstratum = " --proto stratum";
-                port2 = "3395";
-
-                return GetDevicesCommandString() + nicehashstratum +
-                      " --algo " + algo + " --dalgo " + algo2 + pers +
-                      GetServerDual(algoName, algoName2, username, port, port2) + ZilMining +
-                      " --api " + ApiPort;
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                algo = "ethash";
-                algoName = "daggerhashimoto";
-                nicehashstratum = " --proto stratum";
-                port = "3353";
-
-                algo2 = "kheavyhash";
-                algoName2 = "kheavyhash";
-                nicehashstratum = " --proto stratum";
-                port2 = "3395";
-
-                return GetDevicesCommandString() + nicehashstratum +
-                      " --algo " + algo + " --dalgo " + algo2 + pers +
-                      GetServerDual(algoName, algoName2, username, port, port2) +
-                      " --api " + ApiPort;
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                algo = "etchash";
-                algoName = "etchash";
-                nicehashstratum = " --proto stratum";
-                port = "3393";
-
-                algo2 = "kheavyhash";
-                algoName2 = "kheavyhash";
-                nicehashstratum = " --proto stratum";
-                port2 = "3395";
-
-                return GetDevicesCommandString() + nicehashstratum +
-                      " --algo " + algo + " --dalgo " + algo2 + pers +
-                      GetServerDual(algoName, algoName2, username, port, port2) +
-                      " --api " + ApiPort;
-            }
             //
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
             {
@@ -389,7 +314,7 @@ namespace NiceHashMiner.Miners
                 {
                     ret = ret + " -s " + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " +
                         username + " -p " + psw + " " + ssl + " " +
-                        " --dserver " + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port2 + " --duser " +
+                        " --dserver " + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port2 + " --duser " +
                         username + " --dpass " + psw + " " + dssl;
                 }
             }
@@ -429,7 +354,7 @@ namespace NiceHashMiner.Miners
         }
         protected override string GetDevicesCommandString()
         {
-            var deviceStringCommand = "  --watchdog_restart_delay 5 --devices ";
+            var deviceStringCommand = "  --watchdog 0 --devices ";
             var ids = new List<string>();
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             var extra = "";
@@ -626,7 +551,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --algo etchash" +
                 " --server " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://etchash.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
@@ -640,12 +565,6 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --algo grin32" +
                 " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                ret = " --color 0 --pec --algo kheavyhash" +
-                " --server " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --user kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
@@ -667,35 +586,6 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
             //duals
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                ret = " --color 0 --pec --algo autolykos2" +
-                " --server " + Links.CheckDNS("pool.woolypooly.com:3100").Replace("stratum+tcp://", "") + " --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt --pass x " +
-                "--dalgo kheavyhash --dserver " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --duser kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --dpass x " +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                ret = " --color 0 --pec --algo octopus" +
-                " --server " + Links.CheckDNS("pool.woolypooly.com:3094").Replace("stratum+tcp://", "") + " --user cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd --pass x " +
-                "--dalgo kheavyhash --dserver " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --duser kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --dpass x " +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                ret = " --color 0 --pec --algo ethash" +
-                " --server " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x " +
-                "--dalgo kheavyhash --dserver " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --duser kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --dpass x " +
-                GetDevicesCommandString();
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                ret = " --color 0 --pec --algo etchash" +
-                " --server " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x " +
-                "--dalgo kheavyhash --dserver " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --duser kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0 --dpass x " +
-                GetDevicesCommandString();
-            }
-            //
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
             {
                 ret = " --color 0 --pec --algo autolykos2" +
@@ -750,7 +640,6 @@ namespace NiceHashMiner.Miners
             {
                 _benchmarkTimeWait = _benchmarkTimeWait + 10;
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) ||
-                    MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.AutolykosKHeavyHash) ||
                     MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.AutolykosIronFish))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 30;
@@ -1029,8 +918,7 @@ namespace NiceHashMiner.Miners
                         //duals
                         if ((MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
                             MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash) &&
-                            (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash ||
-                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish))
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                         {
                             mPair.Device.MiningHashrate = hashrates[dev];
                             mPair.Device.MiningHashrateSecond = hashrates2[dev];
@@ -1041,8 +929,7 @@ namespace NiceHashMiner.Miners
                         }
 
                         if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
-                            (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash ||
-                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish))
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                         {
                             if (Form_Main.isZilRound)
                             {
@@ -1061,8 +948,7 @@ namespace NiceHashMiner.Miners
                             }
                         }
                         if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
-                            (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash ||
-                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish))
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                         {
                             if (Form_Main.isZilRound)
                             {

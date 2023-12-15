@@ -358,14 +358,32 @@ namespace NiceHashMiner.Miners
         // full of state
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
-            // TODO FOR NOW USD ONLY
+            var profitableDevices = new List<MiningPair>();
+            var currentProfitWithoutPower = 0.0d;
+            //var mostProfitWithoutPower = 0.0d;
+            //var mostProfitWithPower = 0.0d;
+
+            foreach (var device in _miningDevices)
+            {
+                // calculate profits
+                //device.CalculateProfits(e.NormalizedProfits);
+                // check if device has profitable algo
+                if (device.HasProfitableAlgo())
+                {
+                    profitableDevices.Add(device.GetMostProfitablePair());
+                    //mostProfitWithoutPower += device.GetCurrentMostProfitValueWithoutPower;
+                    currentProfitWithoutPower += device.GetCurrentMostProfitValueWithoutPower;
+                }
+            }
+
+            var totalRate = MinersManager.GetTotalRate();
             var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
             _isProfitable =
                 _isMiningRegardlesOfProfit
                 || !_isMiningRegardlesOfProfit && currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
             if (log)
             {
-                Helpers.ConsolePrint(Tag, "Current Global profit: " + currentProfitUsd.ToString("F8") + " USD/Day");
+                Helpers.ConsolePrint(Tag, "Mining profit: " + BTC2Fiat(totalRate) + " Most profit: " + BTC2Fiat(currentProfitWithoutPower) + " with power: " + currentProfitUsd.ToString("F8") + " USD/Day");
                 if (!_isProfitable)
                 {
                     Helpers.ConsolePrint(Tag,
@@ -375,10 +393,12 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
+                    /*
                     var profitabilityInfo = _isMiningRegardlesOfProfit
                         ? "mine always regardless of profit"
                         : ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
                     Helpers.ConsolePrint(Tag, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);
+                    */
                 }
             }
 
@@ -422,7 +442,12 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
+        private string BTC2Fiat(double btc)
+        {
+            return ExchangeRateApi.ConvertToActiveCurrency(btc * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
+        }
 
+        private double prev_percDiff = 0.0d;
         public void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
 #if (SWITCH_TESTING)
@@ -431,6 +456,7 @@ namespace NiceHashMiner.Miners
             AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = true;
             var profitableDevices = new List<MiningPair>();
             var currentProfit = 0.0d;
+            var currentProfitWithoutPower = 0.0d;
             var prevStateProfit = 0.0d;
             foreach (var device in _miningDevices)
             {
@@ -440,8 +466,15 @@ namespace NiceHashMiner.Miners
                 if (device.HasProfitableAlgo())
                 {
                     profitableDevices.Add(device.GetMostProfitablePair());
-                    currentProfit += device.GetCurrentMostProfitValue;
-                    prevStateProfit += device.GetPrevMostProfitValue;
+                    if (ConfigManager.GeneralConfig.with_power)
+                    {
+                        currentProfit += device.GetCurrentMostProfitValue;
+                        prevStateProfit += device.GetPrevMostProfitValue;
+                    } else
+                    { 
+                        currentProfit += device.GetCurrentMostProfitValueWithoutPower;
+                        prevStateProfit += device.GetPrevMostProfitValueWithoutPower;
+                    }
                 }
             }
             var stringBuilderFull = new StringBuilder();
@@ -499,9 +532,13 @@ namespace NiceHashMiner.Miners
                     $"\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
                 stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
                 */
-                string profitStr = ExchangeRateApi.ConvertToActiveCurrency(device.GetCurrentMostProfitValueWithoutPower * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
-                string profitStrWithPower = ExchangeRateApi.ConvertToActiveCurrency(device.GetCurrentMostProfitValue * ExchangeRateApi.GetUsdExchangeRate()).ToString("F2") + " " + ExchangeRateApi.ActiveDisplayCurrency;
-                Helpers.ConsolePrint($"BusID {device.Device.BusID}", $"({ device.Device.GetFullName()}) - MOST PROFITABLE ALGO: {device.GetMostProfitableString()} PROFIT: {profitStr} with power: {profitStrWithPower}");
+                string profitStr = BTC2Fiat(device.GetCurrentMostProfitValueWithoutPower);
+                string profitStrWithPower = BTC2Fiat(device.GetCurrentMostProfitValue);
+                string currentStr = BTC2Fiat(device.GetPrevMostProfitValueWithoutPower);
+                string currentStrWithPower = BTC2Fiat(device.GetPrevMostProfitValue);
+                Helpers.ConsolePrint($"BusID {device.Device.BusID}", $"({ device.Device.GetFullName()}) " +
+                    $"CURRENT ALGO: {device.GetCurrentProfitableString()} PROFIT: {currentStr} with pwr: {currentStrWithPower}" +
+                    $" - MOST PROFITABLE ALGO: {device.GetMostProfitableString()} PROFIT: {profitStr} with pwr: {profitStrWithPower}");
             }
             //Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
             Form_Main.smaCount = 0;
@@ -547,7 +584,14 @@ namespace NiceHashMiner.Miners
 
             if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
             {
-                Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
+                if (ConfigManager.GeneralConfig.with_power)
+                {
+                    Helpers.ConsolePrint("Profitability of all devices with power", $"   ** Current profit {BTC2Fiat(prevStateProfit)}, Profit after switching {BTC2Fiat(currentProfit)}");
+                }
+                else
+                {
+                    Helpers.ConsolePrint("Profitability of all devices", $"   ** Current profit {BTC2Fiat(prevStateProfit)}, Profit after switching {BTC2Fiat(currentProfit)}");
+                }
                 double a = Math.Max(prevStateProfit, currentProfit);
                 double b = Math.Min(prevStateProfit, currentProfit);
                 percDiff = ((a - b)) / Math.Abs(b);
@@ -557,14 +601,16 @@ namespace NiceHashMiner.Miners
                     // don't switch
                     Helpers.ConsolePrint(Tag,
                         $"{"Total rig profit"}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                    //CheckForceSwitch(percDiff);
                     // RESTORE OLD PROFITS STATE
                     foreach (var device in _miningDevices)
                     {
                         device.RestoreOldProfitsState();
                     }
-                } else 
+                }
+                else
                 {
-                    if ((Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
+                    if ((Form_Main.ZilCount == 96 || Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
                     {
                         Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected");
                         needSwitch = false;
@@ -598,15 +644,26 @@ namespace NiceHashMiner.Miners
                         return;
                     }
 
-                    //if (AlgorithmSwitchingManager.newProfit)
-                    //if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable || Math.Round(percDiff * 100, 2) > 20)
                     if (_ticks[0] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                     {
-                        //AlgorithmSwitchingManager.newProfit = false;
-                        _ticks[0] = 0;
-                        needSwitch = true;
-                        Helpers.ConsolePrint(Tag,
-                            $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                        if (prev_percDiff > percDiff + percDiff * ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+                        {
+                            _ticks[0] = _ticks[0] - 1;
+                            needSwitch = false;
+                            Helpers.ConsolePrint(Tag,
+                                $"Switching delayed due profit down. Profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            foreach (var device in _miningDevices)
+                            {
+                                device.RestoreOldProfitsState();
+                            }
+                        }
+                        else
+                        {
+                            _ticks[0] = 0;
+                            needSwitch = true;
+                            Helpers.ConsolePrint(Tag,
+                                $"Will SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                        }
                     }
                     else
                     {
@@ -614,13 +671,13 @@ namespace NiceHashMiner.Miners
                         needSwitch = false;
                         Helpers.ConsolePrint(Tag, $"Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
                             _ticks[0].ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
+                        //CheckForceSwitch(percDiff);
                         // RESTORE OLD PROFITS STATE
                         foreach (var device in _miningDevices)
                         {
                             device.RestoreOldProfitsState();
                         }
                     }
-
                 }
             }
             else
@@ -630,7 +687,7 @@ namespace NiceHashMiner.Miners
                     currentProfit = device.GetCurrentMostProfitValue;
                     prevStateProfit = device.GetPrevMostProfitValue;
 
-                    Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
+                    Helpers.ConsolePrint(Tag, $"PrevStateProfit {BTC2Fiat(prevStateProfit)}, CurrentProfit {BTC2Fiat(currentProfit)}");
                     var a = Math.Max(prevStateProfit, currentProfit);
                     var b = Math.Min(prevStateProfit, currentProfit);
                     percDiff = ((a - b)) / Math.Abs(b);
@@ -639,6 +696,7 @@ namespace NiceHashMiner.Miners
                         // don't switch
                         Helpers.ConsolePrint(Tag,
                             $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {percDiff * 100:f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                        //CheckForceSwitch(percDiff);
                         // RESTORE OLD PROFITS STATE
                         //foreach (var device in _miningDevices)
                         {
@@ -647,38 +705,44 @@ namespace NiceHashMiner.Miners
                     }
                     else
                     {
-                        //if (device.Device.DeviceType == DeviceType.NVIDIA)
+                        if ((Form_Main.ZilCount == 96 || Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
                         {
-                            if ((Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
-                            {
-                                Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected for " + device.Device.Name);
-                                needSwitch = false;
-                                device.RestoreOldProfitsState();
-                                continue;
-                            }
-                            if ((Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0) && !Form_Main._NeedMiningStart)
-                            {
-                                Helpers.ConsolePrint(Tag, "Switching disabled during ZIL round for " + device.Device.Name);
-                                needSwitch = false;
-                                device.RestoreOldProfitsState();
-                                continue;
-                            }
-                            if ((Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2) && !Form_Main._NeedMiningStart)
-                            {
-                                Helpers.ConsolePrint(Tag, "Switching disabled after ZIL round for " + device.Device.Name);
-                                needSwitch = false;
-                                device.RestoreOldProfitsState();
-                                continue;
-                            }
+                            Helpers.ConsolePrint(Tag, "Switching disabled because ZIL round is expected for " + device.Device.Name);
+                            needSwitch = false;
+                            device.RestoreOldProfitsState();
+                            continue;
                         }
-                        //if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable || Math.Round(percDiff * 100, 2) > 20)
+                        if ((Form_Main.isZilRound || Form_Main.ZilCount == 99 || Form_Main.ZilCount == 0) && !Form_Main._NeedMiningStart)
+                        {
+                            Helpers.ConsolePrint(Tag, "Switching disabled during ZIL round for " + device.Device.Name);
+                            needSwitch = false;
+                            device.RestoreOldProfitsState();
+                            continue;
+                        }
+                        if ((Form_Main.ZilCount == 1 || Form_Main.ZilCount == 2 || Form_Main.ZilCount == 3) && !Form_Main._NeedMiningStart)
+                        {
+                            Helpers.ConsolePrint(Tag, "Switching disabled after ZIL round for " + device.Device.Name);
+                            needSwitch = false;
+                            device.RestoreOldProfitsState();
+                            continue;
+                        }
                         if (_ticks[device.Device.Index] + 1 >= AlgorithmSwitchingManager._ticksForStable)
                         {
-                            _ticks[device.Device.Index] = 0;
-                            //AlgorithmSwitchingManager.newProfit = false;
-                            needSwitch = true;
-                            Helpers.ConsolePrint(Tag,
-                                $"{device.Device.GetFullName()}: Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            if (prev_percDiff > percDiff + percDiff *ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+                            {
+                                _ticks[device.Device.Index] = _ticks[device.Device.Index] - 1;
+                                needSwitch = false;
+                                Helpers.ConsolePrint(Tag,
+                                    $"Switching delayed due profit down. Profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                                device.RestoreOldProfitsState();
+                            }
+                            else
+                            {
+                                _ticks[device.Device.Index] = 0;
+                                needSwitch = true;
+                                Helpers.ConsolePrint(Tag,
+                                    $"{device.Device.GetFullName()}: Will SWITCH profit diff is {Math.Round(percDiff * 100, 2)}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            }
                         }
                         else
                         {
@@ -686,6 +750,7 @@ namespace NiceHashMiner.Miners
                             needSwitch = false;
                             Helpers.ConsolePrint(Tag, $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
                                 _ticks[device.Device.Index].ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
+                            //CheckForceSwitch(percDiff);
                             // RESTORE OLD PROFITS STATE
                             //foreach (var device2 in _miningDevices)
                             //{
@@ -696,36 +761,8 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
+            prev_percDiff = percDiff;
             Form_Main._NeedMiningStart = false;
-            /*
-            if (AlgorithmSwitchingManager.forceZIL)
-            {
-                _ticks[0] = 0;
-                needSwitch = true;
-                Helpers.ConsolePrint(Tag, "Force switch ZIL mining");
-                AlgorithmSwitchingManager.forceZIL = false;
-            }
-            */
-            if (Divert.DaggerHashimoto4GBForce && percDiff >= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
-            {
-                for (int i = 0; i > _ticks.Length;i++)
-                {
-                    _ticks[i] = 0;
-                }
-                needSwitch = true;
-                Divert.DaggerHashimoto4GBForce = false;
-                Helpers.ConsolePrint(Tag, "Force switch to/from DaggerHashimoto4GB mining");
-            }
-            if (Divert.DaggerHashimoto3GBForce && percDiff >= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
-            {
-                for (int i = 0; i > _ticks.Length; i++)
-                {
-                    _ticks[i] = 0;
-                }
-                needSwitch = true;
-                Divert.DaggerHashimoto3GBForce = false;
-                Helpers.ConsolePrint(Tag, "Force switch to/from DaggerHashimoto3GB mining");
-            }
 
             if (!needSwitch)
             {
@@ -909,6 +946,37 @@ namespace NiceHashMiner.Miners
             _mainFormRatesComunication?.ForceMinerStatsUpdate();
         }
 
+        private bool CheckForceSwitch(double percDiff)
+        {
+            bool needSwitch = false;
+            if (Divert.DaggerHashimoto4GBForce && percDiff >= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+            {
+                for (int i = 0; i > _ticks.Length; i++)
+                {
+                    _ticks[i] = 0;
+                }
+                needSwitch = true;
+                Divert.DaggerHashimoto4GBForce = false;
+                Helpers.ConsolePrint(Tag, "Force switch to/from DaggerHashimoto4GB mining");
+            }
+            if (Divert.DaggerHashimoto3GBForce && percDiff >= ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+            {
+                foreach (var device in _miningDevices)
+                {
+                    Helpers.ConsolePrint("********", "PrevProfitableAlgorithmType: " + device.PrevProfitableAlgorithmType.ToString());
+                    Helpers.ConsolePrint("********", "MostProfitableAlgorithmType: " + device.GetMostProfitableString().ToString());
+                }
+                for (int i = 0; i > _ticks.Length; i++)
+                {
+                    _ticks[i] = 0;
+                }
+                needSwitch = true;
+                Divert.DaggerHashimoto3GBForce = false;
+                Helpers.ConsolePrint(Tag, "Force switch to/from DaggerHashimoto3GB mining");
+            }
+            return needSwitch;
+        }
+
         private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)
         {
             if (miningPairs.Count > 0)
@@ -1023,13 +1091,13 @@ namespace NiceHashMiner.Miners
                             if (ad.SecondaryAlgorithmID != AlgorithmType.NONE)//single
                             {
                                 NHSmaData.TryGetPaying(AlgorithmType.ZIL, out var secPaying);
-                                if (Form_Main.ZIL_mining_state != 1) secPaying = 0;
+                                if (ConfigManager.GeneralConfig.ZIL_mining_state != 1) secPaying = 0;
                                 groupMiners.CurrentRate = secPaying * ad.SecondarySpeed * 0.000000001 * 1;
                             }
                             if (ad.ThirdAlgorithmID != AlgorithmType.NONE)//dual
                             {
                                 NHSmaData.TryGetPaying(AlgorithmType.ZIL, out var thirdPaying);
-                                if (Form_Main.ZIL_mining_state != 1) thirdPaying = 0;
+                                if (ConfigManager.GeneralConfig.ZIL_mining_state != 1) thirdPaying = 0;
                                 groupMiners.CurrentRate = thirdPaying * ad.ThirdSpeed * 0.000000001 * 1;
                             }
                             if (Form_additional_mining.isAlgoZIL(ad.AlgorithmName, groupMiners.MinerBaseType, groupMiners.DeviceType))

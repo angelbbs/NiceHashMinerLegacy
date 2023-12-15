@@ -154,7 +154,7 @@ namespace NiceHashMiner.Miners
                         }
                         if (zil >= 95 & zil < 97)
                         {
-                            _delay = 30;
+                            _delay = 10;
                         }
                         if (zil == 97 || zil == 98)
                         {
@@ -445,7 +445,8 @@ namespace NiceHashMiner.Miners
                                     Helpers.ConsolePrint("ZILNiceHash", "Epoch = " + epoch.ToString() +
                                         " ZIL block = " + Form_Main.ZilCount.ToString());
                                     bool previousEpoch = EpochZIL;
-                                    if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch && Form_Main.ZilCount == 0 )
+                                    if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch &&
+                                        (Form_Main.ZilCount >= 96 || Form_Main.ZilCount <= 1))
                                     {
                                         if (!Form_Main.isZilRound)
                                         {
