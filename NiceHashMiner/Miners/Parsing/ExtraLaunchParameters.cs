@@ -212,6 +212,7 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     // SingleParam
                     new MinerOption("Platform", "", "--platform=", null, MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("TRM_watchdog_script", "", "--watchdog_script=", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("TRM_kas_start", "", "--kas_start", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("TRM_kas_end", "", "--kas_end", null, MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("TRM_iron_start", "", "--iron_start", null, MinerOptionFlagType.SingleParam, ""),
@@ -226,7 +227,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("TRMeth_eth_config", "", "--eth_config", "B1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMprog_micro_tune", "", "--prog_micro_tune", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMeth_smooth_power", "", "--eth_smooth_power", "1", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, "")
+                    new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, ""),
+                    new MinerOption("TRMforce_watchdog_disabled", "", "--watchdog_disabled", "", MinerOptionFlagType.Uni, "")
                 },
                 // TemperatureOptions
                 new List<MinerOption>() {

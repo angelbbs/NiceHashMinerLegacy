@@ -236,7 +236,6 @@ namespace NiceHashMiner
                 }
             }
 
-
             //checking for incompatibilities
             if (ConfigManager.GeneralConfig.AllowMultipleInstances && ConfigManager.GeneralConfig.ProgramMonitoring)
             {
@@ -268,7 +267,6 @@ namespace NiceHashMiner
                     if (!Directory.Exists("logs")) Directory.CreateDirectory("logs");
                     Logger.ConfigureWithFile();
                 }
-
                 if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 48)
                 {
                     ConfigManager.GeneralConfig.ServiceLocation = 0;
@@ -359,9 +357,13 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 59.1;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 59.2)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 59.2;
+                }
 
                 if (ConfigManager.GeneralConfig.ZILMaxEpoch < 1) ConfigManager.GeneralConfig.ZILMaxEpoch = 1;
-
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************
@@ -496,7 +498,6 @@ namespace NiceHashMiner
                 }
 
             }
-
         }
     }
 }

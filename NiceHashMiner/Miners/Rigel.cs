@@ -29,6 +29,7 @@ namespace NiceHashMiner.Miners
         int addTime = 0;
         int _apiErrors = 0;
         bool isZILround = false;
+        int RejectsLimit = 0;
 
         public Rigel() : base("Rigel")
         {
@@ -38,7 +39,7 @@ namespace NiceHashMiner.Miners
         public override void Start(string btcAdress, string worker)
         {
             string url = "";
-
+            RejectsLimit = ConfigManager.GeneralConfig.KAWPOW_Rigel_Max_Rejects;
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
             ProcessHandle = _Start();
         }
@@ -711,6 +712,15 @@ namespace NiceHashMiner.Miners
                 dynamic resp = JsonConvert.DeserializeObject(ResponseFromRigel);
                 if (resp != null)
                 {
+                    foreach (var d in resp.pools.ravencoin)
+                    {
+                        int rejected = d.solution_stat.rejected;
+                        if (rejected > RejectsLimit)
+                        {
+                            Helpers.ConsolePrint("GetSummaryAsync", "RESTART Rigel due rejects above limit: " + RejectsLimit.ToString());
+                            Restart();
+                        }
+                    }
                     var devices = resp.devices;
                     string algorithm = resp.algorithm;
 

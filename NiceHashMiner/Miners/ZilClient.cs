@@ -30,7 +30,7 @@ using System.Threading.Tasks;
  * EXP 272
  * OCTA 99
  * REDE 60
- * XPB 0 <<!!!
+ * XPB 1 <<!!!
 */
 
 namespace NiceHashMiner.Miners
@@ -46,6 +46,10 @@ namespace NiceHashMiner.Miners
         private static int epochCount = 0;
         public static bool needConnectionZIL = true;
         private static int _delay = 10;
+        private static DateTime StartZILTime = new DateTime();
+        private static DateTime timenow = new DateTime();
+        private static int ZILsec;
+        private static bool ZILblock = false;
 
         public static void StartZilMonitor()
         {
@@ -150,10 +154,12 @@ namespace NiceHashMiner.Miners
                         }
                         if (zil >= 70 & zil < 95)
                         {
+                            ZILsec = 0;
                             _delay = 60 * 2;
                         }
                         if (zil >= 95 & zil < 97)
                         {
+                            ZILsec = 0;
                             _delay = 10;
                         }
                         if (zil == 97 || zil == 98)
@@ -358,7 +364,6 @@ namespace NiceHashMiner.Miners
         public static void ReadFromServer(Stream serverStream, TcpClient tcpClient) //от пула
         {
             System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-            bool EpochZIL = false;
 
             byte[] messagePool = new byte[8192];
 
@@ -443,55 +448,40 @@ namespace NiceHashMiner.Miners
                                     string seedhash = json.@params[1];
                                     epoch = Epoch(seedhash);
                                     Helpers.ConsolePrint("ZILNiceHash", "Epoch = " + epoch.ToString() +
-                                        " ZIL block = " + Form_Main.ZilCount.ToString());
-                                    bool previousEpoch = EpochZIL;
+                                        " ZIL block = " + Form_Main.ZilCount.ToString() + " ZILsec: " + ZILsec.ToString());
+
+                                    //далее костыль. я не придумал, как сделать лучше
                                     if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch &&
-                                        (Form_Main.ZilCount >= 96 || Form_Main.ZilCount <= 1))
+                                        (Form_Main.ZilCount >= 98 || Form_Main.ZilCount <= 0) &&
+                                         ZILsec <= 160)
                                     {
+                                        timenow = DateTime.Now;
+
                                         if (!Form_Main.isZilRound)
                                         {
-                                            Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round epoch " + epoch.ToString());
-                                            /*
-                                            new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
-                                            Thread.Sleep(500);
-                                            if (ConfigManager.GeneralConfig.Use_Last24hours)
-                                            {
-                                                new Task(() => Stats.NiceHashStats.GetSmaAPI24h()).Start();
-                                                Thread.Sleep(500);
-                                            }
-                                            */
                                             if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                                            //ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
+                                            MinersManager.MinerStatsCheck();
+                                            Form_Main.isZilRound = true;
                                         }
-                                        MinersManager.MinerStatsCheck();
-                                        Form_Main.isZilRound = true;
                                     }
                                     else
                                     {
                                         if (Form_Main.isZilRound)
                                         {
                                             epochCount++;
-                                            if (epochCount >= 2)
+                                            if (epochCount >= 2 || ZILsec > 160)
                                             {
                                                 Form_Main.isZilRound = false;
                                                 epochCount = 0;
                                                 Helpers.ConsolePrint("ZILNiceHash", "End ZIL round");
-                                                /*
-                                                new Task(() => Stats.NiceHashStats.GetSmaAPICurrent()).Start();
-                                                Thread.Sleep(500);
-                                                if (ConfigManager.GeneralConfig.Use_Last24hours)
-                                                {
-                                                    new Task(() => Stats.NiceHashStats.GetSmaAPI24h()).Start();
-                                                    Thread.Sleep(500);
-                                                }
-                                                */
                                                 if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
-                                                //ConfigManager.GeneralConfig.ZilFactor = Form_Main.ZilFactor;
                                                 if (ConfigManager.GeneralConfig.RestartGMinerAfterZilRound)
                                                 {
                                                     Form_Main.needGMinerRestart = true;
                                                 }
                                             }
+                                            //ZILsec = timenow.Subtract(StartZILTime).TotalSeconds;
+                                            ZILsec = (int)(timenow - StartZILTime).TotalSeconds;
                                         }
                                     }
                                 }

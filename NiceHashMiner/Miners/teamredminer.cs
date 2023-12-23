@@ -583,6 +583,13 @@ namespace NiceHashMiner.Miners
                             string cSpeed = s.Substring(st + 8, e - st - 8);
                             //Helpers.ConsolePrint("API: ", cSpeed);
                             double.TryParse(cSpeed, out double devSpeed);
+                            if (devSpeed > 1000 && MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)//1000 MH
+                            {
+                                Helpers.ConsolePrint("GetSummaryAsync", "Dead GPU#" + dev.ToString() + " detected. Restart miner.");
+                                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                                Thread.Sleep(1000);
+                                Restart();
+                            }
                             sortedMinerPairs[dev].Device.MiningHashrate = devSpeed * 1000000;
                             _power = sortedMinerPairs[dev].Device.PowerUsage;
                             totalSpeed = totalSpeed + devSpeed * 1000000;
