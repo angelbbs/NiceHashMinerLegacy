@@ -322,13 +322,6 @@ namespace NiceHashMiner.Miners
                     // wait a second due api request
                     Thread.Sleep(1000);
 
-                    if ((MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto)))
-                    {
-                        MinerStartDelay = 20;
-                        delay_before_calc_hashrate = 10;
-                    }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NeoScrypt))
                     {
                         MinerStartDelay = 15;

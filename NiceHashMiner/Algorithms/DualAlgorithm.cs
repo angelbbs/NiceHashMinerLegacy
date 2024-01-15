@@ -33,8 +33,6 @@ namespace NiceHashMiner.Algorithms
                 {
                     switch (SecondaryNiceHashID)
                     {
-                        case AlgorithmType.KHeavyHash:
-                            return AlgorithmType.DaggerKHeavyHash;
                         case AlgorithmType.IronFish:
                             return AlgorithmType.DaggerIronFish;
                     }
@@ -45,8 +43,6 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.DaggerHashimoto:
                             return AlgorithmType.AutolykosZil;
-                        case AlgorithmType.KHeavyHash:
-                            return AlgorithmType.AutolykosKHeavyHash;
                         case AlgorithmType.IronFish:
                             return AlgorithmType.AutolykosIronFish;
                     }
@@ -55,8 +51,6 @@ namespace NiceHashMiner.Algorithms
                 {
                     switch (SecondaryNiceHashID)
                     {
-                        case AlgorithmType.KHeavyHash:
-                            return AlgorithmType.OctopusKHeavyHash;
                         case AlgorithmType.IronFish:
                             return AlgorithmType.OctopusIronFish;
                     }
@@ -65,8 +59,6 @@ namespace NiceHashMiner.Algorithms
                 {
                     switch (SecondaryNiceHashID)
                     {
-                        case AlgorithmType.KHeavyHash:
-                            return AlgorithmType.ETCHashKHeavyHash;
                         case AlgorithmType.IronFish:
                             return AlgorithmType.ETCHashIronFish;
                     }
@@ -179,95 +171,13 @@ namespace NiceHashMiner.Algorithms
         public readonly string DualAlgorithmNameCustom;
         #region Mining settings
 
-        /// <summary>
-        /// Primary hashrate in H/s set by benchmark or user
-        /// <para>If tuning is enabled, returns the hashrate from the most profitable intensity</para>
-        /// </summary>
-        /// 
-        /*
-        public override double BenchmarkSpeed
-        {
-            get
-            {
-                if (MostProfitableIntensity > 0)
-                {
-                    try
-                    {
-                        return IntensitySpeeds[MostProfitableIntensity];
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("CDTUNING", e.ToString());
-                        IntensityUpToDate = false;
-                        return 0;
-                    }
-                }
-
-                return base.BenchmarkSpeed;
-            }
-        }
-        */
         private double _secondaryBenchmarkSpeed;
-        /// <summary>
-        /// Secondary hashrate in H/s set by benchmark or user
-        /// <para>If tuning is enabled, returns the hashrate from the most profitable intensity</para>
-        /// </summary>
-        /*
-        public double SecondaryBenchmarkSpeed
-        {
-            get
-            {
-                if (MostProfitableIntensity > 0)
-                {
-                    try
-                    {
-                        return SecondaryIntensitySpeeds[MostProfitableIntensity];
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("CDTUNING", e.ToString());
-                        IntensityUpToDate = false;
-                        return 0;
-                    }
-                }
-
-                return _secondaryBenchmarkSpeed;
-            }
-            set => _secondaryBenchmarkSpeed = value;
-        }
-        */
 
         /// <summary>
         /// Gets the secondary averaged speed for this algorithm in H/s
         /// <para>When multiple devices of the same model are used, this will be set to their averaged hashrate</para>
         /// </summary>
         public double SecondaryAveragedSpeed { get; set; }
-
-        /// <summary>
-        /// Indicates whether this algorithm requires a benchmark
-        /// </summary>
-        /*
-        public override bool BenchmarkNeeded
-        {
-            get
-            {
-                if (TuningEnabled)
-                {
-                    if (SelectedIntensities.Any(IsIntensityEmpty)) return true;
-                }
-                else
-                {
-                    if (SecondaryBenchmarkSpeed <= 0 || BenchmarkSpeed <= 0)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        }
-        */
-        #endregion
 
         #region Power Switching
 
@@ -396,3 +306,4 @@ namespace NiceHashMiner.Algorithms
 
     }
 }
+#endregion

@@ -185,6 +185,15 @@ namespace NiceHashMiner.Miners
                 port = "3385";
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOWLite)
+            {
+                algo = "kawpow";
+                algoName = "kawpow";
+                ssl = " --ssl 0";
+                nicehashstratum = " --proto stratum";
+                port = "3385";
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 algo = "grin32";
@@ -561,6 +570,12 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("stratum+tcp://kawpow.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
                 GetDevicesCommandString();
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOWLite)
+            {
+                ret = " --color 0 --pec --algo kawpow" +
+                " --server " + Links.CheckDNS("stratum+tcp://kawpow.mine.zergpool.com:3638").Replace("stratum+tcp://", "") + " --user LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.GMiner --pass c=LTC,mc=XNA/CLORE/SATOX/GPN/PAPRY/MEWC/FREN/AIPG " +
+                GetDevicesCommandString();
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
             {
                 ret = " --color 0 --pec --algo grin32" +
@@ -720,6 +735,11 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
                     }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOWLite))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 5;
+                    }
 
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
@@ -822,6 +842,7 @@ namespace NiceHashMiner.Miners
             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
             ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             ad.ThirdAlgorithmID = AlgorithmType.NONE;
+            DeviceType devtype = DeviceType.NVIDIA;
 
             string ResponseFromGMiner;
             double total = 0;
@@ -911,6 +932,7 @@ namespace NiceHashMiner.Miners
 
                     foreach (var mPair in sortedMinerPairs)
                     {
+                        devtype = mPair.Device.DeviceType;
                         _power = mPair.Device.PowerUsage;
                         mPair.Device.MiningHashrate = hashrates[dev];
                         mPair.Device.MiningHashrateSecond = hashrates2[dev];
@@ -931,7 +953,7 @@ namespace NiceHashMiner.Miners
                         if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
                             MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                         {
-                            if (Form_Main.isZilRound)
+                            if (Form_Main.isZilRound && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
                             {
                                 mPair.Device.MiningHashrate = 0;
                                 mPair.Device.MiningHashrateSecond = 0;
@@ -950,7 +972,7 @@ namespace NiceHashMiner.Miners
                         if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
                             MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                         {
-                            if (Form_Main.isZilRound)
+                            if (Form_Main.isZilRound && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
                             {
                                 mPair.Device.MiningHashrate = 0;
                                 mPair.Device.MiningHashrateSecond = 0;
@@ -971,7 +993,7 @@ namespace NiceHashMiner.Miners
 
                         if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
                         {
-                            if (Form_Main.isZilRound)
+                            if (Form_Main.isZilRound && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
                             {
                                 mPair.Device.MiningHashrate = 0;
                                 mPair.Device.AlgorithmID = (int)AlgorithmType.NONE;
@@ -1013,7 +1035,7 @@ namespace NiceHashMiner.Miners
                 ad.SecondarySpeed = total2;
                 ad.ThirdSpeed = total3;
 
-                if (Form_Main.isZilRound)
+                if (Form_Main.isZilRound && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
                 {
                     if (MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE)//dual
                     {
@@ -1073,7 +1095,6 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                    DeviceType devtype = DeviceType.NVIDIA;
                     var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                     foreach (var mPair in sortedMinerPairs)
                     {

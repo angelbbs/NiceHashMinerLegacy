@@ -601,7 +601,7 @@
 "Form_Profit_Chart_Warning1": "Включение графика прибыльности вызовет повышенное потребление интернет трафика",
 "Form_Profit_Chart_Delete": "Удалить данные графика?",
 "Form_Profit_Chart_Disabled": "График прибыльности отключен",
-"Form_Settings_DH3GB_Warning": "С алгоритмом DaggerHashimoto3GB или DaggerHashimoto4GB должен быть включен минимум еще один алгоритм",
+"Form_Settings_Lite_Warning": "С \"*Lite\" алгоритмом должен быть включен минимум еще один алгоритм",
 "Form_Benchmark_BenchmarkProgress": "Бенчмарк",
 "Form_Benchmark_Stop_mining_first": "Сначала остановите майнинг",
 "FormSettings_OverclockSettings": "Настройки разгона для {0} :",
@@ -624,6 +624,16 @@
 "MSIAB_Closing": "Завершение MSI Afterburner",
 "listViewDevices_ToolTip": "Нажмите правую кнопку мыши на выбранном GPU\r\nдля получения дополнительных функций",
 "Form_Settings_buttonLicence": "Просмотр лицензии",
-"Form_Settings_buttonHistory": "Просмотр истории"
+"Form_Settings_buttonHistory": "Просмотр истории",
+"Form_Settings_LiteAlgosSettings": "Настройки майнинга \"*Lite\" алгоритмов",
+"Form_Settings_WinDivertError": "Ошибка WinDivert драйвера. \"*Lite\" алгоритмы отключены",
+"Form_Settings_LiteNoSuitableGPUs": "Нет подходящих GPU. \"*Lite\" алгоритмы отключены",
+"Form_Lite_Title": "\"*Lite\" алгоритмы",
+"Form_Lite_3GB": "Максимальная эпоха для 3GB GPU",
+"Form_Lite_4GB": "Максимальная эпоха для 4GB GPU",
+"Form_Lite_5GB": "Максимальная эпоха для 5GB GPU",
+"Form_Lite_Enable_KAWPOWLite": "Включить KAWPOWLite",
+"Form_Lite_Save": "Сохранить",
+"Form_Lite_Cancel": "Отменить"
   }
 }

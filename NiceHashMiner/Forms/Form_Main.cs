@@ -112,16 +112,13 @@ namespace NiceHashMiner
         public static string BackupFileDate = "";
         public static bool NewVersionExist = false;
         public static bool CertInstalled = false;
-        public static bool DaggerHashimoto3GB4GB = false;
-        public static bool DaggerHashimoto3GB = false;
-        public static bool DaggerHashimoto3GBVisible = false;
-        public static bool DaggerHashimoto3GBEnabled = false;
-        public static bool DaggerHashimoto4GB = false;
-        public static bool DaggerHashimoto4GBVisible = false;
-        public static bool DaggerHashimoto4GBEnabled = false;
-        public static bool DaggerHashimoto1070 = false;
-        public static bool DaggerHashimoto1070Visible = false;
-        public static bool DaggerHashimoto1070Enabled = false;
+        public static bool LiteAlgos = false;
+        public static bool KawpowLite = false;
+        public static bool KawpowLiteVisible = false;
+        public static bool KawpowLiteEnabled = false;
+        public static bool KawpowLite3GB = false;
+        public static bool KawpowLite4GB = false;
+        public static bool KawpowLite5GB = false;
         public static bool SomeAlgoEnabled = false;
         public static bool DaggerHashimotoMaxEpochUpdated = false;
         public static string GoogleIP = "";
@@ -1411,7 +1408,23 @@ namespace NiceHashMiner
                 locations = locations + 5;
             }
 
-            //new Task(() => NiceHashMiner.Utils.ServerResponceTime.GetBestServer()).Start();
+            if (Form_Main.KawpowLite)
+            {
+                if (Divert.CheckWinDivert() > 0)
+                {
+                    Form_Main.DivertAvailable = true;
+                }
+                else
+                {
+                    Form_Main.DivertAvailable = false;
+                }
+            }
+
+            if (Form_Main.KawpowLite && Form_Main.DivertAvailable)
+            {
+                Divert.checkConnectionKawpowLite = true;
+                new Task(() => KawpowClient.CheckConnectionToPool()).Start();
+            }
 
             _loadingScreen.SetValueAndMsg(60, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
@@ -1446,8 +1459,7 @@ namespace NiceHashMiner
             //_loadingScreen.SetValueAndMsg(70, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
-            //Thread.Sleep(500);
-
+            
             _loadingScreen.SetValueAndMsg(75, International.GetText("Form_Main_loadtext_CheckMiners"));
             Thread.Sleep(10);
             var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
@@ -1679,7 +1691,7 @@ namespace NiceHashMiner
 
         private static void MinersGetVersionWatchdog()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
             try
             {
                 Process localByName = Process.GetProcessById(Process.GetCurrentProcess().Id);
@@ -1687,7 +1699,7 @@ namespace NiceHashMiner
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
                 ManagementObjectCollection processList = searcher.Get();
                 var result = processList.Cast<ManagementObject>().Select(p =>
-                    Process.GetProcessById(Convert.ToInt32(p.GetPropertyValue("ProcessId")))).ToList();
+                Process.GetProcessById(Convert.ToInt32(p.GetPropertyValue("ProcessId")))).ToList();
 
                 foreach (var process in result)
                 {
@@ -3356,8 +3368,6 @@ public static void CloseChilds(Process parentId)
         {
             if (DownloadingInProgress) return;
 
-            Divert.checkConnection3GB = false;
-            Divert.checkConnection4GB = false;
             firstRun = true;
             _isManuallyStarted = false;
             //AlgorithmSwitchingManager._smaCheckTimer.Enabled = false;
@@ -3702,84 +3712,6 @@ public static void CloseChilds(Process parentId)
             */
         }
 
-        private void CheckDagger3GB()
-        {
-            //if (ConfigManager.GeneralConfig.DivertRun)
-            {
-                //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-                if (Divert.DaggerHashimoto3GBForce)
-                {
-                    if (Divert.DaggerHashimoto3GBProfit && Divert.checkConnection3GB)
-                    {
-                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch ON");
-                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                        Divert.Dagger3GBEpochCount = 0;
-                        //Divert.DaggerHashimoto3GBForce = false;
-                        Divert.checkConnection3GB = false;
-                    }
-                    if (Divert.Dagger3GBEpochCount > 1 && !Divert.checkConnection3GB)
-                    {
-                        Helpers.ConsolePrint("DaggerHashimoto3GB", "Force switch OFF");
-                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                        //Divert.DaggerHashimoto3GBForce = false;
-                        Divert.checkConnection3GB = true;
-                        //new Task(() => DHClient.StartConnection()).Start();
-                    }
-                    //DHClient.needStart = false;
-                }
-                else
-                {
-                    if (Divert.Dagger3GBEpochCount == 0)
-                    {
-                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying);
-                    }
-                }
-            }
-        }
-        private void CheckDagger4GB()
-        {
-            //if (ConfigManager.GeneralConfig.DivertRun)
-            {
-                //NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                //NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
-                if (Divert.DaggerHashimoto4GBForce)
-                {
-                    if (Divert.DaggerHashimoto4GBProfit && Divert.checkConnection4GB)
-                    {
-                        Helpers.ConsolePrint("DaggerHashimoto4GB", "Force switch ON");
-                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
-                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                        Divert.Dagger4GBEpochCount = 0;
-                        //Divert.DaggerHashimoto4GBForce = false;
-                        Divert.checkConnection4GB = false;
-                    }
-                    if (Divert.Dagger4GBEpochCount > 1 && !Divert.checkConnection4GB)
-                    {
-                        Helpers.ConsolePrint("DaggerHashimoto4GB", "Force switch OFF");
-                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, 0.0d);
-                        NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
-                        //Divert.DaggerHashimoto4GBForce = false;
-                        Divert.checkConnection4GB = true;
-                        //new Task(() => DHClient.StartConnection()).Start();
-                    }
-                    //DHClient.needStart = false;
-                }
-                else
-                {
-                    if (Divert.Dagger4GBEpochCount == 0)
-                    {
-                        NHSmaData.TryGetPaying(AlgorithmType.DaggerHashimoto, out var paying);
-                        NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying);
-                    }
-                }
-            }
-        }
         public static string DNStoIP(string IPName)
         {
             try
@@ -3876,8 +3808,7 @@ public static void CloseChilds(Process parentId)
                 }
                 if (DeviceStatusTimer_FirstTick)
                 {
-                    CheckDagger3GB();
-                    CheckDagger4GB();
+
                 }
                 DeviceStatusTimer_FirstTick = true;
                 ExchangeCallback(null, null);

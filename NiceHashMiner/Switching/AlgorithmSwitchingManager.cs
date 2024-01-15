@@ -2,6 +2,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -176,60 +177,17 @@ namespace NiceHashMiner.Switching
             foreach (var algo in history.Keys)
             {
                 NHSmaData.TryGetPaying(algo, out var paying);
+
+                if (algo == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
+                {
+                    paying = 0;
+                }
+
                 if (!algo.ToString().Contains("UNUSED"))
                 {
                     history[algo].Add(paying);
                     var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
                     double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
-                    //Helpers.ConsolePrint("**********", "MiningSession._ticks[0]: " + MiningSession._ticks[0].ToString() +
-                    //    " algo: " + algo + " p1: " + p1.ToString());
-                    /*
-                    if (MiningSession._ticks[0] != 0 && p1 >= 50 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
-                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash ||
-                        algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB))
-                    {
-                        Helpers.ConsolePrint("UpdateProfits", "ZIL round detected? " + ticks.ToString() + " / " + MiningSession._ticks[0].ToString());
-                        i = 0;
-                        ticks = 0;
-                        _lastLegitPaying[algo] = paying;
-                        updated = true;
-                        if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
-                        {
-                            //MiningSession._ticks[0] = 999;
-                        } else
-                        {
-                            for (int d = 0; d < MiningSession._ticks.Length; d++)
-                            {
-                                //MiningSession._ticks[d] = 999;
-                            }
-                        }
-                        break;
-                    }
-                    */
-                    /*
-                    if (MiningSession._ticks[0] != 0 && p1 <= -50 && (algo == AlgorithmType.DaggerHashimoto || algo == AlgorithmType.DaggerKHeavyHash ||
-                        algo == AlgorithmType.ETCHash || algo == AlgorithmType.ETCHashKHeavyHash ||
-                        algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB))
-                    {
-                        Helpers.ConsolePrint("UpdateProfits", "ZIL round is over? " + ticks.ToString() + " / " + MiningSession._ticks[0].ToString());
-                        i = 0;
-                        ticks = 0;
-                        _lastLegitPaying[algo] = paying;
-                        updated = true;
-                        if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
-                        {
-                            //MiningSession._ticks[0] = 999;
-                        }
-                        else
-                        {
-                            for (int d = 0; d < MiningSession._ticks.Length; d++)
-                            {
-                                //MiningSession._ticks[d] = 999;
-                            }
-                        }
-                        break;
-                    }
-                    */
                     
                     if (paying > _lastLegitPaying[algo])
                     {
@@ -247,12 +205,6 @@ namespace NiceHashMiner.Switching
                                 $" higher for {i}/{ticks} {cTicks} for {algo}"
                             );
                         }
-
-                        if (algo == AlgorithmType.DaggerHashimoto3GB || algo == AlgorithmType.DaggerHashimoto4GB)
-                        {
-                            //_lastLegitPaying[algo] = paying;
-                        }
-
                     }
                     else
                     {

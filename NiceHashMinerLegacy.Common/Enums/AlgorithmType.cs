@@ -6,6 +6,7 @@
 
         // dual algos for grouping
         AutolykosZil = -73,
+        KAWPOWLite = -26,
         OctopusIronFish = -25,
         AutolykosIronFish = -24,
         DaggerIronFish = -23,

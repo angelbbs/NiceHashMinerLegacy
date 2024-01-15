@@ -938,9 +938,9 @@ namespace NiceHashMiner.Miners
                         Thread.Sleep(500);
                         _ticks++;
                         if (_ticks > 20) break;
-                    } while (!File.Exists("miners\\SRBMiner\\ver.txt"));
+                    } while (!File.Exists("miners\\SRBMiner\\ver.txt") && !P.HasExited);
 
-                    P.Kill();
+                    //P.Kill();
                     Thread.Sleep(1000);
                     using (var reader = File.OpenText("miners\\SRBMiner\\ver.txt"))
                     {

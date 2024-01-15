@@ -124,7 +124,6 @@ namespace NiceHashMiner.Forms.Components {
             this.Name = "AlgorithmsListView";
             this.Size = new System.Drawing.Size(539, 380);
             this.Load += new System.EventHandler(this.AlgorithmsListView_Load);
-            this.EnabledChanged += new System.EventHandler(this.AlgorithmsListView_EnabledChanged);
             this.ResumeLayout(false);
 
         }

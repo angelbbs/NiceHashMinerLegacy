@@ -152,7 +152,15 @@ Fatal error detected. Restarting.
                 {
                     new Algorithm(MinerBaseType.Nanominer, AlgorithmType.ETCHash, "ETCHash")
                     {
-                        ExtraLaunchParameters = "memTweak=1"
+                        ExtraLaunchParameters = ""
+                    },
+                    new Algorithm(MinerBaseType.Nanominer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                    {
+                        ExtraLaunchParameters = ""
+                    },
+                    new Algorithm(MinerBaseType.Nanominer, AlgorithmType.KAWPOW, "KAWPOW")
+                    {
+                        ExtraLaunchParameters = ""
                     }
                 }
             },
@@ -304,16 +312,6 @@ Fatal error detected. Restarting.
                             }
             },
             {
-                MinerBaseType.Phoenix,
-                new List<Algorithm>()
-                {
-                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto4GB, "DaggerHashimoto4GB")
-                    {
-    //                    ExtraLaunchParameters = "-rvram -1 "
-                    }
-                }
-            },
-            {
                  MinerBaseType.NBMiner,
                  new List<Algorithm>
                  {
@@ -362,16 +360,6 @@ Fatal error detected. Restarting.
 
         public static Dictionary<MinerBaseType, List<Algorithm>> Nvidia => new Dictionary<MinerBaseType, List<Algorithm>>
         {
-            {
-                MinerBaseType.Phoenix,
-                new List<Algorithm>()
-                {
-                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto3GB, "DaggerHashimoto3GB")
-                    {
-    //                    ExtraLaunchParameters = "-rvram -1 "
-                    }
-                }
-            },
             { MinerBaseType.CryptoDredge,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
@@ -480,6 +468,10 @@ Fatal error detected. Restarting.
                     },
 
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "KAWPOW")
+                    {
+                    },
+
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOWLite, "KAWPOWLite")
                     {
                     },
                     /*

@@ -25,6 +25,7 @@ namespace NiceHashMiner.Forms.Components
         private const int RATIO = 5;
         private const int RATE = 6;
         public static bool isListViewEnabled = true;
+        private static ulong minMem = (ulong)(1024 * 1024 * 8);
         public interface IAlgorithmsListView
         {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
@@ -588,6 +589,28 @@ namespace NiceHashMiner.Forms.Components
                         else
                         {
                             lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                            if (algo.NiceHashID == AlgorithmType.KAWPOWLite && algo.Enabled)
+                            {
+                                minMem = Math.Min(minMem, _computeDevice.GpuRam / 1024);
+                                if (minMem > (ulong)(1024 * 1024 * 2.7) && minMem < (ulong)(1024 * 1024 * 3.7))
+                                {
+                                    Form_Main.KawpowLite3GB = true;
+                                    Form_Main.KawpowLite4GB = false;
+                                    Form_Main.KawpowLite5GB = false;
+                                }
+                                if (minMem > (ulong)(1024 * 1024 * 3.7) && minMem < (ulong)(1024 * 1024 * 4.7))
+                                {
+                                    Form_Main.KawpowLite3GB = false;
+                                    Form_Main.KawpowLite4GB = true;
+                                    Form_Main.KawpowLite5GB = false;
+                                }
+                                if (minMem > (ulong)(1024 * 1024 * 4.7) && minMem < (ulong)(1024 * 1024 * 5.7))
+                                {
+                                    Form_Main.KawpowLite3GB = false;
+                                    Form_Main.KawpowLite4GB = false;
+                                    Form_Main.KawpowLite5GB = true;
+                                }
+                            }
                         }
 
                         lvi.Checked = algo.Enabled;
@@ -608,13 +631,6 @@ namespace NiceHashMiner.Forms.Components
                         _listItemCheckColorSetter.LviSetColor(lvi);
                     }
                 }
-
-                //Visible = isEnabled;
-                //Enabled = isEnabled;
-                //  if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
-                // {
-
-                // }
             }
         }
 
@@ -637,29 +653,10 @@ namespace NiceHashMiner.Forms.Components
             if (e.Item.Tag is Algorithm algo)
             {
                 algo.Enabled = e.Item.Checked;
-                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto3GB &&
-                    algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB && algo.Enabled)
+                                
+                if (Form_Main.KawpowLite && algo.NiceHashID == AlgorithmType.KAWPOWLite && algo.Enabled)
                 {
-                    algo.Enabled = false;
-                    e.Item.Checked = false;
-                    MessageBox.Show("WinDivert driver error. DaggerHashimoto3GB disabled",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                if (!ConfigManager.GeneralConfig.DivertRun && Form_Main.DaggerHashimoto4GB &&
-                    algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB && algo.Enabled)
-                {
-                    algo.Enabled = false;
-                    e.Item.Checked = false;
-                    MessageBox.Show("WinDivert driver error. DaggerHashimoto4GB disabled",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                if (Form_Main.DaggerHashimoto3GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto3GB && algo.Enabled)
-                {
-                    Form_Main.DaggerHashimoto3GBEnabled = true;
-                }
-                if (Form_Main.DaggerHashimoto4GB && algo.NiceHashID == AlgorithmType.DaggerHashimoto4GB && algo.Enabled)
-                {
-                    Form_Main.DaggerHashimoto4GBEnabled = true;
+                    Form_Main.KawpowLiteEnabled = true;
                 }
 
                 if (!IsInBenchmark)
@@ -988,28 +985,25 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (lvi != null && lvi.Tag is Algorithm algorithm)
                     {
-                        if (!lvi.SubItems[1].Text.Contains("3GB") && !lvi.SubItems[1].Text.Contains("4GB"))
+                        if (!lvi.SubItems[1].Text.ToLower().Contains("lite"))
                         {
                             if (lvi.Checked == true)
                             {
                                 Form_Main.SomeAlgoEnabled = true;
                             }
                         }
-                        if (lvi.SubItems[1].Text.Contains("3GB") && lvi.Checked == true)
+                        
+                        if (lvi.SubItems[1].Text.ToLower().Contains("lite") && lvi.Checked == true)
                         {
-                            Form_Main.DaggerHashimoto3GB4GB = true;
-                        }
-                        if (lvi.SubItems[1].Text.Contains("4GB") && lvi.Checked == true)
-                        {
-                            Form_Main.DaggerHashimoto3GB4GB = true;
+                            Form_Main.LiteAlgos = true;
                         }
                     }
                 }
 
-                if (!Form_Main.SomeAlgoEnabled && Form_Main.DaggerHashimoto3GB4GB)
+                if (!Form_Main.SomeAlgoEnabled && Form_Main.LiteAlgos)
                 {
-                    MessageBox.Show(International.GetText("Form_Settings_DH3GB_Warning"),
-International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(International.GetText("Form_Settings_Lite_Warning"),
+                    International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
 
@@ -1029,11 +1023,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         aName = algorithm.AlgorithmName;
                         mName = algorithm.MinerBaseType;
-                        /*
-                        if (algorithm is DualAlgorithm dualAlgo)
-                        {
-                        }
-                        */
+
                         foreach (var device in miningDevices)
                         {
                             //Helpers.ConsolePrint("", device.Name);
@@ -1067,11 +1057,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         aName = algorithm.AlgorithmName;
                         mName = algorithm.MinerBaseType;
-                        /*
-                        if (algorithm is DualAlgorithm dualAlgo)
-                        {
-                        }
-                        */
+
                         foreach (var device in miningDevices)
                         {
                             //Helpers.ConsolePrint("", device.Name);
@@ -1149,11 +1135,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                     {
                         aName = algorithm.AlgorithmName;
                         mName = algorithm.MinerBaseType;
-                        /*
-                        if (algorithm is DualAlgorithm dualAlgo)
-                        {
-                        }
-                        */
+
                         foreach (var device in miningDevices)
                         {
                             //Helpers.ConsolePrint("", device.Name);
@@ -1387,36 +1369,7 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
             {
                 if (listViewAlgorithms != null & listViewAlgorithms.SelectedItems.Count > 0)
                 {
-                    if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("3GB"))
-                    {
-                        Form_Main.DaggerHashimoto3GBVisible = true;
-                        Form_Main.DaggerHashimoto4GBVisible = false;
-                        Form_Main.DaggerHashimoto1070Visible = false;
-                        Form_Main.DaggerHashimotoMaxEpochUpdated = true;
-                    }
-                    else
-                    if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("4GB"))
-                    {
-                        Form_Main.DaggerHashimoto3GBVisible = false;
-                        Form_Main.DaggerHashimoto4GBVisible = true;
-                        Form_Main.DaggerHashimoto1070Visible = false;
-                        Form_Main.DaggerHashimotoMaxEpochUpdated = true;
-                    }
-                    else
-                    if (listViewAlgorithms.SelectedItems[0].SubItems[1].Text.Contains("1070"))
-                    {
-                        Form_Main.DaggerHashimoto3GBVisible = false;
-                        Form_Main.DaggerHashimoto4GBVisible = false;
-                        Form_Main.DaggerHashimoto1070Visible = true;
-                        Form_Main.DaggerHashimotoMaxEpochUpdated = true;
-                    }
-                    else
-                    {
-                        Form_Main.DaggerHashimoto3GBVisible = false;
-                        Form_Main.DaggerHashimoto4GBVisible = false;
-                        Form_Main.DaggerHashimoto1070Visible = false;
-                        Form_Main.DaggerHashimotoMaxEpochUpdated = false;
-                    }
+                    
                 }
             }
             catch (Exception ex)
@@ -1527,11 +1480,6 @@ International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, Message
                 listViewAlgorithms.ListViewItemSorter = new ListViewColumnComparer(e.Column);
                 ConfigManager.GeneralConfig.ColumnListSort = e.Column;
             }
-        }
-
-        private void AlgorithmsListView_EnabledChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void AlgorithmsListView_Load(object sender, EventArgs e)

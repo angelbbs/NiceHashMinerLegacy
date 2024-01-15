@@ -79,9 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connection.cs" />
-    <Compile Include="DDagger4GB.cs" />
-    <Compile Include="DTest.cs" />
-    <Compile Include="DDagger3GB.cs" />
+    <Compile Include="DKawpowLite.cs" />
     <Compile Include="Divert.cs" />
     <Compile Include="Ethash\ArrayExtensions.cs" />
     <Compile Include="Ethash\Converters.cs" />

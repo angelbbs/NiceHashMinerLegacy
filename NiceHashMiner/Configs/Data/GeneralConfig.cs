@@ -21,9 +21,9 @@ namespace NiceHashMiner.Configs.Data
         public bool UseNegativeProfit = false;
         public bool ShowHiddenAlgos = false;
         public double DaggerOrderMaxPay = 0;
-        public int DaggerHashimoto3GBMaxEpoch = 235;
-        public int DaggerHashimoto4GBMaxEpoch = 352;
-        public int DaggerHashimoto1070MaxEpoch = 371;
+        public int KawpowLiteMaxEpoch3GB = 220;
+        public int KawpowLiteMaxEpoch4GB = 354;
+        public int KawpowLiteMaxEpoch5GB = 488;
         public int ZILMaxEpoch = 1;
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";

@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Stats;
+using NiceHashMiner.Utils;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Net.Cache;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Threading;
 
 namespace NiceHashMiner
 {
@@ -44,7 +46,9 @@ namespace NiceHashMiner
         public static string gitlabReleases = ("https://gitlab.com/angelbbs/NiceHashMinerLegacy/-/releases");
         public static string gitlabRepositoryTags => CheckDNS("https://gitlab.com/api/v4/projects/26404146/repository/tags");
         public static string gitlabLastRelease => CheckDNS("https://gitlab.com/api/v4/projects/26404146/releases/");//?
-        
+
+        internal static bool inuse = false;
+
         //dns cache
         public static string CheckDNS(string domain, bool forceIP = false)
         {
@@ -53,6 +57,13 @@ namespace NiceHashMiner
             string prefix = "";
             string path = "";
             string port = "";
+
+            do
+            {
+                Thread.Sleep(50);
+            } while (inuse);
+            inuse = true;
+
 
             if (domain.Contains("stratum-proxy"))
             {
@@ -98,6 +109,7 @@ namespace NiceHashMiner
 
                 if (NiceHashSocket.IsIPAddress(domainName))
                 {
+                    inuse = false;
                     return domain;
                 }
                 List<string> ResolvedIPsList = new List<string>();
@@ -131,10 +143,13 @@ namespace NiceHashMiner
                     WriteAllBytesWithBackup("configs\\dnscache.json", Properties.Resources.dnscache);
                 } else
                 {
-                    if (!File.ReadAllText("configs\\dnscache.json")[0].Equals('{'))
+                    LockManager.GetLock("configs\\dnscache.json", () =>
                     {
-                        WriteAllBytesWithBackup("configs\\dnscache.json", Properties.Resources.dnscache);
-                    }
+                        if (!File.ReadAllText("configs\\dnscache.json")[0].Equals('{'))//
+                        {
+                            WriteAllBytesWithBackup("configs\\dnscache.json", Properties.Resources.dnscache);
+                        }
+                    });
                 }
                 DNSCache file = null;
                 try
@@ -171,6 +186,7 @@ namespace NiceHashMiner
                         {
                             Helpers.ConsolePrint("CheckDNS", "******** Return dnscache (" + domainName + "): " + prefix + ip + path);
                         }
+                        inuse = false;
                         return prefix + ip + path + port;
                     }
                     foreach (string _ip in ResolvedIPsList)
@@ -197,6 +213,7 @@ namespace NiceHashMiner
                     }
                     else
                     {
+                        inuse = false;
                         return domain;
                     }
                 }
@@ -207,12 +224,24 @@ namespace NiceHashMiner
                     domains = _domains
                 };
                 var s = JsonConvert.SerializeObject(_DNSCache, Formatting.Indented);
-                File.WriteAllText("configs\\dnscache.json", s);
+                WriteAllBytesWithBackup("configs\\dnscache.json", StringToByteArrayASCII(s));
             } catch (Exception ex)
             {
+                inuse = false;
                 Helpers.ConsolePrint("CheckDNS", ex.ToString());
             }
+            inuse = false;
             return prefix + domainName + path + port;
+        }
+
+        public static byte[] StringToByteArrayASCII(string str)
+        {
+            byte[] newstr = new byte[str.Length];
+            for (int a = 0; a < str.Length; a++)
+            {
+                newstr[a] = (byte)str[a];
+            }
+            return newstr;
         }
 
         public static void WriteAllBytesWithBackup(string FilePath, byte[] contents)
@@ -226,26 +255,35 @@ namespace NiceHashMiner
             // delete any existing backups
             try
             {
-                if (File.Exists(backup))
-                    File.Delete(backup);
+                LockManager.GetLock(backup, () =>
+                {
+                    if (File.Exists(backup))
+                        File.Delete(backup);
+                });
             }
             catch (Exception ex)
             {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
 
             // get the bytes
             var data = contents;
 
             // write the data to a temp file
-            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
-                tempFile.Write(data, 0, data.Length);
+            LockManager.GetLock(tempPath, () =>
+            {
+                using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                    tempFile.Write(data, 0, data.Length);
+            });
 
             //copy file
             try
             {
-                if (File.Exists(path)) File.Delete(path);
-                File.Copy(tempPath, path);
+                LockManager.GetLock(path, () =>
+                {
+                    if (File.Exists(path)) File.Delete(path);
+                    File.Copy(tempPath, path);
+                });
             }
             catch (Exception ex)
             {

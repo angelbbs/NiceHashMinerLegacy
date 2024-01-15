@@ -3,6 +3,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Miners;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,7 @@ namespace NiceHashMiner.Devices.Algorithms
     /// </summary>
     public static class GroupAlgorithms
     {
+        private static ulong minMem = (ulong)(1024 * 1024 * 8);
         private static Dictionary<MinerBaseType, List<Algorithm>> CreateForDevice(ComputeDevice device)
         {
             if (device == null) return null;
@@ -86,38 +88,46 @@ namespace NiceHashMiner.Devices.Algorithms
             //Helpers.ConsolePrint("GPU MEMORY: ", device.GpuRam.ToString() + " bytes - " + device.Name);
 
 
-            if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
+            if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 5.7)))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.DaggerHashimoto3GB
+                        AlgorithmType.KAWPOWLite
                     });
             }
-            if (device.DeviceType == DeviceType.NVIDIA && (device.GpuRam > (ulong)(1024 * 1024 * 1024 * 2.7) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7)))
+            if (device.DeviceType == DeviceType.NVIDIA && device.GpuRam > (ulong)(1024 * 1024 * 1024 * 2.7) &&
+                device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.7) && device.Enabled)
             {
-                Form_Main.DaggerHashimoto3GB = true;
-            }
-            else
-            {
-                Form_Main.DaggerHashimoto3GB = false;
-            }
+                Form_Main.KawpowLite = true;
+                minMem = Math.Min(minMem, device.GpuRam / 1024);
 
-            if (device.DeviceType == DeviceType.AMD && (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 1.7) || device.GpuRam > (ulong)(1024 * 1024 * 1024 * 4.7)))
-            {
-                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                if (minMem > (ulong)(1024 * 1024 * 2.7) && minMem < (ulong)(1024 * 1024 * 3.7))
+                {
+                    Form_Main.KawpowLite3GB = true;
+                    Form_Main.KawpowLite4GB = false;
+                    Form_Main.KawpowLite5GB = false;
+                }
+                if (minMem > (ulong)(1024 * 1024 * 3.7) && minMem < (ulong)(1024 * 1024 * 4.7))
+                {
+                    Form_Main.KawpowLite3GB = false;
+                    Form_Main.KawpowLite4GB = true;
+                    Form_Main.KawpowLite5GB = false;
+                }
+                if (minMem > (ulong)(1024 * 1024 * 4.7) && minMem < (ulong)(1024 * 1024 * 5.7))
+                {
+                    Form_Main.KawpowLite3GB = false;
+                    Form_Main.KawpowLite4GB = false;
+                    Form_Main.KawpowLite5GB = true;
+                }
+
+                if (algoSettings.ContainsKey(MinerBaseType.GMiner) && Divert.CheckWinDivert() <= 0)
+                {
+                    algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.DaggerHashimoto4GB
+                        AlgorithmType.KAWPOWLite
                     });
+                }
             }
-            if (device.DeviceType == DeviceType.AMD && (device.GpuRam > (ulong)(1024 * 1024 * 1024 * 1.2) && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.7)))
-            {
-                Form_Main.DaggerHashimoto4GB = true;
-            }
-            else
-            {
-                Form_Main.DaggerHashimoto4GB = false;
-            }
-
 
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
             {
@@ -178,6 +188,13 @@ namespace NiceHashMiner.Devices.Algorithms
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.GrinCuckatoo32
+                    });
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.4))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.CuckooCycle
                     });
             }
 
@@ -303,14 +320,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.4))
-            {
-                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
-                    {
-                        AlgorithmType.CuckooCycle
-                    });
-            }
-
+            
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])

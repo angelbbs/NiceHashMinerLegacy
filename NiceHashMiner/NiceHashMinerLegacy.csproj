@@ -360,6 +360,12 @@
     <Compile Include="Forms\Form_Downloading.Designer.cs">
       <DependentUpon>Form_Downloading.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_Lite_Algo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Lite_Algo.Designer.cs">
+      <DependentUpon>Form_Lite_Algo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_RigProfitChart.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -382,10 +388,9 @@
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Miners\ClaymoreNeoscryptMiner.cs" />
     <Compile Include="Miners\CryptoDredge.cs" />
+    <Compile Include="Miners\KawpowClient .cs" />
     <Compile Include="Miners\Rigel.cs" />
     <Compile Include="Miners\ZilClient.cs" />
-    <Compile Include="Miners\DHClient4gb.cs" />
-    <Compile Include="Miners\DHClient.cs" />
     <Compile Include="Miners\Ethash\ArrayExtensions.cs" />
     <Compile Include="Miners\Ethash\Converters.cs" />
     <Compile Include="Miners\Ethash\Hash.cs" />
@@ -522,6 +527,7 @@
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\Firewall.cs" />
     <Compile Include="Utils\Links.cs" />
+    <Compile Include="Utils\LockManager.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
@@ -612,6 +618,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Downloading.resx">
       <DependentUpon>Form_Downloading.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Lite_Algo.resx">
+      <DependentUpon>Form_Lite_Algo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_RigProfitChart.resx">
       <DependentUpon>Form_RigProfitChart.cs</DependentUpon>

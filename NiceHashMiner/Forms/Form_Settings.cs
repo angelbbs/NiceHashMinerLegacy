@@ -4,6 +4,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -316,6 +317,8 @@ namespace NiceHashMiner.Forms
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label1.Text = International.GetText("Form_Settings_Color_profile");
 
+            button_Lite_Algo.Text = International.GetText("Form_Settings_LiteAlgosSettings");
+
             var newver = NiceHashStats.Version.Replace(",", ".");
             var ver = Configs.ConfigManager.GeneralConfig.ForkFixVersion;
             var version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -421,7 +424,6 @@ namespace NiceHashMiner.Forms
             checkBox_DisplayConnected.Text = International.GetText("Form_Settings_checkBox_DisplayConnected");
 
             checkBox_show_NVdevice_manufacturer.Text = International.GetText("Form_Settings_checkBox_show_NVdevice_manufacturer");
-            checkBox_show_NVIDIA_LHR.Text = International.GetText("Form_Settings_checkBox_show_NVIDIA_LHR");
             checkBox_orderPrice.Text = International.GetText("Form_Settings_checkBox_orderPrice");
             checkBoxLast24hours.Text = International.GetText("Form_Settings_checkBox_Last24hours");
             checkBoxShortTerm.Text = International.GetText("Form_Settings_checkBox_ShortTerm");
@@ -817,8 +819,7 @@ namespace NiceHashMiner.Forms
 
                 checkBox_show_NVdevice_manufacturer.BackColor = Form_Main._backColor;
                 checkBox_show_NVdevice_manufacturer.ForeColor = Form_Main._textColor;
-                checkBox_show_NVIDIA_LHR.BackColor = Form_Main._backColor;
-                checkBox_show_NVIDIA_LHR.ForeColor = Form_Main._textColor;
+
                 label_show_manufacturer.BackColor = Form_Main._backColor;
                 label_show_manufacturer.ForeColor = Form_Main._textColor;
 
@@ -1083,7 +1084,6 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisplayConnected.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_show_NVdevice_manufacturer.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_show_NVIDIA_LHR.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_orderPrice.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxLast24hours.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxShortTerm.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1241,7 +1241,6 @@ namespace NiceHashMiner.Forms
                 checkBox_Additional_info_about_device.Checked = ConfigManager.GeneralConfig.Additional_info_about_device;
                 checkBox_DisplayConnected.Checked = ConfigManager.GeneralConfig.Show_displayConected;
                 checkBox_show_NVdevice_manufacturer.Checked = ConfigManager.GeneralConfig.Show_NVdevice_manufacturer;
-                checkBox_show_NVIDIA_LHR.Checked = ConfigManager.GeneralConfig.Show_NVIDIA_LHR;
                 checkBox_orderPrice.Checked = ConfigManager.GeneralConfig.Use_orders_price;
                 checkBoxLast24hours.Checked = ConfigManager.GeneralConfig.Use_Last24hours;
                 checkBoxShortTerm.Checked = ConfigManager.GeneralConfig.ShortTerm;
@@ -2597,7 +2596,6 @@ namespace NiceHashMiner.Forms
                 checkBoxRestartDriver.Enabled = false;
                 checkBoxCheckingCUDA.Enabled = false;
                 checkBox_show_NVdevice_manufacturer.Enabled = false;
-                checkBox_show_NVIDIA_LHR.Enabled = false;
             }
             else
             {
@@ -2606,7 +2604,6 @@ namespace NiceHashMiner.Forms
                 checkBoxRestartDriver.Enabled = true;
                 checkBoxCheckingCUDA.Enabled = true;
                 checkBox_show_NVdevice_manufacturer.Enabled = true;
-                checkBox_show_NVIDIA_LHR.Enabled = true;
             }
         }
 
@@ -3353,6 +3350,34 @@ namespace NiceHashMiner.Forms
         private void buttonHistory_Click(object sender, EventArgs e)
         {
             new Task(() => Updater.Updater.ShowHistory(true)).Start();
+        }
+
+        private void button_Lite_Algo_Click(object sender, EventArgs e)
+        {
+            int dh = Divert.CheckWinDivert();
+            if (dh <= 0)
+            {
+                MessageBox.Show(International.GetText("Form_Settings_WinDivertError") + ". Error: " + dh.ToString(),
+                                International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (!Form_Main.KawpowLite)
+            {
+                MessageBox.Show(International.GetText("Form_Settings_LiteNoSuitableGPUs"),
+                                International.GetText("Form_Settings_groupBoxInfo"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var lite = new Form_Lite_Algo();
+            try
+            {
+                lite.ShowDialog();
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            }
+            catch (Exception er)
+            {
+                Helpers.ConsolePrint("lite", er.ToString());
+            }
         }
     }
 

@@ -107,66 +107,74 @@ namespace MinerLegacyForkFixMonitor
                 }
 
                 Thread.Sleep(1000 * 1);
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher
-                    ("Select * From Win32_Process Where ParentProcessID=" + argv[0]);
-                ManagementObjectCollection moc = searcher.Get();
-                if (moc.Count >= 0)
+                try
                 {
-                    //Helpers.ConsolePrint("Monitor", moc.Count.ToString());
-                    foreach (ManagementObject mo in moc)
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                        ("Select * From Win32_Process Where ParentProcessID=" + argv[0]);
+                    ManagementObjectCollection moc = searcher.Get();
+                    if (moc.Count >= 0)
                     {
-                        //Helpers.ConsolePrint("Monitor", Convert.ToInt32(mo["ProcessID"]).ToString());
-                        int pr = Convert.ToInt32(mo["ProcessID"]);
-                        if (!processIdList.Contains(pr) && pr != mainproc.Id)
+                        //Helpers.ConsolePrint("Monitor", moc.Count.ToString());
+                        foreach (ManagementObject mo in moc)
                         {
-                            processIdList.Add(pr);
+                            //Helpers.ConsolePrint("Monitor", Convert.ToInt32(mo["ProcessID"]).ToString());
+                            int pr = Convert.ToInt32(mo["ProcessID"]);
+                            if (!processIdList.Contains(pr) && pr != mainproc.Id)
+                            {
+                                processIdList.Add(pr);
+                            }
                         }
                     }
-                    try
-                    {
-                        //Process proc = Process.GetProcessById(pid);
-                        //proc.Kill();
-                    }
-                    catch (ArgumentException)
-                    {
-                        // Process already exited.
-                    }
+                } catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("Monitor", ex.ToString());
+                    Thread.Sleep(1000);
+                    continue;
                 }
 
-                MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("MinerLegacyForkFixMonitor");
-                byte[] b1 = { (byte)'0', (byte)'0', (byte)'0' };
-                using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 100, MemoryMappedFileAccess.Read))
+                try
                 {
-                    int b = reader.ReadArray<byte>(0, b1, 0, 3);
-                    int res = b1[0];
-                    if (prevUptimeSec == res) stuckCount++;
-                    if (prevUptimeSec != res) stuckCount = 0;
-                    prevUptimeSec = res;
-                    //Helpers.ConsolePrint("Monitor", "stuckCount: " + stuckCount.ToString());
-                }
-
-                if (stuckCount > 1720)
-                {
-                    Helpers.ConsolePrint("Monitor", "Main process stuck. Trying restart");
-                    try
+                    MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("MinerLegacyForkFixMonitor");
+                    byte[] b1 = { (byte)'0', (byte)'0', (byte)'0' };
+                    using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 100, MemoryMappedFileAccess.Read))
                     {
-                        var tkHandle = new Process
+                        int b = reader.ReadArray<byte>(0, b1, 0, 3);
+                        int res = b1[0];
+                        if (prevUptimeSec == res) stuckCount++;
+                        if (prevUptimeSec != res) stuckCount = 0;
+                        prevUptimeSec = res;
+                        //Helpers.ConsolePrint("Monitor", "stuckCount: " + stuckCount.ToString());
+                    }
+
+                    if (stuckCount > 1720)
+                    {
+                        Helpers.ConsolePrint("Monitor", "Main process stuck. Trying restart");
+                        try
                         {
-                            StartInfo =
+                            var tkHandle = new Process
+                            {
+                                StartInfo =
                             {
                                 FileName = "taskkill.exe"
                             }
-                        };
-                        tkHandle.StartInfo.Arguments = "/PID " + p.Id.ToString() + " /F /T";
-                        tkHandle.StartInfo.UseShellExecute = false;
-                        tkHandle.StartInfo.CreateNoWindow = true;
-                        tkHandle.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("taskkill", ex.ToString());
-                    }
+                            };
+                            tkHandle.StartInfo.Arguments = "/PID " + p.Id.ToString() + " /F /T";
+                            tkHandle.StartInfo.UseShellExecute = false;
+                            tkHandle.StartInfo.CreateNoWindow = true;
+                            tkHandle.Start();
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("taskkill", ex.ToString());
+                        }
 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("Monitor", ex.ToString());
+                    Thread.Sleep(1000);
+                    continue;
                 }
 
                 Thread.Sleep(1000 * 5);

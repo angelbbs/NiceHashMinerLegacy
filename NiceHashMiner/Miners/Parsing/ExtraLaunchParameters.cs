@@ -667,6 +667,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Rigel-zil", "--zil", "--zil", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-zil-cache-dag", "--zil-cache-dag", "--zil-cache-dag", "_", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Rigel-dual-mode", "--dual-mode", "--dual-mode", "_", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("Rigel-fan-control", "--fan-control", "--fan-control", "_", MinerOptionFlagType.MultiParam, ","),
                 },
                 new List<MinerOption>()
             ),
@@ -676,6 +677,7 @@ namespace NiceHashMiner.Miners.Parsing
                 {
                     // parameters differ according to algorithm
                     new MinerOption("GMiner_logfile", "-l", "--logfile", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("GMiner_log_newjob", "--log_newjob", "--log_newjob", "1", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_templimit", "-t", "--templimit", "0", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_watchdog", "-w", "--watchdog", "0", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("GMiner_color", "-c", "--color", "1", MinerOptionFlagType.SingleParam, " "),

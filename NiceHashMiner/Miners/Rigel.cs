@@ -138,7 +138,7 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
                 {
-                    algo = "ravencoin" + ZilAlgo;
+                    algo = "kawpow" + ZilAlgo;
                     algoName = "kawpow";
                     nicehashstratum = "";
                     port = "3385";
@@ -464,7 +464,7 @@ namespace NiceHashMiner.Miners
             
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
-                ret = " -a ravencoin" +
+                ret = " -a kawpow" +
                 " -o " + Links.CheckDNS("rvn.2miners.com:6060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.Rigel -p x" +
                 GetDevicesCommandString();
             }
@@ -712,13 +712,16 @@ namespace NiceHashMiner.Miners
                 dynamic resp = JsonConvert.DeserializeObject(ResponseFromRigel);
                 if (resp != null)
                 {
-                    foreach (var d in resp.pools.ravencoin)
+                    if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
                     {
-                        int rejected = d.solution_stat.rejected;
-                        if (rejected > RejectsLimit)
+                        foreach (var d in resp.pools.kawpow)
                         {
-                            Helpers.ConsolePrint("GetSummaryAsync", "RESTART Rigel due rejects above limit: " + RejectsLimit.ToString());
-                            Restart();
+                            int rejected = d.solution_stat.rejected;
+                            if (rejected > RejectsLimit)
+                            {
+                                Helpers.ConsolePrint("GetSummaryAsync", "RESTART Rigel due rejects above limit: " + RejectsLimit.ToString());
+                                Restart();
+                            }
                         }
                     }
                     var devices = resp.devices;
@@ -747,7 +750,7 @@ namespace NiceHashMiner.Miners
                             {
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
                                 {
-                                    _hashrate = d.hashrate.ravencoin;
+                                    _hashrate = d.hashrate.kawpow;
                                 }
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
                                 {

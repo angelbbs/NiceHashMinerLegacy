@@ -108,51 +108,25 @@ namespace NiceHashMiner.Switching
 
                 }
 
-                if (algo == AlgorithmType.DaggerHashimoto3GB)
+                if (algo == AlgorithmType.KAWPOWLite)
                 {
                     var paying = 0d;
-                    //if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
-                        HasData = true;
+                    HasData = true;
 
                     _currentSma[algo] = new NiceHashSmaTmp
                     {
-                        Port = 3353,
+                        Port = 3385,
                         Name = algo.ToString().ToLower(),
                         Algo = (int)algo,
                         Paying = paying
                     };
-                    /*
                     _finalSma[algo] = new NiceHashSma
                     {
-                        Port = 3353,
+                        Port = 3385,
                         Name = algo.ToString().ToLower(),
                         Algo = (int)algo,
                         Paying = paying
                     };
-                    */
-                }
-                if (algo == AlgorithmType.DaggerHashimoto4GB)
-                {
-                    var paying = 0d;
-                    //if (cacheDict?.TryGetValue(AlgorithmType.DaggerHashimoto, out paying) ?? false)
-                        HasData = true;
-
-                        _currentSma[algo] = new NiceHashSmaTmp
-                        {
-                            Port = 3353,
-                            Name = algo.ToString().ToLower(),
-                            Algo = (int)algo,
-                            Paying = paying
-                        };
-                    /*
-                    _finalSma[algo] = new NiceHashSma
-                    {
-                        Port = 3353,
-                        Name = algo.ToString().ToLower(),
-                        Algo = (int)algo,
-                        Paying = paying
-                    };
-                    */
                 }
             }
             Initialized = true;
@@ -190,8 +164,8 @@ namespace NiceHashMiner.Switching
                         {
                             if (_currentSma[algo].Paying > 0 && newSma[algo] > _currentSma[algo].Paying * 100)
                             {
-                                //Helpers.ConsolePrint("UpdateSmaPaying", "NH API bug. " + algo.ToString() + ": " +
-                                  //  "old value: " + _currentSma[algo].Paying.ToString() + " new value: " + newSma[algo]);
+                                Helpers.ConsolePrint("UpdateSmaPaying", "NH API bug. " + algo.ToString() + ": " +
+                                    "old value: " + _currentSma[algo].Paying.ToString() + " new value: " + newSma[algo]);
                                 continue;
                             }
                             
@@ -215,7 +189,11 @@ namespace NiceHashMiner.Switching
                                 _currentSma[algo].Paying = newSma[algo];
                             }
                         }
-
+                        //
+                        if (algo == AlgorithmType.KAWPOWLite)
+                        {
+                            _currentSma[algo].Paying = newSma[algo];
+                        }
                     }
                 }
                 catch (Exception e)
@@ -279,6 +257,10 @@ namespace NiceHashMiner.Switching
                     {
                         _currentSma[algo].Paying = paying;
                     }
+                }
+                if (algo == AlgorithmType.KAWPOWLite)
+                {
+                    _currentSma[algo].Paying = paying;
                 }
             }
             HasData = true;
@@ -352,6 +334,10 @@ namespace NiceHashMiner.Switching
 
         public static void FinalizeSma()
         {
+            Random r = new Random();
+            int r1 = r.Next(5, 15);
+            Thread.Sleep(100 * r1);
+
             Helpers.ConsolePrint("NHSMA", "FinalizeSma");
             InitializeIfNeeded();
             CheckInit();
@@ -408,6 +394,10 @@ namespace NiceHashMiner.Switching
             if (TryGetSma(algo, out NiceHashSma sma))
             {
                 paying = sma.Paying;
+                if (algo == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
+                {
+                    paying = 0.0d;
+                }
                 return true;
             }
 

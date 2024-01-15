@@ -6,6 +6,7 @@ using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Divert;
 using NiceHashMinerLegacy.UUID;
 using System;
 using System.Collections.Generic;
@@ -973,17 +974,22 @@ namespace NiceHashMiner.Stats
 
         }
 
+        public static bool emptypool = true;
         [HandleProcessCorruptedStateExceptions]
         public static bool GetSmaAPI(bool immediately = false)
         {
             bool ret = false;
+            if (!emptypool) return false;
+
             if (!immediately)
             {
+                emptypool = false;
                 do
                 {
                     Thread.Sleep(500);
                 } while (Form_Main.Uptime.Seconds != 15 && Form_Main.Uptime.Seconds != 45);
             }
+            emptypool = true;
 
             if (Form_Main.Uptime.Seconds == 45)//фактическая прибыльность 1 раз в минуту
             {
@@ -1091,8 +1097,6 @@ namespace NiceHashMiner.Stats
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();
-                //payingDict.Add(AlgorithmType.DaggerHashimoto3GB, 0.0d);
-                //payingDict.Add(AlgorithmType.DaggerHashimoto4GB, 0.0d);
                 if (data != null)
                 {
                     foreach (var algo in data)
@@ -1117,16 +1121,24 @@ namespace NiceHashMiner.Stats
                             paying = 0;
                         }
 
-                        if (!ConfigManager.GeneralConfig.Use_Last24hours)
+                        if (algoKey == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
                         {
+                            paying = 0;
+                            Helpers.ConsolePrint("SetAlgorithmRates", "KawpowLiteGoodEpoch false. Set paying to 0");
+                        }
+
+                         if (!ConfigManager.GeneralConfig.Use_Last24hours)
+                         {
                             if (!algoKey.ToString().Contains("UNUSED") && type.ToLower().Contains("ws"))
                             {
                                 NHSmaData.UpdatePayingForAlgo(algoKey, paying, average);//first init?
                                 if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, average);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, average);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, average);
+                                }
+                                if (algoKey == AlgorithmType.KAWPOW)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying, false);
                                 }
                             }
 
@@ -1137,8 +1149,10 @@ namespace NiceHashMiner.Stats
                                 if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, true);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, true);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, true);
+                                }
+                                if (algoKey == AlgorithmType.KAWPOW)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying, false);
                                 }
                             }
 
@@ -1149,8 +1163,10 @@ namespace NiceHashMiner.Stats
                                 if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
+                                if (algoKey == AlgorithmType.KAWPOW)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying, false);
                                 }
                             }
                         }
@@ -1162,8 +1178,10 @@ namespace NiceHashMiner.Stats
                                 if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
+                                if (algoKey == AlgorithmType.KAWPOW)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying, false);
                                 }
                             }
 
@@ -1174,8 +1192,10 @@ namespace NiceHashMiner.Stats
                                 if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
+                                if (algoKey == AlgorithmType.KAWPOW)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying, false);
                                 }
                             }
 
@@ -1186,8 +1206,10 @@ namespace NiceHashMiner.Stats
                                 if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
+                                if (algoKey == AlgorithmType.KAWPOW)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying, false);
                                 }
                             }
 
@@ -1198,8 +1220,10 @@ namespace NiceHashMiner.Stats
                                 if (algoKey == AlgorithmType.DaggerHashimoto)
                                 {
                                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.ZIL, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto3GB, paying, false);
-                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.DaggerHashimoto4GB, paying, false);
+                                }
+                                if (algoKey == AlgorithmType.KAWPOW)
+                                {
+                                    NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying, false);
                                 }
                             }
                         }
@@ -1209,15 +1233,7 @@ namespace NiceHashMiner.Stats
                 //testing
                 //payingDict[AlgorithmType.RandomX] = 12345;
 
-                //Helpers.ConsolePrint("*** DaggerHashimoto3GB", payingDict[AlgorithmType.DaggerHashimoto3GB].ToString());
-                //Helpers.ConsolePrint("*** DaggerHashimoto4GB", payingDict[AlgorithmType.DaggerHashimoto4GB].ToString());
-                //Helpers.ConsolePrint("*** DaggerHashimoto", payingDict[AlgorithmType.DaggerHashimoto].ToString());
-                
-                //payingDict[AlgorithmType.DaggerHashimoto3GB] = payingDict[AlgorithmType.DaggerHashimoto];
-                //payingDict[AlgorithmType.DaggerHashimoto4GB] = payingDict[AlgorithmType.DaggerHashimoto];
-
                 NHSmaData.UpdateSmaPaying(payingDict, average);
-                
 
                 Thread.Sleep(10);
                 OnSmaUpdate?.Invoke(null, EventArgs.Empty);
@@ -1632,7 +1648,7 @@ namespace NiceHashMiner.Stats
                         string NvidiaLHR = "";
                         if (device.NvidiaLHR && device.DeviceType == DeviceType.NVIDIA && ConfigManager.GeneralConfig.Show_NVIDIA_LHR)
                         {
-                            NvidiaLHR = "(LHR)";
+                            //NvidiaLHR = "(LHR)";
                         }
 
                         deviceName = deviceName + " " + NvidiaLHR;
@@ -1859,11 +1875,12 @@ namespace NiceHashMiner.Stats
                                 speedsJson.Add(new JArray(device.ThirdAlgorithmID, ThirdHashRate));
                             }
                         }
-                        if (rigs == 1 & (device.AlgorithmID == -9) || device.AlgorithmID == -12) //dagger 3-4
+
+                        if (rigs == 1 & (device.AlgorithmID == (int)AlgorithmType.KAWPOWLite)) //KawpowLite
                         {
-                            speedsJson.Add(new JArray(20, HashRate)); //  номер алгоритма, хешрейт
+                            speedsJson.Add(new JArray((int)AlgorithmType.KAWPOW, HashRate)); //  номер алгоритма, хешрейт
                         }
-                        
+
                         array.Add(speedsJson);
 
                         //костыль для amd

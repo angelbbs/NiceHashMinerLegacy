@@ -608,7 +608,7 @@
 "Form_Profit_Chart_Warning1": "Inclusion of a profitability chart will cause increased consumption of internet traffic",
 "Form_Profit_Chart_Delete": "Delete chart data?",
 "Form_Profit_Chart_Disabled": "Profitability chart disabled",
-"Form_Settings_DH3GB_Warning": "With DaggerHashimoto3GB or DaggerHashimoto4GB algorithm, at least one more algorithm must be enabled",
+"Form_Settings_Lite_Warning": "With \"*Lite\" algorithm, at least one more algorithm must be enabled",
 "Form_Benchmark_BenchmarkProgress": "Benchmark",
 "Form_Benchmark_Stop_mining_first": "Stop mining first",
 "FormSettings_OverclockSettings": "Overclock settings for {0} :",
@@ -631,6 +631,16 @@
 "listViewDevices_ToolTip": "Press right mouse button on\r\nselected GPU for advanced features",
 "FormSettings_By_profitability_of_all_devices": "By profitability of all devices",
 "Form_Settings_buttonLicence": "View licence",
-"Form_Settings_buttonHistory": "View history"
+"Form_Settings_buttonHistory": "View history",
+"Form_Settings_LiteAlgosSettings": "\"*Lite\" algorithms mining settings",
+"Form_Settings_WinDivertError": "WinDivert driver error. \"*Lite\" algorithms disabled",
+"Form_Settings_LiteNoSuitableGPUs": "No suitable GPUs. \"*Lite\" algorithms disabled",
+"Form_Lite_Title": "\"*Lite\" algorithms",
+"Form_Lite_3GB": "Maximum epoch for 3GB GPU",
+"Form_Lite_4GB": "Maximum epoch for 4GB GPU",
+"Form_Lite_5GB": "Maximum epoch for 5GB GPU",
+"Form_Lite_Enable_KAWPOWLite": "Enable KAWPOWLite",
+"Form_Lite_Save": "Save",
+"Form_Lite_Cancel": "Cancel"
     }
 }

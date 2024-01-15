@@ -56,14 +56,6 @@ namespace NiceHashMiner.Miners
                 ssl = "";
             }
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto3GB) ||
-                MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto4GB)
-                )
-            {
-                port = "13353";
-                ssl = "";
-            }
-
             int n = 0;
             foreach (string serverUrl in Globals.MiningLocation)
             {
@@ -217,16 +209,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020"), "0x266b27bd794d1A65ab76842ED85B067B415CD505.Phoenix", "");
             }
-            if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto3GB)
-            {
-                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://ethash.mine.zergpool.com:9999"), "LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.Phoenix3", "", "c=LTC,mc=ALT/BRB/OCTA/REDE");
-                //ret = GetStartBenchmarkCommand("", "", "", "", true);
-            }
-            if (algorithm.NiceHashID == AlgorithmType.DaggerHashimoto4GB)
-            {
-                ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://ethash.mine.zergpool.com:9999"), "LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.Phoenix4", "", "c=LTC,mc=ALT/BRB/OCTA/REDE");
-                //ret = GetStartBenchmarkCommand("", "", "", "", true);
-            }
+
             if (algorithm.NiceHashID == AlgorithmType.ETCHash)
             {
                 ret = GetStartBenchmarkCommand(Links.CheckDNS("stratum+tcp://etc.2miners.com:1010"), "0x266b27bd794d1A65ab76842ED85B067B415CD505.Phoenix", "");

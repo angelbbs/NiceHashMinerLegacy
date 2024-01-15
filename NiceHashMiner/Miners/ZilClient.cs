@@ -45,10 +45,10 @@ namespace NiceHashMiner.Miners
         private static int waitReconnect = 10;
         private static int epochCount = 0;
         public static bool needConnectionZIL = true;
-        private static int _delay = 10;
+        private static int _delay = 30;
         private static DateTime StartZILTime = new DateTime();
         private static DateTime timenow = new DateTime();
-        private static int ZILsec;
+        private static double ZILsec;
         private static bool ZILblock = false;
 
         public static void StartZilMonitor()
@@ -94,7 +94,6 @@ namespace NiceHashMiner.Miners
                 if (tcpClient != null)
                 {
                     tcpClient.Close();
-                    tcpClient.Dispose();
                     tcpClient = null;
                 }
             } catch (Exception ex)
@@ -154,11 +153,12 @@ namespace NiceHashMiner.Miners
                         }
                         if (zil >= 70 & zil < 95)
                         {
-                            ZILsec = 0;
+                            timenow = StartZILTime = DateTime.Now;
                             _delay = 60 * 2;
                         }
                         if (zil >= 95 & zil < 97)
                         {
+                            timenow = StartZILTime = DateTime.Now;
                             ZILsec = 0;
                             _delay = 10;
                         }
@@ -219,7 +219,7 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("ZilAPI", ex.ToString());
+                    Helpers.ConsolePrint("ZilAPI", ex.Message);
                 }
                 //sleep
                 int InjectTickSleep = 0;
@@ -250,7 +250,6 @@ namespace NiceHashMiner.Miners
                 if (tcpClient != null)
                 {
                     tcpClient.Close();
-                    tcpClient.Dispose();
                     tcpClient = null;
                 }
 
@@ -330,7 +329,6 @@ namespace NiceHashMiner.Miners
             if (tcpClient != null)
             {
                 tcpClient.Close();
-                tcpClient.Dispose();
                 tcpClient = null;
             }
         }
@@ -452,13 +450,14 @@ namespace NiceHashMiner.Miners
 
                                     //далее костыль. я не придумал, как сделать лучше
                                     if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch &&
-                                        (Form_Main.ZilCount >= 98 || Form_Main.ZilCount <= 0) &&
-                                         ZILsec <= 160)
+                                        (Form_Main.ZilCount >= 99 || Form_Main.ZilCount <= 0) &&
+                                         ZILsec <= 105)
                                     {
                                         timenow = DateTime.Now;
-
                                         if (!Form_Main.isZilRound)
                                         {
+                                            Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round");
+                                            StartZILTime = DateTime.Now;
                                             if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                             MinersManager.MinerStatsCheck();
                                             Form_Main.isZilRound = true;
@@ -469,7 +468,7 @@ namespace NiceHashMiner.Miners
                                         if (Form_Main.isZilRound)
                                         {
                                             epochCount++;
-                                            if (epochCount >= 2 || ZILsec > 160)
+                                            if (epochCount >= 2 || ZILsec > 105)
                                             {
                                                 Form_Main.isZilRound = false;
                                                 epochCount = 0;
@@ -480,10 +479,9 @@ namespace NiceHashMiner.Miners
                                                     Form_Main.needGMinerRestart = true;
                                                 }
                                             }
-                                            //ZILsec = timenow.Subtract(StartZILTime).TotalSeconds;
-                                            ZILsec = (int)(timenow - StartZILTime).TotalSeconds;
                                         }
                                     }
+                                    ZILsec = Math.Round(timenow.Subtract(StartZILTime).TotalSeconds, 0);
                                 }
                             }
                         }
@@ -504,7 +502,6 @@ namespace NiceHashMiner.Miners
                             Helpers.ConsolePrint("ZIL", "Reconnect receive");
                             waitReconnect = 10;
                             tcpClient.Close();
-                            tcpClient.Dispose();
                             tcpClient = null;
                         }
 

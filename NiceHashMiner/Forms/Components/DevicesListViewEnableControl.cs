@@ -176,7 +176,7 @@ namespace NiceHashMiner.Forms.Components
                 string NvidiaLHR = "";
                 if (computeDevice.NvidiaLHR && ConfigManager.GeneralConfig.Show_NVIDIA_LHR)
                 {
-                    NvidiaLHR = "(LHR)";
+                    //NvidiaLHR = "(LHR)";
                 }
                 devInfo = computeDevice.Name + " " + NvidiaLHR;
 

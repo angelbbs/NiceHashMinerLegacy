@@ -32,6 +32,7 @@ namespace NiceHashMiner.Miners
         private bool IsInBenchmark = false;
         private double _power = 0.0d;
         double _powerUsage = 0;
+        int hashrateErrorCount = 0;
 
         public Nanominer() : base("Nanominer")
         {
@@ -160,6 +161,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("mport = 0\n")
                    + String.Format("logPath=" + GetLogFileName() + "\n")
                    + String.Format("protocol = stratum\n")
+                   + String.Format("watchdog = false\n")
                    + String.Format(param) + "\n"
                    + String.Format("[Ethash]\n")
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
@@ -188,6 +190,7 @@ namespace NiceHashMiner.Miners
                    + String.Format("mport = 0\n")
                    + String.Format("logPath=" + GetLogFileName() + "\n")
                    + String.Format("protocol = stratum\n")
+                   + String.Format("watchdog = false\n")
                    + String.Format(param) + "\n"
                    + String.Format("[Etchash]\n")
                    + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
@@ -221,12 +224,42 @@ namespace NiceHashMiner.Miners
                    + String.Format("wallet = {0}", btcAdress) + "\n"
                    + String.Format("rigName = \"{0}\"", rigName) + "\n"
                    + String.Format("protocol = stratum\n")
+                   + String.Format("watchdog = false\n")
                    + GetServer("autolykos", username, "3390");
                 if (ConfigManager.GeneralConfig.StaleProxy)
                 {
                     cfgFile = cfgFile + "rigPassword = stale\n";
                 }
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                try
+                {
+                    if (File.Exists("miners\\Nanominer\\" + GetLogFileName()))
+                        File.Delete("miners\\Nanominer\\" + GetLogFileName());
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", ex.ToString());
+                }
+                cfgFile =
+                   String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
+                   + String.Format("logPath=" + GetLogFileName() + "\n")
+                   + String.Format(param) + "\n"
+                   + String.Format("coin = RVN\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString()) + "\n"
+                   + String.Format("wallet = {0}", btcAdress) + "\n"
+                   + String.Format("rigName = \"{0}\"", rigName) + "\n"
+                   + String.Format("protocol = stratum\n")
+                   + String.Format("watchdog = false\n")
+                   + GetServer("kawpow", username, "3385");
+                if (ConfigManager.GeneralConfig.StaleProxy)
+                {
+                    cfgFile = cfgFile + "rigPassword = stale\n";
+                }
+            }
+
             try
             {
                 FileStream fs = new FileStream("miners\\Nanominer\\config_nh_" + platform + ".ini", FileMode.Create, FileAccess.Write);
@@ -556,7 +589,7 @@ namespace NiceHashMiner.Miners
                 _benchmarkTimeWait = time;
             }
 
-            if (algorithm.NiceHashID == AlgorithmType.Autolykos && algorithm.DualNiceHashID == AlgorithmType.Autolykos)
+            if (algorithm.NiceHashID == AlgorithmType.Autolykos)
             {
                 var cfgFile =
                    String.Format("webPort = {0}", ApiPort) + "\n"
@@ -586,7 +619,38 @@ namespace NiceHashMiner.Miners
                 //Thread.Sleep(1000);
                 _benchmarkTimeWait = time;
             }
-            
+
+            if (algorithm.NiceHashID == AlgorithmType.KAWPOW)
+            {
+                var cfgFile =
+                   String.Format("webPort = {0}", ApiPort) + "\n"
+                   + String.Format("mport = 0\n")
+                   + String.Format("protocol = stratum\n")
+                   + String.Format("watchdog = false\n")
+                   + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD).TrimStart(' ') + (char)10
+                   + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA).TrimStart(' ') + (char)10
+                   + String.Format("[kawpow]\n")
+                   + String.Format("devices = {0}", GetDevicesCommandString().Trim(' ')) + "\n"
+                   + String.Format("wallet = RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX") + "\n"
+                   + String.Format("rigName = Nanominer") + "\n"
+                   + String.Format("pool1 = " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060").Replace("stratum+tcp://", "")) + "\n";
+
+                try
+                {
+                    FileStream fs = new FileStream("miners\\Nanominer\\bench_nh_" + platform + GetDevicesCommandString().Trim(' ') + ".ini", FileMode.Create, FileAccess.Write);
+                    StreamWriter w = new StreamWriter(fs);
+                    w.WriteAsync(cfgFile);
+                    w.Flush();
+                    w.Close();
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("GetStartCommand", e.ToString());
+                }
+                //Thread.Sleep(1000);
+                _benchmarkTimeWait = time;
+            }
+
             return " bench_nh_" + platform + GetDevicesCommandString().Trim(' ') + ".ini";
 
         }
@@ -778,6 +842,12 @@ namespace NiceHashMiner.Miners
         }
         public override async Task<ApiData> GetSummaryAsync()
         {
+            if (hashrateErrorCount > 12)
+            {
+                hashrateErrorCount = 0;
+                Helpers.ConsolePrint(MinerTag(), "Restart nanominer due API error");
+                Restart();
+            }
             CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
             int dSpeed1 = 0;
             int dSpeed2 = 0;
@@ -805,6 +875,7 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception ex)
             {
+                hashrateErrorCount++;
                 Helpers.ConsolePrint("API", ex.Message);
                 return null;
             }
@@ -890,6 +961,35 @@ namespace NiceHashMiner.Miners
                         i++;
                     }
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
+                {
+                    dynamic json = JsonConvert.DeserializeObject(ResponseFromNanominer.Replace("GPU ", "GPU"));
+                    if (json == null) return ad;
+                    var cSpeed1 = (json.Algorithms[0].Kawpow);
+                    if (cSpeed1 == null) return ad;
+                    var cSpeed = (json.Algorithms[0].Kawpow.Total.Hashrate);
+                    dSpeed1 = (int)Convert.ToDouble(cSpeed, CultureInfo.InvariantCulture.NumberFormat);
+
+                    foreach (var mPair in sortedMinerPairs)
+                    {
+                        string gpu = "";
+                        if (platform.Contains("intel"))
+                        {
+                            gpu = mPair.Device.ID.ToString();
+                        }
+                        else
+                        {
+                            gpu = mPair.Device.lolMinerBusID.ToString();
+                        }
+                        string token = $"Algorithms[0].Kawpow.GPU{gpu}.Hashrate";
+                        var hash = (string)json.SelectToken(token);
+                        gpu_hr = (int)Convert.ToDouble(hash, CultureInfo.InvariantCulture.NumberFormat);
+                        sortedMinerPairs[i].Device.MiningHashrate = gpu_hr;
+                        //_power = sortedMinerPairs[i].Device.PowerUsage;
+                        _power = mPair.Device.PowerUsage;
+                        i++;
+                    }
+                }
                 //dual mining
                 i = 0;
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && zilEnabled && !IsInBenchmark)
@@ -937,6 +1037,7 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception ex)
             {
+                hashrateErrorCount++;
                 Helpers.ConsolePrint("API", ex.ToString());
                 return null;
             }
@@ -963,6 +1064,7 @@ namespace NiceHashMiner.Miners
             if (ad.Speed + ad.SecondarySpeed == 0)
             {
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                hashrateErrorCount++;
             }
             else
             {
