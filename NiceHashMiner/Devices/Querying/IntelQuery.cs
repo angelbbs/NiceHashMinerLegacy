@@ -53,11 +53,10 @@ namespace NiceHashMiner.Devices.Querying
 
             if (!IntelPlatformNumFound)
             {
-                Helpers.ConsolePrint("IntelQuery", "Intel Arc or Iris OpenCL platform not found");
+                Helpers.ConsolePrint("IntelQuery", "Intel Arc OpenCL platform not found");
                 return IntelDevices;
             }
             // get only Intel gpus
-            string PNPDeviceID = "";
             string[] _PNPDeviceID;
             foreach (var oclDev in IntelOclDevices)
             {
@@ -339,7 +338,6 @@ namespace NiceHashMiner.Devices.Querying
                 for (int dev = 0; dev < Adapter_count; dev++)
                 {
                     OpenCLDevice intelOpenCLDevice = new OpenCLDevice();
-                    Luid AdapterID;
                     ctl_device_adapter_properties_t StDeviceAdapterProperties = new ctl_device_adapter_properties_t();
                     StDeviceAdapterProperties.Size = Marshal.SizeOf(typeof(ctl_device_adapter_properties_t));
                     StDeviceAdapterProperties.pDeviceID = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Luid)));
@@ -500,30 +498,44 @@ namespace NiceHashMiner.Devices.Querying
                 return -1;
             }
 
+            if (FanHandlerCount <= 0)
+            {
+                Helpers.ConsolePrint("GetFan", "ctlEnumFans 3 ERROR: " + r.ToString());
+                return -1;
+            }
+
             ctl_fan_speed_units_t units = ctl_fan_speed_units_t.CTL_FAN_SPEED_UNITS_RPM;
             if (isPercent)
             {
                 units = ctl_fan_speed_units_t.CTL_FAN_SPEED_UNITS_PERCENT;
             }
             int speed = 0;
+
             r = ctlFanGetState(pFanHandle[FanHandlerCount - 1], units, ref speed);
             if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
             {
                 if (r == _ctl_result_t.CTL_RESULT_ERROR_UNSUPPORTED_FEATURE)
                 {
                     //return -1;
+                    if (isPercent && speed == 0)
+                    {
+                        units = ctl_fan_speed_units_t.CTL_FAN_SPEED_UNITS_RPM;
+                        ctlFanGetState(pFanHandle[FanHandlerCount - 1], units, ref speed);
+                        if (speed > 0) return Math.Min(5000 / speed * 10, 100);//emulate 
+                        if (speed == 0) return 0;
+                    }
                 }
                 else
                 {
                     Helpers.ConsolePrint("GetFan", "ctlFanGetState ERROR: " + r.ToString());
                     return -1;
                 }
-            } else
+            }
+            else
             {
                 if (double.IsNaN(speed)) speed = 0;
                 return speed;
             }
-
             return -1;
         }
 
@@ -686,6 +698,7 @@ namespace NiceHashMiner.Devices.Querying
             // (find a way to get PCI BUS Numbers from PNPDeviceID)
             var IntelVideoControllers = _availableControllers.Where(vcd =>
                 (vcd.Name.ToLower().Contains("intel") && vcd.Name.ToLower().Contains("arc"))).ToList();
+                //(vcd.Name.ToLower().Contains("intel") && vcd.Name.ToLower().Contains("iris"))).ToList();
             // sort by ram not ideal
             IntelVideoControllers.Sort((a, b) => (int)(a.AdapterRam - b.AdapterRam));
             IntelDevices.Sort((a, b) => (int)(a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));

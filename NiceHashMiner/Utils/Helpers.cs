@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Management;
+using System.Net;
 using System.Security.Principal;
 using System.Text;
 
@@ -27,6 +28,12 @@ namespace NiceHashMiner
                 IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
+
+        public static IPAddress GetLocalIP()
+        {
+            return IPAddress.Parse(Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString()) ?? IPAddress.None;
+        }
+
 
         public static void WriteAllBytesThrough(string FileName, byte[] buffer)
         {
@@ -250,8 +257,8 @@ namespace NiceHashMiner
             string second = "";
             string third = "";
             string format = "F3";
-            if (algo2 == AlgorithmType.Scrypt_UNUSED) algo2 = AlgorithmType.NONE;
-            if (algo3 == AlgorithmType.Scrypt_UNUSED) algo3 = AlgorithmType.NONE;
+            if (algo2 == AlgorithmType.Empty) algo2 = AlgorithmType.NONE;
+            if (algo3 == AlgorithmType.Empty) algo3 = AlgorithmType.NONE;
             if (algo == AlgorithmType.BeamV3) format = "F1";
             if (algo == AlgorithmType.ZelHash) format = "F1";
             if (algo == AlgorithmType.ZHash) format = "F1";

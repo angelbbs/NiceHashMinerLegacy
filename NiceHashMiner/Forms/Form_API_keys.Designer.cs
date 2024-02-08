@@ -64,7 +64,6 @@ namespace NiceHashMiner.Forms
             // 
             // buttonSave
             // 
-            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSave.Location = new System.Drawing.Point(175, 100);
             this.buttonSave.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonSave.Name = "buttonSave";
@@ -76,7 +75,6 @@ namespace NiceHashMiner.Forms
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.Location = new System.Drawing.Point(308, 100);
             this.buttonCancel.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonCancel.Name = "buttonCancel";
@@ -125,7 +123,6 @@ namespace NiceHashMiner.Forms
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDelete.Location = new System.Drawing.Point(480, 100);
             this.buttonDelete.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonDelete.Name = "buttonDelete";

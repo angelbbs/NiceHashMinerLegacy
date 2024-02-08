@@ -186,104 +186,12 @@ namespace NiceHashMiner.Forms.Components
                     addInfo = " (" + computeDevice.Uuid.Substring(computeDevice.Uuid.Length - 4, 4).ToUpper() + ")" +
                     " (BusID: " + computeDevice.BusID.ToString() + ")";
                 }
-
-                if (computeDevice.DeviceType == DeviceType.NVIDIA)
-                {
-                    if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
-                    {
-                        devInfo = devInfo.Replace("NVIDIA", "");
-                        if (!devInfo.Contains(ComputeDevice.GetManufacturer(computeDevice.Manufacturer)))
-                        {
-                            Manufacturer = ComputeDevice.GetManufacturer(computeDevice.Manufacturer);
-                        }
-                    }
-                    else
-                    {
-                        devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(computeDevice.Manufacturer) + " ", "");
-                        if (!devInfo.Contains("NVIDIA")) devInfo = "NVIDIA " + devInfo;
-                    }
-
-                    GpuRam = (computeDevice.GpuRam / 1073741824).ToString() + "GB";
-                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
-                    {
-                        if (devInfo.Contains(GpuRam))
-                        {
-                            GpuRam = "";
-                        }
-                    }
-                    else
-                    {
-                        devInfo = devInfo.Replace(GpuRam, "");
-                        GpuRam = "";
-                    }
-                }
-
-                if (computeDevice.DeviceType == DeviceType.AMD)
-                {
-                    if (ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer)
-                    {
-                        if (!devInfo.Contains(ComputeDevice.GetManufacturer(computeDevice.Manufacturer)))
-                        {
-                            Manufacturer = ComputeDevice.GetManufacturer(computeDevice.Manufacturer);
-                        }
-                    }
-                    else
-                    {
-                        devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(computeDevice.Manufacturer) + " ", "");
-                    }
-
-                    devInfo = devInfo.Replace("NVIDIA ", "");
-
-                    GpuRam = (computeDevice.GpuRam / 1073741824).ToString() + "GB";
-                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
-                    {
-                        if (devInfo.Contains(GpuRam))
-                        {
-                            GpuRam = "";
-                        }
-                    }
-                    else
-                    {
-                        devInfo = devInfo.Replace(GpuRam, "");
-                        GpuRam = "";
-                    }
-                }
-
-                if (computeDevice.DeviceType == DeviceType.INTEL)
-                {
-                    if (ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer)
-                    {
-                        if (!devInfo.Contains(ComputeDevice.GetManufacturer(computeDevice.Manufacturer)))
-                        {
-                            devInfo = devInfo.Replace("Intel ", "");
-                            Manufacturer = ComputeDevice.GetManufacturer(computeDevice.Manufacturer);
-                        }
-                    }
-                    else
-                    {
-                        devInfo = devInfo.Replace(ComputeDevice.GetManufacturer(computeDevice.Manufacturer) + " ", "");
-                    }
-
-                    GpuRam = (computeDevice.GpuRam / 1073741824).ToString() + "GB";
-                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize)
-                    {
-                        if (devInfo.Contains(GpuRam))
-                        {
-                            GpuRam = "";
-                        }
-                    }
-                    else
-                    {
-                        devInfo = devInfo.Replace(GpuRam, "");
-                        GpuRam = "";
-                    }
-                }
-
-
+                
                 var lvi = new ListViewItem
                 {
                     Checked = computeDevice.Enabled,
-                    Text = devNum + " " + Manufacturer + " " + devInfo + " " + GpuRam + " " + addInfo,
+                    //Text = devNum + " " + Manufacturer + " " + devInfo + " " + GpuRam + " " + addInfo,
+                    Text = devNum + " " + computeDevice.NameCustom + " " + addInfo,
                     Tag = computeDevice
                 };
                 //lvi.SubItems.Add(computeDevice.Name);
@@ -333,17 +241,10 @@ namespace NiceHashMiner.Forms.Components
 
                 string cLoad = Math.Truncate(computeDevice.Load).ToString() + "%";
                 string cFanSpeed = "";
-                //Helpers.ConsolePrint("**************", computeDevice.TempMemory.ToString());
+
                 if (ConfigManager.GeneralConfig.ShowFanAsPercent)
                 {
-                    if (computeDevice.DeviceType == DeviceType.CPU)
-                    {
-                        cFanSpeed = computeDevice.FanSpeed.ToString();
-                    }
-                    else
-                    {
                         cFanSpeed = computeDevice.FanSpeed.ToString() + "%";
-                    }
                 }
                 else
                 {
@@ -366,6 +267,7 @@ namespace NiceHashMiner.Forms.Components
                 }
                 try
                 {
+                    if (listViewDevices.Items.Count <= 0) return;
                     if (index >= 0)
                     {
                         if (Form_Benchmark.BenchmarkStarted)

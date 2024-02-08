@@ -4,6 +4,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
@@ -115,7 +116,8 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        return ComputeDeviceCPU.CpuReader.GetFan();
+                        int fan = ComputeDeviceCPU.CpuReader.GetFan();
+                        if (fan > 0) return Math.Min(5000 / ComputeDeviceCPU.CpuReader.GetFan() * 10, 100);//emulate
                     }
                     catch (Exception e)
                     {
@@ -170,6 +172,15 @@ namespace NiceHashMiner.Devices
                 }
                 return -1;
             }
+        }
+
+        private static uint GetPower()
+        {
+            ManagementObjectSearcher s = new ManagementObjectSearcher("SELECT * FROM Win32_processor");
+
+            ManagementObject management = s.Get().OfType<ManagementObject>().First();
+
+            return Convert.ToUInt16(management["PowerManagementCapabilities"]);
         }
 
         public CpuComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount, bool monitorconnected = false)

@@ -26,6 +26,7 @@ namespace NiceHashMiner
         public static string NhmNoDevHelp = ("https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev");
         public static string NhmBtcWalletFaqNew = ("https://www.nicehash.com/support");
         public static string NhmSocketAddress = ("wss://nhmws.nicehash.com/v3/nhml");
+        public static string NhmSocketAddressV4 = ("wss://nhmws.nicehash.com/v4/nhm");
         public static string NhmHashpower = ("https://api2.nicehash.com/main/api/v2/hashpower/orderBook?algorithm=");
         public static string NhmSimplemultialgo = ("https://api2.nicehash.com/main/api/v2/public/simplemultialgo/info");
         public static string NhmCurrent = ("https://api2.nicehash.com/main/api/v2/public/stats/global/current");

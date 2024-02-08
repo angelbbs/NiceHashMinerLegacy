@@ -147,12 +147,12 @@ namespace NiceHashMiner.Devices
             if (_NvPhysicalGpuHandle.HasValue) return _NvPhysicalGpuHandle.Value;
             if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
             {
-                Helpers.ConsolePrint("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable ");
+                Helpers.ConsolePrint("GetNvPhysicalGpuHandle", "NvAPI_EnumPhysicalGPUs unavailable ");
                 return null;
             }
             if (NVAPI.NvAPI_GPU_GetBusID == null)
             {
-                Helpers.ConsolePrint("NVAPI", "NvAPI_GPU_GetBusID unavailable");
+                Helpers.ConsolePrint("GetNvPhysicalGpuHandle", "NvAPI_GPU_GetBusID unavailable");
                 return null;
             }
 
@@ -161,7 +161,7 @@ namespace NiceHashMiner.Devices
             var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out _);
             if (status != NvStatus.OK)
             {
-                Helpers.ConsolePrint("NVAPI", $"Enum physical GPUs failed with status: {status}", TimeSpan.FromMinutes(5));
+                Helpers.ConsolePrint("GetNvPhysicalGpuHandle", $"Enum physical GPUs failed with status: {status}", TimeSpan.FromMinutes(5));
             }
             else
             {
@@ -173,11 +173,11 @@ namespace NiceHashMiner.Devices
 
                     if (idStatus != NvStatus.OK)
                     {
-                        Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + idStatus, TimeSpan.FromMinutes(5));
+                        Helpers.ConsolePrint("GetNvPhysicalGpuHandle", "Bus ID get failed with status: " + idStatus, TimeSpan.FromMinutes(5));
                     }
                     else if (id == BusID)
                     {
-                        Helpers.ConsolePrint("NVAPI", "Found handle for busid " + id, TimeSpan.FromMinutes(5));
+                        Helpers.ConsolePrint("GetNvPhysicalGpuHandle", "Found handle for busid " + id, TimeSpan.FromMinutes(5));
                         _NvPhysicalGpuHandle = handle;
                         return handle;
                     }

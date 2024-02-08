@@ -287,6 +287,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void groupBoxSelectedAlgorithmSettings_Resize(object sender, EventArgs e)
         {
+            //Компьютер\HKEY_CURRENT_USER\Control Panel\Desktop\LogPixels
             groupBoxExtraLaunchParameters.Width = groupBoxSelectedAlgorithmSettings.Width - 14;
             richTextBoxExtraLaunchParameters.Width = groupBoxSelectedAlgorithmSettings.Width - 26;
         }

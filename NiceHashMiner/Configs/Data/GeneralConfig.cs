@@ -161,6 +161,7 @@ namespace NiceHashMiner.Configs.Data
         public bool DownloadInit = false;
 
         public bool QM_mode = false;
+        public int NHMWSProtocolVersion = 4;
         public bool EnableAPIkeys = false;
         public bool CheckingCUDA = false;
         public bool RestartDriverOnCUDA_GPU_Lost = true;

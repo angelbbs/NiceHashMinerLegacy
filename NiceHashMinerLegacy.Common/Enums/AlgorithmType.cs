@@ -35,7 +35,7 @@
         Keccak_UNUSED = 5,
         Nist5_UNUSED = 7,
 
-        Scrypt_UNUSED = 0,
+        Empty = 0,
         SHA256_UNUSED = 1,
         ScryptNf_UNUSED = 2,
         X11_UNUSED = 3,

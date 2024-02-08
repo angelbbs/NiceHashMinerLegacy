@@ -227,6 +227,12 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("TRMeth_eth_config", "", "--eth_config", "B1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMprog_micro_tune", "", "--prog_micro_tune", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMeth_smooth_power", "", "--eth_smooth_power", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMclk_core_mh", "", "--clk_core_mhz=", "", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMclk_core_mv", "", "--clk_core_mv=", "", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMclk_mem_mhz", "", "--clk_mem_mhz=", "", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMclk_mem_mv", "", "--clk_mem_mv=", "", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMclk_timing", "", "--clk_timing=", "", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMfan_control", "", "--fan_control=", "", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, ""),
                     new MinerOption("TRMforce_watchdog_disabled", "", "--watchdog_disabled", "", MinerOptionFlagType.Uni, "")
                 },

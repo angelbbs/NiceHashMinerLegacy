@@ -726,6 +726,12 @@ namespace NiceHashMiner.Miners
                     }
                     var devices = resp.devices;
                     string algorithm = resp.algorithm;
+                    string zil_state = "";
+                    zil_state = resp.zil_state;
+                    if (string.IsNullOrEmpty(zil_state))
+                    {
+                        zil_state = "";
+                    }
 
                     double[] hashrates = new double[devices.Count];
                     double[] hashrates2 = new double[devices.Count];
@@ -794,7 +800,8 @@ namespace NiceHashMiner.Miners
                                         hashrateZIL = (double)_hashrateZIL;
                                     }
                                 }
-                                if (hashrateZIL > 0)
+                                //if (hashrateZIL > 0)
+                                if (zil_state.Contains("mining"))
                                 {
                                     isZILround = true;
                                 }
@@ -848,7 +855,7 @@ namespace NiceHashMiner.Miners
                                         hashrateZIL = (double)_hashrateZIL;
                                     }
                                 }
-                                if (hashrateZIL > 0)
+                                if (zil_state.Contains("mining"))
                                 {
                                     isZILround = true;
                                     //Helpers.ConsolePrint("Rigel", "_hashrateZIL: " + hashrateZIL.ToString());

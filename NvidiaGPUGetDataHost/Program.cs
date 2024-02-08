@@ -1,5 +1,6 @@
 ﻿using ManagedCuda.Nvml;
 using NvAPIWrapper.Native;
+using NvAPIWrapper.Native.GPU.Structures;
 using NvidiaGPUGetDataHost.Properties;
 using System;
 using System.Collections.Generic;
@@ -136,7 +137,7 @@ namespace NvidiaGPUGetDataHost
                         }
                         */
                         ret = NvmlNativeMethods.nvmlDeviceGetHandleByIndex((uint)dev, ref _nvmlDevice);
-                        if (ret != nvmlReturn.Success)
+                        if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
                             Logger.ConsolePrint("NvidiaGPUGetDataHost", "nvmlDeviceGetHandleByIndex error: " + ret.ToString());
                             if (!ret.ToString().Contains("NotSupported"))
@@ -147,7 +148,7 @@ namespace NvidiaGPUGetDataHost
                         }
                         Thread.Sleep(50);
                         ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref _power);// <- mem leak 461.40+
-                        if (ret != nvmlReturn.Success)
+                        if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
                             if (!ret.ToString().Contains("NotSupported"))
                             {
@@ -158,7 +159,7 @@ namespace NvidiaGPUGetDataHost
                         }
                         Thread.Sleep(50);
                         ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(_nvmlDevice, ref _fan);
-                        if (ret != nvmlReturn.Success)
+                        if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
                             if (!ret.ToString().Contains("NotSupported"))
                             {
@@ -170,7 +171,7 @@ namespace NvidiaGPUGetDataHost
                         Thread.Sleep(50);
                         var rates = new nvmlUtilization();
                         ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
-                        if (ret != nvmlReturn.Success)
+                        if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
                             if (!ret.ToString().Contains("NotSupported"))
                             {
@@ -183,7 +184,7 @@ namespace NvidiaGPUGetDataHost
                         _loadMem = rates.memory;
                         
                         ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu, ref _temp);
-                        if (ret != nvmlReturn.Success)
+                        if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
                             if (!ret.ToString().Contains("NotSupported"))
                             {
@@ -258,6 +259,16 @@ namespace NvidiaGPUGetDataHost
                                 // ignore
                             }
                             _tempMem = (uint)t1[9];// 2-hotspot, 9-mem
+                            if (_tempMem <= 0)
+                            {
+                                _tempMem = (uint)t1[7];//laptop?
+                            }
+                            /*
+                            for (int i = 0; i< t1.Length;i++)
+                            {
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost", "t1[" + i.ToString() + "]: " + t1[i].ToString());
+                            }
+                            */
                         }
                         Thread.Sleep(50);
 

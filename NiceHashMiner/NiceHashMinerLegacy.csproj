@@ -10,7 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NiceHashMiner</RootNamespace>
     <AssemblyName>NiceHashMinerLegacy</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>9.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -132,16 +133,11 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NiceHashMinerLegacy.Divert">
       <HintPath>..\NiceHashMinerLegacy.Divert\bin\Debug\NiceHashMinerLegacy.Divert.dll</HintPath>
-    </Reference>
-    <Reference Include="NiceHashMinerLegacy.IGCL_Interop">
-      <HintPath>..\Debug\common\NiceHashMinerLegacy.IGCL_Interop.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>True</Private>
     </Reference>
     <Reference Include="NvidiaGPUGetDataHost">
       <HintPath>..\Debug\common\NvidiaGPUGetDataHost.exe</HintPath>
@@ -419,13 +415,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Stats\DeviceState.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\JsonClass.cs" />
+    <Compile Include="Stats\RigStatus.cs" />
+    <Compile Include="Stats\V4\ActionMutableMap.cs" />
+    <Compile Include="Stats\V4\MessageParserV4.cs" />
+    <Compile Include="Stats\V4\MessagesV4.cs" />
     <Compile Include="Stats\NiceHashAPIServer.cs" />
     <Compile Include="Stats\NiceHashServer.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Stats\V4\Nhmws4JSONConverter.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Models.cs" />
@@ -767,6 +769,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del Newtonsoft.Json.xml /Q
+del Newtonsoft.Json.dll /Q
 del miners.zip /Q
 del miners(1).zip /Q
 del miners(2).zip /Q
@@ -799,6 +802,9 @@ del *.exp /Q
     <Error Condition="!Exists('..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets'))" />
   </Target>
   <Import Project="..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.5.7.0\build\Costura.Fody.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>taskkill /F /IM NvidiaGPUGetDataHost.exe || exit /B 0</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

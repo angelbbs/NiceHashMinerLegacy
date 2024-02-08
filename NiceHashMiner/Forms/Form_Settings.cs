@@ -289,7 +289,6 @@ namespace NiceHashMiner.Forms
             checkBoxCheckingCUDA.Text = International.GetText("Form_Settings_checkBox_CheckingCUDA");
             checkBoxRestartDriver.Text = International.GetText("Form_Settings_checkBox_RestartDriver");
             checkBoxRestartWindows.Text = International.GetText("Form_Settings_checkBox_RestartWindows");
-            checkBox_QM_mode.Text = International.GetText("Form_Settings_checkBox_QM_mode");
             checkBox_EnableAPI.Text = International.GetText("Form_Settings_checkBox_EnableAPI");
             if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
             {
@@ -1044,6 +1043,13 @@ namespace NiceHashMiner.Forms
             {
                 //checkBox_Zil_GMiner.Enabled = false;
             }
+            if (ConfigManager.GeneralConfig.EnableAPI)
+            {
+                buttonSetupAPI.Enabled = true;
+            } else
+            {
+                buttonSetupAPI.Enabled = false;
+            }
         }
 
         private void InitializeGeneralTabCallbacks()
@@ -1073,7 +1079,6 @@ namespace NiceHashMiner.Forms
                 checkBoxRestartDriver.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxDriverWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBoxRestartWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_QM_mode.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_EnableAPI.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1229,7 +1234,6 @@ namespace NiceHashMiner.Forms
                 checkBoxRestartDriver.Checked = ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost;
                 checkBoxDriverWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
                 checkBoxRestartWindows.Checked = ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost;
-                checkBox_QM_mode.Checked = ConfigManager.GeneralConfig.QM_mode;
                 checkBox_EnableAPI.Checked = ConfigManager.GeneralConfig.EnableAPIkeys;
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
@@ -1583,7 +1587,6 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.CheckingCUDA = checkBoxCheckingCUDA.Checked;
             ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBoxDriverWarning.Checked;
             ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost = checkBoxRestartWindows.Checked;
-            ConfigManager.GeneralConfig.QM_mode = checkBox_QM_mode.Checked;
             ConfigManager.GeneralConfig.EnableAPIkeys = checkBox_EnableAPI.Checked;
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
@@ -1605,6 +1608,17 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.Show_ShowDeviceMemSize = checkBox_ShowDeviceMemSize.Checked;
             //ConfigManager.GeneralConfig.Show_ShowDeviceBusId = checkBox_ShowDeviceBusId.Checked;
             ConfigManager.GeneralConfig.Use_OpenHardwareMonitor = checkbox_Use_OpenHardwareMonitor.Checked;
+            if (checkbox_Use_OpenHardwareMonitor.Checked)
+            {
+                if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+                {
+                    Form_Main.thisComputer = new LibreHardwareMonitor.Hardware.Computer();
+                    Form_Main.thisComputer.IsGpuEnabled = true;
+                    Form_Main.thisComputer.IsCpuEnabled = true;
+                    Form_Main.thisComputer.Open();
+                }
+            }
+
             ConfigManager.GeneralConfig.Save_windows_size_and_position = Checkbox_Save_windows_size_and_position.Checked;
             ConfigManager.GeneralConfig.ColumnSort = checkBox_sorting_list_of_algorithms.Checked;
             ConfigManager.GeneralConfig.DisableTooltips = checkBox_DisableTooltips.Checked;
@@ -2760,7 +2774,7 @@ namespace NiceHashMiner.Forms
 
         private void checkBox_EnableAPI_CheckedChanged(object sender, EventArgs e)
         {
-            if (ConfigManager.GeneralConfig.EnableAPIkeys)
+            if (checkBox_EnableAPI.Checked)
             {
                 if (!Form_API_keys.GetSavedAPIkeyData())
                 {
@@ -2770,10 +2784,18 @@ namespace NiceHashMiner.Forms
                     //Form_Main.checkBox_EnableAPI = false;
                 } else
                 {
-                    Form_Main.checkBox_EnableAPI = true;
+                    if (!NiceHashStats.GetRigProfitInternalRUN(true))
+                    {
+                        MessageBox.Show(Form_Main.errorAPIkeystring,
+                        International.GetText("Warning_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Form_Main.checkBox_EnableAPI = true;
+                    }
                 }
+                buttonSetupAPI.Enabled = true;
             } else
             {
+                Form_Main.NicehashAPIerrorDescription = "";
+
                 if (Form_API_keys.GetSavedAPIkeyData())
                 {
                     MessageBox.Show(International.GetText("Form_Settings_chart_disabled"),
@@ -2782,6 +2804,7 @@ namespace NiceHashMiner.Forms
                     Form_Main.checkBox_EnableAPI = false;
                     Form_Main.Form_RigProfitChartRunning = false;
                 }
+                buttonSetupAPI.Enabled = false;
             }
         }
 

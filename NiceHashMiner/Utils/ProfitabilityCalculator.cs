@@ -16,7 +16,7 @@ namespace NiceHashMiner
         {
             { AlgorithmType.INVALID , 1 },
             { AlgorithmType.NONE , 1 },
-            { AlgorithmType.Scrypt_UNUSED,                  MHs }, // NOT used
+            { AlgorithmType.Empty,                  MHs }, // NOT used
             { AlgorithmType.SHA256_UNUSED ,                 THs }, // NOT used
             { AlgorithmType.ScryptNf_UNUSED ,               MHs }, // NOT used
             { AlgorithmType.X11_UNUSED ,                    MHs }, // NOT used

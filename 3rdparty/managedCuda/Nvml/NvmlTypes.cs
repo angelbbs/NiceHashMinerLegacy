@@ -645,6 +645,16 @@ namespace ManagedCuda.Nvml
         /// An operation cannot be performed because the GPU is currently in use
         /// </summary>
         InUse = 19,
+
+        NVML_ERROR_MEMORY = 20,//Insufficient memory.
+        NVML_ERROR_NO_DATA = 21,//No data.
+        NVML_ERROR_VGPU_ECC_NOT_SUPPORTED = 22,//The requested vgpu operation is not available on target device, becasue ECC is enabled.
+        NVML_ERROR_INSUFFICIENT_RESOURCES = 23,//Ran out of critical resources, other than memory.
+        NVML_ERROR_FREQ_NOT_SUPPORTED = 24,//Ran out of critical resources, other than memory.
+        NVML_ERROR_ARGUMENT_VERSION_MISMATCH = 25,//The provided version is invalid/unsupported.
+        NVML_ERROR_DEPRECATED = 26,//The requested functionality has been deprecated.
+        NVML_ERROR_NOT_READY = 27,//The system is not ready for the request.
+
         /// <summary>
         /// An internal driver error occurred
         /// </summary>

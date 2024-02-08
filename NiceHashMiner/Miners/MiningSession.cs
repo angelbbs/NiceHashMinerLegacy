@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner.Miners

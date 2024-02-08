@@ -1238,7 +1238,7 @@ namespace NiceHashMiner.Miners
                         if (miner.MinerVersion == null) continue;
                         if (miner.MinerVersion.Length > 0)
                         {
-                            return " " + miner.MinerVersion;
+                            return " " + miner.MinerVersion.TrimEnd(' ');
                         }
                         else
                         {
@@ -1249,6 +1249,7 @@ namespace NiceHashMiner.Miners
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("GetMinerVersion", "ERROR. Miners files not available?");
+                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
                 return "";
             }
             return "";

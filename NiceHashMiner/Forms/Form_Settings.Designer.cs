@@ -55,7 +55,6 @@ namespace NiceHashMiner.Forms
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
             this.checkBoxShowMinersVersions = new System.Windows.Forms.CheckBox();
-            this.checkBox_QM_mode = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableTooltips = new System.Windows.Forms.CheckBox();
             this.labelRestartProgram = new System.Windows.Forms.Label();
             this.comboBoxRestartProgram = new System.Windows.Forms.ComboBox();
@@ -608,7 +607,6 @@ namespace NiceHashMiner.Forms
             // groupBox_Misc
             // 
             this.groupBox_Misc.Controls.Add(this.checkBoxShowMinersVersions);
-            this.groupBox_Misc.Controls.Add(this.checkBox_QM_mode);
             this.groupBox_Misc.Controls.Add(this.checkBox_DisableTooltips);
             this.groupBox_Misc.Controls.Add(this.labelRestartProgram);
             this.groupBox_Misc.Controls.Add(this.comboBoxRestartProgram);
@@ -633,7 +631,7 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Misc.Size = new System.Drawing.Size(288, 479);
+            this.groupBox_Misc.Size = new System.Drawing.Size(288, 446);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
@@ -651,22 +649,11 @@ namespace NiceHashMiner.Forms
             this.checkBoxShowMinersVersions.UseVisualStyleBackColor = true;
             this.checkBoxShowMinersVersions.CheckedChanged += new System.EventHandler(this.checkBoxShowMinersVersions_CheckedChanged);
             // 
-            // checkBox_QM_mode
-            // 
-            this.checkBox_QM_mode.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_QM_mode.Location = new System.Drawing.Point(7, 275);
-            this.checkBox_QM_mode.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_QM_mode.Name = "checkBox_QM_mode";
-            this.checkBox_QM_mode.Size = new System.Drawing.Size(277, 18);
-            this.checkBox_QM_mode.TabIndex = 387;
-            this.checkBox_QM_mode.Text = "Rig Manager QM mode (partially)";
-            this.checkBox_QM_mode.UseVisualStyleBackColor = true;
-            // 
             // checkBox_DisableTooltips
             // 
             this.checkBox_DisableTooltips.AutoSize = true;
             this.checkBox_DisableTooltips.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_DisableTooltips.Location = new System.Drawing.Point(7, 398);
+            this.checkBox_DisableTooltips.Location = new System.Drawing.Point(7, 367);
             this.checkBox_DisableTooltips.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_DisableTooltips.Name = "checkBox_DisableTooltips";
             this.checkBox_DisableTooltips.Size = new System.Drawing.Size(97, 17);
@@ -677,7 +664,7 @@ namespace NiceHashMiner.Forms
             // labelRestartProgram
             // 
             this.labelRestartProgram.AutoSize = true;
-            this.labelRestartProgram.Location = new System.Drawing.Point(4, 427);
+            this.labelRestartProgram.Location = new System.Drawing.Point(4, 396);
             this.labelRestartProgram.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRestartProgram.Name = "labelRestartProgram";
             this.labelRestartProgram.Size = new System.Drawing.Size(82, 13);
@@ -688,7 +675,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBoxRestartProgram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRestartProgram.FormattingEnabled = true;
-            this.comboBoxRestartProgram.Location = new System.Drawing.Point(157, 424);
+            this.comboBoxRestartProgram.Location = new System.Drawing.Point(157, 393);
             this.comboBoxRestartProgram.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBoxRestartProgram.Name = "comboBoxRestartProgram";
             this.comboBoxRestartProgram.Size = new System.Drawing.Size(117, 21);
@@ -699,7 +686,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_program_monitoring.AutoSize = true;
             this.checkBox_program_monitoring.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_program_monitoring.Location = new System.Drawing.Point(7, 375);
+            this.checkBox_program_monitoring.Location = new System.Drawing.Point(7, 344);
             this.checkBox_program_monitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_program_monitoring.Name = "checkBox_program_monitoring";
             this.checkBox_program_monitoring.Size = new System.Drawing.Size(116, 17);
@@ -724,7 +711,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_sorting_list_of_algorithms.AutoSize = true;
             this.checkBox_sorting_list_of_algorithms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_sorting_list_of_algorithms.Location = new System.Drawing.Point(7, 351);
+            this.checkBox_sorting_list_of_algorithms.Location = new System.Drawing.Point(7, 320);
             this.checkBox_sorting_list_of_algorithms.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_sorting_list_of_algorithms.Name = "checkBox_sorting_list_of_algorithms";
             this.checkBox_sorting_list_of_algorithms.Size = new System.Drawing.Size(136, 17);
@@ -736,7 +723,7 @@ namespace NiceHashMiner.Forms
             // 
             this.Checkbox_Save_windows_size_and_position.AutoSize = true;
             this.Checkbox_Save_windows_size_and_position.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(7, 328);
+            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(7, 297);
             this.Checkbox_Save_windows_size_and_position.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Checkbox_Save_windows_size_and_position.Name = "Checkbox_Save_windows_size_and_position";
             this.Checkbox_Save_windows_size_and_position.Size = new System.Drawing.Size(176, 17);
@@ -747,7 +734,7 @@ namespace NiceHashMiner.Forms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 305);
+            this.label1.Location = new System.Drawing.Point(7, 274);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 13);
@@ -779,7 +766,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBox_ColorProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_ColorProfile.FormattingEnabled = true;
-            this.comboBox_ColorProfile.Location = new System.Drawing.Point(172, 301);
+            this.comboBox_ColorProfile.Location = new System.Drawing.Point(172, 270);
             this.comboBox_ColorProfile.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_ColorProfile.Name = "comboBox_ColorProfile";
             this.comboBox_ColorProfile.Size = new System.Drawing.Size(102, 21);
@@ -2293,8 +2280,6 @@ namespace NiceHashMiner.Forms
             // 
             // checkBoxHideUnused2
             // 
-            this.checkBoxHideUnused2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxHideUnused2.AutoSize = true;
             this.checkBoxHideUnused2.ForeColor = System.Drawing.SystemColors.ControlText;
             this.checkBoxHideUnused2.Location = new System.Drawing.Point(371, 162);
@@ -2308,8 +2293,6 @@ namespace NiceHashMiner.Forms
             // 
             // checkBox_ABDefault_program_closing
             // 
-            this.checkBox_ABDefault_program_closing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_ABDefault_program_closing.AutoSize = true;
             this.checkBox_ABDefault_program_closing.ForeColor = System.Drawing.SystemColors.ControlText;
             this.checkBox_ABDefault_program_closing.Location = new System.Drawing.Point(371, 85);
@@ -2322,8 +2305,6 @@ namespace NiceHashMiner.Forms
             // 
             // checkBox_ABDefault_mining_stopped
             // 
-            this.checkBox_ABDefault_mining_stopped.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_ABDefault_mining_stopped.AutoSize = true;
             this.checkBox_ABDefault_mining_stopped.ForeColor = System.Drawing.SystemColors.ControlText;
             this.checkBox_ABDefault_mining_stopped.Location = new System.Drawing.Point(371, 62);
@@ -2348,8 +2329,6 @@ namespace NiceHashMiner.Forms
             // 
             // checkBox_ABMinimize
             // 
-            this.checkBox_ABMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_ABMinimize.AutoSize = true;
             this.checkBox_ABMinimize.ForeColor = System.Drawing.SystemColors.ControlText;
             this.checkBox_ABMinimize.Location = new System.Drawing.Point(371, 39);
@@ -2362,8 +2341,6 @@ namespace NiceHashMiner.Forms
             // 
             // checkBox_ABEnableOverclock
             // 
-            this.checkBox_ABEnableOverclock.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox_ABEnableOverclock.AutoSize = true;
             this.checkBox_ABEnableOverclock.ForeColor = System.Drawing.SystemColors.ControlText;
             this.checkBox_ABEnableOverclock.Location = new System.Drawing.Point(371, 16);
@@ -2853,7 +2830,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBox_ABDefault_mining_stopped;
         private System.Windows.Forms.CheckBox checkBox_DisableTooltips;
         private System.Windows.Forms.CheckBox checkBox_orderPrice;
-        private System.Windows.Forms.CheckBox checkBox_QM_mode;
         private System.Windows.Forms.GroupBox groupBoxAPIkeys;
         private System.Windows.Forms.Button buttonSetupAPI;
         public System.Windows.Forms.CheckBox checkBox_EnableAPI;

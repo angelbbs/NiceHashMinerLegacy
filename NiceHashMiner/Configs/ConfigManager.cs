@@ -129,7 +129,8 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.ProgramMonitoring != _generalConfigBackup.ProgramMonitoring
                    || GeneralConfig.EnableProxy != _generalConfigBackup.EnableProxy
                    || GeneralConfig.QM_mode != _generalConfigBackup.QM_mode
-                   
+                   || GeneralConfig.Show_ShowDeviceMemSize != _generalConfigBackup.Show_ShowDeviceMemSize
+
                    || GeneralConfig.Send_actual_version_info != _generalConfigBackup.Send_actual_version_info
                    || GeneralConfig.Use_OpenHardwareMonitor != _generalConfigBackup.Use_OpenHardwareMonitor
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting

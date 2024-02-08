@@ -16,11 +16,6 @@ namespace NiceHashMiner.Devices
         private readonly int _adapterIndex;
         private readonly long _adapterHandle;
 
-        private int FanSpeedInternal()
-        {
-            return -1;
-        }
-
         public override int FanSpeed //percent
         {
             get
@@ -151,13 +146,13 @@ namespace NiceHashMiner.Devices
             if (IntelDevicesList == null) return;
             foreach (IntelDev dev in IntelDevicesList)
             {
-                dev.FanSpeed = Devices.Querying.IntelQuery.GetFan(dev.DeviceHandle, true);
-                dev.FanSpeedRPM = Devices.Querying.IntelQuery.GetFan(dev.DeviceHandle, false);
-                dev.Load = Devices.Querying.IntelQuery.GetLoad(dev.DeviceHandle);
-                dev.MemLoad = Devices.Querying.IntelQuery.GetLoad(dev.DeviceHandle);
-                dev.PowerUsage = Devices.Querying.IntelQuery.GetPower(dev.DeviceHandle);
-                dev.Temp = (float)Devices.Querying.IntelQuery.GetTemperature(dev.DeviceHandle, false);
-                dev.TempMemory = (float)Devices.Querying.IntelQuery.GetTemperature(dev.DeviceHandle, true);
+                dev.FanSpeed = Querying.IntelQuery.GetFan(dev.DeviceHandle, true);
+                dev.FanSpeedRPM = Querying.IntelQuery.GetFan(dev.DeviceHandle, false);
+                dev.Load = Querying.IntelQuery.GetLoad(dev.DeviceHandle);
+                dev.MemLoad = Querying.IntelQuery.GetLoad(dev.DeviceHandle);
+                dev.PowerUsage = Querying.IntelQuery.GetPower(dev.DeviceHandle);
+                dev.Temp = (float)Querying.IntelQuery.GetTemperature(dev.DeviceHandle, false);
+                dev.TempMemory = (float)Querying.IntelQuery.GetTemperature(dev.DeviceHandle, true);
             }
         }
 

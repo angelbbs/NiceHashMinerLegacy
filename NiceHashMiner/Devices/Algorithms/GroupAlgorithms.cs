@@ -302,7 +302,67 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
+            if (algoSettings.ContainsKey(MinerBaseType.CryptoDredge)) //not supported
+            {
+                foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
+                {
+                    if (algo.NiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 40")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
 
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner)) //not supported
+            {
+                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.BeamV3 && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 40")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner)) //not supported
+            {
+                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 40")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner)) //not supported
+            {
+                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.Octopus && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 40")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner)) //not supported
+            {
+                foreach (var algo in algoSettings[MinerBaseType.NBMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.Autolykos && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 40")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
 
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {

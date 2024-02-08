@@ -3,6 +3,8 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Stats.V4;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.UUID;
 using System;
@@ -24,15 +26,15 @@ namespace NiceHashMiner.Devices
         public int Index { get; protected set; } // For socket control, unique
 
         // to identify equality;
-        public string Name; // { get; set; }
+        public string Name; 
+        public string NameCustom; 
 
-        // name count is the short name for displaying in moning groups
         public string NameCount;
         public bool Enabled;
 
         public DeviceGroupType DeviceGroupType;
 
-        // CPU, NVIDIA, AMD
+        // CPU, NVIDIA, AMD, Intel
         public DeviceType DeviceType;
 
         // UUID now used for saving
@@ -56,14 +58,7 @@ namespace NiceHashMiner.Devices
         public bool IsEtherumCapale;
         public bool MonitorConnected;
         public bool NvidiaLHR;
-        /*
-        public static readonly ulong Memory3Gb = 3221225472;
-        public static readonly ulong Memory4Gb = 4293918720;
-        public static double HashRate = 0.0d;
-        public static int BenchmarkProgress = 0;
-        */
-        // sgminer extra quickfix
-        //public readonly bool IsOptimizedVersion;
+
         public string Codename { get; protected set; }
         public string Manufacturer = "UNK";
         public string BenchmarkProgressString = "";
@@ -94,6 +89,63 @@ namespace NiceHashMiner.Devices
         public virtual int FanSpeed => -1;
         public virtual int FanSpeedRPM => -1;
         public virtual double PowerUsage => -1;
+
+        public DeviceState State = DeviceState.Pending;
+
+        public bool IsDisabled = false;
+
+        public int ApplyNewAlgoStates(MinerAlgoState state)
+        {
+            if (State == DeviceState.Mining || State == DeviceState.Benchmarking) return -1;
+            foreach (var miner in state.Miners)
+            {
+                foreach (var algo in miner.Algos)
+                {
+                    var targets = AlgorithmSettings.Where(a => a.AlgorithmName == algo.Id && a.MinerBaseTypeName == miner.Id)?.ToList();
+                    if (targets == null) continue;
+                    if (!miner.Enabled)
+                    {
+                        //targets.ForEach(t => t.SetEnabled((bool)false));
+                        continue;
+                    }
+                    //targets.ForEach(t => t.SetEnabled((bool)algo.Enabled));
+                }
+                var enabledAlgos = miner.Algos.Where(a => (bool)a.Enabled);
+                var disabledAlgos = miner.Algos.Where(a => (bool)!a.Enabled);
+                /*
+                if (enabledAlgos != null && enabledAlgos.Count() > 0 && miner.Enabled)
+                {
+                    EventManager.Instance.AddEventAlgoEnabled(DevUuid, miner.Id, enabledAlgos.Select(a => a.Id).ToList(), true);
+                }
+                if (disabledAlgos != null && disabledAlgos.Count() > 0)
+                {
+                    EventManager.Instance.AddEventAlgoDisabled(DevUuid, miner.Id, disabledAlgos.Select(a => a.Id).ToList(), true);
+                }
+                else if (!miner.Enabled)
+                {
+                    EventManager.Instance.AddEventAlgoDisabled(DevUuid, miner.Id, miner.Algos.Select(a => a.Id).ToList(), true);
+                }
+                */
+            }
+            //Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
+            return 0;
+        }
+        public int ApplyNewAlgoSpeeds(MinerAlgoSpeed speed)
+        {
+            foreach (var miner in speed.Miners)
+            {
+                foreach (var algo in miner.Combinations)
+                {
+                    var targets = AlgorithmSettings.Where(a => a.AlgorithmName == algo.Id && a.MinerBaseTypeName == miner.Id)?.ToList();
+                    if (targets == null) continue;
+                    targets.ForEach(t => t.BenchmarkSpeed = Convert.ToDouble(algo.Algos.FirstOrDefault().Speed));
+                }
+            }
+            //Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
+            return 0;
+        }
+
+
         //********************************************************************************************************************
         private const string Tag = "CPUDetector";
         internal class CPUDetectionResult
@@ -114,6 +166,7 @@ namespace NiceHashMiner.Devices
             public int NumberOfCores;
         }
 
+        
         public class BaseDevice
         {
             public BaseDevice(BaseDevice bd)
@@ -131,12 +184,12 @@ namespace NiceHashMiner.Devices
                 Name = name;
                 ID = id;
             }
-            public string Name { get; }
-            public DeviceType DeviceType { get; }
-            public string UUID { get; }
+            public string Name { get; set; }
+            public DeviceType DeviceType { get; set; }
+            public string UUID { get; set; }
 
             // TODO the ID will correspond to CPU Index, CUDA ID and AMD/OpenCL ID
-            public int ID { get; }
+            public int ID { get; set; }
         }
 
         public class CPUDevice : BaseDevice
@@ -756,6 +809,9 @@ namespace NiceHashMiner.Devices
                     break;
                 case "103C":
                     man = "HP";
+                    break;
+                case "106B":
+                    man = "Apple";
                     break;
                 case "1565":
                     man = "Biostar";

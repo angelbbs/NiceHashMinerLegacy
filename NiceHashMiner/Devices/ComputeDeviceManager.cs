@@ -6,6 +6,7 @@ using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.UUID;
 using NVIDIA.NVAPI;
 using System;
 using System.Collections.Generic;
@@ -454,8 +455,11 @@ namespace NiceHashMiner.Devices
                         }
                         else if (vidCtrl.Name.ToLower().Contains("intel"))
                         {
+                            /*
+                            intelCount += (vidCtrl.Name.ToLower().Contains("arc") ||
+                                vidCtrl.Name.ToLower().Contains("iris")) ? 1 : 0;
+                            */
                             intelCount += (vidCtrl.Name.ToLower().Contains("arc")) ? 1 : 0;
-                            intelCount += (vidCtrl.Name.ToLower().Contains("iris")) ? 1 : 0;
                         }
 
                     }
@@ -578,6 +582,158 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint(Tag, "virtual memory size GOOD");
                 }
 
+                string type ="";
+                string b64Web = "";
+                foreach (var dev in Available.Devices)
+                {
+                    if (dev.DeviceType == DeviceType.CPU)
+                    {
+                        type = "1";
+                        b64Web = UUID.GetB64UUID(dev.NewUuid);
+                    }
+                    if (dev.DeviceType == DeviceType.NVIDIA)
+                    {
+                        type = "2";
+                        b64Web = UUID.GetB64UUID(dev.Uuid);
+                    }
+                    if (dev.DeviceType == DeviceType.AMD)
+                    {
+                        type = "3";
+                        b64Web = UUID.GetB64UUID(dev.Uuid);
+                    }
+                    if (dev.DeviceType == DeviceType.INTEL)
+                    {
+                        type = "4";
+                        b64Web = UUID.GetB64UUID(dev.Uuid);
+                    }
+                    dev.DevUuid = $"{type}-{b64Web}";
+                }
+
+                foreach (var device in Available.Devices)
+                {
+                    var deviceName = device.Name.Trim(' ');
+
+                    string NvidiaLHR = "";
+                    if (device.NvidiaLHR && device.DeviceType == DeviceType.NVIDIA && ConfigManager.GeneralConfig.Show_NVIDIA_LHR)
+                    {
+                        //NvidiaLHR = " (LHR)";
+                    }
+
+                    deviceName = deviceName + NvidiaLHR;
+
+                    string Manufacturer = "";
+                    string GpuRam = "";
+
+                    if (device.DeviceType == DeviceType.NVIDIA)
+                    {
+                        if (ConfigManager.GeneralConfig.Show_NVdevice_manufacturer)
+                        {
+                            deviceName = deviceName.Replace("NVIDIA", "");
+                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            {
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer).Trim(' ');
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer), "").Trim(' ');
+                            if (!deviceName.Contains("NVIDIA")) deviceName = "NVIDIA " + deviceName;
+                        }
+                    }
+
+                    GpuRam = (device.GpuRam / 1073741824).ToString().Trim(' ') + "GB";
+                    if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
+                    {
+                        if (deviceName.Contains(GpuRam))
+                        {
+                            GpuRam = "";
+                        }
+                        else
+                        {
+                            deviceName = deviceName + " " + GpuRam;
+                        }
+                    }
+                    else
+                    {
+                        deviceName = deviceName.Replace(GpuRam, "");
+                        GpuRam = "";
+                    }
+
+
+                    if (device.DeviceType == DeviceType.AMD)
+                    {
+                        if (ConfigManager.GeneralConfig.Show_AMDdevice_manufacturer)
+                        {
+                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            {
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer).Trim(' ');
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer), "").Trim(' ');
+                        }
+
+                        GpuRam = (device.GpuRam / 1073741824).ToString().Trim(' ') + "GB";
+                        if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
+                        {
+                            if (deviceName.Contains(GpuRam))
+                            {
+                                GpuRam = "";
+                            }
+                            else
+                            {
+                                deviceName = deviceName + " " + GpuRam;
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(GpuRam, "");
+                            GpuRam = "";
+                        }
+                    }
+
+                    if (device.DeviceType == DeviceType.INTEL)
+                    {
+                        if (ConfigManager.GeneralConfig.Show_INTELdevice_manufacturer)
+                        {
+                            if (!deviceName.Contains(ComputeDevice.GetManufacturer(device.Manufacturer)))
+                            {
+                                deviceName = deviceName.Replace("Intel ", "");
+                                Manufacturer = ComputeDevice.GetManufacturer(device.Manufacturer).Trim(' ');
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(ComputeDevice.GetManufacturer(device.Manufacturer), "").Trim(' ');
+                        }
+
+                        GpuRam = (device.GpuRam / 1073741824).ToString().Trim(' ') + "GB";
+                        if (ConfigManager.GeneralConfig.Show_ShowDeviceMemSize && device.DeviceType != DeviceType.CPU)
+                        {
+                            if (deviceName.Contains(GpuRam))
+                            {
+                                GpuRam = "";
+                            }
+                            else
+                            {
+                                deviceName = deviceName + " " + GpuRam;
+                            }
+                        }
+                        else
+                        {
+                            deviceName = deviceName.Replace(GpuRam, "");
+                            GpuRam = "";
+                        }
+                    }
+
+                    if (device.MonitorConnected && ConfigManager.GeneralConfig.Show_displayConected)
+                    {
+                        Manufacturer = "> " + Manufacturer;
+                    }
+                    device.NameCustom = Manufacturer.Trim(' ') + " " + deviceName.Trim(' ');
+                }
+
                 // #x remove reference
                 MessageNotifier = null;
             }
@@ -629,6 +785,9 @@ namespace NiceHashMiner.Devices
                             break;
                         case "103C":
                             man = "HP";
+                            break;
+                        case "106B":
+                            man = "Apple";
                             break;
                         case "17AA":
                             man = "Lenovo";
@@ -852,7 +1011,7 @@ break;
                             }
                             if (vidController.Name.ToLower().Contains("intel") && vidController.Name.ToLower().Contains("iris"))
                             {
-                                intelArc = true;
+                                intelHD = true;
                             }
                             if (vidController.Name.ToLower().Contains("intel") && vidController.Name.ToLower().Contains("hd"))
                             {
@@ -940,8 +1099,8 @@ break;
                         Helpers.ConsolePrint(Tag, stringBuilder.ToString());
                         if (intelArc && intelHD)
                         {
-                            Helpers.ConsolePrint("PANIC!", "Intel Arc or Iris & Intel HD detected! Switch off the Intel HD Graphics");
-                            MessageBox.Show("Intel Arc or Iris & Intel HD detected. Switch off the Intel HD Graphics", "PANIC");
+                            Helpers.ConsolePrint("PANIC!", "Intel Arc GPU & Intel integrated graphics detected! Switch off the Intel integrated graphics");
+                            MessageBox.Show("Intel Arc GPU & Intel integrated graphics detected. Switch off the Intel integrated graphics", "PANIC");
                             //after this reinstal amd & intel arc drivers needed
                         }
                     }
@@ -959,8 +1118,12 @@ break;
                 }
                 public static bool HasIntelVideoController()
                 {
-                    return AvaliableVideoControllers.Any(vctrl => (vctrl.Name.ToLower().Contains("intel") &&
-                    (vctrl.Name.ToLower().Contains("arc") || vctrl.Name.ToLower().Contains("iris"))));
+                    /*
+                    return AvaliableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("intel") &&
+                    (vctrl.Name.ToLower().Contains("arc") || vctrl.Name.ToLower().Contains("iris")));
+                    */
+                    return AvaliableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("intel") &&
+                    (vctrl.Name.ToLower().Contains("arc")));
                 }
                 public static bool HasAMDVideoController()
                 {
@@ -1080,14 +1243,14 @@ break;
                             var handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
                             if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
                             {
-                                Helpers.ConsolePrint("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
+                                Helpers.ConsolePrint("QueryCudaDevices", "NvAPI_EnumPhysicalGPUs unavailable");
                             }
                             else
                             {
                                 var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out var _);
                                 if (status != NvStatus.OK)
                                 {
-                                    Helpers.ConsolePrint("NVAPI", "Enum physical GPUs failed with status: " + status);
+                                    Helpers.ConsolePrint("QueryCudaDevices", "Enum physical GPUs failed with status: " + status);
                                     Form_Main.NvAPIerror = true;
                                 }
                                 else
@@ -1099,12 +1262,12 @@ break;
                                         {
                                             if (idStatus != NvStatus.OK)
                                             {
-                                                Helpers.ConsolePrint("NVAPI",
+                                                Helpers.ConsolePrint("QueryCudaDevices",
                                                     "Bus ID get failed with status: " + idStatus);
                                             }
                                             else
                                             {
-                                                Helpers.ConsolePrint("NVAPI", "Found handle for busid " + id);
+                                                Helpers.ConsolePrint("QueryCudaDevices", "Found handle for busid " + id);
                                                 idHandles[id] = handle;
                                             }
                                         }
@@ -1122,7 +1285,7 @@ break;
 
                                 if (ret == nvmlReturn.Uninitialized)
                                 {
-                                    Helpers.ConsolePrint("NVML", "Uninitialized twice!");
+                                    Helpers.ConsolePrint("QueryCudaDevices", "Uninitialized twice!");
                                     MessageBox.Show("Invalid NVIDIA driver installation!\r Update or reinstall drivers",
                                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     return;

@@ -19,12 +19,12 @@ namespace NiceHashMiner.Forms.Components
             }
             else
             {
-                toolTip2.SetToolTip(button_restart, "Restar miner");
+                toolTip2.SetToolTip(button_restart, "Restart miner");
             }
             richTextBoxSpeedValue.SelectionColor = Form_Main._foreColor;
             groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
             groupBoxMinerGroup.BackColor = Form_Main._backColor;
-
+            groupBoxMinerGroup.DoubleBuffer();
         }
 
 

@@ -94,7 +94,7 @@ namespace NiceHashMiner
         private int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
         private int groupBox1Top = 0;
-        private bool firstRun = false;
+        public static bool firstRun = false;
         public static Color _backColor;
         public static Color _foreColor;
         public static Color _windowColor;
@@ -183,7 +183,9 @@ namespace NiceHashMiner
         public static int ZilCount = -1;
         public static bool needGMinerRestart = false;
         public static string NicehashAPIerrorDescription = "";
+        public static string oldNicehashAPIerrorDescription = "";
         public static int ZIL_mining_state = 0;
+        public static int NHMWSProtocolVersion = 0;
 
         public MemoryMappedFile MonitorSharedMemory = MemoryMappedFile.CreateOrOpen("MinerLegacyForkFixMonitor", 100);
 
@@ -597,10 +599,41 @@ namespace NiceHashMiner
             _loadingScreen = null;
             Enabled = true;
 
+            buttonBenchmark.Enabled = true;
+            buttonChart.Enabled = true;
+            buttonSettings.Enabled = true;
+            buttonStartMining.Enabled = true;
+            buttonStopMining.Enabled = true;
+
+            if (ConfigManager.GeneralConfig.AutoStartMining)
+            {
+                _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
+                _autostartTimerDelay = new Timer();
+                _autostartTimerDelay.Tick += AutoStartTimerDelay_Tick;
+                _autostartTimerDelay.Interval = 1000;
+                _autostartTimerDelay.Start();
+
+                Thread.Sleep(200);//костыль для очередности запуска таймеров
+
+                _autostartTimer = new Timer();
+                _autostartTimer.Tick += AutoStartTimer_Tick;
+                _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
+                _autostartTimer.Start();
+
+                Thread.Sleep(200);
+            }
+
             _idleCheck = new Timer();
             _idleCheck.Tick += IdleCheck_Tick;
             _idleCheck.Interval = 500;
             _idleCheck.Start();
+
+            Thread.Sleep(200);
+
+            _minerStatsCheck = new Timer();
+            _minerStatsCheck.Tick += MinerStatsCheck_Tick;
+            _minerStatsCheck.Interval = 1000;
+
             devicesListViewEnableControl1.Visible = true;
             if (ConfigManager.GeneralConfig.StartChartWithProgram == true)
             {
@@ -1249,7 +1282,7 @@ namespace NiceHashMiner
             }
             else
             {
-                buttonStopMining.Text = buttonStopMining.Text + "...";
+                buttonStopMining.Text = buttonStopMining.Text + " ...";
             }
 
 
@@ -1291,6 +1324,16 @@ namespace NiceHashMiner
             ZoneSchedule2 = ConfigManager.GeneralConfig.ZoneSchedule2;
             ZoneSchedule3 = ConfigManager.GeneralConfig.ZoneSchedule3;
 
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                Helpers.ConsolePrint("LibreHardwareMonitor", "Init library start...");
+                thisComputer = new LibreHardwareMonitor.Hardware.Computer();
+                thisComputer.IsGpuEnabled = true;
+                thisComputer.IsCpuEnabled = true;
+                thisComputer.Open();
+                Helpers.ConsolePrint("LibreHardwareMonitor", "Init library end");
+            }
+
             // Query Available ComputeDevices
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_CPU"));
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//10-15
@@ -1300,6 +1343,8 @@ namespace NiceHashMiner
             _deviceTelemetryTimer.Interval = 1000;
             _deviceTelemetryTimer.Start();
 
+            Application.DoEvents();
+
             _isDeviceDetectionInitialized = true;
 
             _loadingScreen.SetValueAndMsg(15, International.GetText("Form_Main_loadtext_LoadProxyList"));
@@ -1308,6 +1353,7 @@ namespace NiceHashMiner
             _GetProxyListTimer.Interval = 1000 * 60 * 180;
             _GetProxyListTimer.Start();
             CheckProxyList(null, null);
+            Application.DoEvents();
             comboBoxLocation.Update();
             comboBoxLocation.Refresh();
 
@@ -1329,22 +1375,12 @@ namespace NiceHashMiner
             {
                 _loadingScreen.SetValueAndMsg(25, International.GetText("Form_Main_loadtext_MSI_AB"));
                 MSIAfterburner.MSIAfterburnerRUN();
+                Application.DoEvents();
             }
             flowLayoutPanelRates.Visible = true;
 
             new Task(() => Firewall.AddToFirewall()).Start();
-            _minerStatsCheck = new Timer();
-            _minerStatsCheck.Tick += MinerStatsCheck_Tick;
-            _minerStatsCheck.Interval = 1000;
-
-            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
-            {
-                thisComputer = new LibreHardwareMonitor.Hardware.Computer();
-                thisComputer.IsGpuEnabled = true;
-                thisComputer.IsCpuEnabled = true;
-                thisComputer.Open();
-            }
-
+            
             if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
             {
                 if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
@@ -1386,6 +1422,7 @@ namespace NiceHashMiner
             _loadingScreen.SetValueAndMsg(30, "Checking server: nicehash.com");
             this.Update();
             this.Refresh();
+            Application.DoEvents();
             //****************
             Links.CheckDNS("https://nicehash.com");
             List<string> algos = Enum.GetNames(typeof(AlgorithmType)).ToList();
@@ -1402,6 +1439,8 @@ namespace NiceHashMiner
                         algo = algo.Replace("randomx", "randomxmonero");
                         string domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower();
                         _loadingScreen.SetValueAndMsg(35 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location.ToLower());
+                        Application.DoEvents();
+                        _loadingScreen.Update();
                         Links.CheckDNS(domain);
                     }
                 }
@@ -1447,6 +1486,7 @@ namespace NiceHashMiner
             _loadingScreen.Update();
             //new Task(() => CheckUpdates()).Start();
             CheckUpdates();
+            Application.DoEvents();
             if (ConfigManager.GeneralConfig.ShowHistory)
             {
                 new Task(() => Updater.Updater.ShowHistory(false)).Start();
@@ -1458,7 +1498,7 @@ namespace NiceHashMiner
             label_NH_ConnectStatus.Refresh();
             //_loadingScreen.SetValueAndMsg(70, International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
-            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
+            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddressV4)).Start();
             
             _loadingScreen.SetValueAndMsg(75, International.GetText("Form_Main_loadtext_CheckMiners"));
             Thread.Sleep(10);
@@ -1490,23 +1530,6 @@ namespace NiceHashMiner
                 {
                     DownloadingInProgress = true;
                     ConfigManager.GeneralConfigFileCommit();
-                    /*
-                    try
-                    {
-                        if (_autostartTimerDelay != null)
-                        {
-                            _autostartTimerDelay.Stop();
-                        }
-                        if (_autostartTimer != null)
-                        {
-                            _autostartTimer.Stop();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("Download miners", ex.ToString());
-                    } finally
-                    */
                     {
                         if (Updater.Updater.GetGITHUBVersion() > 0)
                         {
@@ -1613,7 +1636,9 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("CheckMiners", ex.ToString());
                 }
                 File.WriteAllText("Configs\\MinersData.json", json);
-                new Task(() => MinersGetVersionWatchdog()).Start();
+                //new Task(() => MinersGetVersionWatchdog()).Start();
+                _loadingScreen.SetValueAndMsg(89, "Check miners");
+                MinersGetVersionWatchdog();
             }
 
 
@@ -1666,19 +1691,6 @@ namespace NiceHashMiner
             }
             _loadingScreen.SetValueAndMsg(100, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
-
-            _AutoStartMiningDelay = ConfigManager.GeneralConfig.AutoStartMiningDelay;
-            _autostartTimerDelay = new Timer();
-            _autostartTimerDelay.Tick += AutoStartTimer_TickDelay;
-            _autostartTimerDelay.Interval = 1000;
-            _autostartTimerDelay.Start();
-
-            Thread.Sleep(200);//костыль для очередности запуска таймеров
-
-            _autostartTimer = new Timer();
-            _autostartTimer.Tick += AutoStartTimer_Tick;
-            _autostartTimer.Interval = Math.Max(2000, ConfigManager.GeneralConfig.AutoStartMiningDelay * 1000);
-            _autostartTimer.Start();
 
             if (_loadingScreen != null)
             {
@@ -1829,7 +1841,7 @@ namespace NiceHashMiner
                 GetNVMLData();
             }
         }
-        private void AutoStartTimer_TickDelay(object sender, EventArgs e)
+        private void AutoStartTimerDelay_Tick(object sender, EventArgs e)
         {
             if (DownloadingInProgress) return;
             if (ConfigManager.GeneralConfig.AutoStartMining)
@@ -1841,6 +1853,7 @@ namespace NiceHashMiner
                     _autostartTimerDelay = null;
                     buttonStopMining.Text = International.GetText("Form_Main_stop");
                     buttonStopMining.Refresh();
+                    //AutoStartTimer_Tick(null, null);
                     return;
                 }
                 else
@@ -1863,7 +1876,6 @@ namespace NiceHashMiner
             if (DownloadingInProgress) return;
             _autostartTimer.Stop();
             _autostartTimer = null;
-
             if (ConfigManager.GeneralConfig.AutoStartMining)
             {
                 if (firstRun)
@@ -2072,6 +2084,12 @@ namespace NiceHashMiner
             {
                 ConfigManager.GeneralConfig.Use_orders_price = false;
             }
+
+            buttonBenchmark.Enabled = false;
+            buttonChart.Enabled = false;
+            buttonSettings.Enabled = false;
+            buttonStartMining.Enabled = false;
+            buttonStopMining.Enabled = false;
 
             _startupTimer = new Timer();
             _startupTimer.Tick += StartupTimer_Tick;
@@ -2574,6 +2592,8 @@ public static void CloseChilds(Process parentId)
                         Visible = false
                     };
                     flowLayoutPanelRates.Controls.Add(newGroupProfitControl);
+                    flowLayoutPanelRates.Update();
+                    Application.DoEvents();
                 }
             }
         }
@@ -2601,6 +2621,8 @@ public static void CloseChilds(Process parentId)
                 {
                     ((GroupProfitControl)control).Visible = hideIndex < groupCount;
                     ++hideIndex;
+                    //flowLayoutPanelRates.Update();
+                    //Application.DoEvents();
                 }
             }
             _flowLayoutPanelRatesIndex = 0;
@@ -2660,19 +2682,7 @@ public static void CloseChilds(Process parentId)
             
             string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
             speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + speedString + "\\b\\par}";
-            /*
-            if (iApiData.AlgorithmID == AlgorithmType.AutolykosZil || (iApiData.AlgorithmID == AlgorithmType.Autolykos && iApiData.SecondaryAlgorithmID == AlgorithmType.DaggerHashimoto))
-            {
-                if (iApiData.SecondarySpeed > 0)
-                {
-                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.SecondarySpeed) + "H/s\\b0  Autolykos+\\b Zilliqa\\b\\par}";
-                }
-                else
-                {
-                    speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + Helpers.FormatSpeedOutput(iApiData.Speed) + "H/s Autolykos\\b0 +Zilliqa\\b\\par}";
-                }
-            }
-            */
+
             var rateBtcString = FormatPayingOutput(paying, power);
             if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
@@ -3625,48 +3635,54 @@ public static void CloseChilds(Process parentId)
 
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(NicehashAPIerrorDescription))
+            string status = NHApiFlag + " " + NicehashAPIerrorDescription;
+            try
             {
-                _NHApiFlag = NHApiFlag + " " + NicehashAPIerrorDescription;
-            } else
-            {
-                _NHApiFlag = NHApiFlag;
-            }
-            if (NiceHashSocket._webSocket != null)
-            {
-                var _curState = NiceHashSocket._webSocket.ReadyState;
-                //if (_curState != _oldState || NHApiFlag != _NHApiFlag)
-                if (_curState != _oldState)
+                if (NiceHashSocket._webSocket is object &&
+                    (NiceHashSocket._webSocket != null || oldNicehashAPIerrorDescription != NicehashAPIerrorDescription ||
+                    NHApiFlag != _NHApiFlag))
                 {
-                    _oldState = _curState;
-                    if (_curState == WebSocketSharp.WebSocketState.Closed || _curState == WebSocketSharp.WebSocketState.Closing)
+                    var _curState = NiceHashSocket._webSocket.ReadyState;
+
+                    if (_curState != _oldState || oldNicehashAPIerrorDescription != NicehashAPIerrorDescription ||
+                        NHApiFlag != _NHApiFlag)
                     {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + _NHApiFlag;
+                        _NHApiFlag = NHApiFlag;
+                        oldNicehashAPIerrorDescription = NicehashAPIerrorDescription;
+                        _oldState = _curState;
+
+                        if (_curState == WebSocketSharp.WebSocketState.Closed || _curState == WebSocketSharp.WebSocketState.Closing)
+                        {
+                            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + status;
+                        }
+                        if (_curState == WebSocketSharp.WebSocketState.Connecting || NHConnectingInProgress)
+                        {
+                            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + status;
+                            textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
+                        }
+                        if (_curState == WebSocketSharp.WebSocketState.Open)
+                        {
+                            label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected") + " " + status;
+                            wssConnectionsErrors = 0;
+                        }
+                        label_NH_ConnectStatus.Update();
                     }
-                    if (_curState == WebSocketSharp.WebSocketState.Connecting || NHConnectingInProgress)
-                    {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + _NHApiFlag;
-                        textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
-                    }
-                    if (_curState == WebSocketSharp.WebSocketState.Open)
-                    {
-                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected") + " " + _NHApiFlag;
-                        wssConnectionsErrors = 0;
-                    }
-                    label_NH_ConnectStatus.Update();
-                }
-            }
-            else
-            {
-                if (NHConnectingInProgress)
-                {
-                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + _NHApiFlag;
-                    label_NH_ConnectStatus.Update();
                 }
                 else
                 {
-                    label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + _NHApiFlag;
+                    if (NHConnectingInProgress)
+                    {
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnecting") + " " + _NHApiFlag;
+                        label_NH_ConnectStatus.Update();
+                    }
+                    else
+                    {
+                        label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusNotConnected") + " " + _NHApiFlag;
+                    }
                 }
+            }catch (Exception ex)
+            {
+                Helpers.ConsolePrint("StatusTimer_Tick", ex.ToString());
             }
         }
         private void RemoteTimer_Tick(object sender, EventArgs e)
@@ -4214,8 +4230,7 @@ public static void CloseChilds(Process parentId)
                 ConfigManager.GeneralConfig.BitcoinAddressNew = textBoxBTCAddress_new.Text.Trim();
                 textBoxBTCAddress_new.Update();
                 NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
-                new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
-                //NiceHashStats.StartConnection(Links.NhmSocketAddress);
+                new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddressV4)).Start();
             }
         }
 
@@ -4246,8 +4261,7 @@ public static void CloseChilds(Process parentId)
 
             }
             NiceHashStats.SetCredentials(textBoxBTCAddress_new.Text.Trim(), textBoxWorkerName.Text.Trim());
-            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
-            //NiceHashStats.StartConnection(Links.NhmSocketAddress);
+            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddressV4)).Start();
         }
 
         public static string GetBTCwalletType()
@@ -4332,11 +4346,6 @@ public static void CloseChilds(Process parentId)
 
         }
 
-        private void labelCAP_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Form_Main_ResizeBegin(object sender, EventArgs e)
         {
             FormMainMoved = true;
@@ -4397,7 +4406,7 @@ public static void CloseChilds(Process parentId)
 
             buttonChangeWorkerName.Enabled = false;
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text;
-            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddress)).Start();
+            new Task(() => NiceHashStats.StartConnection(Links.NhmSocketAddressV4)).Start();
         }
 
         private void textBoxWorkerName_TextChanged(object sender, EventArgs e)

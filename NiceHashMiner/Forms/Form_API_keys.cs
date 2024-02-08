@@ -78,7 +78,7 @@ namespace NiceHashMiner.Forms
                     Form_Main.orgId = jsonAPIdata.orgId;
                     Form_Main.apiKey = jsonAPIdata.apiKey;
                     Form_Main.apiSecret = jsonAPIdata.apiSecret;
-                    return NiceHashStats.GetRigProfitInternal();
+                    return true;
                 }
             }
             catch (Exception ex)
@@ -114,14 +114,14 @@ namespace NiceHashMiner.Forms
                 Form_Main.orgId = textBox_Organization_ID.Text;
                 Form_Main.apiKey = textBox_APIkey.Text;
                 Form_Main.apiSecret = textBox_APIsecret.Text;
-                if (NiceHashStats.GetRigProfitInternal())
+                Form_Main.API_key_validity = true;
+                _jsonAPIdata.Warning = "Do not share this file!";
+                _jsonAPIdata.orgId = textBox_Organization_ID.Text;
+                _jsonAPIdata.apiKey = textBox_APIkey.Text;
+                _jsonAPIdata.apiSecret = textBox_APIsecret.Text;
+                WriteAllTextWithBackup("configs/apidata.key", JsonConvert.SerializeObject(_jsonAPIdata, Formatting.Indented));
+                if (NiceHashStats.GetRigProfitInternalRUN())
                 {
-                    Form_Main.API_key_validity = true;
-                    _jsonAPIdata.Warning = "Do not share this file!";
-                    _jsonAPIdata.orgId = textBox_Organization_ID.Text;
-                    _jsonAPIdata.apiKey = textBox_APIkey.Text;
-                    _jsonAPIdata.apiSecret = textBox_APIsecret.Text;
-                    WriteAllTextWithBackup("configs/apidata.key", JsonConvert.SerializeObject(_jsonAPIdata, Formatting.Indented));
                     MessageBox.Show("API key checked and saved into file configs/apidata.key", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                     return;
@@ -168,6 +168,7 @@ namespace NiceHashMiner.Forms
             {
                 //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
+            
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)

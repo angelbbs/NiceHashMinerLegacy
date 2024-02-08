@@ -1,10 +1,12 @@
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.UUID;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -40,8 +42,6 @@ namespace NiceHashMiner.Stats
         public static bool _connectionEstablished;
         private readonly Random _random = new Random();
         private readonly string _address;
-        private readonly string _addressFailover;
-        bool isFailover = false;
 
         public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
@@ -55,6 +55,8 @@ namespace NiceHashMiner.Stats
         {
             _address = address;
         }
+
+        public static string version = "NHM/" + ConfigManager.GeneralConfig.NHMVersion;
 
         //****************************************************************************************************************
         public static bool IsIPAddress(string ipAddress)
@@ -84,7 +86,25 @@ namespace NiceHashMiner.Stats
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
             string ResolvedIP = "";
-            string link = Links.CheckDNS(Links.NhmSocketAddress);
+            string link = "";
+            string _link = "";
+
+            if (Form_Main.wssConnectionsErrors >= 10)
+            {
+                Form_Main.wssConnectionsErrors = 0;
+                if (Form_Main.NHMWSProtocolVersion == 4) Form_Main.NHMWSProtocolVersion = 3;
+                if (Form_Main.NHMWSProtocolVersion == 3) Form_Main.NHMWSProtocolVersion = 4;
+            }
+
+            if (Form_Main.NHMWSProtocolVersion == 4)
+            {
+                link = Links.CheckDNS(Links.NhmSocketAddressV4);
+                _link = Links.NhmSocketAddressV4;
+            } else
+            {
+                link = Links.CheckDNS(Links.NhmSocketAddress);
+                _link = Links.NhmSocketAddress;
+            }
             if (ConfigManager.GeneralConfig.ServiceLocation > 0 && Form_Main.wssConnectionsErrors > 2)
             {
                 _location++;
@@ -99,11 +119,11 @@ namespace NiceHashMiner.Stats
             {
                 if (_webSocket == null)
                 {
-                    _webSocket = new WebSocket(Links.NhmSocketAddress);
+                    _webSocket = new WebSocket(_link);
 
                     if (!proxy)
                     {
-                        ResolvedIP = new Uri(link).Host;
+                        ResolvedIP = new Uri(_link).Host;
                         Helpers.ConsolePrint("SOCKET", "Start connection to Nicehash directly");
                     }
                     else
@@ -123,6 +143,25 @@ namespace NiceHashMiner.Stats
                     _connectionEstablished = false;
                     _restartConnection = true;
                     _webSocket.Close();
+                    List<string> IPsList = new List<string>();
+                    IPHostEntry heserver;
+
+                    try
+                    {
+                        heserver = Dns.GetHostEntry("nicehash.com");
+                        foreach (IPAddress curAdd in heserver.AddressList)
+                        {
+                            IPsList.Add(curAdd.ToString());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("SendData", ex.ToString());
+                    }
+                    foreach (var ip in IPsList)
+                    {
+                        DropIPPort(Process.GetCurrentProcess().Id, ip, 443);
+                    }
                 }
                 Form_Main.NHConnectingInProgress = true;
                 Form_Main.wssConnectionsErrors++;
@@ -335,7 +374,7 @@ namespace NiceHashMiner.Stats
                     Helpers.ConsolePrint("UUID", "Using old MachineGuid from config");
                     rig = Configs.ConfigManager.GeneralConfig.MachineGuid;
                 }
-                string version = "NHM/" + ConfigManager.GeneralConfig.NHMVersion;
+                version = "NHM/" + ConfigManager.GeneralConfig.NHMVersion;
                 string versionAdd = "";
 
                 if (ConfigManager.GeneralConfig.QM_mode)
@@ -359,9 +398,10 @@ namespace NiceHashMiner.Stats
                     //versionAdd = "/NHQM_v9.0.0.0 mode";//обычный режим  
 
                     //versionAdd = "/NHQM_v 9.0.0.0";//работает 
-
-                    versionAdd = "//Rig manager mode NHQM_v9.0.0.0";//работает, причём строка не показывается в менеджере ригов ))
-
+                    if (Form_Main.NHMWSProtocolVersion == 3)
+                    {
+                        versionAdd = "//Rig manager mode NHQM_v9.0.0.0";//работает, причём строка не показывается в менеджере ригов ))
+                    }
                     //versionAdd = "/NHQM_v9.0.0.0";//работает 
                     //versionAdd = "/NHQM_v0.5.2.0";//работает 
 
@@ -397,9 +437,23 @@ namespace NiceHashMiner.Stats
                 };
                 var loginJson = JsonConvert.SerializeObject(login);
 
-                //new Task(() => SendDataNew(loginJson)).Start();
-                SendDataNew(loginJson);
+                var _computeDevices = ComputeDeviceManager.Available.Devices;
+                var computeDevices = _computeDevices.OrderBy(d => d.DeviceType).ThenBy(d => d.BusID);
+                var _login = NiceHashMiner.Stats.V4.MessageParserV4.CreateLoginMessage(btc, worker, rig,
+                    computeDevices);
+
+                var loginJson4 = JsonConvert.SerializeObject(_login);
+
+                if (Form_Main.NHMWSProtocolVersion == 4)
+                {
+                    SendDataNew(loginJson4);
+                }
+                else
+                {
+                    SendDataNew(loginJson);
+                }
                 Thread.Sleep(500);
+                
                 if (Form_Main.MiningStarted)
                 {
                     NiceHashStats.SetDeviceStatus("MINING", true);
@@ -407,7 +461,7 @@ namespace NiceHashMiner.Stats
                 {
                     NiceHashStats.SetDeviceStatus("STOPPED", true);
                 }
-
+                
                 OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception er)
@@ -459,7 +513,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("WinDivertSharp", ex.ToString());
+                Helpers.ConsolePrint("SendData", ex.ToString());
             }
 
             try
@@ -469,7 +523,7 @@ namespace NiceHashMiner.Stats
                     // Make sure connection is open
                     // Verify valid JSON and method
                     dynamic dataJson = JsonConvert.DeserializeObject(data);
-                    if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "login" || dataJson.method == "executed")
+                    if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "miner.state" || dataJson.method == "login" || dataJson.method == "executed")
                     {
                         Helpers.ConsolePrint("SOCKET SendData", "Sending data: " + data);
                         ForceReconnectCount = 0;

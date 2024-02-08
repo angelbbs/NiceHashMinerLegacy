@@ -72,5 +72,109 @@ namespace NiceHashMiner.Stats
         public int FanRPM { get; set; } = -1;
     }
 
+    //NHM interfaces
+    internal interface IMethod
+    {
+        string Method { get; }
+    }
 
+    public interface ICoreClock
+    {
+        int CoreClock { get; }
+    }
+    public interface IMemoryClock
+    {
+        int MemoryClock { get; }
+    }
+    public enum TDPSettingType
+    {
+        UNSUPPORTED,
+        DISABLED,
+        SIMPLE,
+        PERCENTAGE
+    }
+    public enum TDPSimpleType
+    {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+
+    public interface ITDP
+    {
+        TDPSettingType SettingType { get; set; }
+
+        double TDPPercentage { get; }
+        bool SetTDP(double percentage);
+        TDPSimpleType TDPSimple { get; }
+        bool SetTDPSimple(TDPSimpleType level);
+    }
+    public interface ITDPWatts
+    {
+        int TDPWatts { get; }
+    }
+    public interface ICoreVoltage
+    {
+        int CoreVoltage { get; }
+    }
+
+    public interface ILoad
+    {
+        float Load { get;  }
+    }
+    public interface IFanSpeedRPM
+    {
+        int FanSpeedRPM { get; }
+    }
+    public interface IGetFanSpeedPercentage
+    {
+        (int status, int percentage) GetFanSpeedPercentage();
+    }
+    public interface IMemControllerLoad
+    {
+        int MemoryControllerLoad { get; }
+    }
+    public interface IPowerUsage
+    {
+        double PowerUsage { get; }
+    }
+    public interface ISpecialTemps : IVramTemp, IHotspotTemp
+    { }
+    public interface IVramTemp
+    {
+        int VramTemp { get; }
+    }
+    public interface IHotspotTemp
+    {
+        int HotspotTemp { get; }
+    }
+    public interface ITemp
+    {
+        float Temp { get; }
+    }
+
+
+    public enum DeviceDynamicProperties
+    {
+        NONE,
+        Load,
+        MemoryControllerLoad,
+        Temperature,
+        FanSpeedPercentage,
+        PowerUsage,
+        VramTemp,
+        //HotspotTemp,
+        //CoreClock,
+        //MemClock,
+        //TDP,
+        //TDPWatts,
+        //CoreVoltage,
+        //CoreClockDelta,
+        //MemClockDelta,
+        FanSpeedRPM
+    }
+
+    internal interface ISendMessage
+    {
+    }
 }

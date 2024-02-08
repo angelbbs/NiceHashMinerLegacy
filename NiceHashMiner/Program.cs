@@ -368,6 +368,9 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ForkFixVersion = 60;
                 }
 
+
+                Form_Main.NHMWSProtocolVersion = ConfigManager.GeneralConfig.NHMWSProtocolVersion;
+
                 if (ConfigManager.GeneralConfig.ZILMaxEpoch < 1) ConfigManager.GeneralConfig.ZILMaxEpoch = 1;
                 //**
                 //Thread.Sleep(100);
