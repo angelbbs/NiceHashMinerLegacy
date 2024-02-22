@@ -205,7 +205,7 @@ namespace NiceHashMiner
         public int _maxCooldownTimeInMilliseconds; // = GetMaxCooldownTimeInMilliseconds();
 
         // protected abstract int GetMaxCooldownTimeInMilliseconds();
-        public static Timer _cooldownCheckTimer;
+        private Timer _cooldownCheckTimer;
         protected MinerApiReadStatus CurrentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = MinCooldownTimeInMilliseconds;
         private int _currentCooldownTimeInSecondsLeft = MinCooldownTimeInMilliseconds;
@@ -330,7 +330,7 @@ namespace NiceHashMiner
             IsInit = MiningSetup.IsInit;
             SetApiPort();
             SetWorkingDirAndProgName(MiningSetup.MinerPath);
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            //Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
         }
 
         public void InitBenchmarkSetup(MiningPair benchmarkPair)
@@ -455,7 +455,12 @@ namespace NiceHashMiner
                             process.CloseMainWindow();
                             //process.Kill();
                             process.Close();
-                            process.WaitForExit(1000 * 20);
+                            //process.WaitForExit(1000 * 20);
+                        }
+                        catch (InvalidOperationException ioex)
+                        {
+                            Helpers.ConsolePrint(MinerTag(),
+                                $"InvalidOperationException closing {ProcessTag(pidData)}, exMsg {ioex.Message}");
                         }
                         catch (Exception e)
                         {
@@ -561,6 +566,8 @@ namespace NiceHashMiner
                 int b = (int)pair.Algorithm.SecondaryNiceHashID;
                 pair.Device.AlgorithmID = a;
                 pair.Device.SecondAlgorithmID = b;
+                pair.Device.MinerName = "";
+                pair.Device.State = DeviceState.Stopped;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -616,10 +623,13 @@ namespace NiceHashMiner
 
                 try
                 {
-                    if (ProcessHandle != null && Process.GetProcessById(pid) != null)
+                    if (ProcessHandle is object)
                     {
-                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Try force kill miner");
-                        ProcessHandle.Kill();
+                        if (ProcessHandle != null)
+                        {
+                            Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Try force kill miner");
+                            ProcessHandle.Kill();
+                        }
                     }
                 } catch
                 {
@@ -636,13 +646,22 @@ namespace NiceHashMiner
             }
         }
 
-        protected void KillProspectorClaymoreMinerBase(string exeName)
+        public static bool PiDExist(int processId)
         {
-            foreach (var process in Process.GetProcessesByName(exeName))
+            return true;
+            try
             {
-                try { process.Kill(); }
-                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+                Process[] allProcessesOnLocalMachine = Process.GetProcesses();
+                foreach (Process process in allProcessesOnLocalMachine)
+                {
+                    if (process.Id == processId) return true;
+                }
             }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return false;
         }
 
         protected virtual string GetDevicesCommandString()
@@ -1172,7 +1191,7 @@ namespace NiceHashMiner
                         break;
                     }
                 }
-                if (minerrunning) Thread.Sleep(5000);
+                if (minerrunning) Thread.Sleep(1000);
             }
             catch (Exception ex)
             {
@@ -1300,6 +1319,7 @@ namespace NiceHashMiner
                     pair.Device.AlgorithmID = a;
                     pair.Device.SecondAlgorithmID = b;
                     pair.Device.MinerName = MinerDeviceName;
+                    pair.Device.State = DeviceState.Mining;
 
                     if (pair.Device.DeviceType == DeviceType.NVIDIA)
                     {
@@ -1316,12 +1336,13 @@ namespace NiceHashMiner
                 }
                 
                 GC.Collect();
+                
                 P.DivertHandle = Divert.DivertStart(P.Id, -1, -1, Path,
                             strPlatform, "", false,
                             false,
                             false, ConfigManager.GeneralConfig.DivertRun,
                             100);
-
+                
                 MinerDelayStart(Path);
 
                 if (P.Start())
@@ -1361,8 +1382,8 @@ namespace NiceHashMiner
                             false, ConfigManager.GeneralConfig.DivertRun,
                             MaxEpoch);
                     }
-                    
-                    StartCoolDownTimerChecker();
+                    new Task(() => StartCoolDownTimerChecker()).Start();
+                    //StartCoolDownTimerChecker();
                     return P;
                 }
 
@@ -1603,6 +1624,7 @@ namespace NiceHashMiner
                 End();
                 return;
             }
+            //Helpers.ConsolePrint(MinerTag(), ProcessTag() + " running: " + ProcessHandle._bRunning.ToString());
             if (ProcessHandle == null)
             {
                 CooldownCheck = 100;
@@ -1645,7 +1667,7 @@ namespace NiceHashMiner
                     break;
             }
 
-            if (CooldownCheck > 60)//300 sec
+            if (CooldownCheck > 24)//120 sec
             {
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + "API Error. Restart miner");
                 CooldownCheck = 0;
@@ -1680,7 +1702,13 @@ namespace NiceHashMiner
                 {
 
                 }
-                Thread.Sleep(2000);
+                Thread.Sleep(2500);
+            } else
+            {
+                if (isBefore)
+                {
+                    Thread.Sleep(1000);
+                }
             }
 
             bool CreateNoWindow = false;

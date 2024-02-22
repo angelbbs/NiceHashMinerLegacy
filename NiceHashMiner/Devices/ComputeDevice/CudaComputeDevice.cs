@@ -8,9 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using static NVIDIA.NVAPI.NVAPI;
+
 
 namespace NiceHashMiner.Devices
 {
@@ -19,6 +20,7 @@ namespace NiceHashMiner.Devices
     {
         private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
         private readonly nvmlDevice _nvmlDevice; // For NVML
+        private readonly CudaDevices2 _cudaDevice; // For NVML
         private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
         protected int SMMajor;
         protected int SMMinor;
@@ -38,7 +40,7 @@ namespace NiceHashMiner.Devices
                     //uint dev = (uint)_nvmlDevice.Pointer;
                     foreach (var d in Form_Main.gpuList)
                     {
-                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                        if (_cudaDevice.DeviceID == d.nGpu)
                         {
                             return d.load;
                         }
@@ -64,7 +66,7 @@ namespace NiceHashMiner.Devices
                 {
                     foreach (var d in Form_Main.gpuList)
                     {
-                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                        if (_cudaDevice.DeviceID == d.nGpu)
                         {
                             return d.loadMem;
                         }
@@ -92,7 +94,7 @@ namespace NiceHashMiner.Devices
                     //uint dev = (uint)_nvmlDevice.Pointer;
                     foreach (var d in Form_Main.gpuList)
                     {
-                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                        if (_cudaDevice.DeviceID == d.nGpu)
                         {
                             return d.temp;
                         }
@@ -127,7 +129,7 @@ namespace NiceHashMiner.Devices
                 {
                     foreach (var d in Form_Main.gpuList)
                     {
-                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                        if (_cudaDevice.DeviceID == d.nGpu)
                         {
                             return d.tempMem;
                         }
@@ -202,7 +204,7 @@ namespace NiceHashMiner.Devices
                     //uint dev = (uint)_nvmlDevice.Pointer;
                     foreach (var d in Form_Main.gpuList)
                     {
-                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
+                        if (_cudaDevice.DeviceID == d.nGpu)
                         {
                             return (int)d.fan;
                         }
@@ -216,6 +218,45 @@ namespace NiceHashMiner.Devices
                 return fan;
 
             }
+        }
+
+       
+        private int GetFanSpeedRPM()
+        {
+            if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA || Form_Main.NvAPIerror)
+            {
+                return -1;
+            }
+
+            var fanSpeed = -1;
+
+            // we got the lock
+            var nvHandle = GetNvPhysicalGpuHandle();
+            if (!nvHandle.HasValue)
+            {
+                Helpers.ConsolePrint("NVAPI", $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
+                return -1;
+            }
+
+            if (NVAPI.NvAPI_GPU_GetTachReading != null)
+            {
+                var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
+                if (result != NvStatus.OK)
+                {
+                    var coolersStatus = GetFanCoolersStatus();
+                    if (coolersStatus.Count > 0)
+                    {
+                        uint CurrentLevel = coolersStatus.Items[0].CurrentLevel;
+                        uint CurrentRpm = coolersStatus.Items[0].CurrentRpm;
+                        fanSpeed = (int)CurrentRpm;
+                    }
+                }
+                if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
+                {
+                    return -1;
+                }
+            }
+            return fanSpeed;
         }
 
         public override int FanSpeedRPM
@@ -302,6 +343,35 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public override double PowerUsage
+        {
+            get
+            {
+                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
+                {
+                    return -1;
+                }
+                int power = -1;
+
+                try
+                {
+                    foreach (var d in Form_Main.gpuList)
+                    {
+                        if (_cudaDevice.DeviceID == d.nGpu)
+                        {
+                            return d.power / 1000;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("NVML", e.ToString());
+                    power = -1;
+                }
+                return power;
+            }
+        }
+
         private NvFanCoolersStatus GetFanCoolersStatus()
         {
             var coolers = new NvFanCoolersStatus();
@@ -318,46 +388,7 @@ namespace NiceHashMiner.Devices
             return coolers;
         }
 
-        public List<NvData> gpuList = new List<NvData>();
-        [Serializable]
-        public struct NvData
-        {
-            //public int status;
-            public uint nGpu;
-            public uint power;
-        }
-        public byte[] NVdata;
-        public int devCount = 0;
-        public int ferrorCount = 0;
-        public override double PowerUsage
-        {
-            get
-            {
-                if (ConfigManager.GeneralConfig.DisableMonitoringNVIDIA)
-                {
-                    return -1;
-                }
-                int power = -1;
-
-                try
-                {
-                    foreach (var d in Form_Main.gpuList)
-                    {
-                        if (Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue) == d.nGpu)
-                        {
-                            return d.power / 1000;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("NVML", e.ToString());
-                    power = -1;
-                }
-                return power;
-            }
-        }
-
+        
         public CudaComputeDevice(CudaDevices2 cudaDevice, DeviceGroupType group, int gpuCount,
             NvPhysicalGpuHandle nvHandle, nvmlDevice nvmlHandle)
             : base((int)cudaDevice.DeviceID,
@@ -378,6 +409,7 @@ namespace NiceHashMiner.Devices
 
             _nvHandle = nvHandle;
             _nvmlDevice = nvmlHandle;
+            _cudaDevice = cudaDevice;
             ShouldRunEthlargement = cudaDevice.DeviceName.Contains("1080") || cudaDevice.DeviceName.Contains("Titan Xp");
             Form_Main.ShouldRunEthlargement = ShouldRunEthlargement;
         }

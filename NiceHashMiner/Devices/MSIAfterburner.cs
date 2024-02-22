@@ -524,7 +524,6 @@ namespace NiceHashMiner.Devices
                             break;
                         }
                     }
-                    index = macm.GpuEntries[i].Index;
                 }
             }
 
@@ -533,6 +532,7 @@ namespace NiceHashMiner.Devices
         public static bool locked = false;
         public static bool ResetCurveLock(int _busID, bool commit = false)
         {
+            bool found = false;
             if (!Initialized) return false;
 
             try
@@ -563,14 +563,15 @@ namespace NiceHashMiner.Devices
                             devType = dev.DeviceType;
                             macm.ReloadGpuEntry(i);
                             mahm.ReloadGpuEntry((uint)i);
+                            found = true;
                             break;
                         }
                     }
                     break;
                 }
             }
+            if (!found) return false;
             index = macm.GpuEntries[i].Index;
-
             if (macm.GpuEntries[i].CurveLockIndex != 0)
             {
                 locked = true;
@@ -595,6 +596,7 @@ namespace NiceHashMiner.Devices
 
         public static void ResetToDefaults(int _busID, string uuid = "", string algo = "",  bool commit = false, bool nocheck = true)
         {
+            bool found = false;
             if (!nocheck)
             {
                 CheckMSIAfterburner();
@@ -626,12 +628,14 @@ namespace NiceHashMiner.Devices
                             devType = dev.DeviceType;
                             macm.ReloadGpuEntry(i);
                             mahm.ReloadGpuEntry((uint)i);
+                            found = true;
                             break;
                         }
                     }
                     break;
                 }
             }
+            if (!found) return;
             index = macm.GpuEntries[i].Index;
             Helpers.ConsolePrint("ResetToDefaults", "GPU#" + (index + 1).ToString() + " BusID: " + _busID.ToString());
             if (devType == DeviceType.NVIDIA)

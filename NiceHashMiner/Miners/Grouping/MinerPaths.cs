@@ -208,7 +208,7 @@ namespace NiceHashMiner.Miners.Grouping
         public static List<Algorithm> GetAndInitAlgorithmsMinerPaths(List<Algorithm> algos,
             ComputeDevice computeDevice /*, Options: MinerPathsConfig*/)
         {
-            var retAlgos = algos.FindAll((a) => a != null).ConvertAll((a) =>
+            var retAlgos = algos.FindAll((a) => a != null && a.Hidden != true).ConvertAll((a) =>
             {
                 a.MinerBinaryPath = GetPathFor(computeDevice, a /*, Options*/);
                 return a;

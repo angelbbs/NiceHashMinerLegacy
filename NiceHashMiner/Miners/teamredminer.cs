@@ -44,15 +44,6 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             //    Killteamredminer();
         }
-        static int GetWinVer(Version ver)
-        {
-            if (ver.Major == 6 & ver.Minor == 1)
-                return 7;
-            else if (ver.Major == 6 & ver.Minor == 2)
-                return 8;
-            else
-                return 10;
-        }
 
         private string GetServer(string algo, string username, string port)
         {
@@ -150,7 +141,7 @@ namespace NiceHashMiner.Miners
             }
 
             var sc = "";
-            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
             {
                 sc = variables.TRMiner_add1;
             }
@@ -174,25 +165,7 @@ namespace NiceHashMiner.Miners
                 algo2 = "autolykos";
                 port = "3390";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
-                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
-            {
-                algo = "autolykos2";
-                algo2 = "autolykos";
-                port = "3390";
-                LastCommandLine = sc + "" +
-                    " -d " + GetDevicesCommandString() +
-                    " -a " + algo + " " +
-            GetServerDual(algo2, "kheavyhash", "--kas", username, port, "3395") +
-                              apiBind + apiBind2 +
-                              " " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD);
-                              
-                ProcessHandle = _Start();
-                return;
-            }
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.IronFish))
             {
@@ -255,7 +228,7 @@ namespace NiceHashMiner.Miners
             }
             var sc = "";
             _benchmarkTimeWait = time;
-            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
             {
                 sc = variables.TRMiner_add1;
             }
@@ -284,13 +257,7 @@ namespace NiceHashMiner.Miners
                 CommandLine = sc + " -a autolykos2" +
                  " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
-                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
-            {
-                CommandLine = sc + " -a autolykos2" +
-                 " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d " + GetDevicesCommandString() +
-                 " --kas -o " + Links.CheckDNS("stratum+tcp://pool.eu.woolypooly.com:3112") + " -u kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.teamred" + " -p x -d ";
-            }
+            
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.IronFish))
             {
@@ -528,8 +495,12 @@ namespace NiceHashMiner.Miners
                 if (_apiErrors > 60)
                 {
                     _apiErrors = 0;
-                    Helpers.ConsolePrint("GetApiDataAsync", "RESTART TEAMREDMINER");
-                    Restart();
+                    Helpers.ConsolePrint("GetApiDataAsync", "Need RESTART TEAMREDMINER");
+                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+                    ad.ThirdSpeed = 0;
+                    return null;
                 }
                 return null;
             }
@@ -562,10 +533,12 @@ namespace NiceHashMiner.Miners
             //Helpers.ConsolePrint("API2 <- ", resp2.Trim());
             if (resp1.Contains("Status=Dead") || resp2.Contains("Status=Dead"))
             {
-                Helpers.ConsolePrint("GetSummaryAsync", "Dead GPU detected. Restart miner.");
-                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                Thread.Sleep(1000);
-                Restart();
+                Helpers.ConsolePrint("GetSummaryAsync", "Dead GPU detected. Need Restart miner.");
+                CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                ad.Speed = 0;
+                ad.SecondarySpeed = 0;
+                ad.ThirdSpeed = 0;
+                return ad;
             }
             try
             {
@@ -586,9 +559,11 @@ namespace NiceHashMiner.Miners
                             if (devSpeed > 1000 && MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)//1000 MH
                             {
                                 Helpers.ConsolePrint("GetSummaryAsync", "Dead GPU#" + dev.ToString() + " detected. Restart miner.");
-                                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                                Thread.Sleep(1000);
-                                Restart();
+                                CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                                ad.Speed = 0;
+                                ad.SecondarySpeed = 0;
+                                ad.ThirdSpeed = 0;
+                                return ad;
                             }
                             sortedMinerPairs[dev].Device.MiningHashrate = devSpeed * 1000000;
                             _power = sortedMinerPairs[dev].Device.PowerUsage;

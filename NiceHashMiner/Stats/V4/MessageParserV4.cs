@@ -70,7 +70,7 @@ namespace NiceHashMiner.Stats.V4
             var devData = ComputeDeviceManager.Available.Devices.FirstOrDefault(dev => dev.DevUuid == UUID);
             if (devData == null) return "";
 
-            return devData.MinerName + MinerVersion.GetMinerVersion(devData.MinerName);
+            return devData.MinerName.Trim() + " " + MinerVersion.GetMinerVersion(devData.MinerName).Trim();
         }
 
         private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin = false)
@@ -132,8 +132,12 @@ namespace NiceHashMiner.Stats.V4
                     _ret = d.TempMemory;
                     if (_ret == 0) _ret = -1;
                 }
-                if (typeof(T) == typeof(ILoad)) _ret = d.Load;
-                if (typeof(T) == typeof(ILoad)) _ret = d.MemLoad;
+                if (typeof(T) == typeof(ILoad))
+                {
+                    _ret = d.Load;
+                }
+                if (typeof(T) == typeof(IMemControllerLoad)) _ret = d.MemLoad;
+
                 if (typeof(T) == typeof(IGetFanSpeedPercentage))
                 {
                     _ret = d.FanSpeed;
@@ -144,8 +148,13 @@ namespace NiceHashMiner.Stats.V4
                 }
                 if (typeof(T) == typeof(IPowerUsage)) _ret = (float)d.PowerUsage;
 
-                if (_ret < 0) return (type, name, "", "-"); 
-
+                if (_ret == -1)
+                {
+                    return (type, name, "", "-");
+                } else if (_ret < 0)
+                {
+                    _ret = 0;
+                }
                 return (type, name, unit, _ret.ToString()); 
             }
 
@@ -245,6 +254,8 @@ namespace NiceHashMiner.Stats.V4
 
         // we cache device properties so we persevere  property IDs
         private static readonly Dictionary<ComputeDevice, List<OptionalMutableProperty>> _cachedDevicesOptionalMutable = new Dictionary<ComputeDevice, List<OptionalMutableProperty>>();
+        
+        //settings per device
         private static (List<OptionalMutableProperty> properties, JArray values) GetDeviceOptionalMutable(ComputeDevice d, bool isLogin)
         {
             //OptionalMutableProperty valueOrNull<T>(OptionalMutableProperty v) => d.DeviceMonitor is T ? v : null;
@@ -254,14 +265,14 @@ namespace NiceHashMiner.Stats.V4
             {
                 var optionalProperties = new List<OptionalMutableProperty>();
                 // TODO sort by type
-                /*
+                
                 optionalProperties.Add(new OptionalMutablePropertyString
                 {
                     PropertyID = OptionalMutableProperty.NextPropertyId(),
                     DisplayGroup = 0,
-                    DisplayName = "Miners settings",
+                    DisplayName = "Miners settings",//102
                     DefaultValue = "",
-                    Range = (65536, ""),
+                    Range = (262144, ""),
                     ExecuteTask = async (object p) =>
                     {
                         if (p is not string prop) return -1;
@@ -278,16 +289,16 @@ namespace NiceHashMiner.Stats.V4
                     },
                     ComputeDev = d
                 });
-                */
+                
 
-                /*
+                
                 optionalProperties.Add(new OptionalMutablePropertyString
                 {
                     PropertyID = OptionalMutableProperty.NextPropertyId(),
                     DisplayGroup = 0,
                     DisplayName = "Benchmark settings",
                     DefaultValue = "",
-                    Range = (65536, ""),
+                    Range = (262144, ""),
                     
                     ExecuteTask = async (object p) =>
                     {
@@ -312,7 +323,7 @@ namespace NiceHashMiner.Stats.V4
                         optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
                     }
                 }
-                */
+                
                 return optionalProperties
                     .Where(p => p != null)
                     .ToList();
@@ -393,7 +404,7 @@ namespace NiceHashMiner.Stats.V4
                 MinerState = GetMinerStateValues(worker, devices),
             };
         }
-        private static (List<OptionalMutableProperty> properties, JArray values) GetRigOptionalMutableValues(bool isLogin)
+        public static (List<OptionalMutableProperty> properties, JArray values) GetRigOptionalMutableValues(bool isLogin)
         {
             List<OptionalMutableProperty> getOptionalMutableProperties()
             {
@@ -449,17 +460,19 @@ namespace NiceHashMiner.Stats.V4
                         //}
                     },
                     */
-                    /*
+                    
                     new OptionalMutablePropertyString
                     {
                         PropertyID = OptionalMutableProperty.NextPropertyId(),
                         DisplayGroup = 0,
-                        DisplayName = "Miners settings",
+                        DisplayName = "Miners settings",//104 per rig
                         DefaultValue = "",
-                        Range = (65536, String.Empty),
+                        Range = (262144, String.Empty),
                         GetValue = () =>
                         {
                             string ret = string.Empty;
+                            if (ComputeDeviceManager.Available.Devices.Count < 12)
+                            {
                             var minersSettingsGlobal = new MinerAlgoStateRig();
                             var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null && m.DisplayName == "Miners settings");
                             if(mutables == null || mutables.Count() <= 0) return ret;
@@ -470,9 +483,10 @@ namespace NiceHashMiner.Stats.V4
                                 //Helpers.ConsolePrint("**********", isLogin.ToString());
                                 //if (minersSettingsGlobal.Miners.Exists(JsonConvert.DeserializeObject<MinerAlgoState>(val))) continue;
                                 minersSettingsGlobal.Miners.Add(JsonConvert.DeserializeObject<MinerAlgoState>(val));
-                                
+
                             }
                             ret += JsonConvert.SerializeObject(minersSettingsGlobal);
+                            }
                             return ret;
                         },
                         ExecuteTask = async (object p) =>
@@ -494,7 +508,7 @@ namespace NiceHashMiner.Stats.V4
                             return successCount == newStates.Miners.Count ? 0 : -3;
                         }
                     },
-                    */
+                    
                     /*
                     new OptionalMutablePropertyString
                     {
@@ -509,7 +523,7 @@ namespace NiceHashMiner.Stats.V4
                             var schedules = new SchedulesWS4();
                             var ret = JsonConvert.SerializeObject(schedules);
                             return ret;
-                        },
+                        }
                     */
                         /*
                         ExecuteTask = async (object p) =>
@@ -532,7 +546,7 @@ namespace NiceHashMiner.Stats.V4
                         }
                         */
                     //},
-                    /*
+                    
                     new OptionalMutablePropertyBool
                     {
                         PropertyID = OptionalMutableProperty.NextPropertyId(),
@@ -542,10 +556,10 @@ namespace NiceHashMiner.Stats.V4
                         GetValue = () =>
                         {
                             //return UpdateSettings.Instance.AutoUpdateMinerPlugins && UpdateSettings.Instance.AutoUpdateNiceHashMiner;
-                            return false;
+                            //Helpers.ConsolePrint("*************", "NextPropertyId");
+                            return Configs.ConfigManager.GeneralConfig.ProgramAutoUpdate;
                         },
-                    */
-                        /*
+                    /*
                         ExecuteTask = async (object p) =>
                         {
                             if(p is not bool prop) return -1;
@@ -555,18 +569,21 @@ namespace NiceHashMiner.Stats.V4
                             return 0;
                         }
                         */
-                    //}
-                    /*
+
+                    },
+                    
                     new OptionalMutablePropertyString
                     {
                         PropertyID = OptionalMutableProperty.NextPropertyId(),
                         DisplayGroup = 0,
-                        DisplayName = "Benchmark settings",
+                        DisplayName = "Benchmark settings",//106
                         DefaultValue = "",
-                        Range = (4096, ""),
+                        Range = (262144, ""),
                         GetValue = () =>
                         {
                             var ret = string.Empty;
+                            if (ComputeDeviceManager.Available.Devices.Count < 12)
+                            {
                             var minerSpeedsGlobal = new MinerAlgoSpeedRig();
                             var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null && m.DisplayName == "Benchmark settings");
                             if(mutables == null || mutables.Count() <= 0) return ret;
@@ -576,6 +593,7 @@ namespace NiceHashMiner.Stats.V4
                                 minerSpeedsGlobal.Miners.Add(JsonConvert.DeserializeObject<MinerAlgoSpeed>(val));
                             }
                             ret += JsonConvert.SerializeObject(minerSpeedsGlobal);
+                            }
                             return ret;
                         },
                         ExecuteTask = async (object p) =>
@@ -597,7 +615,7 @@ namespace NiceHashMiner.Stats.V4
                             return successCount == newSpeeds.Miners.Count ? 0 : -3;
                         }
                     }
-                    */
+                    
                 };
                 if (isLogin)
                 {
@@ -638,11 +656,14 @@ namespace NiceHashMiner.Stats.V4
                     "Uptime",
                     "s"
                 }, Math.Round(Form_Main.Uptime.TotalSeconds, 0).ToString()),
+                /*
                 (new List<string>
                 {
                     "IP address"
                 //}, "127.0.0.1"),
+                //}, Helpers.GetLocalIP().ToString())
                 }, Helpers.GetLocalIP().ToString())
+                */
                 /*
                 (new List<string>
                 {
@@ -703,6 +724,16 @@ namespace NiceHashMiner.Stats.V4
                 {
                     var state = deviceStateToInt(d.State);
                     var speeds = NiceHashStats.GetSpeedForDevice(d.DevUuid);
+                    for (int i = 0; i < speeds.Count; i++)
+                    {
+                        if (speeds[i].type == AlgorithmType.KAWPOWLite)
+                        {
+                            var ms = speeds[i];
+                            ms.type = AlgorithmType.KAWPOW;
+                            speeds[i] = ms;
+                        }
+                    }
+
                     return new JArray(state, new JArray(speeds.Select(kvp => new JArray((int)kvp.type, kvp.speed))));
                 }
                 JArray mmv(ComputeDevice d)
@@ -838,10 +869,8 @@ namespace NiceHashMiner.Stats.V4
         }
         private static string GetMinersForDeviceDynamic(ComputeDevice d)
         {
-            //return String.Empty;
-            
             var minersObject = new MinerAlgoState();
-            var containers = d.GetAlgorithmSettings();
+            var containers = d.GetAlgorithmSettings();   
             if (containers == null) return String.Empty;
             var grouped = containers.GroupBy(c => c.MinerBaseTypeName + MinerVersion.GetMinerVersion(c.MinerBaseTypeName)).ToList();
             if (grouped == null) return String.Empty;
@@ -852,8 +881,11 @@ namespace NiceHashMiner.Stats.V4
                 var algos = new List<Algo>();
                 foreach (var algo in group)
                 {
-                    var tempAlgo = new Algo() { Id = algo.AlgorithmName, Enabled = algo.Enabled };
-                    algos.Add(tempAlgo);
+                    if (!algo.Hidden)
+                    {
+                        var tempAlgo = new Algo() { Id = algo.AlgorithmName, Enabled = algo.Enabled };
+                        algos.Add(tempAlgo);
+                    }
                 }
                 miner.Algos = algos;
                 minersObject.Miners.Add(miner);
@@ -879,7 +911,10 @@ namespace NiceHashMiner.Stats.V4
                 var combinations = new List<Combination>();
                 foreach (var algo in group)
                 {
-                    var algorithms = new List<AlgoSpeed>()
+                    var a = algo.SecondaryNiceHashID;
+                    if (a == AlgorithmType.NONE)
+                    {
+                        var algorithms = new List<AlgoSpeed>()
                     {
                         new AlgoSpeed()
                         {
@@ -889,12 +924,61 @@ namespace NiceHashMiner.Stats.V4
                         }
 
                     };
+                        var combination = new Combination()
+                        {
+                            Id = algo.AlgorithmName,
+                            Algos = algorithms
+                        };
+                        combinations.Add(combination);
+                    } else//dual
+                    {
+                        var algorithms = new List<AlgoSpeed>()
+                    {
+                        new AlgoSpeed()
+                        {
+                            //Id = Convert.ToString((int)algo.IDs[0]),
+                            Id = Convert.ToString((int)algo.NiceHashID),
+                            Speed = algo.BenchmarkSpeed.ToString()
+                        },
+                        new AlgoSpeed()
+                        {
+                            //Id = Convert.ToString((int)algo.IDs[0]),
+                            Id = Convert.ToString((int)algo.SecondaryNiceHashID),
+                            Speed = algo.BenchmarkSecondarySpeed.ToString()
+                        }
+
+                    };
+                        var combination = new Combination()
+                        {
+                            Id = algo.AlgorithmName,
+                            Algos = algorithms
+                        };
+                        combinations.Add(combination);
+                    }
+                    /*
+                    var algorithms = new List<AlgoSpeed>()
+                    {
+                        new AlgoSpeed()
+                        {
+                            //Id = Convert.ToString((int)algo.IDs[0]),
+                            Id = Convert.ToString((int)algo.NiceHashID),
+                            Speed = algo.BenchmarkSpeed.ToString()
+                        }, a == AlgorithmType.NONE ? null :
+                        new AlgoSpeed()
+                        {
+                            //Id = Convert.ToString((int)algo.IDs[0]),
+                            Id = Convert.ToString((int)algo.SecondaryNiceHashID),
+                            Speed = algo.BenchmarkSecondarySpeed.ToString()
+                        }
+
+                    };
                     var combination = new Combination()
                     {
                         Id = algo.AlgorithmName,
                         Algos = algorithms
                     };
                     combinations.Add(combination);
+                    */
                 }
                 var miner = new MinerSpeedDynamic() { Id = group.Key, Combinations = combinations };
                 minersObject.Miners.Add(miner);

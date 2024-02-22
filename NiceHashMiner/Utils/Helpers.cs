@@ -1,6 +1,7 @@
 using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using NiceHashMiner.PInvoke;
+using NiceHashMiner.Utils;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace NiceHashMiner
                 try
                 {
                     if (File.Exists(FileName)) File.Delete(FileName);
-                    File.Copy(tempFileName, FileName);
+                    File.Move(tempFileName, FileName);
                 }
                 catch (Exception ex)
                 {
@@ -57,7 +58,7 @@ namespace NiceHashMiner
                 }
 
                 // replace the contents
-                File.Replace(tempFileName, FileName, tempFileName + ".tmp");
+                //File.Replace(tempFileName, FileName, tempFileName + ".tmp");
                 if (File.Exists(tempFileName + ".tmp")) File.Delete(tempFileName + ".tmp");
             } catch (Exception ex)
             {
@@ -531,8 +532,6 @@ namespace NiceHashMiner
             {
                 switch (secondary)
                 {
-                    case AlgorithmType.KHeavyHash:
-                        return AlgorithmType.AutolykosKHeavyHash;
                     case AlgorithmType.IronFish:
                         return AlgorithmType.AutolykosIronFish;
                 }
@@ -541,8 +540,6 @@ namespace NiceHashMiner
             {
                 switch (secondary)
                 {
-                    case AlgorithmType.KHeavyHash:
-                        return AlgorithmType.OctopusKHeavyHash;
                     case AlgorithmType.IronFish:
                         return AlgorithmType.OctopusIronFish;
                 }
@@ -551,8 +548,6 @@ namespace NiceHashMiner
             {
                 switch (secondary)
                 {
-                    case AlgorithmType.KHeavyHash:
-                        return AlgorithmType.DaggerKHeavyHash;
                     case AlgorithmType.IronFish:
                         return AlgorithmType.DaggerIronFish;
                 }
@@ -561,8 +556,6 @@ namespace NiceHashMiner
             {
                 switch (secondary)
                 {
-                    case AlgorithmType.KHeavyHash:
-                        return AlgorithmType.ETCHashKHeavyHash;
                     case AlgorithmType.IronFish:
                         return AlgorithmType.ETCHashIronFish;
                 }
@@ -586,7 +579,16 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
+            try
+            {
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
 
             // get the bytes
@@ -596,28 +598,27 @@ namespace NiceHashMiner
             try
             {
                 // write the data to a temp file
-                using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
-                tempFile.Write(data, 0, data.Length);
+                File.WriteAllText(tempPath, contents);
 
-            
-                if (File.Exists(path)) File.Delete(path);
-                File.Copy(tempPath, path);
+                LockManager.GetLock(path, () =>
+                {
+                    if (File.Exists(path)) File.Delete(path);
+                    File.Move(tempPath, path);
+                });
             }
             catch (Exception ex)
             {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
                 return;
             }
-
-            // replace the contents
             try
             {
-                File.Replace(tempPath, path, backup);
-                if (File.Exists(backup)) File.Delete(backup);
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
             }
             catch (Exception ex)
             {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
         }
     }

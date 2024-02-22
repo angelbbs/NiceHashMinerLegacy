@@ -660,9 +660,9 @@ namespace NiceHashMiner.Devices
         public List<Algorithm> GetAlgorithmSettings()
         {
             // hello state
-            var algos = GetAlgorithmSettingsThirdParty(Use3rdPartyMiners.YES);
+            var algos = GetAlgorithmSettingsThirdParty();
             var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);
-
+            
 
             // sort by algo
             retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0
@@ -698,7 +698,7 @@ namespace NiceHashMiner.Devices
             return sortDict.Values.ToList();
         }
 
-        private List<Algorithm> GetAlgorithmSettingsThirdParty(Use3rdPartyMiners use3rdParty)
+        private List<Algorithm> GetAlgorithmSettingsThirdParty()
         {
             //if (use3rdParty == Use3rdPartyMiners.YES)
             {

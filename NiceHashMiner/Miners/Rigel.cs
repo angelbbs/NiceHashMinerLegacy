@@ -46,18 +46,19 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch)
         {
-            //Helpers.ConsolePrint("Rigel Stop", "");
             DeviceType devtype = DeviceType.NVIDIA;
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
             foreach (var mPair in sortedMinerPairs)
             {
                 devtype = mPair.Device.DeviceType;
             }
-            if (Form_Main.ZilMonitorRunning &&
-                Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype))
+
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype))
             {
-                ZilClient.needConnectionZIL = false;
+                ZilClient.needConnectionZIL = true;
+                ZilClient.StartZilMonitor();
             }
+
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             KillRigel();
         }
@@ -422,8 +423,7 @@ namespace NiceHashMiner.Miners
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
                 Helpers.ConsolePrint("Rigel", "kill Rigel.exe PID: " + pid.ToString());
                 KillProcessAndChildren(pid);
-                ProcessHandle.Kill();
-                ProcessHandle.Close();
+                if (ProcessHandle is object) ProcessHandle.Close();
             }
             catch { }
             //if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
@@ -690,8 +690,12 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("GetSummaryAsync", "Rigel-API ERRORs count: " + _apiErrors.ToString());
                 if (_apiErrors > 60)
                 {
-                    Helpers.ConsolePrint("GetSummaryAsync", "RESTART Rigel");
-                    Restart();
+                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                    Helpers.ConsolePrint("GetSummaryAsync", "Need RESTART Rigel");
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+                    ad.ThirdSpeed = 0;
+                    return ad;
                 }
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = 0;
@@ -1033,13 +1037,6 @@ namespace NiceHashMiner.Miners
                     foreach (var mPair in sortedMinerPairs)
                     {
                         devtype = mPair.Device.DeviceType;
-                    }
-                    if (!Form_Main.ZilMonitorRunning && true &&
-                        Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype))
-                    {
-                        ZilClient.needConnectionZIL = true;
-                        Form_Main.ZilMonitorRunning = true;
-                        ZilClient.StartZilMonitor();
                     }
                 }
 

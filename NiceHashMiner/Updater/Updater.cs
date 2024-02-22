@@ -182,7 +182,7 @@ namespace NiceHashMiner.Updater
                     string curdir = Environment.CurrentDirectory;
                     Helpers.ConsolePrint("Updater", "Start update to " + curdir);
                     MinersManager.StopAllMiners();
-                    if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
+                    //if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
                     MessageBoxManager.Unregister();
                     ConfigManager.GeneralConfigFileCommit();
                     Thread.Sleep(1000);
@@ -209,7 +209,7 @@ namespace NiceHashMiner.Updater
                     {
                         Helpers.ConsolePrint("Updater", "Start update to " + curdir);
                         MinersManager.StopAllMiners();
-                        if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
+                        //if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
                         MessageBoxManager.Unregister();
                         ConfigManager.GeneralConfigFileCommit();
 

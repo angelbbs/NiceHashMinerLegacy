@@ -47,6 +47,7 @@ namespace NiceHashMiner.Forms
         private bool _isStartupChanged = false;
         private static Timer UpdateListView_timer;
         public static bool FormSettingsMoved = false;
+        public static bool ForceClosingForm = false;
         //public static bool Zil_GMiner = false;
         public Form_Settings()
         {
@@ -151,6 +152,10 @@ namespace NiceHashMiner.Forms
         private void UpdateLvi_Tick(object sender, EventArgs e)
         {
             algorithmsListView1.UpdateLvi();
+            if (ForceClosingForm)
+            {
+                ButtonSaveClose_Click(null, null);
+            }
         }
 
         #region Initializations
@@ -279,6 +284,7 @@ namespace NiceHashMiner.Forms
 
             //checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
+            checkBoxSaveProtocolData.Text = International.GetText("Form_Settings_General_SaveProtocolData");
 
             checkBox_AllowMultipleInstances.Text =
                 International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
@@ -1071,6 +1077,7 @@ namespace NiceHashMiner.Forms
                 checkBox_StartMiningWhenIdle.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 //checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_LogToFile.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxSaveProtocolData.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AutoStartMining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AllowMultipleInstances.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1216,13 +1223,16 @@ namespace NiceHashMiner.Forms
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
                 //checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
                 checkBox_LogToFile.Checked = ConfigManager.GeneralConfig.LogToFile;
+                checkBoxSaveProtocolData.Checked = ConfigManager.GeneralConfig.SaveProtocolData;
                 if (checkBox_LogToFile.Checked)
                 {
                     textBox_LogMaxFileSize.Enabled = true;
+                    checkBoxSaveProtocolData.Enabled = true;
                 }
                 else
                 {
                     textBox_LogMaxFileSize.Enabled = false;
+                    checkBoxSaveProtocolData.Enabled = false;
                 }
 
                 checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
@@ -1580,6 +1590,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
             //ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
+            ConfigManager.GeneralConfig.SaveProtocolData = checkBoxSaveProtocolData.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.ShowMinersVersions = checkBoxShowMinersVersions.Checked;
@@ -1654,10 +1665,12 @@ namespace NiceHashMiner.Forms
             if (checkBox_LogToFile.Checked)
             {
                 textBox_LogMaxFileSize.Enabled = true;
+                checkBoxSaveProtocolData.Enabled = true;
             }
             else
             {
                 textBox_LogMaxFileSize.Enabled = false;
+                checkBoxSaveProtocolData.Enabled = false;
             }
 
 
@@ -1820,9 +1833,12 @@ namespace NiceHashMiner.Forms
 
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
-                International.GetText("Form_Settings_buttonSaveTitle"),
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!ForceClosingForm)
+            {
+                MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
+                    International.GetText("Form_Settings_buttonSaveTitle"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             IsChange = true;
             IsChangeSaved = true;
             new Task(() => NiceHashStats.GetRigProfit()).Start();
@@ -1843,6 +1859,7 @@ namespace NiceHashMiner.Forms
             {
                 Form_Settings.ActiveForm.Close();
             }
+            Close();
             new Task(() => NiceHashStats.SetDeviceStatus(null, true)).Start();
         }
 
@@ -1863,17 +1880,25 @@ namespace NiceHashMiner.Forms
         {
             richTextBoxInfo.Dispose();
             GC.Collect();
-            if (IsChange && !IsChangeSaved)
+            if (!ForceClosingForm)
             {
-                var result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
-                    International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (result == DialogResult.No)
+                if (IsChange && !IsChangeSaved)
                 {
-                    e.Cancel = true;
-                    return;
+                    var result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
+                        International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    if (result == DialogResult.No)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
+            } else
+            {
+                ConfigManager.GeneralConfigFileCommit();
+                ConfigManager.CommitBenchmarks();
+                ForceClosingForm = false;
             }
 
             if (UpdateListView_timer != null)

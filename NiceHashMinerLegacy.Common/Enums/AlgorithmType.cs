@@ -104,7 +104,7 @@
         Kadena_UNUSED = 59,
         ETCHash = 60,
         VerusHash = 61,
-        KHeavyHash = 62,
+        KHeavyHash__UNUSED = 62,
         NexaPow = 63,
         IronFish = 64
         #endregion // NiceHashAPI

@@ -86,15 +86,11 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             try
             {
-                //File.WriteAllText(FilePath, JsonConvert.SerializeObject(file, Formatting.Indented));
                 WriteAllTextWithBackup(FilePath, JsonConvert.SerializeObject(file, Formatting.Indented));
-                if (File.Exists(FilePathOld))
-                    File.Delete(FilePathOld);
-                File.Copy(FilePath, FilePathOld, true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
+                 Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex.ToString()}");
             }
         }
 
@@ -102,7 +98,6 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
         {
             string path = FilePath;
             var tempPath = FilePath + ".tmp";
-
             // create the backup name
             var backup = FilePath + ".backup";
 
@@ -114,36 +109,37 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             catch (Exception ex)
             {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
 
             // get the bytes
             var data = Encoding.ASCII.GetBytes(contents);
 
             // write the data to a temp file
-            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
-                tempFile.Write(data, 0, data.Length);
+            try
+            {
+                var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough);
+                    tempFile.Write(data, 0, data.Length);
+                tempFile.Flush();
+                tempFile.Close();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("File.Create", ex.ToString());
+            }
 
             //copy file
             try
             {
                 if (File.Exists(path)) File.Delete(path);
-                File.Copy(tempPath, path);
+                System.IO.File.Move(tempPath, path);
+                //File.Copy(tempPath, path, false);
             }
             catch (Exception ex)
             {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
             }
-
-            // replace the contents
-            try
-            {
-                File.Replace(tempPath, path, backup);
-                if(File.Exists(backup)) File.Delete(backup);
-            } catch (Exception ex)
-            {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
-            }
+            return;
         }
 
         public void CreateBackup()

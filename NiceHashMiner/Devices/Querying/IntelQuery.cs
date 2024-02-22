@@ -608,9 +608,9 @@ namespace NiceHashMiner.Devices.Querying
         static double curtimestampLoad = 0;
         static double prevrenderComputeActivityCounter = 0;
         static double currenderComputeActivityCounter = 0;
-        public static float GetLoad(long hDevice)
+        public static int GetLoad(long hDevice)
         {
-            double load = 0;
+            int load = 0;
             try
             {
                 ctl_power_telemetry_t pPowerTelemetry = new ctl_power_telemetry_t();
@@ -631,9 +631,9 @@ namespace NiceHashMiner.Devices.Querying
                 {
                     prevrenderComputeActivityCounter = currenderComputeActivityCounter;
                     currenderComputeActivityCounter = pPowerTelemetry.renderComputeActivityCounter.value.datadouble;
-                    load = ((currenderComputeActivityCounter - prevrenderComputeActivityCounter) / deltatimestampLoad) * 100;
+                    load = (int)(((currenderComputeActivityCounter - prevrenderComputeActivityCounter) / deltatimestampLoad) * 100);
                     if (double.IsNaN(load)) load = 0;
-                    return (float)(Math.Round(load));
+                    return load;
                 }
             }
             catch (Exception ex)

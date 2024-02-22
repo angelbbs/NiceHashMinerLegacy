@@ -53,6 +53,7 @@ namespace NiceHashMiner
         //dns cache
         public static string CheckDNS(string domain, bool forceIP = false)
         {
+            //if (domain.Contains("https") || domain.Contains("wss") || domain.Contains("443")) return domain;
             bool resolveError = false;
             string domainName = "";
             string prefix = "";
@@ -271,11 +272,19 @@ namespace NiceHashMiner
             var data = contents;
 
             // write the data to a temp file
-            LockManager.GetLock(tempPath, () =>
+            try
             {
-                using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                LockManager.GetLock(tempPath, () =>
+                {
+                    var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough);
                     tempFile.Write(data, 0, data.Length);
-            });
+                    tempFile.Flush();
+                    tempFile.Close();
+                });
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
+            }
 
             //copy file
             try
@@ -283,18 +292,9 @@ namespace NiceHashMiner
                 LockManager.GetLock(path, () =>
                 {
                     if (File.Exists(path)) File.Delete(path);
+                    Thread.Sleep(10);
                     File.Copy(tempPath, path);
                 });
-            }
-            catch (Exception ex)
-            {
-                //Helpers.ConsolePrint("WriteAllTextWithBackup", ex.ToString());
-            }
-
-            // replace the contents
-            try
-            {
-                File.Replace(tempPath, path, backup);
             }
             catch (Exception ex)
             {

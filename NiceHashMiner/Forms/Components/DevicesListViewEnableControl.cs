@@ -191,7 +191,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     Checked = computeDevice.Enabled,
                     //Text = devNum + " " + Manufacturer + " " + devInfo + " " + GpuRam + " " + addInfo,
-                    Text = devNum + " " + computeDevice.NameCustom + " " + addInfo,
+                    Text = devNum + " " + computeDevice.NameCustom.Replace("> ", "") + " " + addInfo,
                     Tag = computeDevice
                 };
                 //lvi.SubItems.Add(computeDevice.Name);

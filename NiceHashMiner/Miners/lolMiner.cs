@@ -236,14 +236,6 @@ namespace NiceHashMiner.Miners
                               " --devices ";
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                LastCommandLine = "--algo KASPA" +
-                GetServer("kheavyhash", username, null, "3395") +
-                    apiBind + " " + param +
-                              " --devices ";
-            }
-
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
             {
                 LastCommandLine = "--algo NEXA" +
@@ -259,6 +251,7 @@ namespace NiceHashMiner.Miners
                               " --devices ";
             }
             //duals
+            /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" +
@@ -273,25 +266,17 @@ namespace NiceHashMiner.Miners
                     apiBind + " " + param +
                               " --devices ";
             }
+            */
 
             LastCommandLine += GetDevicesCommandString() + " ";//
-            LastCommandLine = LastCommandLine.Replace("--asm 1", "");
+            //LastCommandLine = LastCommandLine.Replace("--asm 1", "");
             string sColor = "";
-            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
             {
                 sColor = " --nocolor";
             }
             LastCommandLine += sColor;
             ProcessHandle = _Start();
-        }
-        static int GetWinVer(Version ver)
-        {
-            if (ver.Major == 6 & ver.Minor == 1)
-                return 7;
-            else if (ver.Major == 6 & ver.Minor == 2)
-                return 8;
-            else
-                return 10;
         }
 
         #region Decoupled benchmarking routines
@@ -383,13 +368,7 @@ namespace NiceHashMiner.Miners
                               param +
                 " --devices ";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KHeavyHash)
-            {
-                CommandLine = "--algo KASPA " +
-                " --pool " + Links.CheckDNS("pool.eu.woolypooly.com:3112").Replace("stratum+tcp://", "") + " --user kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.lolMiner --pass x" +
-                              param +
-                " --devices ";
-            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
             {
                 CommandLine = "--algo NEXA " +
@@ -405,6 +384,7 @@ namespace NiceHashMiner.Miners
                 " --devices ";
             }
             //duals
+            /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
             {
                 CommandLine = "--algo ETHASH " +
@@ -421,10 +401,11 @@ namespace NiceHashMiner.Miners
                                               param +
                                 " --devices ";
             }
+            */
 
             CommandLine += GetDevicesCommandString() + " "; //amd карты перечисляются первыми
             _benchmarkTimeWait = time;
-            CommandLine = CommandLine.Replace("--asm 1", "");
+            //CommandLine = CommandLine.Replace("--asm 1", "");
             string sColor = "";
             //if (GetWinVer(Environment.OSVersion.Version) < 8)
             {
@@ -638,10 +619,6 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
-                {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
-                }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NexaPow))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
@@ -650,12 +627,12 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
-
+                /*
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//+dual
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 60;
                 }
-                
+                */
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
@@ -736,11 +713,6 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 20;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
-                    {
-                        delay_before_calc_hashrate = 10;
-                        MinerStartDelay = 10;
-                    }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NexaPow))
                     {
                         delay_before_calc_hashrate = 10;
@@ -761,11 +733,13 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 40;
                         MinerStartDelay = 5;
                     }
+                    /*
                     if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//dual
                     {
                         delay_before_calc_hashrate = 70;
                         MinerStartDelay = 30;
                     }
+                    */
                     var ad = GetSummaryAsync();
                     if (ad.Result != null && ad.Result.Speed > 0)
                     {
@@ -940,6 +914,7 @@ namespace NiceHashMiner.Miners
                     }
                     else //duals
                     {
+                        /*
                         for (int alg = 0; alg < Num_Algorithms; alg++)
                         {
                             string Algorithm = resp.Algorithms[alg].Algorithm;
@@ -965,6 +940,7 @@ namespace NiceHashMiner.Miners
 
                         ad.SecondaryAlgorithmID = AlgorithmType.KHeavyHash;
                         ad.ThirdAlgorithmID = AlgorithmType.NONE;
+                        */
                     }
 
                     ad.Speed = totals;
@@ -1029,8 +1005,12 @@ namespace NiceHashMiner.Miners
             {
                 if (d >= 100)
                 {
-                    Helpers.ConsolePrint(MinerTag(), "Too many API errors. Restarting miner");
-                    Restart();
+                    Helpers.ConsolePrint(MinerTag(), "Too many API errors. Need Restarting miner");
+                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+                    ad.ThirdSpeed = 0;
+                    return ad;
                 }
             }
 

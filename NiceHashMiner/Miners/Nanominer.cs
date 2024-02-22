@@ -25,10 +25,7 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
         string ResponseFromNanominer;
         public string platform = "";
-        //public string[] devices;
         public FileStream fs;
-        private int offset = 0;
-        private bool zilRound = false;
         private bool IsInBenchmark = false;
         private double _power = 0.0d;
         double _powerUsage = 0;
@@ -41,8 +38,6 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string btcAdress, string worker)
         {
-            string url = "";
-            //IsApiReadException = false;
             LastCommandLine = GetStartCommand(btcAdress, worker);
             ProcessHandle = _Start();
             try
@@ -116,6 +111,12 @@ namespace NiceHashMiner.Miners
                     platform = "intel";
                     param = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.INTEL).Trim();
                 }
+            }
+
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype))
+            {
+                ZilClient.needConnectionZIL = true;
+                ZilClient.StartZilMonitor();
             }
 
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype) &&
@@ -367,14 +368,13 @@ namespace NiceHashMiner.Miners
             var nvidiaDeviceCount = ComputeDeviceManager.Query._cudaDevices.CudaDevices.Count;
             var allDeviceCount = ComputeDeviceManager.Query.GpuCount;
             Helpers.ConsolePrint("NanominerIndexing", "platform: " + platform);
-            int dev = 0;
+
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             if (Form_Main.NVIDIA_orderBug)
             {
                 sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             }
-            
-            //devices = new string[sortedMinerPairs.Count];
+
             Helpers.ConsolePrint("NanominerIndexing", $"Found {allDeviceCount} Total GPU devices");
             Helpers.ConsolePrint("NanominerIndexing", $"Found {nvidiaDeviceCount} NVIDIA devices");
             Helpers.ConsolePrint("NanominerIndexing", $"Found {amdDeviceCount} AMD devices");
@@ -585,7 +585,6 @@ namespace NiceHashMiner.Miners
                 {
                     Helpers.ConsolePrint("GetStartCommand", e.ToString());
                 }
-                //Thread.Sleep(1000);
                 _benchmarkTimeWait = time;
             }
 
@@ -616,7 +615,6 @@ namespace NiceHashMiner.Miners
                 {
                     Helpers.ConsolePrint("GetStartCommand", e.ToString());
                 }
-                //Thread.Sleep(1000);
                 _benchmarkTimeWait = time;
             }
 
@@ -647,7 +645,6 @@ namespace NiceHashMiner.Miners
                 {
                     Helpers.ConsolePrint("GetStartCommand", e.ToString());
                 }
-                //Thread.Sleep(1000);
                 _benchmarkTimeWait = time;
             }
 
@@ -707,7 +704,6 @@ namespace NiceHashMiner.Miners
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
                     Helpers.ConsolePrint("BENCHMARK",
                         $"Benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName} KILLED");
-                    //BenchmarkHandle = null;
                 }
             }
         }
@@ -732,7 +728,6 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in: " + _benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
-                //BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
                 benchmarkTimer.Start();
@@ -753,7 +748,6 @@ namespace NiceHashMiner.Miners
                         BenchmarkHandle.Kill();
                         BenchmarkHandle.Dispose();
                         EndBenchmarkProcces();
-                        //  KillMinerBase(imageName);
                         if (BenchmarkSignalTimedout)
                         {
                             throw new Exception("Benchmark timedout");
@@ -804,7 +798,6 @@ namespace NiceHashMiner.Miners
 
                             BenchmarkHandle.Kill();
                             BenchmarkHandle.Dispose();
-                            //EndBenchmarkProcces();
                             Form_Main.nanominerCount = 0;
                             break;
                         }
@@ -842,16 +835,21 @@ namespace NiceHashMiner.Miners
         }
         public override async Task<ApiData> GetSummaryAsync()
         {
+            /*
             if (hashrateErrorCount > 12)
             {
                 hashrateErrorCount = 0;
-                Helpers.ConsolePrint(MinerTag(), "Restart nanominer due API error");
-                Restart();
+                Helpers.ConsolePrint(MinerTag(), "Need Restart nanominer due API error");
+                CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                ad.Speed = 0;
+                ad.SecondarySpeed = 0;
+                ad.ThirdSpeed = 0;
+                return ad;
             }
+            */
             CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
             int dSpeed1 = 0;
             int dSpeed2 = 0;
-            bool IsZil = false;
             int gpu_hr = 0;
             var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.BusID).ToList();
             if (Form_Main.NVIDIA_orderBug)
@@ -876,6 +874,7 @@ namespace NiceHashMiner.Miners
             catch (Exception ex)
             {
                 hashrateErrorCount++;
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 Helpers.ConsolePrint("API", ex.Message);
                 return null;
             }
@@ -1012,7 +1011,7 @@ namespace NiceHashMiner.Miners
                         var gpu_hr1 = (int)Convert.ToDouble(hash1, CultureInfo.InvariantCulture.NumberFormat);
                         var gpu_hr2 = (int)Convert.ToDouble(hash2, CultureInfo.InvariantCulture.NumberFormat);
 
-                        if (Form_Main.isZilRound)
+                        if (Form_Main.isZilRound && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype))
                         {
                             mPair.Device.MiningHashrate = 0;
                             mPair.Device.MiningHashrateSecond = gpu_hr2;
@@ -1029,7 +1028,7 @@ namespace NiceHashMiner.Miners
                             mPair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
                             mPair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                         }
-                        
+                        //mPair.Device.State = Stats.DeviceState.Mining;
                         _power = mPair.Device.PowerUsage;
                         i++;
                     }
@@ -1038,6 +1037,7 @@ namespace NiceHashMiner.Miners
             catch (Exception ex)
             {
                 hashrateErrorCount++;
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 Helpers.ConsolePrint("API", ex.ToString());
                 return null;
             }
@@ -1060,7 +1060,7 @@ namespace NiceHashMiner.Miners
                 ad.SecondaryAlgorithmID = AlgorithmType.DaggerHashimoto;
             }
 
-            
+
             if (ad.Speed + ad.SecondarySpeed == 0)
             {
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
@@ -1070,13 +1070,6 @@ namespace NiceHashMiner.Miners
             {
                 CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
 
-                if (!Form_Main.ZilMonitorRunning && zilEnabled &&
-                    Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype))
-                {
-                    ZilClient.needConnectionZIL = true;
-                    Form_Main.ZilMonitorRunning = true;
-                    ZilClient.StartZilMonitor();
-                }
             }
 
             Thread.Sleep(10);
@@ -1092,11 +1085,7 @@ namespace NiceHashMiner.Miners
             {
                 devtype = mPair.Device.DeviceType;
             }
-            if (Form_Main.ZilMonitorRunning &&
-                Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Nanominer, devtype))
-            {
-                ZilClient.needConnectionZIL = false;
-            }
+
             fs.Close();
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }

@@ -66,7 +66,6 @@ namespace NiceHashMiner
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
         public static bool needRestart = false;
-        public static int SMAdelayTick = 31;
         public static bool ShouldRunEthlargement = false;
 
         private bool _demoMode;
@@ -174,6 +173,7 @@ namespace NiceHashMiner
         public static byte[] desktop = new byte[0];
         public static int SwitchCount = 0;
         public static bool ZilMonitorRunning = false;
+        public static bool ZilMonitorNicehashRunning = false;
         public static bool isZilRound = false;
         public static double RateZil = 0.0d;
         public static int RateZilCount = 0;
@@ -603,7 +603,7 @@ namespace NiceHashMiner
             buttonChart.Enabled = true;
             buttonSettings.Enabled = true;
             buttonStartMining.Enabled = true;
-            buttonStopMining.Enabled = true;
+            buttonStopMining.Enabled = false;
 
             if (ConfigManager.GeneralConfig.AutoStartMining)
             {
@@ -1274,7 +1274,6 @@ namespace NiceHashMiner
         {
             //Запускает приложение в классической теме windows. На 7-ке не отображается progressbar
             //Application.VisualStyleState = System.Windows.Forms.VisualStyles.VisualStyleState.NoneEnabled;
-
             if (!ConfigManager.GeneralConfig.AutoStartMining)
             {
                 buttonStopMining.Enabled = false;
@@ -1317,6 +1316,7 @@ namespace NiceHashMiner
             GetBTCwalletType();
             _loadingScreen.Show();
             _loadingScreen.SetValueAndMsg(5, International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
+            Application.DoEvents();
             Helpers.SetDefaultEnvironmentVariables();
             new Task(() => FlushCache()).Start();
 
@@ -1336,7 +1336,48 @@ namespace NiceHashMiner
 
             // Query Available ComputeDevices
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_CPU"));
+
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//10-15
+
+            if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
+            {
+                if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
+                {
+                    try
+                    {
+                        foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
+                        {
+                            process.Kill();
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    Thread.Sleep(200);
+
+                    if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
+                    {
+                        var MonitorProc = new Process
+                        {
+                            StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
+                        };
+
+                        MonitorProc.StartInfo.UseShellExecute = false;
+                        MonitorProc.StartInfo.CreateNoWindow = true;
+                        if (MonitorProc.Start())
+                        {
+                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
+                        }
+                        Application.DoEvents();
+                    }
+                }
+            }
+            Thread.Sleep(500);
 
             _deviceTelemetryTimer = new Timer();
             _deviceTelemetryTimer.Tick += DeviceTelemetryTimer_Tick;
@@ -1381,44 +1422,7 @@ namespace NiceHashMiner
 
             new Task(() => Firewall.AddToFirewall()).Start();
             
-            if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
-            {
-                if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
-                {
-                    try
-                    {
-                        foreach (var process in Process.GetProcessesByName("NvidiaGPUGetDataHost"))
-                        {
-                            process.Kill();
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                    Thread.Sleep(200);
-
-                    if (File.Exists("common\\NvidiaGPUGetDataHost.exe"))
-                    {
-                        var MonitorProc = new Process
-                        {
-                            StartInfo = { FileName = "common\\NvidiaGPUGetDataHost.exe" }
-                        };
-
-                        MonitorProc.StartInfo.UseShellExecute = false;
-                        MonitorProc.StartInfo.CreateNoWindow = true;
-                        if (MonitorProc.Start())
-                        {
-                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting OK");
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint("NvidiaGPUGetDataHost", "Starting ERROR");
-                        }
-                    }
-                }
-            }
-
+            
             _loadingScreen.SetValueAndMsg(30, "Checking server: nicehash.com");
             this.Update();
             this.Refresh();
@@ -1428,7 +1432,7 @@ namespace NiceHashMiner
             List<string> algos = Enum.GetNames(typeof(AlgorithmType)).ToList();
             Array algosN = Enum.GetValues(typeof(AlgorithmType));
 
-            int locations = 0;
+            int loc = 0;
             foreach (var location in Globals.MiningLocation)
             {
                 for (int an = 8; an <= (int)Enum.GetValues(typeof(AlgorithmType)).Cast<AlgorithmType>().Max(); an++)
@@ -1438,13 +1442,15 @@ namespace NiceHashMiner
                         string algo = ((AlgorithmType)an).ToString().ToLower();
                         algo = algo.Replace("randomx", "randomxmonero");
                         string domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower();
-                        _loadingScreen.SetValueAndMsg(35 + locations, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + location.ToLower());
-                        Application.DoEvents();
+                        _loadingScreen.SetValueAndMsg(35 + loc, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + domain.Replace("stratum+tcp://", ""));
+//                        Application.DoEvents();
                         _loadingScreen.Update();
                         Links.CheckDNS(domain);
+                        loc++;
+                        loc = Math.Min(loc, 55);
                     }
                 }
-                locations = locations + 5;
+                Application.DoEvents();
             }
 
             if (Form_Main.KawpowLite)
@@ -1469,6 +1475,9 @@ namespace NiceHashMiner
             Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
             //NiceHashStats.LoadSMA();//load old sma data if nh down
             NHSmaData.InitializeIfNeeded();
+            NiceHashStats.LoadSMA();
+            NHSmaData.FinalizeSma();
+
             _updateSMATimer = new Timer();
             _updateSMATimer.Tick += UpdateSMATimer_Tick;
             _updateSMATimer.Interval = 1000 * 30;
@@ -1637,7 +1646,7 @@ namespace NiceHashMiner
                 }
                 File.WriteAllText("Configs\\MinersData.json", json);
                 //new Task(() => MinersGetVersionWatchdog()).Start();
-                _loadingScreen.SetValueAndMsg(89, "Check miners");
+                _loadingScreen.SetValueAndMsg(89, International.GetText("Form_Main_loadtext_CheckProcesses"));
                 MinersGetVersionWatchdog();
             }
 
@@ -1703,7 +1712,7 @@ namespace NiceHashMiner
 
         private static void MinersGetVersionWatchdog()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(100);
             try
             {
                 Process localByName = Process.GetProcessById(Process.GetCurrentProcess().Id);
@@ -1839,6 +1848,7 @@ namespace NiceHashMiner
             if (WindowsDisplayAdapters.HasNvidiaVideoController())
             {
                 GetNVMLData();
+                //CudaComputeDevice.GetNVMLData();
             }
         }
         private void AutoStartTimerDelay_Tick(object sender, EventArgs e)
@@ -2095,9 +2105,9 @@ namespace NiceHashMiner
             _startupTimer.Tick += StartupTimer_Tick;
             _startupTimer.Interval = 200;
             _startupTimer.Start();
-
             textBoxBTCAddress_new.Enabled = true;
 
+            Application.DoEvents();
             _remoteTimer = new Timer();
             _remoteTimer.Tick += RemoteTimer_Tick;
             _remoteTimer.Interval = 200;
@@ -2137,10 +2147,9 @@ namespace NiceHashMiner
                     new Task(() => NiceHashStats.GetRigProfit()).Start();
                 }
             }
-
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
             _loadingScreen.SetValueAndMsg(1, "Starting...");
-
+            Application.DoEvents();
         }
 
         private void ChartTimer_Tick(object sender, EventArgs e)
@@ -2345,9 +2354,9 @@ namespace NiceHashMiner
             try
             {
                 new Task(() => MinersManager.StopAllMiners()).Start();
-                Thread.Sleep(1000);
-                if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled)
-                    new Task(() => Miner._cooldownCheckTimer.Stop()).Start();
+                //Thread.Sleep(1000);
+                //if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled)
+                  //  new Task(() => Miner._cooldownCheckTimer.Stop()).Start();
                 MessageBoxManager.Unregister();
                 ConfigManager.GeneralConfigFileCommit();
                 Thread.Sleep(1000);
@@ -2402,7 +2411,7 @@ namespace NiceHashMiner
                 CMDconfigHandleOHM.Start();
 
 
-                if (GetWinVer(Environment.OSVersion.Version) == 10)
+                if (GetWinVer(Environment.OSVersion.Version) >= 10)
                 {
                     var CMDconfigHandleWD = new Process
 
@@ -3049,18 +3058,43 @@ public static void CloseChilds(Process parentId)
             }
         }
 
+        [DllImport("ntdll.dll", SetLastError = true)]
+        internal static extern uint RtlGetVersion(out OsVersionInfo versionInformation); // return type should be the NtStatus enum
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct OsVersionInfo
+        {
+            private readonly uint OsVersionInfoSize;
+
+            internal readonly uint MajorVersion;
+            internal readonly uint MinorVersion;
+
+            internal readonly uint BuildNumber;
+
+            internal readonly uint PlatformId;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            private readonly string CSDVersion;
+        }
         public static double GetWinVer(Version ver)
         {
+            /*
+            RtlGetVersion(out var rv);
+            var MajorVersion = rv.MajorVersion;
+            var MinorVersion = rv.MinorVersion;
+            var BuildNumber = rv.BuildNumber;
+            */
+
             if (ver.Major == 6 & ver.Minor == 1)
                 return 7;
             else if (ver.Major == 6 & ver.Minor == 2)
                 return 8;
             else if (ver.Major == 6 & ver.Minor == 3)
                 return 8.1;
-            else if (ver.Major == 10)
-                return 10;
             else if (ver.Build >= 22000)
                 return 11;
+            else if (ver.Major == 10)
+                return 10;
             else return -1;
         }
 
@@ -3162,7 +3196,7 @@ public static void CloseChilds(Process parentId)
             }
 
             MinersManager.StopAllMiners();
-            if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
+            //if (Miner._cooldownCheckTimer != null && Miner._cooldownCheckTimer.Enabled) Miner._cooldownCheckTimer.Stop();
             MessageBoxManager.Unregister();
             ConfigManager.GeneralConfigFileCommit();
             try
@@ -3265,7 +3299,7 @@ public static void CloseChilds(Process parentId)
             CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
             CMDconfigHandleOHM.Start();
 
-            if (GetWinVer(Environment.OSVersion.Version) == 10)
+            if (GetWinVer(Environment.OSVersion.Version) >= 10)
             {
                 var CMDconfigHandleWD = new Process
 
@@ -3663,7 +3697,6 @@ public static void CloseChilds(Process parentId)
                         if (_curState == WebSocketSharp.WebSocketState.Open)
                         {
                             label_NH_ConnectStatus.Text = International.GetText("Form_Main_NHstatusConnected") + " " + status;
-                            wssConnectionsErrors = 0;
                         }
                         label_NH_ConnectStatus.Update();
                     }
@@ -3783,7 +3816,6 @@ public static void CloseChilds(Process parentId)
                          + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                          International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
-            SMAdelayTick++;
             byte[] b1 = { (byte)254, (byte)254, (byte)254 };//1,2 - reserved
             try
             {
@@ -3884,12 +3916,11 @@ public static void CloseChilds(Process parentId)
             int size = Marshal.SizeOf(_dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_loadMem) + Marshal.SizeOf(_temp) + Marshal.SizeOf(_tempMem);
             try
             {
-                MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("NvidiaGPUGetDataHost");
+                MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("NvidiaGPUGetDataHost", MemoryMappedFileRights.Read);
                 using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, Marshal.SizeOf(devCount), MemoryMappedFileAccess.Read))
                 {
                     devCount = reader.ReadUInt32(0);
                 }
-
                 NvData d = new NvData();
                 ComputeDeviceManager.CudaDevicesCountFromNVMLHost = (int)devCount;
                 gpuList.Clear();
@@ -4046,6 +4077,7 @@ public static void CloseChilds(Process parentId)
             textBoxWorkerName.Enabled = true;
             comboBoxLocation.Enabled = true;
             buttonBenchmark.Enabled = true;
+            /*
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 if (ConfigManager.GeneralConfig.ABDefaultMiningStopped)
@@ -4059,9 +4091,10 @@ public static void CloseChilds(Process parentId)
             {
                 buttonStartMining.Enabled = true;
             }
-
+            */
             buttonSettings.Enabled = true;
             devicesListViewEnableControl1.IsMining = false;
+            buttonStartMining.Enabled = true;
             buttonStopMining.Enabled = false;
             buttonBTC_Clear.Enabled = true;
 

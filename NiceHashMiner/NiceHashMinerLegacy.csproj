@@ -419,6 +419,7 @@
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\JsonClass.cs" />
+    <Compile Include="Stats\NhmwsSetResult.cs" />
     <Compile Include="Stats\RigStatus.cs" />
     <Compile Include="Stats\V4\ActionMutableMap.cs" />
     <Compile Include="Stats\V4\MessageParserV4.cs" />

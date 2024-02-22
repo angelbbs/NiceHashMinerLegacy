@@ -121,7 +121,7 @@ namespace NiceHashMiner.Forms
                 {
                     CurrencyName = "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                     chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                        ": " + MinersManager.GetTotalRate() * 1000 + " " + CurrencyName;
+                        ": " + Math.Round(MinersManager.GetTotalRate() * 1000, 8) + " " + CurrencyName;
                 }
 
                 if (Form_Main.RigProfits.Count <= ProfitsCount)
@@ -160,9 +160,9 @@ namespace NiceHashMiner.Forms
                 }
                 else
                 {
-                    chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalPowerRate * 1000);
-                    chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].totalRate * 1000);
-                    chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000);
+                    chartRigProfit.Series["Series3"].Points.AddXY(ProfitsCount, Math.Round(Form_Main.RigProfits[ProfitsCount].totalPowerRate * 1000, 8));
+                    chartRigProfit.Series["Series2"].Points.AddXY(ProfitsCount, Math.Round(Form_Main.RigProfits[ProfitsCount].totalRate * 1000, 8));
+                    chartRigProfit.Series["Series1"].Points.AddXY(ProfitsCount, Math.Round(Form_Main.RigProfits[ProfitsCount].currentProfitAPI * 1000, 8));
                 }
 
                 //chartRigProfit.Series["Series3"].Enabled = false;
@@ -234,11 +234,11 @@ namespace NiceHashMiner.Forms
                     ces = Math.Round((ce), 5).ToString();
                     cesl = Math.Round((cel), 5).ToString();
                     chartRigProfit.Series["Series1"].LegendText = International.GetText("Form_Main_current_actual_profitabilities") +
-                        ": " + Form_Main.lastRigProfit.currentProfitAPI * 1000 + " " + CurrencyName;
+                        ": " + Math.Round(Form_Main.lastRigProfit.currentProfitAPI * 1000, 8) + " " + CurrencyName;
                     chartRigProfit.Series["Series2"].LegendText = International.GetText("Form_Main_current_local_profitabilities") +
-                        ": " + Form_Main.lastRigProfit.totalRate * 1000 + " " + CurrencyName;
+                        ": " + Math.Round(Form_Main.lastRigProfit.totalRate * 1000, 8) + " " + CurrencyName;
                     chartRigProfit.Series["Series3"].LegendText = International.GetText("Form_Main_current_power") +
-                        ": " + Form_Main.lastRigProfit.totalPowerRate * 1000 + " " + CurrencyName;
+                        ": " + Math.Round(Form_Main.lastRigProfit.totalPowerRate * 1000, 8) + " " + CurrencyName;
                 }
 
                 if (currentProfitAllAPI == 0 || totalRateAll == 0)

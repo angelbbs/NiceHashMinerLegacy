@@ -420,9 +420,12 @@ namespace NiceHashMiner.Devices
                                 {
                                     if (sensor.SensorType == SensorType.Temperature && sensor.Name.Contains("GPU Core"))
                                     {
-                                        if ((int)sensor.Value > 0)
+                                        if (!double.IsNaN((double)sensor.Value))
                                         {
-                                            return (int)sensor.Value;
+                                            if ((int)sensor.Value > 0)
+                                            {
+                                                return (int)sensor.Value;
+                                            }
                                         }
                                     }
                                 }

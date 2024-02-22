@@ -619,7 +619,11 @@ namespace NiceHashMiner.Miners
                 if (ad.Speed < 0)
                 {
                     Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
-                    Restart();
+                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+                    ad.ThirdSpeed = 0;
+                    return ad;
                 }
             }
             else

@@ -1,5 +1,5 @@
 {
-  "TimeCached": "2024-01-05T08:59:45.4866515+03:00",
+  "TimeCached": "2024-02-10T13:15:02.7709823+03:00",
   "domains": [
     {
       "Updated": "0001-01-01T00:00:00",
@@ -45,646 +45,7 @@
       ]
     },
     {
-      "Updated": "2022-03-07T22:48:08.3116271+03:00",
-      "domainName": "neoscrypt.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:08.4115655+03:00",
-      "domainName": "neoscrypt.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:08.5035082+03:00",
-      "domainName": "neoscrypt.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:08.5944529+03:00",
-      "domainName": "neoscrypt.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:08.6833992+03:00",
-      "domainName": "daggerhashimoto.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:08.7833356+03:00",
-      "domainName": "daggerhashimoto.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.216.96"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:08.8612881+03:00",
-      "domainName": "daggerhashimoto.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:08.9432379+03:00",
-      "domainName": "daggerhashimoto.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.202.202"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.0311822+03:00",
-      "domainName": "lyra2z.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.1221266+03:00",
-      "domainName": "lyra2z.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.2220662+03:00",
-      "domainName": "lyra2z.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.3170082+03:00",
-      "domainName": "lyra2z.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.4049527+03:00",
-      "domainName": "x16r.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.4839054+03:00",
-      "domainName": "x16r.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.5838436+03:00",
-      "domainName": "x16r.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.6637922+03:00",
-      "domainName": "x16r.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.7607327+03:00",
-      "domainName": "zhash.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.8616702+03:00",
-      "domainName": "zhash.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.216.96"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:09.941621+03:00",
-      "domainName": "zhash.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:10.023571+03:00",
-      "domainName": "zhash.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.202.202"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:10.1045205+03:00",
-      "domainName": "grincuckatoo31.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:10.1934653+03:00",
-      "domainName": "grincuckatoo31.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:10.3083945+03:00",
-      "domainName": "grincuckatoo31.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:10.4243232+03:00",
-      "domainName": "grincuckatoo31.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:10.9040271+03:00",
-      "domainName": "cuckoocycle.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:10.9839771+03:00",
-      "domainName": "cuckoocycle.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.0619291+03:00",
-      "domainName": "cuckoocycle.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.1558711+03:00",
-      "domainName": "cuckoocycle.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.2388194+03:00",
-      "domainName": "x16rv2.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.3417566+03:00",
-      "domainName": "x16rv2.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.4336989+03:00",
-      "domainName": "x16rv2.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.5156492+03:00",
-      "domainName": "x16rv2.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.6125901+03:00",
-      "domainName": "randomxmonero.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.6975358+03:00",
-      "domainName": "randomxmonero.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.216.96"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.7824844+03:00",
-      "domainName": "randomxmonero.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:11.8724286+03:00",
-      "domainName": "randomxmonero.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.202.202"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.0273333+03:00",
-      "domainName": "grincuckatoo32.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.1162772+03:00",
-      "domainName": "grincuckatoo32.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.2052232+03:00",
-      "domainName": "grincuckatoo32.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.2881717+03:00",
-      "domainName": "grincuckatoo32.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.3781185+03:00",
-      "domainName": "kawpow.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.4720584+03:00",
-      "domainName": "kawpow.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.216.96"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.5640029+03:00",
-      "domainName": "kawpow.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.6419546+03:00",
-      "domainName": "kawpow.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.202.202"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.7219047+03:00",
-      "domainName": "beamv3.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.8028555+03:00",
-      "domainName": "beamv3.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.216.96"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.8878024+03:00",
-      "domainName": "beamv3.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:12.9867421+03:00",
-      "domainName": "beamv3.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.202.202"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.0846802+03:00",
-      "domainName": "octopus.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.1676278+03:00",
-      "domainName": "octopus.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.216.96"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.2615701+03:00",
-      "domainName": "octopus.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.3415207+03:00",
-      "domainName": "octopus.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.202.202"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.424471+03:00",
-      "domainName": "autolykos.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.5413969+03:00",
-      "domainName": "autolykos.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.216.96"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.648333+03:00",
-      "domainName": "autolykos.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.7522677+03:00",
-      "domainName": "autolykos.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.202.202"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.8641987+03:00",
-      "domainName": "zelhash.eu-west.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:13.9541444+03:00",
-      "domainName": "zelhash.eu-north.nicehash.com",
-      "IPs": [
-        "172.65.226.105"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:14.0349578+03:00",
-      "domainName": "zelhash.usa-west.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T22:48:14.1241388+03:00",
-      "domainName": "zelhash.usa-east.nicehash.com",
-      "IPs": [
-        "172.65.247.93"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T23:10:33.4609304+03:00",
-      "domainName": "eth.2miners.com",
-      "IPs": [
-        "141.95.124.99",
-        "51.195.4.174",
-        "51.89.64.65",
-        "141.95.34.44",
-        "51.195.89.38",
-        "135.125.163.215",
-        "141.95.35.152",
-        "51.195.88.15",
-        "141.95.124.98",
-        "141.95.124.89",
-        "51.195.4.122",
-        "51.195.105.101"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T23:12:54.4977855+03:00",
-      "domainName": "pool.woolypooly.com",
-      "IPs": [
-        "5.188.168.51"
-      ]
-    },
-    {
-      "Updated": "2022-03-07T23:17:00.5086226+03:00",
-      "domainName": "us-east.ethash-hub.miningpoolhub.com",
-      "IPs": [
-        "18.204.40.75"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T12:13:33.4152362+03:00",
-      "domainName": "rvn.2miners.com",
-      "IPs": [
-        "141.95.34.186",
-        "51.89.99.172"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T12:41:40.9274504+03:00",
-      "domainName": "btg.2miners.com",
-      "IPs": [
-        "51.89.96.117"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T12:41:41.0027253+03:00",
-      "domainName": "equihash144.eu.mine.zpool.ca",
-      "IPs": [
-        "198.50.168.213"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T12:43:15.1730298+03:00",
-      "domainName": "ae.2miners.com",
-      "IPs": [
-        "51.89.96.116"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T12:50:13.2658115+03:00",
-      "domainName": "beam.2miners.com",
-      "IPs": [
-        "51.89.96.116"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T13:00:54.2966759+03:00",
-      "domainName": "flux.2miners.com",
-      "IPs": [
-        "51.89.96.117"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T13:21:23.6560866+03:00",
-      "domainName": "neoscrypt.eu.mine.zpool.ca",
-      "IPs": [
-        "198.50.168.213"
-      ]
-    },
-    {
-      "Updated": "2022-03-11T14:05:57.3667917+03:00",
-      "domainName": "grin.2miners.com",
-      "IPs": [
-        "51.89.96.41"
-      ]
-    },
-    {
-      "Updated": "2022-03-13T23:54:28.780143+03:00",
-      "domainName": "mark.nl.tab.digital",
-      "IPs": [
-        "185.220.119.141"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:04:33.1616306+03:00",
-      "domainName": "daggerhashimoto.auto.nicehash.com",
-      "IPs": [
-        "34.149.10.66"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:34.5710014+03:00",
-      "domainName": "neoscrypt.auto.nicehash.com",
-      "IPs": [
-        "34.111.146.87"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:34.6641824+03:00",
-      "domainName": "lyra2z.auto.nicehash.com",
-      "IPs": [
-        "34.111.48.55"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:34.7136903+03:00",
-      "domainName": "x16r.auto.nicehash.com",
-      "IPs": [
-        "35.186.193.182"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:34.7561059+03:00",
-      "domainName": "zhash.auto.nicehash.com",
-      "IPs": [
-        "34.120.90.10"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:34.8080738+03:00",
-      "domainName": "grincuckatoo31.auto.nicehash.com",
-      "IPs": [
-        "34.111.63.242"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:34.9602958+03:00",
-      "domainName": "cuckoocycle.auto.nicehash.com",
-      "IPs": [
-        "35.244.231.52"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:35.0042841+03:00",
-      "domainName": "x16rv2.auto.nicehash.com",
-      "IPs": [
-        "34.111.213.200"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:35.0531999+03:00",
-      "domainName": "randomxmonero.auto.nicehash.com",
-      "IPs": [
-        "34.149.22.228"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:35.0966408+03:00",
-      "domainName": "grincuckatoo32.auto.nicehash.com",
-      "IPs": [
-        "34.111.90.158"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:35.1461421+03:00",
-      "domainName": "kawpow.auto.nicehash.com",
-      "IPs": [
-        "35.190.124.115"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:35.1902966+03:00",
-      "domainName": "beamv3.auto.nicehash.com",
-      "IPs": [
-        "34.111.56.74"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:35.237446+03:00",
-      "domainName": "octopus.auto.nicehash.com",
-      "IPs": [
-        "34.111.128.155"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T09:12:35.2847087+03:00",
-      "domainName": "autolykos.auto.nicehash.com",
-      "IPs": [
-        "34.149.62.115"
-      ]
-    },
-    {
-      "Updated": "2022-03-25T10:19:24.3611877+03:00",
-      "domainName": "xmr-eu1.nanopool.org",
-      "IPs": [
-        "51.68.137.66",
-        "51.255.34.118",
-        "46.105.31.147",
-        "51.15.65.182",
-        "135.125.238.108",
-        "51.15.58.224",
-        "51.15.54.102",
-        "51.68.143.81",
-        "51.83.33.228",
-        "51.15.69.136",
-        "51.15.78.68",
-        "217.182.169.148"
-      ]
-    },
-    {
-      "Updated": "2022-04-02T10:58:58.8274276+03:00",
-      "domainName": "zelhash.auto.nicehash.com",
-      "IPs": [
-        "34.111.218.189"
-      ]
-    },
-    {
-      "Updated": "2024-01-05T08:55:36.4552823+03:00",
+      "Updated": "2024-02-10T13:14:54.6864526+03:00",
       "domainName": "",
       "IPs": [
         "169.254.153.232",
@@ -692,35 +53,119 @@
       ]
     },
     {
-      "Updated": "2024-01-05T08:55:41.495262+03:00",
+      "Updated": "2024-02-10T13:14:55.0870983+03:00",
+      "domainName": "neoscrypt.auto.nicehash.com",
+      "IPs": [
+        "34.111.146.87"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:55.300473+03:00",
+      "domainName": "daggerhashimoto.auto.nicehash.com",
+      "IPs": [
+        "34.149.10.66"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:55.6207374+03:00",
+      "domainName": "zhash.auto.nicehash.com",
+      "IPs": [
+        "34.120.90.10"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:55.8511526+03:00",
+      "domainName": "cuckoocycle.auto.nicehash.com",
+      "IPs": [
+        "35.244.231.52"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:56.0738197+03:00",
+      "domainName": "x16rv2.auto.nicehash.com",
+      "IPs": [
+        "34.111.213.200"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:56.2886728+03:00",
+      "domainName": "randomxmonero.auto.nicehash.com",
+      "IPs": [
+        "34.149.22.228"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:56.4929432+03:00",
+      "domainName": "grincuckatoo32.auto.nicehash.com",
+      "IPs": [
+        "34.111.90.158"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:56.7271509+03:00",
+      "domainName": "kawpow.auto.nicehash.com",
+      "IPs": [
+        "35.190.124.115"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:56.9520496+03:00",
+      "domainName": "beamv3.auto.nicehash.com",
+      "IPs": [
+        "34.111.56.74"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:57.1759806+03:00",
+      "domainName": "octopus.auto.nicehash.com",
+      "IPs": [
+        "34.111.128.155"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:57.3870019+03:00",
+      "domainName": "autolykos.auto.nicehash.com",
+      "IPs": [
+        "34.149.62.115"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:57.6110602+03:00",
+      "domainName": "zelhash.auto.nicehash.com",
+      "IPs": [
+        "34.111.218.189"
+      ]
+    },
+    {
+      "Updated": "2024-02-10T13:14:57.8244865+03:00",
       "domainName": "etchash.auto.nicehash.com",
       "IPs": [
         "34.160.163.23"
       ]
     },
     {
-      "Updated": "2024-01-05T08:55:41.5237986+03:00",
+      "Updated": "2024-02-10T13:14:58.0637783+03:00",
       "domainName": "verushash.auto.nicehash.com",
       "IPs": [
         "34.160.142.106"
       ]
     },
     {
-      "Updated": "2024-01-05T08:55:41.5531617+03:00",
+      "Updated": "2024-02-10T13:14:58.2956578+03:00",
       "domainName": "kheavyhash.auto.nicehash.com",
       "IPs": [
         "34.117.82.207"
       ]
     },
     {
-      "Updated": "2024-01-05T08:55:41.6001632+03:00",
+      "Updated": "2024-02-10T13:14:58.5327806+03:00",
       "domainName": "nexapow.auto.nicehash.com",
       "IPs": [
         "35.241.39.129"
       ]
     },
     {
-      "Updated": "2024-01-05T08:55:41.6306966+03:00",
+      "Updated": "2024-02-10T13:14:58.7622665+03:00",
       "domainName": "ironfish.auto.nicehash.com",
       "IPs": [
         "34.110.146.218"

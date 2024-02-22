@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
@@ -75,8 +76,7 @@ namespace NiceHashMiner.Stats
 #pragma warning restore 649, IDE1006
         #endregion
 
-        private const int DeviceUpdateLaunchDelay = 20 * 1000;
-        private const int DeviceUpdateInterval = 30 * 1000;
+        private const int DeviceUpdateInterval = 56 * 1000;
 
         public static double Balance { get; private set; }
         public static string Version = "";
@@ -98,24 +98,6 @@ namespace NiceHashMiner.Stats
         private static List<string> markets = new List<string>();
         public static string serverTime;
 
-        private static void LoadCachedSMAData()
-        {
-            if (File.Exists("configs\\sma.dat"))
-            {
-                try
-                {
-                    dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
-                    Helpers.ConsolePrint("LoadCachedSMAData", "Using previous SMA");
-                    JArray smadata = (JArray.Parse(jsonData));
-                    SetAlgorithmRates(smadata, 1, 12, false);//LoadCachedSMAData
-                }
-                catch (Exception er)
-                {
-                    Helpers.ConsolePrint("SMA.DAT", er.ToString());
-                }
-            }
-        }
-
         public static void StartConnection(string address)
         {
             try
@@ -123,9 +105,9 @@ namespace NiceHashMiner.Stats
                 _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
                 _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
                 _deviceUpdateTimer.Start();
-                NHSmaData.InitializeIfNeeded();
-                //Thread.Sleep(1000);
-                LoadSMA();
+
+                //NHSmaData.InitializeIfNeeded();
+                //LoadSMA();
 
                 _socket = null;
                 _socket = new NiceHashSocket(address);
@@ -133,8 +115,7 @@ namespace NiceHashMiner.Stats
                 _socket.OnDataReceived += SocketOnOnDataReceived;
 
                 Helpers.ConsolePrint("SOCKET-address:", address);
-                new Task(() => _socket.StartConnectionNew()).Start();
-                //_socket.StartConnectionNew();
+                new Task(() => _socket.StartConnection()).Start();
             }
             catch (Exception er)
             {
@@ -158,14 +139,25 @@ namespace NiceHashMiner.Stats
         private static bool firstSMA = true;
         private static void SocketReceive(object sender, MessageEventArgs e)
         {
+            Form_Main.wssConnectionsErrors = 0;
             try
             {
                 if (e.IsText)
                 {
+                    if (ConfigManager.GeneralConfig.SaveProtocolData)
+                    {
+                        Helpers.ConsolePrint("SOCKET", $"Received: {e.Data}");
+                    }
+                    else
+                    {
+                        Helpers.ConsolePrint("SOCKET", $"Received: {e.Data.Substring(0, 20)}...");
+                    }
+                    /*
                     if (!e.Data.Contains("exchange_rates"))
                     {
                         Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
                     }
+                    */
                     string jsondata = e.Data;
                     if (jsondata.EndsWith("\""))
                     {
@@ -177,8 +169,8 @@ namespace NiceHashMiner.Stats
                     {
                             case "sma":
                             {
-                                if (Form_Main.SMAdelayTick < 30) break;
-                                Form_Main.SMAdelayTick = 0;
+                                new Task(() => NiceHashStats.SetDeviceStatus(null, true)).Start();
+
                                 if (File.Exists("configs\\sma.dat")) File.Delete("configs\\sma.dat");
                                 string stw = (string)JsonConvert.SerializeObject(message.data);
                                 File.WriteAllText("configs\\sma.dat", stw);
@@ -275,6 +267,8 @@ namespace NiceHashMiner.Stats
                                 };
                                 OSrestartR.Arguments = "-r -f -t 10";
                                 Helpers.ConsolePrint("*************", "Restart Windows");
+                                var cExecuted = "{\"method\":\"executed\",\"params\":[" + message.id.ToString() + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
+                                _socket.SendData(cExecuted);
                                 Process.Start(OSrestartR);
                             }
                             break;
@@ -302,6 +296,89 @@ namespace NiceHashMiner.Stats
                             break;
                         case "mining.set.power_mode":
                             RemoteMiningNotImplemented(message.id.Value.ToString());
+                            break;
+                        case "miner.set.mutable":
+                            try
+                            {
+                                JArray properties = message.properties;
+                                if (properties is JArray)
+                                {
+                                    foreach (var prop in properties)
+                                    {
+                                        int prop_id = prop.Value<int?>("prop_id") ?? -1;
+
+                                        if (prop_id == 100)//autoupdate
+                                        {
+                                            bool value = prop.Value<bool?>("value") ?? false;
+                                            RemoteAutoUpdate(message.id.Value.ToString(), value);
+                                            Form_Settings.ForceClosingForm = true;
+                                            Thread.Sleep(1000);
+                                            Form_Settings.ForceClosingForm = false;
+                                        }
+                                    }
+                                }
+
+                                JArray devices = message.devices;//102,103
+                                JArray rig_properties = message.properties;//104,106
+                                if (rig_properties is JArray)
+                                {
+                                    foreach (var rigprop in rig_properties)
+                                    {
+                                        int prop_id = rigprop.Value<int?>("prop_id") ?? -1;
+                                        if (prop_id == 104)//miners settings per rig
+                                        {
+                                            RemoteMinersSettingsRig(message.id.Value.ToString(), rigprop);
+                                            Form_Settings.ForceClosingForm = true;
+                                            Thread.Sleep(1000);
+                                            Form_Settings.ForceClosingForm = false;
+                                        }
+                                        if (prop_id == 106)//miners benchmark per rig
+                                        {
+                                            RemoteBenchmarkSettingsRig(message.id.Value.ToString(), rigprop);
+                                            Form_Settings.ForceClosingForm = true;
+                                            Thread.Sleep(1000);
+                                            Form_Settings.ForceClosingForm = false;
+                                        }
+                                    }
+                                }
+                                
+                                if (devices is JArray)
+                                {
+                                    foreach (var dev in devices)
+                                    {
+                                        string id = dev.Value<string>("id") ?? "unknown device";
+                                        JArray dev_properties = dev.Value<JArray>("properties") ?? null;
+                                        if (dev_properties is JArray)
+                                        {
+                                            foreach (var devprop in dev_properties)
+                                            {
+                                                int prop_id = devprop.Value<int?>("prop_id") ?? -1;
+                                                if (prop_id == 102)//miners settings per device
+                                                {
+                                                    RemoteMinersSettings(message.id.Value.ToString(), devprop);
+                                                    Form_Settings.ForceClosingForm = true;
+                                                    Thread.Sleep(1000);
+                                                    Form_Settings.ForceClosingForm = false;
+                                                }
+                                                if (prop_id == 103)//benchmark settings per device
+                                                {
+                                                    JToken value = devprop.Value<JToken>("value") ?? null;
+                                                    if (value is JToken)
+                                                    {
+                                                        RemoteBenchmarkSettings(message.id.Value.ToString(), value);
+                                                        Form_Settings.ForceClosingForm = true;
+                                                        Thread.Sleep(1000);
+                                                        Form_Settings.ForceClosingForm = false;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (Exception ex)
+                            {
+                                Helpers.ConsolePrint("miner.set.mutable", ex.ToString());
+                            }
                             break;
                         case "exchange_rates":
                             SetExchangeRates(message.data.Value);
@@ -364,6 +441,221 @@ namespace NiceHashMiner.Stats
             public string Method { get; set; }
             public IList<IList<object>> Data { get; set; }
         }
+
+        
+        public static async Task RemoteBenchmarkSettings(string id, JToken value)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-999,\"Remote management disabled\"]}";
+                return;
+            }
+            JToken JT_value = (JToken)JsonConvert.DeserializeObject(value.ToString());
+
+            if (JT_value is JToken)
+            {
+                string device_id = JT_value.Value<string>("device_id") ?? "unknown device";
+                string device_name = JT_value.Value<string>("device_name") ?? "unknown device";
+
+                var devData = ComputeDeviceManager.Available.Devices.FirstOrDefault(dev => dev.DevUuid == device_id);
+
+                JArray miners = JT_value.Value<JArray>("miners") ?? null;
+                SetMinersBenchmarks(devData, miners);
+            }
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
+            await _socket.SendData(cExecuted);
+
+        }
+
+        public static async Task RemoteBenchmarkSettingsRig(string id, JToken devprop)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-999,\"Remote management disabled\"]}";
+                return;
+            }
+
+            string value = devprop.Value<string>("value") ?? null;
+            value = value.Replace("\\\"", "\"");
+            JToken _value = (JToken)JsonConvert.DeserializeObject(value);
+            if (_value is JToken)
+            {
+                JArray devices = _value.Value<JArray>("devices") ?? null;
+                if (devices is JArray)
+                {
+                    foreach (var device in devices)
+                    {
+                        string device_id = device.Value<string>("device_id") ?? "unknown device";
+                        string device_name = device.Value<string>("device_name") ?? "unknown device name";
+                        var devData = ComputeDeviceManager.Available.Devices.FirstOrDefault(dev => dev.DevUuid == device_id);
+                        JArray miners = device.Value<JArray>("miners") ?? null;
+                        SetMinersBenchmarks(devData, miners);
+                    }
+                }
+            }
+
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
+            await _socket.SendData(cExecuted);
+        }
+
+        private static void SetMinersBenchmarks(ComputeDevice devData, JArray miners)
+        {
+            if (miners is JArray)
+            {
+                foreach (var miner in miners)
+                {
+                    string miner_id = miner.Value<string>("id") ?? "unknown miner";
+                    JArray combination = miner.Value<JArray>("combination") ?? null;
+                    if (combination is JArray)
+                    {
+                        foreach (var _combination in combination)
+                        {
+                            string combination_id = _combination.Value<string>("id") ?? "unknown algorithm";
+                            JArray algorithm = _combination.Value<JArray>("algorithm") ?? null;
+                            if (algorithm is JArray)
+                            {
+                                foreach (var _algorithm in algorithm)
+                                {
+                                    string _algorithm_id = _algorithm.Value<string>("id") ?? "unknown algorithm_id";
+                                    string _algorithm_speed = _algorithm.Value<string>("speed") ?? "unknown algorithm_id";
+                                    foreach (var _algo in devData.GetAlgorithmSettings())
+                                    {
+                                        if (miner_id.Contains(_algo.MinerBaseType.ToString()))
+                                        {
+                                            if (combination_id == _algo.DualNiceHashID.ToString())
+                                            {
+                                                int.TryParse(_algorithm_id, out int i_algorithm_id);
+                                                if (i_algorithm_id == (int)_algo.NiceHashID)
+                                                {
+                                                    double.TryParse(_algorithm_speed, out double d_algorithm_speed);
+                                                    _algo.BenchmarkSpeed = d_algorithm_speed;
+                                                }
+                                            }
+                                            if (_algo is DualAlgorithm _dualalgo)
+                                            {
+                                                if (combination_id == _algo.DualNiceHashID.ToString())
+                                                {
+                                                    int.TryParse(_algorithm_id, out int i_algorithm_id);
+                                                    if (i_algorithm_id == (int)_dualalgo.SecondaryNiceHashID)
+                                                    {
+                                                        double.TryParse(_algorithm_speed, out double d_algorithm_speed);
+                                                        _dualalgo.BenchmarkSecondarySpeed = d_algorithm_speed;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public static async Task RemoteMinersSettingsRig(string id, JToken devprop)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-999,\"Remote management disabled\"]}";
+                return;
+            }
+
+            string value = devprop.Value<string>("value") ?? null;
+            value = value.Replace("\\\"", "\"");
+            JToken _value = (JToken)JsonConvert.DeserializeObject(value);
+
+            if (_value is JToken)
+            {
+                JArray devices = _value.Value<JArray>("devices") ?? null;
+                if (devices is JArray)
+                {
+                    foreach (var device in devices)
+                    {
+                        string device_id = device.Value<string>("device_id") ?? "unknown device";
+                        string device_name = device.Value<string>("device_name") ?? "unknown device name";
+                        var devData = ComputeDeviceManager.Available.Devices.FirstOrDefault(dev => dev.DevUuid == device_id);
+                        JArray miners = device.Value<JArray>("miners") ?? null;
+                        SetMinersSettings(devData, miners);
+                    }
+                }
+            }
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
+            await _socket.SendData(cExecuted);
+        }
+
+
+        public static async Task RemoteMinersSettings(string id, JToken devprop)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-999,\"Remote management disabled\"]}";
+                return;
+            }
+
+            string value = devprop.Value<string>("value") ?? null;
+            value = value.Replace("\\\"", "\"");
+            JToken _value = (JToken)JsonConvert.DeserializeObject(value);
+
+            if (_value is JToken)
+            {
+                string device_id = _value.Value<string>("device_id") ?? "unknown device";
+                var devData = ComputeDeviceManager.Available.Devices.FirstOrDefault(dev => dev.DevUuid == device_id);
+                JArray miners = _value.Value<JArray>("miners") ?? null;
+                SetMinersSettings(devData, miners);
+            }
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
+            await _socket.SendData(cExecuted);
+        }
+
+        private static void SetMinersSettings(ComputeDevice devData, JArray miners)
+        {
+            if (miners is JArray)
+            {
+                foreach (var miner in miners)
+                {
+                    string miner_id = miner.Value<string>("id") ?? "unknown miner";
+                    bool miner_enabled = miner.Value<bool?>("enabled") ?? false;
+                    JArray algorithms = miner.Value<JArray>("algorithms") ?? null;
+                    if (algorithms is JArray)
+                    {
+                        foreach (var algo in algorithms)
+                        {
+                            string algo_id = algo.Value<string>("id") ?? "unknown miner";
+                            bool algo_enabled = algo.Value<bool?>("enabled") ?? false;
+                            foreach (var _algo in devData.GetAlgorithmSettings())
+                            {
+                                if (miner_id.Contains(_algo.MinerBaseType.ToString()))
+                                {
+                                    if (algo_id == _algo.AlgorithmNameCustom)
+                                    {
+                                        _algo.Enabled = algo_enabled && miner_enabled;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static async Task RemoteAutoUpdate(string id, bool autoupdate)
+        {
+            if (!ConfigManager.GeneralConfig.Allow_remote_management)
+            {
+                Helpers.ConsolePrint("REMOTE", "Remote management disabled");
+                var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-999,\"Remote management disabled\"]}";
+                return;
+            }
+            ConfigManager.GeneralConfig.ProgramAutoUpdate = autoupdate;
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
+            await _socket.SendData(cExecuted);
+
+        }
+
         public static async Task RemoteMiningEnable(string id, string deviceToSwitch, bool Enabled)
         {
             if (!ConfigManager.GeneralConfig.Allow_remote_management)
@@ -407,7 +699,7 @@ namespace NiceHashMiner.Stats
             }
 
             Helpers.ConsolePrint("REMOTE", "id: " + id + " device: " + deviceToSwitch);
-            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
             await _socket.SendData(cExecuted);
             return;
         }
@@ -433,7 +725,7 @@ namespace NiceHashMiner.Stats
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",1,\"Remote management disabled\"]}";
                 return;
             }
-            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
             if (Miner.IsRunningNew)
             {
                 await _socket.SendData(cExecuted);
@@ -454,7 +746,7 @@ namespace NiceHashMiner.Stats
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-1,\"Remote management disabled\"]}";
                 return;
             }
-            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
             if (!Miner.IsRunningNew)
             {
                 await _socket.SendData(cExecuted);
@@ -472,12 +764,14 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("REMOTE", "Remote management disabled");
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-999,\"Remote management disabled\"]}";
+                //await _socket.SendData(cExecutedDisabled);
                 return;
             }
-            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
             await _socket.SendData(cExecuted);
             ConfigManager.GeneralConfig.WorkerName = worker;
-            _socket.StartConnectionNew();
+            new Task(() => _socket.StartConnection()).Start();
+            //_socket.StartConnection();
         }
         public static async Task RemoteSetUsername(string id)
         {
@@ -487,7 +781,7 @@ namespace NiceHashMiner.Stats
                 var cExecutedDisabled = "{\"method\":\"executed\",\"params\":[" + id + ",-1,\"Remote management disabled\"]}";
                 return;
             }
-            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + ",0]}";
+            var cExecuted = "{\"method\":\"executed\",\"params\":[" + id + "," + ((int)NhmwsSetResult.CHANGED).ToString() + "]}";
             if (!Miner.IsRunningNew)
             {
                 await _socket.SendData(cExecuted);
@@ -1028,13 +1322,13 @@ namespace NiceHashMiner.Stats
                     dynamic jsonData = (File.ReadAllText("configs\\sma.dat"));
                     Helpers.ConsolePrint("LoadSMA", "Using previous SMA");
                     JArray smadata = (JArray.Parse(jsonData));
-                    SetAlgorithmRates(smadata);//LoadSMA
+                    SetAlgorithmRates(smadata, 1, 12, false, "WS");
                 }
                 else
                 {
                     Helpers.ConsolePrint("LoadSMA", "Using default SMA");
                     JArray smadata = (JArray.Parse(defsma));
-                    SetAlgorithmRates(smadata);//LoadSMA
+                    SetAlgorithmRates(smadata, 1, 12, false, "WS");
                 }
             }
             catch (Exception ex)
@@ -1042,9 +1336,10 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", ex.Message);
                 Helpers.ConsolePrint("SOCKET", "Using default SMA");
                 JArray smadata = (JArray.Parse(defsma));
-                SetAlgorithmRates(smadata);//LoadSMA
+                SetAlgorithmRates(smadata, 1, 12, false, "WS");
                 Helpers.ConsolePrint("OLDSMA", ex.ToString());
             }
+            GetSmaAPICurrent();
         }
         #endregion
 
@@ -1467,7 +1762,11 @@ namespace NiceHashMiner.Stats
 
         public static void DeviceStatus_TickNew(object sender, ElapsedEventArgs e)
         {
-            SetDeviceStatus(null);
+            var _curState = NiceHashSocket._webSocket.ReadyState;
+            if (_curState == WebSocketSharp.WebSocketState.Open)
+            {
+                SetDeviceStatus(null);
+            }
         }
 
         public static async void SetDeviceStatus(object state, bool devName = false)
@@ -1511,15 +1810,28 @@ namespace NiceHashMiner.Stats
                             {
                                 device.State = DeviceState.Mining;
                                 deviceResort.State = DeviceState.Mining;
-                            }
+                                }
                             else
                             {
                                 device.State = DeviceState.Stopped;
+                                device.AlgorithmID = (int)AlgorithmType.NONE;
+                                device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                                device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                                 deviceResort.State = DeviceState.Stopped;
+                                deviceResort.AlgorithmID = (int)AlgorithmType.NONE;
+                                deviceResort.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                                deviceResort.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                             }
                         } else
                         {
                             device.State = DeviceState.Disabled;
+                            deviceResort.State = DeviceState.Disabled;
+                            device.AlgorithmID = (int)AlgorithmType.NONE;
+                            device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                            device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
+                            deviceResort.AlgorithmID = (int)AlgorithmType.NONE;
+                            deviceResort.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                            deviceResort.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                         }
                        
 
@@ -1712,6 +2024,12 @@ namespace NiceHashMiner.Stats
                     {
                         await _socket.SendData(sendData);
                     }
+                } else
+                {
+                    Helpers.ConsolePrint("SetDeviceStatus", "Socket error!");
+                    _socket = null;
+                    Thread.Sleep(1000);
+                    new Task(() => StartConnection("")).Start();
                 }
             }
             catch (Exception ex2)

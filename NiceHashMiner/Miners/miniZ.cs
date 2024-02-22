@@ -63,21 +63,12 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string btcAdress, string worker)
         {
-            string url = "";
             IsApiReadException = false;
             firstStart = true;
             LastCommandLine = GetStartCommand(btcAdress, worker);
             ProcessHandle = _Start();
         }
-        static int GetWinVer(Version ver)
-        {
-            if (ver.Major == 6 & ver.Minor == 1)
-                return 7;
-            else if (ver.Major == 6 & ver.Minor == 2)
-                return 8;
-            else
-                return 10;
-        }
+
         private string GetServer(string algo, string username, string port)
         {
             string ret = "";
@@ -127,6 +118,12 @@ namespace NiceHashMiner.Miners
             foreach (var mPair in sortedMinerPairs)
             {
                 devtype = mPair.Device.DeviceType;
+            }
+
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
+            {
+                ZilClient.needConnectionZIL = true;
+                ZilClient.StartZilMonitor();
             }
 
             if (!MinerVersion.Get_miniZ().MinerVersion.Trim().Equals("2.1c"))
@@ -197,7 +194,7 @@ namespace NiceHashMiner.Miners
                 pers = " --pers auto";
             }
             string sColor = "";
-            if (GetWinVer(Environment.OSVersion.Version) < 8)
+            if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
             {
                 sColor = " --nocolour";
             }
@@ -543,7 +540,16 @@ namespace NiceHashMiner.Miners
                     errorCount = 0;
                     client.Close();
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                    ad.Speed = prevSpeed;
+                    if ((ad.AlgorithmID == AlgorithmType.ZHash ||
+                        ad.AlgorithmID == AlgorithmType.ZelHash ||
+                        ad.AlgorithmID == AlgorithmType.BeamV3) && ad.Speed > 10000)
+                    {
+                        ad.Speed = 0;
+                    }
+                    else
+                    {
+                        ad.Speed = prevSpeed;
+                    }
                     return ad;
                 }
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
@@ -555,16 +561,22 @@ namespace NiceHashMiner.Miners
                 errorCount++;
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = 0;
+                /*
                 if (errorCount > 20)
                 {
-                    Helpers.ConsolePrint("miniZ API error", "Restart miner");
-                    errorCount = 0;
-                    Restart();
+                    Helpers.ConsolePrint("miniZ API error", "Need Restart miner");
+                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+                    ad.ThirdSpeed = 0;
+                    return ad;
                 }
+                */
             }
 
             ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
-
+            var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
+            DeviceType devtype = DeviceType.NVIDIA;
             try
             {
                 if (resp != null && resp.error == null)
@@ -583,7 +595,7 @@ namespace NiceHashMiner.Miners
                         ad.AlgorithmID == AlgorithmType.ZelHash ||
                         ad.AlgorithmID == AlgorithmType.BeamV3) && ad.Speed > 10000)
                     {
-                        ad.Speed = prevSpeed;
+                        ad.Speed = 0;
                     }
                     ad.SecondarySpeed = resp.result.Aggregate<Result, double>(0, (current, t1) => current + t1.speed_is) * 1000000;
                     pers = resp.pers;
@@ -604,7 +616,6 @@ namespace NiceHashMiner.Miners
                         //hashrates2[i] = resp.result[i].speed_sps;
                     }
                     int dev = 0;
-                    var sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                     if (Form_Main.NVIDIA_orderBug)
                     {
                         sortedMinerPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
@@ -618,7 +629,7 @@ namespace NiceHashMiner.Miners
 
                         if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.NONE)//single
                         {
-                            if (Form_Main.isZilRound)
+                            if (Form_Main.isZilRound && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, mPair.Device.DeviceType))
                             {
                                 //double hashrate = readCSV(mPair.Device.ID);
                                 total = total + hashrates[dev];
@@ -644,6 +655,7 @@ namespace NiceHashMiner.Miners
                     }
                     
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                    
                     if (ad.Speed == 0)
                     {
                         CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
@@ -651,23 +663,16 @@ namespace NiceHashMiner.Miners
                     else
                     {
                         CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                        DeviceType devtype = DeviceType.NVIDIA;
                         sortedMinerPairs = MiningSetup.MiningPairs.OrderBy(pair => pair.Device.IDByBus).ToList();
                         foreach (var mPair in sortedMinerPairs)
                         {
                             devtype = mPair.Device.DeviceType;
                         }
-                        if (!Form_Main.ZilMonitorRunning &&
-                            Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
-                        {
-                            ZilClient.needConnectionZIL = true;
-                            Form_Main.ZilMonitorRunning = true;
-                            ZilClient.StartZilMonitor();
-                        }
+
                     }
 
                     prevSpeed = ad.Speed;
-                    if (Form_Main.isZilRound && total > 0)
+                    if (Form_Main.isZilRound && total > 0 && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
                     {
                         ad.SecondarySpeed = total;
                         ad.Speed = 0;
@@ -682,7 +687,13 @@ namespace NiceHashMiner.Miners
                 ad.Speed = prevSpeed;
             }
 
-            if (Form_Main.isZilRound)
+
+            foreach (var mPair in sortedMinerPairs)
+            {
+                devtype = mPair.Device.DeviceType;
+            }
+
+            if (Form_Main.isZilRound && Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
             {
                 if (pers.Contains("zil"))//+zil
                 {
@@ -785,7 +796,7 @@ namespace NiceHashMiner.Miners
             if (Form_Main.ZilMonitorRunning &&
                 Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.miniZ, devtype))
             {
-                ZilClient.needConnectionZIL = false;
+                //ZilClient.needConnectionZIL = false;
             }
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }

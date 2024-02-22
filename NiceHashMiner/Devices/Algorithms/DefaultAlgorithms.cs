@@ -527,15 +527,18 @@ Fatal error detected. Restarting.
                         ExtraLaunchParameters = "--mt 1"
                     },
                     */
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.IronFish, AlgorithmType.DaggerIronFish.ToString())
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.IronFish, 
+                        "DaggerIronFish")
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, AlgorithmType.IronFish, AlgorithmType.ETCHashIronFish.ToString())
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, AlgorithmType.IronFish, 
+                        "ETCHashIronFish")
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Octopus, AlgorithmType.IronFish, AlgorithmType.OctopusIronFish.ToString())
+                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Octopus, AlgorithmType.IronFish, 
+                        "OctopusIronFish")
                     {
                         ExtraLaunchParameters = "--mt 1"
                     }
@@ -604,7 +607,8 @@ Fatal error detected. Restarting.
                         ExtraLaunchParameters = "--no-tui"
                     },
                     */
-                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.IronFish, AlgorithmType.AutolykosIronFish.ToString())
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.IronFish, 
+                        "AutolykosIronFish")
                     {
                         ExtraLaunchParameters = "--no-tui"
                     }

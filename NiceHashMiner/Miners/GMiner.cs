@@ -72,11 +72,7 @@ namespace NiceHashMiner.Miners
             {
                 devtype = mPair.Device.DeviceType;
             }
-            if (Form_Main.ZilMonitorRunning &&
-                Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
-            {
-                ZilClient.needConnectionZIL = false;
-            }
+
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             KillGminer();
         }
@@ -99,6 +95,12 @@ namespace NiceHashMiner.Miners
             foreach (var mPair in sortedMinerPairs)
             {
                 devtype = mPair.Device.DeviceType;
+            }
+
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
+            {
+                ZilClient.needConnectionZIL = true;
+                ZilClient.StartZilMonitor();
             }
 
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype) &&
@@ -492,8 +494,11 @@ namespace NiceHashMiner.Miners
                 int pid = int.Parse(cpid, CultureInfo.InvariantCulture);
                 Helpers.ConsolePrint("GMINER", "kill gminer.exe PID: " + pid.ToString());
                 KillProcessAndChildren(pid);
-                ProcessHandle.Kill();
-                ProcessHandle.Close();
+                if (ProcessHandle is object && ProcessHandle != null)
+                {
+                    ProcessHandle.Kill();
+                    ProcessHandle.Close();
+                }
             }
             catch { }
             //if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
@@ -503,9 +508,11 @@ namespace NiceHashMiner.Miners
         {
             foreach (var pair in MiningSetup.MiningPairs)
             {
-                if (pair.Device.NvidiaLHR && MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
+                if (pair.Device.DeviceType == DeviceType.AMD && 
+                    (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto ||
+                    MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash))
                 {
-                    //addTime = 60;
+                    addTime = 30;
                 }
             }
 
@@ -844,7 +851,7 @@ namespace NiceHashMiner.Miners
             ad.ThirdAlgorithmID = AlgorithmType.NONE;
             DeviceType devtype = DeviceType.NVIDIA;
 
-            string ResponseFromGMiner;
+            string ResponseFromGMiner = "";
             double total = 0;
             double total2 = 0;
             double total3 = 0;
@@ -863,7 +870,7 @@ namespace NiceHashMiner.Miners
                 ResponseFromGMiner = await Reader.ReadToEndAsync();
                 //Helpers.ConsolePrint("->", ResponseFromGMiner);
                 if (ResponseFromGMiner.Length == 0 || (ResponseFromGMiner[0] != '{' && ResponseFromGMiner[0] != '['))
-                    throw new Exception("Not JSON!");
+                    throw new WebException();
                 Reader.Close();
                 Response.Close();
             }
@@ -873,8 +880,12 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("GetSummaryAsync", "GMINER-API ERRORs count: " + _apiErrors.ToString());
                 if (_apiErrors > 60)
                 {
-                    Helpers.ConsolePrint("GetSummaryAsync", "RESTART GMINER");
-                    Restart();
+                    Helpers.ConsolePrint("GetSummaryAsync", "Need RESTART GMINER");
+                    CurrentMinerReadStatus = MinerApiReadStatus.RESTART;
+                    ad.Speed = 0;
+                    ad.SecondarySpeed = 0;
+                    ad.ThirdSpeed = 0;
+                    return ad;
                 }
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 ad.Speed = 0;
@@ -1099,13 +1110,6 @@ namespace NiceHashMiner.Miners
                     foreach (var mPair in sortedMinerPairs)
                     {
                         devtype = mPair.Device.DeviceType;
-                    }
-                    if (!Form_Main.ZilMonitorRunning && _algo.ToLower().Contains("zil") &&
-                        Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.GMiner, devtype))
-                    {
-                        ZilClient.needConnectionZIL = true;
-                        Form_Main.ZilMonitorRunning = true;
-                        ZilClient.StartZilMonitor();
                     }
                 }
 

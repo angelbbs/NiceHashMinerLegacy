@@ -289,30 +289,12 @@ namespace NiceHashMiner.Miners.Parsing
 
         private static MinerType GetMinerType(DeviceType deviceType, MinerBaseType minerBaseType, AlgorithmType algorithmType)
         {
-            if (MinerBaseType.cpuminer == minerBaseType)
-            {
-                return MinerType.cpuminer_opt;
-            }
             switch (minerBaseType)
             {
-                case MinerBaseType.OptiminerAMD:
-                    return MinerType.OptiminerZcash;
-                case MinerBaseType.sgminer:
-                    return MinerType.sgminer;
-                case MinerBaseType.CastXMR:
-                    return MinerType.CastXMR;
-                case MinerBaseType.hsrneoscrypt:
-                    return MinerType.hsrneoscrypt;
                 case MinerBaseType.CryptoDredge:
                     return MinerType.CryptoDredge;
-                case MinerBaseType.ZEnemy:
-                    return MinerType.ZEnemy;
-                case MinerBaseType.lyclMiner:
-                    return MinerType.lyclMiner;
                 case MinerBaseType.trex:
                     return MinerType.trex;
-                case MinerBaseType.mkxminer:
-                    return MinerType.mkxminer;
                 case MinerBaseType.Phoenix:
                     return MinerType.Phoenix;
                 case MinerBaseType.teamredminer:
@@ -321,20 +303,12 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.GMiner;
                 case MinerBaseType.lolMiner:
                     return MinerType.lolMiner;
-                case MinerBaseType.lolMinerBEAM:
-                    return MinerType.lolMinerBEAM;
-                case MinerBaseType.Bminer:
-                    return MinerType.Bminer;
-                case MinerBaseType.TTMiner:
-                    return MinerType.TTMiner;
                 case MinerBaseType.NBMiner:
                     return MinerType.NBMiner;
                 case MinerBaseType.miniZ:
                     return MinerType.miniZ;
                 case MinerBaseType.Nanominer:
                     return MinerType.Nanominer;
-                case MinerBaseType.Kawpowminer:
-                    return MinerType.Kawpowminer;
                 case MinerBaseType.Rigel:
                     return MinerType.Rigel;
 
@@ -342,26 +316,14 @@ namespace NiceHashMiner.Miners.Parsing
                 case MinerBaseType.Claymore:
                     switch (algorithmType)
                     {
-                        case AlgorithmType.DaggerHashimoto:
-                            return MinerType.ClaymoreDual;
                         case AlgorithmType.NeoScrypt:
                             return MinerType.ClaymoreNeoscrypt;
                     }
                     break;
-                case MinerBaseType.EWBF:
-                    return MinerType.EWBF;
                 case MinerBaseType.Xmrig:
                     return MinerType.Xmrig;
-                case MinerBaseType.XmrigAMD:
-                    return MinerType.Xmrig;
-                case MinerBaseType.WildRig:
-                    return MinerType.WildRig;
                 case MinerBaseType.SRBMiner:
                     return MinerType.SRBMiner;
-                case MinerBaseType.dstm:
-                    return MinerType.dstm;
-                case MinerBaseType.XmrigNVIDIA:
-                    return MinerType.Xmrig;
             }
 
             return MinerType.NONE;

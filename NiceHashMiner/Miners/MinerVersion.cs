@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners
             long filesize = 0l;
             string version = "";
             MinerData ret = new MinerData();
-            ret.MinerName = "ClaymoreNeoscryptMiner";
+            ret.MinerName = "Claymore";
             try
             {
                 if (!File.Exists(path)) return ret;
@@ -48,7 +48,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -87,14 +87,18 @@ namespace NiceHashMiner.Miners
                         {
                             ret.MinerPath = path;
                             ret.MinerSize = new System.IO.FileInfo(path).Length;
-                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty);
+                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty).Trim();
+                            P.Close();
                             return ret;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -127,7 +131,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -171,7 +175,8 @@ namespace NiceHashMiner.Miners
                                 var index = line.IndexOf(findString);
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
-                                ret.MinerVersion = line.Substring(index + 13).Replace(System.Environment.NewLine, string.Empty);
+                                ret.MinerVersion = line.Substring(index + 13).Replace(System.Environment.NewLine, string.Empty).Trim();
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -179,7 +184,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -211,7 +219,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -256,7 +264,8 @@ namespace NiceHashMiner.Miners
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
-                                    Replace(System.Environment.NewLine, string.Empty);
+                                    Replace(System.Environment.NewLine, string.Empty).Trim();
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -264,7 +273,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -296,7 +308,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -341,7 +353,8 @@ namespace NiceHashMiner.Miners
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
-                                    Replace(System.Environment.NewLine, string.Empty);
+                                    Replace(System.Environment.NewLine, string.Empty).Trim();
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -349,7 +362,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -381,7 +397,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -417,18 +433,22 @@ namespace NiceHashMiner.Miners
                     {
                         var line = string.Empty;
                             line = reader.ReadLine();
-                            if (line != null)
-                            {
-                                ret.MinerPath = path;
-                                ret.MinerSize = new System.IO.FileInfo(path).Length;
-                                ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty);
-                                return ret;
-                            }
+                        if (line != null)
+                        {
+                            ret.MinerPath = path;
+                            ret.MinerSize = new System.IO.FileInfo(path).Length;
+                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty).Trim();
+                            P.Close();
+                            return ret;
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -461,7 +481,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -507,6 +527,7 @@ namespace NiceHashMiner.Miners
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
                                     Replace(System.Environment.NewLine, string.Empty).Split('@')[0];
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -514,7 +535,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -546,7 +570,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -591,7 +615,6 @@ namespace NiceHashMiner.Miners
                         if (_ticks > 20) break;
                     } while (!File.Exists("miners\\Nanominer\\ver.txt"));
                     Thread.Sleep(1000);
-
                     P.Kill();
                     Thread.Sleep(1000);
                     using (var reader = File.OpenText("miners\\Nanominer\\ver.txt"))
@@ -607,6 +630,7 @@ namespace NiceHashMiner.Miners
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
                                     Replace(System.Environment.NewLine, string.Empty).Split('-')[0];
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -614,7 +638,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -647,7 +674,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -692,7 +719,8 @@ namespace NiceHashMiner.Miners
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
-                                    Replace(System.Environment.NewLine, string.Empty);
+                                    Replace(System.Environment.NewLine, string.Empty).Trim();
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -700,7 +728,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -732,7 +763,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -777,7 +808,8 @@ namespace NiceHashMiner.Miners
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
-                                    Replace(System.Environment.NewLine, string.Empty);
+                                    Replace(System.Environment.NewLine, string.Empty).Trim();
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -785,7 +817,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -817,7 +852,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -857,14 +892,18 @@ namespace NiceHashMiner.Miners
                         {
                             ret.MinerPath = path;
                             ret.MinerSize = new System.IO.FileInfo(path).Length;
-                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty);
+                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty).Trim();
+                            P.Close();
                             return ret;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -897,7 +936,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -940,7 +979,7 @@ namespace NiceHashMiner.Miners
                         if (_ticks > 20) break;
                     } while (!File.Exists("miners\\SRBMiner\\ver.txt") && !P.HasExited);
 
-                    //P.Kill();
+                    //P.Close();
                     Thread.Sleep(1000);
                     using (var reader = File.OpenText("miners\\SRBMiner\\ver.txt"))
                     {
@@ -954,7 +993,8 @@ namespace NiceHashMiner.Miners
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
-                                    Replace(System.Environment.NewLine, string.Empty);
+                                    Replace(System.Environment.NewLine, string.Empty).Trim();
+                                //P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -962,7 +1002,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -995,7 +1038,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -1041,6 +1084,7 @@ namespace NiceHashMiner.Miners
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
                                     Replace(System.Environment.NewLine, string.Empty).Split(' ')[0];
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -1048,7 +1092,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -1081,7 +1128,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -1126,7 +1173,8 @@ namespace NiceHashMiner.Miners
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
                                 ret.MinerVersion = line.Substring(index + findString.Length).
-                                    Replace(System.Environment.NewLine, string.Empty);
+                                    Replace(System.Environment.NewLine, string.Empty).Trim();
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -1134,7 +1182,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }
@@ -1166,7 +1217,7 @@ namespace NiceHashMiner.Miners
                                 version = m.MinerVersion;
                                 ret.MinerPath = path;
                                 ret.MinerSize = filesize;
-                                ret.MinerVersion = version;
+                                ret.MinerVersion = version.Trim(' ');
                             }
                         }
                     }
@@ -1211,7 +1262,8 @@ namespace NiceHashMiner.Miners
                                 var xmrig = line.IndexOf(findString);
                                 ret.MinerPath = path;
                                 ret.MinerSize = new System.IO.FileInfo(path).Length;
-                                ret.MinerVersion = line.Substring(xmrig + 6).Replace(System.Environment.NewLine, string.Empty);
+                                ret.MinerVersion = line.Substring(xmrig + 6).Replace(System.Environment.NewLine, string.Empty).Trim();
+                                P.Close();
                                 return ret;
                             }
                         } while (line != null);
@@ -1219,7 +1271,10 @@ namespace NiceHashMiner.Miners
                 }
                 catch (Exception ex)
                 {
-                    Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
+                    ret.MinerPath = path;
+                    ret.MinerSize = new System.IO.FileInfo(path).Length;
+                    ret.MinerVersion = "";
                     return ret;
                 }
             }

@@ -5,6 +5,7 @@ using NvidiaGPUGetDataHost.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Reflection;
@@ -25,7 +26,7 @@ namespace NvidiaGPUGetDataHost
         }
 
         private readonly nvmlDevice _nvmlDevice;
-
+        private static string nvmlRootPath = "";
         public static byte[] RawSerialize(object anything)
         {
             int length = Marshal.SizeOf(anything);
@@ -71,10 +72,14 @@ namespace NvidiaGPUGetDataHost
             {
                 uint devCount = 0;
                 nvmlReturn ret;
+                /*
                 var pathVar = Environment.GetEnvironmentVariable("PATH");
                 pathVar += ";" + Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                "\\NVIDIA Corporation\\NVSMI"; ;
                 Environment.SetEnvironmentVariable("PATH", pathVar);
+                */
+                if (!TryAddNvmlToEnvPath()) return;
+
                 nvmlDevice _nvmlDevice = new nvmlDevice();
                 nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
                 if (nvmlLoaded != nvmlReturn.Success)
@@ -285,7 +290,8 @@ namespace NvidiaGPUGetDataHost
                                 writer.WriteArray<byte>(0, RawSerialize(0), 0, Marshal.SizeOf(devCount));
                             }
                             */
-                            writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount), BitConverter.GetBytes(Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue)), 0, Marshal.SizeOf(dev));
+                            //writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount), BitConverter.GetBytes(Convert.ToInt32((long)_nvmlDevice.Pointer % Int32.MaxValue)), 0, Marshal.SizeOf(dev));
+                            writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount), BitConverter.GetBytes(dev), 0, Marshal.SizeOf(dev));
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev), BitConverter.GetBytes(_power), 0, Marshal.SizeOf(_power));
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power), BitConverter.GetBytes(_fan), 0, Marshal.SizeOf(_fan));
                             writer.WriteArray<byte>(size * dev + Marshal.SizeOf(devCount) + Marshal.SizeOf(dev) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan), BitConverter.GetBytes(_load), 0, Marshal.SizeOf(_load));
@@ -328,6 +334,72 @@ namespace NvidiaGPUGetDataHost
                 Console.WriteLine(ex.ToString());
                 Logger.ConsolePrint("NvidiaGPUGetDataHost", "Exception: " + ex.ToString());
             }
+        }
+        private static bool TryAddNvmlToEnvPath()
+        {
+            string defaultpath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                               "\\NVIDIA Corporation\\NVSMI";
+
+            var pathVar = Environment.GetEnvironmentVariable("PATH");
+            if (Directory.Exists(defaultpath) && File.Exists("nvidia-smi.exe") && File.Exists("nvml.dll"))
+            {
+                nvmlRootPath = defaultpath;
+                pathVar += ";" + defaultpath;
+                Logger.ConsolePrint("NvidiaGPUGetDataHost", $"Adding NVML to PATH='{defaultpath}'");
+                Environment.SetEnvironmentVariable("PATH", pathVar);
+                return true;
+            }
+            else
+            {
+                nvmlRootPath = GetNVMLFiles();
+                if (!string.IsNullOrEmpty(nvmlRootPath))
+                {
+                    pathVar += ";" + nvmlRootPath;
+                    Logger.ConsolePrint("NvidiaGPUGetDataHost", $"Adding NVML to PATH='{nvmlRootPath}'");
+                    Environment.SetEnvironmentVariable("PATH", pathVar);
+                    return true;
+                }
+            }
+            Logger.ConsolePrint("NvidiaGPUGetDataHost", "Warning! nvml.dll or nvidia-smi.exe not found!");
+            return false;
+        }
+
+        private static string GetNVMLFiles()
+        {
+            DateTime dt = new DateTime();
+            string pathToFiles = null;
+            string DriverFolder = "C:\\Windows\\System32\\DriverStore\\FileRepository";
+            string nvFolder = "\\nv_dispig.inf_amd64_7e5fd280efaa5445";
+            if (File.Exists(DriverFolder + nvFolder + "\\nvidia-smi.exe"))
+            {
+                return DriverFolder + nvFolder;
+            }
+            try
+            {
+                string[] folders = Directory.GetDirectories(DriverFolder);
+                foreach (string folder in folders)
+                {
+                    string[] files = Directory.GetFiles(folder);
+                    foreach (string filename in files)
+                    {
+                        if (filename.Contains("nvml.dll"))
+                        {
+                            FileInfo fi = new FileInfo(filename);
+                            if (DateTime.Compare(fi.CreationTime, dt) > 0)
+                            {
+                                dt = fi.CreationTime;
+                                pathToFiles = folder;
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (System.Exception e)
+            {
+                Logger.ConsolePrint("GetNVMLFiles", e.ToString());
+            }
+            return pathToFiles;
         }
 
     }

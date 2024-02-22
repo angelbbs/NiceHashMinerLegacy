@@ -142,6 +142,7 @@ namespace NiceHashMiner.Configs.Data
 
         public int MinIdleSeconds = 60;
         public bool LogToFile = true;
+        public bool SaveProtocolData = false;
         public bool ShowHistory = true;
 
         // in bytes
@@ -210,10 +211,6 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableMonitoringAMD = false;
         public bool DisableMonitoringNVIDIA = false;
         public bool DisableMonitoringINTEL = false;
-
-
-        // 3rd party miners
-        public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.YES;
 
         public bool DownloadInit3rdParty = false;
 
@@ -314,7 +311,6 @@ namespace NiceHashMiner.Configs.Data
             ProxyAsFailover = false;
             ProxySSL = true;
             IdleWhenNoInternetAccess = false;
-            Use3rdPartyMiners = Use3rdPartyMiners.YES;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = false;
             UseIFTTT = false;

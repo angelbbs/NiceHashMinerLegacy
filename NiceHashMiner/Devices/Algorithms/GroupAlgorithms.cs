@@ -315,6 +315,19 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
 
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner)) 
+            {
+                foreach (var algo in algoSettings[MinerBaseType.GMiner])
+                {
+                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA &&
+                        (device.Name.Contains("RTX 4060") && device.Name.Contains("Laptop")))
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+
             if (algoSettings.ContainsKey(MinerBaseType.NBMiner)) //not supported
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])

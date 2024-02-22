@@ -24,7 +24,6 @@ namespace NiceHashMiner.Miners
         private int _benchmarkTimeWait = 180;
 
         private const int TotalDelim = 2;
-        int count = 0;
         private double speed = 0;
         private double tmp = 0;
         private bool IsInBenchmark = false;
@@ -39,7 +38,6 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string btcAdress, string worker)
         {
-            string url = "";
             IsInBenchmark = false;
             //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.SRBMiner;
 
@@ -144,6 +142,12 @@ namespace NiceHashMiner.Miners
                 devtype = mPair.Device.DeviceType;
             }
 
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype))
+            {
+                ZilClient.needConnectionZIL = true;
+                ZilClient.StartZilMonitor();
+            }
+
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype) &&
                 ConfigManager.GeneralConfig.ZIL_mining_state == 1)
             {
@@ -173,6 +177,7 @@ namespace NiceHashMiner.Miners
             {
                 var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
                 //сначала дуалы
+                /*
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
                 {
                     return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
@@ -189,6 +194,7 @@ namespace NiceHashMiner.Miners
                     $"--api-enable --api-port {ApiPort} " +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
+                */
                 //
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
@@ -242,15 +248,7 @@ namespace NiceHashMiner.Miners
                     GetServer(algo, username, port) + ZilMining +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
-                {
-                    var port = "3395";
-                    var algo = "kheavyhash";
-
-                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm kaspa --api-enable --api-port {ApiPort} " +
-                    GetServer(algo, username, port) + ZilMining +
-                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-                }
+                
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
                 {
                     var port = "3397";
@@ -303,9 +301,8 @@ namespace NiceHashMiner.Miners
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
             string username = GetUsername(btcAddress, worker);
 
-
-
             //сначала дуалы
+            /*
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
             {
                 return $" " + disablePlatform + " --algorithm autolykos2" +
@@ -316,7 +313,6 @@ namespace NiceHashMiner.Miners
                     $" --wallet kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-                _benchmarkTimeWait = 30;
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
             {
@@ -328,8 +324,8 @@ namespace NiceHashMiner.Miners
                     $" --wallet kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-                _benchmarkTimeWait = 30;
             }
+            */
 
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
             {
@@ -371,15 +367,7 @@ namespace NiceHashMiner.Miners
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
-            {
-                return $" " + disablePlatform + " --algorithm kaspa" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://pool.eu.woolypooly.com")}:3112" +
-                    $" --wallet kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.SRBMiner" +
-                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
-                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-                _benchmarkTimeWait = 30;
-            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
             {
                 return $" " + disablePlatform + " --algorithm blake3_ironfish" +
@@ -387,7 +375,6 @@ namespace NiceHashMiner.Miners
                     $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-                _benchmarkTimeWait = 30;
             }
 
             return "unknown";
@@ -402,11 +389,7 @@ namespace NiceHashMiner.Miners
             {
                 devtype = mPair.Device.DeviceType;
             }
-            if (Form_Main.ZilMonitorRunning &&
-                Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype))
-            {
-                ZilClient.needConnectionZIL = false;
-            }
+
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             StopDriver();
         }
@@ -468,7 +451,6 @@ namespace NiceHashMiner.Miners
             dynamic resp = JsonConvert.DeserializeObject(ResponseFromSRBMiner);
             //Helpers.ConsolePrint("API ->:", ResponseFromSRBMiner.ToString());
             ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType, MiningSetup.MiningPairs[0]);
-            //ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
             ad.ThirdAlgorithmID = AlgorithmType.NONE;
 
             if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
@@ -479,16 +461,7 @@ namespace NiceHashMiner.Miners
             double totalsMain = 0;
             double totalsSecond = 0;
             double totalsThird = 0;
-            /*
-            if (ResponseFromSRBMiner.ToLower().Contains("\"name\": \"zil\""))
-            {
-                Form_Main.isZilRound = true;
-            }
-            else
-            {
-                Form_Main.isZilRound = false;
-            }
-            */
+
             try
             {
                 ad.ZilRound = false;
@@ -692,13 +665,6 @@ namespace NiceHashMiner.Miners
                         {
                             devtype = mPair.Device.DeviceType;
                         }
-                        if (!Form_Main.ZilMonitorRunning &&
-                            Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype))
-                        {
-                            ZilClient.needConnectionZIL = true;
-                            Form_Main.ZilMonitorRunning = true;
-                            ZilClient.StartZilMonitor();
-                        }
                     }
                 }
             }
@@ -858,11 +824,7 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 15;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KHeavyHash))
-                    {
-                        MinerStartDelay = 10;
-                        delay_before_calc_hashrate = 5;
-                    }
+
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
                     {
                         MinerStartDelay = 10;

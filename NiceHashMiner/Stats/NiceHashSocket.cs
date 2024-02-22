@@ -74,7 +74,7 @@ namespace NiceHashMiner.Stats
         }
 
         private int _location = 0;
-        public void StartConnectionNew(string btc = null, string worker = null, string group = null)
+        public void StartConnection(string btc = null, string worker = null, string group = null)
         {
             bool proxy = false;//test
             string proxyUrl = "";
@@ -89,11 +89,25 @@ namespace NiceHashMiner.Stats
             string link = "";
             string _link = "";
 
+            if (_webSocket is object && _webSocket.ReadyState == WebSocketState.Open)
+            {
+                _webSocket.Close();
+                return;
+            }
+
+                Helpers.ConsolePrint("StartConnection", "WSS connections Errors count: " + Form_Main.wssConnectionsErrors.ToString()); 
             if (Form_Main.wssConnectionsErrors >= 10)
             {
                 Form_Main.wssConnectionsErrors = 0;
-                if (Form_Main.NHMWSProtocolVersion == 4) Form_Main.NHMWSProtocolVersion = 3;
-                if (Form_Main.NHMWSProtocolVersion == 3) Form_Main.NHMWSProtocolVersion = 4;
+                if (Form_Main.NHMWSProtocolVersion == 4)
+                {
+                    Helpers.ConsolePrint("StartConnection", "Change protocol to V3 due many connection errors");
+                    Form_Main.NHMWSProtocolVersion = 3;
+                } else if (Form_Main.NHMWSProtocolVersion == 3)
+                {
+                    Helpers.ConsolePrint("StartConnection", "Change protocol to V4 due many connection errors");
+                    Form_Main.NHMWSProtocolVersion = 4;
+                }
             }
 
             if (Form_Main.NHMWSProtocolVersion == 4)
@@ -117,7 +131,7 @@ namespace NiceHashMiner.Stats
             //proxyUrl = proxyUrl.Replace("ru.stratum-proxy.ru", "yandex.ru");
             try
             {
-                if (_webSocket == null)
+                if (_webSocket is not object)
                 {
                     _webSocket = new WebSocket(_link);
 
@@ -137,45 +151,23 @@ namespace NiceHashMiner.Stats
                         _webSocket.ResolvedIP = ResolvedIP;
                     }
                 }
-                else
-                {
-                    Helpers.ConsolePrint("SOCKET", $"Credentials change reconnecting nhmws");
-                    _connectionEstablished = false;
-                    _restartConnection = true;
-                    _webSocket.Close();
-                    List<string> IPsList = new List<string>();
-                    IPHostEntry heserver;
 
-                    try
-                    {
-                        heserver = Dns.GetHostEntry("nicehash.com");
-                        foreach (IPAddress curAdd in heserver.AddressList)
-                        {
-                            IPsList.Add(curAdd.ToString());
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("SendData", ex.ToString());
-                    }
-                    foreach (var ip in IPsList)
-                    {
-                        DropIPPort(Process.GetCurrentProcess().Id, ip, 443);
-                    }
-                }
                 Form_Main.NHConnectingInProgress = true;
                 Form_Main.wssConnectionsErrors++;
+                if (_webSocket.ReadyState == WebSocketState.Connecting)
+                {
+                    _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                    _webSocket.OnOpen += ConnectCallback;
+                    _webSocket.OnMessage += ReceiveCallbackNew;
+                    _webSocket.OnError += ErrorCallbackNew;
+                    _webSocket.OnClose += CloseCallbackNew;
+                    _webSocket.EmitOnPing = true;
+                    _webSocket.Log.Level = LogLevel.Debug;
+                    _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
+                    _webSocket.EnableRedirection = true;
+                }
+                    _webSocket.Connect();
                 
-                _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                _webSocket.OnOpen += ConnectCallback;
-                _webSocket.OnMessage += ReceiveCallbackNew;
-                _webSocket.OnError += ErrorCallbackNew;
-                _webSocket.OnClose += CloseCallbackNew;
-                _webSocket.EmitOnPing = true;
-                _webSocket.Log.Level = LogLevel.Debug;
-                _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
-                _webSocket.EnableRedirection = true;
-                _webSocket.Connect();
                 Helpers.ConsolePrint("SOCKET", "Connected?");
                 _connectionEstablished = true;
                 _restartConnection = false;
@@ -216,11 +208,8 @@ namespace NiceHashMiner.Stats
         private void CloseCallbackNew(object sender, CloseEventArgs e)
         {
             Helpers.ConsolePrint("NiceHashSocket", $"Connection closed code {e.Code}: {e.Reason}");
-            if (!_restartConnection)
-            {
-                new Task(() => AttemptReconnectNew()).Start();
-                //AttemptReconnectNew();
-            }
+            Thread.Sleep(1000 * 10);
+            new Task(() => StartConnection()).Start();
         }
 
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
@@ -231,98 +220,39 @@ namespace NiceHashMiner.Stats
                 // Make sure connection is open
                 if (_webSocket != null && IsAlive)
                 {
-                    Helpers.ConsolePrint("SOCKETNEW", $"Sending data: {data}");
+                    if (ConfigManager.GeneralConfig.SaveProtocolData)
+                    {
+                        Helpers.ConsolePrint("SOCKET", $"Sending data: {data}");
+                    } else
+                    {
+                        Helpers.ConsolePrint("SOCKET", $"Sending data: {data.Substring(0, 20)}...");
+                    }
                     ForceReconnectCount = 0;
                     _webSocket.Send(data);
                     return true;
                 }
                 else if (_webSocket != null)
                 {
-                    _webSocket = null; //force
-                    new Task(() => StartConnectionNew()).Start();
-                    //StartConnectionNew();
+                    //_webSocket = null; //force
+                    new Task(() => StartConnection()).Start();
                 }
                 else
                 {
                     if (!_connectionAttempted)
                     {
-                        Helpers.ConsolePrint("SOCKETNEW", "Data sending attempted before socket initialization");
+                        Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
                     }
                     else
                     {
-                        Helpers.ConsolePrint("SOCKETNEW", "webSocket not created, retrying");
-                        StartConnectionNew();
+                        Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
+                        StartConnection();
                     }
                 }
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("NiceHashSocketNew", $"Error occured while sending data: {e.Message}");
+                Helpers.ConsolePrint("NiceHashSocket", $"Error occured while sending data: {e.Message}");
             }
-            return false;
-        }
-
-        private bool AttemptReconnectNew()
-        {
-            if (_attemptingReconnect || _endConnection)
-            {
-                return false;
-            }
-            if (IsAlive)
-            {
-                // no reconnect needed
-                return true;
-            }
-            _attemptingReconnect = true;
-            var sleep = 5;
-
-            // More retries on first attempt
-            var retries = 5;
-            if (_connectionEstablished)
-            {
-                // Don't wait if no connection yet
-                Thread.Sleep(sleep * 1000);
-            }
-            else
-            {
-                // Don't not wait again
-                _connectionEstablished = true;
-            }
-            for (var i = 0; i < retries; i++)
-            {
-                Helpers.ConsolePrint("SOCKET", $"Attempting reconnect" +
-                $"" +
-                $"" +
-                $" in {sleep} seconds");
-                try
-                {
-                    _webSocket.Connect();
-                    Thread.Sleep(1000 * sleep);
-                    if (IsAlive)
-                    {
-                        _attemptingReconnect = false;
-                        return true;
-                    }
-                }
-                catch (InvalidOperationException e)
-                {
-                    if (e.Message == "A series of reconnecting has failed.")
-                    {
-                        // Need to recreate websocket
-                        Helpers.ConsolePrint("SOCKET", "Recreating socket");
-                        _webSocket = null;
-                        StartConnectionNew();
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("NiceHashSocketNew", $"Error while attempting reconnect: {e.Message}");
-                }
-                Thread.Sleep(500);
-            }
-            _attemptingReconnect = false;
-            OnConnectionLost?.Invoke(null, EventArgs.Empty);
             return false;
         }
 
@@ -452,16 +382,7 @@ namespace NiceHashMiner.Stats
                 {
                     SendDataNew(loginJson);
                 }
-                Thread.Sleep(500);
-                
-                if (Form_Main.MiningStarted)
-                {
-                    NiceHashStats.SetDeviceStatus("MINING", true);
-                } else
-                {
-                    NiceHashStats.SetDeviceStatus("STOPPED", true);
-                }
-                
+
                 OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception er)
@@ -525,7 +446,14 @@ namespace NiceHashMiner.Stats
                     dynamic dataJson = JsonConvert.DeserializeObject(data);
                     if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "miner.status" || dataJson.method == "miner.state" || dataJson.method == "login" || dataJson.method == "executed")
                     {
-                        Helpers.ConsolePrint("SOCKET SendData", "Sending data: " + data);
+                        if (ConfigManager.GeneralConfig.SaveProtocolData)
+                        {
+                            Helpers.ConsolePrint("SOCKET SendData", $"Sending data: {data}");
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("SOCKET SendData", $"Sending data: {data.Substring(0, 20)}...");
+                        }
                         ForceReconnectCount = 0;
                         _webSocket.Send(data);
                         dataJson = null;
@@ -548,10 +476,9 @@ namespace NiceHashMiner.Stats
                     {
                         DropIPPort(Process.GetCurrentProcess().Id, ip, 443);
                     }
-                    _webSocket = null;
+                    //_webSocket = null;
                     Thread.Sleep(3000);
-                    new Task(() => StartConnectionNew()).Start();
-                    //StartConnectionNew();
+                    new Task(() => StartConnection()).Start();
                 }
                 else
                 {
@@ -562,7 +489,7 @@ namespace NiceHashMiner.Stats
                     else
                     {
                         Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
-                        StartConnectionNew();
+                        StartConnection();
                     }
                 }
             }
@@ -576,53 +503,6 @@ namespace NiceHashMiner.Stats
                 Thread.Sleep(1000);
             }
             return false;
-        }
-        
-        private async void attemptReconnect_Tick()
-        {
-            _attemptingReconnect = true;
-            int sleep = 5;
-            Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep.ToString() + " seconds");
-            // More retries on first attempt
-            var retries = _connectionEstablished ? 5 : 8;
-            if (_connectionEstablished)
-            {
-                // Don't wait if no connection yet
-                await Task.Delay(sleep * 1000);
-            }
-            else
-            {
-                // Don't not wait again
-                _connectionEstablished = true;
-            }
-            for (var i = 0; i < retries; i++)
-            {
-                try
-                {
-                    _webSocket.Connect();
-                    Thread.Sleep(1000 * 2);
-                    if (IsAlive)
-                    {
-                        _attemptingReconnect = false;
-                        return;
-                    }
-                }
-                catch (InvalidOperationException e)
-                {
-                    if (e.Message == "A series of reconnecting has failed.")
-                    {
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Helpers.ConsolePrint("SOCKET", $"Error while attempting reconnect: {e}");
-                }
-                Thread.Sleep(1000);
-            }
-            _attemptingReconnect = false;
-            OnConnectionLost?.Invoke(null, EventArgs.Empty);
-            return;
         }
     }
 }

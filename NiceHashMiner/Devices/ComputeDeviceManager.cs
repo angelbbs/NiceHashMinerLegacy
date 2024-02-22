@@ -258,13 +258,15 @@ namespace NiceHashMiner.Devices
                             }
                         }
                     }
-                    CUDAQueryCount++;
+                    //CUDAQueryCount++;
                 }
+                /*
                 if (CUDAQueryCount >= 2)
                 {
                     return ret;
                 }
-                return -1;
+                */
+                return ret;
             }
             private static bool TryAddNvmlToEnvPath()
             {
