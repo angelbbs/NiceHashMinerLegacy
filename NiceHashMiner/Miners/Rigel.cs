@@ -165,6 +165,13 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3397";
                 }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+                {
+                    algo = "karlsenhash" + ZilAlgo;
+                    algoName = "karlsenhash";
+                    nicehashstratum = "";
+                    port = "3398";
+                }
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
                 {
                     algo = "octopus" + ZilAlgo;
@@ -190,6 +197,36 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3390";
                     port2 = "3397";
+                }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+                {
+                    algo = "autolykos2+karlsenhash" + ZilAlgo;
+                    algoName = "autolykos";
+                    algoName2 = "karlsenhash";
+                    nicehashstratum = "";
+                    port = "3390";
+                    port2 = "3398";
+                }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
+                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+                {
+                    algo = "octopus+karlsenhash" + ZilAlgo;
+                    algoName = "octopus";
+                    algoName2 = "karlsenhash";
+                    nicehashstratum = "";
+                    port = "3389";
+                    port2 = "3398";
+                }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash &&
+                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+                {
+                    algo = "etchash+karlsenhash" + ZilAlgo;
+                    algoName = "etchash";
+                    algoName2 = "karlsenhash";
+                    nicehashstratum = "";
+                    port = "3393";
+                    port2 = "3398";
                 }
 
                 return GetDevicesCommandString() + nicehashstratum +
@@ -439,7 +476,6 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            _benchmarkTimeWait = time + addTime;
             var ret = "";
 
             var btcAddress = Globals.GetBitcoinUser();
@@ -490,6 +526,13 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                ret = " -a karlsenhash" +
+                " -o " + Links.CheckDNS("kls.2miners.com:2020") + " -u karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.Rigel -p x" +
+                GetDevicesCommandString();
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
                 ret = " -a octopus" +
@@ -504,9 +547,37 @@ namespace NiceHashMiner.Miners
                 " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3100") + " -u [1]9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel" +
                 " -o [2]" + Links.CheckDNS("ru.ironfish.herominers.com:1145") + " -u [2]fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.Rigel " +
                 GetDevicesCommandString();
+                addTime = 30;
+            }
+            
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                ret = " -a autolykos2+karlsenhash" +
+                " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3100") + " -u [1]9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel" +
+                " -o [2]" + Links.CheckDNS("kls.2miners.com:2020") + " -u [2]karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.Rigel " +
+                GetDevicesCommandString();
+                addTime = 30;
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                ret = " -a octopus+karlsenhash" +
+                " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3094") + " -u [1]cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.Rigel" +
+                " -o [2]" + Links.CheckDNS("kls.2miners.com:2020") + " -u [2]karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.Rigel " +
+                GetDevicesCommandString();
+                addTime = 30;
+            }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                ret = " -a etchash+karlsenhash" +
+                " -o [1]" + Links.CheckDNS("etc.2miners.com:1010") + " -u [1]0x266b27bd794d1A65ab76842ED85B067B415CD505.Rigel" +
+                " -o [2]" + Links.CheckDNS("kls.2miners.com:2020") + " -u [2]karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.Rigel " +
+                GetDevicesCommandString();
+                addTime = 30;
+            }
+
+            _benchmarkTimeWait = time + addTime;
             return ret + " --api-bind 127.0.0.1:" + ApiPort; 
         }
         protected override bool BenchmarkParseLine(string outdata)
@@ -559,6 +630,11 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 30;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 10;
@@ -774,6 +850,10 @@ namespace NiceHashMiner.Miners
                                 {
                                     _hashrate = d.hashrate.ironfish;
                                 }
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+                                {
+                                    _hashrate = d.hashrate.karlsenhash;
+                                }
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
                                 {
                                     _hashrate = d.hashrate.octopus;
@@ -821,6 +901,27 @@ namespace NiceHashMiner.Miners
                                 {
                                     _hashrate = d.hashrate.autolykos2;
                                     _hashrate2 = d.hashrate.ironfish;
+                                }
+
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+                                {
+                                    _hashrate = d.hashrate.autolykos2;
+                                    _hashrate2 = d.hashrate.karlsenhash;
+                                }
+
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
+                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+                                {
+                                    _hashrate = d.hashrate.octopus;
+                                    _hashrate2 = d.hashrate.karlsenhash;
+                                }
+
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash &&
+                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
+                                {
+                                    _hashrate = d.hashrate.etchash;
+                                    _hashrate2 = d.hashrate.karlsenhash;
                                 }
 
                                 _hashrateZIL = d.hashrate.zil;
@@ -904,9 +1005,12 @@ namespace NiceHashMiner.Miners
                         mPair.Device.MiningHashrateSecond = hashratesZIL[mPair.Device.ID];
 
                         //duals
-                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
+                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish ||
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
                         {
-                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
+                            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos ||
+                                MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus ||
+                                MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
                             {
                                 mPair.Device.MiningHashrate = hashrates[mPair.Device.ID];
                                 mPair.Device.MiningHashrateSecond = hashrates2[mPair.Device.ID];

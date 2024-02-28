@@ -169,6 +169,13 @@ namespace NiceHashMiner.Miners
                 nicehashstratum = " --proto stratum";
                 port = "3397";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                algo = "karlsenhash";
+                algoName = "karlsenhash";
+                nicehashstratum = " --proto stratum";
+                port = "3398";
+            }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
@@ -212,6 +219,15 @@ namespace NiceHashMiner.Miners
                 ssl = " --ssl 0";
                 nicehashstratum = " --proto stratum";
                 port = "3390";
+            }
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                algo = "karlsenhash";
+                algoName = "karlsenhash";
+                ssl = " --ssl 0";
+                nicehashstratum = " --proto stratum";
+                port = "3398";
             }
 
             //
@@ -516,7 +532,6 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            _benchmarkTimeWait = time + addTime;
             var ret = "";
 
             var btcAddress = Globals.GetBitcoinUser();
@@ -595,6 +610,12 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521 --pass x" +
                 GetDevicesCommandString();
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                ret = " --color 0 --pec --algo karlsenhash" +
+                " --server " + Links.CheckDNS("kls.2miners.com:2020").Replace("stratum+tcp://", "") + " --user karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.gminer --pass x" +
+                GetDevicesCommandString();
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
                 ret = " --color 0 --pec --algo octopus" +
@@ -614,6 +635,7 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("pool.woolypooly.com:3100").Replace("stratum+tcp://", "") + " --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt --pass x " +
                 "--dalgo ironfish --dserver " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --duser fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.GMiner --dpass x " +
                 GetDevicesCommandString();
+                addTime = 60;
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
             {
@@ -621,6 +643,7 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("pool.woolypooly.com:3094").Replace("stratum+tcp://", "") + " --user cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd --pass x " +
                 "--dalgo ironfish --dserver " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --duser fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.GMiner --dpass x " +
                 GetDevicesCommandString();
+                addTime = 60;
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
             {
@@ -628,6 +651,7 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x " +
                 "--dalgo ironfish --dserver " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --duser fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.GMiner --dpass x " +
                 GetDevicesCommandString();
+                addTime = 60;
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
             {
@@ -635,8 +659,9 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x " +
                 "--dalgo ironfish --dserver " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --duser fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.GMiner --dpass x " +
                 GetDevicesCommandString();
+                addTime = 30;
             }
-
+            _benchmarkTimeWait = time + addTime;
             return ret + " --api " + ApiPort; 
         }
         protected override bool BenchmarkParseLine(string outdata)
@@ -709,6 +734,11 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 5;
                         delay_before_calc_hashrate = 5;
                     }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                    {
+                        MinerStartDelay = 5;
+                        delay_before_calc_hashrate = 5;
+                    }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
                     {
                         MinerStartDelay = 10;
@@ -720,7 +750,6 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 15;
                     }
 
-                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                     {
                         MinerStartDelay = 10;
@@ -746,6 +775,12 @@ namespace NiceHashMiner.Miners
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
+                    }
+                    //duals
+                    if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.IronFish))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 90;
                     }
 
                     var ad = GetSummaryAsync();

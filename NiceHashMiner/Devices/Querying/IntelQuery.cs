@@ -534,6 +534,7 @@ namespace NiceHashMiner.Devices.Querying
             else
             {
                 if (double.IsNaN(speed)) speed = 0;
+                if (speed > 10000) speed = 0;
                 return speed;
             }
             return -1;
@@ -577,7 +578,7 @@ namespace NiceHashMiner.Devices.Querying
                     prevgpuEnergyCounterPower = curgpuEnergyCounterPower;
                     curgpuEnergyCounterPower = pPowerTelemetry.gpuEnergyCounter.value.datadouble;
                     power = (curgpuEnergyCounterPower - prevgpuEnergyCounterPower) / deltatimestampPower;
-                    if (power > 500) power = -1;
+                    if (power > 500) power = 0;
                     if (double.IsNaN(power))
                     {
                         /*
@@ -633,12 +634,13 @@ namespace NiceHashMiner.Devices.Querying
                     currenderComputeActivityCounter = pPowerTelemetry.renderComputeActivityCounter.value.datadouble;
                     load = (int)(((currenderComputeActivityCounter - prevrenderComputeActivityCounter) / deltatimestampLoad) * 100);
                     if (double.IsNaN(load)) load = 0;
+                    if (load < -2) load = 0;
                     return load;
                 }
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("GetPower", ex.ToString());
+                Helpers.ConsolePrint("GetLoad", ex.ToString());
             }
             return -1;
         }

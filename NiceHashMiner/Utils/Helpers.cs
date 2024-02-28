@@ -493,76 +493,8 @@ namespace NiceHashMiner
             }
         }
 
-        public static void SetNvidiaP0State()
-        {
-            try
-            {
-                var psi = new ProcessStartInfo
-                {
-                    FileName = "nvidiasetp0state.exe",
-                    Verb = "runas",
-                    UseShellExecute = true,
-                    CreateNoWindow = true
-                };
-                var p = Process.Start(psi);
-                p?.WaitForExit();
-                if (p?.ExitCode != 0)
-                    ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
-                else
-                    ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
-            }
-            catch (Exception ex)
-            {
-                ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
-            }
-        }
-
-        public static AlgorithmType DualAlgoFromAlgos(AlgorithmType primary, AlgorithmType secondary)
-        {
-            if (primary == AlgorithmType.Autolykos)
-            {
-                switch (secondary)
-                {
-                    case AlgorithmType.DaggerHashimoto:
-                        return AlgorithmType.AutolykosZil;
-                }
-            }
-
-            if (primary == AlgorithmType.Autolykos)
-            {
-                switch (secondary)
-                {
-                    case AlgorithmType.IronFish:
-                        return AlgorithmType.AutolykosIronFish;
-                }
-            }
-            if (primary == AlgorithmType.Octopus)
-            {
-                switch (secondary)
-                {
-                    case AlgorithmType.IronFish:
-                        return AlgorithmType.OctopusIronFish;
-                }
-            }
-            if (primary == AlgorithmType.DaggerHashimoto)
-            {
-                switch (secondary)
-                {
-                    case AlgorithmType.IronFish:
-                        return AlgorithmType.DaggerIronFish;
-                }
-            }
-            if (primary == AlgorithmType.ETCHash)
-            {
-                switch (secondary)
-                {
-                    case AlgorithmType.IronFish:
-                        return AlgorithmType.ETCHashIronFish;
-                }
-            }
-
-            return primary;
-        }
+        
+        
         public static void WriteAllTextWithBackup(string FilePath, string contents)
         {
             string path = FilePath;

@@ -103,7 +103,7 @@ namespace NiceHashMiner.Stats
             try
             {
                 _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);
-                _deviceUpdateTimer.Elapsed += DeviceStatus_TickNew;
+                _deviceUpdateTimer.Elapsed += DeviceStatus_Tick;
                 _deviceUpdateTimer.Start();
 
                 //NHSmaData.InitializeIfNeeded();
@@ -169,7 +169,7 @@ namespace NiceHashMiner.Stats
                     {
                             case "sma":
                             {
-                                new Task(() => NiceHashStats.SetDeviceStatus(null, true)).Start();
+                                new Task(() => NiceHashStats.SetDeviceStatus(null, true, "SocketReceive")).Start();
 
                                 if (File.Exists("configs\\sma.dat")) File.Delete("configs\\sma.dat");
                                 string stw = (string)JsonConvert.SerializeObject(message.data);
@@ -1760,18 +1760,19 @@ namespace NiceHashMiner.Stats
         }
 
 
-        public static void DeviceStatus_TickNew(object sender, ElapsedEventArgs e)
+        public static void DeviceStatus_Tick(object sender, ElapsedEventArgs e)
         {
             var _curState = NiceHashSocket._webSocket.ReadyState;
             if (_curState == WebSocketSharp.WebSocketState.Open)
             {
-                SetDeviceStatus(null);
+                SetDeviceStatus(null, false, "DeviceStatus_Tick");
             }
         }
 
-        public static async void SetDeviceStatus(object state, bool devName = false)
+        public static async void SetDeviceStatus(object state, bool devName = false, string from = "")
         {
-            Helpers.ConsolePrint("SOCKET", "DeviceStatusRunning: " + DeviceStatusRunning);
+            Helpers.ConsolePrint("SetDeviceStatus", "DeviceStatusRunning: " + DeviceStatusRunning +
+                " called from: " + from);
             if (DeviceStatusRunning) return;
             DeviceStatusRunning = true;
             var devicesOld = ComputeDeviceManager.Available.Devices;
@@ -1806,11 +1807,12 @@ namespace NiceHashMiner.Stats
                     {
                         if (device.Enabled)
                         {
+                            /*
                             if (Miner.IsRunningNew)
                             {
                                 device.State = DeviceState.Mining;
                                 deviceResort.State = DeviceState.Mining;
-                                }
+                            }
                             else
                             {
                                 device.State = DeviceState.Stopped;
@@ -1822,7 +1824,8 @@ namespace NiceHashMiner.Stats
                                 deviceResort.SecondAlgorithmID = (int)AlgorithmType.NONE;
                                 deviceResort.ThirdAlgorithmID = (int)AlgorithmType.NONE;
                             }
-                        } else
+                            */
+                        } else// чтоб не было в кабинете - "некоторые устройства не майнят"
                         {
                             device.State = DeviceState.Disabled;
                             deviceResort.State = DeviceState.Disabled;
@@ -2035,6 +2038,7 @@ namespace NiceHashMiner.Stats
             catch (Exception ex2)
             {
                 Helpers.ConsolePrint("SetDeviceStatus", ex2.ToString());
+                DeviceStatusRunning = false;
             }
             DeviceStatusRunning = false;
         }

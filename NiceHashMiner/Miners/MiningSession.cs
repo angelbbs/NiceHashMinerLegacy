@@ -261,6 +261,7 @@ namespace NiceHashMiner.Miners
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
+            new Task(() => NiceHashStats.SetDeviceStatus(null, true, "StopAllMiners")).Start();
         }
 
         public void StopAllMinersNonProfitable()
@@ -796,6 +797,19 @@ namespace NiceHashMiner.Miners
                 AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = false;
                 return;
             }
+
+            //чтоб после переключения не было еще одного переключения
+            if (ConfigManager.GeneralConfig.By_profitability_of_all_devices)
+            {
+                _ticks[0] = 0;
+            } else
+            {
+                foreach (var device in _miningDevices)
+                {
+                    _ticks[device.Device.Index] = 0;
+                }
+            }
+
             NewGrouping(profitableDevices);
         }
 

@@ -95,6 +95,27 @@ namespace NiceHashMiner.Devices
             return false;
         }
 
+        public static bool _CheckMSIAfterburner(int count = 10)
+        {
+            bool running = false;
+            int countab = 0;
+            do
+            {
+                Thread.Sleep(100);
+                countab++;
+                if (Process.GetProcessesByName("MSIAfterburner").Any())
+                {
+                    running = true;
+                    break;
+                }
+            } while (countab < count); //default 1 sec
+            if (!running)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static bool CheckMSIAfterburner()
         {
             bool running = false;
@@ -149,7 +170,13 @@ namespace NiceHashMiner.Devices
                     {
                         waiting.SetText("", International.GetText("MSIAB_Closing"));
                         MSIAfterburnerKill();
-                        Thread.Sleep(1000);//обязательная пауза
+                        int count = 0;
+                        do
+                        {
+                            if (_CheckMSIAfterburner()) break;
+                            count++;
+                        } while (count < 5);
+                        //Thread.Sleep(1000);//обязательная пауза
                     }
 
                     waiting.SetText("", International.GetText("MSIAB_Starting"));
@@ -181,25 +208,28 @@ namespace NiceHashMiner.Devices
 
                                 if ((int)wdwIntPtr > 1)
                                 {
+                                    /*
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 25%");
-                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
+
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 50%");
-                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
+
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 75%");
-                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
+
                                     waiting.SetText("", International.GetText("MSIAB_Starting") + " 100%");
-                                    //waiting.Update();
                                     Thread.Sleep(1000);//обязательная пауза
+                                    */
                                     break;
                                 }
                                 repeats++;
-
+                                Thread.Sleep(100);
                             }
                             Thread.Sleep(1000);
-                        } while (repeats < 30);
+                        } while (repeats < 15);//15 sec
+                        Thread.Sleep(1000);//обязательная пауза
+
                         waiting.SetText("", International.GetText("MSIAB_Checking"));
                         repeats = 0;
                         bool meminit = false;
@@ -207,7 +237,7 @@ namespace NiceHashMiner.Devices
                         {
                             Helpers.ConsolePrint("MSIAfterburnerRUN", "Check MSI Afterburner shared memory. Try " + repeats.ToString());
                             IntPtr handle = MSI.Afterburner.SharedMemory.CheckSharedMemory("MACMSharedMemory", Win32API.FileMapAccess.FileMapAllAccess);
-                            //Helpers.ConsolePrint("MSIAfterburnerRUN", "handle: " + handle.ToString());
+
                             if (handle != IntPtr.Zero)
                             {
                                 meminit = true;
@@ -218,25 +248,28 @@ namespace NiceHashMiner.Devices
                                     //GetWindowPlacement(wdwIntPtr, ref placement);
                                     //ShowWindow(wdwIntPtr, ShowWindowEnum.ForceMinimized);
                                 }
+                                /*
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 25%");
-                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
+
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 50%");
-                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
+
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 75%");
-                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
+
                                 waiting.SetText("", International.GetText("MSIAB_Checking") + " 100%");
-                                //waiting.Update();
                                 Thread.Sleep(1000);//обязательная пауза
+                                */
                                 P.Exited += new EventHandler(MSIABprocessExited);
                                 P.EnableRaisingEvents = true;
                                 break;
                             }
                             repeats++;
                             Thread.Sleep(1000);
-                        } while (repeats < 10);
+                        } while (repeats < 10);//10 sec
+                        Thread.Sleep(1000);//обязательная пауза
+
 
                         if (!meminit)
                         {
@@ -282,11 +315,7 @@ namespace NiceHashMiner.Devices
                     {
                         waiting.CloseWaitingBox();
                         Thread.Sleep(500);
-                        //waiting.SetText("", "");
-                        //waiting.Update();
-                        //Thread.Sleep(100);
                         waiting.Dispose();
-                        //
                     }
                     catch (Exception ex)
                     {
@@ -314,14 +343,17 @@ namespace NiceHashMiner.Devices
             }
             MSIAfterburnerRUN();
             Thread.Sleep(50);
-            //CheckMSIAfterburner();
         }
 
         public static void MSIAfterburnerKill()
         {
             foreach (var process in Process.GetProcessesByName("MSIAfterburner"))
             {
-                try { process.CloseMainWindow(); }
+                try
+                {
+                    process.Close();
+                    //process.CloseMainWindow();
+                }
                 catch (Exception e) { Helpers.ConsolePrint("MSIAfterburnerKill", e.ToString()); }
             }
             Initialized = false;
@@ -350,9 +382,6 @@ namespace NiceHashMiner.Devices
             try
             {
                 Thread.Sleep(100);
-                //waiting.SetText("", "");
-                //waiting.Update();
-                //Thread.Sleep(100);
                 waiting.CloseWaitingBox();
             }
             catch (Exception ex)
@@ -728,103 +757,6 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public static bool CompareDeviceData(int _busID, string FileName)
-        {
-            CheckMSIAfterburner();
-            if (!Initialized) return false;
-            ControlMemoryGpuEntry dev = new ControlMemoryGpuEntry();
-            int index = -1;
-            for (int i = 0; i < macm.Header.GpuEntryCount; i++)
-            {
-                int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
-                if (busID == _busID)
-                {
-                    /*
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "busID: " + busID.ToString());
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "_busID: " + _busID.ToString());
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "i: " + i.ToString());
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "macm.GpuEntries[i].Index: " + macm.GpuEntries[i].Index.ToString());
-                    */
-                    index = macm.GpuEntries[i].Index;
-                    //почему номер карты в MSI AB не всегда равен порядковому номеру карты в shared memory AB?????
-                    //далее плохой костыль...
-                    try
-                    {
-                        macm.ReloadGpuEntry(index);
-                        mahm.ReloadGpuEntry((uint)index);
-                        //break;
-                    }
-                    catch (Exception)
-                    {
-                        //Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error? BUG?: " + ex.ToString());
-                        //return false;
-                    }
-                    finally
-                    {
-                        index = i;
-                        macm.ReloadGpuEntry(index);
-                        mahm.ReloadGpuEntry((uint)index);
-                    }
-                }
-            }
-            if (index == -1)
-            {
-                if (_busID != -1)
-                {
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error! Device with busID " + _busID.ToString() + " not found!");
-                }
-                return false;
-            }
-
-            try
-            {
-
-                byte[] buffer0 = RawSerialize(macm.GpuEntries[index], (int)macm.Header.GpuEntrySize);
-                byte[] buffer = File.ReadAllBytes(FileName);
-                
-                buffer = ReplaceBytes(buffer, Encoding.ASCII.GetBytes("BUS_"), Encoding.ASCII.GetBytes("BUS_" + _busID.ToString()));
-                dev = RawDeserialize(buffer, macm.GpuEntries[index]);
-
-                if (ByteArrayCompareWithSimplest(buffer0, buffer))
-                {
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare OK. busID " + _busID.ToString());
-                    return true;
-                }
-                else
-                {
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare ERROR. busID " + _busID.ToString());
-                    return false;
-                }
-
-                /*
-                if (macm.GpuEntries[index].CoreClockBoostCur == dev.CoreClockBoostCur &&
-                    macm.GpuEntries[index].CoreClockCur == dev.CoreClockCur &&
-                    macm.GpuEntries[index].CoreVoltageBoostCur == dev.CoreVoltageBoostCur &&
-                    macm.GpuEntries[index].CoreVoltageCur == dev.CoreVoltageCur &&
-                    macm.GpuEntries[index].MemoryClockBoostCur == dev.MemoryClockBoostCur &&
-                    macm.GpuEntries[index].MemoryClockCur == dev.MemoryClockCur &&
-                    macm.GpuEntries[index].PowerLimitCur == dev.PowerLimitCur &&
-                    macm.GpuEntries[index].FanSpeedCur == dev.FanSpeedCur &&
-                    macm.GpuEntries[index].ThermalLimitCur == dev.ThermalLimitCur)
-                {
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare OK. busID " + _busID.ToString());
-                    return true;
-                }
-                else
-                {
-                    Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Compare ERROR. busID " + _busID.ToString());
-                    return false;
-                }
-            */
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("MSIAfterburner CompareDeviceData", "Error: " + ex.ToString());
-                return false;
-            }
-            return false;
-        }
-
         private static bool ByteArrayCompareWithSimplest(byte[] p_BytesLeft, byte[] p_BytesRight)
         {
             if (p_BytesLeft.Length != p_BytesRight.Length)
@@ -901,23 +833,47 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint("MSIAfterburner SaveDeviceData", "Error: " + ex.ToString());
             }
         }
-        public static void ApplyFromFile(int _busID, string FileName)
+        public static bool ApplyFromFile(int _busID, string FileName)
         {
+            if (!File.Exists(FileName))
+            {
+                Helpers.ConsolePrint("MSIAfterburner ReadFromFile", "Error. File not found: " + FileName);
+                return true;
+            }
+                int i = 0;
+            ControlMemoryGpuEntry dev = null;
             try
             {
-                ControlMemoryGpuEntry dev = ReadFromFile(_busID, FileName);
+                dev = ReadFromFile(_busID, FileName);
 
-                for (int i = 0; i < macm.Header.GpuEntryCount; i++)
+                for (i = 0; i < macm.Header.GpuEntryCount; i++)
                 {
                     int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                     if (busID == _busID)
                     {
                         macm.GpuEntries[i] = dev;
+                        break;
                     }
                 }
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("MSIAfterburner", ex.ToString());
+            }
+            CommitChanges(false);
+            Thread.Sleep(100);
+            //***********установить задержки и сделать галочку в настройказ
+            byte[] macmbuffer = RawSerialize(macm.GpuEntries[i], (int)macm.Header.GpuEntrySize);
+            byte[] devbuffer = File.ReadAllBytes(FileName);
+
+            if (ByteArrayCompareWithSimplest(macmbuffer, devbuffer))
+            {
+                Helpers.ConsolePrint("MSIAfterburner.ApplyFromFile", "Compare OK. busID " + _busID.ToString());
+                return true;
+            }
+            else
+            {
+                Helpers.ConsolePrint("MSIAfterburner.ApplyFromFile", "Compare ERROR. busID " + _busID.ToString());
+                return false;
             }
         }
         public static void Flush()

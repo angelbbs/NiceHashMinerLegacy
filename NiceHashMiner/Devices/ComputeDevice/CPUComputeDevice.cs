@@ -6,8 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
+using ComTypes = System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Devices
 {
@@ -17,6 +20,11 @@ namespace NiceHashMiner.Devices
         //private readonly PerformanceCounter _cpuCounter;
         private static int cpuLoad = 0;
         private static float cpuTemp = -1;
+        private static PerformanceCounter cpuCounter = new PerformanceCounter();
+        private static ManagementObjectSearcher searcher_ThermalZoneInformation =
+                new ManagementObjectSearcher("root\\CIMV2",
+                "SELECT * FROM Win32_PerfFormattedData_Counters_ThermalZoneInformation");
+
         public override float Load
         {
             get
@@ -29,12 +37,11 @@ namespace NiceHashMiner.Devices
                 {
                     try
                     {
-                        // if (_cpuCounter != null) return _cpuCounter.NextValue();
                         return ComputeDeviceCPU.CpuReader.GetLoad();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                        Helpers.ConsolePrint("Load", e.ToString());
                     }
                 } else
                 {
@@ -44,30 +51,41 @@ namespace NiceHashMiner.Devices
                 return -1;
             }
         }
+        
         private static void GetLoad()
         {
-            PerformanceCounter cpuCounter;
-            cpuCounter = new PerformanceCounter();
-            cpuCounter.CategoryName = "Processor";
-            cpuCounter.CounterName = "% Processor Time";
-            cpuCounter.InstanceName = "_Total";
+            try
+            {
+                cpuCounter.CategoryName = "Processor";
+                cpuCounter.CounterName = "% Processor Time";
+                cpuCounter.InstanceName = "_Total";
 
-
-            float cpu = cpuCounter.NextValue();
-            Thread.Sleep(1000);
-            cpuLoad = (int)cpuCounter.NextValue();
+                float cpu = cpuCounter.NextValue();
+                Thread.Sleep(1000);
+                cpuLoad = (int)cpuCounter.NextValue();
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("GetLoad", ex.ToString());
+                var CMD = new Process
+                {
+                    StartInfo =
+                            {
+                                FileName = "lodctr.exe"
+                            }
+                };
+                CMD.StartInfo.Arguments = "/r";
+                CMD.StartInfo.UseShellExecute = false;
+                CMD.StartInfo.CreateNoWindow = true;
+                CMD.Start();
+            }
         }
         private static void GetTemp()
         {
             try
             {
-                ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2",
-                "SELECT * FROM Win32_PerfFormattedData_Counters_ThermalZoneInformation");
-
-                foreach (ManagementObject queryObj in searcher.Get())
+                foreach (ManagementObject queryObj in searcher_ThermalZoneInformation.Get())
                 {
-                    Double temperature = Convert.ToDouble(queryObj["HighPrecisionTemperature"].ToString());
+                    var temperature = Convert.ToDouble(queryObj["HighPrecisionTemperature"].ToString());
                     temperature = (temperature - 2732) / 10.0;
                     cpuTemp = (float)temperature;
                 }
@@ -170,6 +188,7 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint("CPUDIAG", e.ToString());
                     }
                 }
+                //Helpers.ConsolePrint("CPUDIAG", GetPower().ToString());
                 return -1;
             }
         }
@@ -215,4 +234,6 @@ namespace NiceHashMiner.Devices
             */
         }
     }
+
+
 }

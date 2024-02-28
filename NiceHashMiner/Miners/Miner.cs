@@ -96,6 +96,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.IronFish:
                         return AlgorithmType.ETCHashIronFish;
+                    case AlgorithmType.KarlsenHash:
+                        return AlgorithmType.ETCHashKarlsenHash;
                 }
             }
             if (AlgorithmID == AlgorithmType.Autolykos)
@@ -104,6 +106,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.IronFish:
                         return AlgorithmType.AutolykosIronFish;
+                    case AlgorithmType.KarlsenHash:
+                        return AlgorithmType.AutolykosKarlsenHash;
                 }
             }
             if (AlgorithmID == AlgorithmType.Octopus)
@@ -112,6 +116,8 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.IronFish:
                         return AlgorithmType.OctopusIronFish;
+                    case AlgorithmType.KarlsenHash:
+                        return AlgorithmType.OctopusKarlsenHash;
                 }
             }
 
@@ -330,7 +336,7 @@ namespace NiceHashMiner
             IsInit = MiningSetup.IsInit;
             SetApiPort();
             SetWorkingDirAndProgName(MiningSetup.MinerPath);
-            //Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
+            Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
         }
 
         public void InitBenchmarkSetup(MiningPair benchmarkPair)
@@ -416,10 +422,15 @@ namespace NiceHashMiner
             string strPlatform = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
-                int a = (int)pair.Algorithm.NiceHashID;
-                int b = (int)pair.Algorithm.SecondaryNiceHashID;
-                pair.Device.AlgorithmID = a;
-                pair.Device.SecondAlgorithmID = b; ;
+                pair.Device.MiningHashrate = 0;
+                pair.Device.MiningHashrateSecond = 0;
+                pair.Device.MiningHashrateThird = 0;
+                pair.Device.MinerName = "";
+                pair.Device.State = DeviceState.Stopped;
+
+                pair.Device.AlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -562,12 +573,13 @@ namespace NiceHashMiner
             {
                 pair.Device.MiningHashrate = 0;
                 pair.Device.MiningHashrateSecond = 0;
-                int a = (int)pair.Algorithm.NiceHashID;
-                int b = (int)pair.Algorithm.SecondaryNiceHashID;
-                pair.Device.AlgorithmID = a;
-                pair.Device.SecondAlgorithmID = b;
+                pair.Device.MiningHashrateThird = 0;
                 pair.Device.MinerName = "";
                 pair.Device.State = DeviceState.Stopped;
+
+                pair.Device.AlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -1441,10 +1453,15 @@ namespace NiceHashMiner
             string strPlatform = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
-                int a = (int)pair.Algorithm.NiceHashID;
-                int b = (int)pair.Algorithm.SecondaryNiceHashID;
-                pair.Device.AlgorithmID = a;
-                pair.Device.SecondAlgorithmID = b;
+                pair.Device.MiningHashrate = 0;
+                pair.Device.MiningHashrateSecond = 0;
+                pair.Device.MiningHashrateThird = 0;
+                pair.Device.MinerName = "";
+                pair.Device.State = DeviceState.Stopped;
+
+                pair.Device.AlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -1497,10 +1514,15 @@ namespace NiceHashMiner
             string strPlatform = "";
             foreach (var pair in MiningSetup.MiningPairs)
             {
-                int a = (int)pair.Algorithm.NiceHashID;
-                int b = (int)pair.Algorithm.SecondaryNiceHashID;
-                pair.Device.AlgorithmID = a;
-                pair.Device.SecondAlgorithmID = b;
+                pair.Device.MiningHashrate = 0;
+                pair.Device.MiningHashrateSecond = 0;
+                pair.Device.MiningHashrateThird = 0;
+                pair.Device.MinerName = "";
+                pair.Device.State = DeviceState.Stopped;
+
+                pair.Device.AlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
+                pair.Device.ThirdAlgorithmID = (int)AlgorithmType.NONE;
 
                 if (pair.Device.DeviceType == DeviceType.NVIDIA)
                 {
@@ -1687,12 +1709,12 @@ namespace NiceHashMiner
                     {
                         if (dev.Device.Enabled)
                         {
-                            for (int i = 0; i < 1; i++)
+                            for (int i = 0; i < 5; i++)
                             {
                                 string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
                                 Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
-                                MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName);
-                                MSIAfterburner.CommitChanges(false);
+                                if (MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName)) break;
+                                //MSIAfterburner.CommitChanges(false);
                             }
                         }
                     }
@@ -1702,7 +1724,7 @@ namespace NiceHashMiner
                 {
 
                 }
-                Thread.Sleep(2500);
+                //Thread.Sleep(3000);
             } else
             {
                 if (isBefore)
@@ -1751,6 +1773,9 @@ namespace NiceHashMiner
                         pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosIronFish ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerIronFish ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashIronFish ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKarlsenHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusKarlsenHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashKarlsenHash ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusIronFish)
                     {
                         strDual = "DUAL";

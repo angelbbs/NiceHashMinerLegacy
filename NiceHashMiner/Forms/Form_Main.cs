@@ -25,6 +25,7 @@ namespace NiceHashMiner
     using LibreHardwareMonitor.Hardware;
     using Microsoft.Win32;
     using Newtonsoft.Json;
+    using NiceHashMiner.Devices.Querying;
     using NiceHashMiner.Miners.Grouping;
     using NiceHashMinerLegacy.Divert;
     //using OpenHardwareMonitor.Hardware;
@@ -1650,7 +1651,6 @@ namespace NiceHashMiner
                 MinersGetVersionWatchdog();
             }
 
-
             if (ConfigManager.GeneralConfig.EnableRigRemoteView)
             {
                 _loadingScreen.SetValueAndMsg(90, "Start internal http server");
@@ -2392,11 +2392,12 @@ namespace NiceHashMiner
                             FileName = "sc.exe"
                         }
                     };
+                /*
                     CMDconfigHandleOHM.StartInfo.Arguments = "stop R0NiceHashMinerLegacy";
                     CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
                     CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
                     CMDconfigHandleOHM.Start();
-
+*/
                 CMDconfigHandleOHM = new Process
 
                 {
@@ -2405,11 +2406,12 @@ namespace NiceHashMiner
                             FileName = "sc.exe"
                         }
                 };
+                /*
                 CMDconfigHandleOHM.StartInfo.Arguments = "delete R0NiceHashMinerLegacy";
                 CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
                 CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleOHM.Start();
-
+                */
 
                 if (GetWinVer(Environment.OSVersion.Version) >= 10)
                 {
@@ -2434,6 +2436,7 @@ namespace NiceHashMiner
                 {
                     WindowStyle = ProcessWindowStyle.Minimized
                 };
+                thisComputer.Close();
                 Helpers.ConsolePrint("SheduleRestart", "Schedule or config changed restart program after " + (periodRestartProgram / 60).ToString() + "h");
                 Process.Start(RestartProgram);
 
@@ -3108,6 +3111,13 @@ public static void CloseChilds(Process parentId)
                 AlgorithmSwitchingManager._smaCheckTimer = null;
             }
 
+            if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
+            {
+                thisComputer.Close();
+                Helpers.ConsolePrint("LibreHardwareMonitor", "Close library");
+            }
+
+
             //NiceHashSocket.StopConnection();
             /*
             List<string> IPsList = new List<string>();
@@ -3279,26 +3289,25 @@ public static void CloseChilds(Process parentId)
                     FileName = "sc.exe"
                 }
                 };
-
+            /*
                 CMDconfigHandleOHM.StartInfo.Arguments = "stop R0NiceHashMinerLegacy";
                 CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
                 CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleOHM.Start();
-
+            */
             CMDconfigHandleOHM = new Process
-
             {
                 StartInfo =
                 {
                     FileName = "sc.exe"
                 }
             };
-
+            /*
             CMDconfigHandleOHM.StartInfo.Arguments = "delete R0NiceHashMinerLegacy";
             CMDconfigHandleOHM.StartInfo.UseShellExecute = false;
             CMDconfigHandleOHM.StartInfo.CreateNoWindow = true;
             CMDconfigHandleOHM.Start();
-
+            */
             if (GetWinVer(Environment.OSVersion.Version) >= 10)
             {
                 var CMDconfigHandleWD = new Process
@@ -3557,7 +3566,7 @@ public static void CloseChilds(Process parentId)
             }
 
             NiceHashStats._deviceUpdateTimer.Stop();
-            //new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+            Thread.Sleep(100);
             NiceHashStats._deviceUpdateTimer.Start();
 
             if (textBoxBTCAddress_new.Text.Equals(""))
@@ -3577,9 +3586,8 @@ public static void CloseChilds(Process parentId)
                     else
                     {
                         NiceHashStats._deviceUpdateTimer.Stop();
-                        new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+                        new Task(() => NiceHashStats.SetDeviceStatus("STOPPED", false, "StartMining STOPPED")).Start();
                         NiceHashStats._deviceUpdateTimer.Start();
-                        //NiceHashStats.SetDeviceStatus("STOPPED");
                         return StartMiningReturnType.IgnoreMsg;
                     }
                 }
@@ -3591,7 +3599,7 @@ public static void CloseChilds(Process parentId)
             else if (!VerifyMiningAddress(true))
             {
                 NiceHashStats._deviceUpdateTimer.Stop();
-                new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+                new Task(() => NiceHashStats.SetDeviceStatus("STOPPED", false, "StartMining STOPPED")).Start();
                 NiceHashStats._deviceUpdateTimer.Start();
                 return StartMiningReturnType.IgnoreMsg;
             }
@@ -3651,7 +3659,7 @@ public static void CloseChilds(Process parentId)
             _minerStatsCheck.Start();
 
             NiceHashStats._deviceUpdateTimer.Stop();
-            new Task(() => NiceHashStats.SetDeviceStatus("MINING")).Start();
+            new Task(() => NiceHashStats.SetDeviceStatus("MINING", false, "StartMining MINING")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
 
             if (ConfigManager.GeneralConfig.RestartDriverOnCUDA_GPU_Lost || ConfigManager.GeneralConfig.RestartWindowsOnCUDA_GPU_Lost)
@@ -3843,15 +3851,23 @@ public static void CloseChilds(Process parentId)
                 
                 if (ConfigManager.GeneralConfig.Use_OpenHardwareMonitor)
                 {
-                    if (Form_Main.thisComputer != null)
+                    try
                     {
-                        foreach (var hardware in Form_Main.thisComputer.Hardware)
+                        if (Form_Main.thisComputer != null)
                         {
-                            if (hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.Cpu)
+                            foreach (var hardware in Form_Main.thisComputer.Hardware)
                             {
-                                new Task(() => hardware.Update()).Start();
+                                if (hardware is object &&
+                                    (hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.Cpu))
+                                {
+                                    hardware.Update();
+                                    //new Task(() => hardware.Update()).Start();
+                                }
                             }
                         }
+                    } catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("DeviceStatusTimer_Tick", ex.ToString());
                     }
                 }
                 if (DeviceStatusTimer_FirstTick)
@@ -4019,7 +4035,7 @@ public static void CloseChilds(Process parentId)
             Form_Main.smaCount = 0;
             AlgorithmSwitchingManager.Stop();
             NiceHashStats._deviceUpdateTimer.Stop();
-            new Task(() => NiceHashStats.SetDeviceStatus("STOPPED")).Start();
+            new Task(() => NiceHashStats.SetDeviceStatus("STOPPED", false, "StopMining STOPPED")).Start();
             NiceHashStats._deviceUpdateTimer.Start();
             //NiceHashStats.SetDeviceStatus("PENDING");
             _minerStatsCheck.Stop();
@@ -4041,6 +4057,7 @@ public static void CloseChilds(Process parentId)
                         {
                             MSIAfterburner.ResetToDefaults(cdev.BusID, cdev.Uuid, ((AlgorithmType)cdev.AlgorithmID).ToString(), false);
                             MSIAfterburner.CommitChanges(false);
+                            Thread.Sleep(100);
                         }
                     }
                     MSIAfterburner.Flush();

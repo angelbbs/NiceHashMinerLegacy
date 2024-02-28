@@ -1860,7 +1860,7 @@ namespace NiceHashMiner.Forms
                 Form_Settings.ActiveForm.Close();
             }
             Close();
-            new Task(() => NiceHashStats.SetDeviceStatus(null, true)).Start();
+            new Task(() => NiceHashStats.SetDeviceStatus(null, true, "ButtonSaveClose_Click")).Start();
         }
 
         private void ButtonCloseNoSave_Click(object sender, EventArgs e)

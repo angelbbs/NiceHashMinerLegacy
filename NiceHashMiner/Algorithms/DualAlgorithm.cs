@@ -45,6 +45,8 @@ namespace NiceHashMiner.Algorithms
                             return AlgorithmType.AutolykosZil;
                         case AlgorithmType.IronFish:
                             return AlgorithmType.AutolykosIronFish;
+                        case AlgorithmType.KarlsenHash:
+                            return AlgorithmType.AutolykosKarlsenHash;
                     }
                 }
                 if (NiceHashID == AlgorithmType.Octopus)
@@ -53,6 +55,8 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.IronFish:
                             return AlgorithmType.OctopusIronFish;
+                        case AlgorithmType.KarlsenHash:
+                            return AlgorithmType.OctopusKarlsenHash;
                     }
                 }
                 if (NiceHashID == AlgorithmType.ETCHash)
@@ -61,6 +65,8 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.IronFish:
                             return AlgorithmType.ETCHashIronFish;
+                        case AlgorithmType.KarlsenHash:
+                            return AlgorithmType.ETCHashKarlsenHash;
                     }
                 }
 

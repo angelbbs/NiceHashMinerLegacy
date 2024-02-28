@@ -482,11 +482,9 @@ Fatal error detected. Restarting.
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZelHash, "ZelHash")
                     {
                     },
-                    /*
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.KarlsenHash, "KarlsenHash")
                     {
                     },
-                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Octopus, "Octopus")
                     {
                     },
@@ -502,31 +500,12 @@ Fatal error detected. Restarting.
                     },
                     */
                     /*
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
-                    {
-                        ExtraLaunchParameters = "--mt 1"
-                    },
-                    */
-                    /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.IronFish, AlgorithmType.AutolykosIronFish.ToString())
                     {
                         ExtraLaunchParameters = "--mt 1"
                     },
                     */
-                    /*
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, AlgorithmType.DaggerKHeavyHash.ToString())
-                    {
-                        ExtraLaunchParameters = "--mt 1"
-                    },
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.ETCHash, AlgorithmType.KHeavyHash, AlgorithmType.ETCHashKHeavyHash.ToString())
-                    {
-                        ExtraLaunchParameters = "--mt 1"
-                    },
-                    new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Octopus, AlgorithmType.KHeavyHash, AlgorithmType.OctopusKHeavyHash.ToString())
-                    {
-                        ExtraLaunchParameters = "--mt 1"
-                    },
-                    */
+
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.IronFish, 
                         "DaggerIronFish")
                     {
@@ -601,6 +580,10 @@ Fatal error detected. Restarting.
                     {
                         ExtraLaunchParameters = "--no-tui"
                     },
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.KarlsenHash, "KarlsenHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui"
+                    },
                     /*
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
                     {
@@ -609,6 +592,21 @@ Fatal error detected. Restarting.
                     */
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.IronFish, 
                         "AutolykosIronFish")
+                    {
+                        ExtraLaunchParameters = "--no-tui"
+                    },
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.KarlsenHash,
+                        "AutolykosKarlsenHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui"
+                    },
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, AlgorithmType.KarlsenHash,
+                        "OctopusKarlsenHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui"
+                    },
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.ETCHash, AlgorithmType.KarlsenHash,
+                        "ETCHashKarlsenHash")
                     {
                         ExtraLaunchParameters = "--no-tui"
                     }

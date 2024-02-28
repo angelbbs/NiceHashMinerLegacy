@@ -13,6 +13,7 @@ namespace ComputeDeviceCPU
         public static int GetTemperaturesInCelsius()
         {
             int _ret = -1;
+            _mainboard.Open();
             var coreAndTemperature = new Dictionary<string, float>();
 
             foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -21,36 +22,36 @@ namespace ComputeDeviceCPU
                 {
                     if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
                     {
-                        //Helpers.ConsolePrint("CPU", sensor.Name + " " + sensor.Value.ToString());
-                        //  if (sensor.Name == "Package")
+                        //Helpers.ConsolePrint("LHM Temperature", sensor.Name + " = " + sensor.Value.ToString());
+                        if (sensor.Name == "CPU Package" || sensor.Name.Contains("Core ("))
                         {
                             _ret = (int)sensor.Value.Value;
+                            break;
                         }
                     }
                 }
             }
-
             return _ret;
         }
 
         public static int GetPower()
         {
             int _ret = -1;
+            _mainboard.Open();
             var coreAndTemperature = new Dictionary<string, float>();
             try
             {
                 foreach (var hardware in Form_Main.thisComputer.Hardware)
                 {
-                    //hardware.Update(); //use hardware.Name to get CPU model
                     foreach (var sensor in hardware.Sensors)
                     {
-                        //Helpers.ConsolePrint("CPU", sensor.Name + " " + sensor.Value.ToString());
                         if (sensor.SensorType == SensorType.Power && sensor.Value.HasValue)
                         {
-                            // Helpers.ConsolePrint("CPU", sensor.Name + " " + sensor.Value.ToString());
-                            if (sensor.Name == "CPU Package")
+                            //Helpers.ConsolePrint("LHM Power", sensor.Name + " = " + sensor.Value.ToString());
+                            if (sensor.Name == "CPU Package" || sensor.Name == "Package")
                             {
                                 _ret = (int)sensor.Value;
+                                break;
                             }
                         }
                     }
@@ -75,12 +76,10 @@ namespace ComputeDeviceCPU
                 if (hardware.HardwareType == HardwareType.Motherboard)
                 {
                     hardware.Update();
-                    //  Helpers.ConsolePrint("!all CPU:", hardware.Name + " " + hardware.HardwareType.ToString());
-
                     foreach (var sensor in hardware.SubHardware)
                     {
                         sensor.Update();
-                        //  Helpers.ConsolePrint("all CPU:", sensor.Name + " " + HardwareType.SuperIO.ToString());
+                        //Helpers.ConsolePrint("LHM", sensor.Name + " " + HardwareType.SuperIO.ToString());
 
                         if (sensor.HardwareType == HardwareType.SuperIO)
                         {
@@ -91,7 +90,8 @@ namespace ComputeDeviceCPU
                                 {
                                     if (sens2.SensorType == SensorType.Fan)
                                     {
-                                        if (sens2.Name == "Fan #1" || sens2.Name == "CPU Fan")
+                                        //Helpers.ConsolePrint("LHM Fan", sens2.Name + " = " + sens2.Value.ToString());
+                                        if (sens2.Name == "Fan #1" || sens2.Name == "Fan #2" || sens2.Name == "CPU Fan")
                                         {
                                             _ret = (int)sens2.Value;
                                         }
