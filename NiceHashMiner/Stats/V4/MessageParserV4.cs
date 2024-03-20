@@ -1,6 +1,7 @@
 ﻿using HidSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using NiceHashMinerLegacy.Common.Enums;
@@ -146,8 +147,15 @@ namespace NiceHashMiner.Stats.V4
                 {
                     _ret = d.FanSpeedRPM;
                 }
-                if (typeof(T) == typeof(IPowerUsage)) _ret = (float)d.PowerUsage;
-
+                if (typeof(T) == typeof(IPowerUsage))
+                {
+                    _ret = (float)d.PowerUsage;
+                    if (d.State == DeviceState.Disabled && !ConfigManager.GeneralConfig.ShowPowerOfDisabledDevices)
+                    {
+                        _ret = -1;
+                    }
+                }
+                    
                 if (_ret == -1)
                 {
                     return (type, name, "", "-");

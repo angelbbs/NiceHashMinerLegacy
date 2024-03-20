@@ -57,6 +57,7 @@ namespace NiceHashMiner.Configs.Data
         public bool ShowFanAsPercent = false;
         public bool ShowToolsFolder = false;
         public bool GetMinersVersions = true;
+        public bool InstallRootCerts = true;
         public bool MOPA1 = true;
         public bool MOPA2 = false;
         public bool MOPA3 = false;
@@ -169,6 +170,7 @@ namespace NiceHashMiner.Configs.Data
         public bool RestartWindowsOnCUDA_GPU_Lost = false;
         public bool Allow_remote_management = true;
         public bool Send_actual_version_info = true;
+        public bool ShowPowerOfDisabledDevices = true;
         public bool Force_mining_if_nonprofitable = true;
         public bool Additional_info_about_device = false;
         public bool Show_NVdevice_manufacturer = true;

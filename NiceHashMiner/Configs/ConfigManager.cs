@@ -132,6 +132,7 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.Show_ShowDeviceMemSize != _generalConfigBackup.Show_ShowDeviceMemSize
 
                    || GeneralConfig.Send_actual_version_info != _generalConfigBackup.Send_actual_version_info
+                   || GeneralConfig.InstallRootCerts != _generalConfigBackup.InstallRootCerts
                    || GeneralConfig.Use_OpenHardwareMonitor != _generalConfigBackup.Use_OpenHardwareMonitor
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
                    || GeneralConfig.RestartDriverOnCUDA_GPU_Lost != _generalConfigBackup.RestartDriverOnCUDA_GPU_Lost

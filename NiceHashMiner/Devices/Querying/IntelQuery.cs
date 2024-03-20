@@ -500,7 +500,7 @@ namespace NiceHashMiner.Devices.Querying
 
             if (FanHandlerCount <= 0)
             {
-                Helpers.ConsolePrint("GetFan", "ctlEnumFans 3 ERROR: " + r.ToString());
+                //Helpers.ConsolePrint("GetFan", "ctlEnumFans 3 ERROR: " + r.ToString());
                 return -1;
             }
 
@@ -556,18 +556,14 @@ namespace NiceHashMiner.Devices.Querying
                 DateTime now = DateTime.Now;
                 prev = now;
                 ctl_power_telemetry_t pPowerTelemetry = new ctl_power_telemetry_t();
-                pPowerTelemetry.Size = Marshal.SizeOf(typeof(ctl_power_telemetry_t));
+                pPowerTelemetry.Size = (ushort)Marshal.SizeOf(typeof(ctl_power_telemetry_t));
+                IGCL.IGCL._ctl_result_t r = ctlPowerTelemetryGet(hDevice, ref pPowerTelemetry);
 
-                IGCL.IGCL._ctl_result_t r = (_ctl_result_t)ctlPowerTelemetryGet(hDevice, out pPowerTelemetry);
                 if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
                 {
                     Helpers.ConsolePrint("GetPower", "ctlPowerTelemetryGet: " + r.ToString());
                     return -1;
                 }
-
-                //ctl_power_telemetry_t _pPowerTelemetry = BytesToStructure<ctl_power_telemetry_t>(getBytes(pPowerTelemetry));
-                //byte[] d = getBytes(pPowerTelemetry);
-                //File.WriteAllBytes("logs\\pPowerTelemetry.bin", d);
 
                 prevtimestampPower = curtimestampPower;
                 curtimestampPower = pPowerTelemetry.timeStamp.value.datadouble;
@@ -615,12 +611,11 @@ namespace NiceHashMiner.Devices.Querying
             try
             {
                 ctl_power_telemetry_t pPowerTelemetry = new ctl_power_telemetry_t();
-                pPowerTelemetry.Size = Marshal.SizeOf(typeof(ctl_power_telemetry_t));
-
-                IGCL.IGCL._ctl_result_t r = (_ctl_result_t)ctlPowerTelemetryGet(hDevice, out pPowerTelemetry);
+                pPowerTelemetry.Size = (ushort)Marshal.SizeOf(typeof(ctl_power_telemetry_t));
+                IGCL.IGCL._ctl_result_t r = (_ctl_result_t)ctlPowerTelemetryGet(hDevice, ref pPowerTelemetry);
                 if (r != _ctl_result_t.CTL_RESULT_SUCCESS)
                 {
-                    Helpers.ConsolePrint("GetLoad", "ctlPowerTelemetryGet: " + r.ToString());
+                    //Helpers.ConsolePrint("GetLoad", "ctlPowerTelemetryGet: " + r.ToString());
                     return -1;
                 }
 
@@ -700,7 +695,8 @@ namespace NiceHashMiner.Devices.Querying
             // (find a way to get PCI BUS Numbers from PNPDeviceID)
             var IntelVideoControllers = _availableControllers.Where(vcd =>
                 (vcd.Name.ToLower().Contains("intel") && vcd.Name.ToLower().Contains("arc"))).ToList();
-                //(vcd.Name.ToLower().Contains("intel") && vcd.Name.ToLower().Contains("iris"))).ToList();
+                //(vcd.Name.ToLower().Contains("intel") && (vcd.Name.ToLower().Contains("iris") ||
+                //vcd.Name.ToLower().Contains("arc")))).ToList();
             // sort by ram not ideal
             IntelVideoControllers.Sort((a, b) => (int)(a.AdapterRam - b.AdapterRam));
             IntelDevices.Sort((a, b) => (int)(a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));

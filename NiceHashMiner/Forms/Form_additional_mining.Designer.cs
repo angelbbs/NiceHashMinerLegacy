@@ -61,11 +61,12 @@ namespace NiceHashMiner.Forms
             this.checkBox_NANOMINER_AMD_Autolykos = new System.Windows.Forms.CheckBox();
             this.tabPageRigel = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBox_Rigel_NVIDIA_Octopus = new System.Windows.Forms.CheckBox();
+            this.checkBox_Rigel_NVIDIA_KAWPOW = new System.Windows.Forms.CheckBox();
             this.checkBox_Rigel_NVIDIA_AutolykosIronFish = new System.Windows.Forms.CheckBox();
             this.checkBox_Rigel_NVIDIA_IronFish = new System.Windows.Forms.CheckBox();
             this.checkBox_Rigel_NVIDIA_Autolykos = new System.Windows.Forms.CheckBox();
             this.checkBox_Rigel_NVIDIA_Nexapow = new System.Windows.Forms.CheckBox();
-            this.checkBox_Rigel_NVIDIA_KAWPOW = new System.Windows.Forms.CheckBox();
             this.tabPageSRBMiner = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBox_SRBMINER_AMD_Autolykos = new System.Windows.Forms.CheckBox();
@@ -81,7 +82,11 @@ namespace NiceHashMiner.Forms
             this.labelPort = new System.Windows.Forms.Label();
             this.textBox_Pool = new System.Windows.Forms.TextBox();
             this.label_Pool = new System.Windows.Forms.Label();
-            this.checkBox_Rigel_NVIDIA_Octopus = new System.Windows.Forms.CheckBox();
+            this.checkBox_GMINER_NVIDIA_KarlsenHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_Rigel_NVIDIA_KarlsenHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash = new System.Windows.Forms.CheckBox();
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash = new System.Windows.Forms.CheckBox();
             this.TabControlZILadditionalMining.SuspendLayout();
             this.tabPageGMiner.SuspendLayout();
             this.groupBox_NVIDIA.SuspendLayout();
@@ -144,6 +149,7 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_NVIDIA
             // 
+            this.groupBox_NVIDIA.Controls.Add(this.checkBox_GMINER_NVIDIA_KarlsenHash);
             this.groupBox_NVIDIA.Controls.Add(this.checkBox_GMINER_NVIDIA_OctopusIronFish);
             this.groupBox_NVIDIA.Controls.Add(this.checkBox_GMINER_NVIDIA_AutolykosIronFish);
             this.groupBox_NVIDIA.Controls.Add(this.checkBox_GMINER_NVIDIA_IronFish);
@@ -165,7 +171,7 @@ namespace NiceHashMiner.Forms
             // checkBox_GMINER_NVIDIA_OctopusIronFish
             // 
             this.checkBox_GMINER_NVIDIA_OctopusIronFish.AutoSize = true;
-            this.checkBox_GMINER_NVIDIA_OctopusIronFish.Location = new System.Drawing.Point(233, 65);
+            this.checkBox_GMINER_NVIDIA_OctopusIronFish.Location = new System.Drawing.Point(6, 88);
             this.checkBox_GMINER_NVIDIA_OctopusIronFish.Name = "checkBox_GMINER_NVIDIA_OctopusIronFish";
             this.checkBox_GMINER_NVIDIA_OctopusIronFish.Size = new System.Drawing.Size(103, 17);
             this.checkBox_GMINER_NVIDIA_OctopusIronFish.TabIndex = 13;
@@ -205,7 +211,7 @@ namespace NiceHashMiner.Forms
             // checkBox_GMINER_NVIDIA_ZHash
             // 
             this.checkBox_GMINER_NVIDIA_ZHash.AutoSize = true;
-            this.checkBox_GMINER_NVIDIA_ZHash.Location = new System.Drawing.Point(101, 88);
+            this.checkBox_GMINER_NVIDIA_ZHash.Location = new System.Drawing.Point(233, 88);
             this.checkBox_GMINER_NVIDIA_ZHash.Name = "checkBox_GMINER_NVIDIA_ZHash";
             this.checkBox_GMINER_NVIDIA_ZHash.Size = new System.Drawing.Size(58, 17);
             this.checkBox_GMINER_NVIDIA_ZHash.TabIndex = 8;
@@ -215,7 +221,7 @@ namespace NiceHashMiner.Forms
             // checkBox_GMINER_NVIDIA_ZelHash
             // 
             this.checkBox_GMINER_NVIDIA_ZelHash.AutoSize = true;
-            this.checkBox_GMINER_NVIDIA_ZelHash.Location = new System.Drawing.Point(6, 88);
+            this.checkBox_GMINER_NVIDIA_ZelHash.Location = new System.Drawing.Point(138, 88);
             this.checkBox_GMINER_NVIDIA_ZelHash.Name = "checkBox_GMINER_NVIDIA_ZelHash";
             this.checkBox_GMINER_NVIDIA_ZelHash.Size = new System.Drawing.Size(66, 17);
             this.checkBox_GMINER_NVIDIA_ZelHash.TabIndex = 7;
@@ -225,7 +231,7 @@ namespace NiceHashMiner.Forms
             // checkBox_GMINER_NVIDIA_Octopus
             // 
             this.checkBox_GMINER_NVIDIA_Octopus.AutoSize = true;
-            this.checkBox_GMINER_NVIDIA_Octopus.Location = new System.Drawing.Point(101, 65);
+            this.checkBox_GMINER_NVIDIA_Octopus.Location = new System.Drawing.Point(233, 65);
             this.checkBox_GMINER_NVIDIA_Octopus.Name = "checkBox_GMINER_NVIDIA_Octopus";
             this.checkBox_GMINER_NVIDIA_Octopus.Size = new System.Drawing.Size(66, 17);
             this.checkBox_GMINER_NVIDIA_Octopus.TabIndex = 6;
@@ -451,7 +457,11 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash);
+            this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash);
             this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_Octopus);
+            this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_KarlsenHash);
+            this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash);
             this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_KAWPOW);
             this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_AutolykosIronFish);
             this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_IronFish);
@@ -459,15 +469,35 @@ namespace NiceHashMiner.Forms
             this.groupBox3.Controls.Add(this.checkBox_Rigel_NVIDIA_Nexapow);
             this.groupBox3.Location = new System.Drawing.Point(6, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(348, 92);
+            this.groupBox3.Size = new System.Drawing.Size(348, 121);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "NVIDIA";
             // 
+            // checkBox_Rigel_NVIDIA_Octopus
+            // 
+            this.checkBox_Rigel_NVIDIA_Octopus.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_Octopus.Location = new System.Drawing.Point(257, 65);
+            this.checkBox_Rigel_NVIDIA_Octopus.Name = "checkBox_Rigel_NVIDIA_Octopus";
+            this.checkBox_Rigel_NVIDIA_Octopus.Size = new System.Drawing.Size(66, 17);
+            this.checkBox_Rigel_NVIDIA_Octopus.TabIndex = 11;
+            this.checkBox_Rigel_NVIDIA_Octopus.Text = "Octopus";
+            this.checkBox_Rigel_NVIDIA_Octopus.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_Rigel_NVIDIA_KAWPOW
+            // 
+            this.checkBox_Rigel_NVIDIA_KAWPOW.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_KAWPOW.Location = new System.Drawing.Point(6, 69);
+            this.checkBox_Rigel_NVIDIA_KAWPOW.Name = "checkBox_Rigel_NVIDIA_KAWPOW";
+            this.checkBox_Rigel_NVIDIA_KAWPOW.Size = new System.Drawing.Size(77, 17);
+            this.checkBox_Rigel_NVIDIA_KAWPOW.TabIndex = 5;
+            this.checkBox_Rigel_NVIDIA_KAWPOW.Text = "KAWPOW";
+            this.checkBox_Rigel_NVIDIA_KAWPOW.UseVisualStyleBackColor = true;
+            // 
             // checkBox_Rigel_NVIDIA_AutolykosIronFish
             // 
             this.checkBox_Rigel_NVIDIA_AutolykosIronFish.AutoSize = true;
-            this.checkBox_Rigel_NVIDIA_AutolykosIronFish.Location = new System.Drawing.Point(116, 19);
+            this.checkBox_Rigel_NVIDIA_AutolykosIronFish.Location = new System.Drawing.Point(107, 19);
             this.checkBox_Rigel_NVIDIA_AutolykosIronFish.Name = "checkBox_Rigel_NVIDIA_AutolykosIronFish";
             this.checkBox_Rigel_NVIDIA_AutolykosIronFish.Size = new System.Drawing.Size(109, 17);
             this.checkBox_Rigel_NVIDIA_AutolykosIronFish.TabIndex = 10;
@@ -497,22 +527,12 @@ namespace NiceHashMiner.Forms
             // checkBox_Rigel_NVIDIA_Nexapow
             // 
             this.checkBox_Rigel_NVIDIA_Nexapow.AutoSize = true;
-            this.checkBox_Rigel_NVIDIA_Nexapow.Location = new System.Drawing.Point(116, 42);
+            this.checkBox_Rigel_NVIDIA_Nexapow.Location = new System.Drawing.Point(257, 42);
             this.checkBox_Rigel_NVIDIA_Nexapow.Name = "checkBox_Rigel_NVIDIA_Nexapow";
             this.checkBox_Rigel_NVIDIA_Nexapow.Size = new System.Drawing.Size(72, 17);
             this.checkBox_Rigel_NVIDIA_Nexapow.TabIndex = 6;
             this.checkBox_Rigel_NVIDIA_Nexapow.Text = "NexaPow";
             this.checkBox_Rigel_NVIDIA_Nexapow.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_Rigel_NVIDIA_KAWPOW
-            // 
-            this.checkBox_Rigel_NVIDIA_KAWPOW.AutoSize = true;
-            this.checkBox_Rigel_NVIDIA_KAWPOW.Location = new System.Drawing.Point(6, 42);
-            this.checkBox_Rigel_NVIDIA_KAWPOW.Name = "checkBox_Rigel_NVIDIA_KAWPOW";
-            this.checkBox_Rigel_NVIDIA_KAWPOW.Size = new System.Drawing.Size(77, 17);
-            this.checkBox_Rigel_NVIDIA_KAWPOW.TabIndex = 5;
-            this.checkBox_Rigel_NVIDIA_KAWPOW.Text = "KAWPOW";
-            this.checkBox_Rigel_NVIDIA_KAWPOW.UseVisualStyleBackColor = true;
             // 
             // tabPageSRBMiner
             // 
@@ -676,15 +696,55 @@ namespace NiceHashMiner.Forms
             this.label_Pool.TabIndex = 359;
             this.label_Pool.Text = "Pool";
             // 
-            // checkBox_Rigel_NVIDIA_Octopus
+            // checkBox_GMINER_NVIDIA_KarlsenHash
             // 
-            this.checkBox_Rigel_NVIDIA_Octopus.AutoSize = true;
-            this.checkBox_Rigel_NVIDIA_Octopus.Location = new System.Drawing.Point(257, 42);
-            this.checkBox_Rigel_NVIDIA_Octopus.Name = "checkBox_Rigel_NVIDIA_Octopus";
-            this.checkBox_Rigel_NVIDIA_Octopus.Size = new System.Drawing.Size(66, 17);
-            this.checkBox_Rigel_NVIDIA_Octopus.TabIndex = 11;
-            this.checkBox_Rigel_NVIDIA_Octopus.Text = "Octopus";
-            this.checkBox_Rigel_NVIDIA_Octopus.UseVisualStyleBackColor = true;
+            this.checkBox_GMINER_NVIDIA_KarlsenHash.AutoSize = true;
+            this.checkBox_GMINER_NVIDIA_KarlsenHash.Location = new System.Drawing.Point(101, 65);
+            this.checkBox_GMINER_NVIDIA_KarlsenHash.Name = "checkBox_GMINER_NVIDIA_KarlsenHash";
+            this.checkBox_GMINER_NVIDIA_KarlsenHash.Size = new System.Drawing.Size(86, 17);
+            this.checkBox_GMINER_NVIDIA_KarlsenHash.TabIndex = 14;
+            this.checkBox_GMINER_NVIDIA_KarlsenHash.Text = "KarlsenHash";
+            this.checkBox_GMINER_NVIDIA_KarlsenHash.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_Rigel_NVIDIA_AutolykosKarlsenHash
+            // 
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash.Location = new System.Drawing.Point(107, 42);
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash.Name = "checkBox_Rigel_NVIDIA_AutolykosKarlsenHash";
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash.Size = new System.Drawing.Size(132, 17);
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash.TabIndex = 12;
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash.Text = "AutolykosKarlsenHash";
+            this.checkBox_Rigel_NVIDIA_AutolykosKarlsenHash.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_Rigel_NVIDIA_KarlsenHash
+            // 
+            this.checkBox_Rigel_NVIDIA_KarlsenHash.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_KarlsenHash.Location = new System.Drawing.Point(6, 42);
+            this.checkBox_Rigel_NVIDIA_KarlsenHash.Name = "checkBox_Rigel_NVIDIA_KarlsenHash";
+            this.checkBox_Rigel_NVIDIA_KarlsenHash.Size = new System.Drawing.Size(86, 17);
+            this.checkBox_Rigel_NVIDIA_KarlsenHash.TabIndex = 13;
+            this.checkBox_Rigel_NVIDIA_KarlsenHash.Text = "KarlsenHash";
+            this.checkBox_Rigel_NVIDIA_KarlsenHash.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_Rigel_NVIDIA_ETCHashKarlsenHash
+            // 
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash.Location = new System.Drawing.Point(106, 65);
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash.Name = "checkBox_Rigel_NVIDIA_ETCHashKarlsenHash";
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash.Size = new System.Drawing.Size(132, 17);
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash.TabIndex = 13;
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash.Text = "ETCHashKarlsenHash";
+            this.checkBox_Rigel_NVIDIA_ETCHashKarlsenHash.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_Rigel_NVIDIA_OctopusKarlsenHash
+            // 
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash.AutoSize = true;
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash.Location = new System.Drawing.Point(6, 92);
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash.Name = "checkBox_Rigel_NVIDIA_OctopusKarlsenHash";
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash.Size = new System.Drawing.Size(126, 17);
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash.TabIndex = 14;
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash.Text = "OctopusKarlsenHash";
+            this.checkBox_Rigel_NVIDIA_OctopusKarlsenHash.UseVisualStyleBackColor = true;
             // 
             // Form_additional_mining
             // 
@@ -783,5 +843,10 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label label_Pool;
         private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_AutolykosIronFish;
         private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_Octopus;
+        private System.Windows.Forms.CheckBox checkBox_GMINER_NVIDIA_KarlsenHash;
+        private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_OctopusKarlsenHash;
+        private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_ETCHashKarlsenHash;
+        private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_KarlsenHash;
+        private System.Windows.Forms.CheckBox checkBox_Rigel_NVIDIA_AutolykosKarlsenHash;
     }
 }

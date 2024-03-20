@@ -134,6 +134,12 @@ namespace MinerLegacyForkFixMonitor
 
                 try
                 {
+                    DateTime modification = File.GetLastWriteTime(@"logs\log.txt");
+                    if (DateTime.Now.Minute > modification.Minute + 5)
+                    {
+                        Restart(p);
+                    }
+
                     MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("MinerLegacyForkFixMonitor");
                     byte[] b1 = { (byte)'0', (byte)'0', (byte)'0' };
                     using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 100, MemoryMappedFileAccess.Read))
@@ -148,26 +154,7 @@ namespace MinerLegacyForkFixMonitor
 
                     if (stuckCount > 1720)
                     {
-                        Helpers.ConsolePrint("Monitor", "Main process stuck. Trying restart");
-                        try
-                        {
-                            var tkHandle = new Process
-                            {
-                                StartInfo =
-                            {
-                                FileName = "taskkill.exe"
-                            }
-                            };
-                            tkHandle.StartInfo.Arguments = "/PID " + p.Id.ToString() + " /F /T";
-                            tkHandle.StartInfo.UseShellExecute = false;
-                            tkHandle.StartInfo.CreateNoWindow = true;
-                            tkHandle.Start();
-                        }
-                        catch (Exception ex)
-                        {
-                            Helpers.ConsolePrint("taskkill", ex.ToString());
-                        }
-
+                        Restart(p);  
                     }
                 }
                 catch (Exception ex)
@@ -177,9 +164,34 @@ namespace MinerLegacyForkFixMonitor
                     continue;
                 }
 
+
+
                 Thread.Sleep(1000 * 5);
             }
             Helpers.ConsolePrint("Monitor", "Stop");
+        }
+
+        static void Restart(Process p)
+        {
+            Helpers.ConsolePrint("Monitor", "Main process stuck. Trying restart");
+            try
+            {
+                var tkHandle = new Process
+                {
+                    StartInfo =
+                            {
+                                FileName = "taskkill.exe"
+                            }
+                };
+                tkHandle.StartInfo.Arguments = "/PID " + p.Id.ToString() + " /F /T";
+                tkHandle.StartInfo.UseShellExecute = false;
+                tkHandle.StartInfo.CreateNoWindow = true;
+                tkHandle.Start();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("taskkill", ex.ToString());
+            }
         }
     }
 }

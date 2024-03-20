@@ -236,9 +236,112 @@ namespace IGCL
             public fixed byte body[800];
         }
 
-        [StructLayout(LayoutKind.Explicit, Size = 808)]
+        [StructLayout(LayoutKind.Sequential)]
         [Serializable]
         public struct ctl_power_telemetry_t
+        {
+            public uint Size;                                  ///< [in] size of this structure
+            public uint Version;                                ///< [in] version of this structure
+            public ctl_oc_telemetry_item_t timeStamp;              ///< [out] Snapshot of the timestamp counter that measures the total time
+                                                                   ///< since Jan 1, 1970 UTC. It is a decimal value in seconds with a minimum
+                                                                   ///< accuracy of 1 millisecond.
+            public ctl_oc_telemetry_item_t gpuEnergyCounter;       ///< [out] Snapshot of the monotonic energy counter maintained by hardware.
+                                                                   ///< It measures the total energy consumed by the GPU chip. By taking the
+                                                                   ///< delta between two snapshots and dividing by the delta time in seconds,
+                                                                   ///< an application can compute the average power.
+            public ctl_oc_telemetry_item_t gpuVoltage;             ///< [out] Instantaneous snapshot of the voltage feeding the GPU chip. It
+                                                                   ///< is measured at the power supply output - chip input will be lower.
+            public ctl_oc_telemetry_item_t gpuCurrentClockFrequency;   ///< [out] Instantaneous snapshot of the GPU chip frequency.
+            public ctl_oc_telemetry_item_t gpuCurrentTemperature;  ///< [out] Instantaneous snapshot of the GPU chip temperature, read from
+                                                                   ///< the sensor reporting the highest value.
+            public ctl_oc_telemetry_item_t globalActivityCounter;  ///< [out] Snapshot of the monotonic global activity counter. It measures
+                                                                   ///< the time in seconds (accurate down to 1 millisecond) that any GPU
+                                                                   ///< engine is busy. By taking the delta between two snapshots and dividing
+                                                                   ///< by the delta time in seconds, an application can compute the average
+                                                                   ///< percentage utilization of the GPU..
+            public ctl_oc_telemetry_item_t renderComputeActivityCounter;   ///< [out] Snapshot of the monotonic 3D/compute activity counter. It
+                                                                           ///< measures the time in seconds (accurate down to 1 millisecond) that any
+                                                                           ///< 3D render/compute engine is busy. By taking the delta between two
+                                                                           ///< snapshots and dividing by the delta time in seconds, an application
+                                                                           ///< can compute the average percentage utilization of all 3D
+                                                                           ///< render/compute blocks in the GPU.
+            public ctl_oc_telemetry_item_t mediaActivityCounter;   ///< [out] Snapshot of the monotonic media activity counter. It measures
+                                                                   ///< the time in seconds (accurate down to 1 millisecond) that any media
+                                                                   ///< engine is busy. By taking the delta between two snapshots and dividing
+                                                                   ///< by the delta time in seconds, an application can compute the average
+                                                                   ///< percentage utilization of all media blocks in the GPU.
+            //wrong struct?
+            public bool gpuPowerLimited;                           ///< [out] Instantaneous indication that the desired GPU frequency is being
+                                                                   ///< throttled because the GPU chip is exceeding the maximum power limits.
+                                                                   ///< Increasing the power limits using ::ctlOverclockPowerLimitSet() is one
+                                                                   ///< way to remove this limitation.
+            public bool gpuTemperatureLimited;                     ///< [out] Instantaneous indication that the desired GPU frequency is being
+                                                                   ///< throttled because the GPU chip is exceeding the temperature limits.
+                                                                   ///< Increasing the temperature limits using
+                                                                   ///< ::ctlOverclockTemperatureLimitSet() is one way to reduce this
+                                                                   ///< limitation. Improving the cooling solution is another way.
+            public bool gpuCurrentLimited;                         ///< [out] Instantaneous indication that the desired GPU frequency is being
+                                                                   ///< throttled because the GPU chip has exceeded the power supply current
+                                                                   ///< limits. A better power supply is required to reduce this limitation.
+            public bool gpuVoltageLimited;                         ///< [out] Instantaneous indication that the GPU frequency cannot be
+                                                                   ///< increased because the voltage limits have been reached. Increase the
+                                                                   ///< voltage offset using ::ctlOverclockGpuVoltageOffsetSet() is one way to
+                                                                   ///< reduce this limitation.
+            public bool gpuUtilizationLimited;                     ///< [out] Instantaneous indication that due to lower GPU utilization, the
+                                                                   ///< hardware has lowered the GPU frequency.
+            public ctl_oc_telemetry_item_t vramEnergyCounter;      ///< [out] Snapshot of the monotonic energy counter maintained by hardware.
+                                                                   ///< It measures the total energy consumed by the local memory modules. By
+                                                                   ///< taking the delta between two snapshots and dividing by the delta time
+                                                                   ///< in seconds, an application can compute the average power.
+            public ctl_oc_telemetry_item_t vramVoltage;            ///< [out] Instantaneous snapshot of the voltage feeding the memory
+                                                                   ///< modules.
+            public ctl_oc_telemetry_item_t vramCurrentClockFrequency;  ///< [out] Instantaneous snapshot of the raw clock frequency driving the
+                                                                       ///< memory modules.
+            public ctl_oc_telemetry_item_t vramCurrentEffectiveFrequency;  ///< [out] Instantaneous snapshot of the effective data transfer rate that
+                                                                           ///< the memory modules can sustain based on the current clock frequency..
+            public ctl_oc_telemetry_item_t vramReadBandwidthCounter;   ///< [out] Instantaneous snapshot of the monotonic counter that measures
+                                                                       ///< the read traffic from the memory modules. By taking the delta between
+                                                                       ///< two snapshots and dividing by the delta time in seconds, an
+                                                                       ///< application can compute the average read bandwidth.
+            public ctl_oc_telemetry_item_t vramWriteBandwidthCounter;  ///< [out] Instantaneous snapshot of the monotonic counter that measures
+                                                                       ///< the write traffic to the memory modules. By taking the delta between
+                                                                       ///< two snapshots and dividing by the delta time in seconds, an
+                                                                       ///< application can compute the average write bandwidth.
+            public ctl_oc_telemetry_item_t vramCurrentTemperature; ///< [out] Instantaneous snapshot of the GPU chip temperature, read from
+                                                                   ///< the sensor reporting the highest value.
+            public bool vramPowerLimited;                          ///< [out] Instantaneous indication that the memory frequency is being
+                                                                   ///< throttled because the memory modules are exceeding the maximum power
+                                                                   ///< limits.
+            public bool vramTemperatureLimited;                    ///< [out] Instantaneous indication that the memory frequency is being
+                                                                   ///< throttled because the memory modules are exceeding the temperature
+                                                                   ///< limits.
+            public bool vramCurrentLimited;                        ///< [out] Instantaneous indication that the memory frequency is being
+                                                                   ///< throttled because the memory modules have exceeded the power supply
+                                                                   ///< current limits.
+            public bool vramVoltageLimited;                        ///< [out] Instantaneous indication that the memory frequency cannot be
+                                                                   ///< increased because the voltage limits have been reached.
+            public bool vramUtilizationLimited;                    ///< [out] Instantaneous indication that due to lower memory traffic, the
+                                                                   ///< hardware has lowered the memory frequency.
+            public ctl_oc_telemetry_item_t totalCardEnergyCounter; ///< [out] Total Card Energy Counter.
+            //ctl_psu_info_t psu[CTL_PSU_COUNT];              ///< [out] PSU voltage and power.
+            //ctl_oc_telemetry_item_t fanSpeed[CTL_FAN_COUNT];///< [out] Fan speed.
+            public ctl_psu_info_t psu0;              ///< [out] PSU voltage and power.
+            public ctl_psu_info_t psu1;              ///< [out] PSU voltage and power.
+            public ctl_psu_info_t psu2;              ///< [out] PSU voltage and power.
+            public ctl_psu_info_t psu3;              ///< [out] PSU voltage and power.
+            public ctl_psu_info_t psu4;              ///< [out] PSU voltage and power.
+
+            public ctl_oc_telemetry_item_t fanSpeed0;///< [out] Fan speed.
+            public ctl_oc_telemetry_item_t fanSpeed1;///< [out] Fan speed.
+            public ctl_oc_telemetry_item_t fanSpeed2;///< [out] Fan speed.
+            public ctl_oc_telemetry_item_t fanSpeed3;///< [out] Fan speed.
+            //public ctl_oc_telemetry_item_t fanSpeed4;///< [out] Fan speed.
+        }
+
+
+        [StructLayout(LayoutKind.Explicit, Size = 808)]
+        [Serializable]
+        public struct ctl_power_telemetry_t0
         {
             [FieldOffset(0)]
             public int Size;                                  ///< [in] size of this structure
@@ -561,7 +664,7 @@ namespace IGCL
         public static extern _ctl_result_t ctlTemperatureGetState(long hTemperature, ref double temperature);
 
         [DllImport("ControlLib.dll", SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern _ctl_result_t ctlPowerTelemetryGet(long hTemperature, out ctl_power_telemetry_t pPowerTelemetry);
+        public static extern _ctl_result_t ctlPowerTelemetryGet(long hTemperature, ref ctl_power_telemetry_t pPowerTelemetry);
 
         [DllImport("ControlLib.dll", SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         public static extern _ctl_result_t ctlEnumFans(long hDAhandle, ref uint FanHandlerCount, long[] pFanHandle);

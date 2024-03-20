@@ -320,7 +320,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
                     if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA &&
-                        (device.Name.Contains("RTX 4060") && device.Name.Contains("Laptop")))
+                        device.Name.Contains("RTX 4060") && device.Name.Contains("Laptop") &&
+                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 11.4))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;

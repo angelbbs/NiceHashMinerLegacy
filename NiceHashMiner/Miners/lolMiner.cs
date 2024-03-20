@@ -250,6 +250,13 @@ namespace NiceHashMiner.Miners
                     apiBind + " " + param +
                               " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                LastCommandLine = "--algo KARLSEN" +
+                GetServer("karlsenhash", username, null, "3398") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
             //duals
             /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KHeavyHash)
@@ -380,6 +387,13 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = "--algo IRONFISH " +
                 " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
+                              param +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+            {
+                CommandLine = "--algo KARLSEN " +
+                " --pool " + Links.CheckDNS("kls.2miners.com:2020").Replace("stratum+tcp://", "") + " --user karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -627,6 +641,10 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
+                }
                 /*
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))//+dual
                 {
@@ -719,6 +737,11 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                     {
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;

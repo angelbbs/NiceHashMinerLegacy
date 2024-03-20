@@ -35,11 +35,8 @@ namespace NiceHashMiner.Stats
 
         public static WebSocket _webSocket;
         public bool IsAlive => _webSocket.ReadyState == WebSocketState.Open;
-        public static bool _restartConnection = false;
         private bool _attemptingReconnect;
-        public static bool _endConnection = false;
         private bool _connectionAttempted;
-        public static bool _connectionEstablished;
         private readonly Random _random = new Random();
         private readonly string _address;
 
@@ -95,7 +92,7 @@ namespace NiceHashMiner.Stats
                 return;
             }
 
-                Helpers.ConsolePrint("StartConnection", "WSS connections Errors count: " + Form_Main.wssConnectionsErrors.ToString()); 
+            Helpers.ConsolePrint("StartConnection", "WSS connections Errors count: " + Form_Main.wssConnectionsErrors.ToString()); 
             if (Form_Main.wssConnectionsErrors >= 10)
             {
                 Form_Main.wssConnectionsErrors = 0;
@@ -103,11 +100,19 @@ namespace NiceHashMiner.Stats
                 {
                     Helpers.ConsolePrint("StartConnection", "Change protocol to V3 due many connection errors");
                     Form_Main.NHMWSProtocolVersion = 3;
+                    Form_Main.TotalConnectionsErrors++;
                 } else if (Form_Main.NHMWSProtocolVersion == 3)
                 {
                     Helpers.ConsolePrint("StartConnection", "Change protocol to V4 due many connection errors");
                     Form_Main.NHMWSProtocolVersion = 4;
+                    Form_Main.TotalConnectionsErrors++;
                 }
+            }
+
+            if (Form_Main.TotalConnectionsErrors >= 10)
+            {
+                Helpers.ConsolePrint("SOCKET", "CRITICAL ERROR! Many protocol reconnections. Need restart");
+                Form_Main.MakeRestart(0);
             }
 
             if (Form_Main.NHMWSProtocolVersion == 4)
@@ -169,13 +174,18 @@ namespace NiceHashMiner.Stats
                     _webSocket.Connect();
                 
                 Helpers.ConsolePrint("SOCKET", "Connected?");
-                _connectionEstablished = true;
-                _restartConnection = false;
-                _endConnection = true;
             }
             catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
+                if (_webSocket is object && _webSocket.ReadyState == WebSocketState.Closed)
+                {
+                    _webSocket.Close();
+                    Form_Main.NHConnectingInProgress = false;
+                    _webSocket = null;
+                    new Task(() => StartConnection()).Start();
+                    return;
+                }
             }
             Form_Main.NHConnectingInProgress = false;
         }
@@ -402,7 +412,7 @@ namespace NiceHashMiner.Stats
             cports.RedirectStandardOutput = false;
             cports.CreateNoWindow = true;
             cports.WindowStyle = ProcessWindowStyle.Hidden;
-
+            Helpers.ConsolePrint("DropIPPort", "Drop port " + IP + ":" + port.ToString() + " completed");
             try
             {
                 Process.Start(cports);

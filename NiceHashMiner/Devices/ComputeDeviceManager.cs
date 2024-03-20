@@ -457,10 +457,10 @@ namespace NiceHashMiner.Devices
                         }
                         else if (vidCtrl.Name.ToLower().Contains("intel"))
                         {
-                            /*
-                            intelCount += (vidCtrl.Name.ToLower().Contains("arc") ||
-                                vidCtrl.Name.ToLower().Contains("iris")) ? 1 : 0;
-                            */
+                            
+                            //intelCount += (vidCtrl.Name.ToLower().Contains("arc") ||
+                              //  vidCtrl.Name.ToLower().Contains("iris")) ? 1 : 0;
+                            
                             intelCount += (vidCtrl.Name.ToLower().Contains("arc")) ? 1 : 0;
                         }
 
@@ -1126,6 +1126,7 @@ break;
                     */
                     return AvaliableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("intel") &&
                     (vctrl.Name.ToLower().Contains("arc")));
+                    
                 }
                 public static bool HasAMDVideoController()
                 {

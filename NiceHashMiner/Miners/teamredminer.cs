@@ -158,6 +158,12 @@ namespace NiceHashMiner.Miners
                 algo2 = "kawpow";
                 port = "3385";
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+            {
+                algo = "karlsen";
+                algo2 = "karlsenhash";
+                port = "3398";
+            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && 
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
             {
@@ -250,6 +256,11 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = sc + " -a kawpow" +
                  " -o stratum+tcp://rvn.2miners.com:6060" + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.teamred" + " -p x -d ";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+            {
+                CommandLine = sc + " -a karlsen" +
+                 " -o stratum+tcp://kls.2miners.com:2020" + " -u karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.teamred" + " -p x -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
@@ -361,6 +372,11 @@ namespace NiceHashMiner.Miners
                     }
                     
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                    {
+                        delay_before_calc_hashrate = 30;
+                        MinerStartDelay = 0;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                     {
                         delay_before_calc_hashrate = 30;
                         MinerStartDelay = 0;

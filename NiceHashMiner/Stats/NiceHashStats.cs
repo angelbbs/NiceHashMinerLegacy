@@ -140,6 +140,7 @@ namespace NiceHashMiner.Stats
         private static void SocketReceive(object sender, MessageEventArgs e)
         {
             Form_Main.wssConnectionsErrors = 0;
+            Form_Main.TotalConnectionsErrors = 0;
             try
             {
                 if (e.IsText)
@@ -1762,10 +1763,16 @@ namespace NiceHashMiner.Stats
 
         public static void DeviceStatus_Tick(object sender, ElapsedEventArgs e)
         {
-            var _curState = NiceHashSocket._webSocket.ReadyState;
-            if (_curState == WebSocketSharp.WebSocketState.Open)
+            try
             {
-                SetDeviceStatus(null, false, "DeviceStatus_Tick");
+                var _curState = NiceHashSocket._webSocket.ReadyState;
+                if (_curState == WebSocketSharp.WebSocketState.Open)
+                {
+                    SetDeviceStatus(null, false, "DeviceStatus_Tick");
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("DeviceStatus_Tick", ex.ToString());
             }
         }
 

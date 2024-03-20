@@ -171,6 +171,7 @@ namespace NiceHashMiner
         public static string[] _proxyUrls = { };
         public static int wssConnectionsErrors = 0;
         public static int apiConnectionsErrors = 0;
+        public static int TotalConnectionsErrors = 0;
         public static byte[] desktop = new byte[0];
         public static int SwitchCount = 0;
         public static bool ZilMonitorRunning = false;
@@ -714,6 +715,67 @@ namespace NiceHashMiner
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
+            }
+        }
+
+        private static void InstallCerts()
+        {
+            MyWebClient client = new MyWebClient();
+            client.UseDefaultCredentials = false;
+            try
+            {
+                if (File.Exists("temp//authrootstl.cab"))
+                {
+                    File.Delete("temp//authrootstl.cab");
+                }
+                client.DownloadFile(new Uri("http://ctldl.windowsupdate.com/msdownload/update/v3/static/trustedr/en/authrootstl.cab"), "temp//authrootstl.cab");
+
+                if (File.Exists("temp//authrootstl.cab"))
+                {
+                    var CMDconfigHandleBackup = new Process
+                    {
+                        StartInfo =
+                {
+                    FileName = "utils\\7z.exe"
+                }
+                    };
+
+                    var cmd7z = new Process
+                    {
+                        StartInfo =
+                {
+                    FileName = "utils\\7z.exe"
+                }
+                    };
+                    cmd7z.StartInfo.Arguments = "x -r -y temp\\authrootstl.cab";
+                    cmd7z.StartInfo.UseShellExecute = false;
+                    cmd7z.StartInfo.CreateNoWindow = true;
+                    cmd7z.Start();
+                    cmd7z.WaitForExit(1000 * 2);
+                    Helpers.ConsolePrint("InstallCerts", "Error code: " + cmd7z.ExitCode);
+                    if (File.Exists("authroot.stl"))
+                    {
+                        //certutil -enterprise -f -v -AddStore "Root" "authroot.stl"
+                        ProcessStartInfo cmdcertutil = new ProcessStartInfo();
+                        cmdcertutil.FileName = "certutil";
+                        cmdcertutil.Arguments = "-enterprise -f -v -AddStore \"Root\" \"authroot.stl\"";
+                        cmdcertutil.UseShellExecute = false;
+                        cmdcertutil.CreateNoWindow = true;
+                        cmdcertutil.RedirectStandardOutput = true;
+                        cmdcertutil.RedirectStandardError = true;
+                        Process p = Process.Start(cmdcertutil);
+                        string o = p.StandardOutput.ReadToEnd();
+                        p.WaitForExit(1000 * 5);
+                        File.Delete("authroot.stl");
+                        //Helpers.ConsolePrint("InstallCerts", o);
+                    }
+                    File.Delete("temp//authrootstl.cab");
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("InstallCerts", ex.ToString());
+                return;
             }
         }
 
@@ -1407,6 +1469,10 @@ namespace NiceHashMiner
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
             _loadingScreen.SetValueAndMsg(20, International.GetText("Form_Main_loadtext_SaveConfig"));
+            if (ConfigManager.GeneralConfig.InstallRootCerts)
+            {
+                new Task(() => InstallCerts()).Start();
+            }
 
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
@@ -2436,7 +2502,7 @@ namespace NiceHashMiner
                 {
                     WindowStyle = ProcessWindowStyle.Minimized
                 };
-                thisComputer.Close();
+                if (thisComputer is object) thisComputer.Close();
                 Helpers.ConsolePrint("SheduleRestart", "Schedule or config changed restart program after " + (periodRestartProgram / 60).ToString() + "h");
                 Process.Start(RestartProgram);
 

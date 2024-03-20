@@ -16,6 +16,7 @@ namespace NiceHashMiner.Configs.Data
         public bool CuckooCycle_NVIDIA { get; set; }
         public bool GrinCuckatoo32_NVIDIA { get; set; }
         public bool KAWPOW_NVIDIA { get; set; }
+        public bool KarlsenHash_NVIDIA { get; set; }
         public bool KHeavyHash_NVIDIA { get; set; }
         public bool IronFish_NVIDIA { get; set; }
         public bool Octopus_NVIDIA { get; set; }
@@ -36,7 +37,7 @@ namespace NiceHashMiner.Configs.Data
             CuckooCycle_NVIDIA = true;
             GrinCuckatoo32_NVIDIA = true;
             KAWPOW_NVIDIA = true;
-            KHeavyHash_NVIDIA = true;
+            KarlsenHash_NVIDIA = true;
             IronFish_NVIDIA = true;
             Octopus_NVIDIA = true;
             OctopusKHeavyHash_NVIDIA = true;
@@ -75,18 +76,26 @@ namespace NiceHashMiner.Configs.Data
     {
         public bool Autolykos_NVIDIA { get; set; }
         public bool AutolykosIronFish_NVIDIA { get; set; }
+        public bool AutolykosKarlsenHash_NVIDIA { get; set; }
         public bool KAWPOW_NVIDIA { get; set; }
         public bool Nexapow_NVIDIA { get; set; }
         public bool IronFish_NVIDIA { get; set; }
         public bool Octopus_NVIDIA { get; set; }
+        public bool OctopusKarlsenHash_NVIDIA { get; set; }
+        public bool ETCHashKarlsenHash_NVIDIA { get; set; }
+        public bool KarlsenHash_NVIDIA { get; set; }
         public ZILConfigRigel()
         {
             Autolykos_NVIDIA = true;
             AutolykosIronFish_NVIDIA = true;
+            AutolykosKarlsenHash_NVIDIA = true;
             KAWPOW_NVIDIA = true;
             Nexapow_NVIDIA = true;
             IronFish_NVIDIA = true;
+            KarlsenHash_NVIDIA = true;
             Octopus_NVIDIA = true;
+            OctopusKarlsenHash_NVIDIA = true;
+            ETCHashKarlsenHash_NVIDIA = true;
         }
     }
     [Serializable]

@@ -132,7 +132,7 @@ Fatal error detected. Restarting.
                                 ExtraLaunchParameters = ""
                             },
                             /*
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")//broken
                             {
                                 ExtraLaunchParameters = ""
                             }
@@ -229,7 +229,8 @@ Fatal error detected. Restarting.
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW"),
-                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, "Autolykos")
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, "Autolykos"),
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KarlsenHash, "KarlsenHash")
                             /*
                             new DualAlgorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
                             {
@@ -280,13 +281,11 @@ Fatal error detected. Restarting.
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            /*
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KarlsenHash, "KarlsenHash")
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            */
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
+                              new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
                             {
                                 ExtraLaunchParameters = ""
                             },
@@ -420,9 +419,11 @@ Fatal error detected. Restarting.
     */
             { MinerBaseType.miniZ,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")
+                            /*
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")//broken in 2.3.c
                             {
                             },
+                            */
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
                             },
@@ -433,6 +434,9 @@ Fatal error detected. Restarting.
                             {
                             },
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.Octopus, "Octopus")
+                            {
+                            },
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.KarlsenHash, "KarlsenHash")
                             {
                             }
                         }
@@ -499,13 +503,13 @@ Fatal error detected. Restarting.
                         ExtraLaunchParameters = "--mt 1"
                     },
                     */
+                    //xnsub не поддерживается, 
                     /*
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.Autolykos, AlgorithmType.IronFish, AlgorithmType.AutolykosIronFish.ToString())
                     {
-                        ExtraLaunchParameters = "--mt 1"
+                        ExtraLaunchParameters = "--mt 1 -di 10"
                     },
                     */
-
                     new DualAlgorithm(MinerBaseType.GMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.IronFish, 
                         "DaggerIronFish")
                     {
@@ -562,7 +566,7 @@ Fatal error detected. Restarting.
                 {
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.KAWPOW, "KAWPOW")
                     {
-                        ExtraLaunchParameters = "--no-tui"
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.NexaPow, "NexaPow")
                     {
@@ -570,7 +574,7 @@ Fatal error detected. Restarting.
                     },
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, "Autolykos")
                     {
-                        ExtraLaunchParameters = "--no-tui"
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.IronFish, "IronFish")
                     {
@@ -578,7 +582,7 @@ Fatal error detected. Restarting.
                     },
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, "Octopus")
                     {
-                        ExtraLaunchParameters = "--no-tui"
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.KarlsenHash, "KarlsenHash")
                     {
@@ -593,22 +597,22 @@ Fatal error detected. Restarting.
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.IronFish, 
                         "AutolykosIronFish")
                     {
-                        ExtraLaunchParameters = "--no-tui"
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.KarlsenHash,
                         "AutolykosKarlsenHash")
                     {
-                        ExtraLaunchParameters = "--no-tui"
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, AlgorithmType.KarlsenHash,
                         "OctopusKarlsenHash")
                     {
-                        ExtraLaunchParameters = "--no-tui"
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.ETCHash, AlgorithmType.KarlsenHash,
                         "ETCHashKarlsenHash")
                     {
-                        ExtraLaunchParameters = "--no-tui"
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     }
                 }
             }

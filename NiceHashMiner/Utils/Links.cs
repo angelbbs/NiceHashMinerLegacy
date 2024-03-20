@@ -69,7 +69,12 @@ namespace NiceHashMiner
 
             if (domain.Contains("stratum-proxy"))
             {
-                domain = domain.Replace("grincuckatoo32", "stratum").Replace("verushash", "stratum").Replace("x16rv2", "stratum");
+                domain = domain.Replace("grincuckatoo32", "stratum").
+                    Replace("verushash", "stratum").
+                    Replace("nexapow", "stratum").
+                    Replace("ironfish", "stratum").
+                    Replace("karlsenhash", "stratum").
+                    Replace("x16rv2", "stratum");
             }
 
             if (!domain.Contains("://"))

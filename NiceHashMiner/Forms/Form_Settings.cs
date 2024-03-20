@@ -270,19 +270,9 @@ namespace NiceHashMiner.Forms
             labelDisableDetection.Text = International.GetText("Form_Settings_General_DisableDetection");
             labelDisableMonitoring.Text = International.GetText("Form_Settings_General_monitoring");
 
-            /*
-            checkBox_DisableDetectionNVIDIA.Text =
-                string.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA");
-            checkBox_DisableDetectionAMD.Text =
-                string.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
-            checkBoxAMDmonitoring.Text = International.GetText("Form_Settings_General_AMDmonitoring");
-            checkBoxNVMonitoring.Text = International.GetText("Form_Settings_General_NVMonitoring");
-            checkBoxCPUmonitoring.Text = International.GetText("Form_Settings_General_CPUmonitoring");
-            */
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
 
-            //checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
             checkBoxSaveProtocolData.Text = International.GetText("Form_Settings_General_SaveProtocolData");
 
@@ -425,6 +415,8 @@ namespace NiceHashMiner.Forms
 
             checkBox_Allow_remote_management.Text = International.GetText("Form_Settings_checkBox_Allow_remote_management");
             checkBox_Send_actual_version_info.Text = International.GetText("Form_Settings_checkBox_Send_actual_version_info");
+            checkBox_ShowPowerOfDisabledDevices.Text = International.GetText("Form_Settings_checkBox_ShowPowerOfDisabledDevices");
+            checkBoxInstall_root_certificates.Text = International.GetText("Form_Settings_checkBox_Install_root_certificates");
             checkBox_Additional_info_about_device.Text = International.GetText("Form_Settings_checkBox_Additional_info_about_device");
             checkBox_DisplayConnected.Text = International.GetText("Form_Settings_checkBox_DisplayConnected");
 
@@ -816,6 +808,12 @@ namespace NiceHashMiner.Forms
                 checkBox_Send_actual_version_info.BackColor = Form_Main._backColor;
                 checkBox_Send_actual_version_info.ForeColor = Form_Main._textColor;
 
+                checkBox_ShowPowerOfDisabledDevices.BackColor = Form_Main._backColor;
+                checkBox_ShowPowerOfDisabledDevices.ForeColor = Form_Main._textColor;
+
+                checkBoxInstall_root_certificates.BackColor = Form_Main._backColor;
+                checkBoxInstall_root_certificates.ForeColor = Form_Main._textColor;
+
                 checkBox_Additional_info_about_device.BackColor = Form_Main._backColor;
                 checkBox_Additional_info_about_device.ForeColor = Form_Main._textColor;
 
@@ -1039,6 +1037,7 @@ namespace NiceHashMiner.Forms
             groupBox_additionally.Text = International.GetText("FormSettings_Tab_General_Group_Additionally");
             groupBox_Localization.Text = International.GetText("FormSettings_Tab_General_Group_Localization");
             groupBox_Logging.Text = International.GetText("FormSettings_Tab_General_Group_Logging");
+            groupBox_RigManager.Text = International.GetText("FormSettings_Tab_General_Group_RigManager");
             groupBox_Misc.Text = International.GetText("FormSettings_Tab_General_Group_Misc");
             // advanced
             groupBox_Miners.Text = International.GetText("FormSettings_Tab_Advanced_Group_Miners");
@@ -1089,6 +1088,8 @@ namespace NiceHashMiner.Forms
                 checkBox_EnableAPI.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Allow_remote_management.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Send_actual_version_info.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_ShowPowerOfDisabledDevices.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBoxInstall_root_certificates.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Force_mining_if_nonprofitable.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkbox_wallet_balance.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_Show_profit_with_power_consumption.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1247,6 +1248,8 @@ namespace NiceHashMiner.Forms
                 checkBox_EnableAPI.Checked = ConfigManager.GeneralConfig.EnableAPIkeys;
                 checkBox_Allow_remote_management.Checked = ConfigManager.GeneralConfig.Allow_remote_management;
                 checkBox_Send_actual_version_info.Checked = ConfigManager.GeneralConfig.Send_actual_version_info;
+                checkBox_ShowPowerOfDisabledDevices.Checked = ConfigManager.GeneralConfig.ShowPowerOfDisabledDevices;
+                checkBoxInstall_root_certificates.Checked = ConfigManager.GeneralConfig.InstallRootCerts;
                 checkBox_Force_mining_if_nonprofitable.Checked = ConfigManager.GeneralConfig.Force_mining_if_nonprofitable;
                 checkbox_wallet_balance.Checked = ConfigManager.GeneralConfig.Show_wallet_balance;
                 checkBox_Show_profit_with_power_consumption.Checked = ConfigManager.GeneralConfig.DecreasePowerCost;
@@ -1601,6 +1604,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.EnableAPIkeys = checkBox_EnableAPI.Checked;
             ConfigManager.GeneralConfig.Allow_remote_management = checkBox_Allow_remote_management.Checked;
             ConfigManager.GeneralConfig.Send_actual_version_info = checkBox_Send_actual_version_info.Checked;
+            ConfigManager.GeneralConfig.ShowPowerOfDisabledDevices = checkBox_ShowPowerOfDisabledDevices.Checked;
+            ConfigManager.GeneralConfig.InstallRootCerts = checkBoxInstall_root_certificates.Checked;
             ConfigManager.GeneralConfig.Force_mining_if_nonprofitable = checkBox_Force_mining_if_nonprofitable.Checked;
             ConfigManager.GeneralConfig.Show_wallet_balance = checkbox_wallet_balance.Checked;
             ConfigManager.GeneralConfig.DecreasePowerCost = checkBox_Show_profit_with_power_consumption.Checked;
@@ -1977,34 +1982,6 @@ namespace NiceHashMiner.Forms
             IsChange = true;
             ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             checkBox_MinimizeMiningWindows.Enabled = !checkBox_HideMiningWindows.Checked;
-        }
-
-        private void algorithmsListView1_Load(object sender, EventArgs e)
-        {
-        }
-
-        private void groupBoxAlgorithmSettings_Enter(object sender, EventArgs e)
-        {
-        }
-
-        private void checkBox_AutoStartMining_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void checkBox_RunScriptOnCUDA_GPU_Lost_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void checkBox_Send_actual_version_info_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void algorithmSettingsControl1_Load(object sender, EventArgs e)
-        {
-        }
-
-        private void checkBox_Force_mining_if_nonprofitable_CheckedChanged(object sender, EventArgs e)
-        {
         }
 
         private void textBox_AutoStartMiningDelay_KeyPress(object sender, KeyPressEventArgs e)

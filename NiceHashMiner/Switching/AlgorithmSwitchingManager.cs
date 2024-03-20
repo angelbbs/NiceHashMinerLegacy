@@ -137,7 +137,6 @@ namespace NiceHashMiner.Switching
         {
             SmaCheckTimerOnElapsedRun = true;
 
-            //if (_smaCheckTimer != null) _smaCheckTimer.Interval = _smaCheckTime * 1000;
             GetTickPeriod();
             var sb = new StringBuilder();
             if (_hasStarted)
@@ -159,10 +158,7 @@ namespace NiceHashMiner.Switching
                 _hasStarted = true;
             }
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
-            //SmaCheckTimerOnElapsedRun = false;
-            //new Task(() => SmaCheck(sender, args)).Start();
             SmaCheck?.Invoke(sender, args);
-            //SmaCheckTimerOnElapsedRun = false;
         }
 
         /// <summary>

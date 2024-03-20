@@ -9,8 +9,9 @@ namespace nvidiasetp0state
         {
             string stdOut, stdErr, args, smiPath;
             stdOut = stdErr = args = String.Empty;
-            smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
-            if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
+            //smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
+            smiPath = "C:\\Windows\\System32\\DriverStore\\FileRepository\\nvcvsig.inf_amd64_ef7e4b17596a0738\\nvidia-smi.exe";
+            //if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
 
             bool sumResult = true;
 

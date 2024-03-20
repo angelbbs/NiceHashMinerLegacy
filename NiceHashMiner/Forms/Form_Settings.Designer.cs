@@ -54,6 +54,7 @@ namespace NiceHashMiner.Forms
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.checkBoxInstall_root_certificates = new System.Windows.Forms.CheckBox();
             this.checkBoxShowMinersVersions = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableTooltips = new System.Windows.Forms.CheckBox();
             this.labelRestartProgram = new System.Windows.Forms.Label();
@@ -185,9 +186,6 @@ namespace NiceHashMiner.Forms
             this.checkBoxHideUnused = new System.Windows.Forms.CheckBox();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
             this.checkBoxHideUnused2 = new System.Windows.Forms.CheckBox();
             this.checkBox_ABDefault_program_closing = new System.Windows.Forms.CheckBox();
@@ -196,8 +194,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_ABMinimize = new System.Windows.Forms.CheckBox();
             this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
             this.groupBoxOverClockSettings = new System.Windows.Forms.GroupBox();
-            this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
-            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
             this.groupBoxBackup = new System.Windows.Forms.GroupBox();
             this.checkBox_BackupBeforeUpdate = new System.Windows.Forms.CheckBox();
@@ -212,12 +208,19 @@ namespace NiceHashMiner.Forms
             this.linkLabelNewVersion2 = new System.Windows.Forms.LinkLabel();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonCheckNewVersion = new System.Windows.Forms.Button();
-            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.checkBoxHistory = new System.Windows.Forms.CheckBox();
             this.buttonHistory = new System.Windows.Forms.Button();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.groupBox_RigManager = new System.Windows.Forms.GroupBox();
+            this.checkBox_ShowPowerOfDisabledDevices = new System.Windows.Forms.CheckBox();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
+            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxServer.SuspendLayout();
@@ -243,6 +246,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxBackup.SuspendLayout();
             this.groupBoxUpdates.SuspendLayout();
             this.groupBoxInfo.SuspendLayout();
+            this.groupBox_RigManager.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -326,6 +330,7 @@ namespace NiceHashMiner.Forms
             // tabPageGeneral
             // 
             this.tabPageGeneral.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageGeneral.Controls.Add(this.groupBox_RigManager);
             this.tabPageGeneral.Controls.Add(this.groupBoxServer);
             this.tabPageGeneral.Controls.Add(this.groupBoxAPIkeys);
             this.tabPageGeneral.Controls.Add(this.groupBox_Idle);
@@ -349,11 +354,11 @@ namespace NiceHashMiner.Forms
             this.groupBoxServer.Controls.Add(this.checkBoxAPI);
             this.groupBoxServer.Controls.Add(this.linkLabelRigRemoteView);
             this.groupBoxServer.Controls.Add(this.checkBoxEnableRigRemoteView);
-            this.groupBoxServer.Location = new System.Drawing.Point(6, 389);
+            this.groupBoxServer.Location = new System.Drawing.Point(6, 354);
             this.groupBoxServer.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxServer.Name = "groupBoxServer";
             this.groupBoxServer.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxServer.Size = new System.Drawing.Size(365, 78);
+            this.groupBoxServer.Size = new System.Drawing.Size(365, 66);
             this.groupBoxServer.TabIndex = 394;
             this.groupBoxServer.TabStop = false;
             this.groupBoxServer.Text = "Internal server:";
@@ -361,7 +366,7 @@ namespace NiceHashMiner.Forms
             // linkLabelGetAPIkey
             // 
             this.linkLabelGetAPIkey.AutoSize = true;
-            this.linkLabelGetAPIkey.Location = new System.Drawing.Point(243, 45);
+            this.linkLabelGetAPIkey.Location = new System.Drawing.Point(243, 43);
             this.linkLabelGetAPIkey.Name = "linkLabelGetAPIkey";
             this.linkLabelGetAPIkey.Size = new System.Drawing.Size(61, 13);
             this.linkLabelGetAPIkey.TabIndex = 413;
@@ -372,7 +377,7 @@ namespace NiceHashMiner.Forms
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(138, 45);
+            this.label2.Location = new System.Drawing.Point(138, 43);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(48, 13);
@@ -381,7 +386,7 @@ namespace NiceHashMiner.Forms
             // 
             // textBoxAPIport
             // 
-            this.textBoxAPIport.Location = new System.Drawing.Point(190, 42);
+            this.textBoxAPIport.Location = new System.Drawing.Point(190, 39);
             this.textBoxAPIport.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBoxAPIport.Name = "textBoxAPIport";
             this.textBoxAPIport.Size = new System.Drawing.Size(48, 20);
@@ -391,7 +396,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBoxAPI.AutoSize = true;
             this.checkBoxAPI.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxAPI.Location = new System.Drawing.Point(4, 44);
+            this.checkBoxAPI.Location = new System.Drawing.Point(6, 42);
             this.checkBoxAPI.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxAPI.Name = "checkBoxAPI";
             this.checkBoxAPI.Size = new System.Drawing.Size(111, 17);
@@ -415,7 +420,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBoxEnableRigRemoteView.AutoSize = true;
             this.checkBoxEnableRigRemoteView.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxEnableRigRemoteView.Location = new System.Drawing.Point(4, 19);
+            this.checkBoxEnableRigRemoteView.Location = new System.Drawing.Point(6, 19);
             this.checkBoxEnableRigRemoteView.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxEnableRigRemoteView.Name = "checkBoxEnableRigRemoteView";
             this.checkBoxEnableRigRemoteView.Size = new System.Drawing.Size(133, 17);
@@ -428,11 +433,11 @@ namespace NiceHashMiner.Forms
             // 
             this.groupBoxAPIkeys.Controls.Add(this.buttonSetupAPI);
             this.groupBoxAPIkeys.Controls.Add(this.checkBox_EnableAPI);
-            this.groupBoxAPIkeys.Location = new System.Drawing.Point(6, 326);
+            this.groupBoxAPIkeys.Location = new System.Drawing.Point(6, 304);
             this.groupBoxAPIkeys.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBoxAPIkeys.Name = "groupBoxAPIkeys";
             this.groupBoxAPIkeys.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxAPIkeys.Size = new System.Drawing.Size(365, 56);
+            this.groupBoxAPIkeys.Size = new System.Drawing.Size(365, 44);
             this.groupBoxAPIkeys.TabIndex = 393;
             this.groupBoxAPIkeys.TabStop = false;
             this.groupBoxAPIkeys.Text = "API keys:";
@@ -441,7 +446,7 @@ namespace NiceHashMiner.Forms
             // 
             this.buttonSetupAPI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSetupAPI.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSetupAPI.Location = new System.Drawing.Point(141, 15);
+            this.buttonSetupAPI.Location = new System.Drawing.Point(141, 13);
             this.buttonSetupAPI.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonSetupAPI.Name = "buttonSetupAPI";
             this.buttonSetupAPI.Size = new System.Drawing.Size(145, 23);
@@ -453,7 +458,7 @@ namespace NiceHashMiner.Forms
             // checkBox_EnableAPI
             // 
             this.checkBox_EnableAPI.AutoSize = true;
-            this.checkBox_EnableAPI.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_EnableAPI.Location = new System.Drawing.Point(9, 19);
             this.checkBox_EnableAPI.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_EnableAPI.Name = "checkBox_EnableAPI";
             this.checkBox_EnableAPI.Size = new System.Drawing.Size(104, 17);
@@ -467,11 +472,11 @@ namespace NiceHashMiner.Forms
             this.groupBox_Idle.Controls.Add(this.checkBox_StartMiningWhenIdle);
             this.groupBox_Idle.Controls.Add(this.label_MinIdleSeconds);
             this.groupBox_Idle.Controls.Add(this.textBox_MinIdleSeconds);
-            this.groupBox_Idle.Location = new System.Drawing.Point(6, 262);
+            this.groupBox_Idle.Location = new System.Drawing.Point(6, 254);
             this.groupBox_Idle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Idle.Name = "groupBox_Idle";
             this.groupBox_Idle.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Idle.Size = new System.Drawing.Size(365, 58);
+            this.groupBox_Idle.Size = new System.Drawing.Size(365, 44);
             this.groupBox_Idle.TabIndex = 392;
             this.groupBox_Idle.TabStop = false;
             this.groupBox_Idle.Text = "Idle:";
@@ -517,11 +522,12 @@ namespace NiceHashMiner.Forms
             this.groupBox_Main.Controls.Add(this.comboBox_TimeUnit);
             this.groupBox_Main.Controls.Add(this.textBox_MinProfit);
             this.groupBox_Main.Controls.Add(this.label_MinProfit);
+            this.groupBox_Main.Controls.Add(this.checkBox_AutoScaleBTCValues);
             this.groupBox_Main.Location = new System.Drawing.Point(6, 6);
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(365, 117);
+            this.groupBox_Main.Size = new System.Drawing.Size(365, 114);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
@@ -530,10 +536,10 @@ namespace NiceHashMiner.Forms
             // checkbox_wallet_balance
             // 
             this.checkbox_wallet_balance.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkbox_wallet_balance.Location = new System.Drawing.Point(9, 90);
+            this.checkbox_wallet_balance.Location = new System.Drawing.Point(179, 89);
             this.checkbox_wallet_balance.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkbox_wallet_balance.Name = "checkbox_wallet_balance";
-            this.checkbox_wallet_balance.Size = new System.Drawing.Size(318, 18);
+            this.checkbox_wallet_balance.Size = new System.Drawing.Size(182, 18);
             this.checkbox_wallet_balance.TabIndex = 385;
             this.checkbox_wallet_balance.Text = "Show wallet balance";
             this.checkbox_wallet_balance.UseVisualStyleBackColor = true;
@@ -542,7 +548,7 @@ namespace NiceHashMiner.Forms
             // checkBox_fiat
             // 
             this.checkBox_fiat.AutoSize = true;
-            this.checkBox_fiat.Location = new System.Drawing.Point(9, 47);
+            this.checkBox_fiat.Location = new System.Drawing.Point(9, 45);
             this.checkBox_fiat.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_fiat.Name = "checkBox_fiat";
             this.checkBox_fiat.Size = new System.Drawing.Size(239, 17);
@@ -554,7 +560,7 @@ namespace NiceHashMiner.Forms
             // checkBox_Force_mining_if_nonprofitable
             // 
             this.checkBox_Force_mining_if_nonprofitable.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Force_mining_if_nonprofitable.Location = new System.Drawing.Point(9, 68);
+            this.checkBox_Force_mining_if_nonprofitable.Location = new System.Drawing.Point(9, 67);
             this.checkBox_Force_mining_if_nonprofitable.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Force_mining_if_nonprofitable.Name = "checkBox_Force_mining_if_nonprofitable";
             this.checkBox_Force_mining_if_nonprofitable.Size = new System.Drawing.Size(318, 18);
@@ -607,9 +613,10 @@ namespace NiceHashMiner.Forms
             // 
             // groupBox_Misc
             // 
-            this.groupBox_Misc.Controls.Add(this.checkBoxShowMinersVersions);
+            this.groupBox_Misc.Controls.Add(this.checkBoxInstall_root_certificates);
             this.groupBox_Misc.Controls.Add(this.checkBox_DisableTooltips);
             this.groupBox_Misc.Controls.Add(this.labelRestartProgram);
+            this.groupBox_Misc.Controls.Add(this.checkBoxShowMinersVersions);
             this.groupBox_Misc.Controls.Add(this.comboBoxRestartProgram);
             this.groupBox_Misc.Controls.Add(this.checkBox_program_monitoring);
             this.groupBox_Misc.Controls.Add(this.checkBox_AlwaysOnTop);
@@ -618,30 +625,39 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.Controls.Add(this.label1);
             this.groupBox_Misc.Controls.Add(this.textBox_AutoStartMiningDelay);
             this.groupBox_Misc.Controls.Add(this.label_AutoStartMiningDelay);
+            this.groupBox_Misc.Controls.Add(this.checkBox_AllowMultipleInstances);
             this.groupBox_Misc.Controls.Add(this.comboBox_ColorProfile);
-            this.groupBox_Misc.Controls.Add(this.checkBox_Send_actual_version_info);
-            this.groupBox_Misc.Controls.Add(this.checkBox_Allow_remote_management);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeMiningWindows);
             this.groupBox_Misc.Controls.Add(this.checkBox_RunAtStartup);
-            this.groupBox_Misc.Controls.Add(this.checkBox_AllowMultipleInstances);
             this.groupBox_Misc.Controls.Add(this.checkBox_AutoStartMining);
             this.groupBox_Misc.Controls.Add(this.checkBox_HideMiningWindows);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeToTray);
-            this.groupBox_Misc.Controls.Add(this.checkBox_AutoScaleBTCValues);
             this.groupBox_Misc.Location = new System.Drawing.Point(375, 6);
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Misc.Size = new System.Drawing.Size(288, 461);
+            this.groupBox_Misc.Size = new System.Drawing.Size(288, 363);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
             this.groupBox_Misc.Enter += new System.EventHandler(this.groupBox_Misc_Enter);
             // 
+            // checkBoxInstall_root_certificates
+            // 
+            this.checkBoxInstall_root_certificates.AutoSize = true;
+            this.checkBoxInstall_root_certificates.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBoxInstall_root_certificates.Location = new System.Drawing.Point(7, 287);
+            this.checkBoxInstall_root_certificates.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxInstall_root_certificates.Name = "checkBoxInstall_root_certificates";
+            this.checkBoxInstall_root_certificates.Size = new System.Drawing.Size(128, 17);
+            this.checkBoxInstall_root_certificates.TabIndex = 409;
+            this.checkBoxInstall_root_certificates.Text = "Install root certificates";
+            this.checkBoxInstall_root_certificates.UseVisualStyleBackColor = true;
+            // 
             // checkBoxShowMinersVersions
             // 
             this.checkBoxShowMinersVersions.AutoSize = true;
-            this.checkBoxShowMinersVersions.Location = new System.Drawing.Point(7, 114);
+            this.checkBoxShowMinersVersions.Location = new System.Drawing.Point(7, 264);
             this.checkBoxShowMinersVersions.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxShowMinersVersions.Name = "checkBoxShowMinersVersions";
             this.checkBoxShowMinersVersions.Size = new System.Drawing.Size(128, 17);
@@ -654,7 +670,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_DisableTooltips.AutoSize = true;
             this.checkBox_DisableTooltips.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_DisableTooltips.Location = new System.Drawing.Point(7, 377);
+            this.checkBox_DisableTooltips.Location = new System.Drawing.Point(7, 183);
             this.checkBox_DisableTooltips.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_DisableTooltips.Name = "checkBox_DisableTooltips";
             this.checkBox_DisableTooltips.Size = new System.Drawing.Size(97, 17);
@@ -665,7 +681,7 @@ namespace NiceHashMiner.Forms
             // labelRestartProgram
             // 
             this.labelRestartProgram.AutoSize = true;
-            this.labelRestartProgram.Location = new System.Drawing.Point(4, 406);
+            this.labelRestartProgram.Location = new System.Drawing.Point(4, 337);
             this.labelRestartProgram.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRestartProgram.Name = "labelRestartProgram";
             this.labelRestartProgram.Size = new System.Drawing.Size(82, 13);
@@ -676,10 +692,10 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBoxRestartProgram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRestartProgram.FormattingEnabled = true;
-            this.comboBoxRestartProgram.Location = new System.Drawing.Point(157, 403);
+            this.comboBoxRestartProgram.Location = new System.Drawing.Point(136, 334);
             this.comboBoxRestartProgram.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBoxRestartProgram.Name = "comboBoxRestartProgram";
-            this.comboBoxRestartProgram.Size = new System.Drawing.Size(117, 21);
+            this.comboBoxRestartProgram.Size = new System.Drawing.Size(138, 21);
             this.comboBoxRestartProgram.TabIndex = 405;
             this.comboBoxRestartProgram.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxRestartProgram_DrawItem);
             // 
@@ -687,7 +703,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_program_monitoring.AutoSize = true;
             this.checkBox_program_monitoring.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_program_monitoring.Location = new System.Drawing.Point(7, 354);
+            this.checkBox_program_monitoring.Location = new System.Drawing.Point(7, 310);
             this.checkBox_program_monitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_program_monitoring.Name = "checkBox_program_monitoring";
             this.checkBox_program_monitoring.Size = new System.Drawing.Size(116, 17);
@@ -699,7 +715,7 @@ namespace NiceHashMiner.Forms
             // checkBox_AlwaysOnTop
             // 
             this.checkBox_AlwaysOnTop.AutoSize = true;
-            this.checkBox_AlwaysOnTop.Location = new System.Drawing.Point(7, 161);
+            this.checkBox_AlwaysOnTop.Location = new System.Drawing.Point(7, 137);
             this.checkBox_AlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_AlwaysOnTop.Name = "checkBox_AlwaysOnTop";
             this.checkBox_AlwaysOnTop.Size = new System.Drawing.Size(96, 17);
@@ -712,7 +728,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_sorting_list_of_algorithms.AutoSize = true;
             this.checkBox_sorting_list_of_algorithms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_sorting_list_of_algorithms.Location = new System.Drawing.Point(7, 330);
+            this.checkBox_sorting_list_of_algorithms.Location = new System.Drawing.Point(7, 206);
             this.checkBox_sorting_list_of_algorithms.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_sorting_list_of_algorithms.Name = "checkBox_sorting_list_of_algorithms";
             this.checkBox_sorting_list_of_algorithms.Size = new System.Drawing.Size(136, 17);
@@ -724,7 +740,7 @@ namespace NiceHashMiner.Forms
             // 
             this.Checkbox_Save_windows_size_and_position.AutoSize = true;
             this.Checkbox_Save_windows_size_and_position.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(7, 307);
+            this.Checkbox_Save_windows_size_and_position.Location = new System.Drawing.Point(7, 160);
             this.Checkbox_Save_windows_size_and_position.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Checkbox_Save_windows_size_and_position.Name = "Checkbox_Save_windows_size_and_position";
             this.Checkbox_Save_windows_size_and_position.Size = new System.Drawing.Size(176, 17);
@@ -735,7 +751,7 @@ namespace NiceHashMiner.Forms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 284);
+            this.label1.Location = new System.Drawing.Point(7, 234);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 13);
@@ -767,7 +783,7 @@ namespace NiceHashMiner.Forms
             // 
             this.comboBox_ColorProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_ColorProfile.FormattingEnabled = true;
-            this.comboBox_ColorProfile.Location = new System.Drawing.Point(172, 280);
+            this.comboBox_ColorProfile.Location = new System.Drawing.Point(172, 230);
             this.comboBox_ColorProfile.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_ColorProfile.Name = "comboBox_ColorProfile";
             this.comboBox_ColorProfile.Size = new System.Drawing.Size(102, 21);
@@ -779,7 +795,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_Send_actual_version_info.AutoSize = true;
             this.checkBox_Send_actual_version_info.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Send_actual_version_info.Location = new System.Drawing.Point(7, 252);
+            this.checkBox_Send_actual_version_info.Location = new System.Drawing.Point(6, 42);
             this.checkBox_Send_actual_version_info.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Send_actual_version_info.Name = "checkBox_Send_actual_version_info";
             this.checkBox_Send_actual_version_info.Size = new System.Drawing.Size(140, 17);
@@ -791,7 +807,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_Allow_remote_management.AutoSize = true;
             this.checkBox_Allow_remote_management.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_Allow_remote_management.Location = new System.Drawing.Point(7, 229);
+            this.checkBox_Allow_remote_management.Location = new System.Drawing.Point(6, 19);
             this.checkBox_Allow_remote_management.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Allow_remote_management.Name = "checkBox_Allow_remote_management";
             this.checkBox_Allow_remote_management.Size = new System.Drawing.Size(150, 17);
@@ -802,7 +818,7 @@ namespace NiceHashMiner.Forms
             // checkBox_MinimizeMiningWindows
             // 
             this.checkBox_MinimizeMiningWindows.AutoSize = true;
-            this.checkBox_MinimizeMiningWindows.Location = new System.Drawing.Point(7, 91);
+            this.checkBox_MinimizeMiningWindows.Location = new System.Drawing.Point(7, 113);
             this.checkBox_MinimizeMiningWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_MinimizeMiningWindows.Name = "checkBox_MinimizeMiningWindows";
             this.checkBox_MinimizeMiningWindows.Size = new System.Drawing.Size(141, 17);
@@ -825,7 +841,7 @@ namespace NiceHashMiner.Forms
             // checkBox_AllowMultipleInstances
             // 
             this.checkBox_AllowMultipleInstances.AutoSize = true;
-            this.checkBox_AllowMultipleInstances.Location = new System.Drawing.Point(7, 206);
+            this.checkBox_AllowMultipleInstances.Location = new System.Drawing.Point(7, 67);
             this.checkBox_AllowMultipleInstances.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_AllowMultipleInstances.Name = "checkBox_AllowMultipleInstances";
             this.checkBox_AllowMultipleInstances.Size = new System.Drawing.Size(139, 17);
@@ -849,7 +865,7 @@ namespace NiceHashMiner.Forms
             // checkBox_HideMiningWindows
             // 
             this.checkBox_HideMiningWindows.AutoSize = true;
-            this.checkBox_HideMiningWindows.Location = new System.Drawing.Point(7, 68);
+            this.checkBox_HideMiningWindows.Location = new System.Drawing.Point(7, 90);
             this.checkBox_HideMiningWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_HideMiningWindows.Name = "checkBox_HideMiningWindows";
             this.checkBox_HideMiningWindows.Size = new System.Drawing.Size(123, 17);
@@ -860,7 +876,7 @@ namespace NiceHashMiner.Forms
             // checkBox_MinimizeToTray
             // 
             this.checkBox_MinimizeToTray.AutoSize = true;
-            this.checkBox_MinimizeToTray.Location = new System.Drawing.Point(7, 138);
+            this.checkBox_MinimizeToTray.Location = new System.Drawing.Point(169, 137);
             this.checkBox_MinimizeToTray.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_MinimizeToTray.Name = "checkBox_MinimizeToTray";
             this.checkBox_MinimizeToTray.Size = new System.Drawing.Size(100, 17);
@@ -871,7 +887,7 @@ namespace NiceHashMiner.Forms
             // checkBox_AutoScaleBTCValues
             // 
             this.checkBox_AutoScaleBTCValues.AutoSize = true;
-            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(7, 183);
+            this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(9, 90);
             this.checkBox_AutoScaleBTCValues.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_AutoScaleBTCValues.Name = "checkBox_AutoScaleBTCValues";
             this.checkBox_AutoScaleBTCValues.Size = new System.Drawing.Size(128, 17);
@@ -885,11 +901,11 @@ namespace NiceHashMiner.Forms
             this.groupBox_Logging.Controls.Add(this.label_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.textBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.checkBox_LogToFile);
-            this.groupBox_Logging.Location = new System.Drawing.Point(6, 188);
+            this.groupBox_Logging.Location = new System.Drawing.Point(6, 182);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Logging.Size = new System.Drawing.Size(365, 68);
+            this.groupBox_Logging.Size = new System.Drawing.Size(365, 66);
             this.groupBox_Logging.TabIndex = 388;
             this.groupBox_Logging.TabStop = false;
             this.groupBox_Logging.Text = "Logging:";
@@ -897,7 +913,7 @@ namespace NiceHashMiner.Forms
             // checkBoxSaveProtocolData
             // 
             this.checkBoxSaveProtocolData.AutoSize = true;
-            this.checkBoxSaveProtocolData.Location = new System.Drawing.Point(4, 42);
+            this.checkBoxSaveProtocolData.Location = new System.Drawing.Point(6, 42);
             this.checkBoxSaveProtocolData.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxSaveProtocolData.Name = "checkBoxSaveProtocolData";
             this.checkBoxSaveProtocolData.Size = new System.Drawing.Size(277, 17);
@@ -908,7 +924,7 @@ namespace NiceHashMiner.Forms
             // label_LogMaxFileSize
             // 
             this.label_LogMaxFileSize.AutoSize = true;
-            this.label_LogMaxFileSize.Location = new System.Drawing.Point(133, 20);
+            this.label_LogMaxFileSize.Location = new System.Drawing.Point(135, 20);
             this.label_LogMaxFileSize.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_LogMaxFileSize.Name = "label_LogMaxFileSize";
             this.label_LogMaxFileSize.Size = new System.Drawing.Size(84, 13);
@@ -942,11 +958,11 @@ namespace NiceHashMiner.Forms
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(6, 129);
+            this.groupBox_Localization.Location = new System.Drawing.Point(6, 126);
             this.groupBox_Localization.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Localization.Size = new System.Drawing.Size(365, 53);
+            this.groupBox_Localization.Size = new System.Drawing.Size(365, 50);
             this.groupBox_Localization.TabIndex = 385;
             this.groupBox_Localization.TabStop = false;
             this.groupBox_Localization.Text = "Localization:";
@@ -2233,47 +2249,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
             // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
-            this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
-            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(645, 217);
-            this.algorithmsListView1.TabIndex = 2;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
-            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 193);
-            this.algorithmSettingsControl1.TabIndex = 396;
-            // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 8);
-            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 204);
-            this.devicesListViewEnableControl1.TabIndex = 397;
-            // 
             // tabPageOverClock
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
@@ -2379,34 +2354,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxOverClockSettings.TabIndex = 400;
             this.groupBoxOverClockSettings.TabStop = false;
             this.groupBoxOverClockSettings.Text = "Overclock settings for selected device:";
-            // 
-            // algorithmsListViewOverClock1
-            // 
-            this.algorithmsListViewOverClock1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
-            this.algorithmsListViewOverClock1.ComunicationInterface = null;
-            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 19);
-            this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
-            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(652, 266);
-            this.algorithmsListViewOverClock1.TabIndex = 399;
-            // 
-            // devicesListViewEnableControl2
-            // 
-            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
-            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.devicesListViewEnableControl2.IsInBenchmark = false;
-            this.devicesListViewEnableControl2.IsMining = false;
-            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(6, 16);
-            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
-            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 163);
-            this.devicesListViewEnableControl2.TabIndex = 398;
-            this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
             // 
             // tabPageAbout
             // 
@@ -2581,20 +2528,6 @@ namespace NiceHashMiner.Forms
             this.buttonCheckNewVersion.UseVisualStyleBackColor = true;
             this.buttonCheckNewVersion.Click += new System.EventHandler(this.buttonCheckNewVersion_Click);
             // 
-            // progressBarUpdate
-            // 
-            this.progressBarUpdate.CustomText = "";
-            this.progressBarUpdate.Location = new System.Drawing.Point(536, 14);
-            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
-            this.progressBarUpdate.Name = "progressBarUpdate";
-            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
-            this.progressBarUpdate.Size = new System.Drawing.Size(118, 23);
-            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBarUpdate.TabIndex = 396;
-            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
-            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
-            // 
             // groupBoxInfo
             // 
             this.groupBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -2658,6 +2591,115 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.Text = "View licence";
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
+            // 
+            // groupBox_RigManager
+            // 
+            this.groupBox_RigManager.Controls.Add(this.checkBox_ShowPowerOfDisabledDevices);
+            this.groupBox_RigManager.Controls.Add(this.checkBox_Allow_remote_management);
+            this.groupBox_RigManager.Controls.Add(this.checkBox_Send_actual_version_info);
+            this.groupBox_RigManager.Location = new System.Drawing.Point(376, 375);
+            this.groupBox_RigManager.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox_RigManager.Name = "groupBox_RigManager";
+            this.groupBox_RigManager.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox_RigManager.Size = new System.Drawing.Size(288, 110);
+            this.groupBox_RigManager.TabIndex = 395;
+            this.groupBox_RigManager.TabStop = false;
+            this.groupBox_RigManager.Text = "Rig manager:";
+            // 
+            // checkBox_ShowPowerOfDisabledDevices
+            // 
+            this.checkBox_ShowPowerOfDisabledDevices.AutoSize = true;
+            this.checkBox_ShowPowerOfDisabledDevices.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_ShowPowerOfDisabledDevices.Location = new System.Drawing.Point(6, 65);
+            this.checkBox_ShowPowerOfDisabledDevices.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ShowPowerOfDisabledDevices.Name = "checkBox_ShowPowerOfDisabledDevices";
+            this.checkBox_ShowPowerOfDisabledDevices.Size = new System.Drawing.Size(211, 17);
+            this.checkBox_ShowPowerOfDisabledDevices.TabIndex = 376;
+            this.checkBox_ShowPowerOfDisabledDevices.Text = "Show power usage of disabled devices";
+            this.checkBox_ShowPowerOfDisabledDevices.UseVisualStyleBackColor = true;
+            // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
+            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(645, 217);
+            this.algorithmsListView1.TabIndex = 2;
+            // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
+            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 193);
+            this.algorithmSettingsControl1.TabIndex = 396;
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 8);
+            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 204);
+            this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
+            // algorithmsListViewOverClock1
+            // 
+            this.algorithmsListViewOverClock1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListViewOverClock1.ComunicationInterface = null;
+            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 19);
+            this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
+            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(652, 266);
+            this.algorithmsListViewOverClock1.TabIndex = 399;
+            // 
+            // devicesListViewEnableControl2
+            // 
+            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl2.IsInBenchmark = false;
+            this.devicesListViewEnableControl2.IsMining = false;
+            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(6, 16);
+            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
+            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 163);
+            this.devicesListViewEnableControl2.TabIndex = 398;
+            this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
+            // 
+            // progressBarUpdate
+            // 
+            this.progressBarUpdate.CustomText = "";
+            this.progressBarUpdate.Location = new System.Drawing.Point(536, 14);
+            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
+            this.progressBarUpdate.Name = "progressBarUpdate";
+            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
+            this.progressBarUpdate.Size = new System.Drawing.Size(118, 23);
+            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBarUpdate.TabIndex = 396;
+            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
+            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
             // 
             // Form_Settings
             // 
@@ -2723,6 +2765,8 @@ namespace NiceHashMiner.Forms
             this.groupBoxUpdates.PerformLayout();
             this.groupBoxInfo.ResumeLayout(false);
             this.groupBoxInfo.PerformLayout();
+            this.groupBox_RigManager.ResumeLayout(false);
+            this.groupBox_RigManager.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2923,5 +2967,8 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Button buttonHistory;
         private System.Windows.Forms.Button button_Lite_Algo;
         private System.Windows.Forms.CheckBox checkBoxSaveProtocolData;
+        private System.Windows.Forms.CheckBox checkBoxInstall_root_certificates;
+        private System.Windows.Forms.GroupBox groupBox_RigManager;
+        private System.Windows.Forms.CheckBox checkBox_ShowPowerOfDisabledDevices;
     }
 }
