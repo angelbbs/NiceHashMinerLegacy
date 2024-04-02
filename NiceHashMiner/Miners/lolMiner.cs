@@ -250,10 +250,24 @@ namespace NiceHashMiner.Miners
                     apiBind + " " + param +
                               " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash)
+            {
+                LastCommandLine = "--algo FISHHASH" +
+                GetServer("fishhash", username, null, "3400") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
             {
                 LastCommandLine = "--algo KARLSEN" +
                 GetServer("karlsenhash", username, null, "3398") +
+                    apiBind + " " + param +
+                              " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Alephium)
+            {
+                LastCommandLine = "--algo ALEPH" +
+                GetServer("alephium", username, null, "3399") +
                     apiBind + " " + param +
                               " --devices ";
             }
@@ -390,10 +404,24 @@ namespace NiceHashMiner.Miners
                               param +
                 " --devices ";
             }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash)
+            {
+                CommandLine = "--algo FISHHASH " +
+                " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
+                              param +
+                " --devices ";
+            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
             {
                 CommandLine = "--algo KARLSEN " +
                 " --pool " + Links.CheckDNS("kls.2miners.com:2020").Replace("stratum+tcp://", "") + " --user karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.lolMiner --pass x" +
+                              param +
+                " --devices ";
+            }
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Alephium)
+            {
+                CommandLine = "--algo ALEPH " +
+                " --pool " + Links.CheckDNS("ru.alephium.herominers.com:1199").Replace("stratum+tcp://", "") + " --user 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -641,6 +669,10 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
+                {
+                    _benchmarkTimeWait = _benchmarkTimeWait + 10;
+                }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
@@ -741,7 +773,17 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;
                     }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 10;
+                    }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                    {
+                        delay_before_calc_hashrate = 10;
+                        MinerStartDelay = 10;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Alephium))
                     {
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;

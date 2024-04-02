@@ -105,19 +105,47 @@ Fatal error detected. Restarting.
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
-
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
+                            {
+                            },
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, "ETCHash")
                             {
-                                ExtraLaunchParameters = "--gpu-auto-tune 1"
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
+                            {
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Alephium, "Alephium")
+                            {
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.IronFish, "IronFish")
+                            {
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KarlsenHash, "KarlsenHash")
+                            {
                             },
                             /*
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KarlsenHash, "AutolykosKarlsenHash")
                             {
                             },
                             */
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.IronFish, "IronFish")
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KarlsenHash, "DaggerKarlsenHash")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, AlgorithmType.KarlsenHash, "ETCHashKarlsenHash")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.Alephium, "AutolykosAlephium")
                             {
                             }
+                            /*
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Alephium, "DaggerAlephium")
+                            {
+                            },
+                            
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, AlgorithmType.Alephium, "ETCHashAlephium")
+                            {
+                            }
+                            */
                         }
             },
             {
@@ -180,27 +208,42 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, "ETCHash")
+                            {
+                            },
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
-                            /*
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Alephium, "Alephium")
                             {
                             },
-                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.IronFish, "IronFish")
                             {
-                            }
-                            /*
-                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KarlsenHash, "KarlsenHash")
                             {
                             },
-                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KHeavyHash, "DaggerKHeavyHash")
+                            /*
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KarlsenHash, "AutolykosKarlsenHash")
                             {
-                                ExtraLaunchParameters = "--gpu-auto-tune 1"
-                            }
+                            },
                             */
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KarlsenHash, "DaggerKarlsenHash")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, AlgorithmType.KarlsenHash, "ETCHashKarlsenHash")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.Alephium, "AutolykosAlephium")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Alephium, "DaggerAlephium")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, AlgorithmType.Alephium, "ETCHashAlephium")
+                            {
+                            }
                         }
             },
             {
@@ -285,7 +328,11 @@ Fatal error detected. Restarting.
                             {
                                 ExtraLaunchParameters = ""
                             },
-                              new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Alephium, "Alephium")
                             {
                                 ExtraLaunchParameters = ""
                             },
@@ -298,6 +345,10 @@ Fatal error detected. Restarting.
                             },
                             */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.IronFish, "IronFish")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, "FishHash")
                             {
                                 ExtraLaunchParameters = ""
                             }
@@ -337,9 +388,6 @@ Fatal error detected. Restarting.
             },
             { MinerBaseType.miniZ,
                         new List<Algorithm>() {
-                            //new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")
-                            //{
-                            //},
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
                             },
@@ -359,6 +407,25 @@ Fatal error detected. Restarting.
 
         public static Dictionary<MinerBaseType, List<Algorithm>> Nvidia => new Dictionary<MinerBaseType, List<Algorithm>>
         {
+            /*
+            {
+                MinerBaseType.SRBMiner,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Alephium, "Alephium")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.Alephium, "AutolykosAlephium")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Alephium, "DaggerAlephium")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, AlgorithmType.Alephium, "ETCHashAlephium")
+                            {
+                            }
+                        }
+            },
+            */
             { MinerBaseType.CryptoDredge,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
@@ -406,24 +473,11 @@ Fatal error detected. Restarting.
                         }
             },
             
-             //����, extranonce2 �� ������������
-             /*
-            { MinerBaseType.ZEnemy,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ZEnemy, AlgorithmType.KAWPOW, "KAWPOW")
-                            {
-                            },
-                        }
-        
-            },
-    */
             { MinerBaseType.miniZ,
                         new List<Algorithm>() {
-                            /*
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")//broken in 2.3.c
                             {
                             },
-                            */
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
                             },
@@ -435,10 +489,12 @@ Fatal error detected. Restarting.
                             },
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.Octopus, "Octopus")
                             {
-                            },
+                            }
+                            /*
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.KarlsenHash, "KarlsenHash")
                             {
                             }
+                            */
                         }
             },
             { MinerBaseType.NBMiner,
@@ -539,7 +595,7 @@ Fatal error detected. Restarting.
                                 ExtraLaunchParameters = ""
                             },
                             /*
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KHeavyHash, "KHeavyHash")
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.ZelHash, "ZelHash")
                             {
                                 ExtraLaunchParameters = ""
                             },
@@ -553,7 +609,15 @@ Fatal error detected. Restarting.
                             {
                             },
                             */
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Alephium, "Alephium")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.IronFish, "IronFish")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, "FishHash")
                             {
                                 ExtraLaunchParameters = ""
                             }
@@ -580,6 +644,10 @@ Fatal error detected. Restarting.
                     {
                         ExtraLaunchParameters = "--no-tui"
                     },
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.FishHash, "FishHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, "Octopus")
                     {
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
@@ -589,11 +657,12 @@ Fatal error detected. Restarting.
                         ExtraLaunchParameters = "--no-tui"
                     },
                     /*
-                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, AlgorithmType.AutolykosKHeavyHash.ToString())
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.Alephium, "Alephium")
                     {
                         ExtraLaunchParameters = "--no-tui"
                     },
                     */
+                    //dual
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.IronFish, 
                         "AutolykosIronFish")
                     {
@@ -604,13 +673,49 @@ Fatal error detected. Restarting.
                     {
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
+                    /*
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Autolykos, AlgorithmType.Alephium,
+                        "AutolykosAlephium")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
+                    */
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, AlgorithmType.KarlsenHash,
                         "OctopusKarlsenHash")
                     {
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
+                    /*
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, AlgorithmType.Alephium,
+                        "OctopusAlephium")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
+                    */
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.ETCHash, AlgorithmType.KarlsenHash,
                         "ETCHashKarlsenHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
+                    /*
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.ETCHash, AlgorithmType.Alephium,
+                        "ETCHashAlephium")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.DaggerHashimoto, AlgorithmType.Alephium,
+                        "DaggerAlephium")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
+                    */
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.DaggerHashimoto, AlgorithmType.KarlsenHash,
+                        "DaggerKarlsenHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
+                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.FishHash, AlgorithmType.KarlsenHash,
+                        "FishHashKarlsenHash")
                     {
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     }

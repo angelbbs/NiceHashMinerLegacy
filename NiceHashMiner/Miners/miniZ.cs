@@ -550,7 +550,7 @@ namespace NiceHashMiner.Miners
                 Reader.BaseStream.ReadTimeout = 3 * 1000;
                 respStr = await Reader.ReadToEndAsync();
 
-                //Helpers.ConsolePrint("miniZ API:", respStr);
+                Helpers.ConsolePrint("miniZ API:", respStr);
                 respStr = respStr.Substring(respStr.IndexOf('{'), respStr.Length - respStr.IndexOf('{'));
                 //Helpers.ConsolePrint("miniZ API:", respStr);
                 if (!respStr.Contains("}]}") && prevSpeed != 0)

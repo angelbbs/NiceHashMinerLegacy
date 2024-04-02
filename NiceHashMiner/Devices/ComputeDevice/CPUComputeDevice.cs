@@ -17,7 +17,6 @@ namespace NiceHashMiner.Devices
     [Serializable]
     public class CpuComputeDevice : ComputeDevice
     {
-        //private readonly PerformanceCounter _cpuCounter;
         private static int cpuLoad = 0;
         private static float cpuTemp = -1;
         private static PerformanceCounter cpuCounter = new PerformanceCounter();
@@ -111,7 +110,6 @@ namespace NiceHashMiner.Devices
                     }
                     catch (Exception)
                     {
-                        //    Helpers.ConsolePrint("CPUDIAG", e.ToString());
                     }
                 } else
                 {
@@ -188,7 +186,6 @@ namespace NiceHashMiner.Devices
                         Helpers.ConsolePrint("CPUDIAG", e.ToString());
                     }
                 }
-                //Helpers.ConsolePrint("CPUDIAG", GetPower().ToString());
                 return -1;
             }
         }
@@ -224,14 +221,6 @@ namespace NiceHashMiner.Devices
             else NewUuid = "0";
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             Index = ID; // Don't increment for CPU
-            /*
-            _cpuCounter = new PerformanceCounter
-            {
-                CategoryName = "Processor",
-                CounterName = "% Processor Time",
-                InstanceName = "_Total"
-            };
-            */
         }
     }
 

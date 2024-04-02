@@ -3,6 +3,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.Grouping
@@ -105,7 +106,7 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 Miner.Stop();
                 // wait before going on
-                System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+                Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
             }
             CurrentRate = 0;
             PowerRate = 0;
@@ -128,6 +129,7 @@ namespace NiceHashMiner.Miners.Grouping
             System.Threading.Thread.Sleep(100);
             //var locationUrl = Globals.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
             Miner.Start(btcAdress, worker);
+            Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
         }
     }
 }

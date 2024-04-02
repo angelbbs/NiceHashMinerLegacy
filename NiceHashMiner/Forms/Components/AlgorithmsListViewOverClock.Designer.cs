@@ -41,6 +41,7 @@ namespace NiceHashMiner.Forms.Components
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.labelOverclockNotSupported = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listViewAlgorithms
@@ -143,11 +144,27 @@ namespace NiceHashMiner.Forms.Components
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
+            // labelOverclockNotSupported
+            // 
+            this.labelOverclockNotSupported.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelOverclockNotSupported.AutoSize = true;
+            this.labelOverclockNotSupported.BackColor = System.Drawing.Color.Transparent;
+            this.labelOverclockNotSupported.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelOverclockNotSupported.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelOverclockNotSupported.ForeColor = System.Drawing.Color.Red;
+            this.labelOverclockNotSupported.Location = new System.Drawing.Point(267, 164);
+            this.labelOverclockNotSupported.Name = "labelOverclockNotSupported";
+            this.labelOverclockNotSupported.Size = new System.Drawing.Size(220, 37);
+            this.labelOverclockNotSupported.TabIndex = 101;
+            this.labelOverclockNotSupported.Text = "Not supported";
+            this.labelOverclockNotSupported.Visible = false;
+            // 
             // AlgorithmsListViewOverClock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this.labelOverclockNotSupported);
             this.Controls.Add(this.listViewAlgorithms);
             this.Name = "AlgorithmsListViewOverClock";
             this.Size = new System.Drawing.Size(744, 380);
@@ -156,6 +173,7 @@ namespace NiceHashMiner.Forms.Components
             this.DoubleClick += new System.EventHandler(this.AlgorithmsListViewOverClock_DoubleClick);
             this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.AlgorithmsListViewOverClock_MouseDoubleClick);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -172,5 +190,6 @@ namespace NiceHashMiner.Forms.Components
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.Label labelOverclockNotSupported;
     }
 }

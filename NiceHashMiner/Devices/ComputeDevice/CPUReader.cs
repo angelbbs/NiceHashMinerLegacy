@@ -7,14 +7,11 @@ namespace ComputeDeviceCPU
 {
     public class CpuReader
     {
-        private static readonly Computer _computer = new Computer { IsCpuEnabled = true };
-        private static readonly Computer _mainboard = new Computer { IsMotherboardEnabled = true };
-
         public static int GetTemperaturesInCelsius()
         {
             int _ret = -1;
-            _mainboard.Open();
-            var coreAndTemperature = new Dictionary<string, float>();
+            if (Form_Main.thisComputer is not object) return -1;
+            if (Form_Main.thisComputer.Hardware == null) return -1;
 
             foreach (var hardware in Form_Main.thisComputer.Hardware)
             {
@@ -22,7 +19,6 @@ namespace ComputeDeviceCPU
                 {
                     if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
                     {
-                        //Helpers.ConsolePrint("LHM Temperature", sensor.Name + " = " + sensor.Value.ToString());
                         if (sensor.Name == "CPU Package" || sensor.Name.Contains("Core ("))
                         {
                             _ret = (int)sensor.Value.Value;
@@ -37,8 +33,8 @@ namespace ComputeDeviceCPU
         public static int GetPower()
         {
             int _ret = -1;
-            _mainboard.Open();
-            var coreAndTemperature = new Dictionary<string, float>();
+            if (Form_Main.thisComputer is not object) return -1;
+            if (Form_Main.thisComputer.Hardware == null) return -1;
             try
             {
                 foreach (var hardware in Form_Main.thisComputer.Hardware)
@@ -47,7 +43,6 @@ namespace ComputeDeviceCPU
                     {
                         if (sensor.SensorType == SensorType.Power && sensor.Value.HasValue)
                         {
-                            //Helpers.ConsolePrint("LHM Power", sensor.Name + " = " + sensor.Value.ToString());
                             if (sensor.Name == "CPU Package" || sensor.Name == "Package")
                             {
                                 _ret = (int)sensor.Value;
@@ -66,21 +61,16 @@ namespace ComputeDeviceCPU
         public static int GetFan()
         {
             int _ret = -1;
-            _mainboard.Open();
-            var coreAndTemperature = new Dictionary<string, float>();
-            if (_mainboard.Hardware == null) return -1;
-            foreach (var hardware in _mainboard.Hardware)
+            if (Form_Main.thisComputer is not object) return -1;
+            if (Form_Main.thisComputer.Hardware == null) return -1;
+            foreach (var hardware in Form_Main.thisComputer.Hardware)
             {
-                //hardware.Update(); //use hardware.Name to get CPU model
-
                 if (hardware.HardwareType == HardwareType.Motherboard)
                 {
                     hardware.Update();
                     foreach (var sensor in hardware.SubHardware)
                     {
                         sensor.Update();
-                        //Helpers.ConsolePrint("LHM", sensor.Name + " " + HardwareType.SuperIO.ToString());
-
                         if (sensor.HardwareType == HardwareType.SuperIO)
                         {
                             foreach (var superio in hardware.SubHardware)
@@ -90,7 +80,6 @@ namespace ComputeDeviceCPU
                                 {
                                     if (sens2.SensorType == SensorType.Fan)
                                     {
-                                        //Helpers.ConsolePrint("LHM Fan", sens2.Name + " = " + sens2.Value.ToString());
                                         if (sens2.Name == "Fan #1" || sens2.Name == "Fan #2" || sens2.Name == "CPU Fan")
                                         {
                                             _ret = (int)sens2.Value;
@@ -106,19 +95,17 @@ namespace ComputeDeviceCPU
         }
         public static int GetLoad()
         {
-            // _computer = new Computer { CPUEnabled = true };
             int _ret = -1;
-            var coreAndTemperature = new Dictionary<string, float>();
+            if (Form_Main.thisComputer is not object) return -1;
+            if (Form_Main.thisComputer.Hardware == null) return -1;
             try
             {
                 foreach (var hardware in Form_Main.thisComputer.Hardware)
                 {
-                    //hardware.Update(); //use hardware.Name to get CPU model
                     foreach (var sensor in hardware.Sensors)
                     {
                         if (sensor.SensorType == SensorType.Load && sensor.Value.HasValue)
                         {
-                            //Helpers.ConsolePrint("CPU", sensor.Name + " " + sensor.Value.ToString());
                             if (sensor.Name == "Package" || sensor.Name == "CPU Total")
                             {
                                 _ret = (int)sensor.Value.Value;
@@ -131,18 +118,6 @@ namespace ComputeDeviceCPU
 
             }
             return _ret;
-        }
-
-        public void Dispose()
-        {
-            try
-            {
-                _computer.Close();
-            }
-            catch (Exception)
-            {
-                //ignore closing errors
-            }
         }
     }
 

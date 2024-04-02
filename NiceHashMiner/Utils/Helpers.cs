@@ -438,27 +438,7 @@ namespace NiceHashMiner
             }
             return false;
         }
-        /*
-        public static void InstallVcRedist()
-        {
-            var PInstallVcRedist = new Process
-            {
-                StartInfo =
-                {
-                    FileName = @"bin\vc_redist.x64.exe",
-                    Arguments = "/q /norestart",
-                    UseShellExecute = false,
-                    RedirectStandardError = false,
-                    RedirectStandardOutput = false,
-                    CreateNoWindow = false
-                }
-            };
 
-            //const int waitTime = 45 * 1000; // 45seconds
-            //CudaDevicesDetection.WaitForExit(waitTime);
-            PInstallVcRedist.Start();
-        }
-        */
         public static void SetDefaultEnvironmentVariables()
         {
             ConsolePrint("NICEHASH", "Setting environment variables");

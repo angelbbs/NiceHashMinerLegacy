@@ -147,6 +147,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("TRMclk_mem_mv", "", "--clk_mem_mv=", "", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMclk_timing", "", "--clk_timing=", "", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMfan_control", "", "--fan_control=", "", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("TRMeth_dag_buf=", "", "--eth_dag_buf=", "", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("TRMforce_colors", "", "--force_colors", "", MinerOptionFlagType.Uni, ""),
                     new MinerOption("TRMforce_watchdog_disabled", "", "--watchdog_disabled", "", MinerOptionFlagType.Uni, "")
                 },
@@ -176,6 +177,7 @@ namespace NiceHashMiner.Miners.Parsing
                     //new MinerOption("lolMinerasm", "", "--asm", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMinerbasecolor", "", "--basecolor", "", MinerOptionFlagType.Uni, ""),
                     new MinerOption("lolMinernocolor", "", "--nocolor", "", MinerOptionFlagType.Uni, ""),
+                    new MinerOption("lolMinernocl", "", "--no-cl", "", MinerOptionFlagType.Uni, ""),
                     new MinerOption("lolMiner_lhrwait", "--lhrwait", "--lhrwait", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMiner_screen ", "--screen ", "--screen", "0", MinerOptionFlagType.SingleParam, ""),
                 },

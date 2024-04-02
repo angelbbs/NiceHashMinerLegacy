@@ -74,6 +74,28 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                {
+                    AlgorithmType.FishHash
+                });
+            }
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                {
+                    AlgorithmType.FishHashAlephium
+                });
+            }
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                {
+                    AlgorithmType.FishHashKarlsenHash
+                });
+            }
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 if (device.DeviceType == DeviceType.NVIDIA)

@@ -240,6 +240,14 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
 
+            if (_computeDevice.DeviceType == DeviceType.CPU || _computeDevice.DeviceType == DeviceType.INTEL)
+            {
+                labelOverclockNotSupported.Visible = true;
+            } else
+            {
+                labelOverclockNotSupported.Visible = false;
+            }
+
             foreach (var alg in computeDevice.GetAlgorithmSettings())
             {
                 if (ConfigManager.GeneralConfig.Hide_unused_algorithms && !alg.Enabled)

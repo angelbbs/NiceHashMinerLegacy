@@ -88,6 +88,20 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerOctopus;
                     case AlgorithmType.IronFish:
                         return AlgorithmType.DaggerIronFish;
+                    case AlgorithmType.KarlsenHash:
+                        return AlgorithmType.DaggerKarlsenHash;
+                    case AlgorithmType.Alephium:
+                        return AlgorithmType.DaggerAlephium;
+                }
+            }
+            if (AlgorithmID == AlgorithmType.FishHash)
+            {
+                switch (SecondaryAlgorithmID)
+                {
+                    case AlgorithmType.KarlsenHash:
+                        return AlgorithmType.FishHashKarlsenHash;
+                    case AlgorithmType.Alephium:
+                        return AlgorithmType.FishHashAlephium;
                 }
             }
             if (AlgorithmID == AlgorithmType.ETCHash)
@@ -98,6 +112,8 @@ namespace NiceHashMiner
                         return AlgorithmType.ETCHashIronFish;
                     case AlgorithmType.KarlsenHash:
                         return AlgorithmType.ETCHashKarlsenHash;
+                    case AlgorithmType.Alephium:
+                        return AlgorithmType.ETCHashAlephium;
                 }
             }
             if (AlgorithmID == AlgorithmType.Autolykos)
@@ -108,6 +124,8 @@ namespace NiceHashMiner
                         return AlgorithmType.AutolykosIronFish;
                     case AlgorithmType.KarlsenHash:
                         return AlgorithmType.AutolykosKarlsenHash;
+                    case AlgorithmType.Alephium:
+                        return AlgorithmType.AutolykosAlephium;
                 }
             }
             if (AlgorithmID == AlgorithmType.Octopus)
@@ -118,6 +136,8 @@ namespace NiceHashMiner
                         return AlgorithmType.OctopusIronFish;
                     case AlgorithmType.KarlsenHash:
                         return AlgorithmType.OctopusKarlsenHash;
+                    case AlgorithmType.Alephium:
+                        return AlgorithmType.OctopusAlephium;
                 }
             }
 
@@ -336,7 +356,7 @@ namespace NiceHashMiner
             IsInit = MiningSetup.IsInit;
             SetApiPort();
             SetWorkingDirAndProgName(MiningSetup.MinerPath);
-            Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
+            //Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
         }
 
         public void InitBenchmarkSetup(MiningPair benchmarkPair)
@@ -376,7 +396,18 @@ namespace NiceHashMiner
 
         public string ProcessTag()
         {
-            return _currentPidData == null ? "PidData is NULL" : ProcessTag(_currentPidData);
+            if (_currentPidData == null)
+            {
+                Helpers.ConsolePrint("ProcessTag", "PidData is NULL. Restart program");
+                Stop(MinerStopType.END); // stop miner first
+                Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
+                Form_Main.MakeRestart(0);
+                return "PidData is NULL";
+            } else
+            {
+                return ProcessTag(_currentPidData);
+            }
+            return "unknown";
         }
 
         private static int ChildProcess(MinerPidData pidData)
@@ -1083,7 +1114,7 @@ namespace NiceHashMiner
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
 
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
 
             try
             {
@@ -1554,7 +1585,7 @@ namespace NiceHashMiner
             }
             Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Restarting miner..");
             Stop(MinerStopType.END); // stop miner first
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            Thread.Sleep(Math.Max(ConfigManager.GeneralConfig.MinerRestartDelayMS, 500));
             ProcessHandle = _Start(); // start with old command line
         }
 
@@ -1714,17 +1745,18 @@ namespace NiceHashMiner
                                 string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
                                 Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
                                 if (MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName)) break;
+                                Thread.Sleep(100);
                                 //MSIAfterburner.CommitChanges(false);
                             }
                         }
                     }
                     MSIAfterburner.Flush();
+                    Thread.Sleep(100);
                 }
                 else
                 {
 
                 }
-                //Thread.Sleep(3000);
             } else
             {
                 if (isBefore)
@@ -1774,8 +1806,15 @@ namespace NiceHashMiner
                         pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerIronFish ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashIronFish ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosKarlsenHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerKarlsenHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.FishHashAlephium ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.FishHashKarlsenHash ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusKarlsenHash ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashKarlsenHash ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.AutolykosAlephium ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusAlephium ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.ETCHashAlephium ||
+                        pair.Algorithm.DualNiceHashID == AlgorithmType.DaggerAlephium ||
                         pair.Algorithm.DualNiceHashID == AlgorithmType.OctopusIronFish)
                     {
                         strDual = "DUAL";
@@ -1787,6 +1826,10 @@ namespace NiceHashMiner
                     else if (pair.Device.DeviceType == DeviceType.AMD)
                     {
                         strPlatform = "AMD";
+                    }
+                    else if (pair.Device.DeviceType == DeviceType.INTEL)
+                    {
+                        strPlatform = "INTEL";
                     }
                     else if (pair.Device.DeviceType == DeviceType.CPU)
                     {
@@ -1860,75 +1903,6 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint(MinerTag(), ex.ToString());
             }
             return CMDconfigHandle;
-        }
-
-        protected virtual void RunCMDAfterMining(string CMDparam, NiceHashProcess ProcessHandle)
-        {
-            bool CreateNoWindow = false;
-            var CMDconfigHandle = new Process
-            {
-                StartInfo =
-                {
-                    FileName = MiningSetup.MinerPath
-                }
-            };
-
-            string MinerDir = MiningSetup.MinerPath.Substring(0, MiningSetup.MinerPath.LastIndexOf("\\"));
-            CMDconfigHandle.StartInfo.FileName = "GPU-Reset.cmd";
-
-            {
-                var cmd = "";
-                FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Open, FileAccess.Read);
-                StreamReader w = new StreamReader(fs);
-                cmd = w.ReadToEnd();
-                w.Close();
-
-                if (cmd.ToUpper().Trim().Contains("SET NOVISIBLE=TRUE"))
-                {
-                    CreateNoWindow = true;
-                }
-                if (cmd.ToUpper().Trim().Contains("SET RUN=FALSE"))
-                {
-                    return;
-                }
-            }
-            //BenchmarkProcessPath = CMDconfigHandle.StartInfo.WorkingDirectory;
-            Helpers.ConsolePrint(MinerTag(), "Using CMD: " + CMDconfigHandle.StartInfo.FileName);
-            //CMDconfigHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-
-            if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
-            {
-                foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path])
-                {
-                    var envName = kvp.Key;
-                    var envValue = kvp.Value;
-                    CMDconfigHandle.StartInfo.EnvironmentVariables[envName] = envValue;
-                }
-            }
-
-            CMDconfigHandle.StartInfo.Arguments = CMDparam;
-            CMDconfigHandle.StartInfo.UseShellExecute = false;
-            // CMDconfigHandle.StartInfo.RedirectStandardError = true;
-            // CMDconfigHandle.StartInfo.RedirectStandardOutput = true;
-            CMDconfigHandle.StartInfo.CreateNoWindow = CreateNoWindow;
-
-            Helpers.ConsolePrint(MinerTag(), "Start CMD: " + CMDconfigHandle.StartInfo.FileName + CMDconfigHandle.StartInfo.Arguments);
-            CMDconfigHandle.Start();
-
-            try
-            {
-                if (!CMDconfigHandle.WaitForExit(60 * 1000))
-                {
-                    CMDconfigHandle.Kill();
-                    CMDconfigHandle.WaitForExit(5 * 1000);
-                    CMDconfigHandle.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("KillCMDBeforeOrAfterMining", e.ToString());
-            }
-            return;
         }
     }
 }

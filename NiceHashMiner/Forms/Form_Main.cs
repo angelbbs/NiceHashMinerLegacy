@@ -1849,18 +1849,26 @@ namespace NiceHashMiner
         }
         private bool IsVcRedistInstalled()
         {
-
-            // x64 - 14.24.28127
-            const int minMajor = 14;
-            const int minMinor = 23;
             try
             {
                 using (var vcredist = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"))
                 {
-                    var major = Int32.Parse(vcredist.GetValue("Major")?.ToString());
-                    var minor = Int32.Parse(vcredist.GetValue("Minor")?.ToString());
-                    if (major < minMajor) return false;
-                    if (minor < minMinor) return false;
+                    var major = double.Parse(vcredist.GetValue("Major")?.ToString());
+                    var minor = double.Parse(vcredist.GetValue("Minor")?.ToString());
+                    double verInstalled = major + (double)(minor / 100);
+                    
+                    var versionInfo = FileVersionInfo.GetVersionInfo("miners\\vc_redist.x64.exe");
+                    string version = versionInfo.FileVersion;
+                    double.TryParse(version.Split('.')[0], out double verFilemajor);
+                    double.TryParse(version.Split('.')[1], out double verFileminor);
+                    double verFile = verFilemajor + (double)(verFileminor / 100);
+
+                    if (verFile > verInstalled)
+                    {
+                        Helpers.ConsolePrint("IsVcRedistInstalled", "File version is newer (" + verFile.ToString() + ") " +
+                            "than installed (" + verInstalled.ToString() + ")");
+                        return false;
+                    }
                     return true;
                 }
             }
@@ -1877,6 +1885,7 @@ namespace NiceHashMiner
             {
                 return;
             }
+            Helpers.ConsolePrint("InstallVcRedist", "Try install vcredist");
             try
             {
                 var vcredistProcess = new Process
@@ -1893,7 +1902,7 @@ namespace NiceHashMiner
                 vcredistProcess.StartInfo.CreateNoWindow = false;
                 vcredistProcess.Start();
                 vcredistProcess.WaitForExit();
-
+                Helpers.ConsolePrint("InstallVcRedist", "vcredist install completed");
             }
             catch (Exception e)
             {
@@ -2699,7 +2708,7 @@ public static void CloseChilds(Process parentId)
                 {
                     ((GroupProfitControl)control).Visible = hideIndex < groupCount;
                     ++hideIndex;
-                    //flowLayoutPanelRates.Update();
+                    flowLayoutPanelRates.Update();
                     //Application.DoEvents();
                 }
             }

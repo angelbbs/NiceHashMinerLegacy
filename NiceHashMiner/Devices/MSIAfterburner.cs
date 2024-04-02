@@ -366,7 +366,7 @@ namespace NiceHashMiner.Devices
             foreach (var dev in Available.Devices)
             {
                 waiting.SetText("", "Initializing " + dev.Name);
-                if (dev.DeviceType != DeviceType.CPU)
+                if (dev.DeviceType != DeviceType.CPU && dev.DeviceType != DeviceType.INTEL)
                 {
                     foreach (var alg in dev.GetAlgorithmSettings())
                     {
@@ -394,7 +394,7 @@ namespace NiceHashMiner.Devices
         {
             CheckMSIAfterburner();
             foreach (var dev in Available.Devices)
-                if (dev.DeviceType != DeviceType.CPU)
+                if (dev.DeviceType != DeviceType.CPU && dev.DeviceType != DeviceType.INTEL)
                 {
                     foreach (var alg in dev.GetAlgorithmSettings())
                     {
@@ -422,7 +422,7 @@ namespace NiceHashMiner.Devices
         {
             CheckMSIAfterburner();
             foreach (var dev in Available.Devices)
-                if (dev.DeviceType != DeviceType.CPU)
+                if (dev.DeviceType != DeviceType.CPU && dev.DeviceType != DeviceType.INTEL)
                 {
                     foreach (var alg in dev.GetAlgorithmSettings())
                     {
@@ -456,6 +456,7 @@ namespace NiceHashMiner.Devices
             var devData = new ControlMemoryGpuEntry();
             for (int i = 0; i < macm.Header.GpuEntryCount; i++)
             {
+                if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                 if (busID == _busID)
                 {
@@ -532,6 +533,7 @@ namespace NiceHashMiner.Devices
             var devType = new DeviceType();
             for (int i = 0; i < macm.Header.GpuEntryCount; i++)
             {
+                if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                 if (busID == _busID)
                 {
@@ -582,6 +584,7 @@ namespace NiceHashMiner.Devices
             int i = 0;
             for (i = 0; i < macm.Header.GpuEntryCount; i++)
             {
+                if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                 if (busID == _busID)
                 {
@@ -647,6 +650,7 @@ namespace NiceHashMiner.Devices
             int i = 0;
             for (i = 0; i < macm.Header.GpuEntryCount; i++)
             {
+                if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                 if (busID == _busID)
                 {
@@ -779,6 +783,7 @@ namespace NiceHashMiner.Devices
             int index = -1;
             for (int i = 0; i < macm.Header.GpuEntryCount; i++)
             {
+                if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                 if (busID == _busID)
                 {
@@ -848,6 +853,7 @@ namespace NiceHashMiner.Devices
 
                 for (i = 0; i < macm.Header.GpuEntryCount; i++)
                 {
+                    if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                     int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                     if (busID == _busID)
                     {
@@ -902,6 +908,7 @@ namespace NiceHashMiner.Devices
         {
             for (int i = 0; i < macm.Header.GpuEntryCount; i++)
             {
+                if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                 int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                 if (busID == _busID)
                 {
@@ -920,6 +927,7 @@ namespace NiceHashMiner.Devices
             {
                 for (int i = 0; i < macm.Header.GpuEntryCount; i++)
                 {
+                    if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
                     int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
                     if (busID == _busID)
                     {

@@ -6,6 +6,12 @@
 
         // dual algos for grouping
         AutolykosZil = -73,
+        FishHashAlephium = -36,
+        FishHashKarlsenHash = -35,
+        OctopusAlephium = -34,
+        AutolykosAlephium = -33,
+        DaggerAlephium = -32,
+        ETCHashAlephium = -31,
         OctopusKarlsenHash = -30,
         AutolykosKarlsenHash = -29,
         DaggerKarlsenHash = -28,
@@ -111,7 +117,9 @@
         KHeavyHash__UNUSED = 62,
         NexaPow = 63,
         IronFish = 64,
-        KarlsenHash = 65
+        KarlsenHash = 65,
+        Alephium = 66,
+        FishHash = 67
         #endregion // NiceHashAPI
     }
 }

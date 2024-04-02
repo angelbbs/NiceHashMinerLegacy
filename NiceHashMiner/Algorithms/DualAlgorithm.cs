@@ -35,6 +35,20 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.IronFish:
                             return AlgorithmType.DaggerIronFish;
+                        case AlgorithmType.Alephium:
+                            return AlgorithmType.DaggerAlephium;
+                        case AlgorithmType.KarlsenHash:
+                            return AlgorithmType.DaggerKarlsenHash;
+                    }
+                }
+                if (NiceHashID == AlgorithmType.FishHash)
+                {
+                    switch (SecondaryNiceHashID)
+                    {
+                        case AlgorithmType.Alephium:
+                            return AlgorithmType.FishHashAlephium;
+                        case AlgorithmType.KarlsenHash:
+                            return AlgorithmType.FishHashKarlsenHash;
                     }
                 }
                 if (NiceHashID == AlgorithmType.Autolykos)
@@ -47,6 +61,8 @@ namespace NiceHashMiner.Algorithms
                             return AlgorithmType.AutolykosIronFish;
                         case AlgorithmType.KarlsenHash:
                             return AlgorithmType.AutolykosKarlsenHash;
+                        case AlgorithmType.Alephium:
+                            return AlgorithmType.AutolykosAlephium;
                     }
                 }
                 if (NiceHashID == AlgorithmType.Octopus)
@@ -57,6 +73,8 @@ namespace NiceHashMiner.Algorithms
                             return AlgorithmType.OctopusIronFish;
                         case AlgorithmType.KarlsenHash:
                             return AlgorithmType.OctopusKarlsenHash;
+                        case AlgorithmType.Alephium:
+                            return AlgorithmType.OctopusAlephium;
                     }
                 }
                 if (NiceHashID == AlgorithmType.ETCHash)
@@ -67,6 +85,8 @@ namespace NiceHashMiner.Algorithms
                             return AlgorithmType.ETCHashIronFish;
                         case AlgorithmType.KarlsenHash:
                             return AlgorithmType.ETCHashKarlsenHash;
+                        case AlgorithmType.Alephium:
+                            return AlgorithmType.ETCHashAlephium;
                     }
                 }
 

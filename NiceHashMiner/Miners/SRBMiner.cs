@@ -173,28 +173,66 @@ namespace NiceHashMiner.Miners
             {
                 disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-amd ";
             }
+            if (devtype == DeviceType.NVIDIA)
+            {
+                disablePlatform = "--disable-cpu --disable-gpu-intel --disable-gpu-amd ";
+            }
             try
             {
                 var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, devtype);
                 //сначала дуалы
-                /*
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                 {
                     return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
-                        $"--algorithm ethash;kaspa " +
-                        GetServer2("daggerhashimoto", "kheavyhash", username, "3353", "3395") +
+                        $"--algorithm ethash;karlsenhash " +
+                        GetServer2("daggerhashimoto", "karlsenhash", username, "3353", "3398") +
                         $"--api-enable --api-port {ApiPort} " +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                 {
                     return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
-                        $"--algorithm autolykos2;kaspa " +
-                        GetServer2("autolykos", "kheavyhash", username, "3390", "3395") + ZilMining +
+                        $"--algorithm etchash;karlsenhash " +
+                        GetServer2("etchash", "karlsenhash", username, "3393", "3398") +
+                        $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                {
+                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm autolykos2;karlsenhash " +
+                        GetServer2("autolykos", "karlsenhash", username, "3390", "3398") + ZilMining +
                     $"--api-enable --api-port {ApiPort} " +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
-                */
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+                {
+                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm ethash;alephium " +
+                        GetServer2("daggerhashimoto", "alephium", username, "3353", "3399") +
+                        $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+                {
+                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm etchash;alephium " +
+                        GetServer2("etchash", "alephium", username, "3393", "3399") +
+                        $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+                {
+                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm autolykos2;alephium " +
+                        GetServer2("autolykos", "alephium", username, "3390", "3399") + ZilMining +
+                    $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+
+
                 //
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
@@ -259,6 +297,26 @@ namespace NiceHashMiner.Miners
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
 
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                {
+                    var port = "3398";
+                    var algo = "karlsenhash";
+
+                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm karlsenhash --api-enable --api-port {ApiPort} " +
+                    GetServer(algo, username, port) + ZilMining +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Alephium))
+                {
+                    var port = "3399";
+                    var algo = "alephium";
+
+                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm blake3_alephium --api-enable --api-port {ApiPort} " +
+                    GetServer(algo, username, port) + ZilMining +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("GetStartCommand", ex.ToString());
@@ -295,6 +353,10 @@ namespace NiceHashMiner.Miners
             {
                 disablePlatform = "--disable-cpu --disable-gpu-nvidia --disable-gpu-amd ";
             }
+            if (devtype == DeviceType.NVIDIA)
+            {
+                disablePlatform = "--disable-cpu --disable-gpu-intel --disable-gpu-amd ";
+            }
 
             IsInBenchmark = true;
             var LastCommandLine = GetStartCommand(btcAddress, worker);
@@ -302,31 +364,78 @@ namespace NiceHashMiner.Miners
             string username = GetUsername(btcAddress, worker);
 
             //сначала дуалы
-            /*
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
             {
                 return $" " + disablePlatform + " --algorithm autolykos2" +
                     $" --pool {Links.CheckDNS("stratum+tcp://pool.woolypooly.com")}:3100" +
                     $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
-                    " --algorithm kaspa" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://pool.eu.woolypooly.com")}:3112" +
-                    $" --wallet kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.SRBMiner" +
+                    " --algorithm karlsenhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://kls.2miners.com")}:2020" +
+                    $" --wallet karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KHeavyHash))
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
             {
                 return $" " + disablePlatform + " --algorithm ethash" +
                     $" --pool {Links.CheckDNS("stratum+tcp://ethw.2miners.com")}:2020" +
                     $" --wallet 0x266b27bd794d1A65ab76842ED85B067B415CD505.SRBMiner" +
-                    " --algorithm kaspa" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://pool.eu.woolypooly.com")}:3112" +
-                    $" --wallet kaspa:qq9y94k2xqumnsgvx6huxn3uugzy8euzxjh9utxe338ck0ufch0hkvvd37vc0.SRBMiner" +
+                    " --algorithm karlsenhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://kls.2miners.com")}:2020" +
+                    $" --wallet karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
-            */
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash) &&
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+            {
+                return $" " + disablePlatform + " --algorithm etchash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://etc.2miners.com")}:1010" +
+                    $" --wallet 0x266b27bd794d1A65ab76842ED85B067B415CD505.SRBMiner" +
+                    " --algorithm karlsenhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://kls.2miners.com")}:2020" +
+                    $" --wallet karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
 
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+            {
+                return $" " + disablePlatform + " --algorithm autolykos2" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://pool.woolypooly.com")}:3100" +
+                    $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
+                    " --algorithm blake3_alephium" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.alephium.herominers.com")}:1199" +
+                    $" --wallet 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+            {
+                return $" " + disablePlatform + " --algorithm ethash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ethw.2miners.com")}:2020" +
+                    $" --wallet 0x266b27bd794d1A65ab76842ED85B067B415CD505.SRBMiner" +
+                    " --algorithm blake3_alephium" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.alephium.herominers.com")}:1199" +
+                    $" --wallet 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+            {
+                return $" " + disablePlatform + " --algorithm etchash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://etc.2miners.com")}:1010" +
+                    $" --wallet 0x266b27bd794d1A65ab76842ED85B067B415CD505.SRBMiner" +
+                    " --algorithm blake3_alephium" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.alephium.herominers.com")}:1199" +
+                    $" --wallet 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+
+            //
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
             {
                 ApiPort = 4040;
@@ -343,6 +452,7 @@ namespace NiceHashMiner.Miners
                 + $" --pool {Links.CheckDNS("stratum+tcp://xmr-eu1.nanopool.org")}:14444 --wallet 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark" +
                 $" --nicehash false --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
             }
+            //
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
             {
                 return $" " + disablePlatform + " --algorithm ethash" +
@@ -373,6 +483,24 @@ namespace NiceHashMiner.Miners
                 return $" " + disablePlatform + " --algorithm blake3_ironfish" +
                     $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
                     $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+            {
+                return $" " + disablePlatform + " --algorithm karlsenhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://kls.2miners.com")}:2020" +
+                    $" --wallet karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Alephium))
+            {
+                return $" " + disablePlatform + " --algorithm blake3_alephium" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.alephium.herominers.com")}:1199" +
+                    $" --wallet 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
@@ -445,6 +573,7 @@ namespace NiceHashMiner.Miners
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("API", ex.Message);
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return null;
             }
 
@@ -827,8 +956,23 @@ namespace NiceHashMiner.Miners
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
                     {
+                        _benchmarkTimeWait = 60;
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
+                    }
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                    {
+                        _benchmarkTimeWait = 60;
+                        MinerStartDelay = 15;
+                        delay_before_calc_hashrate = 10;
+                    }
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Alephium))
+                    {
+                        _benchmarkTimeWait = 60;
+                        MinerStartDelay = 15;
+                        delay_before_calc_hashrate = 10;
                     }
 
                     var ad = GetSummaryAsync();
