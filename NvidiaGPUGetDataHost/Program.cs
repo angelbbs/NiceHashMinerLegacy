@@ -121,6 +121,7 @@ namespace NvidiaGPUGetDataHost
                 var _loadMem = 0u;
                 var _temp = 0u;
                 var _tempMem = 0u;
+                var _tempHotSpot = 0u;
 
                 int size = Marshal.SizeOf(devn) + Marshal.SizeOf(_power) + Marshal.SizeOf(_fan) + Marshal.SizeOf(_load) + Marshal.SizeOf(_loadMem) + Marshal.SizeOf(_temp) + Marshal.SizeOf(_tempMem);
 
@@ -153,6 +154,7 @@ namespace NvidiaGPUGetDataHost
                         }
                         Thread.Sleep(50);
                         ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref _power);// <- mem leak 461.40+
+                        //Logger.ConsolePrint("NvidiaGPUGetDataHost", "_power: " + _power.ToString());
                         if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
                             if (!ret.ToString().Contains("NotSupported"))
@@ -187,7 +189,8 @@ namespace NvidiaGPUGetDataHost
                         Thread.Sleep(50);
                         _load = rates.gpu;
                         _loadMem = rates.memory;
-                        
+
+                        //Logger.ConsolePrint("NvidiaGPUGetDataHost", "_load: " + _load.ToString());
                         ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu, ref _temp);
                         if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
@@ -242,6 +245,7 @@ namespace NvidiaGPUGetDataHost
                                 {
                                     GPUApi.QueryThermalSensors(handle, 1u << maxBit);
                                 }
+
                                 catch
                                 {
                                     break;
@@ -263,13 +267,37 @@ namespace NvidiaGPUGetDataHost
                             {
                                 // ignore
                             }
-                            _tempMem = (uint)t1[9];// 2-hotspot, 9-mem
-                            if (_tempMem <= 0)
+
+                            if (t1.Length >= 10)
                             {
-                                _tempMem = (uint)t1[7];//laptop?
+                                _tempMem = (uint)t1[9];// 2-hotspot, 9-mem
+                                if (_tempMem <= 0)
+                                {
+                                    _tempMem = (uint)t1[7];//laptop?
+                                    /*
+                                    if (_tempMem <= 0)
+                                    {
+                                        _tempMem = (uint)t1[2];
+                                    }
+                                    */
+                                }
                             }
                             /*
-                            for (int i = 0; i< t1.Length;i++)
+                            if (_power == 0u)
+                            {
+                                                                var _p = GPUApi.ClientPowerTopologyGetStatus(handle);
+                                var e = _p.PowerPolicyStatusEntries;
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", e.Count().ToString());
+                                foreach ( var pt in e)
+                                {
+                                    Logger.ConsolePrint("NvidiaGPUGetDataHost", pt.Domain.ToString() +
+                                        " " + pt.PowerUsageInPCM.ToString());
+                                }
+                                }
+                            */
+
+                            /*
+                            for (int i = 0; i< t1.Count();i++)
                             {
                                 Logger.ConsolePrint("NvidiaGPUGetDataHost", "t1[" + i.ToString() + "]: " + t1[i].ToString());
                             }

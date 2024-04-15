@@ -24,7 +24,7 @@ namespace NiceHashMiner.Devices.Algorithms
             if (algoSettings == null) return null;
 
             // check if it is Etherum capable
-            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.5))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                 {
@@ -32,11 +32,13 @@ namespace NiceHashMiner.Devices.Algorithms
                 });
             }
 
-            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.5))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                 {
-                    AlgorithmType.DaggerIronFish
+                    AlgorithmType.DaggerAlephium,
+                    AlgorithmType.DaggerAutolykos,
+                    AlgorithmType.DaggerKarlsenHash
                 });
             }
 
@@ -51,7 +53,8 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.ETCHashIronFish
+                        AlgorithmType.ETCHashAlephium,
+                        AlgorithmType.ETCHashKarlsenHash
                     });
             }
 
@@ -95,7 +98,14 @@ namespace NiceHashMiner.Devices.Algorithms
                     AlgorithmType.FishHashKarlsenHash
                 });
             }
-
+            if (device.GpuRam < (ulong)(1024 * 1024 * 1024 * 5.8))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                {
+                    AlgorithmType.FishHashPyrinHash
+                });
+            }
+            
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 if (device.DeviceType == DeviceType.NVIDIA)
@@ -170,7 +180,10 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
-                        AlgorithmType.Octopus
+                        AlgorithmType.Octopus,
+                        AlgorithmType.OctopusAlephium,
+                        AlgorithmType.OctopusKarlsenHash,
+                        AlgorithmType.OctopusPyrinHash
                     });
             }
 
@@ -220,11 +233,104 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
             }
 
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                    {
+                        AlgorithmType.CuckooCycle
+                    });
+            }
+            //*******************
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.SRBMiner) &&
+                (device.Codename.ToLower().Contains("ellesmere")))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.SRBMiner])
+                {
+                    if (algo.DualNiceHashID == AlgorithmType.AutolykosKarlsenHash ||
+                        algo.DualNiceHashID == AlgorithmType.AutolykosPyrinHash ||
+                        algo.DualNiceHashID == AlgorithmType.FishHashAlephium ||
+                        algo.DualNiceHashID == AlgorithmType.FishHashPyrinHash)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.lolMiner) &&
+                (device.Codename.ToLower().Contains("ellesmere") ||
+                device.Name.ToLower().Contains("vega") || device.Name.ToLower().Contains("vii")))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.lolMiner])
+                {
+                    if (algo.DualNiceHashID == AlgorithmType.FishHashAlephium ||
+                        algo.DualNiceHashID == AlgorithmType.FishHashKarlsenHash ||
+                        algo.DualNiceHashID == AlgorithmType.FishHashPyrinHash)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.lolMiner) &&
+                (device.Codename.ToLower().Contains("gfx1010") || device.Codename.ToLower().Contains("gfx1011") ||
+                device.Codename.ToLower().Contains("gfx1012")))//RX 5500/5700/5600(M/XT)
+            {
+                foreach (var algo in algoSettings[MinerBaseType.lolMiner])
+                {
+                    if (algo.DualNiceHashID == AlgorithmType.FishHashPyrinHash)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.Claymore) &&
+                (device.Codename.ToLower().Contains("gfx") || device.Codename.ToLower().Contains("vega") ||
+                device.Codename.ToLower().Contains("vii")))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.Claymore])
+                {
+                    if (algo.NiceHashID == AlgorithmType.NeoScrypt)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+            //*********
+            /*
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.lolMiner) &&
+                (device.Codename.ToLower().Contains("ellesmere") ||
+                device.Name.ToLower().Contains("vega") || device.Name.ToLower().Contains("vii")))
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                {
+                    AlgorithmType.FishHashAlephium,
+                    AlgorithmType.FishHashKarlsenHash,
+                    AlgorithmType.FishHashPyrinHash
+                });
+            }
+            */
+            /*
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.lolMiner) &&
+                (device.Codename.ToLower().Contains("gfx1010") || device.Codename.ToLower().Contains("gfx1011") ||
+                device.Codename.ToLower().Contains("gfx1012")))//RX 5500/5700/5600(M/XT)
+            {
+                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
+                {
+                    AlgorithmType.FishHashPyrinHash
+                });
+            }
+            */
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZelHash &&
+                    if (algo.DualNiceHashID == AlgorithmType.ZelHash &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
                     {
                         algo.Enabled = false;
@@ -236,7 +342,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.lolMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZelHash &&
+                    if (algo.DualNiceHashID == AlgorithmType.ZelHash &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
                     {
                         algo.Enabled = false;
@@ -248,7 +354,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.lolMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.BeamV3 &&
+                    if (algo.DualNiceHashID == AlgorithmType.BeamV3 &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.3))
                     {
                         algo.Enabled = false;
@@ -266,7 +372,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.BeamV3)
+                    if (algo.DualNiceHashID == AlgorithmType.BeamV3)
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;
@@ -280,7 +386,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.ZEnemy])
                 {
-                    if (algo.NiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 30")))
                     {
                         algo.Enabled = false;
@@ -292,7 +398,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.ZEnemy])
                 {
-                    if (algo.NiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
@@ -304,7 +410,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
                 {
-                    if (algo.NiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 30")))
                     {
                         algo.Enabled = false;
@@ -316,7 +422,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
                 {
-                    if (algo.NiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
@@ -328,7 +434,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
                 {
-                    if (algo.NiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
@@ -341,7 +447,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA &&
                         device.Name.Contains("RTX 4060") && device.Name.Contains("Laptop") &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 11.4))
                     {
@@ -355,7 +461,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.BeamV3 && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.BeamV3 && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
@@ -367,7 +473,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.KAWPOW && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
@@ -379,7 +485,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.Octopus && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.Octopus && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
@@ -391,7 +497,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.Autolykos && device.DeviceType == DeviceType.NVIDIA &&
+                    if (algo.DualNiceHashID == AlgorithmType.Autolykos && device.DeviceType == DeviceType.NVIDIA &&
                         (device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
@@ -404,7 +510,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZelHash &&
+                    if (algo.DualNiceHashID == AlgorithmType.ZelHash &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.2) &&
                         Form_Main.GetWinVer(Environment.OSVersion.Version) > 9)
                     {
@@ -446,20 +552,11 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 3.4))
-            {
-                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
-                    {
-                        AlgorithmType.CuckooCycle
-                    });
-            }
-
-
             if (algoSettings.ContainsKey(MinerBaseType.miniZ))
             {
                 foreach (var algo in algoSettings[MinerBaseType.miniZ])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZHash && device.DeviceType == DeviceType.AMD &&
+                    if (algo.DualNiceHashID == AlgorithmType.ZHash && device.DeviceType == DeviceType.AMD &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
                     {
                         algo.Enabled = false;
@@ -471,7 +568,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.miniZ])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZelHash && device.DeviceType == DeviceType.AMD &&
+                    if (algo.DualNiceHashID == AlgorithmType.ZelHash && device.DeviceType == DeviceType.AMD &&
                         device.GpuRam < (ulong)(1024 * 1024 * 1024 * 2.7))
                     {
                         algo.Enabled = false;
@@ -483,7 +580,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.miniZ])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZelHash && device.DeviceType == DeviceType.AMD &&
+                    if (algo.DualNiceHashID == AlgorithmType.ZelHash && device.DeviceType == DeviceType.AMD &&
                         device.Name.Contains("550"))
                     {
                         algo.Enabled = false;
@@ -495,7 +592,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.miniZ])
                 {
-                    if (algo.NiceHashID == AlgorithmType.ZHash && device.DeviceType == DeviceType.AMD &&
+                    if (algo.DualNiceHashID == AlgorithmType.ZHash && device.DeviceType == DeviceType.AMD &&
                         device.Name.Contains("550"))
                     {
                         algo.Enabled = false;
@@ -508,7 +605,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 foreach (var algo in algoSettings[MinerBaseType.miniZ])
                 {
-                    if (algo.NiceHashID == AlgorithmType.DaggerHashimoto &
+                    if (algo.DualNiceHashID == AlgorithmType.DaggerHashimoto &
                         (device.DeviceType == DeviceType.AMD || device.DeviceType == DeviceType.NVIDIA))
                     {
                         algo.Enabled = false;
@@ -524,7 +621,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             */
-//не забыть в ригеле сделать kawpow+zil
+
             if (!ConfigManager.GeneralConfig.ShowHiddenAlgos)
             {
                     algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -651,12 +748,22 @@ namespace NiceHashMiner.Devices.Algorithms
                 // all minerbasekeys
                 foreach (var kvp in minerAlgos)
                 {
-                    var algoList = kvp.Value.FindAll(a => toRemove.IndexOf(a.NiceHashID) == -1);
+                    var algoList = kvp.Value.FindAll(a => toRemove.IndexOf(a.DualNiceHashID) == -1);
                     if (algoList.Count > 0)
                     {
                         finalRet[kvp.Key] = algoList;
                     }
                 }
+                /*
+                foreach (var kvp in minerAlgos)
+                {
+                    var algoList = kvp.Value.FindAll(a => toRemove.IndexOf(a.DualNiceHashID) == -1);
+                    if (algoList.Count > 0)
+                    {
+                        finalRet[kvp.Key] = algoList;
+                    }
+                }
+                */
             }
             else
             {
@@ -665,11 +772,18 @@ namespace NiceHashMiner.Devices.Algorithms
                     // filter only if base key is defined
                     if (toRemoveBase.IndexOf(kvp.Key) > -1)
                     {
-                        var algoList = kvp.Value.FindAll(a => toRemove.IndexOf(a.NiceHashID) == -1);
+                        var algoList = kvp.Value.FindAll(a => toRemove.IndexOf(a.DualNiceHashID) == -1);
                         if (algoList.Count > 0)
                         {
                             finalRet[kvp.Key] = algoList;
                         }
+                        /*
+                        var algoList2 = kvp.Value.FindAll(a => toRemove.IndexOf(a.DualNiceHashID) == -1);
+                        if (algoList2.Count > 0)
+                        {
+                            finalRet[kvp.Key] = algoList2;
+                        }
+                        */
                     }
                     else
                     {

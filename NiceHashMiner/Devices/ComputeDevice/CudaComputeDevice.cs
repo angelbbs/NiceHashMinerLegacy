@@ -359,7 +359,13 @@ namespace NiceHashMiner.Devices
                     {
                         if (_cudaDevice.DeviceID == d.nGpu)
                         {
-                            return d.power / 1000;
+                            if (d.power > 1000)
+                            {
+                                return d.power / 1000;
+                            } else
+                            {
+                                return d.power;
+                            }
                         }
                     }
                 }

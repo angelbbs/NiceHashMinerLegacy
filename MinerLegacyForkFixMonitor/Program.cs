@@ -38,6 +38,7 @@ namespace MinerLegacyForkFixMonitor
             Logger.ConfigureWithFile();
             var mainproc = Process.GetCurrentProcess();
             Helpers.ConsolePrint("Monitor", "Start monitoring process ID: " + argv[0]);
+            Thread.Sleep(5000);
 
             foreach (var process in Process.GetProcessesByName("device_detection"))
             {
@@ -135,6 +136,7 @@ namespace MinerLegacyForkFixMonitor
                 try
                 {
                     DateTime modification = File.GetLastWriteTime(@"logs\log.txt");
+
                     if (DateTime.Now.Minute > modification.Minute + 5)
                     {
                         Restart(p);

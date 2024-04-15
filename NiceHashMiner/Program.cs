@@ -387,7 +387,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 63;
                 }
-
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 64)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 64;
+                }
 
                 Form_Main.NHMWSProtocolVersion = ConfigManager.GeneralConfig.NHMWSProtocolVersion;
 

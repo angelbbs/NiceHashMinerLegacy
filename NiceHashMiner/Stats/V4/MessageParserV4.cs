@@ -152,7 +152,7 @@ namespace NiceHashMiner.Stats.V4
                     _ret = (float)d.PowerUsage;
                     if (d.State == DeviceState.Disabled && !ConfigManager.GeneralConfig.ShowPowerOfDisabledDevices)
                     {
-                        _ret = -1;
+                        _ret = 0;
                     }
                 }
                     

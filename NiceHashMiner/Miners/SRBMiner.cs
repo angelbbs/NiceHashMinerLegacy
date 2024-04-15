@@ -184,7 +184,7 @@ namespace NiceHashMiner.Miners
 
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                 {
-                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
                         $"--algorithm ethash;karlsenhash " +
                         GetServer2("daggerhashimoto", "karlsenhash", username, "3353", "3398") +
                         $"--api-enable --api-port {ApiPort} " +
@@ -192,7 +192,7 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                 {
-                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
                         $"--algorithm etchash;karlsenhash " +
                         GetServer2("etchash", "karlsenhash", username, "3393", "3398") +
                         $"--api-enable --api-port {ApiPort} " +
@@ -200,16 +200,24 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                 {
-                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
                         $"--algorithm autolykos2;karlsenhash " +
                         GetServer2("autolykos", "karlsenhash", username, "3390", "3398") + ZilMining +
+                    $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.PyrinHash))
+                {
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm autolykos2;pyrinhash " +
+                        GetServer2("autolykos", "pyrinhash", username, "3390", "3401") + ZilMining +
                     $"--api-enable --api-port {ApiPort} " +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
 
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
                 {
-                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
                         $"--algorithm ethash;alephium " +
                         GetServer2("daggerhashimoto", "alephium", username, "3353", "3399") +
                         $"--api-enable --api-port {ApiPort} " +
@@ -217,7 +225,7 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ETCHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
                 {
-                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
                         $"--algorithm etchash;alephium " +
                         GetServer2("etchash", "alephium", username, "3393", "3399") +
                         $"--api-enable --api-port {ApiPort} " +
@@ -225,18 +233,33 @@ namespace NiceHashMiner.Miners
                 }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
                 {
-                    return " --main-pool-reconnect 2 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
                         $"--algorithm autolykos2;alephium " +
                         GetServer2("autolykos", "alephium", username, "3390", "3399") + ZilMining +
                     $"--api-enable --api-port {ApiPort} " +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
-
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+                {
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm fishhash;alephium " +
+                        GetServer2("fishhash", "alephium", username, "3400", "3399") + ZilMining +
+                    $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.PyrinHash))
+                {
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm fishhash;pyrinhash " +
+                        GetServer2("fishhash", "pyrinhash", username, "3400", "3401") + ZilMining +
+                    $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
 
                 //
                 if (MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
-                    return " --main-pool-reconnect 2 " + disablePlatform + " --a0-is-zil " +
+                    return " --retry-time 0 " + disablePlatform + " --a0-is-zil " +
                         $"--algorithm ethash;autolykos2 " +
                         GetServer2("daggerhashimoto", "autolykos", username, "3353", "3390") + 
                         $"--api-enable --api-port {ApiPort} " +
@@ -264,7 +287,7 @@ namespace NiceHashMiner.Miners
                     var port = "3353";
                     var algo = "daggerhashimoto";
 
-                    return " --main-pool-reconnect 2 --a0-is-zil " + disablePlatform + $"--algorithm ethash --api-enable --api-port {ApiPort} " +
+                    return " --retry-time 0 --a0-is-zil " + disablePlatform + $"--algorithm ethash --api-enable --api-port {ApiPort} " +
                     GetServer(algo, username, port) +
                     " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -273,7 +296,7 @@ namespace NiceHashMiner.Miners
                     var port = "3393";
                     var algo = "etchash";
 
-                    return " --main-pool-reconnect 2 --a0-is-zil " + disablePlatform + $"--algorithm etchash --api-enable --api-port {ApiPort} " +
+                    return " --retry-time 0 --a0-is-zil " + disablePlatform + $"--algorithm etchash --api-enable --api-port {ApiPort} " +
                     GetServer(algo, username, port) +
                     " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -282,17 +305,7 @@ namespace NiceHashMiner.Miners
                     var port = "3390";
                     var algo = "autolykos";
 
-                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm autolykos2 --api-enable --api-port {ApiPort} " +
-                    GetServer(algo, username, port) + ZilMining +
-                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-                }
-                
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
-                {
-                    var port = "3397";
-                    var algo = "ironfish";
-
-                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm blake3_ironfish --api-enable --api-port {ApiPort} " +
+                    return " --retry-time 0 " + disablePlatform + $" --algorithm autolykos2 --api-enable --api-port {ApiPort} " +
                     GetServer(algo, username, port) + ZilMining +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -302,7 +315,7 @@ namespace NiceHashMiner.Miners
                     var port = "3398";
                     var algo = "karlsenhash";
 
-                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm karlsenhash --api-enable --api-port {ApiPort} " +
+                    return " --retry-time 0 " + disablePlatform + $" --algorithm karlsenhash --api-enable --api-port {ApiPort} " +
                     GetServer(algo, username, port) + ZilMining +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -312,7 +325,27 @@ namespace NiceHashMiner.Miners
                     var port = "3399";
                     var algo = "alephium";
 
-                    return " --main-pool-reconnect 2 " + disablePlatform + $" --algorithm blake3_alephium --api-enable --api-port {ApiPort} " +
+                    return " --retry-time 0 " + disablePlatform + $" --algorithm blake3_alephium --api-enable --api-port {ApiPort} " +
+                    GetServer(algo, username, port) + ZilMining +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
+                {
+                    var port = "3400";
+                    var algo = "fishhash";
+
+                    return " --retry-time 0 " + disablePlatform + $" --algorithm fishhash --api-enable --api-port {ApiPort} " +
+                    GetServer(algo, username, port) + ZilMining +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.PyrinHash))
+                {
+                    var port = "3401";
+                    var algo = "pyrinhash";
+
+                    return " --retry-time 0 " + disablePlatform + $" --algorithm pyrinhash --api-enable --api-port {ApiPort} " +
                     GetServer(algo, username, port) + ZilMining +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -376,6 +409,18 @@ namespace NiceHashMiner.Miners
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
+                MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.PyrinHash))
+            {
+                return $" " + disablePlatform + " --algorithm autolykos2" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://pool.woolypooly.com")}:3100" +
+                    $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
+                    " --algorithm pyrinhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://pyi.2miners.com")}:2121" +
+                    $" --wallet pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) &&
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
             {
@@ -412,6 +457,29 @@ namespace NiceHashMiner.Miners
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
+            {
+                return $" " + disablePlatform + " --algorithm fishhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
+                    $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
+                    " --algorithm blake3_alephium" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.alephium.herominers.com")}:1199" +
+                    $" --wallet 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.PyrinHash))
+            {
+                return $" " + disablePlatform + " --algorithm fishhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
+                    $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
+                    " --algorithm pyrinhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://pyi.2miners.com")}:2121" +
+                    $" --wallet pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.Alephium))
             {
                 return $" " + disablePlatform + " --algorithm ethash" +
@@ -478,15 +546,6 @@ namespace NiceHashMiner.Miners
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
-            {
-                return $" " + disablePlatform + " --algorithm blake3_ironfish" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
-                    $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
-                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
-                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
-            }
-
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
             {
                 return $" " + disablePlatform + " --algorithm karlsenhash" +
@@ -501,6 +560,24 @@ namespace NiceHashMiner.Miners
                 return $" " + disablePlatform + " --algorithm blake3_alephium" +
                     $" --pool {Links.CheckDNS("stratum+tcp://ru.alephium.herominers.com")}:1199" +
                     $" --wallet 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
+            {
+                return $" " + disablePlatform + " --algorithm fishhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
+                    $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.PyrinHash))
+            {
+                return $" " + disablePlatform + " --algorithm pyrinhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://pyi.2miners.com")}:2121" +
+                    $" --wallet pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
@@ -954,13 +1031,12 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 15;
                     }
 
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
                     {
                         _benchmarkTimeWait = 60;
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
                     }
-
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
                     {
                         _benchmarkTimeWait = 60;
@@ -969,6 +1045,13 @@ namespace NiceHashMiner.Miners
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Alephium))
+                    {
+                        _benchmarkTimeWait = 60;
+                        MinerStartDelay = 15;
+                        delay_before_calc_hashrate = 10;
+                    }
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.PyrinHash))
                     {
                         _benchmarkTimeWait = 60;
                         MinerStartDelay = 15;

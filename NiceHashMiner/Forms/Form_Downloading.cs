@@ -88,9 +88,15 @@ namespace NiceHashMiner.Forms
             UnzipRoutine();
             Thread.Sleep(200);
             GetMinersVersion();
-            Thread.Sleep(200);
-            Form_Main._autostartTimerDelay.Start();
-            Thread.Sleep(200);//костыль для очередности запуска таймеров
+            Thread.Sleep(2000);
+            try
+            {
+                Form_Main._autostartTimerDelay.Start();
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("client_EmergencyDownloadFileCompleted", ex.ToString());
+            }
+            Thread.Sleep(1000);//костыль для очередности запуска таймеров
 
             if (ConfigManager.GeneralConfig.AutoStartMining)
             {

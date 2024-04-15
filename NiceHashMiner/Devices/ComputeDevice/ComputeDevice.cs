@@ -538,7 +538,7 @@ namespace NiceHashMiner.Devices
                         var AlgorithmSettingsTemp = GroupAlgorithms.CreateForDeviceList(this);
                         foreach (var a in AlgorithmSettingsTemp)
                         {
-                            if (setAlgo.NiceHashID == a.NiceHashID && setAlgo.MinerBaseType == a.MinerBaseType)
+                            if (setAlgo.DualNiceHashID == a.DualNiceHashID && setAlgo.MinerBaseType == a.MinerBaseType)
                             {
                                 setAlgo.Hidden = a.Hidden;
                                 if (ConfigManager.GeneralConfig.ShowHiddenAlgos)
@@ -605,7 +605,6 @@ namespace NiceHashMiner.Devices
             foreach (var algo in AlgorithmSettings)
             {
                 // create/setup
-
                 var conf = new AlgorithmConfig
                 {
                     Name = algo.AlgorithmStringID,
@@ -818,6 +817,9 @@ namespace NiceHashMiner.Devices
                     break;
                 case "1569":
                     man = "Palit";
+                    break;
+                case "1771":
+                    man = "InnoVISION";
                     break;
                 case "17AA":
                     man = "Lenovo";

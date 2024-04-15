@@ -791,6 +791,9 @@ namespace NiceHashMiner.Devices
                         case "106B":
                             man = "Apple";
                             break;
+                        case "1771":
+                            man = "InnoVISION";
+                            break;
                         case "17AA":
                             man = "Lenovo";
                             break;

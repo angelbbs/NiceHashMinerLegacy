@@ -177,6 +177,7 @@ namespace NiceHashMiner
         public static bool ZilMonitorRunning = false;
         public static bool ZilMonitorNicehashRunning = false;
         public static bool isZilRound = false;
+        public static bool isForceZilRound = false;
         public static double RateZil = 0.0d;
         public static int RateZilCount = 0;
         public static double RateNoZil = 0.0d;
@@ -2690,7 +2691,8 @@ public static void CloseChilds(Process parentId)
             HideNotProfitable();
             ClearRates(-1);
         }
-
+        //67,[67,"1.0000000000e-07"] "paying": 1.012905863405184e-8
+        //[67,"1.2872605844e-04" "paying": 0.000012809115794294396
         public void ClearRates(int groupCount)
         {
             if (InvokeRequired)

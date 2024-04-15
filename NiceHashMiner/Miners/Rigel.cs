@@ -53,12 +53,6 @@ namespace NiceHashMiner.Miners
                 devtype = mPair.Device.DeviceType;
             }
 
-            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype))
-            {
-                ZilClient.needConnectionZIL = true;
-                ZilClient.StartZilMonitor();
-            }
-
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             KillRigel();
         }
@@ -82,6 +76,12 @@ namespace NiceHashMiner.Miners
             foreach (var mPair in sortedMinerPairs)
             {
                 devtype = mPair.Device.DeviceType;
+            }
+
+            if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype))
+            {
+                ZilClient.needConnectionZIL = true;
+                ZilClient.StartZilMonitor();
             }
 
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.Rigel, devtype) &&
@@ -158,6 +158,7 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3390";
                 }
+                /*
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
                 {
                     algo = "ironfish" + ZilAlgo;
@@ -165,6 +166,7 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3397";
                 }
+                */
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
                 {
                     algo = "karlsenhash" + ZilAlgo;
@@ -193,6 +195,13 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3400";
                 }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.PyrinHash)
+                {
+                    algo = "pyrinhash" + ZilAlgo;
+                    algoName = "pyrinhash";
+                    nicehashstratum = "";
+                    port = "3401";
+                }
 
                 return GetDevicesCommandString() + nicehashstratum +
                   " -a " + algo +
@@ -202,6 +211,7 @@ namespace NiceHashMiner.Miners
             }
             else //dual
             {
+                /*
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
                     MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
                 {
@@ -212,6 +222,7 @@ namespace NiceHashMiner.Miners
                     port = "3390";
                     port2 = "3397";
                 }
+                */
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
                     MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
                 {
@@ -232,6 +243,16 @@ namespace NiceHashMiner.Miners
                     port = "3390";
                     port2 = "3399";
                 }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+                {
+                    algo = "autolykos2+pyrinhash" + ZilAlgo;
+                    algoName = "autolykos";
+                    algoName2 = "pyrinhash";
+                    nicehashstratum = "";
+                    port = "3390";
+                    port2 = "3401";
+                }
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
                     MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
                 {
@@ -251,6 +272,16 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3389";
                     port2 = "3399";
+                }
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
+                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+                {
+                    algo = "octopus+pyrinhash" + ZilAlgo;
+                    algoName = "octopus";
+                    algoName2 = "pyrinhash";
+                    nicehashstratum = "";
+                    port = "3389";
+                    port2 = "3401";
                 }
                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash &&
                     MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
@@ -316,6 +347,17 @@ namespace NiceHashMiner.Miners
                     nicehashstratum = "";
                     port = "3400";
                     port2 = "3399";
+                }
+
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash &&
+                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+                {
+                    algo = "fishhash+pyrinhash" + ZilAlgo;
+                    algoName = "fishhash";
+                    algoName2 = "pyrinhash";
+                    nicehashstratum = "";
+                    port = "3400";
+                    port2 = "3401";
                 }
 
                 return GetDevicesCommandString() + nicehashstratum +
@@ -607,14 +649,14 @@ namespace NiceHashMiner.Miners
                 " -o " + Links.CheckDNS("pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel -p x" +
                 GetDevicesCommandString();
             }
-
+            /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
             {
                 ret = " -a ironfish" +
                 " -o " + Links.CheckDNS("ru.ironfish.herominers.com:1145") + " -u fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.Rigel -p x" +
                 GetDevicesCommandString();
             }
-
+            */
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
             {
                 ret = " -a karlsenhash" +
@@ -643,7 +685,15 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.PyrinHash)
+            {
+                ret = " -a pyrinhash" +
+                " -o " + Links.CheckDNS("pyi.2miners.com:2121") + " -u pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.Rigel -p x" +
+                GetDevicesCommandString();
+            }
+
             //duals
+            /*
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
             {
                 ret = " -a autolykos2+ironfish" +
@@ -652,7 +702,7 @@ namespace NiceHashMiner.Miners
                 GetDevicesCommandString();
                 addTime = 30;
             }
-            
+            */
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
             {
                 ret = " -a autolykos2+karlsenhash" +
@@ -671,6 +721,15 @@ namespace NiceHashMiner.Miners
                 addTime = 30;
             }
 
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+            {
+                ret = " -a autolykos2+pyrinhash" +
+                " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3100") + " -u [1]9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel" +
+                " -o [2]" + Links.CheckDNS("pyi.2miners.com:2121") + " -u [2]pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.Rigel " +
+                GetDevicesCommandString();
+                addTime = 30;
+            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
             {
                 ret = " -a octopus+karlsenhash" +
@@ -685,6 +744,15 @@ namespace NiceHashMiner.Miners
                 ret = " -a octopus+alephium" +
                 " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3094") + " -u [1]cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.Rigel" +
                 " -o [2]" + Links.CheckDNS("ru.alephium.herominers.com:1199") + " -u [2]12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.Rigel " +
+                GetDevicesCommandString();
+                addTime = 30;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+            {
+                ret = " -a octopus+pyrinhash" +
+                " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3094") + " -u [1]cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.Rigel" +
+                " -o [2]" + Links.CheckDNS("pyi.2miners.com:2121") + " -u [2]pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.Rigel " +
                 GetDevicesCommandString();
                 addTime = 30;
             }
@@ -736,9 +804,18 @@ namespace NiceHashMiner.Miners
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Alephium)
             {
-                ret = " -a ethash+alephium" +
+                ret = " -a fishhash+alephium" +
                 " -o [1]" + Links.CheckDNS("ru.ironfish.herominers.com:1145") + " -u [1]fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.Rigel" +
                 " -o [2]" + Links.CheckDNS("ru.alephium.herominers.com:1199") + " -u [2]12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.Rigel " +
+                GetDevicesCommandString();
+                addTime = 45;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+            {
+                ret = " -a fishhash+pyrinhash" +
+                " -o [1]" + Links.CheckDNS("ru.ironfish.herominers.com:1145") + " -u [1]fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.Rigel" +
+                " -o [2]" + Links.CheckDNS("pyi.2miners.com:2121") + " -u [2]pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.Rigel " +
                 GetDevicesCommandString();
                 addTime = 45;
             }
@@ -795,12 +872,19 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 30;
                     }
+                    /*
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 10;
                     }
+                    */
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
+                    {
+                        MinerStartDelay = 10;
+                        delay_before_calc_hashrate = 30;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.PyrinHash))
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 30;
@@ -1022,13 +1106,19 @@ namespace NiceHashMiner.Miners
                                 {
                                     _hashrate = d.hashrate.autolykos2;
                                 }
+                                /*
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
                                 {
                                     _hashrate = d.hashrate.ironfish;
                                 }
+                                */
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash)
                                 {
                                     _hashrate = d.hashrate.fishhash;
+                                }
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.PyrinHash)
+                                {
+                                    _hashrate = d.hashrate.pyrinhash;
                                 }
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
                                 {
@@ -1068,26 +1158,10 @@ namespace NiceHashMiner.Miners
                                         hashrateZIL = (double)_hashrateZIL;
                                     }
                                 }
-                                //if (hashrateZIL > 0)
-                                if (zil_state.Contains("mining"))
-                                {
-                                    isZILround = true;
-                                }
-                                else
-                                {
-                                    isZILround = false;
-                                }
                             }
                             else //dual
                             {
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
-                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish)
-                                {
-                                    _hashrate = d.hashrate.autolykos2;
-                                    _hashrate2 = d.hashrate.ironfish;
-                                }
-
-                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
                                     MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
                                 {
                                     _hashrate = d.hashrate.autolykos2;
@@ -1099,6 +1173,13 @@ namespace NiceHashMiner.Miners
                                 {
                                     _hashrate = d.hashrate.autolykos2;
                                     _hashrate2 = d.hashrate.alephium;
+                                }
+
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos &&
+                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+                                {
+                                    _hashrate = d.hashrate.autolykos2;
+                                    _hashrate2 = d.hashrate.pyrinhash;
                                 }
 
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
@@ -1113,6 +1194,13 @@ namespace NiceHashMiner.Miners
                                 {
                                     _hashrate = d.hashrate.octopus;
                                     _hashrate2 = d.hashrate.alephium;
+                                }
+
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus &&
+                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+                                {
+                                    _hashrate = d.hashrate.octopus;
+                                    _hashrate2 = d.hashrate.pyrinhash;
                                 }
 
                                 if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash &&
@@ -1155,6 +1243,13 @@ namespace NiceHashMiner.Miners
                                 {
                                     _hashrate = d.hashrate.fishhash;
                                     _hashrate2 = d.hashrate.alephium;
+                                }
+
+                                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash &&
+                                    MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
+                                {
+                                    _hashrate = d.hashrate.fishhash;
+                                    _hashrate2 = d.hashrate.pyrinhash;
                                 }
 
                                 _hashrateZIL = d.hashrate.zil;
@@ -1193,16 +1288,18 @@ namespace NiceHashMiner.Miners
                                         hashrateZIL = (double)_hashrateZIL;
                                     }
                                 }
-                                if (zil_state.Contains("mining"))
-                                {
-                                    isZILround = true;
-                                    //Helpers.ConsolePrint("Rigel", "_hashrateZIL: " + hashrateZIL.ToString());
-                                }
-                                else
-                                {
-                                    isZILround = false;
-                                    //Helpers.ConsolePrint("Rigel", "isZILround = false");
-                                }
+                            }
+                            if (zil_state.Contains("mining"))
+                            {
+                                isZILround = true;
+                                Form_Main.isForceZilRound = true;
+                                //Helpers.ConsolePrint("Rigel", "_hashrateZIL: " + hashrateZIL.ToString());
+                            }
+                            else
+                            {
+                                isZILround = false;
+                                Form_Main.isForceZilRound = false;
+                                //Helpers.ConsolePrint("Rigel", "isZILround = false");
                             }
                         }
 
@@ -1238,9 +1335,9 @@ namespace NiceHashMiner.Miners
                         mPair.Device.MiningHashrateSecond = hashratesZIL[mPair.Device.ID];
 
                         //duals
-                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.IronFish ||
-                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash ||
-                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Alephium)
+                        if (MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash ||
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Alephium ||
+                            MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
                         {
                             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos ||
                                 MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus ||

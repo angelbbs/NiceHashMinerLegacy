@@ -49,9 +49,18 @@ namespace NiceHashMiner.Miners
         private static DateTime StartZILTime = new DateTime();
         private static DateTime timenow = new DateTime();
         private static double ZILsec;
+        private static int ZILsecMax;
 
         public static void StartZilMonitor()
         {
+            if (ConfigManager.GeneralConfig.ZIL_mining_state == 1)
+            {
+                ZILsecMax = 150;
+            }
+            if (ConfigManager.GeneralConfig.ZIL_mining_state == 2)
+            {
+                ZILsecMax = 105;
+            }
             new Task(() => StartZilMonitorAPI()).Start();
             new Task(() => StartZilMonitorNiceHash()).Start();
         }
@@ -154,12 +163,12 @@ namespace NiceHashMiner.Miners
                         {
                             _delay = 60 * 10;
                         }
-                        if (zil >= 70 & zil < 95)
+                        if (zil >= 70 & zil < 90)
                         {
                             timenow = StartZILTime = DateTime.Now;
                             _delay = 60 * 2;
                         }
-                        if (zil >= 95 & zil < 97)
+                        if (zil >= 90 & zil < 96)
                         {
                             timenow = StartZILTime = DateTime.Now;
                             ZILsec = 0;
@@ -446,15 +455,22 @@ namespace NiceHashMiner.Miners
                                     Helpers.ConsolePrint("ZILNiceHash", "Epoch = " + epoch.ToString() +
                                         " [ZilAPI] Block = " + Form_Main.ZilCount.ToString() + " ZILsec: " + ZILsec.ToString());
 
-                                    //далее костыль. я не придумал, как сделать лучше
-                                    if (epoch <= ConfigManager.GeneralConfig.ZILMaxEpoch &&
-                                        (Form_Main.ZilCount >= 99 || Form_Main.ZilCount <= 0) &&
-                                         ZILsec <= 105)
+                                    if (!Form_Main.isZilRound && Form_Main.isForceZilRound)//rigel
+                                    {
+                                        Form_Main.ZilCount = 99;
+                                        epoch = ConfigManager.GeneralConfig.ZILMaxEpoch;
+                                        Helpers.ConsolePrint("ZIL", "Force ZIL round");
+                                        ZILsec = 0;
+                                        StartZILTime = DateTime.Now;
+                                    }
+                                    if (epoch == ConfigManager.GeneralConfig.ZILMaxEpoch &&
+                                        (Form_Main.ZilCount >= 96 || Form_Main.ZilCount <= 0) &&
+                                         ZILsec <= ZILsecMax)
                                     {
                                         timenow = DateTime.Now;
                                         if (!Form_Main.isZilRound)
                                         {
-                                            Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round");
+                                            Helpers.ConsolePrint("ZILNiceHash", "Start ZIL round?");
                                             StartZILTime = DateTime.Now;
                                             if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;
                                             MinersManager.MinerStatsCheck();
@@ -466,9 +482,11 @@ namespace NiceHashMiner.Miners
                                         if (Form_Main.isZilRound)
                                         {
                                             epochCount++;
-                                            if (epochCount >= 2 || ZILsec > 105)
+                                            //if ((epochCount >= 2 || ZILsec > ZILsecMax) && !Form_Main.isForceZilRound)
+                                            if ((epoch != ConfigManager.GeneralConfig.ZILMaxEpoch || ZILsec > ZILsecMax) && !Form_Main.isForceZilRound)
                                             {
                                                 Form_Main.isZilRound = false;
+                                                Form_Main.isForceZilRound = false;
                                                 epochCount = 0;
                                                 Helpers.ConsolePrint("ZILNiceHash", "End ZIL round");
                                                 if (double.IsNaN(Form_Main.ZilFactor)) Form_Main.ZilFactor = 0.0d;

@@ -33,8 +33,6 @@ namespace NiceHashMiner.Algorithms
                 {
                     switch (SecondaryNiceHashID)
                     {
-                        case AlgorithmType.IronFish:
-                            return AlgorithmType.DaggerIronFish;
                         case AlgorithmType.Alephium:
                             return AlgorithmType.DaggerAlephium;
                         case AlgorithmType.KarlsenHash:
@@ -49,6 +47,8 @@ namespace NiceHashMiner.Algorithms
                             return AlgorithmType.FishHashAlephium;
                         case AlgorithmType.KarlsenHash:
                             return AlgorithmType.FishHashKarlsenHash;
+                        case AlgorithmType.PyrinHash:
+                            return AlgorithmType.FishHashPyrinHash;
                     }
                 }
                 if (NiceHashID == AlgorithmType.Autolykos)
@@ -57,32 +57,30 @@ namespace NiceHashMiner.Algorithms
                     {
                         case AlgorithmType.DaggerHashimoto:
                             return AlgorithmType.AutolykosZil;
-                        case AlgorithmType.IronFish:
-                            return AlgorithmType.AutolykosIronFish;
                         case AlgorithmType.KarlsenHash:
                             return AlgorithmType.AutolykosKarlsenHash;
                         case AlgorithmType.Alephium:
                             return AlgorithmType.AutolykosAlephium;
+                        case AlgorithmType.PyrinHash:
+                            return AlgorithmType.AutolykosPyrinHash;
                     }
                 }
                 if (NiceHashID == AlgorithmType.Octopus)
                 {
                     switch (SecondaryNiceHashID)
                     {
-                        case AlgorithmType.IronFish:
-                            return AlgorithmType.OctopusIronFish;
                         case AlgorithmType.KarlsenHash:
                             return AlgorithmType.OctopusKarlsenHash;
                         case AlgorithmType.Alephium:
                             return AlgorithmType.OctopusAlephium;
+                        case AlgorithmType.PyrinHash:
+                            return AlgorithmType.OctopusPyrinHash;
                     }
                 }
                 if (NiceHashID == AlgorithmType.ETCHash)
                 {
                     switch (SecondaryNiceHashID)
                     {
-                        case AlgorithmType.IronFish:
-                            return AlgorithmType.ETCHashIronFish;
                         case AlgorithmType.KarlsenHash:
                             return AlgorithmType.ETCHashKarlsenHash;
                         case AlgorithmType.Alephium:

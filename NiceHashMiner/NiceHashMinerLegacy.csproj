@@ -308,6 +308,7 @@
     <Reference Include="WinDivertSharp">
       <HintPath>..\Debug\common\WinDivertSharp.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />

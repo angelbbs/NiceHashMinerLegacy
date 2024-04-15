@@ -160,9 +160,11 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     // SingleParam
                     new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
-                    new MinerOption("lolMiner_log", "", "--logs", "0", MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("lolMiner_dualfactor", "", "--dualfactor", "auto", MinerOptionFlagType.SingleParam, ""),
+                    new MinerOption("lolMiner_dualmode", "", "--dualmode", "none", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMiner_enablezilcache", "--enablezilcache=", "--enablezilcache=", "0", MinerOptionFlagType.SingleParam, ""),
                     new MinerOption("lolMiner_win4galloc", "", "--win4galloc", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("lolMiner_maxdualimpact", "", "--maxdualimpact", "*", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_4gallocsize", "", "--4g-alloc-size", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_keepfree", "", "--keepfree", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("lolMiner_zombie-tune", "", "--zombie-tune", "0", MinerOptionFlagType.MultiParam, ","),

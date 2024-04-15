@@ -171,7 +171,7 @@ namespace NiceHashMiner.Miners
                 algo2 = "autolykos";
                 port = "3390";
             }
-            
+            /*
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.IronFish))
             {
@@ -192,6 +192,7 @@ namespace NiceHashMiner.Miners
                 ProcessHandle = _Start();
                 return;
             }
+            */
 
             LastCommandLine = sc + "" + "-a " + algo + " " +
             GetServer(algo2, username, port) +
@@ -268,7 +269,7 @@ namespace NiceHashMiner.Miners
                 CommandLine = sc + " -a autolykos2" +
                  " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d ";
             }
-            
+            /*
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.IronFish))
             {
@@ -276,7 +277,7 @@ namespace NiceHashMiner.Miners
                  " -o " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100") + " -u 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.teamred" + " -p x -d " + GetDevicesCommandString() +
                  " --iron -o " + Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com:1145") + " -u fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.teamred" + " -p x -d ";
             }
-
+            */
             CommandLine += GetDevicesCommandString() +
                 ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD) +
                 apiBind + apiBind2;

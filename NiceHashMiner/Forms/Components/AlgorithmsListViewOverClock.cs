@@ -234,10 +234,19 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.Columns[Thermal_limit].Width = ConfigManager.GeneralConfig.ColumnListThermalLimit;
         }
 
+
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
         {
             _computeDevice = computeDevice;
             listViewAlgorithms.BeginUpdate();
+
+            int listIndex = 0;
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
+            {
+                listIndex = lvi.Index;
+            }
+
+
             listViewAlgorithms.Items.Clear();
 
             if (_computeDevice.DeviceType == DeviceType.CPU || _computeDevice.DeviceType == DeviceType.INTEL)
@@ -369,9 +378,11 @@ namespace NiceHashMiner.Forms.Components
                     listViewAlgorithms.Items.Add(lvi);
                 }
             }
+
             listViewAlgorithms.EndUpdate();
             isListViewEnabled = isEnabled;
             listViewAlgorithms.CheckBoxes = isEnabled;
+            listViewAlgorithms.EnsureVisible(listIndex);
         }
 
         public void RepaintStatus(bool isEnabled, string uuid)
