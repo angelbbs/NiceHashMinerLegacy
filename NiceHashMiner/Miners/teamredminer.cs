@@ -72,7 +72,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
+                    ret = ret + "-o " + ssl + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " + 
                         username + " -p " + psw + " ";
                 }
             }
@@ -111,7 +111,7 @@ namespace NiceHashMiner.Miners
                 {
                     ret = ret + "-o " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u " +
                         username + " -p " + psw + " " +
-                        algoDualPrefix + " -o " + ssl + Links.CheckDNS(algoDual + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + portDual + " -u " +
+                        algoDualPrefix + " -o " + ssl + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + portDual + " -u " +
                         username + " -p " + psw + " ";
                 }
             }
@@ -170,6 +170,12 @@ namespace NiceHashMiner.Miners
                 algo = "autolykos2";
                 algo2 = "autolykos";
                 port = "3390";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
+            {
+                algo = "fishhash";
+                algo2 = "fishhash";
+                port = "3400";
             }
             /*
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
@@ -262,6 +268,11 @@ namespace NiceHashMiner.Miners
             {
                 CommandLine = sc + " -a karlsen" +
                  " -o stratum+tcp://kls.2miners.com:2020" + " -u karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.teamred" + " -p x -d ";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
+            {
+                CommandLine = sc + " -a fishhash" +
+                 " -o stratum+tcp://ru.ironfish.herominers.com:1145" + " -u fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.teamred" + " -p x -d ";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Autolykos) &&
                 MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))
@@ -378,6 +389,11 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 0;
                     }
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                    {
+                        delay_before_calc_hashrate = 30;
+                        MinerStartDelay = 0;
+                    }
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))
                     {
                         delay_before_calc_hashrate = 30;
                         MinerStartDelay = 0;

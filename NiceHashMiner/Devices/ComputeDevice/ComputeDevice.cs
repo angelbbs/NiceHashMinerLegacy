@@ -254,7 +254,8 @@ namespace NiceHashMiner.Devices
                 {
                     hashedInfo += $"{cpuInfo.Family}--{cpuInfo.ModelName}--{cpuInfo.NumberOfCores}--{cpuInfo.PhysicalID}--{cpuInfo.VendorID}";
                 }
-                var uuidHEX = UUID.GetHexUUID(hashedInfo);
+                var uuidHEX = GetHexUUID(hashedInfo);
+                //var uuidHEX = "jhjhg";
                 var uuid = $"CPU-{uuidHEX}";
 
                 // plugin device
@@ -262,6 +263,19 @@ namespace NiceHashMiner.Devices
                 var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks);
                 return cpu;
             });
+        }
+
+        public static string GetHexUUID(string infoToHashed)
+        {
+            //var uuidHex = Guid.UUID.V5(_defaultNamespace, infoToHashed).AsGuid().ToString();
+            string uuidHex = "";
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(infoToHashed));
+                var result = new System.Guid(hash);
+                uuidHex = result.ToString();
+            }
+            return uuidHex;
         }
 
         public static CPUDevice TryCPUDevice()
@@ -299,11 +313,12 @@ namespace NiceHashMiner.Devices
             {
                 hashedInfo += $"{cpuInfo.Family}--{cpuInfo.ModelName}--{cpuInfo.NumberOfCores}--{cpuInfo.PhysicalID}--{cpuInfo.VendorID}";
             }
-            var uuidHEX = UUID.GetHexUUID(hashedInfo);
+            var uuidHEX = GetHexUUID(hashedInfo);
             var uuid = $"CPU-{uuidHEX}";
 
             // plugin device
             var bd = new BaseDevice(DeviceType.CPU, uuid, name, 0);
+            
             var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks);
             return cpu;
         }

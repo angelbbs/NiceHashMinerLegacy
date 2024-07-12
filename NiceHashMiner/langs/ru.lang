@@ -612,6 +612,7 @@
 "FormSettings_OverclockSettings": "Настройки разгона для {0} :",
 "FormSettings_ABOverclockTab": "Разгон",
 "FormSettings_ABEnableOverclock": "Включить разгон",
+"FormSettings_ABmaintaining": "Проверка и поддержание разгона",
 "FormSettings_ABOverclock_Relative": "Относительные значения",
 "FormSettings_AB_ForceRun": "Принудительный запуск MSI Afterburner при старте",
 "FormSettings_AB_Minimize": "Сворачивать MSI Afterburner",

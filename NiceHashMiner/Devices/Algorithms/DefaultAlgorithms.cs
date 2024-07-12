@@ -155,6 +155,9 @@ Fatal error detected. Restarting.
                             },
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.FishHash, AlgorithmType.PyrinHash, "FishHashPyrinHash")
                             {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.FishHash, AlgorithmType.KarlsenHash, "FishHashKarlsenHash")
+                            {
                             }
                             /*
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Alephium, "DaggerAlephium")
@@ -251,6 +254,7 @@ Fatal error detected. Restarting.
                             {
                             },
                             */
+                            //DaggerPyrinHash ETCHashPyrinHash нет шар
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.KarlsenHash, "DaggerKarlsenHash")
                             {
                             },
@@ -276,6 +280,9 @@ Fatal error detected. Restarting.
                             {
                             },
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.FishHash, AlgorithmType.PyrinHash, "FishHashPyrinHash")
+                            {
+                            },
+                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.FishHash, AlgorithmType.KarlsenHash, "FishHashKarlsenHash")
                             {
                             }
                         }
@@ -307,7 +314,8 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.DaggerHashimoto, "DaggerHashimoto"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KAWPOW, "KAWPOW"),
                             new Algorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, "Autolykos"),
-                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KarlsenHash, "KarlsenHash")
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.KarlsenHash, "KarlsenHash"),
+                            new Algorithm(MinerBaseType.teamredminer, AlgorithmType.FishHash, "FishHash")
                             /*
                             new DualAlgorithm(MinerBaseType.teamredminer, AlgorithmType.Autolykos, AlgorithmType.KHeavyHash, "AutolykosKHeavyHash")
                             {
@@ -516,9 +524,11 @@ Fatal error detected. Restarting.
             
             { MinerBaseType.miniZ,
                         new List<Algorithm>() {
+                            /*
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")//broken in 2.3.c
                             {
                             },
+                            */
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
                             },

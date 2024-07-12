@@ -302,6 +302,7 @@ namespace NiceHashMiner.Forms
             checkBoxHistory.Text = International.GetText("Form_Settings_checkBoxHistory");
             checkBox_BackupBeforeUpdate.Text = International.GetText("Form_Settings_checkBox_backup_before_update");
             checkBox_ABEnableOverclock.Text = International.GetText("FormSettings_ABEnableOverclock");
+            checkBox_AB_maintaining.Text = International.GetText("FormSettings_ABmaintaining");
             checkBox_ABMinimize.Text = International.GetText("FormSettings_AB_Minimize");
             checkBox_ABDefault_mining_stopped.Text = International.GetText("FormSettings_ABDefault_mining_stopped");
             checkBox_ABDefault_program_closing.Text = International.GetText("FormSettings_ABDefault_program_closing");
@@ -895,6 +896,8 @@ namespace NiceHashMiner.Forms
 
                 checkBox_ABEnableOverclock.BackColor = Form_Main._backColor;
                 checkBox_ABEnableOverclock.ForeColor = Form_Main._textColor;
+                checkBox_AB_maintaining.BackColor = Form_Main._backColor;
+                checkBox_AB_maintaining.ForeColor = Form_Main._textColor;
                 checkBox_ABDefault_mining_stopped.BackColor = Form_Main._backColor;
                 checkBox_ABDefault_mining_stopped.ForeColor = Form_Main._textColor;
                 checkBox_ABDefault_program_closing.BackColor = Form_Main._backColor;
@@ -1126,6 +1129,7 @@ namespace NiceHashMiner.Forms
                 checkBoxHideUnused2.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 //checkBox_Zil_GMiner.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABEnableOverclock.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_AB_maintaining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_mining_stopped.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABDefault_program_closing.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ABMinimize.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -1286,6 +1290,7 @@ namespace NiceHashMiner.Forms
                 checkBoxHideUnused2.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
                 //checkBox_Zil_GMiner.Checked = ConfigManager.GeneralConfig.Zilliqua_GMiner;
                 checkBox_ABEnableOverclock.Checked = ConfigManager.GeneralConfig.ABEnableOverclock;
+                checkBox_AB_maintaining.Checked = ConfigManager.GeneralConfig.ABMaintaiming;
                 checkBox_ABDefault_mining_stopped.Checked = ConfigManager.GeneralConfig.ABDefaultMiningStopped;
                 checkBox_ABDefault_program_closing.Checked = ConfigManager.GeneralConfig.ABDefaultProgramClosing;
                 checkBox_ABMinimize.Checked = ConfigManager.GeneralConfig.ABMinimize;
@@ -1403,6 +1408,7 @@ namespace NiceHashMiner.Forms
             checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
             checkBox_ABDefault_mining_stopped.Enabled = checkBox_ABEnableOverclock.Checked;
             checkBox_ABDefault_program_closing.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_AB_maintaining.Enabled = checkBox_ABEnableOverclock.Checked;
             Form_Main.OverclockEnabled = checkBox_ABEnableOverclock.Checked;
 
             if (!Form_Main.GetBTCwalletType().Equals("P2SH"))
@@ -1660,6 +1666,7 @@ namespace NiceHashMiner.Forms
             }
             */
             ConfigManager.GeneralConfig.ABEnableOverclock = checkBox_ABEnableOverclock.Checked;
+            ConfigManager.GeneralConfig.ABMaintaiming = checkBox_AB_maintaining.Checked;
             ConfigManager.GeneralConfig.ABDefaultMiningStopped = checkBox_ABDefault_mining_stopped.Checked;
             ConfigManager.GeneralConfig.ABDefaultProgramClosing = checkBox_ABDefault_program_closing.Checked;
             ConfigManager.GeneralConfig.ABMinimize = checkBox_ABMinimize.Checked;
@@ -2695,6 +2702,7 @@ namespace NiceHashMiner.Forms
         {
             checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
             checkBox_ABDefault_mining_stopped.Enabled = checkBox_ABEnableOverclock.Checked;
+            checkBox_AB_maintaining.Enabled = checkBox_ABEnableOverclock.Checked;
             checkBox_ABDefault_program_closing.Enabled = checkBox_ABEnableOverclock.Checked;
 
             var oc = tabPageOverClock;

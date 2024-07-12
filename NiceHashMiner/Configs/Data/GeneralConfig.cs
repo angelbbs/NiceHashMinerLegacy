@@ -106,6 +106,8 @@ namespace NiceHashMiner.Configs.Data
         public bool ChartFiat = false;
         public bool ChartEnable = false;
         public bool ABEnableOverclock = false;
+        public bool ABMaintaiming = false;
+        public int ABMaintaiminginterval = 60;
         public bool ABDefaultMiningStopped = false;
         public bool ABDefaultProgramClosing = false;
         public bool ABMinimize = false;

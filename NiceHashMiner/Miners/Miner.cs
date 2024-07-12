@@ -12,6 +12,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Divert;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -716,46 +717,7 @@ namespace NiceHashMiner
         }
 
         #region BENCHMARK DE-COUPLED Decoupled benchmarking routines
-        protected double BenchmarkParseLine_cpu_hsrneoscrypt_extra(string outdata)
-        {
-            if (outdata.Contains("Benchmark: ") && outdata.Contains("/s"))
-            {
-                int i = outdata.IndexOf("Benchmark:");
-                int k = outdata.IndexOf("/s");
-                string hashspeed = outdata.Substring(i + 11, k - i - 9);
-                Helpers.ConsolePrint("BENCHMARK-NS", "Final Speed: " + hashspeed);
-
-                // save speed
-                int b = hashspeed.IndexOf(" ");
-                if (b < 0)
-                {
-                    int stub;
-                    for (int _i = hashspeed.Length - 1; _i >= 0; --_i)
-                    {
-                        if (Int32.TryParse(hashspeed[_i].ToString(), out stub))
-                        {
-                            b = _i;
-                            break;
-                        }
-                    }
-                }
-                if (b >= 0)
-                {
-                    string speedStr = hashspeed.Substring(0, b);
-                    double spd = Helpers.ParseDouble(speedStr);
-                    if (hashspeed.Contains("kH/s"))
-                        spd *= 1000;
-                    else if (hashspeed.Contains("MH/s"))
-                        spd *= 1000000;
-                    else if (hashspeed.Contains("GH/s"))
-                        spd *= 1000000000;
-
-                    return spd;
-                }
-            }
-            return 0.0d;
-        }
-
+        
         public int BenchmarkTimeoutInSeconds(int timeInSeconds)
         {
             if (TimeoutStandard) return timeInSeconds;
@@ -1277,7 +1239,13 @@ namespace NiceHashMiner
 
         protected virtual NiceHashProcess _Start()
         {
-            RunCMDBeforeOrAfterMining(true);
+            try
+            {
+                RunCMDBeforeOrAfterMining(true);
+            } catch (Exception ex)
+            {
+
+            }
             // never start when ended
             if (_isEnded)
             {
@@ -1481,6 +1449,7 @@ namespace NiceHashMiner
                 ? ConfigManager.GeneralConfig.MinerRestartDelayMS
                 : ms;
             Helpers.ConsolePrint(MinerTag(), ProcessTag() + $" directly Miner_Exited Will restart in {restartInMs} ms");
+            CooldownCheck = 0;
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             string strPlatform = "";
             foreach (var pair in MiningSetup.MiningPairs)
@@ -1731,39 +1700,103 @@ namespace NiceHashMiner
 
         #endregion //Cooldown/retry logic
 
+        private static Timer _deviceMSIABCheckTimer;
+        private void CheckMSIABOverclock(object sender, ElapsedEventArgs e)
+        {
+            foreach (var dev in MiningSetup.MiningPairs)
+            {
+                if (dev.Device.Enabled)
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
+                        //Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
+                        if (MSIAfterburner.CheckFromFile(dev.Device.BusID, fName))
+                        {
+                            Helpers.ConsolePrint("MSIAfterburner.CheckFromFile", "Compare OK. busID " + dev.Device.BusID.ToString());
+                            break;
+                        } else
+                        {
+                            Helpers.ConsolePrint("MSIAfterburner.CheckFromFile", "Compare ERROR. busID " + dev.Device.BusID.ToString() +
+                                " Try MSIAfterburner.CheckFromFile: " + fName);
+                            MSIAfterburner.CommitChanges(false);
+                            Thread.Sleep(200);
+                            MSIAfterburner.Flush();
+                        }
+
+                        Thread.Sleep(200);
+                    }
+                }
+            }
+            //MSIAfterburner.Flush();
+            Thread.Sleep(100);
+        }
+        private Dictionary<string, System.Timers.Timer> timersDict = new Dictionary<string, System.Timers.Timer>();
         protected Process RunCMDBeforeOrAfterMining(bool isBefore)
         {
-            if (ConfigManager.GeneralConfig.ABEnableOverclock)
+            try
             {
-                if (isBefore)
+                if (ConfigManager.GeneralConfig.ABEnableOverclock)
                 {
-                    foreach (var dev in MiningSetup.MiningPairs)
+                    if (isBefore)
                     {
-                        if (dev.Device.Enabled)
+                        if (ConfigManager.GeneralConfig.ABMaintaiming)
                         {
-                            for (int i = 0; i < 5; i++)
+                            Helpers.ConsolePrint("CheckMSIABOverclock", "Start timer for " + MinerTag());
+                            _deviceMSIABCheckTimer = new Timer();
+                            _deviceMSIABCheckTimer.Elapsed += CheckMSIABOverclock;
+                            _deviceMSIABCheckTimer.Interval = 1000 * ConfigManager.GeneralConfig.ABMaintaiminginterval;
+                            _deviceMSIABCheckTimer.Start();
+                            timersDict.Add(MinerTag(), _deviceMSIABCheckTimer);
+                        }
+                        foreach (var dev in MiningSetup.MiningPairs)
+                        {
+                            if (dev.Device.Enabled)
                             {
-                                string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
-                                Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
-                                if (MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName)) break;
-                                Thread.Sleep(100);
-                                //MSIAfterburner.CommitChanges(false);
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
+                                    Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
+                                    if (MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName)) break;
+                                    Thread.Sleep(100);
+                                    //MSIAfterburner.CommitChanges(false);
+                                }
                             }
                         }
+                        //MSIAfterburner.Flush();
+                        Thread.Sleep(100);
                     }
-                    MSIAfterburner.Flush();
-                    Thread.Sleep(100);
+                    else
+                    {
+                        if (ConfigManager.GeneralConfig.ABMaintaiming)
+                        {
+                            foreach (var t in timersDict)
+                            {
+                                if (t.Key == MinerTag())
+                                {
+                                    if (t.Value is object)
+                                    {
+                                        Helpers.ConsolePrint("CheckMSIABOverclock", "Stop timer for " + MinerTag());
+                                        t.Value.Stop();
+                                        t.Value.Dispose();
+                                    }
+                                }
+                            }
+                            timersDict.Remove(MinerTag());
+                        }
+                    }
                 }
                 else
                 {
-
+                    if (isBefore)
+                    {
+                        Thread.Sleep(1000);
+                    }
                 }
-            } else
+            }
+            catch (Exception ex)
             {
-                if (isBefore)
-                {
-                    Thread.Sleep(1000);
-                }
+                Helpers.ConsolePrint(MinerTag(), ex.ToString());
             }
 
             bool CreateNoWindow = false;

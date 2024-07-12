@@ -99,7 +99,7 @@ namespace NiceHashMiner.Miners
                 }
                 else//не проверено
                 {
-                    ret = ret + " --url " + ssl + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                    ret = ret + " --url " + ssl + username + "@" + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                 }
             }
             return ret;
@@ -518,6 +518,7 @@ namespace NiceHashMiner.Miners
         {
             return ad;
         }
+
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
@@ -538,7 +539,14 @@ namespace NiceHashMiner.Miners
             string pers = "";
             try
             {
-                var bytesToSend = Encoding.ASCII.GetBytes(variables.miniZ_toSend);
+                byte[] bytesToSend;
+                if (Form_Main.isZilRound)
+                {
+                   bytesToSend = Encoding.ASCII.GetBytes(variables.miniZ_toSend_zil);
+                } else
+                {
+                    bytesToSend = Encoding.ASCII.GetBytes(variables.miniZ_toSend);
+                }
                 var client = new TcpClient("127.0.0.1", ApiPort);
                 client.ReceiveTimeout = 2000;
                 var nwStream = client.GetStream();

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Miners;
@@ -392,10 +393,40 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 64;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 65)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 65;
+                }
 
                 Form_Main.NHMWSProtocolVersion = ConfigManager.GeneralConfig.NHMWSProtocolVersion;
 
                 if (ConfigManager.GeneralConfig.ZILMaxEpoch < 1) ConfigManager.GeneralConfig.ZILMaxEpoch = 1;
+
+                string keyName = @"SYSTEM\ControlSet001\Services";
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyName, true))
+                {
+                    if (key == null)
+                    {
+                    }
+                    else
+                    {
+                        key.DeleteValue("WinDivert1.4");
+                    }
+                }
+
+                keyName = @"SYSTEM\CurrentControlSet\Services";
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyName, true))
+                {
+                    if (key == null)
+                    {
+                    }
+                    else
+                    {
+                        key.DeleteValue("WinDivert1.4");
+                    }
+                }
+
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************

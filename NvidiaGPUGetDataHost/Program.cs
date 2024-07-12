@@ -1,9 +1,11 @@
 ﻿using ManagedCuda.Nvml;
 using NvAPIWrapper.Native;
+using NvAPIWrapper.Native.General;
 using NvAPIWrapper.Native.GPU.Structures;
 using NvidiaGPUGetDataHost.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.MemoryMappedFiles;
@@ -12,6 +14,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using static NvAPIWrapper.Native.GPU.Structures.PrivatePowerPoliciesStatusV1;
 
 namespace NvidiaGPUGetDataHost
 {
@@ -56,6 +59,7 @@ namespace NvidiaGPUGetDataHost
                 return Assembly.Load(Resources.log4net); //dll в ресурсах
             return null;
         }
+
         [STAThread]
         public static void Main()
         {
@@ -79,9 +83,9 @@ namespace NvidiaGPUGetDataHost
                 Environment.SetEnvironmentVariable("PATH", pathVar);
                 */
                 if (!TryAddNvmlToEnvPath()) return;
-
                 nvmlDevice _nvmlDevice = new nvmlDevice();
                 nvmlReturn nvmlLoaded = NvmlNativeMethods.nvmlInit();
+
                 if (nvmlLoaded != nvmlReturn.Success)
                 {
                     Logger.ConsolePrint("NvidiaGPUGetDataHost", "NVSMI Error: " + nvmlLoaded);
@@ -110,7 +114,7 @@ namespace NvidiaGPUGetDataHost
                     GpuDataList.Add(_GpuData);
                     Logger.ConsolePrint("NvidiaGPUGetDataHost", "NVIDIA device: " + devName + " busID: " + devPci.bus.ToString()); ;
                 }
-
+                
                 int ticks = 0;
                 int errors = 0;
 
@@ -130,18 +134,7 @@ namespace NvidiaGPUGetDataHost
                 {
                     for (int dev = 0; dev < devCount; dev++)
                     {
-                        /*
-                        ret = NvmlNativeMethods.nvmlDeviceGetCount(ref devCount);
-                        if (ret != nvmlReturn.Success)
-                        {
-                            using (EventLog eventLog = new EventLog("Application"))
-                            {
-                                eventLog.Source = "NvidiaGPUGetDataHost";
-                                eventLog.WriteEntry("nvmlDeviceGetCount error: " + ret.ToString(), EventLogEntryType.Error, 101, 1);
-                            }
-                            return;
-                        }
-                        */
+                        
                         ret = NvmlNativeMethods.nvmlDeviceGetHandleByIndex((uint)dev, ref _nvmlDevice);
                         if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
                         {
@@ -153,6 +146,8 @@ namespace NvidiaGPUGetDataHost
                             }
                         }
                         Thread.Sleep(50);
+                        //537.58++ на 4060 не работает потребление (546.17, 551.86, 552.44)
+                        //537.13 работает
                         ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref _power);// <- mem leak 461.40+
                         //Logger.ConsolePrint("NvidiaGPUGetDataHost", "_power: " + _power.ToString());
                         if (ret != nvmlReturn.Success && ret != nvmlReturn.NVML_ERROR_NO_DATA)
@@ -200,6 +195,7 @@ namespace NvidiaGPUGetDataHost
                                 errors++;
                             }
                         }
+                        
                         Thread.Sleep(50);
                         bool nvApierror = false;
                         try
@@ -207,6 +203,7 @@ namespace NvidiaGPUGetDataHost
                             var gpus0 = NvAPIWrapper.GPU.PhysicalGPU.GetPhysicalGPUs();
                         } catch (Exception ex)
                         {
+                            Logger.ConsolePrint("NvidiaGPUGetDataHost", "NvAPIWrapper error: " + ex.ToString());
                             nvApierror = true;
                         }
 
@@ -232,12 +229,15 @@ namespace NvidiaGPUGetDataHost
                                         Logger.ConsolePrint("NvidiaGPUGetDataHost", "Stuck GPU: " + g.Name + " BusId: " + g.busID.ToString());
                                     }
                                 }
+
                             }
                             var gpu = sorted[dev];
                             NvmlNativeMethods.nvmlDeviceGetName(_nvmlDevice, out string name);
                             //Logger.ConsolePrint("NvidiaGPUGetDataHost", "dev: " + dev + " nvml.name: " + name + " api.FullName: " + gpu.FullName + " api.GPUId: " + gpu.GPUId.ToString());
+                            
                             var handle = GPUApi.GetPhysicalGPUFromGPUID(gpu.GPUId);
                             // find bits
+
                             var maxBit = 0;
                             for (; maxBit < 32; maxBit++)
                             {
@@ -251,6 +251,7 @@ namespace NvidiaGPUGetDataHost
                                     break;
                                 }
                             }
+                            
                             //Logger.ConsolePrint("NvidiaGPUGetDataHost", "maxBit: " + maxBit.ToString());
                             if (maxBit == 0)
                             {
@@ -274,27 +275,60 @@ namespace NvidiaGPUGetDataHost
                                 if (_tempMem <= 0)
                                 {
                                     _tempMem = (uint)t1[7];//laptop?
-                                    /*
-                                    if (_tempMem <= 0)
-                                    {
-                                        _tempMem = (uint)t1[2];
-                                    }
-                                    */
+
+                                    //if (_tempMem <= 0)
+                                    //{
+                                      //  _tempMem = (uint)t1[2];
+                                    //}
                                 }
                             }
-                            /*
+                            
                             if (_power == 0u)
                             {
-                                                                var _p = GPUApi.ClientPowerTopologyGetStatus(handle);
-                                var e = _p.PowerPolicyStatusEntries;
-                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", e.Count().ToString());
-                                foreach ( var pt in e)
+                                /* 
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", GPUApi.GetFullName(handle) + " power:" +  _power.ToString());
+                                var p1 = NvAPIWrapper.Native.GPUApi.ClientPowerPoliciesGetInfo(handle).PowerPolicyInfoEntries;
+                                var p2 = NvAPIWrapper.Native.GPUApi.ClientPowerPoliciesGetStatus(handle).PowerPolicyStatusEntries;
+                                var p3 = NvAPIWrapper.Native.GPUApi.ClientPowerTopologyGetStatus(handle).PowerPolicyStatusEntries;
+
+                                //PrivatePowerPoliciesStatusV1 pol = new PrivatePowerPoliciesStatusV1();
+                                //GPUApi.ClientPowerPoliciesSetStatus(handle, pol);
+
+                                var p4 = NvAPIWrapper.Native.GPUApi.GetPerformanceStates20(handle);
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", "GetPerformanceStates20 Clocks " + p4.Clocks.Count().ToString());
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", "GetPerformanceStates20 GeneralVoltages " + p4.GeneralVoltages.Count().ToString());
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", "GetPerformanceStates20 PerformanceStates " + p4.PerformanceStates.Count().ToString());
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", "GetPerformanceStates20 Voltages " + p4.Voltages.Count().ToString());
+
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", "ClientPowerPoliciesGetInfo count " + p1.Count().ToString());
+                                foreach (var pt in p1)
                                 {
-                                    Logger.ConsolePrint("NvidiaGPUGetDataHost", pt.Domain.ToString() +
-                                        " " + pt.PowerUsageInPCM.ToString());
+                                    Logger.ConsolePrint("NvidiaGPUGetDataHost", pt.DefaultPowerInPCM.ToString() + " " +
+                                        pt.MaximumPowerInPCM.ToString() + " " +
+                                      " " + pt.MinimumPowerInPCM.ToString());
                                 }
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", "ClientPowerPoliciesGetStatus count " + p2.Count().ToString());
+                                foreach (var pt in p2)
+                                {
+                                    Logger.ConsolePrint("NvidiaGPUGetDataHost", pt.PerformanceStateId.ToString() + " " +
+                                        pt.PowerTargetInPCM.ToString());
                                 }
-                            */
+                                Logger.ConsolePrint("NvidiaGPUGetDataHost*", "ClientPowerTopologyGetStatus count " + p3.Count().ToString());
+                                foreach (var pt in p3)
+                                {
+                                    Logger.ConsolePrint("NvidiaGPUGetDataHost", pt.Domain.ToString() + " " + 
+                                        pt.PowerUsageInPCM.ToString());
+                                    _power = pt.PowerUsageInPCM;
+                                }
+
+                                foreach (var pt in p4.Voltages)
+                                {
+                                    Logger.ConsolePrint("NvidiaGPUGetDataHost", pt.Key.ToString() + " " +
+                                        pt.Value.Count().ToString());
+                                }
+                                */
+                            }
+                            
 
                             /*
                             for (int i = 0; i< t1.Count();i++)

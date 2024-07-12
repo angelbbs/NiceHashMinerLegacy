@@ -1,8 +1,9 @@
 ﻿using Microsoft.Win32;
-//using NHM.Common;
 using System;
 using System.IO;
 using System.Management;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace NiceHashMinerLegacy.UUID
 {
@@ -11,7 +12,14 @@ namespace NiceHashMinerLegacy.UUID
         private static System.Guid _defaultNamespace = Guid.UUID.Nil().AsGuid();
         public static string GetHexUUID(string infoToHashed)
         {
-            var uuidHex = Guid.UUID.V5(_defaultNamespace, infoToHashed).AsGuid().ToString();
+            //var uuidHex = Guid.UUID.V5(_defaultNamespace, infoToHashed).AsGuid().ToString();
+            string uuidHex = "";
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(infoToHashed));
+                var result = new System.Guid(hash);
+                uuidHex = result.ToString();
+            }
             return uuidHex;
         }
 
@@ -36,7 +44,8 @@ namespace NiceHashMinerLegacy.UUID
                 Console.WriteLine(infoToHash);
             }
             //            Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
-            var hexUuid = GetHexUUID(infoToHash);
+            //var hexUuid = GetHexUUID(infoToHash);
+            var hexUuid = "zsdasf";
             return $"{0}-{GetB64UUID(hexUuid).Replace("+","_")}";
         }
 

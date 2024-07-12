@@ -221,6 +221,7 @@ namespace NiceHashMiner.Forms
             this.buttonHistory = new System.Windows.Forms.Button();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
+            this.checkBox_AB_maintaining = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_RigManager.SuspendLayout();
@@ -2319,6 +2320,7 @@ namespace NiceHashMiner.Forms
             // tabPageOverClock
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageOverClock.Controls.Add(this.checkBox_AB_maintaining);
             this.tabPageOverClock.Controls.Add(this.checkBoxHideUnused2);
             this.tabPageOverClock.Controls.Add(this.checkBox_ABDefault_program_closing);
             this.tabPageOverClock.Controls.Add(this.checkBox_ABDefault_mining_stopped);
@@ -2337,7 +2339,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBoxHideUnused2.AutoSize = true;
             this.checkBoxHideUnused2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBoxHideUnused2.Location = new System.Drawing.Point(371, 162);
+            this.checkBoxHideUnused2.Location = new System.Drawing.Point(371, 154);
             this.checkBoxHideUnused2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxHideUnused2.Name = "checkBoxHideUnused2";
             this.checkBoxHideUnused2.Size = new System.Drawing.Size(136, 17);
@@ -2350,7 +2352,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_ABDefault_program_closing.AutoSize = true;
             this.checkBox_ABDefault_program_closing.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ABDefault_program_closing.Location = new System.Drawing.Point(371, 85);
+            this.checkBox_ABDefault_program_closing.Location = new System.Drawing.Point(371, 108);
             this.checkBox_ABDefault_program_closing.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ABDefault_program_closing.Name = "checkBox_ABDefault_program_closing";
             this.checkBox_ABDefault_program_closing.Size = new System.Drawing.Size(227, 17);
@@ -2362,7 +2364,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_ABDefault_mining_stopped.AutoSize = true;
             this.checkBox_ABDefault_mining_stopped.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ABDefault_mining_stopped.Location = new System.Drawing.Point(371, 62);
+            this.checkBox_ABDefault_mining_stopped.Location = new System.Drawing.Point(371, 85);
             this.checkBox_ABDefault_mining_stopped.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ABDefault_mining_stopped.Name = "checkBox_ABDefault_mining_stopped";
             this.checkBox_ABDefault_mining_stopped.Size = new System.Drawing.Size(201, 17);
@@ -2374,7 +2376,7 @@ namespace NiceHashMiner.Forms
             // 
             this.linkLabel3.AutoSize = true;
             this.linkLabel3.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.linkLabel3.Location = new System.Drawing.Point(368, 112);
+            this.linkLabel3.Location = new System.Drawing.Point(368, 135);
             this.linkLabel3.Name = "linkLabel3";
             this.linkLabel3.Size = new System.Drawing.Size(55, 13);
             this.linkLabel3.TabIndex = 406;
@@ -2386,7 +2388,7 @@ namespace NiceHashMiner.Forms
             // 
             this.checkBox_ABMinimize.AutoSize = true;
             this.checkBox_ABMinimize.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_ABMinimize.Location = new System.Drawing.Point(371, 39);
+            this.checkBox_ABMinimize.Location = new System.Drawing.Point(371, 62);
             this.checkBox_ABMinimize.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ABMinimize.Name = "checkBox_ABMinimize";
             this.checkBox_ABMinimize.Size = new System.Drawing.Size(143, 17);
@@ -2701,6 +2703,18 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
+            // checkBox_AB_maintaining
+            // 
+            this.checkBox_AB_maintaining.AutoSize = true;
+            this.checkBox_AB_maintaining.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_AB_maintaining.Location = new System.Drawing.Point(371, 39);
+            this.checkBox_AB_maintaining.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_AB_maintaining.Name = "checkBox_AB_maintaining";
+            this.checkBox_AB_maintaining.Size = new System.Drawing.Size(144, 17);
+            this.checkBox_AB_maintaining.TabIndex = 410;
+            this.checkBox_AB_maintaining.Text = "Maintaining overclocking";
+            this.checkBox_AB_maintaining.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2970,5 +2984,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.CheckBox checkBoxInstall_root_certificates;
         private System.Windows.Forms.GroupBox groupBox_RigManager;
         private System.Windows.Forms.CheckBox checkBox_ShowPowerOfDisabledDevices;
+        private System.Windows.Forms.CheckBox checkBox_AB_maintaining;
     }
 }

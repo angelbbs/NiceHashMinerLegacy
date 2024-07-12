@@ -72,7 +72,9 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         AlgorithmType.Autolykos,
                         AlgorithmType.AutolykosIronFish,
-                        AlgorithmType.AutolykosZil
+                        AlgorithmType.AutolykosZil,
+                        AlgorithmType.AutolykosKarlsenHash,
+                        AlgorithmType.AutolykosPyrinHash
 
                     });
             }
@@ -248,7 +250,9 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     if (algo.DualNiceHashID == AlgorithmType.AutolykosKarlsenHash ||
                         algo.DualNiceHashID == AlgorithmType.AutolykosPyrinHash ||
+                        algo.DualNiceHashID == AlgorithmType.AutolykosAlephium ||
                         algo.DualNiceHashID == AlgorithmType.FishHashAlephium ||
+                        algo.DualNiceHashID == AlgorithmType.FishHashKarlsenHash ||
                         algo.DualNiceHashID == AlgorithmType.FishHashPyrinHash)
                     {
                         algo.Enabled = false;
@@ -272,7 +276,21 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                 }
             }
-            
+
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.teamredminer) &&
+    (!device.Codename.ToLower().Contains("gfx9") && !device.Codename.ToLower().Contains("gfx10") &&
+    !device.Codename.ToLower().Contains("gfx20")))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.teamredminer])
+                {
+                    if (algo.DualNiceHashID == AlgorithmType.FishHash)
+                    {
+                        algo.Enabled = false;
+                        algo.Hidden = true;
+                    }
+                }
+            }
+
             if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.lolMiner) &&
                 (device.Codename.ToLower().Contains("gfx1010") || device.Codename.ToLower().Contains("gfx1011") ||
                 device.Codename.ToLower().Contains("gfx1012")))//RX 5500/5700/5600(M/XT)

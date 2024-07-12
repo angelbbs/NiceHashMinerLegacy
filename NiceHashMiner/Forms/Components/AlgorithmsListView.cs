@@ -447,7 +447,7 @@ namespace NiceHashMiner.Forms.Components
 
                 } else
                 {
-                    Helpers.ConsolePrint("****lvi", name);
+
                 }
             }
             listViewAlgorithms.EndUpdate();

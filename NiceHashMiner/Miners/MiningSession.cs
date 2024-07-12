@@ -699,7 +699,26 @@ namespace NiceHashMiner.Miners
                     {
                         // don't switch
                         Helpers.ConsolePrint(Tag,
-                            $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {percDiff * 100:f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+                            $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff less - {percDiff * 100:f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
+
+                        //удалить устройства, для которых не нужно переключение
+                        var itemToRemove = profitableDevices.SingleOrDefault(r => r.Device.BusID == device.Device.BusID);
+                        if (itemToRemove != null)
+                        {
+                            device.RestoreOldProfitsState();
+                            if (device.HasProfitableAlgo())
+                            {
+                                profitableDevices.Remove(itemToRemove);
+                                profitableDevices.Add(device.GetMostProfitablePair());
+                            }
+                        }
+                        /*
+                        foreach (var dev in _miningDevices)
+                        {
+                            dev.RestoreOldProfitsState();
+                        }
+                        */
+
                         //CheckForceSwitch(percDiff);
                         // RESTORE OLD PROFITS STATE
                         //foreach (var device in _miningDevices)
@@ -773,13 +792,28 @@ namespace NiceHashMiner.Miners
                             {
                                 Helpers.ConsolePrint(Tag, $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
                                 _ticks[device.Device.Index].ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
-                                //CheckForceSwitch(percDiff);
-                                // RESTORE OLD PROFITS STATE
-                                //foreach (var device2 in _miningDevices)
-                                //{
-                                //  device2.RestoreOldProfitsState();
-                                //}
-                                device.RestoreOldProfitsState();
+
+                                //удалить устройства, для которых не нужно переключение не получится,
+                                //если порог переключения (percDiff) превышен, а время(_ticks) нет,
+                                //то всё-равно переключится,
+                                //т.к. переключалка(NewGrouping(profitableDevices) не знает о _ticks
+                                //в реальности это выглядит так - если одному GPU надо переключиться
+                                //на другой алгоритм (превышен порог(percDiff) и время(_ticks)),
+                                //то это переключение влияет на другие GPU, у которых также превышен
+                                //порог переключения, но не (_ticks).
+                                //Переключалка(NewGrouping(profitableDevices) формирует новые группы карт
+                                //Менять этот атавизм, оставшийся от nicehash я не буду!
+                                var itemToRemove = profitableDevices.SingleOrDefault(r => r.Device.BusID == device.Device.BusID);
+                                if (itemToRemove != null)
+                                {
+                                    device.RestoreOldProfitsState();
+                                    if (device.HasProfitableAlgo())
+                                    {
+                                        profitableDevices.Remove(itemToRemove);
+                                        profitableDevices.Add(device.GetMostProfitablePair());
+                                    }
+                                }
+                                
                             }
                         }
                     }

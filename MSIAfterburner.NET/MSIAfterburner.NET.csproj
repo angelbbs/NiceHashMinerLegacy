@@ -7,7 +7,7 @@
     <ProjectGuid>{08F25F99-9D46-4D1F-A776-377ADA69B23E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>MSIAfterburner.NET</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>MSI.Afterburner</RootNamespace>
     <FileUpgradeFlags>

@@ -755,9 +755,12 @@ namespace NiceHashMiner.Devices
                 var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _AdapterIndex2, 0, ref power); //0
                 if (result == ADL.ADL_SUCCESS)
                 {
-                    //Helpers.ConsolePrint("PowerUsageInternal1", "(power / (1 << 8)) + addAMD: " + ((power / (1 << 8)) + addAMD).ToString());
+                    //Helpers.ConsolePrint("PowerUsageInternal", "_AdapterIndex: " + _AdapterIndex.ToString() +
+                      //  " _AdapterIndex2: " + _AdapterIndex2.ToString() +
+                        //" power: " + power.ToString() + 
+                        //" (power / (1 << 8)) + addAMD: " + ((power / (1 << 8)) + addAMD).ToString());
                     //return power;
-                    return (double)(power / (1 << 8)) + addAMD;
+                    return (double)(power / (1 << 8));
                 }
             }
             return -1;
@@ -776,7 +779,10 @@ namespace NiceHashMiner.Devices
                     if (i < aDLPMLogDataOutput.sensors.Length && aDLPMLogDataOutput.sensors[i].supported != 0)
                     {
                         power = aDLPMLogDataOutput.sensors[i].value;
-                        return (double)power + addAMD;
+                        //Helpers.ConsolePrint("PowerUsageInternal", "_AdapterIndex: " + _AdapterIndex.ToString() +
+                        //" _AdapterIndex2: " + _AdapterIndex2.ToString() +
+                        //" PMLOG_ASIC_POWER power: " + power.ToString());
+                        return (double)power;
                     }
                 }
                 
@@ -816,11 +822,11 @@ namespace NiceHashMiner.Devices
                 
                 if (valuePowerUsage > 0)
                 {
-                    return valuePowerUsage;
+                    return (int)(valuePowerUsage + addAMD);
                 }
                 else
                 {
-                    return (int)PowerUsageInternal8(_AdapterIndex, _AdapterIndex2);
+                    return (int)((int)PowerUsageInternal8(_AdapterIndex, _AdapterIndex2) + addAMD);
                 }
             }
             else

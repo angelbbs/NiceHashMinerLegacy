@@ -433,8 +433,8 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + " -o [1]" + stratum + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u [1]" + username +
-                        " -o [2]" + stratum + Links.CheckDNS(algo2 + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port2 + " -u [2]" + username;
+                    ret = ret + " -o [1]" + stratum + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u [1]" + username +
+                        " -o [2]" + stratum + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port2 + " -u [2]" + username;
                 }
             }
             return ret;

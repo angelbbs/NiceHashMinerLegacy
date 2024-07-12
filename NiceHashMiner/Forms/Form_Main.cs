@@ -144,6 +144,7 @@ namespace NiceHashMiner
         public static bool MSIAfterburnerRunning = false;
         public static bool OverclockEnabled = false;
         public static bool NVIDIA_orderBug = false;
+        public static string NVIDIADriver;
         public static bool MiningStarted = false;
         public static int devCur = 0;
         public static double PowerAllDevices = 0;
@@ -1509,13 +1510,25 @@ namespace NiceHashMiner
                     {
                         string algo = ((AlgorithmType)an).ToString().ToLower();
                         algo = algo.Replace("randomx", "randomxmonero");
-                        string domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower();
+                        string domain;
+                        if (location.Contains("auto"))
+                        {
+                            domain = "stratum+tcp://" + algo.ToLower() + "." + location.ToLower();
+                        } else
+                        {
+                            domain = "stratum+tcp://" + "stratum." + location.ToLower();
+                        }
                         _loadingScreen.SetValueAndMsg(35 + loc, International.GetText("Form_Main_loadtext_Checking_servers_locations") + ": " + domain.Replace("stratum+tcp://", ""));
 //                        Application.DoEvents();
                         _loadingScreen.Update();
                         Links.CheckDNS(domain);
                         loc++;
                         loc = Math.Min(loc, 55);
+
+                        if (!location.Contains("auto"))
+                        {
+                            break;
+                        }
                     }
                 }
                 Application.DoEvents();

@@ -108,7 +108,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + " -o" + n.ToString() + " " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u" + 
+                    ret = ret + " -o" + n.ToString() + " " + ssl + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " -u" + 
                         n.ToString() + " " + username + " -p" + n.ToString() + " " + psw + " ";
                 }
                 n++;

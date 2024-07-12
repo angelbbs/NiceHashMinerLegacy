@@ -112,6 +112,8 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("miniZ_oc1", "--oc1", "--oc1", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("miniZ_oc2", "--oc2", "--oc2", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("miniZ_ocX", "--ocX", "--ocX", null, MinerOptionFlagType.Uni, ""),
+                    new MinerOption("miniZ_minimal", "--minimal", "--minimal", null, MinerOptionFlagType.Uni, ""),
+                    new MinerOption("miniZ_hideclocks", "--hideclocks", "--hideclocks", null, MinerOptionFlagType.Uni, ""),
                     new MinerOption("miniZ_mod", "--mode=", "--mode=", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("miniZ_autoclocks", "--autoclocks=", "--autoclocks=", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("miniZ_stocksettings", "--stocksettings=", "--stocksettings=", "0", MinerOptionFlagType.MultiParam, ","),

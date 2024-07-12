@@ -185,7 +185,8 @@ namespace NiceHashMiner
             if (!res)
             {
                 var err = Marshal.GetLastWin32Error();
-                throw new Exception("Failed to start process, err=" + err);
+                Helpers.ConsolePrint("Start", "Failed to start process, err=" + err + ". Restart program");
+                Form_Main.MakeRestart(0);
             }
 
             CloseHandle(sInfo.hStdError);

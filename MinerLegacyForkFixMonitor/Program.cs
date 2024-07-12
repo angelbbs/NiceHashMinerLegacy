@@ -135,13 +135,15 @@ namespace MinerLegacyForkFixMonitor
 
                 try
                 {
+                    //время файла может отличаться от текущего. не знаю, почему
+                    /*
                     DateTime modification = File.GetLastWriteTime(@"logs\log.txt");
 
                     if (DateTime.Now.Minute > modification.Minute + 5)
                     {
                         Restart(p);
                     }
-
+                    */
                     MemoryMappedFile sharedMemory = MemoryMappedFile.OpenExisting("MinerLegacyForkFixMonitor");
                     byte[] b1 = { (byte)'0', (byte)'0', (byte)'0' };
                     using (MemoryMappedViewAccessor reader = sharedMemory.CreateViewAccessor(0, 100, MemoryMappedFileAccess.Read))

@@ -363,9 +363,10 @@ namespace NiceHashMiner.Devices
             WaitingForm waiting = new WaitingForm();
             waiting.SetText("", "Initializing");
             waiting.ShowWaitingBox();
+            waiting.Visible = false;
             foreach (var dev in Available.Devices)
             {
-                waiting.SetText("", "Initializing " + dev.Name);
+                waiting.SetText("", "Initializing GPU#" + dev.Index.ToString() + " " + dev.Name);
                 if (dev.DeviceType != DeviceType.CPU && dev.DeviceType != DeviceType.INTEL)
                 {
                     foreach (var alg in dev.GetAlgorithmSettings())
@@ -373,6 +374,7 @@ namespace NiceHashMiner.Devices
                         string fName = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
                         if (!File.Exists(fName))
                         {
+                            waiting.Visible = true;
                             Helpers.ConsolePrint("FirstInitFiles", "Init filedata for busId: " + dev.BusID + " algo: " + alg.AlgorithmStringID);
                             SaveDefaultDeviceData(dev.BusID, fName);
                         }
@@ -838,6 +840,102 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint("MSIAfterburner SaveDeviceData", "Error: " + ex.ToString());
             }
         }
+
+        public static bool CheckFromFile(int _busID, string FileName)
+        {
+            if (!File.Exists(FileName))
+            {
+                Helpers.ConsolePrint("MSIAfterburner CheckFromFile", "Error. File not found: " + FileName);
+                return true;
+            }
+            int i = 0;
+            ControlMemoryGpuEntry dev = null;
+            try
+            {
+                dev = ReadFromFile(_busID, FileName);
+
+                for (i = 0; i < macm.Header.GpuEntryCount; i++)
+                {
+                    if (mahm.GpuEntries[i].Device.Contains("Intel")) continue;
+                    int.TryParse(mahm.GpuEntries[i].GpuId.ToString().Split('&')[4].Replace("BUS_", ""), out int busID);
+                    if (busID == _busID)
+                    {
+                        //macm.GpuEntries[i] = dev;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("MSIAfterburner", ex.ToString());
+            }
+
+            macm.ReloadHeader();
+            macm.ReloadGpuEntry(i);
+            Thread.Sleep(100);
+
+            //byte[] macmbuffer = RawSerialize(macm.GpuEntries[i], (int)macm.Header.GpuEntrySize);
+            byte[] devbuffer = File.ReadAllBytes(FileName);
+
+            ControlMemoryGpuEntry devb = null;
+            devb = RawDeserialize(devbuffer, macm.GpuEntries[i]);
+
+            if (
+                macm.GpuEntries[i].CoreClockBoostCur == devb.CoreClockBoostCur &&
+                macm.GpuEntries[i].CoreClockCur == devb.CoreClockCur &&
+                macm.GpuEntries[i].CoreVoltageBoostCur == devb.CoreVoltageBoostCur &&
+                //macm.GpuEntries[i].CoreVoltageCur == devb.CoreVoltageCur &&
+                macm.GpuEntries[i].FanFlagsCur == devb.FanFlagsCur &&
+                //macm.GpuEntries[i].FanSpeedCur == devb.FanSpeedCur &&
+                //macm.GpuEntries[i].Flags == devb.Flags &&
+                macm.GpuEntries[i].MemoryClockBoostCur == devb.MemoryClockBoostCur &&
+                macm.GpuEntries[i].MemoryClockCur == devb.MemoryClockCur &&
+                macm.GpuEntries[i].MemoryVoltageBoostCur == devb.MemoryVoltageBoostCur &&
+                macm.GpuEntries[i].MemoryVoltageCur == devb.MemoryVoltageCur &&
+                macm.GpuEntries[i].PowerLimitCur == devb.PowerLimitCur &&
+                //macm.GpuEntries[i].ThermalLimitCur == devb.ThermalLimitCur &&
+                macm.GpuEntries[i].thermalPrioritizeCur == devb.thermalPrioritizeCur)
+            {
+                return true;
+            }
+            else
+            {
+                /*
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].CoreClockBoostCur=" +
+                    macm.GpuEntries[i].CoreClockBoostCur.ToString() + " " + devb.CoreClockBoostCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].CoreClockCur=" +
+                    macm.GpuEntries[i].CoreClockCur.ToString() + " " + devb.CoreClockCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].CoreVoltageBoostCur=" +
+                    macm.GpuEntries[i].CoreVoltageBoostCur.ToString() + " " + devb.CoreVoltageBoostCur.ToString());
+                //Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].CoreVoltageCur=" +
+                  //  macm.GpuEntries[i].CoreVoltageCur.ToString() + " " + devb.CoreVoltageCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].FanFlagsCur=" +
+                    macm.GpuEntries[i].FanFlagsCur.ToString() + " " + devb.FanFlagsCur.ToString());
+                //Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].FanSpeedCur=" +
+                //  macm.GpuEntries[i].FanSpeedCur.ToString() + " " + devb.FanSpeedCur.ToString());
+                //Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].Flags=" +
+                //  macm.GpuEntries[i].Flags.ToString() + " " + devb.Flags.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].MemoryClockBoostCur=" +
+                    macm.GpuEntries[i].MemoryClockBoostCur.ToString() + " " + devb.MemoryClockBoostCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].MemoryClockCur=" +
+                    macm.GpuEntries[i].MemoryClockCur.ToString() + " " + devb.MemoryClockCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].MemoryVoltageBoostCur=" +
+                    macm.GpuEntries[i].MemoryVoltageBoostCur.ToString() + " " + devb.MemoryVoltageBoostCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].MemoryVoltageCur=" +
+                    macm.GpuEntries[i].MemoryVoltageCur.ToString() + " " + devb.MemoryVoltageCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].PowerLimitCur=" +
+                    macm.GpuEntries[i].PowerLimitCur.ToString() + " " + devb.PowerLimitCur.ToString());
+                //Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].ThermalLimitCur=" +
+                  //  macm.GpuEntries[i].ThermalLimitCur.ToString() + " " + devb.ThermalLimitCur.ToString());
+                Helpers.ConsolePrint(_busID.ToString(), "macm.GpuEntries[i].thermalPrioritizeCur=" +
+                    macm.GpuEntries[i].thermalPrioritizeCur.ToString() + " " + devb.thermalPrioritizeCur.ToString());
+                */
+                
+                macm.GpuEntries[i] = devb;
+                return false;
+            }
+        }
+
         public static bool ApplyFromFile(int _busID, string FileName)
         {
             if (!File.Exists(FileName))
@@ -867,11 +965,31 @@ namespace NiceHashMiner.Devices
             }
             CommitChanges(false);
             Thread.Sleep(100);
-            //***********установить задержки и сделать галочку в настройказ
-            byte[] macmbuffer = RawSerialize(macm.GpuEntries[i], (int)macm.Header.GpuEntrySize);
+            Flush();
+            macm.ReloadHeader();
+            macm.ReloadGpuEntry(i);
+            Thread.Sleep(100);
+            //byte[] macmbuffer = RawSerialize(macm.GpuEntries[i], (int)macm.Header.GpuEntrySize);
             byte[] devbuffer = File.ReadAllBytes(FileName);
 
-            if (ByteArrayCompareWithSimplest(macmbuffer, devbuffer))
+            ControlMemoryGpuEntry devb = new ControlMemoryGpuEntry();
+            devb = RawDeserialize(devbuffer, macm.GpuEntries[i]);
+
+            if (
+                macm.GpuEntries[i].CoreClockBoostCur == devb.CoreClockBoostCur &&
+                macm.GpuEntries[i].CoreClockCur == devb.CoreClockCur &&
+                macm.GpuEntries[i].CoreVoltageBoostCur == devb.CoreVoltageBoostCur &&
+                //macm.GpuEntries[i].CoreVoltageCur == devb.CoreVoltageCur &&
+                macm.GpuEntries[i].FanFlagsCur == devb.FanFlagsCur &&
+                //macm.GpuEntries[i].FanSpeedCur == devb.FanSpeedCur &&
+                //macm.GpuEntries[i].Flags == devb.Flags &&
+                macm.GpuEntries[i].MemoryClockBoostCur == devb.MemoryClockBoostCur &&
+                macm.GpuEntries[i].MemoryClockCur == devb.MemoryClockCur &&
+                macm.GpuEntries[i].MemoryVoltageBoostCur == devb.MemoryVoltageBoostCur &&
+                macm.GpuEntries[i].MemoryVoltageCur == devb.MemoryVoltageCur &&
+                macm.GpuEntries[i].PowerLimitCur == devb.PowerLimitCur &&
+                //macm.GpuEntries[i].ThermalLimitCur == devb.ThermalLimitCur &&
+                macm.GpuEntries[i].thermalPrioritizeCur == devb.thermalPrioritizeCur)
             {
                 Helpers.ConsolePrint("MSIAfterburner.ApplyFromFile", "Compare OK. busID " + _busID.ToString());
                 return true;

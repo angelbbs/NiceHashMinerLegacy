@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using NiceHashMiner.Utils;
 using System;
 using System.IO;
 using System.Text;
@@ -118,10 +119,14 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             // write the data to a temp file
             try
             {
-                var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough);
+                LockManager.GetLock(tempPath, () =>
+                {
+                    var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough);
                     tempFile.Write(data, 0, data.Length);
-                tempFile.Flush();
-                tempFile.Close();
+                    tempFile.Flush();
+                    tempFile.Close();
+                });
+
             }
             catch (Exception ex)
             {

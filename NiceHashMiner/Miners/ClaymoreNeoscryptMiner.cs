@@ -39,7 +39,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + " -pool " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                    ret = ret + " -pool " + ssl + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                     break;
                 }
             }

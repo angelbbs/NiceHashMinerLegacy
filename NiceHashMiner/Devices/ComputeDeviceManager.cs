@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 namespace NiceHashMiner.Devices
 {
@@ -188,7 +189,7 @@ namespace NiceHashMiner.Devices
                             }
                         };
                         P.Start();
-                        P.WaitForExit(30 * 1000);
+                        //P.WaitForExit(30 * 1000);
 
                         stdOut = P.StandardOutput.ReadToEnd();
                         stdErr = P.StandardError.ReadToEnd();
@@ -302,10 +303,13 @@ namespace NiceHashMiner.Devices
                 string pathToFiles = null;
                 string DriverFolder = "C:\\Windows\\System32\\DriverStore\\FileRepository";
                 string nvFolder = "\\nv_dispig.inf_amd64_7e5fd280efaa5445";
+                /*
                 if (File.Exists(DriverFolder + nvFolder + "\\nvidia-smi.exe"))
                 {
                     return DriverFolder + nvFolder;
                 }
+                */
+                string driverline = "Unknown driver version";
                 try
                 {
                     string[] folders = Directory.GetDirectories(DriverFolder);
@@ -316,15 +320,40 @@ namespace NiceHashMiner.Devices
                         {
                             if (filename.Contains("nvml.dll"))
                             {
-                                FileInfo fi = new FileInfo(filename);
-                                if (DateTime.Compare(fi.CreationTime, dt) > 0)
+                                var inf0 = folder.IndexOf("FileRepository\\", 0) + 15;
+                                var inf1 = folder.IndexOf(".inf", 0);
+                                var inf = folder.Substring(inf0, inf1 - inf0) + ".inf";
+
+                                DateTime DriverDate = new DateTime();
+                                var fdata = File.ReadAllLines(folder + "\\" + inf);
+
+                                foreach(string line in fdata)
                                 {
-                                    dt = fi.CreationTime;
+                                    if (line.ToLower().Contains("driverver"))
+                                    {
+                                        var i0 = line.IndexOf("= ", 0) + 2;
+                                        var i1 = line.IndexOf(", ", 0);
+                                        var dd = line.Substring(i0, i1 - i0);
+                                        DriverDate = DateTime.ParseExact(dd, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                                        driverline = line;
+                                        break;
+                                    }
+                                }
+
+                                //FileInfo fi = new FileInfo(filename);
+                                Helpers.ConsolePrint("GetNVMLFiles", "Found " + folder + " " + driverline);
+                                if (DateTime.Compare(DriverDate, dt) > 0)
+                                {
+                                    dt = DriverDate;
                                     pathToFiles = folder;
                                 }
                             }
                         }
-
+                        if (driverline.Contains(Form_Main.NVIDIADriver))
+                        {
+                            pathToFiles = folder;
+                            break;
+                        }
                     }
                 }
                 catch (System.Exception e)
@@ -1062,14 +1091,20 @@ break;
                             stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");
                             stringBuilder.AppendLine($"\t\tInfSection {vidController.InfSection}");
                             stringBuilder.AppendLine($"\t\tAdapterRAM {vidController.AdapterRam}");
-                            
+
                             // check if controller ok
                             if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
                             {
                                 allVideoContollersOK = false;
                             }
-
+                            
                             AvaliableVideoControllers.Add(vidController);
+
+                            if (vidController.Name.ToLower().Contains("nvidia") ||
+                                vidController.PnpDeviceID.Contains("10DE"))
+                            {
+                                Form_Main.NVIDIADriver = vidController.DriverVersion;
+                            }
 
                             if (vidController.DriverVersion.Contains("4.6079"))
                             {
@@ -1081,8 +1116,10 @@ break;
 
                             if (warningsEnabled)
                             {
-                                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
+                                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK && 
+                                    !vidController.Name.Contains("Radeon HD"))
                                 {
+                                    //Helpers.ConsolePrint("*****", vidController.Name);
                                     var msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
                                     foreach (var vc in AvaliableVideoControllers)
                                     {
@@ -1227,8 +1264,148 @@ break;
                 {
                     return ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 }
+                /*
+                [DllImport("common/DeviceDetection/device_detection_cuda_nvml.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Winapi, SetLastError = true)]
+                public static extern string cuda_device_detection_json_result_str();
+                */
+                
+                public static void GetCudaDevices2()
+                {
+                    Helpers.ConsolePrint("ComputeDeviceManager.Query", "Getting CUDA devices using nvidia-smi.exe");
+                    string _queryCudaDevicesString = "";
+                    Process nvidia_smi = new Process();
+                    nvidia_smi.StartInfo.FileName = "nvidia-smi.exe";
+                    if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
+                    {
+                        nvidia_smi.StartInfo.Arguments = "--query-gpu=index,gpu_name,pci.bus,uuid,memory.total,index,pci.device_id,pci.sub_device_id,display_mode --format=csv,noheader,nounits";
+                    } else
+                    {
+                        nvidia_smi.StartInfo.Arguments = "--query-gpu=index,gpu_name,pci.bus,uuid,memory.total,compute_cap,pci.device_id,pci.sub_device_id,display_mode --format=csv,noheader,nounits";
+                    }
+                    nvidia_smi.StartInfo.UseShellExecute = false;
+                    nvidia_smi.StartInfo.RedirectStandardOutput = true;
+                    nvidia_smi.StartInfo.RedirectStandardError = true;
+                    nvidia_smi.StartInfo.CreateNoWindow = true;
 
+                    const int waitTime = 5 * 1000; 
+                    try
+                    {
+                        if (!nvidia_smi.Start())
+                        {
+                            Helpers.ConsolePrint(Tag, "nvidia-smi.exe process could not start");
+                        }
+                        else
+                        {
+                            _queryCudaDevicesString += nvidia_smi.StandardOutput.ReadToEnd();
+                            _queryCudaDevicesString += nvidia_smi.StandardError.ReadToEnd();
+                            if (nvidia_smi.WaitForExit(waitTime))
+                            {
+                                nvidia_smi.Close();
+                            }
 
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint(Tag, "nvidia-smi.exe Exception: " + ex.Message);
+                    }
+
+                    if (nvidia_smi != null)
+                    {
+                        nvidia_smi.Close();
+                        nvidia_smi.Dispose();
+                    }
+
+                    if (_queryCudaDevicesString != "")
+                    {
+                        var result = _queryCudaDevicesString.Split(new[] { '\r' });
+                        try
+                        {
+                            foreach (var line in result)
+                            {
+                                if (string.IsNullOrEmpty(line.Trim()) || line.Length < 10) break;
+                                CudaDevices2 cd = new CudaDevices2();
+                                string[] parts;
+
+                                Helpers.ConsolePrint("nvidia-smi.exe", line);
+                                parts = line.Split(',');
+
+                                uint.TryParse(parts[0].Trim(), out uint devid);
+                                cd.DeviceID = devid;
+                                cd.DeviceName = parts[1].Trim();
+                                
+                                int busid = -1;
+                                string _busid = parts[2].ToString().ToLower().Trim();
+                                if (_busid.StartsWith("0x"))
+                                {
+                                    busid = Int32.Parse(_busid.Substring(2), NumberStyles.HexNumber);
+                                }
+                                else
+                                {
+                                    busid = Int32.Parse(_busid);
+                                }
+                                cd.pciBusID = busid;
+
+                                cd.UUID = parts[3].Trim();
+
+                                ulong.TryParse(parts[4].Trim(), out ulong memsize);
+                                cd.DeviceGlobalMemory = memsize * 1024 * 1024;
+
+                                if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
+                                {
+                                    cd.SM_major = 6;
+                                    cd.SM_minor = 0;
+                                }
+                                else
+                                {
+                                    var sm = parts[5].Trim().Split('.');
+                                    int.TryParse(sm[0].Trim(), out int sm_major);
+                                    int.TryParse(sm[1].Trim(), out int sm_minor);
+                                    cd.SM_major = sm_major;
+                                    cd.SM_minor = sm_minor;
+                                }
+
+                                int pciDeviceId = -1;
+                                string _pciDeviceId = parts[6].ToString().ToLower().Trim();
+                                if (_busid.StartsWith("0x"))
+                                {
+                                    pciDeviceId = Int32.Parse(_pciDeviceId.Substring(2), NumberStyles.HexNumber);
+                                }
+                                else
+                                {
+                                    pciDeviceId = Int32.Parse(_pciDeviceId);
+                                }
+                                cd.pciDeviceId = (uint)pciDeviceId;
+
+                                int pciSubSystemId = -1;
+                                string _pciSubSystemId = parts[7].ToString().ToLower().Trim();
+                                if (_busid.StartsWith("0x"))
+                                {
+                                    pciSubSystemId = Int32.Parse(_pciSubSystemId.Substring(2), NumberStyles.HexNumber);
+                                }
+                                else
+                                {
+                                    pciSubSystemId = Int32.Parse(_pciSubSystemId);
+                                }
+                                cd.pciSubSystemId = (uint)pciSubSystemId;
+
+                                if (parts[8].Trim().ToLower().Contains("disabled"))
+                                {
+                                    cd.MonitorConnected = false;
+                                } else
+                                {
+                                    cd.MonitorConnected = true;
+                                    cd.HasMonitorConnected++;
+                                }
+
+                                _cudaDevices.CudaDevices.Add(cd);
+                            }
+                        } catch(Exception ex)
+                        {
+                            Helpers.ConsolePrint("GetCudaDevices2", ex.ToString());
+                        }
+                    }
+                }
 
                 public static void QueryCudaDevices()
                 {
@@ -1335,7 +1512,8 @@ break;
                                     {
                                         _equals = true;
                                     }
-                                } else
+                                }
+                                else
                                 {
                                     if ((vc.DEV_ + vc.VEN_).Equals(cudaDev.pciDeviceId.ToString("X")))
                                     {
@@ -1367,7 +1545,7 @@ break;
                                     }
                                 }
                             }
-                            
+
                             // check sm vesrions
                             bool isUnderSM21;
                             {
@@ -1479,8 +1657,17 @@ break;
                 private static List<CudaDevices2> _CudaDeviceList = new List<CudaDevices2>();
                 public static void QueryCudaDevices(ref CudaDevicesList _cudaDevices)
                 {
-                    _queryCudaDevicesString = "";
-
+                    /*
+                    try
+                    {
+                        _queryCudaDevicesString = cuda_device_detection_json_result_str();
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("QueryCudaDevices", ex.Message);
+                    }
+                    */
+                    
                     Process cudaDevicesDetection = new Process();
                     cudaDevicesDetection.StartInfo.FileName = "common/DeviceDetection/device_detection.exe";
                     cudaDevicesDetection.StartInfo.Arguments = "cuda -n";
@@ -1500,7 +1687,6 @@ break;
                         {
                             _queryCudaDevicesString += cudaDevicesDetection.StandardOutput.ReadToEnd();
                             _queryCudaDevicesString += cudaDevicesDetection.StandardError.ReadToEnd();
-
                             if (cudaDevicesDetection.WaitForExit(waitTime))
                             {
                                 cudaDevicesDetection.Close();
@@ -1511,32 +1697,34 @@ break;
                     catch (Exception ex)
                     {
                         // TODO
-                        Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
+                        Helpers.ConsolePrint(Tag, "CudaDevicesDetection Exception: " + ex.Message);
                     }
-                    finally
+                    
+                    if (cudaDevicesDetection != null)
                     {
-                        if (cudaDevicesDetection != null)
-                        {
-                            cudaDevicesDetection.Close();
-                            cudaDevicesDetection.Dispose();
-                        }
-                        if (_queryCudaDevicesString != "")
-                        {
-                            try
-                            {
-                                _cudaDevices = JsonConvert.DeserializeObject<CudaDevicesList>(_queryCudaDevicesString);
-                            }
-                            catch (Exception ex)
-                            {
-                                Helpers.ConsolePrint("QueryCudaDevices", ex.ToString());
-                                _cudaDevices = null;
-                            }
+                        cudaDevicesDetection.Close();
+                        cudaDevicesDetection.Dispose();
+                    }
 
-                            if (_cudaDevices == null || _cudaDevices.CudaDevices.Count == 0)
-                                Helpers.ConsolePrint(Tag,
-                                    "CudaDevicesDetection found no devices(" + _cudaDevices.CudaDevices.Count.ToString() + "). CudaDevicesDetection returned: " +
-                                    _queryCudaDevicesString);
+                    if (_queryCudaDevicesString != "")
+                    {
+                        try
+                        {
+                            _cudaDevices = JsonConvert.DeserializeObject<CudaDevicesList>(_queryCudaDevicesString);
                         }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("QueryCudaDevices", ex.ToString());
+                            _cudaDevices = null;
+                        }
+
+                        if (_cudaDevices == null || _cudaDevices.CudaDevices.Count == 0)
+                            Helpers.ConsolePrint(Tag,
+                                "CudaDevicesDetection found no devices(" + _cudaDevices.CudaDevices.Count.ToString() + "). CudaDevicesDetection returned: " +
+                                _queryCudaDevicesString);
+                    } else
+                    {
+                        GetCudaDevices2();
                     }
                 }
             }
@@ -1557,10 +1745,13 @@ break;
                     }
                 }
 
+                [DllImport("common/DeviceDetection/device_detection_opencl_adl.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Winapi, SetLastError = true)]
+                public static extern string open_cl_adl_device_detection_json_result_str();
+
                 public static void QueryOpenCLDevices()
                 {
                     Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
-
+                    
                     Process openCLDevicesDetection = new Process();
                     openCLDevicesDetection.StartInfo.FileName = "common/DeviceDetection/device_detection.exe";
                     openCLDevicesDetection.StartInfo.Arguments = "ocl -n";
@@ -1592,21 +1783,29 @@ break;
                         // TODO
                         Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
                     }
-                    finally
+                    
+                    /*
+                    try
                     {
-                        if (_queryOpenCLDevicesString != "")
+                        _queryOpenCLDevicesString = open_cl_adl_device_detection_json_result_str();
+                    } catch (Exception ex)
+                    {
+                        Helpers.ConsolePrint("QueryOpenCLDevices", ex.Message);
+                    }
+                    */
+                    if (_queryOpenCLDevicesString != "")
+                    {
+                        try
                         {
-                            try
-                            {
-                                _openCLJsonData = JsonConvert.DeserializeObject<OpenCLJsonData>(_queryOpenCLDevicesString);
-                            }
-                            catch (Exception ex)
-                            {
-                                Helpers.ConsolePrint("QueryOpenCLDevices", ex.ToString());
-                                _openCLJsonData = null;
-                            }
+                            _openCLJsonData = JsonConvert.DeserializeObject<OpenCLJsonData>(_queryOpenCLDevicesString);
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("QueryOpenCLDevices", ex.ToString());
+                            _openCLJsonData = null;
                         }
                     }
+                    
 
                     if (_openCLJsonData == null)
                     {

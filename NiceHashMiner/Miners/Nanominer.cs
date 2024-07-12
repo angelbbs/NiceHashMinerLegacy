@@ -80,7 +80,7 @@ namespace NiceHashMiner.Miners
                 else
                 {
                     ret = ret + ssl;
-                    ret = ret + "pool" + n.ToString() + " = " + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                    ret = ret + "pool" + n.ToString() + " = " + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                 }
                 ret = ret + "\n";
             }

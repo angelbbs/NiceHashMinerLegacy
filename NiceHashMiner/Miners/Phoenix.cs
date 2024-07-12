@@ -67,7 +67,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + "-pool" + n.ToString() + " " + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
+                    ret = ret + "-pool" + n.ToString() + " " + ssl + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port + " ";
                 }
                 if (n >= 2) break;
             }

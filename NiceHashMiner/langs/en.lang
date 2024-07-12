@@ -619,6 +619,7 @@
 "FormSettings_OverclockSettings": "Overclock settings for {0} :",
 "FormSettings_ABOverclockTab": "Overclock",
 "FormSettings_ABEnableOverclock": "Enable overclock",
+"FormSettings_ABmaintaining": "Checking and maintaining overclock",
 "FormSettings_ABOverclock_Relative": "Relative values",
 "FormSettings_AB_ForceRun": "Force run MSI Afterburner on program startup",
 "FormSettings_AB_Minimize": "Minimize MSI Afterburner",

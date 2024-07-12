@@ -259,7 +259,7 @@ namespace NiceHashMiner.Devices.Querying
                         var infoToHashed = $"{newIntelDev.DeviceID}--{DeviceType.INTEL}--{newIntelDev.DeviceGlobalMemory}--{newIntelDev.Codename}--{newIntelDev.DeviceName}";
                         infoToHashed += newIntelDev.UUID.Replace("PCI_", "PCI/");//PnpDeviceID неверный!
 
-                        var uuidHEX = UUID.GetHexUUID(infoToHashed);
+                        var uuidHEX = ComputeDevice.GetHexUUID(infoToHashed);
                         var Newuuid = $"INTEL-{uuidHEX}";
                         newIntelDev.NewUUID = Newuuid;
                         // just in case

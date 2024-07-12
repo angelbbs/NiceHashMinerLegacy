@@ -76,7 +76,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + "!" + ssl + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":" + port;
+                    ret = ret + "!" + ssl + Links.CheckDNS("stratum." + serverUrl).Replace("stratum+tcp://", "") + ":" + port;
                     users = users + "!" + username;
                     passwords = passwords + "!" + psw;
                     nicehash = nicehash + "!true";
@@ -119,7 +119,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    ret = ret + "!" + ssl + algo1 + "." + serverUrl + ":" + port +";" + ssl + algo2 + "." + serverUrl + ":" + port2;
+                    ret = ret + "!" + ssl + "stratum." + serverUrl + ":" + port +";" + ssl + "stratum." + serverUrl + ":" + port2;
                     users = users + "!" + username + ";" + username;
                     passwords = passwords + "!x;x";
                     nicehash = nicehash + "!true;true";
@@ -152,7 +152,7 @@ namespace NiceHashMiner.Miners
                 ConfigManager.GeneralConfig.ZIL_mining_state == 1)
             {
                 //прокси не используется
-                ZilMining = " --zil-enable --zil-pool stratum+tcp://etchash.auto.nicehash.com:9200 --zil-wallet " + 
+                ZilMining = " --zil-enable --zil-pool stratum+tcp://daggerhashimoto.auto.nicehash.com:9200 --zil-wallet " + 
                             username + " --zil-esm 2 --disable-worker-watchdog ";
             }
             if (Form_additional_mining.isAlgoZIL(MiningSetup.AlgorithmName, MinerBaseType.SRBMiner, devtype) &&
@@ -252,6 +252,14 @@ namespace NiceHashMiner.Miners
                     return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
                         $"--algorithm fishhash;pyrinhash " +
                         GetServer2("fishhash", "pyrinhash", username, "3400", "3401") + ZilMining +
+                    $"--api-enable --api-port {ApiPort} " +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+                {
+                    return " --retry-time 0 " + disablePlatform + " --multi-algorithm-job-mode 3 " +
+                        $"--algorithm fishhash;karlsenhash " +
+                        GetServer2("fishhash", "karlsenhash", username, "3400", "3398") + ZilMining +
                     $"--api-enable --api-port {ApiPort} " +
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
@@ -476,6 +484,17 @@ namespace NiceHashMiner.Miners
                     " --algorithm pyrinhash" +
                     $" --pool {Links.CheckDNS("stratum+tcp://pyi.2miners.com")}:2121" +
                     $" --wallet pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash) && MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.KarlsenHash))
+            {
+                return $" " + disablePlatform + " --algorithm fishhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
+                    $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
+                    " --algorithm karlsenhash" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://kls.2miners.com")}:2020" +
+                    $" --wallet karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }

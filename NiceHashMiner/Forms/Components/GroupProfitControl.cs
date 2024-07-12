@@ -31,19 +31,21 @@ namespace NiceHashMiner.Forms.Components
         public void UpdateProfitStats(string groupName, string deviceStringInfo,
             string speedString, DateTime StartMinerTime, string btcRateString, string currencyRateString, string ProcessTag)
         {
-            if (ConfigManager.GeneralConfig.ShowUptime)
+            try
             {
-                var timenow = DateTime.Now;
-                TimeSpan Uptime = timenow.Subtract(StartMinerTime);
-                groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo) +
-                    "  " + International.GetText("Form_Main_Miner") + groupName.Split('-')[0] +
-                    MinerVersion.GetMinerVersion(groupName.Split('-')[0]) +
-                    "  " + International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
-            }
-            else
-            {
-                groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
-            }
+                if (ConfigManager.GeneralConfig.ShowUptime)
+                {
+                    var timenow = DateTime.Now;
+                    TimeSpan Uptime = timenow.Subtract(StartMinerTime);
+                    groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo) +
+                        "  " + International.GetText("Form_Main_Miner") + groupName.Split('-')[0] +
+                        MinerVersion.GetMinerVersion(groupName.Split('-')[0]) +
+                        "  " + International.GetText("Form_Main_Uptime") + " " + Uptime.ToString(@"d\ \d\a\y\s\ hh\:mm\:ss");
+                }
+                else
+                {
+                    groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
+                }
 
             labelBTCRateValue.Text = btcRateString;
             labelCurentcyPerDayVaue.Text = currencyRateString;
@@ -56,6 +58,11 @@ namespace NiceHashMiner.Forms.Components
 
             button_restart.Tag = ProcessTag;
             button_restart.Refresh();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
 

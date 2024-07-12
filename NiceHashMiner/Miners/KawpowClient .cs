@@ -139,20 +139,24 @@ namespace NiceHashMiner.Miners
                 {
                     _location = ConfigManager.GeneralConfig.ServiceLocation - 1;
                 }
-                var serv = Links.CheckDNS("kawpow." +
-                    Globals.MiningLocation[_location], true).Replace("stratum+tcp://", "");
-                IPAddress addr = IPAddress.Parse(serv);
-                IPAddress addrl = IPAddress.Parse("0.0.0.0");
+                string serv;
 
                 int port = 3385;
                 if (Globals.MiningLocation[_location].ToLower().Contains("auto"))
                 {
                     port = 9200;
+                    serv = Links.CheckDNS("kawpow." +
+                    Globals.MiningLocation[_location], true).Replace("stratum+tcp://", "");
                 }
                 else
                 {
                     port = 13385;
+                    serv = Links.CheckDNS("stratum." +
+                    Globals.MiningLocation[_location], true).Replace("stratum+tcp://", "");
                 }
+
+                IPAddress addr = IPAddress.Parse(serv);
+                IPAddress addrl = IPAddress.Parse("0.0.0.0");
                 var iep = new IPEndPoint(addrl, port);
 
                 if (tcpClient == null)

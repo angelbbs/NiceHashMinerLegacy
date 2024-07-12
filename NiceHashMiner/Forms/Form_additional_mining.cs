@@ -282,12 +282,18 @@ namespace NiceHashMiner.Forms
                             return ConfigManager.GeneralConfig.ZILConfigRigel.Autolykos_NVIDIA;
                         case "KarlsenHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.KarlsenHash_NVIDIA;
+                        case "PyrinHash":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.PyrinHash_NVIDIA;
                         case "FishHashKarlsenHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.FishHashKarlsenHash_NVIDIA;
+                        case "FishHashPyrinHash":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.FishHashPyrinHash_NVIDIA;
                         case "DaggerKarlsenHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.DaggerKarlsenHash_NVIDIA;
                         case "AutolykosKarlsenHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosKarlsenHash_NVIDIA;
+                        case "AutolykosPyrinHash":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.AutolykosPyrinHash_NVIDIA;
                         case "KAWPOW":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.KAWPOW_NVIDIA;
                         case "NexaPow":
@@ -298,6 +304,8 @@ namespace NiceHashMiner.Forms
                             return ConfigManager.GeneralConfig.ZILConfigRigel.Octopus_NVIDIA;
                         case "OctopusKarlsenHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.OctopusKarlsenHash_NVIDIA;
+                        case "OctopusPyrinHash":
+                            return ConfigManager.GeneralConfig.ZILConfigRigel.OctopusPyrinHash_NVIDIA;
                         case "ETCHashKarlsenHash":
                             return ConfigManager.GeneralConfig.ZILConfigRigel.ETCHashKarlsenHash_NVIDIA;
                         default:
