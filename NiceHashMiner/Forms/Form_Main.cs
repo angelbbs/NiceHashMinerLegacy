@@ -805,6 +805,7 @@ namespace NiceHashMiner
         }
         private void CheckProxyList(object sender, EventArgs e)
         {
+            Miner.minerRestartingCount = 0;
             if (!ConfigManager.GeneralConfig.EnableProxy)
             {
                 Helpers.ConsolePrint("CheckProxyList", "Using proxy disabled");
@@ -1471,6 +1472,70 @@ namespace NiceHashMiner
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
             _loadingScreen.SetValueAndMsg(20, International.GetText("Form_Main_loadtext_SaveConfig"));
+            var mainproc = Process.GetCurrentProcess();
+            if (ConfigManager.GeneralConfig.ProgramMonitoring)
+            {
+                try
+                {
+                    var WDHandle = new Process
+                    {
+                        StartInfo =
+                {
+                    FileName = "taskkill.exe"
+                }
+                    };
+                    WDHandle.StartInfo.Arguments = "/F /IM startMonitor.cmd";
+                    WDHandle.StartInfo.UseShellExecute = false;
+                    WDHandle.StartInfo.CreateNoWindow = true;
+                    WDHandle.Start();
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("WatchDog", ex.ToString());
+                }
+
+                try
+                {
+                    /*
+                    if (File.Exists("utils\\startMonitor.cmd"))
+                    {
+                        File.Delete("utils\\startMonitor.cmd");
+                        File.WriteAllText("utils\\startMonitor.cmd", "start MinerLegacyForkFixMonitor.exe %1");
+                    }
+                    else
+                    {
+                        File.WriteAllText("utils\\startMonitor.cmd", "start MinerLegacyForkFixMonitor.exe %1");
+                    }
+                    */
+                    if (File.Exists("MinerLegacyForkFixMonitor.exe"))
+                    {
+                        var MonitorProc = new Process
+                        {
+                            StartInfo =
+                        {
+                             FileName = "utils\\startMonitor.cmd"
+                        }
+                        };
+
+                        MonitorProc.StartInfo.Arguments = mainproc.Id.ToString();
+                        MonitorProc.StartInfo.UseShellExecute = false;
+                        MonitorProc.StartInfo.CreateNoWindow = true;
+                        if (MonitorProc.Start())
+                        {
+                            Helpers.ConsolePrint("Watchdog Monitor", "Starting OK");
+
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint("Watchdog Monitor", "Starting ERROR");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("Watchdog Monitor", ex.Message);
+                }
+            }
             if (ConfigManager.GeneralConfig.InstallRootCerts)
             {
                 new Task(() => InstallCerts()).Start();
@@ -1480,13 +1545,14 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
-
+            
             if (ConfigManager.GeneralConfig.ABEnableOverclock)
             {
                 _loadingScreen.SetValueAndMsg(25, International.GetText("Form_Main_loadtext_MSI_AB"));
                 MSIAfterburner.MSIAfterburnerRUN();
                 Application.DoEvents();
             }
+            
             flowLayoutPanelRates.Visible = true;
 
             new Task(() => Firewall.AddToFirewall()).Start();

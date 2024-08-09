@@ -344,6 +344,7 @@ namespace NiceHashMiner.Devices.Algorithms
             }
             */
 
+
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
                 foreach (var algo in algoSettings[MinerBaseType.GMiner])
@@ -646,6 +647,19 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         AlgorithmType.X16RV2
                     });
+
+                //нет шар
+                if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
+                {
+                    foreach (var algo in algoSettings[MinerBaseType.lolMiner])
+                    {
+                        if (algo.DualNiceHashID == AlgorithmType.Autolykos)
+                        {
+                            algo.Enabled = false;
+                            algo.Hidden = true;
+                        }
+                    }
+                }
             }
             return algoSettings;
         }

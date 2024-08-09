@@ -167,15 +167,17 @@ namespace NiceHashMiner.Miners
                         {
                             tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                             tcpClient.ConnectAsync(addr, port);
-
-                            while (!tcpClient.Connected)
+                            if (tcpClient is object)
                             {
-                                Thread.Sleep(1000);
-                            }
-                            using (serverStream = tcpClient.GetStream())
-                            {
-                                serverStream.ReadTimeout = 1000 * 240;
-                                ReadFromServer(serverStream, tcpClient);
+                                while (!tcpClient.Connected)
+                                {
+                                    Thread.Sleep(1000);
+                                }
+                                using (serverStream = tcpClient.GetStream())
+                                {
+                                    serverStream.ReadTimeout = 1000 * 240;
+                                    ReadFromServer(serverStream, tcpClient);
+                                }
                             }
                         }
                     }

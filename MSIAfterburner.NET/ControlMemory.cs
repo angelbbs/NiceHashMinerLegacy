@@ -64,7 +64,7 @@ namespace MSI.Afterburner
             if (this.mmf != null)
             {
                 this.mmf.Dispose();
-                //this.mmf = (SharedMemory)null;
+                this.mmf = (SharedMemory)null;
             }
             Initialized = false;
             GC.Collect();

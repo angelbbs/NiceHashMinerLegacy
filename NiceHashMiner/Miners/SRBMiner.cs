@@ -646,6 +646,8 @@ namespace NiceHashMiner.Miners
         {
             return ad;
         }
+
+        //private int total_gpu_compute_errors = 0;
         public override async Task<ApiData> GetSummaryAsync()
         {            
             string ResponseFromSRBMiner;
@@ -740,6 +742,18 @@ namespace NiceHashMiner.Miners
                                 int gpu_hr1 = (int)Convert.ToInt32(hash1, CultureInfo.InvariantCulture.NumberFormat);
                                 mPair.Device.MiningHashrateSecond = gpu_hr1;
 
+                                string tokenerrors = $"algorithms[0].gpu_compute_errors.gpu{mPair.Device.IDByBus}";
+                                var hasherror = resp.SelectToken(tokenerrors);
+                                int gpu_compute_errors = (int)Convert.ToInt32(hasherror, CultureInfo.InvariantCulture.NumberFormat);
+                                //total_gpu_compute_errors = + gpu_compute_errors;
+                                /*
+                                if (gpu_compute_errors >= 10)
+                                {
+                                    Helpers.ConsolePrint("GetSummaryAsync", "RESTART SRBMiner due rejects above limit: " + total_gpu_compute_errors.ToString());
+                                    total_gpu_compute_errors = 0;
+                                    Restart();
+                                }
+                                */
                                 if (Form_Main.isZilRound)
                                 {
                                     mPair.Device.MiningHashrate = 0;
@@ -750,6 +764,7 @@ namespace NiceHashMiner.Miners
                                 }
                                 else
                                 {
+                                    mPair.Device.AlgorithmID = (int)MiningSetup.CurrentAlgorithmType;
                                     mPair.Device.MiningHashrateSecond = 0;
                                     mPair.Device.MiningHashrateThird = 0;
                                     mPair.Device.SecondAlgorithmID = (int)AlgorithmType.NONE;
@@ -762,8 +777,19 @@ namespace NiceHashMiner.Miners
                                 Helpers.ConsolePrint("API Exception:", ex.ToString());
                             }
                         }
-                        totalsMain = resp.algorithms[0].hashrate.gpu.total;
-                        totalsSecond = resp.algorithms[1].hashrate.gpu.total;
+                        try
+                        {
+                            totalsMain = resp.algorithms[0].hashrate.gpu.total;
+                            totalsSecond = resp.algorithms[1].hashrate.gpu.total;
+                        } catch
+                        {
+
+                        }
+                        /*
+                        Helpers.ConsolePrint("******", "isZilRound?: " + Form_Main.isZilRound.ToString() +
+                            " totalsMain: " + totalsMain.ToString() +
+                            " totalsSecond: " + totalsSecond.ToString());
+                        */
                     }
 
                     if (!MiningSetup.CurrentSecondaryAlgorithmType.Equals(AlgorithmType.NONE))//dual no zil
@@ -792,7 +818,13 @@ namespace NiceHashMiner.Miners
                                 Helpers.ConsolePrint("API Exception:", ex.ToString());
                             }
                         }
-                        totalsMain = resp.algorithms[0].hashrate.gpu.total;
+                        try
+                        {
+                            totalsMain = resp.algorithms[0].hashrate.gpu.total;
+                        } catch
+                        {
+                            //totalsMain = resp.algorithms[0].hashrate.1min;
+                        }
                         try
                         {
                             totalsSecond = resp.algorithms[1].hashrate.gpu.total;

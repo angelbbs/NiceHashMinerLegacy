@@ -456,7 +456,8 @@ namespace NiceHashMiner.Miners
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
 #endif
-            
+            if (Miner.minerRestarting) return;
+
             AlgorithmSwitchingManager.SmaCheckTimerOnElapsedRun = true;
             var profitableDevices = new List<MiningPair>();
             var currentProfit = 0.0d;

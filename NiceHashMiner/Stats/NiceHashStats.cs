@@ -393,6 +393,10 @@ namespace NiceHashMiner.Stats
                             Helpers.ConsolePrint("*************", "Restart Windows");
                             Process.Start(OSrestart);
                             break;
+                        case "server.bye":
+                            Helpers.ConsolePrint("SocketReceive", "server.bye received: " + e.Data);
+                            Configs.ConfigManager.GeneralConfig.MachineGuid = UUID.GetDeviceB64UUID(); 
+                            break;
                     }
                 }
 

@@ -223,6 +223,7 @@ namespace NiceHashMiner.Miners.Parsing
                 new List<MinerOption>() {
                     new MinerOption("SRBMiner-log-file", "--log-file", "--log-file", null, MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("SRBMiner-cpu-threads", "--cpu-threads", "--cpu-threads", null, MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("SRBMiner-dns-over-https", "--dns-over-https", "--dns-over-https", null, MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("SRBMiner-ramp-up", "--enable-workers-ramp-up", "--enable-workers-ramp-up", null, MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("SRBMiner-randomx-use-tweaks", "--randomx-use-tweaks", "--randomx-use-tweaks", null, MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("SRBMiner-a0-oc-script", "--a0-oc-script", "--a0-oc-script", null, MinerOptionFlagType.SingleParam, " "),

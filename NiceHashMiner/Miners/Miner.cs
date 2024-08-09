@@ -334,17 +334,6 @@ namespace NiceHashMiner
                 {
                     ApiPort = MinersApiPortsManager.GetAvaliablePort();
                 }
-                /*
-                if (minerBase.ToString().Equals("Nanominer") && devtype == DeviceType.NVIDIA)
-                {
-                    ApiPort = 4051;
-                }
-                if (minerBase.ToString().Equals("Nanominer") && devtype == DeviceType.AMD)
-                {
-                    ApiPort = 4052;
-                }
-                Helpers.ConsolePrint("SetApiPort********************", "ApiPort: " + ApiPort.ToString());
-                */
             }
         }
 
@@ -1438,17 +1427,27 @@ namespace NiceHashMiner
             ScheduleRestart(6000);
         }
 
+        public static bool minerRestarting = false;
+        public static int minerRestartingCount = 0;
         protected void ScheduleRestart(int ms)
         {
             if (ProcessHandle != null)
             {
                 if (!ProcessHandle._bRunning) return;
             }
+            if (!IsRunning) return;
+            minerRestarting = true;
+            minerRestartingCount++;
 
+            if (minerRestartingCount > 20)
+            {
+                Helpers.ConsolePrint(MinerTag(), "Many restarts of miner. Restart program");
+                Form_Main.MakeRestart(0);
+            }
             var restartInMs = ConfigManager.GeneralConfig.MinerRestartDelayMS > ms
                 ? ConfigManager.GeneralConfig.MinerRestartDelayMS
                 : ms;
-            Helpers.ConsolePrint(MinerTag(), ProcessTag() + $" directly Miner_Exited Will restart in {restartInMs} ms");
+            Helpers.ConsolePrint(MinerTag(), ProcessTag() + $" directly Miner_Exited Will restart in {restartInMs} ms. Coint: " + minerRestartingCount.ToString());
             CooldownCheck = 0;
             var algo = (int)MiningSetup.CurrentAlgorithmType;
             string strPlatform = "";
@@ -1504,8 +1503,10 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint(MinerTag(), ProcessTag() + "Process not exist.");
                 }
             }
+            if (!IsRunning) return;
             Thread.Sleep(restartInMs);
             Restart();
+            minerRestarting = false;
         }
 
         protected void Restart()

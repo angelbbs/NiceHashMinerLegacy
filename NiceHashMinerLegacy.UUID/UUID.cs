@@ -44,8 +44,7 @@ namespace NiceHashMinerLegacy.UUID
                 Console.WriteLine(infoToHash);
             }
             //            Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
-            //var hexUuid = GetHexUUID(infoToHash);
-            var hexUuid = "zsdasf";
+            var hexUuid = GetHexUUID(infoToHash);
             return $"{0}-{GetB64UUID(hexUuid).Replace("+","_")}";
         }
 

@@ -1784,15 +1784,19 @@ break;
                         Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
                     }
                     
-                    /*
-                    try
+                    
+                    if (string.IsNullOrEmpty(_queryOpenCLDevicesString))
                     {
-                        _queryOpenCLDevicesString = open_cl_adl_device_detection_json_result_str();
-                    } catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("QueryOpenCLDevices", ex.Message);
+                        try
+                        {
+                            _queryOpenCLDevicesString = open_cl_adl_device_detection_json_result_str();
+                        }
+                        catch (Exception ex)
+                        {
+                            Helpers.ConsolePrint("QueryOpenCLDevices", ex.Message);
+                        }
                     }
-                    */
+
                     if (_queryOpenCLDevicesString != "")
                     {
                         try
@@ -1805,9 +1809,8 @@ break;
                             _openCLJsonData = null;
                         }
                     }
-                    
 
-                    if (_openCLJsonData == null)
+                    if (string.IsNullOrEmpty(_queryOpenCLDevicesString))
                     {
                         Helpers.ConsolePrint(Tag,
                             "OpenCLDeviceDetection found no devices. OpenCLDeviceDetection returned: " +

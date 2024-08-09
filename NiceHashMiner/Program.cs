@@ -139,6 +139,26 @@ namespace NiceHashMiner
                 }
             }
 
+            try
+            {
+                var WDHandle = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "taskkill.exe"
+                }
+                };
+                WDHandle.StartInfo.Arguments = "/F /IM MinerLegacyForkFixMonitor.exe";
+                WDHandle.StartInfo.UseShellExecute = false;
+                WDHandle.StartInfo.CreateNoWindow = true;
+                WDHandle.Start();
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("WatchDog", ex.ToString());
+            }
+
+            
             // #1 first initialize config
             if (!ConfigManager.InitializeConfig() && BackupRestoreFile)
             {
@@ -190,50 +210,6 @@ namespace NiceHashMiner
                     MinersManager.StopAllMiners();
                     System.Threading.Thread.Sleep(5000);
                     Process.Start("backup\\restore.cmd");
-                }
-            }
-
-            var mainproc = Process.GetCurrentProcess();
-            if (ConfigManager.GeneralConfig.ProgramMonitoring)
-            {
-                try
-                {
-                    if (File.Exists("utils\\startMonitor.cmd"))
-                    {
-                        File.Delete("utils\\startMonitor.cmd");
-                        File.WriteAllText("utils\\startMonitor.cmd", "start MinerLegacyForkFixMonitor.exe %1");
-                    } else
-                    {
-                        File.WriteAllText("utils\\startMonitor.cmd", "start MinerLegacyForkFixMonitor.exe %1");
-                    }
-
-                    if (File.Exists("MinerLegacyForkFixMonitor.exe"))
-                    {
-                        var MonitorProc = new Process
-                        {
-                            StartInfo =
-                {
-                    FileName = "utils\\startMonitor.cmd"
-                }
-                        };
-
-                        MonitorProc.StartInfo.Arguments = mainproc.Id.ToString();
-                        MonitorProc.StartInfo.UseShellExecute = false;
-                        MonitorProc.StartInfo.CreateNoWindow = true;
-                        if (MonitorProc.Start())
-                        {
-                            Helpers.ConsolePrint("Monitor", "Starting OK");
-
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint("Monitor", "Starting ERROR");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
                 }
             }
 
@@ -397,6 +373,11 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 65;
+                }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 65.1)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 65.1;
                 }
 
                 Form_Main.NHMWSProtocolVersion = ConfigManager.GeneralConfig.NHMWSProtocolVersion;
