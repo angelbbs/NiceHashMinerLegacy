@@ -1702,7 +1702,7 @@ namespace NiceHashMiner
         #endregion //Cooldown/retry logic
 
         private static Timer _deviceMSIABCheckTimer;
-        private void CheckMSIABOverclock(object sender, ElapsedEventArgs e)
+        public void CheckMSIABOverclock(object sender, ElapsedEventArgs e)
         {
             foreach (var dev in MiningSetup.MiningPairs)
             {
@@ -1710,7 +1710,8 @@ namespace NiceHashMiner
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
+                        string fName = "configs\\profiles\\" + ConfigManager.GeneralConfig.ProfileName.Trim() + "\\overclock\\" +
+                            dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
                         //Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
                         if (MSIAfterburner.CheckFromFile(dev.Device.BusID, fName))
                         {
@@ -1756,7 +1757,8 @@ namespace NiceHashMiner
                             {
                                 for (int i = 0; i < 5; i++)
                                 {
-                                    string fName = "configs\\overclock\\" + dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
+                                    string fName = "configs\\profiles\\" + ConfigManager.GeneralConfig.ProfileName.Trim() + "\\overclock\\" +
+                                        dev.Device.Uuid + "_" + dev.Algorithm.AlgorithmStringID + ".gpu";
                                     Helpers.ConsolePrint(MinerTag(), "Try MSIAfterburner.ApplyFromFile: " + fName);
                                     if (MSIAfterburner.ApplyFromFile(dev.Device.BusID, fName)) break;
                                     Thread.Sleep(100);

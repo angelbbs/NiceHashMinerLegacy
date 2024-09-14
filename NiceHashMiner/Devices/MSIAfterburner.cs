@@ -119,6 +119,7 @@ namespace NiceHashMiner.Devices
 
         public static bool CheckMSIAfterburner()
         {
+            if (!ConfigManager.GeneralConfig.ABEnableOverclock) return false;
             bool running = false;
             int countab = 0;
             do
@@ -325,6 +326,8 @@ namespace NiceHashMiner.Devices
         private static void MSIABprocessExited(object sender, EventArgs e)
         {
             if (Form_Main.ProgramClosing) return;
+            if (!ConfigManager.GeneralConfig.ABEnableOverclock) return;
+
             Helpers.ConsolePrint("MSIABprocessExited", "MSI Afterburner exited. Restart AB");
             
             MSIAB_exited++;
@@ -387,7 +390,8 @@ namespace NiceHashMiner.Devices
                     foreach (var alg in dev.GetAlgorithmSettings())
                     {
                         //Helpers.ConsolePrint("FirstInitFiles", "Init GPU#" + dev.Index.ToString() + " " + dev.Name + " " + alg.AlgorithmName);
-                        string fName = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
+                        string fName = "configs\\profiles\\" + ConfigManager.GeneralConfig.ProfileName.Trim() + "\\overclock\\" +
+                            dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
                         if (!File.Exists(fName))
                         {
                             try
@@ -426,7 +430,8 @@ namespace NiceHashMiner.Devices
                     {
                         try
                         {
-                            string fNameSrc = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
+                            string fNameSrc = "configs\\profiles\\" + ConfigManager.GeneralConfig.ProfileName.Trim() + "\\overclock\\" +
+                                dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
                             string fNameDst = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gputmp";
                             if (!File.Exists(fNameSrc))
                             {
@@ -454,7 +459,8 @@ namespace NiceHashMiner.Devices
                     {
                         try
                         {
-                            string fNameDst = "configs\\overclock\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
+                            string fNameDst = "configs\\profiles\\" + ConfigManager.GeneralConfig.ProfileName.Trim() + "\\overclock\\" +
+                                dev.Uuid + "_" + alg.AlgorithmStringID + ".gpu";
                             string fNameSrc = "temp\\" + dev.Uuid + "_" + alg.AlgorithmStringID + ".gputmp";
                             if (!File.Exists(fNameSrc))
                             {

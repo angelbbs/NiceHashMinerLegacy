@@ -1036,13 +1036,12 @@ namespace NiceHashMiner
 
         public static double GetKwhPrice()
         {
-            double _24h = (new TimeSpan(24, 0, 0)).TotalMilliseconds;
             TimeSpan _From = new TimeSpan();
             TimeSpan _To = new TimeSpan();
             TimeSpan _Add = new TimeSpan(0, 0, 0);//при переходе через 24:00
+            double _price = 0.0d;
             if (ConfigManager.GeneralConfig.PowerTarif == 0)
             {
-                double _price = 0.0d;
                 try
                 {
                     _From = TimeSpan.Parse(Form_Main.ZoneSchedule1[0]);
@@ -1067,20 +1066,10 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
             }
 
             if (ConfigManager.GeneralConfig.PowerTarif == 1)
             {
-                double _price = 0.0d;
                 //1
                 try
                 {
@@ -1106,18 +1095,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                /*
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
-                */
-                if (DateTime.Now.TimeOfDay.IsBetween(_From, _To)) return _price;
+
                 //2
                 try
                 {
@@ -1143,25 +1121,10 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                /*
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                //10:00-07:00
-                //34:00>=10:00 < 31:00
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
-                */
-                if (DateTime.Now.TimeOfDay.IsBetween(_From, _To)) return _price;
             }
 
             if (ConfigManager.GeneralConfig.PowerTarif == 2)
             {
-                double _price = 0.0d;
                 //1
                 try
                 {
@@ -1187,15 +1150,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
+
                 //2
                 try
                 {
@@ -1221,15 +1176,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
+
                 //3
                 try
                 {
@@ -1255,15 +1202,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
+
                 //4
                 try
                 {
@@ -1289,15 +1228,7 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
+
                 //5
                 try
                 {
@@ -1323,16 +1254,22 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
-                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
-                {
-                    _Add = new TimeSpan(24, 0, 0);
-                    _To = _To.Add(_Add);
-                }
-                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-                {
-                    return _price;
-                }
             }
+
+            if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+            {
+                _Add = new TimeSpan(24, 0, 0);
+                _To = _To.Add(_Add);
+            }
+            if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
+            {
+                return _price;
+            }
+            if (DateTime.Now.TimeOfDay.IsBetween(_From, _To))//переход через 23:59:59
+            {
+                return _price;
+            }
+
             return 0.0d;
         }
 
@@ -1404,6 +1341,9 @@ namespace NiceHashMiner
             _loadingScreen.SetValueAndMsg(10, International.GetText("Form_Main_loadtext_CPU"));
 
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);//10-15
+
+            // Init profiles
+            Profiles.Profile.InitProfiles();
 
             if (!ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
             {
@@ -1720,64 +1660,67 @@ namespace NiceHashMiner
             {
                 var minerdata = new MinerData();
 
-                _loadingScreen.SetValueAndMsg(76, International.GetText("Form_Main_loadtext_GetMinerVersion") + "ClaymoreNeoscrypt");
-                minerdata = MinerVersion.Get_ClaymoreNeoscrypt();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
+                lock (MinerVersion.MinerDataList)
                 {
-                    _loadingScreen.SetValueAndMsg(77, International.GetText("Form_Main_loadtext_GetMinerVersion") + "CryptoDredge");
-                    minerdata = MinerVersion.Get_CryptoDredge();
+                    _loadingScreen.SetValueAndMsg(76, International.GetText("Form_Main_loadtext_GetMinerVersion") + "ClaymoreNeoscrypt");
+                    minerdata = MinerVersion.Get_ClaymoreNeoscrypt();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    if (ComputeDeviceManager.Query.WindowsDisplayAdapters.HasNvidiaVideoController())
+                    {
+                        _loadingScreen.SetValueAndMsg(77, International.GetText("Form_Main_loadtext_GetMinerVersion") + "CryptoDredge");
+                        minerdata = MinerVersion.Get_CryptoDredge();
+                        MinerVersion.MinerDataList.Add(minerdata);
+                    }
+
+                    _loadingScreen.SetValueAndMsg(78, International.GetText("Form_Main_loadtext_GetMinerVersion") + "GMiner");
+                    minerdata = MinerVersion.Get_GMiner();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(79, International.GetText("Form_Main_loadtext_GetMinerVersion") + "lolMiner");
+                    minerdata = MinerVersion.Get_lolMiner();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(80, International.GetText("Form_Main_loadtext_GetMinerVersion") + "miniZ");
+                    minerdata = MinerVersion.Get_miniZ();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(81, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer");
+                    minerdata = MinerVersion.Get_nanominer();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner.39.5");
+                    minerdata = MinerVersion.Get_NBMiner39_5();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
+                    minerdata = MinerVersion.Get_NBMiner();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner");
+                    minerdata = MinerVersion.Get_Phoenix();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(84, International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner");
+                    minerdata = MinerVersion.Get_SRBMiner();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex");
+                    minerdata = MinerVersion.Get_TRex();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(86, International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner");
+                    minerdata = MinerVersion.Get_TeamRedMiner();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(87, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
+                    minerdata = MinerVersion.Get_XMRig();
+                    MinerVersion.MinerDataList.Add(minerdata);
+
+                    _loadingScreen.SetValueAndMsg(88, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Rigel");
+                    minerdata = MinerVersion.Get_Rigel();
                     MinerVersion.MinerDataList.Add(minerdata);
                 }
-
-                _loadingScreen.SetValueAndMsg(78, International.GetText("Form_Main_loadtext_GetMinerVersion") + "GMiner");
-                minerdata = MinerVersion.Get_GMiner();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(79, International.GetText("Form_Main_loadtext_GetMinerVersion") + "lolMiner");
-                minerdata = MinerVersion.Get_lolMiner();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(80, International.GetText("Form_Main_loadtext_GetMinerVersion") + "miniZ");
-                minerdata = MinerVersion.Get_miniZ();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(81, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer");
-                minerdata = MinerVersion.Get_nanominer();
-                MinerVersion.MinerDataList.Add(minerdata);
-                
-                _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner.39.5");
-                minerdata = MinerVersion.Get_NBMiner39_5();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
-                minerdata = MinerVersion.Get_NBMiner();
-                MinerVersion.MinerDataList.Add(minerdata);
-                
-                _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner");
-                minerdata = MinerVersion.Get_Phoenix();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(84, International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner");
-                minerdata = MinerVersion.Get_SRBMiner();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex");
-                minerdata = MinerVersion.Get_TRex();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(86, International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner");
-                minerdata = MinerVersion.Get_TeamRedMiner();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                _loadingScreen.SetValueAndMsg(87, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
-                minerdata = MinerVersion.Get_XMRig();
-                MinerVersion.MinerDataList.Add(minerdata);
-                
-                _loadingScreen.SetValueAndMsg(88, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Rigel");
-                minerdata = MinerVersion.Get_Rigel();
-                MinerVersion.MinerDataList.Add(minerdata);
                 
                 string json = JsonConvert.SerializeObject(MinerDataList, Formatting.Indented);
                 try
@@ -2005,6 +1948,7 @@ namespace NiceHashMiner
                 GetNVMLData();
                 //CudaComputeDevice.GetNVMLData();
             }
+            Profiles.Profile.CheckShedule();
         }
         private void AutoStartTimerDelay_Tick(object sender, EventArgs e)
         {
@@ -3573,7 +3517,7 @@ public static void CloseChilds(Process parentId)
         }
 
 
-        private void ButtonStopMining_Click(object sender, EventArgs e)
+        public void ButtonStopMining_Click(object sender, EventArgs e)
         {
             if (DownloadingInProgress) return;
 
@@ -3884,15 +3828,15 @@ public static void CloseChilds(Process parentId)
         }
         private void RemoteTimer_Tick(object sender, EventArgs e)
         {
-            if (NiceHashStats.remoteMiningStart)
-            {
-                NiceHashStats.remoteMiningStart = false;
-                StartMining(true);
-            }
             if (NiceHashStats.remoteMiningStop)
             {
                 NiceHashStats.remoteMiningStop = false;
                 StopMining();
+            }
+            if (NiceHashStats.remoteMiningStart)
+            {
+                NiceHashStats.remoteMiningStart = false;
+                StartMining(true);
             }
             if (NiceHashStats.remoteUpdateUI)
             {
@@ -3903,6 +3847,17 @@ public static void CloseChilds(Process parentId)
 
             //_remoteTimer.Stop();
             //_remoteTimer= null;
+        }
+
+        public void RestartMining()
+        {
+            Helpers.ConsolePrint("***************", "2");
+            //Application.DoEvents();
+            ButtonStopMining_Click(null, null);
+            //StopMining();
+            Thread.Sleep(1000);
+            //StartMining(false);
+            ButtonStartMining_Click(null, null);
         }
 
         private void restartProgram()
@@ -3948,6 +3903,13 @@ public static void CloseChilds(Process parentId)
 
         private void DeviceStatusTimer_Tick(object sender, EventArgs e)
         {
+            if (Profiles.Profile.GetProfilesCount() > 1)
+            {
+                groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates") +
+                                " (" + International.GetText("Form_Benchmark_titleProfile") +
+                                " " + ConfigManager.GeneralConfig.ProfileName + ")";
+            }
+
             if (ConfigManager.GeneralConfig.EnableRigRemoteView)
             {
                 try
@@ -4183,7 +4145,7 @@ public static void CloseChilds(Process parentId)
             Marshal.FreeHGlobal(num2);
             return structure;
         }
-        private void StopMining()
+        public void StopMining()
         {
             MiningStarted = false;
             ticks = 0;
@@ -4415,11 +4377,6 @@ public static void CloseChilds(Process parentId)
             */
         }
 
-        private void devicesListViewEnableControl1_Resize(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonBTC_Clear_Click(object sender, EventArgs e)
         {
             if (DownloadingInProgress) return;
@@ -4623,6 +4580,7 @@ public static void CloseChilds(Process parentId)
             }
         }
     }
+
     static class TimeSpanExtensions
     {
         static public bool IsBetween(this TimeSpan time,

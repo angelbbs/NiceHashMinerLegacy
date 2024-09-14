@@ -35,6 +35,8 @@ namespace NiceHashMiner.Forms {
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.checkBoxHideUnused = new System.Windows.Forms.CheckBox();
+            this.label_profile = new System.Windows.Forms.Label();
+            this.comboBox_profile = new System.Windows.Forms.ComboBox();
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,9 +68,9 @@ namespace NiceHashMiner.Forms {
             this.groupBoxBenchmarkProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxBenchmarkProgress.Controls.Add(this.labelBenchmarkSteps);
             this.groupBoxBenchmarkProgress.Controls.Add(this.progressBarBenchmarkSteps);
-            this.groupBoxBenchmarkProgress.Location = new System.Drawing.Point(12, 452);
+            this.groupBoxBenchmarkProgress.Location = new System.Drawing.Point(189, 453);
             this.groupBoxBenchmarkProgress.Name = "groupBoxBenchmarkProgress";
-            this.groupBoxBenchmarkProgress.Size = new System.Drawing.Size(337, 47);
+            this.groupBoxBenchmarkProgress.Size = new System.Drawing.Size(269, 47);
             this.groupBoxBenchmarkProgress.TabIndex = 108;
             this.groupBoxBenchmarkProgress.TabStop = false;
             this.groupBoxBenchmarkProgress.Text = "Benchmark progress status:";
@@ -86,7 +88,7 @@ namespace NiceHashMiner.Forms {
             // 
             this.progressBarBenchmarkSteps.Location = new System.Drawing.Point(162, 16);
             this.progressBarBenchmarkSteps.Name = "progressBarBenchmarkSteps";
-            this.progressBarBenchmarkSteps.Size = new System.Drawing.Size(169, 23);
+            this.progressBarBenchmarkSteps.Size = new System.Drawing.Size(101, 23);
             this.progressBarBenchmarkSteps.TabIndex = 108;
             // 
             // radioButton_SelectedUnbenchmarked
@@ -94,7 +96,7 @@ namespace NiceHashMiner.Forms {
             this.radioButton_SelectedUnbenchmarked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButton_SelectedUnbenchmarked.AutoSize = true;
             this.radioButton_SelectedUnbenchmarked.Checked = true;
-            this.radioButton_SelectedUnbenchmarked.Location = new System.Drawing.Point(21, 404);
+            this.radioButton_SelectedUnbenchmarked.Location = new System.Drawing.Point(12, 403);
             this.radioButton_SelectedUnbenchmarked.Name = "radioButton_SelectedUnbenchmarked";
             this.radioButton_SelectedUnbenchmarked.Size = new System.Drawing.Size(260, 17);
             this.radioButton_SelectedUnbenchmarked.TabIndex = 110;
@@ -107,7 +109,7 @@ namespace NiceHashMiner.Forms {
             // 
             this.radioButton_RE_SelectedUnbenchmarked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButton_RE_SelectedUnbenchmarked.AutoSize = true;
-            this.radioButton_RE_SelectedUnbenchmarked.Location = new System.Drawing.Point(21, 427);
+            this.radioButton_RE_SelectedUnbenchmarked.Location = new System.Drawing.Point(12, 426);
             this.radioButton_RE_SelectedUnbenchmarked.Name = "radioButton_RE_SelectedUnbenchmarked";
             this.radioButton_RE_SelectedUnbenchmarked.Size = new System.Drawing.Size(192, 17);
             this.radioButton_RE_SelectedUnbenchmarked.TabIndex = 110;
@@ -183,11 +185,40 @@ namespace NiceHashMiner.Forms {
             this.checkBoxHideUnused.UseVisualStyleBackColor = true;
             this.checkBoxHideUnused.CheckedChanged += new System.EventHandler(this.checkBoxHideUnused_CheckedChanged);
             // 
+            // label_profile
+            // 
+            this.label_profile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_profile.AutoSize = true;
+            this.label_profile.Location = new System.Drawing.Point(11, 477);
+            this.label_profile.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_profile.Name = "label_profile";
+            this.label_profile.Size = new System.Drawing.Size(36, 13);
+            this.label_profile.TabIndex = 403;
+            this.label_profile.Text = "Profile";
+            // 
+            // comboBox_profile
+            // 
+            this.comboBox_profile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBox_profile.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBox_profile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_profile.FormattingEnabled = true;
+            this.comboBox_profile.Items.AddRange(new object[] {
+            "Default"});
+            this.comboBox_profile.Location = new System.Drawing.Point(64, 474);
+            this.comboBox_profile.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBox_profile.Name = "comboBox_profile";
+            this.comboBox_profile.Size = new System.Drawing.Size(99, 21);
+            this.comboBox_profile.TabIndex = 402;
+            this.comboBox_profile.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBox_profile_DrawItem);
+            this.comboBox_profile.SelectedIndexChanged += new System.EventHandler(this.comboBox_profile_SelectedIndexChanged);
+            // 
             // Form_Benchmark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 511);
+            this.Controls.Add(this.label_profile);
+            this.Controls.Add(this.comboBox_profile);
             this.Controls.Add(this.checkBoxHideUnused);
             this.Controls.Add(this.checkBox_StartMiningAfterBenchmark);
             this.Controls.Add(this.radioButton_RE_SelectedUnbenchmarked);
@@ -228,5 +259,7 @@ namespace NiceHashMiner.Forms {
         private System.Windows.Forms.CheckBox checkBox_StartMiningAfterBenchmark;
         private Components.BenchmarkOptions benchmarkOptions1;
         private System.Windows.Forms.CheckBox checkBoxHideUnused;
+        private System.Windows.Forms.Label label_profile;
+        private System.Windows.Forms.ComboBox comboBox_profile;
     }
 }

@@ -670,7 +670,7 @@ namespace NiceHashMiner.Miners
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("API", ex.Message);
+                Helpers.ConsolePrint("API Exception", ex.Message);
                 CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return null;
             }
@@ -1080,6 +1080,12 @@ namespace NiceHashMiner.Miners
                     {
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 15;
+                    }
+
+                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
+                    {
+                        MinerStartDelay = 40;
+                        delay_before_calc_hashrate = 60;
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.FishHash))

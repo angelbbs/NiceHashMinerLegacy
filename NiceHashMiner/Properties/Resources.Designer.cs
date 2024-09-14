@@ -63,6 +63,16 @@ namespace NiceHashMiner.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Add_normal {
+            get {
+                object obj = ResourceManager.GetObject("Add-normal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Close_hot {
             get {
                 object obj = ResourceManager.GetObject("Close-hot", resourceCulture);

@@ -100,6 +100,7 @@ namespace NiceHashMiner.Stats
 
         public static void StartConnection(string address)
         {
+            Helpers.ConsolePrint("StartConnection", "Try start connection to Nicehash");
             try
             {
                 _deviceUpdateTimer = new System.Timers.Timer(DeviceUpdateInterval);

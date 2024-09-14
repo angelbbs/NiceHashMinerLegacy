@@ -45,6 +45,19 @@ namespace NiceHashMiner.Configs.Data
         public string[] ZoneSchedule1 = { "00:00", "23:59:59", "0.00" };
         public string[] ZoneSchedule2 = { "07:00", "23:00", "0.00", "23:00", "07:00", "0.00" };
         public string[] ZoneSchedule3 = { "23:00", "07:00", "0.00", "07:00", "09:00", "0.00", "09:00", "17:00", "0.00", "17:00", "20:00", "0.00", "20:00", "23:00", "0.00" };
+        public int ZoneScheduleProfileIndex1 = 0;
+        public int ZoneScheduleProfileIndex2 = 0;
+        public int ZoneScheduleProfileIndex3 = 0;
+        public int ZoneScheduleProfileIndex4 = 0;
+        public int ZoneScheduleProfileIndex5 = 0;
+        public bool ZoneScheduleUseProfile1 = false;
+        public bool ZoneScheduleUseProfile2 = false;
+        public bool ZoneScheduleUseProfile3 = false;
+        public bool ZoneScheduleUseProfile4 = false;
+        public bool ZoneScheduleUseProfile5 = false;
+
+        public int ProfileIndex = 0;
+        public string ProfileName = "Default";
 
         public string IFTTTKey = "";
         public int ServiceLocation = 0;
@@ -71,7 +84,9 @@ namespace NiceHashMiner.Configs.Data
         public int ColumnPOWER = 85;
 
         public int ColumnListALGORITHM = 106;
+        public int ColumnListALGORITHMOverclock = 106;
         public int ColumnListMINER = 82;
+        public int ColumnListMINEROverclock = 82;
         public int ColumnListSPEED = 152;
         public int ColumnListPOWER = 88;
         public int ColumnListRATIO = 90;

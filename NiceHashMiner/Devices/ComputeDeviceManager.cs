@@ -1204,7 +1204,7 @@ break;
 
                         Available.CpusCount = 0;
                     }
-
+                    /*
                     if (threadsPerCpu * Available.CpusCount > 64)
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
@@ -1216,7 +1216,7 @@ break;
 
                         Available.CpusCount = 0;
                     }
-
+                    */
                     // TODO important move this to settings
                     var threadsPerCpuMask = threadsPerCpu;
                     Globals.ThreadsPerCpu = threadsPerCpu;

@@ -1286,24 +1286,27 @@ namespace NiceHashMiner.Miners
             if (!ConfigManager.GeneralConfig.ShowMinersVersions) return "";
             try
             {
-                foreach (var miner in MinerVersion.MinerDataList)
+                lock (MinerVersion.MinerDataList)
                 {
-                    if (miner.MinerName.ToLower().Equals(minerName.ToLower()))
+                    foreach (var miner in MinerVersion.MinerDataList)
                     {
-                        if (miner.MinerVersion == null) continue;
-                        if (miner.MinerVersion.Length > 0)
+                        if (miner.MinerName.ToLower().Equals(minerName.ToLower()))
                         {
-                            return " " + miner.MinerVersion.TrimEnd(' ');
-                        }
-                        else
-                        {
-                            return "";
+                            if (miner.MinerVersion == null) continue;
+                            if (miner.MinerVersion.Length > 0)
+                            {
+                                return " " + miner.MinerVersion.TrimEnd(' ');
+                            }
+                            else
+                            {
+                                return "";
+                            }
                         }
                     }
                 }
             } catch (Exception ex)
             {
-                Helpers.ConsolePrint("GetMinerVersion", "ERROR. Miners files not available?");
+                Helpers.ConsolePrint("GetMinerVersion", "ERROR. Miners files not available? " + minerName);
                 Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
                 return "";
             }

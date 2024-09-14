@@ -152,11 +152,12 @@ namespace NiceHashMiner.Forms.Components
             this.labelOverclockNotSupported.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.labelOverclockNotSupported.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelOverclockNotSupported.ForeColor = System.Drawing.Color.Red;
-            this.labelOverclockNotSupported.Location = new System.Drawing.Point(267, 164);
+            this.labelOverclockNotSupported.Location = new System.Drawing.Point(142, 112);
             this.labelOverclockNotSupported.Name = "labelOverclockNotSupported";
             this.labelOverclockNotSupported.Size = new System.Drawing.Size(220, 37);
             this.labelOverclockNotSupported.TabIndex = 101;
             this.labelOverclockNotSupported.Text = "Not supported";
+            this.labelOverclockNotSupported.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.labelOverclockNotSupported.Visible = false;
             // 
             // AlgorithmsListViewOverClock

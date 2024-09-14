@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
@@ -16,6 +17,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Security;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,7 +25,7 @@ namespace NiceHashMiner.Forms
 {
     public partial class Form_Settings : Form
     {
-        private readonly bool _isInitFinished = false;
+        private bool _isInitFinished = false;
         private bool _isChange = false;
         public static ProgressBar ProgressProgramUpdate { get; set; }
 
@@ -243,6 +245,10 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(textBoxScheduleCost4, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
             toolTip1.SetToolTip(textBoxScheduleCost5, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
 
+            toolTip1.SetToolTip(comboBox_profile, International.GetText("Form_Settings_ToolTip_Profile"));
+            toolTip1.SetToolTip(buttonProfileAdd, International.GetText("Form_Settings_ToolTip_ProfileAdd"));
+            toolTip1.SetToolTip(buttonProfileDel, International.GetText("Form_Settings_ToolTip_ProfileDel"));
+
             Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -269,6 +275,11 @@ namespace NiceHashMiner.Forms
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
             labelDisableDetection.Text = International.GetText("Form_Settings_General_DisableDetection");
             labelDisableMonitoring.Text = International.GetText("Form_Settings_General_monitoring");
+            checkBoxProfile1.Text = International.GetText("Form_Settings_checkbox_Profile");
+            checkBoxProfile2.Text = International.GetText("Form_Settings_checkbox_Profile");
+            checkBoxProfile3.Text = International.GetText("Form_Settings_checkbox_Profile");
+            checkBoxProfile4.Text = International.GetText("Form_Settings_checkbox_Profile");
+            checkBoxProfile5.Text = International.GetText("Form_Settings_checkbox_Profile");
 
             checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
             checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
@@ -294,6 +305,11 @@ namespace NiceHashMiner.Forms
 
                 checkBoxRestartDriver.Location = new Point(checkBoxRestartDriver.Location.X + 26, checkBoxRestartDriver.Location.Y);
                 checkBoxRestartWindows.Location = new Point(checkBoxRestartWindows.Location.X + 26, checkBoxRestartWindows.Location.Y);
+                comboBoxProfile1.Location = new Point(comboBoxProfile1.Location.X + 66, comboBoxProfile1.Location.Y);
+                comboBoxProfile2.Location = new Point(comboBoxProfile2.Location.X + 66, comboBoxProfile2.Location.Y);
+                comboBoxProfile3.Location = new Point(comboBoxProfile3.Location.X + 66, comboBoxProfile3.Location.Y);
+                comboBoxProfile4.Location = new Point(comboBoxProfile4.Location.X + 66, comboBoxProfile4.Location.Y);
+                comboBoxProfile5.Location = new Point(comboBoxProfile5.Location.X + 66, comboBoxProfile5.Location.Y);
             }
 
             checkBoxDriverWarning.Text = International.GetText("Form_Settings_General_ShowDriverVersionWarning");
@@ -552,30 +568,12 @@ namespace NiceHashMiner.Forms
             labelPowerCurrency3.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
             labelPowerCurrency4.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
             labelPowerCurrency5.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+
+            label_profile.Text = International.GetText("Form_Settings_label_Profile");
+
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
             devicesListViewEnableControl2.InitLocale();
-            Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
-            if (ConfigManager.GeneralConfig.SettingsFormLeft + ConfigManager.GeneralConfig.SettingsFormWidth <= screenSize.Size.Width &&
-                ConfigManager.GeneralConfig.SettingsFormTop + ConfigManager.GeneralConfig.SettingsFormHeight <= screenSize.Size.Height)
-            {
-                if (ConfigManager.GeneralConfig.SettingsFormTop + ConfigManager.GeneralConfig.SettingsFormLeft != 0)
-                {
-                    this.Top = ConfigManager.GeneralConfig.SettingsFormTop;
-                    this.Left = ConfigManager.GeneralConfig.SettingsFormLeft;
-                }
-                else
-                {
-                    this.StartPosition = FormStartPosition.CenterScreen;
-                }
-                this.Width = ConfigManager.GeneralConfig.SettingsFormWidth;
-                this.Height = ConfigManager.GeneralConfig.SettingsFormHeight;
-            }
-            else
-            {
-                this.Top = 0;
-                this.Left = 0;
-            }
 
             algorithmsListView1.InitLocale();
             algorithmsListViewOverClock1.InitLocale();
@@ -756,6 +754,7 @@ namespace NiceHashMiner.Forms
                 comboBox_devices_count.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBoxCheckforprogramupdatesevery.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
                 comboBoxRestartProgram.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_profile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 foreach (var lbl in this.tabPageGeneral.Controls.OfType<GroupBox>())
                 {
@@ -922,6 +921,10 @@ namespace NiceHashMiner.Forms
                 textBoxScheduleCost1.ForeColor = Form_Main._foreColor;
                 textBoxScheduleCost1.BorderStyle = BorderStyle.FixedSingle;
 
+                comboBoxProfile1.BackColor = Form_Main._backColor;
+                comboBoxProfile1.ForeColor = Form_Main._foreColor;
+                comboBoxProfile1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+
                 textBoxScheduleFrom2.BackColor = Form_Main._backColor;
                 textBoxScheduleFrom2.ForeColor = Form_Main._foreColor;
                 textBoxScheduleFrom2.BorderStyle = BorderStyle.FixedSingle;
@@ -933,6 +936,10 @@ namespace NiceHashMiner.Forms
                 textBoxScheduleCost2.BackColor = Form_Main._backColor;
                 textBoxScheduleCost2.ForeColor = Form_Main._foreColor;
                 textBoxScheduleCost2.BorderStyle = BorderStyle.FixedSingle;
+
+                comboBoxProfile2.BackColor = Form_Main._backColor;
+                comboBoxProfile2.ForeColor = Form_Main._foreColor;
+                comboBoxProfile2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 textBoxScheduleFrom3.BackColor = Form_Main._backColor;
                 textBoxScheduleFrom3.ForeColor = Form_Main._foreColor;
@@ -946,6 +953,10 @@ namespace NiceHashMiner.Forms
                 textBoxScheduleCost3.ForeColor = Form_Main._foreColor;
                 textBoxScheduleCost3.BorderStyle = BorderStyle.FixedSingle;
 
+                comboBoxProfile3.BackColor = Form_Main._backColor;
+                comboBoxProfile3.ForeColor = Form_Main._foreColor;
+                comboBoxProfile3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+
                 textBoxScheduleFrom4.BackColor = Form_Main._backColor;
                 textBoxScheduleFrom4.ForeColor = Form_Main._foreColor;
                 textBoxScheduleFrom4.BorderStyle = BorderStyle.FixedSingle;
@@ -957,6 +968,10 @@ namespace NiceHashMiner.Forms
                 textBoxScheduleCost4.BackColor = Form_Main._backColor;
                 textBoxScheduleCost4.ForeColor = Form_Main._foreColor;
                 textBoxScheduleCost4.BorderStyle = BorderStyle.FixedSingle;
+
+                comboBoxProfile4.BackColor = Form_Main._backColor;
+                comboBoxProfile4.ForeColor = Form_Main._foreColor;
+                comboBoxProfile4.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 textBoxScheduleFrom5.BackColor = Form_Main._backColor;
                 textBoxScheduleFrom5.ForeColor = Form_Main._foreColor;
@@ -970,6 +985,9 @@ namespace NiceHashMiner.Forms
                 textBoxScheduleCost5.ForeColor = Form_Main._foreColor;
                 textBoxScheduleCost5.BorderStyle = BorderStyle.FixedSingle;
 
+                comboBoxProfile5.BackColor = Form_Main._backColor;
+                comboBoxProfile5.ForeColor = Form_Main._foreColor;
+                comboBoxProfile5.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 
                 textBox_psu.BackColor = Form_Main._backColor;
                 textBox_psu.ForeColor = Form_Main._foreColor;
@@ -1190,6 +1208,7 @@ namespace NiceHashMiner.Forms
                 comboBox_devices_count.Leave += GeneralComboBoxes_Leave;
                 comboBoxCheckforprogramupdatesevery.Leave += GeneralComboBoxes_Leave;
                 comboBoxRestartProgram.Leave += GeneralComboBoxes_Leave;
+                comboBox_profile.Leave += GeneralComboBoxes_Leave;
             }
         }
 
@@ -1340,6 +1359,23 @@ namespace NiceHashMiner.Forms
                 }
             }
 
+            // Add profiles selections list
+            {
+                InitProfiles();
+
+                label_profile.Visible = false;
+                comboBox_profile.Visible = false;
+                buttonProfileAdd.Visible = false;
+                buttonProfileDel.Visible = false;
+
+                buttonProfileAdd.FlatStyle = FlatStyle.Flat;
+                buttonProfileAdd.FlatAppearance.BorderSize = 0;
+                buttonProfileAdd.FlatAppearance.MouseOverBackColor = Form_Main._backColor;
+                buttonProfileDel.FlatStyle = FlatStyle.Flat;
+                buttonProfileDel.FlatAppearance.BorderSize = 0;
+                buttonProfileDel.FlatAppearance.MouseOverBackColor = Form_Main._backColor;
+            }
+
             // Textboxes
             {
                 textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
@@ -1377,6 +1413,7 @@ namespace NiceHashMiner.Forms
                     comboBox_Language.Items.Add(lang[(LanguageType)i]);
                 }
             }
+
             // Add time unit selection list
             {
                 var timeunits = new Dictionary<TimeUnitType, string>();
@@ -1403,6 +1440,16 @@ namespace NiceHashMiner.Forms
                 comboBox_devices_count.SelectedIndex = ConfigManager.GeneralConfig.DevicesCountIndex;
                 comboBoxCheckforprogramupdatesevery.SelectedIndex = ConfigManager.GeneralConfig.ProgramUpdateIndex;
                 comboBoxRestartProgram.SelectedIndex = ConfigManager.GeneralConfig.ProgramRestartIndex;
+
+                try
+                {
+                    comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+                } catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("comboBox_profile", "Mismatch in the number of profiles");
+                    ConfigManager.GeneralConfig.ProfileIndex = 0;
+                    comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+                }
             }
 
             checkBox_ABMinimize.Enabled = checkBox_ABEnableOverclock.Checked;
@@ -1418,9 +1465,65 @@ namespace NiceHashMiner.Forms
                 groupBoxAPIkeys.Enabled = false;
             }
         }
+        
+        public void InitProfiles()
+        {
+            comboBox_profile.Items.Clear();
+            comboBoxProfile1.Items.Clear();
+            comboBoxProfile2.Items.Clear();
+            comboBoxProfile3.Items.Clear();
+            comboBoxProfile4.Items.Clear();
+            comboBoxProfile5.Items.Clear();
+            try
+            {
+                if (File.Exists("Configs\\profiles.json"))
+                {
+                    string json = File.ReadAllText("Configs\\profiles.json");
+                    var profilesList = JsonConvert.DeserializeObject<List<Profiles.ProfileData.Profile>>(json);
+                    if (profilesList != null)
+                    {
+                        foreach (var profile in profilesList)
+                        {
+                            comboBox_profile.Items.Add(profile.ProfileName);
+                            comboBoxProfile1.Items.Add(profile.ProfileName);
+                            comboBoxProfile2.Items.Add(profile.ProfileName);
+                            comboBoxProfile3.Items.Add(profile.ProfileName);
+                            comboBoxProfile4.Items.Add(profile.ProfileName);
+                            comboBoxProfile5.Items.Add(profile.ProfileName);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Add profiles selections list", ex.ToString());
+            }
+            try
+            {
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("InitProfiles", "Mismatch in the number of profiles " + ConfigManager.GeneralConfig.ProfileIndex.ToString());
+                ConfigManager.GeneralConfig.ProfileIndex = 0;
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+            }
+        }
 
         private void SetZoneTable(int PowerTarif)
         {
+            checkBoxProfile1.Checked = ConfigManager.GeneralConfig.ZoneScheduleUseProfile1;
+            checkBoxProfile2.Checked = ConfigManager.GeneralConfig.ZoneScheduleUseProfile2;
+            checkBoxProfile3.Checked = ConfigManager.GeneralConfig.ZoneScheduleUseProfile3;
+            checkBoxProfile4.Checked = ConfigManager.GeneralConfig.ZoneScheduleUseProfile4;
+            checkBoxProfile5.Checked = ConfigManager.GeneralConfig.ZoneScheduleUseProfile5;
+
+            comboBoxProfile1.Enabled = ConfigManager.GeneralConfig.ZoneScheduleUseProfile1;
+            comboBoxProfile2.Enabled = ConfigManager.GeneralConfig.ZoneScheduleUseProfile2;
+            comboBoxProfile3.Enabled = ConfigManager.GeneralConfig.ZoneScheduleUseProfile3;
+            comboBoxProfile4.Enabled = ConfigManager.GeneralConfig.ZoneScheduleUseProfile4;
+            comboBoxProfile5.Enabled = ConfigManager.GeneralConfig.ZoneScheduleUseProfile5;
+
             if (PowerTarif == 0)
             {
                 textBoxScheduleFrom1.Text = ConfigManager.GeneralConfig.ZoneSchedule1[0].Replace("23:59:59", "24:00");
@@ -1439,7 +1542,7 @@ namespace NiceHashMiner.Forms
                 textBoxScheduleCost3.Visible = false;
                 textBoxScheduleCost4.Visible = false;
                 textBoxScheduleCost5.Visible = false;
-
+                
                 labelFrom2.Visible = false;
                 labelFrom3.Visible = false;
                 labelFrom4.Visible = false;
@@ -1456,6 +1559,21 @@ namespace NiceHashMiner.Forms
                 labelPowerCurrency3.Visible = false;
                 labelPowerCurrency4.Visible = false;
                 labelPowerCurrency5.Visible = false;
+
+                checkBoxProfile2.Visible = false;
+                checkBoxProfile3.Visible = false;
+                checkBoxProfile4.Visible = false;
+                checkBoxProfile5.Visible = false;
+                comboBoxProfile2.Visible = false;
+                comboBoxProfile3.Visible = false;
+                comboBoxProfile4.Visible = false;
+                comboBoxProfile5.Visible = false;
+
+                comboBoxProfile1.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex1;
+                comboBoxProfile2.SelectedIndex = 0;
+                comboBoxProfile3.SelectedIndex = 0;
+                comboBoxProfile4.SelectedIndex = 0;
+                comboBoxProfile5.SelectedIndex = 0;
             }
             if (PowerTarif == 1)
             {
@@ -1473,6 +1591,8 @@ namespace NiceHashMiner.Forms
                 labelTo2.Visible = true;
                 labelCost2.Visible = true;
                 labelPowerCurrency2.Visible = true;
+                checkBoxProfile2.Visible = true;
+                comboBoxProfile2.Visible = true;
 
                 textBoxScheduleFrom3.Visible = false;
                 textBoxScheduleFrom4.Visible = false;
@@ -1496,6 +1616,19 @@ namespace NiceHashMiner.Forms
                 labelPowerCurrency3.Visible = false;
                 labelPowerCurrency4.Visible = false;
                 labelPowerCurrency5.Visible = false;
+
+                checkBoxProfile3.Visible = false;
+                checkBoxProfile4.Visible = false;
+                checkBoxProfile5.Visible = false;
+                comboBoxProfile3.Visible = false;
+                comboBoxProfile4.Visible = false;
+                comboBoxProfile5.Visible = false;
+
+                comboBoxProfile1.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex1;
+                comboBoxProfile2.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex2;
+                comboBoxProfile3.SelectedIndex = 0;
+                comboBoxProfile4.SelectedIndex = 0;
+                comboBoxProfile5.SelectedIndex = 0;
             }
             if (PowerTarif == 2)
             {
@@ -1544,10 +1677,46 @@ namespace NiceHashMiner.Forms
                 labelPowerCurrency3.Visible = true;
                 labelPowerCurrency4.Visible = true;
                 labelPowerCurrency5.Visible = true;
+
+                checkBoxProfile2.Visible = true;
+                checkBoxProfile3.Visible = true;
+                checkBoxProfile4.Visible = true;
+                checkBoxProfile5.Visible = true;
+                comboBoxProfile2.Visible = true;
+                comboBoxProfile3.Visible = true;
+                comboBoxProfile4.Visible = true;
+                comboBoxProfile5.Visible = true;
+
+                comboBoxProfile1.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex1;
+                comboBoxProfile2.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex2;
+                comboBoxProfile3.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex3;
+                comboBoxProfile4.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex4;
+                comboBoxProfile5.SelectedIndex = ConfigManager.GeneralConfig.ZoneScheduleProfileIndex5;
             }
         }
         private void InitializeGeneralTab()
         {
+            Rectangle screenSize = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
+            if (ConfigManager.GeneralConfig.SettingsFormLeft + ConfigManager.GeneralConfig.SettingsFormWidth <= screenSize.Size.Width &&
+                ConfigManager.GeneralConfig.SettingsFormTop + ConfigManager.GeneralConfig.SettingsFormHeight <= screenSize.Size.Height)
+            {
+                if (ConfigManager.GeneralConfig.SettingsFormTop + ConfigManager.GeneralConfig.SettingsFormLeft != 0)
+                {
+                    this.Top = ConfigManager.GeneralConfig.SettingsFormTop;
+                    this.Left = ConfigManager.GeneralConfig.SettingsFormLeft;
+                }
+                else
+                {
+                    this.StartPosition = FormStartPosition.CenterScreen;
+                }
+                this.Width = ConfigManager.GeneralConfig.SettingsFormWidth;
+                this.Height = ConfigManager.GeneralConfig.SettingsFormHeight;
+            }
+            else
+            {
+                this.Top = 0;
+                this.Left = 0;
+            }
             InitializeGeneralTabTranslations();//<- mem leak
             InitializeGeneralTabCallbacks();
             InitializeGeneralTabFieldValuesReferences();
@@ -2016,7 +2185,7 @@ namespace NiceHashMiner.Forms
         }
 
 
-        private void comboBox_ServiceLocation_DrawItem(object sender, DrawItemEventArgs e)
+        public void comboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             var cmb = (ComboBox)sender;
             if (cmb == null) return;
@@ -2029,11 +2198,14 @@ namespace NiceHashMiner.Forms
             var fc = new SolidBrush(Form_Main._foreColor);
             var wc = new SolidBrush(Form_Main._windowColor);
             var gr = new SolidBrush(Color.Gray);
+            var red = new SolidBrush(Color.Red);
             e.Graphics.FillRectangle(bc, e.Bounds);
-
+            //e.Graphics.FillRectangle(((e.State & DrawItemState.Selected) > 0) ? red : bc, e.Bounds);
 
             // change foreground color
             Brush brush = ((e.State & DrawItemState.Selected) > 0) ? fc : gr;
+            //brush = ((e.State & DrawItemState.Focus) > 0) ? gr : fc;
+
             if (e.Index >= 0)
             {
                 e.Graphics.DrawString(cmb.Items[e.Index].ToString(), cmb.Font, brush, e.Bounds);
@@ -2043,7 +2215,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBox_TimeUnit_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void comboBox_Language_SelectedIndexChanged(object sender, EventArgs e)
@@ -2054,12 +2226,12 @@ namespace NiceHashMiner.Forms
 
         private void comboBox_Language_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void currencyConverterCombobox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void comboBox_ColorProfile_DrawItem(object sender, DrawItemEventArgs e)
@@ -2222,7 +2394,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBox_switching_algorithms_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void textBox_MinerRestartDelayMS_TextChanged(object sender, EventArgs e)
@@ -2267,7 +2439,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBox_devices_count_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void buttonLicence_Click(object sender, EventArgs e)
@@ -2483,7 +2655,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBoxCheckforprogramupdatesevery_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void checkBoxRestartWindows_CheckedChanged(object sender, EventArgs e)
@@ -2500,7 +2672,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBoxRestartProgram_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void label_TimeUnit_Click_1(object sender, EventArgs e)
@@ -2704,10 +2876,11 @@ namespace NiceHashMiner.Forms
             checkBox_ABDefault_mining_stopped.Enabled = checkBox_ABEnableOverclock.Checked;
             checkBox_AB_maintaining.Enabled = checkBox_ABEnableOverclock.Checked;
             checkBox_ABDefault_program_closing.Enabled = checkBox_ABEnableOverclock.Checked;
+            Form_Main.OverclockEnabled = checkBox_ABEnableOverclock.Checked;
 
             var oc = tabPageOverClock;
             //tabControlGeneral.TabPages.Remove(oc);
-            Form_Main.OverclockEnabled = checkBox_ABEnableOverclock.Checked;
+            oc.Update();
             if (checkBox_ABEnableOverclock.Checked && oc.Created)
             {
                 string str = " ";
@@ -2741,6 +2914,7 @@ namespace NiceHashMiner.Forms
                 MSIAfterburner.mahm = null;
 
             }
+            comboBox_profile_SelectedIndexChanged(null, null);
             oc.Focus();
         }
 
@@ -2761,6 +2935,7 @@ namespace NiceHashMiner.Forms
         {
             var selected = currencyConverterCombobox.SelectedItem.ToString();
             ConfigManager.GeneralConfig.DisplayCurrency = selected;
+            ConfigManager.GeneralConfigFileCommit();
         }
 
         private void checkBox_orderPrice_CheckedChanged(object sender, EventArgs e)
@@ -2895,7 +3070,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBoxZones_DrawItem(object sender, DrawItemEventArgs e)
         {
-            comboBox_ServiceLocation_DrawItem(sender, e);
+            comboBox_DrawItem(sender, e);
         }
 
         private void comboBoxZones_SelectedIndexChanged(object sender, EventArgs e)
@@ -3336,6 +3511,29 @@ namespace NiceHashMiner.Forms
             {
 
             }
+            if (tabControlGeneral.SelectedTab.Name.Equals("tabPageDevicesAlgos") ||
+                tabControlGeneral.SelectedTab.Name.Equals("tabPageOverClock"))
+            {
+                label_profile.Visible = true;
+                comboBox_profile.Visible = true;
+                buttonProfileAdd.Visible = true;
+                buttonProfileDel.Visible = true;
+            } else
+            {
+                label_profile.Visible = false;
+                comboBox_profile.Visible = false;
+                buttonProfileAdd.Visible = false;
+                buttonProfileDel.Visible = false;
+            }
+            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+            labelPowerCurrency1.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency2.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency3.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency4.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+            labelPowerCurrency5.Text = ConfigManager.GeneralConfig.DisplayCurrency + "/" + International.GetText("Form_Main_Power6") + "." + International.GetText("Hour");
+
+            //InitializeGeneralTab();
+            //InitializeGeneralTabTranslations(); 
         }
 
         private void button_ZIL_additional_mining_Click(object sender, EventArgs e)
@@ -3411,6 +3609,166 @@ namespace NiceHashMiner.Forms
             {
                 Helpers.ConsolePrint("lite", er.ToString());
             }
+        }
+
+        private void comboBox_profile_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_DrawItem(sender, e);
+        }
+
+        private void buttonProfileAdd_Click(object sender, EventArgs e)
+        {
+            //string returnVal = Microsoft.VisualBasic.Interaction.InputBox(International.GetText("Form_Settings_Enter_profile_name"),
+            //  International.GetText("Form_Settings_Adding_new_profile"), "New profile", -1, -1);
+            var NewProfile = new FormAddProfile(Cursor.Position.X - 16, Cursor.Position.Y - 94);
+            NewProfile.ShowDialog();
+        }
+
+        private void buttonProfileDel_Click(object sender, EventArgs e)
+        {
+            if (comboBox_profile.SelectedIndex == 0)
+            {
+                MessageBox.Show(International.GetText("Form_Settings_Def_profileDel"), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (comboBox_profile.SelectedIndex == ConfigManager.GeneralConfig.ZoneScheduleProfileIndex1 ||
+                comboBox_profile.SelectedIndex == ConfigManager.GeneralConfig.ZoneScheduleProfileIndex2 ||
+                comboBox_profile.SelectedIndex == ConfigManager.GeneralConfig.ZoneScheduleProfileIndex3 ||
+                comboBox_profile.SelectedIndex == ConfigManager.GeneralConfig.ZoneScheduleProfileIndex4 ||
+                comboBox_profile.SelectedIndex == ConfigManager.GeneralConfig.ZoneScheduleProfileIndex5)
+            {
+                MessageBox.Show(string.Format(International.GetText("Form_Settings_DelUsed_profile"),
+                                comboBox_profile.Text), "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var dialogRes = MessageBox.Show(string.Format(International.GetText("Form_Settings_Del_profile"),
+                comboBox_profile.Text), "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogRes == System.Windows.Forms.DialogResult.No)
+            {
+                return;
+            }
+            Profiles.Profile.DelProfile(comboBox_profile.SelectedIndex, ConfigManager.GeneralConfig.ProfileName);
+        }
+
+        private void comboBox_profile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_isInitFinished)
+            {
+                return;
+            }
+
+            ConfigManager.CommitBenchmarks();
+
+            if (Miner.IsRunningNew)
+            {
+                MessageBox.Show(International.GetText("Form_Benchmark_Stop_mining_first"),
+                International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _isInitFinished = false;
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+                _isInitFinished = true;
+                return;
+            }
+
+            ConfigManager.GeneralConfig.ProfileName = comboBox_profile.Text;
+            ConfigManager.GeneralConfig.ProfileIndex = comboBox_profile.SelectedIndex;
+            //ConfigManager.GeneralConfigFileCommit();
+            ConfigManager.AfterDeviceQueryInitialization();
+            if (ConfigManager.GeneralConfig.ABEnableOverclock && MSIAfterburner.Initialized)
+            {
+                MSIAfterburner.InitTempFiles();
+            }
+            try
+            {
+                if (_selectedComputeDevice == null) return;
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void comboBoxProfile1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_DrawItem(sender, e);
+        }
+
+        private void comboBoxProfile2_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_DrawItem(sender, e);
+        }
+
+        private void comboBoxProfile3_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_DrawItem(sender, e);
+        }
+
+        private void comboBoxProfile4_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_DrawItem(sender, e);
+        }
+
+        private void comboBoxProfile5_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            comboBox_DrawItem(sender, e);
+        }
+
+        private void comboBoxProfile1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleProfileIndex1 = comboBoxProfile1.SelectedIndex;
+        }
+
+        private void comboBoxProfile2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleProfileIndex2 = comboBoxProfile2.SelectedIndex;
+        }
+
+        private void comboBoxProfile3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleProfileIndex3 = comboBoxProfile3.SelectedIndex;
+        }
+
+        private void comboBoxProfile4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleProfileIndex4 = comboBoxProfile4.SelectedIndex;
+        }
+
+        private void comboBoxProfile5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleProfileIndex5 = comboBoxProfile5.SelectedIndex;
+        }
+
+        private void checkBoxProfile1_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleUseProfile1 = checkBoxProfile1.Checked;
+            comboBoxProfile1.Enabled = checkBoxProfile1.Checked;
+        }
+
+        private void checkBoxProfile2_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleUseProfile2 = checkBoxProfile2.Checked;
+            comboBoxProfile2.Enabled = checkBoxProfile2.Checked;
+        }
+
+        private void checkBoxProfile3_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleUseProfile3 = checkBoxProfile3.Checked;
+            comboBoxProfile3.Enabled = checkBoxProfile3.Checked;
+        }
+
+        private void checkBoxProfile4_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleUseProfile4 = checkBoxProfile4.Checked;
+            comboBoxProfile4.Enabled = checkBoxProfile4.Checked;
+        }
+
+        private void checkBoxProfile5_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ZoneScheduleUseProfile5 = checkBoxProfile5.Checked;
+            comboBoxProfile5.Enabled = checkBoxProfile5.Checked;
         }
     }
 

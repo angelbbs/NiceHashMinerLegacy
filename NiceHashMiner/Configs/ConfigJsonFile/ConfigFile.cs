@@ -114,7 +114,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
 
             // get the bytes
-            var data = Encoding.ASCII.GetBytes(contents);
+            var data = Encoding.UTF8.GetBytes(contents);
 
             // write the data to a temp file
             try

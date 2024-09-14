@@ -341,6 +341,12 @@
     <Compile Include="Forms\Components\AlgorithmsListViewOverClock.Designer.cs">
       <DependentUpon>AlgorithmsListViewOverClock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormAddProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAddProfile.Designer.cs">
+      <DependentUpon>FormAddProfile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_additional_mining.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -413,6 +419,7 @@
     <Compile Include="Miners\teamredminer.cs" />
     <Compile Include="Miners\trex.cs" />
     <Compile Include="Miners\Z-Enemy.cs" />
+    <Compile Include="Profiles\ProfileData.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -610,6 +617,9 @@
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAddProfile.resx">
+      <DependentUpon>FormAddProfile.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_additional_mining.resx">
       <DependentUpon>Form_additional_mining.cs</DependentUpon>
     </EmbeddedResource>
@@ -698,6 +708,7 @@
     <None Include="Resources\floppy.bmp" />
     <None Include="Resources\Copy.png" />
     <None Include="Resources\Down.png" />
+    <None Include="Resources\Add-normal.png" />
     <Content Include="Resources\info_black_18.png" />
     <Content Include="Resources\info_black_36.png" />
     <None Include="Resources\Ok-hot.png" />
@@ -770,6 +781,7 @@
       <Name>NiceHashMinerLegacy.UUID</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del Newtonsoft.Json.xml /Q

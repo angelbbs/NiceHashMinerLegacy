@@ -16,11 +16,14 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
                 fileName = fileName.Replace(c.ToString(), string.Empty);
             }
             const string extension = ".json";
-            return fileName + old + extension;
+            return "configs\\profiles\\" + ConfigManager.GeneralConfig.ProfileName.Trim() + "\\" +
+                fileName + old + extension;
         }
 
         public DeviceBenchmarkConfigFile(string deviceUuid)
-            : base(Folders.Config, GetName(deviceUuid), GetName(deviceUuid, "_OLD"))
+            : base("configs\\profiles\\" + ConfigManager.GeneralConfig.ProfileName.Trim() + "\\",
+                  GetName(deviceUuid), GetName(deviceUuid, "_OLD"))
+            //: base(Folders.Config, GetName(deviceUuid), GetName(deviceUuid, "_OLD"))
         { }
     }
 }

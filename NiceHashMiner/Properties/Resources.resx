@@ -130,9 +130,6 @@
   <data name="info_black_36" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info_black_36.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NHM_Cash_Register_Bitcoin_transparent_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NHM_Cash_Register_Bitcoin_transparent_white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Refresh-hot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Refresh-hot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -145,8 +142,8 @@
   <data name="NHM_logo_xxsmall_light92" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NHM_logo_xxsmall_light92.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\logo.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="NHM_Cash_Register_Bitcoin_transparent_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NHM_Cash_Register_Bitcoin_transparent_white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dnscache" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dnscache.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -190,6 +187,9 @@
   <data name="Down" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="info_black_18" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info_black_18.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -204,5 +204,8 @@
   </data>
   <data name="info_white_18" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info_white_18.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Add-normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Add-normal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

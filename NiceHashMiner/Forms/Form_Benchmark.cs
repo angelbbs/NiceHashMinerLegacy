@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -159,44 +161,17 @@ namespace NiceHashMiner.Forms
                     lbl.FlatAppearance.BorderSize = 1;
                 }
 
-                // Form_Benchmark.ActiveForm.Enabled = true;
-
-
                 foreach (var lbl in this.Controls.OfType<CheckBox>()) lbl.BackColor = Form_Main._backColor;
-                // DevicesListViewEnableControl.listViewDevices.BackColor = _backColor;
                 devicesListViewEnableControl1.BackColor = Form_Main._backColor;
                 devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;
                 algorithmsListView1.BackColor = Form_Main._backColor;
                 algorithmsListView1.ForeColor = Form_Main._foreColor;
-                //DevicesListViewEnableControl.DefaultDevicesColorSeter.
-                //   DevicesListViewEnableControl.DefaultDevicesColorSeter.EnabledColor = _backColor;
-                //  devicesListViewEnableControl1.listViewDevices.Items[0].UseItemStyleForSubItems = false;
-
-
             }
 
             _benchmarkingTimer = new Timer();
             _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
             _benchmarkingTimer.Interval = 500;
 
-
-            //Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
-            //// name, UUID
-            //Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
-            //// initialize benchmark settings for same cards to only copy settings
-            //foreach (var cDev in ComputeDeviceManager.Available.Devices) {
-            //    var plainDevName = cDev.Name;
-            //    if (benchNamesUUIDs.ContainsKey(plainDevName)) {
-            //        cDev.Enabled = false;
-            //        cDev.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
-            //    } else if (cDev.Enabled == true) {
-            //        benchNamesUUIDs.Add(plainDevName, cDev.UUID);
-            //        //cDev.Enabled = true; // enable benchmark
-            //        cDev.BenchmarkCopyUUID = null;
-            //    }
-            //}
-
-            //groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
             devicesListViewEnableControl1.Enabled = true;
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
 
@@ -397,12 +372,6 @@ namespace NiceHashMiner.Forms
                             lvi.ForeColor = Form_Main._foreColor;
                             break;
                     }
-                //// enable disable status, NOT needed
-                //if (cdvo.IsEnabled && _benchmarkDevicesAlgorithmStatus[uuid] >= BenchmarkSettingsStatus.DISABLED_NONE) {
-                //    _benchmarkDevicesAlgorithmStatus[uuid] -= 2;
-                //} else if (!cdvo.IsEnabled && _benchmarkDevicesAlgorithmStatus[uuid] <= BenchmarkSettingsStatus.TODO) {
-                //    _benchmarkDevicesAlgorithmStatus[uuid] += 2;
-                //}
             }
         }
 
@@ -469,8 +438,12 @@ namespace NiceHashMiner.Forms
 
         private void InitLocale()
         {
-            Text = International.GetText("Form_Benchmark_title"); //International.GetText("SubmitResultDialog_title");
-            //labelInstruction.Text = International.GetText("SubmitResultDialog_labelInstruction");
+            /*
+            Text = International.GetText("Form_Benchmark_title") + 
+                " (" + International.GetText("Form_Benchmark_titleProfile") + 
+                " " + ConfigManager.GeneralConfig.ProfileName + ")"; 
+            */
+            Text = International.GetText("Form_Benchmark_title");
             StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
             CloseBtn.Text = International.GetText("SubmitResultDialog_CloseBtn");
 
@@ -487,6 +460,54 @@ namespace NiceHashMiner.Forms
             checkBoxHideUnused.Text = International.GetText("Form_Settings_checkBox_Hide_Unused");
             checkBox_StartMiningAfterBenchmark.Enabled = !Form_Main.MiningStarted;
             checkBoxHideUnused.Checked = ConfigManager.GeneralConfig.Hide_unused_algorithms;
+            label_profile.Text = International.GetText("Form_Settings_label_Profile");
+            comboBox_profile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+
+            InitProfiles();
+            try
+            {
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("comboBox_profile", "Mismatch in the number of profiles");
+                ConfigManager.GeneralConfig.ProfileIndex = 0;
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+            }
+        }
+
+        public void InitProfiles()
+        {
+            comboBox_profile.Items.Clear();
+            try
+            {
+                if (File.Exists("Configs\\profiles.json"))
+                {
+                    string json = File.ReadAllText("Configs\\profiles.json");
+                    var profilesList = JsonConvert.DeserializeObject<List<Profiles.ProfileData.Profile>>(json);
+                    if (profilesList != null)
+                    {
+                        foreach (var profile in profilesList)
+                        {
+                            comboBox_profile.Items.Add(profile.ProfileName);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("Add profiles selections list", ex.ToString());
+            }
+            try
+            {
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("InitProfiles", "Mismatch in the number of profiles " + ConfigManager.GeneralConfig.ProfileIndex.ToString());
+                ConfigManager.GeneralConfig.ProfileIndex = 0;
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+            }
         }
 
         #region Start/Stop methods
@@ -690,66 +711,6 @@ namespace NiceHashMiner.Forms
                 }
 
             }
-
-            /*
-            bool CreateNoWindow = false;
-            var CMDconfigHandle = new Process
-
-            {
-                StartInfo =
-                {
-                    FileName = "AfterBenchmark.cmd"
-                }
-            };
-
-            CMDconfigHandle.StartInfo.FileName = "AfterBenchmark.cmd";
-
-            if (!File.Exists(CMDconfigHandle.StartInfo.FileName))
-            {
-                return null;
-            }
-
-            var cmd = "";
-            FileStream fs = new FileStream(CMDconfigHandle.StartInfo.FileName, FileMode.Open, FileAccess.Read);
-            StreamReader w = new StreamReader(fs);
-            cmd = w.ReadToEnd();
-            w.Close();
-
-            if (cmd.ToUpper().Trim().Contains("SET NOVISIBLE=TRUE"))
-            {
-                CreateNoWindow = true;
-            }
-            if (cmd.ToUpper().Trim().Contains("SET RUN=FALSE"))
-            {
-                return null;
-            }
-
-            Thread.Sleep(100);
-
-            CMDconfigHandle.StartInfo.Arguments = "";
-            CMDconfigHandle.StartInfo.UseShellExecute = false;
-            CMDconfigHandle.StartInfo.CreateNoWindow = CreateNoWindow;
-            Thread.Sleep(150);
-            Helpers.ConsolePrint("RunCMDAfterBenchmark", "Start CMD: " + CMDconfigHandle.StartInfo.FileName + CMDconfigHandle.StartInfo.Arguments);
-            CMDconfigHandle.Start();
-
-            try
-            {
-                if (!CMDconfigHandle.WaitForExit(10 * 1000))
-                {
-                    CMDconfigHandle.Kill();
-                    CMDconfigHandle.WaitForExit(5 * 1000);
-                    CMDconfigHandle.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("KillCMDAfterBenchmark", e.ToString());
-            }
-
-            Thread.Sleep(5);
-            return CMDconfigHandle;
-            */
         }
         private void EndBenchmark()
         {
@@ -938,6 +899,68 @@ namespace NiceHashMiner.Forms
         private void checkBoxHideUnused_CheckedChanged(object sender, EventArgs e)
         {
             ConfigManager.GeneralConfig.Hide_unused_algorithms = checkBoxHideUnused.Checked;
+            try
+            {
+                if (_selectedComputeDevice == null) return;
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        public void comboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var cmb = (ComboBox)sender;
+            if (cmb == null) return;
+
+
+            e.DrawBackground();
+
+            // change background color
+            var bc = new SolidBrush(Form_Main._backColor);
+            var fc = new SolidBrush(Form_Main._foreColor);
+            var wc = new SolidBrush(Form_Main._windowColor);
+            var gr = new SolidBrush(Color.Gray);
+            var red = new SolidBrush(Color.Red);
+            e.Graphics.FillRectangle(bc, e.Bounds);
+            //e.Graphics.FillRectangle(((e.State & DrawItemState.Selected) > 0) ? red : bc, e.Bounds);
+
+            // change foreground color
+            Brush brush = ((e.State & DrawItemState.Selected) > 0) ? fc : gr;
+            //brush = ((e.State & DrawItemState.Focus) > 0) ? gr : fc;
+
+            if (e.Index >= 0)
+            {
+                e.Graphics.DrawString(cmb.Items[e.Index].ToString(), cmb.Font, brush, e.Bounds);
+                e.DrawFocusRectangle();
+            }
+        }
+        private void comboBox_profile_DrawItem(object sender, DrawItemEventArgs e)
+        {
+           comboBox_DrawItem(sender, e);
+        }
+
+        private void comboBox_profile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ConfigManager.CommitBenchmarks();
+
+            if (Miner.IsRunningNew)
+            {
+                MessageBox.Show(International.GetText("Form_Benchmark_Stop_mining_first"),
+                International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboBox_profile.SelectedIndex = ConfigManager.GeneralConfig.ProfileIndex;
+                return;
+            }
+
+            ConfigManager.GeneralConfig.ProfileName = comboBox_profile.Text;
+            ConfigManager.GeneralConfig.ProfileIndex = comboBox_profile.SelectedIndex;
+            //ConfigManager.GeneralConfigFileCommit();
+            ConfigManager.AfterDeviceQueryInitialization();
+            if (ConfigManager.GeneralConfig.ABEnableOverclock && MSIAfterburner.Initialized)
+            {
+                MSIAfterburner.InitTempFiles();
+            }
             try
             {
                 if (_selectedComputeDevice == null) return;

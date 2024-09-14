@@ -222,8 +222,8 @@ namespace NiceHashMiner.Forms.Components
             listViewAlgorithms.Columns[ALGORITHM].Text = International.GetText("AlgorithmsListView_Algorithm");
             listViewAlgorithms.Columns[MINER].Text = "Miner";
 
-            listViewAlgorithms.Columns[ALGORITHM].Width = ConfigManager.GeneralConfig.ColumnListALGORITHM;
-            listViewAlgorithms.Columns[MINER].Width = ConfigManager.GeneralConfig.ColumnListMINER;
+            listViewAlgorithms.Columns[ALGORITHM].Width = ConfigManager.GeneralConfig.ColumnListALGORITHMOverclock;
+            listViewAlgorithms.Columns[MINER].Width = ConfigManager.GeneralConfig.ColumnListMINEROverclock;
             listViewAlgorithms.Columns[GPU_clock].Width = ConfigManager.GeneralConfig.ColumnListGPU_clock;
             listViewAlgorithms.Columns[Mem_clock].Width = ConfigManager.GeneralConfig.ColumnListMem_clock;
             listViewAlgorithms.Columns[GPU_voltage].Width = ConfigManager.GeneralConfig.ColumnListGPU_voltage;
@@ -249,12 +249,25 @@ namespace NiceHashMiner.Forms.Components
 
             listViewAlgorithms.Items.Clear();
 
-            if (_computeDevice.DeviceType == DeviceType.CPU || _computeDevice.DeviceType == DeviceType.INTEL)
+            if (!Form_Main.OverclockEnabled)
             {
+                listViewAlgorithms.Visible = false;
+                labelOverclockNotSupported.Text = International.GetText("FormSettings_AB_NotEnabled");
                 labelOverclockNotSupported.Visible = true;
-            } else
+            }
+            else
             {
-                labelOverclockNotSupported.Visible = false;
+                if (_computeDevice.DeviceType == DeviceType.CPU || _computeDevice.DeviceType == DeviceType.INTEL)
+                {
+                    listViewAlgorithms.Visible = false;
+                    labelOverclockNotSupported.Text = International.GetText("FormSettings_AB_NotSupported");
+                    labelOverclockNotSupported.Visible = true;
+                }
+                else
+                {
+                    listViewAlgorithms.Visible = true;
+                    labelOverclockNotSupported.Visible = false;
+                }
             }
 
             foreach (var alg in computeDevice.GetAlgorithmSettings())
@@ -840,14 +853,14 @@ namespace NiceHashMiner.Forms.Components
         {
             //ResizeColumn();
             listViewAlgorithms.BeginUpdate();
-            ResizeAutoSizeColumn(listViewAlgorithms, 9);
+            ResizeAutoSizeColumn(listViewAlgorithms, 1);
             listViewAlgorithms.EndUpdate();
         }
 
         private void listViewAlgorithms_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
         {
-            ConfigManager.GeneralConfig.ColumnListALGORITHM = listViewAlgorithms.Columns[ALGORITHM].Width;
-            ConfigManager.GeneralConfig.ColumnListMINER = listViewAlgorithms.Columns[MINER].Width;
+            ConfigManager.GeneralConfig.ColumnListALGORITHMOverclock = listViewAlgorithms.Columns[ALGORITHM].Width;
+            ConfigManager.GeneralConfig.ColumnListMINEROverclock = listViewAlgorithms.Columns[MINER].Width;
             ConfigManager.GeneralConfig.ColumnListGPU_clock = listViewAlgorithms.Columns[GPU_clock].Width;
             ConfigManager.GeneralConfig.ColumnListMem_clock = listViewAlgorithms.Columns[Mem_clock].Width;
             ConfigManager.GeneralConfig.ColumnListGPU_voltage = listViewAlgorithms.Columns[GPU_voltage].Width;

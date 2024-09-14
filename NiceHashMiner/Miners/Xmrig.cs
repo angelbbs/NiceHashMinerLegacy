@@ -149,7 +149,7 @@ namespace NiceHashMiner.Miners
             {
                 algo = "randomxmonero";
                 port = "3363";
-                return $" --algo=rx/0 -o {Links.CheckDNS("stratum+tcp://xmr-eu1.nanopool.org")}:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p x {extras} --http-port {ApiPort} --donate-level=1 "
+                return $" --algo=rx/0 -o {Links.CheckDNS("stratum+tcp://xmr-eu1.nanopool.org")}:14444 -u 42fV4v2EC4EALhKWKNCEJsErcdJygynt7RJvFZk8HSeYA9srXdJt58D9fQSwZLqGHbijCSMqSP4mU7inEEWNyer6F7PiqeX.benchmark -p 123456789 {extras} --http-port {ApiPort} --donate-level=1 "
                 + $" {platform}"
                + GetDevicesCommandString().TrimStart();
             }

@@ -26,6 +26,8 @@ namespace NiceHashMiner.Forms
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonProfileDel = new System.Windows.Forms.Button();
+            this.buttonProfileAdd = new System.Windows.Forms.Button();
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
@@ -100,6 +102,11 @@ namespace NiceHashMiner.Forms
             this.textBox_mb = new System.Windows.Forms.TextBox();
             this.textBoxAddAMD = new System.Windows.Forms.TextBox();
             this.groupBoxTariffs = new System.Windows.Forms.GroupBox();
+            this.comboBoxProfile5 = new System.Windows.Forms.ComboBox();
+            this.comboBoxProfile4 = new System.Windows.Forms.ComboBox();
+            this.comboBoxProfile3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxProfile2 = new System.Windows.Forms.ComboBox();
+            this.comboBoxProfile1 = new System.Windows.Forms.ComboBox();
             this.labelTo5 = new System.Windows.Forms.Label();
             this.labelTo4 = new System.Windows.Forms.Label();
             this.labelTo3 = new System.Windows.Forms.Label();
@@ -188,10 +195,8 @@ namespace NiceHashMiner.Forms
             this.checkBoxHideUnused = new System.Windows.Forms.CheckBox();
             this.checkBox_Disable_extra_launch_parameter_checking = new System.Windows.Forms.CheckBox();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageOverClock = new System.Windows.Forms.TabPage();
+            this.checkBox_AB_maintaining = new System.Windows.Forms.CheckBox();
             this.checkBoxHideUnused2 = new System.Windows.Forms.CheckBox();
             this.checkBox_ABDefault_program_closing = new System.Windows.Forms.CheckBox();
             this.checkBox_ABDefault_mining_stopped = new System.Windows.Forms.CheckBox();
@@ -199,8 +204,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_ABMinimize = new System.Windows.Forms.CheckBox();
             this.checkBox_ABEnableOverclock = new System.Windows.Forms.CheckBox();
             this.groupBoxOverClockSettings = new System.Windows.Forms.GroupBox();
-            this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
-            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.tabPageAbout = new System.Windows.Forms.TabPage();
             this.groupBoxBackup = new System.Windows.Forms.GroupBox();
             this.checkBox_BackupBeforeUpdate = new System.Windows.Forms.CheckBox();
@@ -215,13 +218,24 @@ namespace NiceHashMiner.Forms
             this.linkLabelNewVersion2 = new System.Windows.Forms.LinkLabel();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonCheckNewVersion = new System.Windows.Forms.Button();
-            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
             this.groupBoxInfo = new System.Windows.Forms.GroupBox();
             this.checkBoxHistory = new System.Windows.Forms.CheckBox();
             this.buttonHistory = new System.Windows.Forms.Button();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttonLicence = new System.Windows.Forms.Button();
-            this.checkBox_AB_maintaining = new System.Windows.Forms.CheckBox();
+            this.label_profile = new System.Windows.Forms.Label();
+            this.comboBox_profile = new System.Windows.Forms.ComboBox();
+            this.checkBoxProfile1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxProfile2 = new System.Windows.Forms.CheckBox();
+            this.checkBoxProfile3 = new System.Windows.Forms.CheckBox();
+            this.checkBoxProfile4 = new System.Windows.Forms.CheckBox();
+            this.checkBoxProfile5 = new System.Windows.Forms.CheckBox();
+            this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.algorithmsListViewOverClock1 = new NiceHashMiner.Forms.Components.AlgorithmsListViewOverClock();
+            this.devicesListViewEnableControl2 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.progressBarUpdate = new ProgressBarSample.TextProgressBar();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_RigManager.SuspendLayout();
@@ -254,6 +268,34 @@ namespace NiceHashMiner.Forms
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.ToolTip1_Popup);
+            // 
+            // buttonProfileDel
+            // 
+            this.buttonProfileDel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonProfileDel.FlatAppearance.BorderSize = 0;
+            this.buttonProfileDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonProfileDel.Image = global::NiceHashMiner.Properties.Resources.Delete_normal;
+            this.buttonProfileDel.Location = new System.Drawing.Point(201, 526);
+            this.buttonProfileDel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonProfileDel.Name = "buttonProfileDel";
+            this.buttonProfileDel.Size = new System.Drawing.Size(20, 20);
+            this.buttonProfileDel.TabIndex = 361;
+            this.buttonProfileDel.UseVisualStyleBackColor = false;
+            this.buttonProfileDel.Click += new System.EventHandler(this.buttonProfileDel_Click);
+            // 
+            // buttonProfileAdd
+            // 
+            this.buttonProfileAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonProfileAdd.FlatAppearance.BorderSize = 0;
+            this.buttonProfileAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonProfileAdd.Image = global::NiceHashMiner.Properties.Resources.Add_normal;
+            this.buttonProfileAdd.Location = new System.Drawing.Point(175, 526);
+            this.buttonProfileAdd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonProfileAdd.Name = "buttonProfileAdd";
+            this.buttonProfileAdd.Size = new System.Drawing.Size(20, 20);
+            this.buttonProfileAdd.TabIndex = 362;
+            this.buttonProfileAdd.UseVisualStyleBackColor = false;
+            this.buttonProfileAdd.Click += new System.EventHandler(this.buttonProfileAdd_Click);
             // 
             // buttonSaveClose
             // 
@@ -1106,9 +1148,9 @@ namespace NiceHashMiner.Forms
             this.groupBox_additionally.Controls.Add(this.labelAddAMD);
             this.groupBox_additionally.Controls.Add(this.textBox_mb);
             this.groupBox_additionally.Controls.Add(this.textBoxAddAMD);
-            this.groupBox_additionally.Location = new System.Drawing.Point(343, 6);
+            this.groupBox_additionally.Location = new System.Drawing.Point(5, 196);
             this.groupBox_additionally.Name = "groupBox_additionally";
-            this.groupBox_additionally.Size = new System.Drawing.Size(320, 184);
+            this.groupBox_additionally.Size = new System.Drawing.Size(658, 112);
             this.groupBox_additionally.TabIndex = 395;
             this.groupBox_additionally.TabStop = false;
             this.groupBox_additionally.Text = "Additionally";
@@ -1116,7 +1158,7 @@ namespace NiceHashMiner.Forms
             // checkBox_Show_Total_Power
             // 
             this.checkBox_Show_Total_Power.AutoSize = true;
-            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(8, 101);
+            this.checkBox_Show_Total_Power.Location = new System.Drawing.Point(8, 80);
             this.checkBox_Show_Total_Power.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Show_Total_Power.Name = "checkBox_Show_Total_Power";
             this.checkBox_Show_Total_Power.Size = new System.Drawing.Size(220, 17);
@@ -1137,7 +1179,7 @@ namespace NiceHashMiner.Forms
             // checkBox_Show_profit_with_power_consumption
             // 
             this.checkBox_Show_profit_with_power_consumption.AutoSize = true;
-            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(8, 126);
+            this.checkBox_Show_profit_with_power_consumption.Location = new System.Drawing.Point(316, 80);
             this.checkBox_Show_profit_with_power_consumption.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Show_profit_with_power_consumption.Name = "checkBox_Show_profit_with_power_consumption";
             this.checkBox_Show_profit_with_power_consumption.Size = new System.Drawing.Size(196, 17);
@@ -1167,7 +1209,7 @@ namespace NiceHashMiner.Forms
             // labelAddAMD
             // 
             this.labelAddAMD.AutoSize = true;
-            this.labelAddAMD.Location = new System.Drawing.Point(5, 76);
+            this.labelAddAMD.Location = new System.Drawing.Point(363, 49);
             this.labelAddAMD.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelAddAMD.Name = "labelAddAMD";
             this.labelAddAMD.Size = new System.Drawing.Size(221, 13);
@@ -1184,7 +1226,7 @@ namespace NiceHashMiner.Forms
             // 
             // textBoxAddAMD
             // 
-            this.textBoxAddAMD.Location = new System.Drawing.Point(251, 73);
+            this.textBoxAddAMD.Location = new System.Drawing.Point(609, 46);
             this.textBoxAddAMD.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBoxAddAMD.Name = "textBoxAddAMD";
             this.textBoxAddAMD.Size = new System.Drawing.Size(37, 20);
@@ -1192,6 +1234,16 @@ namespace NiceHashMiner.Forms
             // 
             // groupBoxTariffs
             // 
+            this.groupBoxTariffs.Controls.Add(this.checkBoxProfile5);
+            this.groupBoxTariffs.Controls.Add(this.checkBoxProfile4);
+            this.groupBoxTariffs.Controls.Add(this.checkBoxProfile3);
+            this.groupBoxTariffs.Controls.Add(this.checkBoxProfile2);
+            this.groupBoxTariffs.Controls.Add(this.checkBoxProfile1);
+            this.groupBoxTariffs.Controls.Add(this.comboBoxProfile5);
+            this.groupBoxTariffs.Controls.Add(this.comboBoxProfile4);
+            this.groupBoxTariffs.Controls.Add(this.comboBoxProfile3);
+            this.groupBoxTariffs.Controls.Add(this.comboBoxProfile2);
+            this.groupBoxTariffs.Controls.Add(this.comboBoxProfile1);
             this.groupBoxTariffs.Controls.Add(this.labelTo5);
             this.groupBoxTariffs.Controls.Add(this.labelTo4);
             this.groupBoxTariffs.Controls.Add(this.labelTo3);
@@ -1232,10 +1284,90 @@ namespace NiceHashMiner.Forms
             this.groupBoxTariffs.Controls.Add(this.comboBoxZones);
             this.groupBoxTariffs.Location = new System.Drawing.Point(5, 6);
             this.groupBoxTariffs.Name = "groupBoxTariffs";
-            this.groupBoxTariffs.Size = new System.Drawing.Size(332, 184);
+            this.groupBoxTariffs.Size = new System.Drawing.Size(658, 184);
             this.groupBoxTariffs.TabIndex = 394;
             this.groupBoxTariffs.TabStop = false;
             this.groupBoxTariffs.Text = "Tariffs";
+            // 
+            // comboBoxProfile5
+            // 
+            this.comboBoxProfile5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxProfile5.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBoxProfile5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProfile5.FormattingEnabled = true;
+            this.comboBoxProfile5.Items.AddRange(new object[] {
+            "Default"});
+            this.comboBoxProfile5.Location = new System.Drawing.Point(392, 150);
+            this.comboBoxProfile5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBoxProfile5.Name = "comboBoxProfile5";
+            this.comboBoxProfile5.Size = new System.Drawing.Size(99, 21);
+            this.comboBoxProfile5.TabIndex = 442;
+            this.comboBoxProfile5.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxProfile5_DrawItem);
+            this.comboBoxProfile5.SelectedIndexChanged += new System.EventHandler(this.comboBoxProfile5_SelectedIndexChanged);
+            // 
+            // comboBoxProfile4
+            // 
+            this.comboBoxProfile4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxProfile4.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBoxProfile4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProfile4.FormattingEnabled = true;
+            this.comboBoxProfile4.Items.AddRange(new object[] {
+            "Default"});
+            this.comboBoxProfile4.Location = new System.Drawing.Point(392, 123);
+            this.comboBoxProfile4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBoxProfile4.Name = "comboBoxProfile4";
+            this.comboBoxProfile4.Size = new System.Drawing.Size(99, 21);
+            this.comboBoxProfile4.TabIndex = 440;
+            this.comboBoxProfile4.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxProfile4_DrawItem);
+            this.comboBoxProfile4.SelectedIndexChanged += new System.EventHandler(this.comboBoxProfile4_SelectedIndexChanged);
+            // 
+            // comboBoxProfile3
+            // 
+            this.comboBoxProfile3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxProfile3.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBoxProfile3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProfile3.FormattingEnabled = true;
+            this.comboBoxProfile3.Items.AddRange(new object[] {
+            "Default"});
+            this.comboBoxProfile3.Location = new System.Drawing.Point(392, 97);
+            this.comboBoxProfile3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBoxProfile3.Name = "comboBoxProfile3";
+            this.comboBoxProfile3.Size = new System.Drawing.Size(99, 21);
+            this.comboBoxProfile3.TabIndex = 438;
+            this.comboBoxProfile3.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxProfile3_DrawItem);
+            this.comboBoxProfile3.SelectedIndexChanged += new System.EventHandler(this.comboBoxProfile3_SelectedIndexChanged);
+            // 
+            // comboBoxProfile2
+            // 
+            this.comboBoxProfile2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxProfile2.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBoxProfile2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProfile2.FormattingEnabled = true;
+            this.comboBoxProfile2.Items.AddRange(new object[] {
+            "Default"});
+            this.comboBoxProfile2.Location = new System.Drawing.Point(392, 71);
+            this.comboBoxProfile2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBoxProfile2.Name = "comboBoxProfile2";
+            this.comboBoxProfile2.Size = new System.Drawing.Size(99, 21);
+            this.comboBoxProfile2.TabIndex = 436;
+            this.comboBoxProfile2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxProfile2_DrawItem);
+            this.comboBoxProfile2.SelectedIndexChanged += new System.EventHandler(this.comboBoxProfile2_SelectedIndexChanged);
+            // 
+            // comboBoxProfile1
+            // 
+            this.comboBoxProfile1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxProfile1.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBoxProfile1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProfile1.FormattingEnabled = true;
+            this.comboBoxProfile1.Items.AddRange(new object[] {
+            "Default"});
+            this.comboBoxProfile1.Location = new System.Drawing.Point(392, 46);
+            this.comboBoxProfile1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBoxProfile1.Name = "comboBoxProfile1";
+            this.comboBoxProfile1.Size = new System.Drawing.Size(99, 21);
+            this.comboBoxProfile1.TabIndex = 434;
+            this.comboBoxProfile1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxProfile1_DrawItem);
+            this.comboBoxProfile1.SelectedIndexChanged += new System.EventHandler(this.comboBoxProfile1_SelectedIndexChanged);
             // 
             // labelTo5
             // 
@@ -2276,47 +2408,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
             // 
-            // algorithmsListView1
-            // 
-            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
-            this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
-            this.algorithmsListView1.IsInBenchmark = false;
-            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
-            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(645, 217);
-            this.algorithmsListView1.TabIndex = 2;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
-            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 193);
-            this.algorithmSettingsControl1.TabIndex = 396;
-            // 
-            // devicesListViewEnableControl1
-            // 
-            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 8);
-            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 204);
-            this.devicesListViewEnableControl1.TabIndex = 397;
-            // 
             // tabPageOverClock
             // 
             this.tabPageOverClock.BackColor = System.Drawing.SystemColors.Control;
@@ -2334,6 +2425,18 @@ namespace NiceHashMiner.Forms
             this.tabPageOverClock.Size = new System.Drawing.Size(669, 491);
             this.tabPageOverClock.TabIndex = 5;
             this.tabPageOverClock.Text = "OverClock";
+            // 
+            // checkBox_AB_maintaining
+            // 
+            this.checkBox_AB_maintaining.AutoSize = true;
+            this.checkBox_AB_maintaining.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox_AB_maintaining.Location = new System.Drawing.Point(371, 39);
+            this.checkBox_AB_maintaining.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_AB_maintaining.Name = "checkBox_AB_maintaining";
+            this.checkBox_AB_maintaining.Size = new System.Drawing.Size(144, 17);
+            this.checkBox_AB_maintaining.TabIndex = 410;
+            this.checkBox_AB_maintaining.Text = "Maintaining overclocking";
+            this.checkBox_AB_maintaining.UseVisualStyleBackColor = true;
             // 
             // checkBoxHideUnused2
             // 
@@ -2423,34 +2526,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxOverClockSettings.TabIndex = 400;
             this.groupBoxOverClockSettings.TabStop = false;
             this.groupBoxOverClockSettings.Text = "Overclock settings for selected device:";
-            // 
-            // algorithmsListViewOverClock1
-            // 
-            this.algorithmsListViewOverClock1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
-            this.algorithmsListViewOverClock1.ComunicationInterface = null;
-            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 19);
-            this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
-            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(652, 266);
-            this.algorithmsListViewOverClock1.TabIndex = 399;
-            // 
-            // devicesListViewEnableControl2
-            // 
-            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
-            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.devicesListViewEnableControl2.IsInBenchmark = false;
-            this.devicesListViewEnableControl2.IsMining = false;
-            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(6, 16);
-            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
-            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 163);
-            this.devicesListViewEnableControl2.TabIndex = 398;
-            this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
             // 
             // tabPageAbout
             // 
@@ -2625,20 +2700,6 @@ namespace NiceHashMiner.Forms
             this.buttonCheckNewVersion.UseVisualStyleBackColor = true;
             this.buttonCheckNewVersion.Click += new System.EventHandler(this.buttonCheckNewVersion_Click);
             // 
-            // progressBarUpdate
-            // 
-            this.progressBarUpdate.CustomText = "";
-            this.progressBarUpdate.Location = new System.Drawing.Point(536, 14);
-            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
-            this.progressBarUpdate.Name = "progressBarUpdate";
-            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
-            this.progressBarUpdate.Size = new System.Drawing.Size(118, 23);
-            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBarUpdate.TabIndex = 396;
-            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
-            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
-            // 
             // groupBoxInfo
             // 
             this.groupBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -2703,23 +2764,185 @@ namespace NiceHashMiner.Forms
             this.buttonLicence.UseVisualStyleBackColor = true;
             this.buttonLicence.Click += new System.EventHandler(this.buttonLicence_Click);
             // 
-            // checkBox_AB_maintaining
+            // label_profile
             // 
-            this.checkBox_AB_maintaining.AutoSize = true;
-            this.checkBox_AB_maintaining.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox_AB_maintaining.Location = new System.Drawing.Point(371, 39);
-            this.checkBox_AB_maintaining.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_AB_maintaining.Name = "checkBox_AB_maintaining";
-            this.checkBox_AB_maintaining.Size = new System.Drawing.Size(144, 17);
-            this.checkBox_AB_maintaining.TabIndex = 410;
-            this.checkBox_AB_maintaining.Text = "Maintaining overclocking";
-            this.checkBox_AB_maintaining.UseVisualStyleBackColor = true;
+            this.label_profile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_profile.AutoSize = true;
+            this.label_profile.Location = new System.Drawing.Point(9, 530);
+            this.label_profile.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_profile.Name = "label_profile";
+            this.label_profile.Size = new System.Drawing.Size(36, 13);
+            this.label_profile.TabIndex = 360;
+            this.label_profile.Text = "Profile";
+            // 
+            // comboBox_profile
+            // 
+            this.comboBox_profile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBox_profile.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBox_profile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_profile.FormattingEnabled = true;
+            this.comboBox_profile.Items.AddRange(new object[] {
+            "Default"});
+            this.comboBox_profile.Location = new System.Drawing.Point(62, 527);
+            this.comboBox_profile.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBox_profile.Name = "comboBox_profile";
+            this.comboBox_profile.Size = new System.Drawing.Size(99, 21);
+            this.comboBox_profile.TabIndex = 359;
+            this.comboBox_profile.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBox_profile_DrawItem);
+            this.comboBox_profile.SelectedIndexChanged += new System.EventHandler(this.comboBox_profile_SelectedIndexChanged);
+            // 
+            // checkBoxProfile1
+            // 
+            this.checkBoxProfile1.AutoSize = true;
+            this.checkBoxProfile1.Location = new System.Drawing.Point(312, 48);
+            this.checkBoxProfile1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxProfile1.Name = "checkBoxProfile1";
+            this.checkBoxProfile1.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxProfile1.TabIndex = 444;
+            this.checkBoxProfile1.Text = "Use profile";
+            this.checkBoxProfile1.UseVisualStyleBackColor = true;
+            this.checkBoxProfile1.CheckedChanged += new System.EventHandler(this.checkBoxProfile1_CheckedChanged);
+            // 
+            // checkBoxProfile2
+            // 
+            this.checkBoxProfile2.AutoSize = true;
+            this.checkBoxProfile2.Location = new System.Drawing.Point(312, 74);
+            this.checkBoxProfile2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxProfile2.Name = "checkBoxProfile2";
+            this.checkBoxProfile2.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxProfile2.TabIndex = 445;
+            this.checkBoxProfile2.Text = "Use profile";
+            this.checkBoxProfile2.UseVisualStyleBackColor = true;
+            this.checkBoxProfile2.CheckedChanged += new System.EventHandler(this.checkBoxProfile2_CheckedChanged);
+            // 
+            // checkBoxProfile3
+            // 
+            this.checkBoxProfile3.AutoSize = true;
+            this.checkBoxProfile3.Location = new System.Drawing.Point(312, 101);
+            this.checkBoxProfile3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxProfile3.Name = "checkBoxProfile3";
+            this.checkBoxProfile3.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxProfile3.TabIndex = 446;
+            this.checkBoxProfile3.Text = "Use profile";
+            this.checkBoxProfile3.UseVisualStyleBackColor = true;
+            this.checkBoxProfile3.CheckedChanged += new System.EventHandler(this.checkBoxProfile3_CheckedChanged);
+            // 
+            // checkBoxProfile4
+            // 
+            this.checkBoxProfile4.AutoSize = true;
+            this.checkBoxProfile4.Location = new System.Drawing.Point(312, 127);
+            this.checkBoxProfile4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxProfile4.Name = "checkBoxProfile4";
+            this.checkBoxProfile4.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxProfile4.TabIndex = 447;
+            this.checkBoxProfile4.Text = "Use profile";
+            this.checkBoxProfile4.UseVisualStyleBackColor = true;
+            this.checkBoxProfile4.CheckedChanged += new System.EventHandler(this.checkBoxProfile4_CheckedChanged);
+            // 
+            // checkBoxProfile5
+            // 
+            this.checkBoxProfile5.AutoSize = true;
+            this.checkBoxProfile5.Location = new System.Drawing.Point(312, 153);
+            this.checkBoxProfile5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBoxProfile5.Name = "checkBoxProfile5";
+            this.checkBoxProfile5.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxProfile5.TabIndex = 448;
+            this.checkBoxProfile5.Text = "Use profile";
+            this.checkBoxProfile5.UseVisualStyleBackColor = true;
+            this.checkBoxProfile5.CheckedChanged += new System.EventHandler(this.checkBoxProfile5_CheckedChanged);
+            // 
+            // algorithmsListView1
+            // 
+            this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListView1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListView1.BenchmarkCalculation = null;
+            this.algorithmsListView1.ComunicationInterface = null;
+            this.algorithmsListView1.IsInBenchmark = false;
+            this.algorithmsListView1.Location = new System.Drawing.Point(6, 21);
+            this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmsListView1.Name = "algorithmsListView1";
+            this.algorithmsListView1.Size = new System.Drawing.Size(645, 217);
+            this.algorithmsListView1.TabIndex = 2;
+            // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(378, -1);
+            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(285, 193);
+            this.algorithmSettingsControl1.TabIndex = 396;
+            // 
+            // devicesListViewEnableControl1
+            // 
+            this.devicesListViewEnableControl1.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl1.IsInBenchmark = false;
+            this.devicesListViewEnableControl1.IsMining = false;
+            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(8, 8);
+            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
+            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(348, 204);
+            this.devicesListViewEnableControl1.TabIndex = 397;
+            // 
+            // algorithmsListViewOverClock1
+            // 
+            this.algorithmsListViewOverClock1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListViewOverClock1.BackColor = System.Drawing.SystemColors.Control;
+            this.algorithmsListViewOverClock1.ComunicationInterface = null;
+            this.algorithmsListViewOverClock1.Location = new System.Drawing.Point(5, 19);
+            this.algorithmsListViewOverClock1.Name = "algorithmsListViewOverClock1";
+            this.algorithmsListViewOverClock1.Size = new System.Drawing.Size(652, 266);
+            this.algorithmsListViewOverClock1.TabIndex = 399;
+            // 
+            // devicesListViewEnableControl2
+            // 
+            this.devicesListViewEnableControl2.BackColor = System.Drawing.SystemColors.Control;
+            this.devicesListViewEnableControl2.BenchmarkCalculation = null;
+            this.devicesListViewEnableControl2.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.devicesListViewEnableControl2.IsInBenchmark = false;
+            this.devicesListViewEnableControl2.IsMining = false;
+            this.devicesListViewEnableControl2.Location = new System.Drawing.Point(6, 16);
+            this.devicesListViewEnableControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.devicesListViewEnableControl2.Name = "devicesListViewEnableControl2";
+            this.devicesListViewEnableControl2.SaveToGeneralConfig = false;
+            this.devicesListViewEnableControl2.Size = new System.Drawing.Size(348, 163);
+            this.devicesListViewEnableControl2.TabIndex = 398;
+            this.devicesListViewEnableControl2.Load += new System.EventHandler(this.devicesListViewEnableControl2_Load);
+            // 
+            // progressBarUpdate
+            // 
+            this.progressBarUpdate.CustomText = "";
+            this.progressBarUpdate.Location = new System.Drawing.Point(536, 14);
+            this.progressBarUpdate.Margin = new System.Windows.Forms.Padding(0);
+            this.progressBarUpdate.Name = "progressBarUpdate";
+            this.progressBarUpdate.ProgressColor = System.Drawing.Color.Green;
+            this.progressBarUpdate.Size = new System.Drawing.Size(118, 23);
+            this.progressBarUpdate.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBarUpdate.TabIndex = 396;
+            this.progressBarUpdate.TextColor = System.Drawing.Color.Black;
+            this.progressBarUpdate.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.progressBarUpdate.VisualMode = ProgressBarSample.ProgressBarDisplayMode.Percentage;
             // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 561);
+            this.Controls.Add(this.buttonProfileAdd);
+            this.Controls.Add(this.buttonProfileDel);
+            this.Controls.Add(this.label_profile);
+            this.Controls.Add(this.comboBox_profile);
             this.Controls.Add(this.tabControlGeneral);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
@@ -2782,6 +3005,7 @@ namespace NiceHashMiner.Forms
             this.groupBoxInfo.ResumeLayout(false);
             this.groupBoxInfo.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -2985,5 +3209,19 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.GroupBox groupBox_RigManager;
         private System.Windows.Forms.CheckBox checkBox_ShowPowerOfDisabledDevices;
         private System.Windows.Forms.CheckBox checkBox_AB_maintaining;
+        private System.Windows.Forms.Label label_profile;
+        private System.Windows.Forms.ComboBox comboBox_profile;
+        private System.Windows.Forms.Button buttonProfileDel;
+        private System.Windows.Forms.Button buttonProfileAdd;
+        private System.Windows.Forms.ComboBox comboBoxProfile5;
+        private System.Windows.Forms.ComboBox comboBoxProfile4;
+        private System.Windows.Forms.ComboBox comboBoxProfile3;
+        private System.Windows.Forms.ComboBox comboBoxProfile2;
+        private System.Windows.Forms.ComboBox comboBoxProfile1;
+        private System.Windows.Forms.CheckBox checkBoxProfile1;
+        private System.Windows.Forms.CheckBox checkBoxProfile5;
+        private System.Windows.Forms.CheckBox checkBoxProfile4;
+        private System.Windows.Forms.CheckBox checkBoxProfile3;
+        private System.Windows.Forms.CheckBox checkBoxProfile2;
     }
 }

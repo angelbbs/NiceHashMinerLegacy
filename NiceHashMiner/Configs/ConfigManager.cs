@@ -1,7 +1,11 @@
 using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 
 namespace NiceHashMiner.Configs
 {
@@ -91,10 +95,50 @@ namespace NiceHashMiner.Configs
             {
                 _benchmarkConfigsBackup[cDev.Uuid] = cDev.GetAlgorithmDeviceConfig();
             }
+
+            try
+            {
+                string startPath = @"configs";
+                string zipPath = @"temp\\configs.zip";
+                if (File.Exists(zipPath))
+                {
+                    File.Delete(zipPath);
+                }
+                ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, false);
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("CreateBackup", ex.ToString());
+            }
         }
 
         public static void RestoreBackup()
         {
+            string zipPath = @"temp\\configs.zip";
+            string extractPath = @"configs";
+            try
+            {
+                ZipArchive archive = ZipFile.OpenRead(zipPath);
+                var entries = archive.Entries;
+                for (var i = 0; i < entries.Count; i++)
+                {
+                    var entry = entries[i];
+                    var completeFileName = Path.Combine(extractPath, entry.FullName);
+                    var directory = Path.GetDirectoryName(completeFileName);
+                    Directory.CreateDirectory(directory);
+                    if (entry.Name != string.Empty)
+                    {
+                        entry.ExtractToFile(completeFileName, overwrite: true);
+                    }
+                }
+                if (File.Exists(zipPath))
+                {
+                    archive.Dispose();
+                    File.Delete(zipPath);
+                }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("RestoreBackup", ex.ToString());
+            }
             // restore general
             GeneralConfig = _generalConfigBackup;
             if (GeneralConfig.LastDevicesSettup != null)
@@ -107,7 +151,9 @@ namespace NiceHashMiner.Configs
                     }
                 }
             }
+            AfterDeviceQueryInitialization();
             // restore benchmarks
+            /*
             foreach (var cDev in ComputeDeviceManager.Available.Devices)
             {
                 if (_benchmarkConfigsBackup != null && _benchmarkConfigsBackup.ContainsKey(cDev.Uuid))
@@ -115,6 +161,22 @@ namespace NiceHashMiner.Configs
                     cDev.SetAlgorithmDeviceConfig(_benchmarkConfigsBackup[cDev.Uuid]);
                 }
             }
+            */
+            // restore profiles
+            /*
+            try
+            {
+                if (File.Exists("Configs\\profiles_old.json"))
+                {
+                    string json = File.ReadAllText("Configs\\profiles_old.json");
+                    File.WriteAllText("Configs\\profiles.json", json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("FormAddProfile", ex.ToString());
+            }
+            */
         }
 
         public static bool IsRestartNeeded()

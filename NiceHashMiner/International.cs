@@ -86,7 +86,7 @@ namespace NiceHashMiner
 
             foreach (var lang in langs)
             {
-                Helpers.ConsolePrint("NICEHASH", "Found language: " + lang.Name);
+                //Helpers.ConsolePrint("NICEHASH", "Found language: " + lang.Name);
                 retdict.Add(lang.ID, lang.Name);
             }
             langs.Clear();

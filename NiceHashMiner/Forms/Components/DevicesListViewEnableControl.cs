@@ -148,6 +148,8 @@ namespace NiceHashMiner.Forms.Components
                 _listItemCheckColorSetter?.LviSetColor(lvi);
             }
         }
+
+        private bool isFirstSelected = false;
         public void SetComputeDevices(List<ComputeDevice> computeDevices, bool includeCPU = true)
         {
             // to not run callbacks when setting new
@@ -194,6 +196,19 @@ namespace NiceHashMiner.Forms.Components
                     Text = devNum + " " + computeDevice.NameCustom.Replace("> ", "") + " " + addInfo,
                     Tag = computeDevice
                 };
+
+                Control senderObject = this as Control;
+                string hoveredControl = senderObject.TopLevelControl.Name;
+
+                if (hoveredControl.Contains("Form_Settings") || hoveredControl.Contains("Form_Benchmark"))
+                {
+                    if (!isFirstSelected && lvi.Checked)
+                    {
+                        isFirstSelected = true;
+                        lvi.Selected = true;
+                        lvi.Focused = true;
+                    }
+                }
                 //lvi.SubItems.Add(computeDevice.Name);
                 listViewDevices.Items.Add(lvi);
                 lvi.SubItems.Add("");
@@ -203,6 +218,7 @@ namespace NiceHashMiner.Forms.Components
                 lvi.SubItems.Add("");
                 _listItemCheckColorSetter.LviSetColor(lvi);
             }
+
             listViewDevices.EndUpdate();
             listViewDevices.Invalidate(true);
             // reset properties

@@ -93,6 +93,7 @@
 
 
     "Form_Benchmark_title": "Бенчмарк",
+"Form_Benchmark_titleProfile": "Текущий профиль:",
     "Form_Benchmark_buttonStartBenchmark": "&Старт бенчмарка",
     "Form_Benchmark_buttonStopBenchmark": "Ст&оп",
     "Form_Benchmark_buttonReset": "Сбр&осить",
@@ -257,6 +258,9 @@
     "Form_Settings_ToolTip_CPU_LessThreads": "Уменьшает число потоков (ядер), используемых на каждом CPU.",
     "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Использовать определённую технологию для CPU.",
     "Form_Settings_ToolTip_checkBox_RunAtStartup": "Если отмечено, Miner Legacy Fork Fix будет запущен при входе в систему.",
+"Form_Settings_ToolTip_Profile": "Выбор профиля разгона, бенчмарков и дополнительных параметров.",
+"Form_Settings_ToolTip_ProfileAdd": "Добавить профиль на основе выбранного.",
+"Form_Settings_ToolTip_ProfileDel": "Удалить выбранный профиль.",
 
     "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Фиксированная часть минимального времени в секундах перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\".",
     "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Случайная часть минимального времени в секундах перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\". \nСлучайная часть используется для предотвращения наличия одинакового шаблона переключения\nдля всех пользователей Miner Legacy Fork Fix.",
@@ -567,6 +571,14 @@
 "Form_Settings_label_From": "с",
 "Form_Settings_label_To": "по",
 "Form_Settings_label_Cost": "цена",
+"Form_Settings_label_Profile": "Профиль",
+"Form_Settings_checkbox_Profile": "Использовать профиль",
+"Form_Settings_Enter_profile_name": "Название профиля:",
+"Form_Settings_Adding_new_profile": "Добавление нового профиля на основе выбранного",
+"Form_Settings_Del_profile": "Удалить профиль \"{0}\"?",
+"Form_Settings_DelUsed_profile": "Профиль \"{0}\" нельзя удалить, так как он используется в тарифах на электроэнергию",
+"Form_Settings_Def_profileDel": "Профиль \"По умолчанию (Default)\" удалить нельзя!",
+"Form_Settings_ProfileExist": "Профиль \"{0}\" уже существует!",
 "Form_Settings_label_AddAMD": "Дополнительное потребление AMD GPU (Вт)",
 "Form_Settings_uncompatible_options1": "Параметры \"Разрешить неколько экземпляров\" и \"Включить сторожевой процесс\" несовместимы",
 "Form_Settings_DelBenchmarks": "Это приведет к сбросу всех скоростей в алгоритмах",
@@ -622,6 +634,8 @@
 "FormSettings_AB_FileNotFound": "Ошибка MSI Afterburner.\r\nФайл {0} не найден.\r\nПожалуйста, установите MSI Afterburner",
 "FormSettings_AB_ValueWarning": "Значение должно быть между {0} и {1}",
 "FormSettings_AB_HowToUse": "Как использовать MSI Afterburner для разгона",
+"FormSettings_AB_NotEnabled": "MSI Afterburner не включен",
+"FormSettings_AB_NotSupported": "CPU или Intel Arc не поддерживаются",
 "FormSettings_API_HowToUse": "Как использовать API",
 "FormSettings_By_profitability_of_all_devices": "По прибыльности всех устройств",
 "FormSettings_NoSameDevices": "Нет одинаковых устройств",
@@ -640,6 +654,8 @@
 "Form_Lite_5GB": "Максимальная эпоха для 5GB GPU",
 "Form_Lite_Enable_KAWPOWLite": "Включить KAWPOWLite",
 "Form_Lite_Save": "Сохранить",
-"Form_Lite_Cancel": "Отменить"
+"Form_Lite_Cancel": "Отменить",
+"Button_Save": "Сохранить",
+"Button_Cancel": "Отменить"
   }
 }

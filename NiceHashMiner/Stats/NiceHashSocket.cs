@@ -6,6 +6,7 @@ using NiceHashMinerLegacy.UUID;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -70,6 +71,31 @@ namespace NiceHashMiner.Stats
             return isIPAddres;
         }
 
+        public static bool CheckForInternetConnection(int timeoutMs = 10000, string url = null)
+        {
+            try
+            {
+                url ??= CultureInfo.InstalledUICulture switch
+                {
+                    { Name: var n } when n.StartsWith("ru") => 
+                        "http://www.ya.ru",
+                    { Name: var n } when n.StartsWith("en") => 
+                        "http://www.google.com",
+                    _ =>
+                        "http://www.gstatic.com/generate_204",
+                };
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.KeepAlive = false;
+                request.Timeout = timeoutMs;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                    return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private int _location = 0;
         public void StartConnection(string btc = null, string worker = null, string group = null)
         {
@@ -86,12 +112,13 @@ namespace NiceHashMiner.Stats
             string link = "";
             string _link = "";
 
-            if (_webSocket is object && _webSocket.ReadyState == WebSocketState.Open)
+            if (_webSocket is object && _webSocket.ReadyState == WebSocketState.Open &&
+                CheckForInternetConnection())
             {
-                _webSocket.Close();
+                //_webSocket.Close();
+                StopConnection();
                 return;
             }
-
             Helpers.ConsolePrint("StartConnection", "WSS connections Errors count: " + Form_Main.wssConnectionsErrors.ToString()); 
             if (Form_Main.wssConnectionsErrors >= 10)
             {
@@ -108,7 +135,6 @@ namespace NiceHashMiner.Stats
                     Form_Main.TotalConnectionsErrors++;
                 }
             }
-
             if (Form_Main.TotalConnectionsErrors >= 10)
             {
                 Helpers.ConsolePrint("SOCKET", "CRITICAL ERROR! Many protocol reconnections. Need restart");
@@ -136,9 +162,11 @@ namespace NiceHashMiner.Stats
             //proxyUrl = proxyUrl.Replace("ru.stratum-proxy.ru", "yandex.ru");
             try
             {
+                StopConnection();
                 if (_webSocket is not object)
                 {
                     _webSocket = new WebSocket(_link);
+                    _webSocket.WaitTime = TimeSpan.FromSeconds(10);
 
                     if (!proxy)
                     {
@@ -183,6 +211,8 @@ namespace NiceHashMiner.Stats
                     _webSocket.Close();
                     Form_Main.NHConnectingInProgress = false;
                     _webSocket = null;
+                    Helpers.ConsolePrint("StartConnection", "Try reconnect to Nicehash");
+                    Form_Main.NHConnectingInProgress = false;
                     new Task(() => StartConnection()).Start();
                     return;
                 }
@@ -219,6 +249,7 @@ namespace NiceHashMiner.Stats
         {
             Helpers.ConsolePrint("NiceHashSocket", $"Connection closed code {e.Code}: {e.Reason}");
             Thread.Sleep(1000 * 10);
+            Helpers.ConsolePrint("CloseCallbackNew", "Try start connection to Nicehash");
             new Task(() => StartConnection()).Start();
         }
 
@@ -244,6 +275,7 @@ namespace NiceHashMiner.Stats
                 else if (_webSocket != null)
                 {
                     //_webSocket = null; //force
+                    Helpers.ConsolePrint("SendDataNew", "Try start connection to Nicehash");
                     new Task(() => StartConnection()).Start();
                 }
                 else

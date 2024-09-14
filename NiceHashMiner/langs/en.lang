@@ -91,6 +91,7 @@
 
 
         "Form_Benchmark_title": "Benchmark",
+"Form_Benchmark_titleProfile": "Current profile:",
         "Form_Benchmark_buttonStartBenchmark": "Start &benchmark",
         "Form_Benchmark_buttonStopBenchmark": "St&op benchmark",
         "Form_Benchmark_buttonReset": "&Reset",
@@ -258,6 +259,9 @@
         "Form_Settings_ToolTip_CPU_LessThreads": "Reduce the number of threads used on each CPU by LessThreads.",
         "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Force certain CPU extension miner.",
         "Form_Settings_ToolTip_checkBox_RunAtStartup": "When checked, Miner Legacy Fork Fix will run on login.",
+"Form_Settings_ToolTip_Profile": "Selection of overclocking profile, benchmarks and additional parameters.",
+"Form_Settings_ToolTip_ProfileAdd": "Add a profile based on the selected one.",
+"Form_Settings_ToolTip_ProfileDel": "Delete the selected profile.",
 
         "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Fixed part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
         "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide Miner Legacy Fork Fix users to have the exact same switching pattern.",
@@ -326,6 +330,14 @@
 	 "Form_Settings_label_From": "from",
 	 "Form_Settings_label_To": "to",
 	 "Form_Settings_label_Cost": "cost",
+"Form_Settings_label_Profile": "Profile",
+"Form_Settings_checkbox_Profile": "Use profile",
+"Form_Settings_Enter_profile_name": "Enter a profile name:",
+"Form_Settings_Adding_new_profile": "Adding new profile",
+"Form_Settings_Del_profile": "Delete profile \"{0}\"?",
+"Form_Settings_DelUsed_profile": "The profile \"{0}\" cannot be deleted, because it is used in tariffs for electricity",
+"Form_Settings_Def_profileDel": "Profile \"Default\" cannot be deleted!",
+"Form_Settings_ProfileExist": "Profile \"{0}\" already exists!",
         "AlgorithmsListView_Enabled": "On",
         "AlgorithmsListView_Algorithm": "Algorithm",
         "AlgorithmsListView_Speed": "Speed",
@@ -629,6 +641,8 @@
 "FormSettings_AB_FileNotFound": "MSI Afterburner error.\r\nFile {0} not found.\r\nPlease install MSI Afterburner",
 "FormSettings_AB_ValueWarning": "Value must be between {0} and {1}",
 "FormSettings_AB_HowToUse": "How to use MSI Afterburner for overclocking",
+"FormSettings_AB_NotEnabled": "MSI Afterburner not enabled",
+"FormSettings_AB_NotSupported": "CPU or Intel Arc not supported",
 "FormSettings_API_HowToUse": "How to use API",
 "FormSettings_NoSameDevices": "There are no same devices",
 "MSIAB_Starting": "Starting MSI Afterburner",
@@ -647,6 +661,8 @@
 "Form_Lite_5GB": "Maximum epoch for 5GB GPU",
 "Form_Lite_Enable_KAWPOWLite": "Enable KAWPOWLite",
 "Form_Lite_Save": "Save",
-"Form_Lite_Cancel": "Cancel"
+"Form_Lite_Cancel": "Cancel",
+"Button_Save": "Save",
+"Button_Cancel": "Cancel"
     }
 }
