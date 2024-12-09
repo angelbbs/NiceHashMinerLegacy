@@ -136,7 +136,7 @@ namespace NiceHashMiner.Forms {
             | System.Windows.Forms.AnchorStyles.Right)));
             this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
             this.algorithmsListView1.BenchmarkCalculation = null;
-            this.algorithmsListView1.ComunicationInterface = null;
+            //this.algorithmsListView1.ComunicationInterface = null;
             this.algorithmsListView1.IsInBenchmark = false;
             this.algorithmsListView1.Location = new System.Drawing.Point(12, 192);
             this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);

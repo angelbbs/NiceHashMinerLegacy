@@ -69,6 +69,7 @@ namespace NiceHashMiner.Forms.Components {
             this.listViewAlgorithms.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewAlgorithms_MouseClick);
             this.listViewAlgorithms.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listViewAlgorithms_MouseDown);
             this.listViewAlgorithms.MouseLeave += new System.EventHandler(this.listViewAlgorithms_MouseLeave);
+            this.listViewAlgorithms.MouseHover += new System.EventHandler(this.listViewAlgorithms_MouseHover);
             this.listViewAlgorithms.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listViewAlgorithms_MouseUp);
             this.listViewAlgorithms.Resize += new System.EventHandler(this.listViewAlgorithms_Resize);
             // 

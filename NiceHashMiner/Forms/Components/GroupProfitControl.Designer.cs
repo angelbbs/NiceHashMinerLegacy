@@ -25,12 +25,12 @@ namespace NiceHashMiner.Forms.Components {
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.groupBoxMinerGroup = new System.Windows.Forms.GroupBox();
+            this.labelBTCRateIndicator = new System.Windows.Forms.Label();
             this.button_restart = new System.Windows.Forms.Button();
             this.labelCurentcyPerDayVaue = new System.Windows.Forms.Label();
             this.labelBTCRateValue = new System.Windows.Forms.Label();
-            this.labelBTCRateIndicator = new System.Windows.Forms.Label();
-            this.richTextBoxSpeedValue = new System.Windows.Forms.RichTextBox();
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
+            this.richTextBoxSpeedValue = new System.Windows.Forms.TextBox();
             this.groupBoxMinerGroup.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -38,11 +38,11 @@ namespace NiceHashMiner.Forms.Components {
             // 
             this.groupBoxMinerGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxMinerGroup.Controls.Add(this.button_restart);
-            this.groupBoxMinerGroup.Controls.Add(this.labelCurentcyPerDayVaue);
             this.groupBoxMinerGroup.Controls.Add(this.labelBTCRateValue);
             this.groupBoxMinerGroup.Controls.Add(this.labelBTCRateIndicator);
             this.groupBoxMinerGroup.Controls.Add(this.richTextBoxSpeedValue);
+            this.groupBoxMinerGroup.Controls.Add(this.button_restart);
+            this.groupBoxMinerGroup.Controls.Add(this.labelCurentcyPerDayVaue);
             this.groupBoxMinerGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBoxMinerGroup.Location = new System.Drawing.Point(0, 0);
             this.groupBoxMinerGroup.Name = "groupBoxMinerGroup";
@@ -51,6 +51,17 @@ namespace NiceHashMiner.Forms.Components {
             this.groupBoxMinerGroup.TabIndex = 108;
             this.groupBoxMinerGroup.TabStop = false;
             this.groupBoxMinerGroup.Text = "Mining Devices { N/A } ";
+            // 
+            // labelBTCRateIndicator
+            // 
+            this.labelBTCRateIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelBTCRateIndicator.AutoSize = true;
+            this.labelBTCRateIndicator.Location = new System.Drawing.Point(293, 17);
+            this.labelBTCRateIndicator.Name = "labelBTCRateIndicator";
+            this.labelBTCRateIndicator.Size = new System.Drawing.Size(33, 13);
+            this.labelBTCRateIndicator.TabIndex = 106;
+            this.labelBTCRateIndicator.Text = "Rate:";
+            this.labelBTCRateIndicator.Click += new System.EventHandler(this.labelBTCRateIndicator_Click);
             // 
             // button_restart
             // 
@@ -94,34 +105,18 @@ namespace NiceHashMiner.Forms.Components {
             this.labelBTCRateValue.Text = "0.00000000 BTC/Day";
             this.labelBTCRateValue.Click += new System.EventHandler(this.labelBTCRateValue_Click);
             // 
-            // labelBTCRateIndicator
-            // 
-            this.labelBTCRateIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelBTCRateIndicator.AutoSize = true;
-            this.labelBTCRateIndicator.Location = new System.Drawing.Point(293, 17);
-            this.labelBTCRateIndicator.Name = "labelBTCRateIndicator";
-            this.labelBTCRateIndicator.Size = new System.Drawing.Size(33, 13);
-            this.labelBTCRateIndicator.TabIndex = 106;
-            this.labelBTCRateIndicator.Text = "Rate:";
-            this.labelBTCRateIndicator.Click += new System.EventHandler(this.labelBTCRateIndicator_Click);
-            // 
             // richTextBoxSpeedValue
             // 
             this.richTextBoxSpeedValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxSpeedValue.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxSpeedValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.richTextBoxSpeedValue.ForeColor = System.Drawing.Color.Red;
-            this.richTextBoxSpeedValue.Location = new System.Drawing.Point(9, 17);
-            this.richTextBoxSpeedValue.Multiline = false;
+            this.richTextBoxSpeedValue.Location = new System.Drawing.Point(10, 17);
             this.richTextBoxSpeedValue.Name = "richTextBoxSpeedValue";
             this.richTextBoxSpeedValue.ReadOnly = true;
-            this.richTextBoxSpeedValue.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBoxSpeedValue.ShortcutsEnabled = false;
-            this.richTextBoxSpeedValue.Size = new System.Drawing.Size(313, 18);
-            this.richTextBoxSpeedValue.TabIndex = 115;
-            this.richTextBoxSpeedValue.Text = ".";
-            this.richTextBoxSpeedValue.WordWrap = false;
+            this.richTextBoxSpeedValue.Size = new System.Drawing.Size(320, 13);
+            this.richTextBoxSpeedValue.TabIndex = 116;
+            this.richTextBoxSpeedValue.Enter += new System.EventHandler(this.richTextBoxSpeedValue_Enter_1);
             // 
             // GroupProfitControl
             // 
@@ -148,6 +143,6 @@ namespace NiceHashMiner.Forms.Components {
         private System.Windows.Forms.Label labelBTCRateIndicator;
         private System.Windows.Forms.Button button_restart;
         private System.Windows.Forms.ToolTip toolTip2;
-        private System.Windows.Forms.RichTextBox richTextBoxSpeedValue;
+        private System.Windows.Forms.TextBox richTextBoxSpeedValue;
     }
 }

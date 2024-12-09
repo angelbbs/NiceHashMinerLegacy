@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Divert;
 using System;
@@ -53,6 +55,7 @@ namespace NiceHashMiner.Forms
         //public static bool Zil_GMiner = false;
         public Form_Settings()
         {
+            _isInitFinished = false;
             Process thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.High;
 
@@ -95,9 +98,6 @@ namespace NiceHashMiner.Forms
 
             // initialization calls
             InitializeDevicesTab();
-            // link algorithm list with algorithm settings control
-            algorithmSettingsControl1.Enabled = false;
-            algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
 
             ProgressProgramUpdate = progressBarUpdate;
 
@@ -251,7 +251,8 @@ namespace NiceHashMiner.Forms
 
             Text = International.GetText("Form_Settings_Title");
 
-            algorithmSettingsControl1.InitLocale(toolTip1);
+            AlgorithmSettingsControl();
+            InitLocaleAlgorithmSettingsControl(toolTip1);
         }
 
         #region Form this
@@ -270,6 +271,8 @@ namespace NiceHashMiner.Forms
 
         private void InitializeGeneralTabTranslations()
         {
+            button_ZIL_additional_mining.Visible = false;
+
             checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
             checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
@@ -604,17 +607,12 @@ namespace NiceHashMiner.Forms
                 }
 
                 tabControlGeneral.SelectedTab.BackColor = Form_Main._backColor;
-                foreach (var lbl in this.Controls.OfType<TabControl>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
 
-                foreach (var lbl in this.Controls.OfType<ListBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
+                tabPageGeneral.BackColor = Form_Main._backColor;
+                tabPageGeneral.ForeColor = Form_Main._foreColor;
+
+                tabPagePower.BackColor = Form_Main._backColor;
+                tabPagePower.ForeColor = Form_Main._foreColor;
 
                 tabPageAdvanced1.BackColor = Form_Main._backColor;
                 tabPageAdvanced1.ForeColor = Form_Main._foreColor;
@@ -628,45 +626,17 @@ namespace NiceHashMiner.Forms
                 tabPageAbout.BackColor = Form_Main._backColor;
                 tabPageAbout.ForeColor = Form_Main._foreColor;
 
-                tabPagePower.BackColor = Form_Main._backColor;
-                tabPagePower.ForeColor = Form_Main._foreColor;
-
                 progressBarUpdate.BackColor = Form_Main._backColor;
                 progressBarUpdate.ForeColor = Form_Main._foreColor;
                 progressBarUpdate.ProgressColor = Form_Main._backColor;
 
-                foreach (var lbl in tabPageAdvanced1.Controls.OfType<GroupBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-
-                foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<GroupBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-                foreach (var lbl in tabPageOverClock.Controls.OfType<GroupBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-                foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._textColor;
-                    lbl.FlatStyle = FlatStyle.Flat;
-                    lbl.FlatAppearance.BorderColor = Form_Main._textColor;
-                    lbl.FlatAppearance.BorderSize = 1;
-                }
-                foreach (var lbl in tabPageOverClock.Controls.OfType<Button>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._textColor;
-                    lbl.FlatStyle = FlatStyle.Flat;
-                    lbl.FlatAppearance.BorderColor = Form_Main._textColor;
-                    lbl.FlatAppearance.BorderSize = 1;
+                foreach (Button child in tabPageDevicesAlgos.Controls.OfType<Button>())
+                {//не в groupbox
+                    child.BackColor = Form_Main._backColor;
+                    child.ForeColor = Form_Main._foreColor;
+                    child.FlatStyle = FlatStyle.Flat;
+                    child.FlatAppearance.BorderColor = Form_Main._textColor;
+                    child.FlatAppearance.BorderSize = 1;
                 }
 
                 richTextBoxInfo.BackColor = Form_Main._backColor;
@@ -697,213 +667,6 @@ namespace NiceHashMiner.Forms
                 linkLabelRigRemoteView.ActiveLinkColor = Form_Main._textColor;
                 linkLabelRigRemoteView.MouseLeave += (s, e) => linkLabelRigRemoteView.LinkBehavior = LinkBehavior.NeverUnderline;
                 linkLabelRigRemoteView.MouseEnter += (s, e) => linkLabelRigRemoteView.LinkBehavior = LinkBehavior.AlwaysUnderline;
-
-                foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<Button>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                foreach (var lbl in tabPageDevicesAlgos.Controls.OfType<UserControl>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                //*
-                foreach (var lbl in tabPageAbout.Controls.OfType<GroupBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                foreach (var lbl in tabPageAbout.Controls.OfType<Button>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._textColor;
-                    lbl.FlatStyle = FlatStyle.Flat;
-                    lbl.FlatAppearance.BorderColor = Form_Main._textColor;
-                    lbl.FlatAppearance.BorderSize = 1;
-                }
-
-                foreach (var lbl in tabPageAbout.Controls.OfType<Button>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                foreach (var lbl in tabPageAbout.Controls.OfType<UserControl>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                foreach (var lbl in tabPageOverClock.Controls.OfType<UserControl>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                //comboBox_ServiceLocation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBox_TimeUnit.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBoxZones.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                currencyConverterCombobox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBox_Language.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBox_switching_algorithms.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBox_devices_count.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBoxCheckforprogramupdatesevery.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBoxRestartProgram.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-                comboBox_profile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-
-                foreach (var lbl in this.tabPageGeneral.Controls.OfType<GroupBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                foreach (var lbl in this.tabPageGeneral.Controls.OfType<CheckBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-                foreach (var lbl in this.tabPageAbout.Controls.OfType<CheckBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                foreach (var lbl in this.tabPageOverClock.Controls.OfType<CheckBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-                foreach (var lbl in this.tabPageOverClock.Controls.OfType<PictureBox>())
-                {
-                    lbl.BackColor = Form_Main._backColor;
-                    lbl.ForeColor = Form_Main._foreColor;
-                }
-
-                checkBox_BackupBeforeUpdate.BackColor = Form_Main._backColor;
-                checkBox_BackupBeforeUpdate.ForeColor = Form_Main._textColor;
-                checkBoxAutoupdate.BackColor = Form_Main._backColor;
-                checkBoxAutoupdate.ForeColor = Form_Main._textColor;
-                checkBoxHistory.BackColor = Form_Main._backColor;
-                checkBoxHistory.ForeColor = Form_Main._textColor;
-
-                checkBox_Force_mining_if_nonprofitable.BackColor = Form_Main._backColor;
-                checkBox_Force_mining_if_nonprofitable.ForeColor = Form_Main._textColor;
-
-                checkbox_wallet_balance.BackColor = Form_Main._backColor;
-                checkbox_wallet_balance.ForeColor = Form_Main._textColor;
-
-                checkBox_Show_profit_with_power_consumption.BackColor = Form_Main._backColor;
-                checkBox_Show_profit_with_power_consumption.ForeColor = Form_Main._textColor;
-                checkBox_Show_Total_Power.BackColor = Form_Main._backColor;
-                checkBox_Show_Total_Power.ForeColor = Form_Main._textColor;
-
-                checkBox_Allow_remote_management.BackColor = Form_Main._backColor;
-                checkBox_Allow_remote_management.ForeColor = Form_Main._textColor;
-
-                checkBox_Send_actual_version_info.BackColor = Form_Main._backColor;
-                checkBox_Send_actual_version_info.ForeColor = Form_Main._textColor;
-
-                checkBox_ShowPowerOfDisabledDevices.BackColor = Form_Main._backColor;
-                checkBox_ShowPowerOfDisabledDevices.ForeColor = Form_Main._textColor;
-
-                checkBoxInstall_root_certificates.BackColor = Form_Main._backColor;
-                checkBoxInstall_root_certificates.ForeColor = Form_Main._textColor;
-
-                checkBox_Additional_info_about_device.BackColor = Form_Main._backColor;
-                checkBox_Additional_info_about_device.ForeColor = Form_Main._textColor;
-
-                checkBox_DisplayConnected.BackColor = Form_Main._backColor;
-                checkBox_DisplayConnected.ForeColor = Form_Main._textColor;
-
-                checkBox_show_NVdevice_manufacturer.BackColor = Form_Main._backColor;
-                checkBox_show_NVdevice_manufacturer.ForeColor = Form_Main._textColor;
-
-                label_show_manufacturer.BackColor = Form_Main._backColor;
-                label_show_manufacturer.ForeColor = Form_Main._textColor;
-
-                checkBox_orderPrice.BackColor = Form_Main._backColor;
-                checkBox_orderPrice.ForeColor = Form_Main._textColor;
-
-                checkBoxLast24hours.BackColor = Form_Main._backColor;
-                checkBoxLast24hours.ForeColor = Form_Main._textColor;
-
-                checkBoxShortTerm.BackColor = Form_Main._backColor;
-                checkBoxShortTerm.ForeColor = Form_Main._textColor;
-
-                checkBoxMiningFee.BackColor = Form_Main._backColor;
-                checkBoxMiningFee.ForeColor = Form_Main._textColor;
-
-                checkBox_Show_memory_temp.BackColor = Form_Main._backColor;
-                checkBox_Show_memory_temp.ForeColor = Form_Main._textColor;
-                checkBox_show_AMDdevice_manufacturer.BackColor = Form_Main._backColor;
-                checkBox_show_AMDdevice_manufacturer.ForeColor = Form_Main._textColor;
-
-                checkBox_show_INTELdevice_manufacturer.BackColor = Form_Main._backColor;
-                checkBox_show_INTELdevice_manufacturer.ForeColor = Form_Main._textColor;
-
-                checkBox_ShowDeviceMemSize.BackColor = Form_Main._backColor;
-                checkBox_ShowDeviceMemSize.ForeColor = Form_Main._textColor;
-                /*
-                checkBox_ShowDeviceBusId.BackColor = Form_Main._backColor;
-                checkBox_ShowDeviceBusId.ForeColor = Form_Main._textColor;
-                */
-                checkbox_Use_OpenHardwareMonitor.BackColor = Form_Main._backColor;
-                checkbox_Use_OpenHardwareMonitor.ForeColor = Form_Main._textColor;
-
-                Checkbox_Save_windows_size_and_position.BackColor = Form_Main._backColor;
-                Checkbox_Save_windows_size_and_position.ForeColor = Form_Main._textColor;
-
-                checkBox_sorting_list_of_algorithms.BackColor = Form_Main._backColor;
-                checkBox_sorting_list_of_algorithms.ForeColor = Form_Main._textColor;
-
-                checkBox_DisableTooltips.BackColor = Form_Main._backColor;
-                checkBox_DisableTooltips.ForeColor = Form_Main._textColor;
-
-                checkBox_program_monitoring.BackColor = Form_Main._backColor;
-                checkBox_program_monitoring.ForeColor = Form_Main._textColor;
-
-                checkBoxEnableRigRemoteView.BackColor = Form_Main._backColor;
-                checkBoxEnableRigRemoteView.ForeColor = Form_Main._textColor;
-
-                checkBox_ShowFanAsPercent.BackColor = Form_Main._backColor;
-                checkBox_ShowFanAsPercent.ForeColor = Form_Main._textColor;
-
-                checkbox_Group_same_devices.BackColor = Form_Main._backColor;
-                checkbox_Group_same_devices.ForeColor = Form_Main._textColor;
-
-                checkBox_withPower.BackColor = Form_Main._backColor;
-                checkBox_withPower.ForeColor = Form_Main._textColor;
-
-                checkBox_By_profitability_of_all_devices.BackColor = Form_Main._backColor;
-                checkBox_By_profitability_of_all_devices.ForeColor = Form_Main._textColor;
-
-                checkBox_Disable_extra_launch_parameter_checking.BackColor = Form_Main._backColor;
-                checkBox_Disable_extra_launch_parameter_checking.ForeColor = Form_Main._textColor;
-
-                checkBoxHideUnused.BackColor = Form_Main._backColor;
-                checkBoxHideUnused.ForeColor = Form_Main._textColor;
-                checkBoxHideUnused2.BackColor = Form_Main._backColor;
-                checkBoxHideUnused2.ForeColor = Form_Main._textColor;
-
-                //checkBox_Zil_GMiner.BackColor = Form_Main._backColor;
-                //checkBox_Zil_GMiner.ForeColor = Form_Main._textColor;
-
-                checkBox_ABEnableOverclock.BackColor = Form_Main._backColor;
-                checkBox_ABEnableOverclock.ForeColor = Form_Main._textColor;
-                checkBox_AB_maintaining.BackColor = Form_Main._backColor;
-                checkBox_AB_maintaining.ForeColor = Form_Main._textColor;
-                checkBox_ABDefault_mining_stopped.BackColor = Form_Main._backColor;
-                checkBox_ABDefault_mining_stopped.ForeColor = Form_Main._textColor;
-                checkBox_ABDefault_program_closing.BackColor = Form_Main._backColor;
-                checkBox_ABDefault_program_closing.ForeColor = Form_Main._textColor;
-
-                checkBox_ABMinimize.BackColor = Form_Main._backColor;
-                checkBox_ABMinimize.ForeColor = Form_Main._textColor;
 
                 textBox_AutoStartMiningDelay.BackColor = Form_Main._backColor;
                 textBox_AutoStartMiningDelay.ForeColor = Form_Main._foreColor;
@@ -1021,19 +784,16 @@ namespace NiceHashMiner.Forms
                 textBox_SwitchProfitabilityThreshold.ForeColor = Form_Main._foreColor;
                 textBox_SwitchProfitabilityThreshold.BorderStyle = BorderStyle.FixedSingle;
 
-                labelRestartProgram.BackColor = Form_Main._backColor;
-                labelRestartProgram.ForeColor = Form_Main._foreColor;
-
-                devicesListViewEnableControl1.BackColor = Form_Main._backColor;
-                devicesListViewEnableControl1.ForeColor = Form_Main._foreColor;
-                algorithmsListView1.BackColor = Form_Main._backColor;
-                algorithmsListView1.ForeColor = Form_Main._foreColor;
-                devicesListViewEnableControl2.BackColor = Form_Main._backColor;
-                devicesListViewEnableControl2.ForeColor = Form_Main._foreColor;
-                algorithmsListViewOverClock1.BackColor = Form_Main._backColor;
-                algorithmsListViewOverClock1.ForeColor = Form_Main._foreColor;
-                tabPageGeneral.BackColor = Form_Main._backColor;
-                tabPageGeneral.ForeColor = Form_Main._foreColor;
+                comboBox_TimeUnit.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBoxZones.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                currencyConverterCombobox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_Language.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_ColorProfile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_switching_algorithms.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_devices_count.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBoxCheckforprogramupdatesevery.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBoxRestartProgram.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+                comboBox_profile.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             }
             else
             {
@@ -1224,12 +984,12 @@ namespace NiceHashMiner.Forms
                 if (checkBox_AutoStartMining.Checked)
                 {
                     textBox_AutoStartMiningDelay.Enabled = true;
-                    label_AutoStartMiningDelay.Enabled = true;
+                    //label_AutoStartMiningDelay.Enabled = true;
                 }
                 else
                 {
                     textBox_AutoStartMiningDelay.Enabled = false;
-                    label_AutoStartMiningDelay.Enabled = false;
+                    //label_AutoStartMiningDelay.Enabled = false;
                 }
                 checkBox_AutoStartMining.Checked = ConfigManager.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
@@ -1947,7 +1707,7 @@ namespace NiceHashMiner.Forms
             {
                 return;
             }
-            algorithmSettingsControl1.Deselect();
+            Deselect();
             // show algorithms
             _selectedComputeDevice =
                 ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
@@ -1961,7 +1721,7 @@ namespace NiceHashMiner.Forms
             {
                 return;
             }
-            algorithmSettingsControl1.Deselect();
+            Deselect();
             // show algorithms
             _selectedComputeDevice =
                 ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
@@ -2040,7 +1800,6 @@ namespace NiceHashMiner.Forms
             {
                 Form_Settings.ActiveForm.Close();
             }
-            Close();
             new Task(() => NiceHashStats.SetDeviceStatus(null, true, "ButtonSaveClose_Click")).Start();
         }
 
@@ -2143,7 +1902,7 @@ namespace NiceHashMiner.Forms
             // set first device selected {
             if (ComputeDeviceManager.Available.Devices.Count > 0)
             {
-                algorithmSettingsControl1.Deselect();
+                Deselect();
             }
         }
 
@@ -2841,12 +2600,12 @@ namespace NiceHashMiner.Forms
             if (checkBox_AutoStartMining.Checked)
             {
                 textBox_AutoStartMiningDelay.Enabled = true;
-                label_AutoStartMiningDelay.Enabled = true;
+                //label_AutoStartMiningDelay.Enabled = true;
             }
             else
             {
                 textBox_AutoStartMiningDelay.Enabled = false;
-                label_AutoStartMiningDelay.Enabled = false;
+                //label_AutoStartMiningDelay.Enabled = false;
             }
         }
 
@@ -2959,6 +2718,7 @@ namespace NiceHashMiner.Forms
 
         private void checkBox_EnableAPI_CheckedChanged(object sender, EventArgs e)
         {
+            if (!_isInitFinished) return;
             if (checkBox_EnableAPI.Checked)
             {
                 if (!Form_API_keys.GetSavedAPIkeyData())
@@ -3501,19 +3261,19 @@ namespace NiceHashMiner.Forms
 
         private void tabControlGeneral_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
-            {
-                if (_selectedComputeDevice == null) return;
-                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-                algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-            }
-            catch (Exception ex)
-            {
-
-            }
             if (tabControlGeneral.SelectedTab.Name.Equals("tabPageDevicesAlgos") ||
                 tabControlGeneral.SelectedTab.Name.Equals("tabPageOverClock"))
             {
+                try
+                {
+                    if (_selectedComputeDevice == null) return;
+                    algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                    algorithmsListViewOverClock1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                }
+                catch (Exception ex)
+                {
+
+                }
                 label_profile.Visible = true;
                 comboBox_profile.Visible = true;
                 buttonProfileAdd.Visible = true;
@@ -3770,6 +3530,274 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.ZoneScheduleUseProfile5 = checkBoxProfile5.Checked;
             comboBoxProfile5.Enabled = checkBoxProfile5.Checked;
         }
-    }
 
+        //*******
+        private const int ENABLED = 0;
+        private const int ALGORITHM = 1;
+        private const int MINER = 2;
+        private const int SPEED = 3;
+        //private const int SECSPEED = 4;
+        private const int POWER = 4;
+        private const int RATIO = 5;
+        private const int RATE = 6;
+        private ComputeDevice _computeDevice;
+        private Algorithm _currentlySelectedAlgorithm;
+        private ListViewItem _currentlySelectedLvi;
+
+        private bool _selected = false;
+        public void AlgorithmSettingsControl()
+        {
+            fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
+            secondaryFieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
+            field_PowerUsage.SetInputModeDoubleOnly();
+            field_PowerUsage.SetOnTextChanged(TextChangedPowerUsage);
+            fieldBoxBenchmarkSpeed.SetOnTextChanged(TextChangedBenchmarkSpeed);
+            secondaryFieldBoxBenchmarkSpeed.SetOnTextChanged(SecondaryTextChangedBenchmarkSpeed);
+            richTextBoxExtraLaunchParameters.TextChanged += TextChangedExtraLaunchParameters;
+        }
+        public void Deselect()
+        {
+            _selected = false;
+            groupBoxSelectedAlgorithmSettings.Text = string.Format(International.GetText("AlgorithmsListView_GroupBox"),
+                International.GetText("AlgorithmsListView_GroupBox_NONE"));
+            fieldBoxBenchmarkSpeed.EntryText = "";
+            secondaryFieldBoxBenchmarkSpeed.EntryText = "";
+            field_PowerUsage.EntryText = "";
+            richTextBoxExtraLaunchParameters.Text = "";
+        }
+        public void InitLocaleAlgorithmSettingsControl(ToolTip toolTip1)
+        {
+            field_PowerUsage.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_PowerUsage") + ":",
+                International.GetText("Form_Settings_ToolTip_PowerUsage"));
+            fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
+                International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+            secondaryFieldBoxBenchmarkSpeed.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
+                International.GetText("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
+            groupBoxExtraLaunchParameters.Text = International.GetText("Form_Settings_General_ExtraLaunchParameters");
+            toolTip1.SetToolTip(groupBoxExtraLaunchParameters,
+                International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
+            //  toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
+            if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+            {
+                groupBoxSelectedAlgorithmSettings.Text = "Настройки выбранного алгоритма";
+                field_PowerUsage.InitLocale(toolTip1, "Потребляемая мощн. (Вт)", "Потребляемая мощность (Вт)");
+            }
+
+            if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
+            {
+                foreach (var lbl in this.Controls.OfType<GroupBox>()) lbl.BackColor = Form_Main._backColor;
+                foreach (var lbl in this.Controls.OfType<GroupBox>()) lbl.ForeColor = Form_Main._textColor;
+
+                groupBoxSelectedAlgorithmSettings.BackColor = Form_Main._backColor;
+                groupBoxSelectedAlgorithmSettings.ForeColor = Form_Main._foreColor;
+
+                groupBoxExtraLaunchParameters.BackColor = Form_Main._backColor;
+                groupBoxExtraLaunchParameters.ForeColor = Form_Main._foreColor;
+
+                //    pictureBox1.Image = ZergPoolMiner.Properties.Resources.info_white_18;
+                richTextBoxExtraLaunchParameters.BackColor = Form_Main._backColor;
+                richTextBoxExtraLaunchParameters.ForeColor = Form_Main._foreColor;
+            }
+        }
+        private static string ParseStringDefault(string value)
+        {
+            return value ?? "";
+        }
+
+        private static string ParseDoubleDefault(double value)
+        {
+            return value <= 0 ? "" : value.ToString();
+        }
+
+        public void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice)
+        {
+            // should not happen ever
+            if (lvi == null) return;
+
+            _computeDevice = computeDevice;
+            if (lvi.Tag is Algorithm algorithm)
+            {
+                _selected = true;
+                _currentlySelectedAlgorithm = algorithm;
+                _currentlySelectedLvi = lvi;
+                Enabled = lvi.Checked;
+
+                groupBoxSelectedAlgorithmSettings.Text = string.Format(
+                    International.GetText("AlgorithmsListView_GroupBox"),
+                    $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
+                ;
+
+                field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage, 0));
+                fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
+                richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
+                if (algorithm is DualAlgorithm dualAlgo)
+                {
+                    //secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
+                    secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSecondarySpeed);
+                    secondaryFieldBoxBenchmarkSpeed.Enabled = true;
+                }
+                else
+                {
+                    secondaryFieldBoxBenchmarkSpeed.EntryText = "";
+                    secondaryFieldBoxBenchmarkSpeed.Enabled = false;
+                }
+
+                Update();
+            }
+            else
+            {
+                // TODO this should not be null
+            }
+        }
+        public void ChangeSpeed(ListViewItem lvi)
+        {
+            if (ReferenceEquals(_currentlySelectedLvi, lvi))
+            {
+                if (lvi.Tag is Algorithm algorithm)
+                {
+                    fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
+                    field_PowerUsage.EntryText = ParseDoubleDefault(Math.Round(algorithm.PowerUsage, 0));
+                    if (algorithm is DualAlgorithm dualAlgo)
+                    {
+                        //secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
+                        secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSecondarySpeed);
+                    }
+                    else
+                    {
+                        secondaryFieldBoxBenchmarkSpeed.EntryText = "";
+                    }
+                }
+            }
+        }
+
+        private bool CanEdit()
+        {
+            return _currentlySelectedAlgorithm != null && _selected;
+        }
+        private void TextChangedBenchmarkSpeed(object sender, EventArgs e)
+        {
+            if (!CanEdit()) return;
+            if (double.TryParse(fieldBoxBenchmarkSpeed.EntryText, out var value))
+            {
+                _currentlySelectedAlgorithm.BenchmarkSpeed = value;
+                //_currentlySelectedAlgorithm.CurPayingRate = value.ToString();
+            }
+            else
+            {
+                _currentlySelectedAlgorithm.BenchmarkSpeed = 0;
+            }
+            UpdateSpeedText();
+        }
+        private void TextChangedPowerUsage(object sender, EventArgs e)
+        {
+            if (!CanEdit()) return;
+            if (double.TryParse(field_PowerUsage.EntryText, out var value))
+            {
+                _currentlySelectedAlgorithm.PowerUsage = Math.Round(value, 0);
+            }
+            else
+            {
+                _currentlySelectedAlgorithm.PowerUsage = 0;
+            }
+            UpdateSpeedText();
+        }
+
+        private void SecondaryTextChangedBenchmarkSpeed(object sender, EventArgs e)
+        {
+            if (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo)
+            {
+                //dualAlgo.SecondaryBenchmarkSpeed = secondaryValue;
+                if (double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out var secondaryValue))
+                {
+                    _currentlySelectedAlgorithm.BenchmarkSecondarySpeed = secondaryValue;
+                }
+            }
+            else
+            {
+                _currentlySelectedAlgorithm.BenchmarkSecondarySpeed = 0;
+            }
+            UpdateSpeedText();
+        }
+        public void HandleCheck(ListViewItem lvi)
+        {
+            if (ReferenceEquals(_currentlySelectedLvi, lvi))
+            {
+                Enabled = lvi.Checked;
+            }
+        }
+        private void UpdateSpeedText()
+        {
+            var speed = _currentlySelectedAlgorithm.BenchmarkSpeed;
+            var secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? _currentlySelectedAlgorithm.BenchmarkSecondarySpeed : 0;
+            var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, secondarySpeed, 0, _currentlySelectedAlgorithm.NiceHashID, _currentlySelectedAlgorithm.DualNiceHashID);
+            speedString = speedString.Replace("--", "");
+            AlgorithmType algo = AlgorithmType.NONE;
+            NHSmaData.TryGetPaying(algo, out var payingSec);
+            NHSmaData.TryGetPaying(_currentlySelectedAlgorithm.NiceHashID, out var paying);
+
+            var payingRate = speed * paying * 0.000000001;
+            var payingRateSec = secondarySpeed * payingSec * 0.000000001;
+            var rate = (payingRate + payingRateSec).ToString("F8");
+
+            var WithPowerRate = payingRate + payingRateSec - ExchangeRateApi.GetKwhPriceInBtc() * _currentlySelectedAlgorithm.PowerUsage * 24 * Form_Main._factorTimeUnit / 1000;
+            if (ConfigManager.GeneralConfig.DecreasePowerCost)
+            {
+                rate = WithPowerRate.ToString("F8");
+            }
+
+            // update lvi speed
+            if (_currentlySelectedLvi != null)
+            {
+                if (ConfigManager.GeneralConfig.Language == LanguageType.Ru)
+                {
+                    _currentlySelectedLvi.SubItems[POWER].Text = _currentlySelectedAlgorithm.PowerUsage.ToString() + " Вт";
+                }
+                else
+                {
+                    _currentlySelectedLvi.SubItems[POWER].Text = _currentlySelectedAlgorithm.PowerUsage.ToString() + " W";
+                }
+            }
+        }
+        private void PowerUsage_Leave(object sender, EventArgs e)
+        {
+            if (!CanEdit()) return;
+
+            if (double.TryParse(field_PowerUsage.EntryText, out var value))
+            {
+                _currentlySelectedAlgorithm.PowerUsage = value;
+            }
+        }
+
+        private void TextChangedExtraLaunchParameters(object sender, EventArgs e)
+        {
+            if (!CanEdit()) return;
+            var extraLaunchParams = richTextBoxExtraLaunchParameters.Text.Replace("\r\n", " ");
+            extraLaunchParams = extraLaunchParams.Replace("\n", " ");
+            _currentlySelectedAlgorithm.ExtraLaunchParameters = extraLaunchParams;
+        }
+
+        private void groupBoxSelectedAlgorithmSettings_Resize(object sender, EventArgs e)
+        {
+            //Компьютер\HKEY_CURRENT_USER\Control Panel\Desktop\LogPixels
+            groupBoxExtraLaunchParameters.Width = groupBoxSelectedAlgorithmSettings.Width - 14;
+            richTextBoxExtraLaunchParameters.Width = groupBoxSelectedAlgorithmSettings.Width - 26;
+        }
+
+        private void groupBoxSelectedAlgorithmSettings_Paint(object sender, PaintEventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.ColorProfileIndex != 14) return;
+            GroupBox box = sender as GroupBox;
+            Form_Main.DrawGroupBox(box, e.Graphics, Form_Main._foreColor, Form_Main._grey);
+        }
+
+        private void groupBoxExtraLaunchParameters_Paint(object sender, PaintEventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.ColorProfileIndex != 14) return;
+            GroupBox box = sender as GroupBox;
+            Form_Main.DrawGroupBox(box, e.Graphics, Form_Main._foreColor, Form_Main._grey);
+        }
+    }
 }

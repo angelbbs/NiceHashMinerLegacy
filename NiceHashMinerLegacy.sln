@@ -56,6 +56,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGCL", "IGCL\IGCL.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nvidiasetp0state", "nvidiasetp0state\nvidiasetp0state.csproj", "{9E106E41-0813-489D-A1B5-85ED434F2C3E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B89C2D4-A27A-4AE0-A822-208345DE981B}"
+	ProjectSection(SolutionItems) = preProject
+		license.md = license.md
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug x64|Any CPU = Debug x64|Any CPU

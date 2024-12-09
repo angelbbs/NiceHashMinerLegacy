@@ -385,10 +385,29 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.ForkFixVersion = 66;
                 }
 
+                ConfigManager.GeneralConfig.ZIL_Mining_Enable = false;
+                ConfigManager.GeneralConfig.ZIL_mining_state = 0;
+                ConfigManager.GeneralConfig.ProxySSL = false;
+
                 Form_Main.NHMWSProtocolVersion = ConfigManager.GeneralConfig.NHMWSProtocolVersion;
 
                 if (ConfigManager.GeneralConfig.ZILMaxEpoch < 1) ConfigManager.GeneralConfig.ZILMaxEpoch = 1;
 
+                /*
+                Helpers.ConsolePrint("test", "try deleting reg key1");
+                var CMDconfigHandlereg1 = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "reg.exe"
+                }
+                };
+                CMDconfigHandlereg1.StartInfo.Arguments = "delete \"HKCU\\SYSTEM\\ControlSet001\\Services\\WinDivert1.4\\\" /va /f";
+                CMDconfigHandlereg1.StartInfo.UseShellExecute = false;
+                CMDconfigHandlereg1.StartInfo.CreateNoWindow = true;
+                CMDconfigHandlereg1.Start();
+                */
+                /*
                 string keyName = @"SYSTEM\ControlSet001\Services";
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyName, true))
                 {
@@ -400,7 +419,23 @@ namespace NiceHashMiner
                         key.DeleteValue("WinDivert1.4");
                     }
                 }
+                */
+                /*
+                Helpers.ConsolePrint("test", "try deleting reg key2");
+                var CMDconfigHandlereg2 = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "reg.exe"
+                }
+                };
+                CMDconfigHandlereg2.StartInfo.Arguments = "delete \"HKCU\\SYSTEM\\CurrentControlSet\\Services\\WinDivert1.4\\\" /va /f";
+                CMDconfigHandlereg2.StartInfo.UseShellExecute = false;
+                CMDconfigHandlereg2.StartInfo.CreateNoWindow = true;
+                CMDconfigHandlereg2.Start();
+                */
 
+                /*
                 keyName = @"SYSTEM\CurrentControlSet\Services";
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyName, true))
                 {
@@ -412,11 +447,11 @@ namespace NiceHashMiner
                         key.DeleteValue("WinDivert1.4");
                     }
                 }
-
+                */
                 //**
                 //Thread.Sleep(100);
                 //********************************************************************
-                if (!Directory.Exists("configs\\overclock")) Directory.CreateDirectory("configs\\overclock");
+                //if (!Directory.Exists("configs\\overclock")) Directory.CreateDirectory("configs\\overclock");
                 new StorePermission(PermissionState.Unrestricted) { Flags = StorePermissionFlags.AddToStore }.Assert();
                 X509Certificate2 certificate = new X509Certificate2(Properties.Resources.rootCA, "", X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
 
@@ -440,7 +475,6 @@ namespace NiceHashMiner
                     }
                     storeCU.Close();
                 }
-
                 using (var storeLM = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
                 {
                     storeLM.Open(OpenFlags.ReadWrite | OpenFlags.MaxAllowed);
@@ -461,7 +495,6 @@ namespace NiceHashMiner
                     }
                     storeLM.Close();
                 }
-
                 //check after install
                 using (var store2 = new X509Store(StoreName.Root, StoreLocation.LocalMachine))
                 {
@@ -490,6 +523,19 @@ namespace NiceHashMiner
                 CMDconfigHandleWD.StartInfo.UseShellExecute = false;
                 CMDconfigHandleWD.StartInfo.CreateNoWindow = true;
                 CMDconfigHandleWD.Start();
+                Thread.Sleep(200);
+                var CMDconfigHandleWD1 = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = "sc.exe"
+                }
+                };
+
+                CMDconfigHandleWD1.StartInfo.Arguments = "delete WinDivert1.4";
+                CMDconfigHandleWD1.StartInfo.UseShellExecute = false;
+                CMDconfigHandleWD1.StartInfo.CreateNoWindow = true;
+                CMDconfigHandleWD1.Start();
 
                 var version = Assembly.GetExecutingAssembly().GetName().Version;
                 var buildDate = new DateTime(2000, 1, 1).AddDays(version.Build).AddSeconds(version.Revision * 2);
@@ -511,8 +557,10 @@ namespace NiceHashMiner
                 if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang)
                 {
                     Helpers.ConsolePrint("NICEHASH",
-                        "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
-                    Application.Run(new Form_ChooseLanguage(true));
+                        "No config file found. Running Miner Legacy Fork Fix for the first time. Choosing a default language.");
+                    //Application.Run(new Form_ChooseLanguage(true));
+                    var l = new Form_ChooseLanguage(true);
+                    l.ShowDialog();
                 }
 
                 // Init languages

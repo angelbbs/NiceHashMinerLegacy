@@ -474,12 +474,6 @@
     <Compile Include="Forms\Components\AlgorithmsListView.Designer.cs">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\AlgorithmSettingsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\AlgorithmSettingsControl.Designer.cs">
-      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\BenchmarkLimitControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -596,10 +590,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
-      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\BenchmarkLimitControl.resx">
@@ -804,9 +794,9 @@ del *.xml /Q
 del *.ilk /Q
 del *.exp /Q
 
-7za a -tzip -mx0 ../LatestBuild/nhmlffLatest *.*
-7za u -tzip -mx0 ../LatestBuild/nhmlffLatest langs\*.* -r
-7za u -tzip -mx0 ../LatestBuild/nhmlffLatest common\*.* -r</PostBuildEvent>
+::7za a -tzip -mx0 ../LatestBuild/nhmlffLatest *.*
+::7za u -tzip -mx0 ../LatestBuild/nhmlffLatest langs\*.* -r
+::7za u -tzip -mx0 ../LatestBuild/nhmlffLatest common\*.* -r</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Fody.6.5.5\build\Fody.targets" Condition="Exists('..\packages\Fody.6.5.5\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

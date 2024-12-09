@@ -87,42 +87,21 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerKAWPOW;
                     case AlgorithmType.Octopus:
                         return AlgorithmType.DaggerOctopus;
-                    case AlgorithmType.KarlsenHash:
-                        return AlgorithmType.DaggerKarlsenHash;
-                    case AlgorithmType.Alephium:
-                        return AlgorithmType.DaggerAlephium;
                 }
             }
             if (AlgorithmID == AlgorithmType.FishHash)
             {
                 switch (SecondaryAlgorithmID)
                 {
-                    case AlgorithmType.KarlsenHash:
-                        return AlgorithmType.FishHashKarlsenHash;
-                    case AlgorithmType.Alephium:
-                        return AlgorithmType.FishHashAlephium;
                     case AlgorithmType.PyrinHash:
                         return AlgorithmType.FishHashPyrinHash;
                 }
             }
-            if (AlgorithmID == AlgorithmType.ETCHash)
-            {
-                switch (SecondaryAlgorithmID)
-                {
-                    case AlgorithmType.KarlsenHash:
-                        return AlgorithmType.ETCHashKarlsenHash;
-                    case AlgorithmType.Alephium:
-                        return AlgorithmType.ETCHashAlephium;
-                }
-            }
+
             if (AlgorithmID == AlgorithmType.Autolykos)
             {
                 switch (SecondaryAlgorithmID)
                 {
-                    case AlgorithmType.KarlsenHash:
-                        return AlgorithmType.AutolykosKarlsenHash;
-                    case AlgorithmType.Alephium:
-                        return AlgorithmType.AutolykosAlephium;
                     case AlgorithmType.PyrinHash:
                         return AlgorithmType.AutolykosPyrinHash;
                 }
@@ -131,10 +110,6 @@ namespace NiceHashMiner
             {
                 switch (SecondaryAlgorithmID)
                 {
-                    case AlgorithmType.KarlsenHash:
-                        return AlgorithmType.OctopusKarlsenHash;
-                    case AlgorithmType.Alephium:
-                        return AlgorithmType.OctopusAlephium;
                     case AlgorithmType.PyrinHash:
                         return AlgorithmType.OctopusPyrinHash;
                 }
@@ -746,7 +721,9 @@ namespace NiceHashMiner
 
             BenchLines = new List<string>();
             _benchmarkLogPath =
-                $"{Logger.LogPath}Log_{MiningSetup.MiningPairs[0].Device.Uuid}_{MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID}";
+                $"{Logger.LogPath}Log_{MiningSetup.MiningPairs[0].Device.Uuid}_" +
+                $"{MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID}" +
+                $"{MiningSetup.MiningPairs[0].Algorithm.SecondaryNiceHashID}";
 
             var commandLine = BenchmarkCreateCommandLine(BenchmarkAlgorithm, time);
             var benchmarkThread = new Thread(BenchmarkThreadRoutine, time);

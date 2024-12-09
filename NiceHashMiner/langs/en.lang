@@ -254,7 +254,7 @@
         "Form_Settings_ToolTip_ServiceLocation": "Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency.",
         "Form_Settings_ToolTip_TimeUnit": "Sets the time unit to report BTC rates.",
         "Form_Settings_ToolTip_checkBox_AutoStartMining": "When checked, Miner Legacy Fork Fix will automatically start mining when launched.",
-        "Form_Settings_ToolTip_checkBox_HideMiningWindows": "When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden.",
+        "Form_Settings_ToolTip_checkBox_HideMiningWindows": "When checked, miners console windows will be hidden.",
         "Form_Settings_ToolTip_checkBox_MinimizeToTray": "When checked, Miner Legacy Fork Fix will minimize to tray.",
         "Form_Settings_ToolTip_CPU_LessThreads": "Reduce the number of threads used on each CPU by LessThreads.",
         "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Force certain CPU extension miner.",
@@ -270,7 +270,7 @@
         "Form_Settings_ToolTip_SwitchMinSeconds": "Lower bound for the randomly chosen profit check interval.\nDo not set too low.",
 
 
-        "Form_Settings_ToolTip_MinerAPIQueryInterval": "API query interval for ccminer, sgminer cpuminer and ethminer.",
+        "Form_Settings_ToolTip_MinerAPIQueryInterval": "API query interval for miners.",
         "Form_Settings_ToolTip_MinerRestartDelayMS": "Amount of time (in milliseconds) that Miner Legacy Fork Fix will wait before restarting the miner.",
         "Form_Settings_ToolTip_MinerAPIGraceSeconds": "Period of time when restart of miner is not forced if API is unreachable.",
         "Form_Settings_ToolTip_MinerAPIGraceSecondsAMD": "Period of additional time when restart of AMD GPU miner is not forced if API is unreachable.",
@@ -649,6 +649,7 @@
 "MSIAB_Checking": "Checking MSI Afterburner",
 "MSIAB_Closing": "Closing MSI Afterburner",
 "listViewDevices_ToolTip": "Press right mouse button on\r\nselected GPU for advanced features",
+"listViewAlgorithms_ToolTip": "Press right mouse button on\r\nselected algorithm for advanced features",
 "FormSettings_By_profitability_of_all_devices": "By profitability of all devices",
 "Form_Settings_buttonLicence": "View licence",
 "Form_Settings_buttonHistory": "View history",

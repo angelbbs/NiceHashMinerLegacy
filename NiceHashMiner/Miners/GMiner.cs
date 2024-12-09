@@ -162,22 +162,6 @@ namespace NiceHashMiner.Miners
                 port = "3393";
                 ZilMining = "";
             }
-            /*
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
-            {
-                algo = "ironfish";
-                algoName = "ironfish";
-                nicehashstratum = " --proto stratum";
-                port = "3397";
-            }
-            */
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
-            {
-                algo = "karlsenhash";
-                algoName = "karlsenhash";
-                nicehashstratum = " --proto stratum";
-                port = "3398";
-            }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
@@ -222,17 +206,6 @@ namespace NiceHashMiner.Miners
                 nicehashstratum = " --proto stratum";
                 port = "3390";
             }
-
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
-            {
-                algo = "karlsenhash";
-                algoName = "karlsenhash";
-                ssl = " --ssl 0";
-                nicehashstratum = " --proto stratum";
-                port = "3398";
-            }
-
-            
 
             return GetDevicesCommandString() + nicehashstratum +
                   " --algo " + algo + pers +
@@ -538,20 +511,6 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
                 GetDevicesCommandString();
             }
-            /*
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
-            {
-                ret = " --color 0 --pec --algo ironfish" +
-                " --server " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521 --pass x" +
-                GetDevicesCommandString();
-            }
-            */
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
-            {
-                ret = " --color 0 --pec --algo karlsenhash" +
-                " --server " + Links.CheckDNS("kls.2miners.com:2020").Replace("stratum+tcp://", "") + " --user karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.gminer --pass x" +
-                GetDevicesCommandString();
-            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
                 ret = " --color 0 --pec --algo octopus" +
@@ -673,18 +632,7 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 15;
                     }
-                    /*
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.IronFish))
-                    {
-                        MinerStartDelay = 5;
-                        delay_before_calc_hashrate = 5;
-                    }
-                    */
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
-                    {
-                        MinerStartDelay = 5;
-                        delay_before_calc_hashrate = 5;
-                    }
+
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.ZHash))
                     {
                         MinerStartDelay = 10;

@@ -244,9 +244,12 @@ namespace NiceHashMiner
             // 
             // linkLabelCheckStats
             // 
+            this.linkLabelCheckStats.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.linkLabelCheckStats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelCheckStats.AutoSize = true;
-            this.linkLabelCheckStats.Location = new System.Drawing.Point(644, 36);
+            this.linkLabelCheckStats.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.linkLabelCheckStats.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.linkLabelCheckStats.Location = new System.Drawing.Point(648, 36);
             this.linkLabelCheckStats.Name = "linkLabelCheckStats";
             this.linkLabelCheckStats.Size = new System.Drawing.Size(94, 13);
             this.linkLabelCheckStats.TabIndex = 9;
@@ -543,6 +546,7 @@ namespace NiceHashMiner
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Miner Legacy";
+            this.Activated += new System.EventHandler(this.Form_Main_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Main_Shown);
             this.ResizeBegin += new System.EventHandler(this.Form_Main_ResizeBegin);

@@ -260,35 +260,16 @@ namespace NiceHashMiner.Miners
                               " --devices ";
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
-                LastCommandLine = "--algo KARLSEN" +
-                GetServer("karlsenhash", username, null, "3398") +
+                LastCommandLine = "--algo OCTOPUS" +
+                GetServer("octopus", username, null, "3389") +
                     apiBind + " " + param +
                               " --devices ";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Alephium)
-            {
-                LastCommandLine = "--algo ALEPH" +
-                GetServer("alephium", username, null, "3399") +
-                    apiBind + " " + param +
-                              " --devices ";
-            }
+
             //duals
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Alephium)
-            {
-                LastCommandLine = "--algo FISHHASH" +
-                GetServerDual("fishhash", "ALEPHDUAL", "alephium", username, worker, "3400", "3399") +
-                    apiBind + " " + param +
-                              " --devices ";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
-            {
-                LastCommandLine = "--algo FISHHASH" +
-                GetServerDual("fishhash", "KARLSENDUAL", "karlsenhash", username, worker, "3400", "3398") +
-                    apiBind + " " + param +
-                              " --devices ";
-            }
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
             {
                 LastCommandLine = "--algo FISHHASH" +
@@ -406,15 +387,15 @@ namespace NiceHashMiner.Miners
                               param +
                 " --devices ";
             }
-            /*
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.IronFish)
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
-                CommandLine = "--algo IRONFISH " +
-                " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
+                CommandLine = "--algo OCTOPUS " +
+                " --pool " + Links.CheckDNS("pool.woolypooly.com:3094").Replace("stratum+tcp://", "") + " --user cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
-            */
+
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash)
             {
                 CommandLine = "--algo FISHHASH " +
@@ -422,20 +403,7 @@ namespace NiceHashMiner.Miners
                               param +
                 " --devices ";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
-            {
-                CommandLine = "--algo KARLSEN " +
-                " --pool " + Links.CheckDNS("kls.2miners.com:2020").Replace("stratum+tcp://", "") + " --user karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.lolMiner --pass x" +
-                              param +
-                " --devices ";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Alephium)
-            {
-                CommandLine = "--algo ALEPH " +
-                " --pool " + Links.CheckDNS("ru.alephium.herominers.com:1199").Replace("stratum+tcp://", "") + " --user 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.lolMiner --pass x" +
-                              param +
-                " --devices ";
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.PyrinHash)
             {
                 CommandLine = "--algo PYRIN " +
@@ -444,22 +412,7 @@ namespace NiceHashMiner.Miners
                 " --devices ";
             }
             //duals
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.Alephium)
-            {
-                CommandLine = "--algo FISHHASH " +
-                                " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
-                                " --dualmode ALEPHDUAL --dualpool " + Links.CheckDNS("ru.alephium.herominers.com:1199").Replace("stratum + tcp://", "") + " --dualuser 12bjcHBTbdqW3zfDc84qq8z6RNZr33oXgqqaYdZRUD5qC.lolMiner --dualpass x" +
-                                              param +
-                                " --devices ";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.KarlsenHash)
-            {
-                CommandLine = "--algo FISHHASH " +
-                                " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
-                                " --dualmode KARLSENDUAL --dualpool " + Links.CheckDNS("kls.2miners.com:2020").Replace("stratum + tcp://", "") + " --dualuser karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.lolMiner --dualpass x" +
-                                              param +
-                                " --devices ";
-            }
+            
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
             {
                 CommandLine = "--algo FISHHASH " +
@@ -719,10 +672,7 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 80;
                 }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
-                {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
-                }
+                
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.PyrinHash))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
@@ -835,21 +785,13 @@ namespace NiceHashMiner.Miners
                         delay_before_calc_hashrate = 90;
                         MinerStartDelay = 30;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KarlsenHash))
-                    {
-                        delay_before_calc_hashrate = 10;
-                        MinerStartDelay = 10;
-                    }
+                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.PyrinHash))
                     {
                         delay_before_calc_hashrate = 10;
                         MinerStartDelay = 10;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.Alephium))
-                    {
-                        delay_before_calc_hashrate = 10;
-                        MinerStartDelay = 10;
-                    }
+                    
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
                     {
                         delay_before_calc_hashrate = 40;
@@ -1053,6 +995,7 @@ namespace NiceHashMiner.Miners
                                     hashrates[w] = resp.Algorithms[alg].Worker_Performance[w] * resp.Algorithms[alg].Performance_Factor;
                                 }
                             }
+                            /*
                             if (Algorithm.Contains("Blake3-Alephium"))
                             {
                                 Total_Performance2[alg] = resp.Algorithms[alg].Total_Performance * resp.Algorithms[alg].Performance_Factor;
@@ -1073,6 +1016,7 @@ namespace NiceHashMiner.Miners
                                 }
                                 ad.SecondaryAlgorithmID = AlgorithmType.KarlsenHash;
                             }
+                            */
                             if (Algorithm.Contains("HeavyHash-Pyrin"))
                             {
                                 Total_Performance2[alg] = resp.Algorithms[alg].Total_Performance * resp.Algorithms[alg].Performance_Factor;

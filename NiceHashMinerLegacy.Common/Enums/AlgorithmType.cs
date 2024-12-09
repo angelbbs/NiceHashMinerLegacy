@@ -120,8 +120,8 @@
         KHeavyHash__UNUSED = 62,
         NexaPow = 63,
         IronFish_UNUSED = 64,
-        KarlsenHash = 65,
-        Alephium = 66,
+        KarlsenHash_UNUSED = 65,
+        Alephium_UNUSED = 66,
         FishHash = 67,
         PyrinHash = 68
         #endregion // NiceHashAPI

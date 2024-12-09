@@ -33,7 +33,6 @@ namespace NiceHashMiner.Forms.Components
             void ChangeSpeed(ListViewItem lvi);
         }
 
-        public IAlgorithmsListView ComunicationInterface { get; set; }
 
         public IBenchmarkCalculation BenchmarkCalculation { get; set; }
 
@@ -641,7 +640,10 @@ namespace NiceHashMiner.Forms.Components
 
         private void ListViewAlgorithms_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            ComunicationInterface?.SetCurrentlySelected(e.Item, _computeDevice);
+            if (Form_Main.settings is object)
+            {
+                Form_Main.settings.SetCurrentlySelected(e.Item, _computeDevice);
+            }
         }
 
         private void ListViewAlgorithms_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -668,7 +670,7 @@ namespace NiceHashMiner.Forms.Components
                 }
             }
 
-            ComunicationInterface?.HandleCheck(e.Item);
+            //ComunicationInterface?.HandleCheck(e.Item);
             var lvi = e.Item;
             _listItemCheckColorSetter.LviSetColor(lvi);
             // update benchmark status data
@@ -696,7 +698,9 @@ namespace NiceHashMiner.Forms.Components
                 {
                     foreach (ListViewItem lvi in listViewAlgorithms.Items)
                     {
-                        if (lvi.Tag is Algorithm algo && algo.AlgorithmStringID == algorithm.AlgorithmStringID)
+                        if (lvi.Tag is Algorithm algo && algo.NiceHashID == algorithm.NiceHashID &&
+                            algo.SecondaryNiceHashID == algorithm.SecondaryNiceHashID &&
+                            algo.MinerBaseTypeName == algorithm.MinerBaseTypeName)
                         {
                             // TODO handle numbers
                             if (algo != null)
@@ -749,7 +753,7 @@ namespace NiceHashMiner.Forms.Components
                             if (algorithm is DualAlgorithm dualAlg)
                             {
                                 //lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + dualAlg.SecondaryCurPayingRatio;
-                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + algorithm.CurSecondPayingRatio;
+                                //lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio + "/" + algorithm.CurSecondPayingRatio;
                             }
                             else
                             {
@@ -1118,7 +1122,7 @@ namespace NiceHashMiner.Forms.Components
                         // update benchmark status data
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                         // update settings
-                        ComunicationInterface?.ChangeSpeed(lvi);
+                        if (Form_Main.settings is object) Form_Main.settings.ChangeSpeed(lvi);
                     }
                 }
             }
@@ -1192,7 +1196,7 @@ namespace NiceHashMiner.Forms.Components
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
 
-                        ComunicationInterface?.ChangeSpeed(lvi);
+                        if (Form_Main.settings is object) Form_Main.settings.ChangeSpeed(lvi);
                     }
                 }
             }
@@ -1209,7 +1213,7 @@ namespace NiceHashMiner.Forms.Components
                         if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
                         {
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                            ComunicationInterface?.ChangeSpeed(lvi);
+                            if (Form_Main.settings is object) Form_Main.settings.ChangeSpeed(lvi);
                         }
                     }
                 }
@@ -1228,7 +1232,7 @@ namespace NiceHashMiner.Forms.Components
                         if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
                         {
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
-                            ComunicationInterface?.ChangeSpeed(lvi);
+                            if (Form_Main.settings is object) Form_Main.settings.ChangeSpeed(lvi);
                         }
                     }
                 }
@@ -1309,7 +1313,7 @@ namespace NiceHashMiner.Forms.Components
                             algorithm.Forced = true;
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                             BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
-                            ComunicationInterface?.ChangeSpeed(lvi);
+                            if (Form_Main.settings is object) Form_Main.settings.ChangeSpeed(lvi);
                         }
                         else
                         {
@@ -1350,7 +1354,7 @@ namespace NiceHashMiner.Forms.Components
                         algorithm.Forced = false;
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
-                        ComunicationInterface?.ChangeSpeed(lvi);
+                        if (Form_Main.settings is object) Form_Main.settings.ChangeSpeed(lvi);
                     }
                 }
             }
@@ -1507,6 +1511,25 @@ namespace NiceHashMiner.Forms.Components
         private void listViewAlgorithms_MouseLeave(object sender, EventArgs e)
         {
             mouseDown = false;
+        }
+
+        private void listViewAlgorithms_MouseHover(object sender, EventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.DisableTooltips)
+            {
+                return;
+            }
+            Control senderObject = sender as Control;
+            string hoveredControl = senderObject.TopLevelControl.Name;
+
+            ToolTip toolTip1 = new ToolTip();
+            toolTip1.AutoPopDelay = 5000;
+            toolTip1.InitialDelay = 1000;
+            toolTip1.ReshowDelay = 500;
+            // Force the ToolTip text to be displayed whether or not the form is active.
+            toolTip1.ShowAlways = true;
+            toolTip1.IsBalloon = true;
+            toolTip1.SetToolTip(this.listViewAlgorithms, International.GetText("listViewAlgorithms_ToolTip"));
         }
     }
     class ListViewColumnComparer : IComparer

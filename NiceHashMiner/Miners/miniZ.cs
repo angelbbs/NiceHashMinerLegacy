@@ -193,13 +193,7 @@ namespace NiceHashMiner.Miners
                 port = "3389";
                 pers = " --pers auto";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
-            {
-                algo = "karlsen";
-                algoName = "karlsenhash";
-                port = "3398";
-                pers = " --pers auto";
-            }
+            
             string sColor = "";
             if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
             {
@@ -340,18 +334,7 @@ namespace NiceHashMiner.Miners
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }
-                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KarlsenHash)
-                {
-                    algo = "karlsen";
-                    algoName = "karlsenhash";
-                    ret = GetDevicesCommandString()
-                          + " --nocolour --par=" + algo
-                          + " --url karlsen:qrnsjf7ka334kx0rlgfxxvqf04c9qthdltfj7q7amm6nqvmqz9csunnazj64s.miniz@" + Links.CheckDNS("stratum+tcp://ru.karlsen.herominers.com:1195").Replace("stratum+tcp://", "")
-                          + " --url " + username + "@" + server.Replace("stratum+tcp://", "")
-                          + " --pass=x" + " --telemetry=" + ApiPort;
-                    _benchmarkTimeWait = time;
-                }
-
+                
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("BenchmarkCreateCommandLine", ex.ToString());

@@ -1327,6 +1327,25 @@ namespace NiceHashMiner.Forms.Components
         {
             mouseDown = false;
         }
+
+        private void listViewAlgorithms_MouseHover(object sender, EventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.DisableTooltips)
+            {
+                return;
+            }
+            Control senderObject = sender as Control;
+            string hoveredControl = senderObject.TopLevelControl.Name;
+
+            ToolTip toolTip1 = new ToolTip();
+            toolTip1.AutoPopDelay = 5000;
+            toolTip1.InitialDelay = 1000;
+            toolTip1.ReshowDelay = 500;
+            // Force the ToolTip text to be displayed whether or not the form is active.
+            toolTip1.ShowAlways = true;
+            toolTip1.IsBalloon = true;
+            toolTip1.SetToolTip(this.listViewAlgorithms, International.GetText("listViewAlgorithms_ToolTip"));
+        }
     }
     class ListViewColumnComparerOverClock : IComparer
     {

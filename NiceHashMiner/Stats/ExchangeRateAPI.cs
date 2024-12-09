@@ -158,6 +158,7 @@ namespace NiceHashMiner.Stats
         {
             var price = Form_Main.GetKwhPrice();
             if (price <= 0) return 0;
+            /*
             // Converting with 1/price will give us 1/usdPrice
             var invertedUsdRate = ConvertToActiveCurrency(1 / price);
             if (invertedUsdRate <= 0)
@@ -169,6 +170,7 @@ namespace NiceHashMiner.Stats
             }
             // Make price in USD
             price = 1 / invertedUsdRate;
+            */
             // Race condition not a problem since UsdBtcRate will never update to 0
             if (UsdBtcRate <= 0)
             {

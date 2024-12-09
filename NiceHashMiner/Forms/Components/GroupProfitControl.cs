@@ -21,7 +21,6 @@ namespace NiceHashMiner.Forms.Components
             {
                 toolTip2.SetToolTip(button_restart, "Restart miner");
             }
-            richTextBoxSpeedValue.SelectionColor = Form_Main._foreColor;
             groupBoxMinerGroup.ForeColor = Form_Main._foreColor;
             groupBoxMinerGroup.BackColor = Form_Main._backColor;
             groupBoxMinerGroup.DoubleBuffer();
@@ -50,10 +49,9 @@ namespace NiceHashMiner.Forms.Components
             labelBTCRateValue.Text = btcRateString;
             labelCurentcyPerDayVaue.Text = currencyRateString;
 
-            richTextBoxSpeedValue.Rtf = speedString;
+            richTextBoxSpeedValue.Text = speedString;
             richTextBoxSpeedValue.SelectionStart = 0;
             richTextBoxSpeedValue.SelectionLength = richTextBoxSpeedValue.Text.Length;
-            richTextBoxSpeedValue.SelectionColor = Form_Main._foreColor;
             richTextBoxSpeedValue.BackColor = Form_Main._backColor;
 
             button_restart.Tag = ProcessTag;
@@ -94,15 +92,23 @@ namespace NiceHashMiner.Forms.Components
 
         private void buttonBTC_restart(object sender, System.EventArgs e)
         {
-            // Form_Main.ActiveForm.Focus();
             Helpers.ConsolePrint("NICEHASH", "Restarting miner: " + button_restart.Tag.ToString());
             MiningSession.RestartMiner(button_restart.Tag.ToString());
-            //button_restart.Enabled = false;
             button_restart.ForeColor = Form_Main._backColor;
             button_restart.Image = Properties.Resources.Refresh_disabled;
             button_restart.UseVisualStyleBackColor = false;
             button_restart.FlatAppearance.BorderSize = 0;
             button_restart.Update();
+        }
+
+        private void richTextBoxSpeedValue_Enter(object sender, EventArgs e)
+        {
+            ActiveControl = groupBoxMinerGroup;
+        }
+
+        private void richTextBoxSpeedValue_Enter_1(object sender, EventArgs e)
+        {
+            ActiveControl = groupBoxMinerGroup;
         }
     }
 }

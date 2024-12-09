@@ -226,8 +226,6 @@ namespace NiceHashMiner
             public uint tempMem;
         }
 
-
-
         public Form_Main()
         {
 
@@ -1034,33 +1032,26 @@ namespace NiceHashMiner
             NHApiFlag = NiceHashStats.GetApiFlags();
         }
 
+        private class TimeInterval
+        {
+            public TimeSpan From;
+            public TimeSpan To;
+            public double Price;
+        }
         public static double GetKwhPrice()
         {
-            TimeSpan _From = new TimeSpan();
-            TimeSpan _To = new TimeSpan();
-            TimeSpan _Add = new TimeSpan(0, 0, 0);//при переходе через 24:00
             double _price = 0.0d;
+            List<TimeInterval> zones = new List<TimeInterval>();
+
             if (ConfigManager.GeneralConfig.PowerTarif == 0)
             {
                 try
                 {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule1[0]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule1[1]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule1[2]);
+                    TimeInterval _interval = new();
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule1[0]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule1[1]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule1[2]);
+                    zones.Add(_interval);
                 }
                 catch (FormatException ex)
                 {
@@ -1070,52 +1061,20 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.PowerTarif == 1)
             {
-                //1
                 try
                 {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule2[0]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule2[1]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule2[2]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
+                    TimeInterval _interval = new();
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule2[0]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule2[1]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule2[2]);
+                    zones.Add(_interval);
 
-                //2
-                try
-                {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule2[3]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule2[4]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule2[5]);
+                    _interval = new();
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule2[3]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule2[4]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule2[5]);
+                    zones.Add(_interval);
+
                 }
                 catch (FormatException ex)
                 {
@@ -1125,151 +1084,67 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.PowerTarif == 2)
             {
-                //1
                 try
                 {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[0]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[1]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule3[2]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
+                    TimeInterval _interval = new();
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule3[0]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule3[1]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule3[2]);
+                    zones.Add(_interval);
+                    _interval = new();
 
-                //2
-                try
-                {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[3]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[4]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule3[5]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule3[3]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule3[4]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule3[5]);
+                    zones.Add(_interval);
+                    _interval = new();
 
-                //3
-                try
-                {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[6]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[7]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule3[8]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule3[6]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule3[7]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule3[8]);
+                    zones.Add(_interval);
+                    _interval = new();
 
-                //4
-                try
-                {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[9]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[10]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule3[11]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule3[9]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule3[10]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule3[11]);
+                    zones.Add(_interval);
+                    _interval = new();
 
-                //5
-                try
-                {
-                    _From = TimeSpan.Parse(Form_Main.ZoneSchedule3[12]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _To = TimeSpan.Parse(Form_Main.ZoneSchedule3[13]);
-                }
-                catch (FormatException ex)
-                {
-                    Helpers.ConsolePrint("GetKwhPrice", ex.Message);
-                }
-                try
-                {
-                    _price = double.Parse(Form_Main.ZoneSchedule3[14]);
+                    _interval.From = TimeSpan.Parse(Form_Main.ZoneSchedule3[12]);
+                    _interval.To = TimeSpan.Parse(Form_Main.ZoneSchedule3[13]);
+                    _interval.Price = double.Parse(Form_Main.ZoneSchedule3[14]);
+                    zones.Add(_interval);
+                    _interval = new();
                 }
                 catch (FormatException ex)
                 {
                     Helpers.ConsolePrint("GetKwhPrice", ex.Message);
                 }
             }
-
-            if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+            foreach (var zone in zones)
             {
-                _Add = new TimeSpan(24, 0, 0);
-                _To = _To.Add(_Add);
-            }
-            if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
-            {
-                return _price;
-            }
-            if (DateTime.Now.TimeOfDay.IsBetween(_From, _To))//переход через 23:59:59
-            {
-                return _price;
-            }
+                TimeSpan _From = new TimeSpan();
+                TimeSpan _To = new TimeSpan();
+                TimeSpan _Add = new TimeSpan(0, 0, 0);
+                _From = zone.From;
+                _To = zone.To;
+                _price = zone.Price;
 
+                if (_To.TotalMilliseconds - _From.TotalMilliseconds < 0)
+                {
+                    _Add = new TimeSpan(24, 0, 0);
+                    _To = _To.Add(_Add);
+                }
+                if (DateTime.Now.TimeOfDay.Add(_Add) >= _From && DateTime.Now.TimeOfDay.Add(_Add) < _To)
+                {
+                    return _price;
+                }
+                if (DateTime.Now.TimeOfDay.IsBetween(_From, _To))//переход через 23:59:59
+                {
+                    return _price;
+                }
+            }
             return 0.0d;
         }
 
@@ -1790,6 +1665,12 @@ namespace NiceHashMiner
             _loadingScreen.SetValueAndMsg(100, International.GetText("Form_Main_loadtext_Check_VC_redistributable"));
             InstallVcRedist();
 
+            //buttonChangeWorkerName.Enabled = false;
+            textBoxBTCAddress_new.Enabled = true;
+            textBoxWorkerName.Enabled = true;
+            comboBoxLocation.Enabled = true;
+            linkLabelCheckStats.Enabled = true;
+
             if (_loadingScreen != null)
             {
                 _loadingScreen.FinishLoad();
@@ -1817,7 +1698,8 @@ namespace NiceHashMiner
                     string p = process.StartInfo.WorkingDirectory;
                     if (m.Contains("MSIAfterburner") || m.Contains("NvidiaGPUGetDataHost") ||
                         m.Contains("netsh") || m.Contains("cports") || m.Contains("sc") ||
-                        m.Contains("igfx") || m.Contains("vc_redist") || m.ToLower().Contains("notepad") || m.ToLower().Contains("form_splash"))
+                        m.Contains("igfx") || m.Contains("vc_redist") || m.ToLower().Contains("notepad") ||
+                        m.ToLower().Contains("form_splash") || m.ToLower().Contains("reg"))
                     {
                         continue;
                     }
@@ -2089,7 +1971,12 @@ namespace NiceHashMiner
             buttonChangeWorkerName.FlatAppearance.BorderSize = 0;
             buttonChangeWorkerName.FlatAppearance.MouseOverBackColor = _backColor;
             buttonChangeWorkerName.Enabled = false;
+            textBoxBTCAddress_new.Enabled = false;
+            textBoxWorkerName.Enabled = false;
+            comboBoxLocation.Enabled = false;
+            linkLabelCheckStats.Enabled = false;
 
+            this.Enabled = true;
             if (ConfigManager.GeneralConfig.ColorProfileIndex != 0)
             {
                 if (this != null)
@@ -2204,7 +2091,7 @@ namespace NiceHashMiner
             _startupTimer.Tick += StartupTimer_Tick;
             _startupTimer.Interval = 200;
             _startupTimer.Start();
-            textBoxBTCAddress_new.Enabled = true;
+            //textBoxBTCAddress_new.Enabled = true;
 
             Application.DoEvents();
             _remoteTimer = new Timer();
@@ -2247,7 +2134,13 @@ namespace NiceHashMiner
                 }
             }
             Form_Main.RigProfits.Add(Form_Main.lastRigProfit);
-            _loadingScreen.SetValueAndMsg(1, "Starting...");
+            try
+            {
+                _loadingScreen.SetValueAndMsg(1, "Starting...");
+            } catch (Exception ex)
+            {
+
+            }
             Application.DoEvents();
         }
 
@@ -2792,9 +2685,9 @@ public static void CloseChilds(Process parentId)
                 speedString = "...";
             }
             
-            string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
-            speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + speedString + "\\b\\par}";
-
+            //string speedStringRtf = "{\\rtf1\\ansi\\ansicpg1251\\deff0\\nouicompat\\deflang1049{\\fonttbl{\\f0\\fnil\\fcharset204 Microsoft Sans Serif;}}\r";
+            //speedString = speedStringRtf + "{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1\\pard\\b\\f0\\fs17 " + International.GetText("ListView_Speed") + "  " + speedString + "\\b\\par}";
+            speedString = International.GetText("ListView_Speed") + " " + speedString;
             var rateBtcString = FormatPayingOutput(paying, power);
             if (!ConfigManager.GeneralConfig.DecreasePowerCost)
             {
@@ -2921,7 +2814,7 @@ public static void CloseChilds(Process parentId)
                     totalPowerRateDec = totalPowerRate;
                 }
 
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate - totalPowerRateDec < 0.1)
                 {
                     if (totalPowerRate != 0)
                     {
@@ -3084,7 +2977,13 @@ public static void CloseChilds(Process parentId)
             {
                 if (!ConfigManager.GeneralConfig.DisableTooltips)
                 {
-                    toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
+                    string tooltip = ($"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
+                    toolTip1.AutoPopDelay = 3000;
+                    toolTip1.InitialDelay = 1000;
+                    toolTip1.ReshowDelay = 5000;
+                    toolTip1.ShowAlways = false;
+                    toolTip1.IsBalloon = false;
+                    toolTip1.SetToolTip(this.statusStrip1, tooltip);
                 }
             }
             catch (Exception ex)
@@ -3458,7 +3357,6 @@ public static void CloseChilds(Process parentId)
         private void ButtonBenchmark_Click(object sender, EventArgs e)
         {
             if (DownloadingInProgress) return;
-
             _benchmarkForm = new Form_Benchmark();
             //  SetChildFormCenter(_benchmarkForm);
             _benchmarkForm.ShowDialog();
@@ -4517,6 +4415,7 @@ public static void CloseChilds(Process parentId)
         private void Form_Main_ResizeEnd(object sender, EventArgs e)
         {
             FormMainMoved = false;
+            ConfigManager.GeneralConfig.FormWidth = this.Width;
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -4558,7 +4457,7 @@ public static void CloseChilds(Process parentId)
             toolTipStatus.AutoPopDelay = 5000;
             toolTipStatus.InitialDelay = 1000;
             toolTipStatus.ReshowDelay = 5000;
-            toolTipStatus.ShowAlways = true;
+            toolTipStatus.ShowAlways = false;
             toolTipStatus.IsBalloon = true;
             toolTipStatus.SetToolTip(this.statusStrip1, ctooltip);
         }
@@ -4578,6 +4477,43 @@ public static void CloseChilds(Process parentId)
             {
                 buttonChangeWorkerName.Enabled = true;
             }
+        }
+
+        public static Color _grey = Color.FromArgb(150, 150, 150);
+        public static void DrawGroupBox(GroupBox box, Graphics g, Color textColor, Color borderColor)
+        {
+            if (box != null)
+            {
+                Brush textBrush = new SolidBrush(textColor);
+                Brush borderBrush = new SolidBrush(borderColor);
+                Pen borderPen = new Pen(borderBrush);
+                SizeF strSize = g.MeasureString(box.Text, box.Font);
+                Rectangle rect = new Rectangle(box.ClientRectangle.X,
+                                               box.ClientRectangle.Y + (int)(strSize.Height / 2),
+                                               box.ClientRectangle.Width - 1,
+                                               box.ClientRectangle.Height - (int)(strSize.Height / 2) - 1);
+                var PaddingLeft = 4;
+                // Clear text and border
+                g.Clear(Form_Main._backColor);
+                // Draw text
+                g.DrawString(box.Text, box.Font, textBrush, box.Padding.Left + PaddingLeft, 0);
+                // Drawing Border
+                //Left
+                g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
+                //Right
+                g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                //Bottom
+                g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                //Top1
+                g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left + PaddingLeft, rect.Y));
+                //Top2
+                g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + PaddingLeft + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
+            }
+        }
+
+        private void Form_Main_Activated(object sender, EventArgs e)
+        {
+            this.Width = ConfigManager.GeneralConfig.FormWidth;
         }
     }
 

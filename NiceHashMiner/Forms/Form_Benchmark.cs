@@ -58,6 +58,7 @@ namespace NiceHashMiner.Forms
         public static bool FormBenchmarkMoved = false;
         private ComputeDevice _selectedComputeDevice;
         private bool benchmarkRepeat = false;
+        private bool _isInitFinished = false;
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
         {
@@ -212,6 +213,7 @@ namespace NiceHashMiner.Forms
             progressBarBenchmarkSteps.Maximum = 0;
             progressBarBenchmarkSteps.Value = 0;
             SetLabelBenchmarkSteps(0, 0);
+            _isInitFinished = true;
         }
 
         private void UpdateLvi_Tick(object sender, EventArgs e)
@@ -591,7 +593,7 @@ namespace NiceHashMiner.Forms
                 }
             }
             */
-            if (Form_Main.MiningStarted)
+            if (Form_Main.MiningStarted && _isInitFinished)
             {
                 MessageBox.Show(International.GetText("Form_Benchmark_Stop_mining_first"),
                     International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -945,7 +947,7 @@ namespace NiceHashMiner.Forms
         {
             ConfigManager.CommitBenchmarks();
 
-            if (Miner.IsRunningNew)
+            if (Miner.IsRunningNew && _isInitFinished)
             {
                 MessageBox.Show(International.GetText("Form_Benchmark_Stop_mining_first"),
                 International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
