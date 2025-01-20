@@ -319,19 +319,15 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             //*********
-            /*
-            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.lolMiner) &&
-                (device.Codename.ToLower().Contains("ellesmere") ||
-                device.Name.ToLower().Contains("vega") || device.Name.ToLower().Contains("vii")))
+            if (device.DeviceType == DeviceType.AMD &&
+                (device.Codename.ToLower().Contains("ellesmere")))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                 {
-                    AlgorithmType.FishHashAlephium,
-                    AlgorithmType.FishHashKarlsenHash,
-                    AlgorithmType.FishHashPyrinHash
+                    AlgorithmType.Octopus,
+                    AlgorithmType.OctopusPyrinHash
                 });
             }
-            */
             /*
             if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.lolMiner) &&
                 (device.Codename.ToLower().Contains("gfx1010") || device.Codename.ToLower().Contains("gfx1011") ||
@@ -430,7 +426,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 foreach (var algo in algoSettings[MinerBaseType.CryptoDredge])
                 {
                     if (algo.DualNiceHashID == AlgorithmType.NeoScrypt && device.DeviceType == DeviceType.NVIDIA &&
-                        (device.Name.Contains("RTX 30")))
+                        (device.Name.Contains("RTX 30") || device.Name.Contains("RTX 40")))
                     {
                         algo.Enabled = false;
                         algo.Hidden = true;

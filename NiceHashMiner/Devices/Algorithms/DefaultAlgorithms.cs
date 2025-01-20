@@ -92,6 +92,10 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.VerusHash, "VerusHash")
                             {
                               //  ExtraLaunchParameters = " "
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.XelisHashV2, "XelisHashV2")
+                            {
+                              //  ExtraLaunchParameters = " "
                             }
                         }
             }
@@ -396,10 +400,12 @@ Fatal error detected. Restarting.
                             {
                                 ExtraLaunchParameters = "--enablezilcache=1"
                             },
+                            /*
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 ExtraLaunchParameters = ""
@@ -523,8 +529,8 @@ Fatal error detected. Restarting.
             */
             { MinerBaseType.CryptoDredge,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt"),
-                            new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.KAWPOW, "KAWPOW")
+                            new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt")
+                            //new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.KAWPOW, "KAWPOW")
                         }
             },
             { MinerBaseType.trex,
@@ -570,11 +576,11 @@ Fatal error detected. Restarting.
             
             { MinerBaseType.miniZ,
                         new List<Algorithm>() {
-                            /*
-                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")//broken in 2.3.c
+                            
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.BeamV3, "BeamV3")
                             {
                             },
-                            */
+                            
                              new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZHash, "ZHash")
                             {
                             },
@@ -587,8 +593,9 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.Octopus, "Octopus")
                             {
                             }
+                            //Invalid job params iron[0]
                             /*
-                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.KarlsenHash, "KarlsenHash")
+                            new Algorithm(MinerBaseType.miniZ, AlgorithmType.FishHash, "FishHash")
                             {
                             }
                             */
@@ -619,11 +626,12 @@ Fatal error detected. Restarting.
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
+                    /*
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32")
                     {
                                 //ExtraLaunchParameters = "--pec 1 "
                     },
-
+                    */
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.KAWPOW, "KAWPOW")
                     {
                     },
@@ -699,6 +707,10 @@ Fatal error detected. Restarting.
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.ZHash, "ZHash")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
                             {
                                 ExtraLaunchParameters = "--keepfree 1024"
@@ -718,12 +730,13 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, "FishHash")
                             {
                                 ExtraLaunchParameters = ""
-                            },
-
+                            }
+                            /*
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.PyrinHash, "PyrinHash")
                             {
                                 ExtraLaunchParameters = ""
                             },
+                            */
                             /*
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, AlgorithmType.Alephium, "FishHashAlephium")
                             {
@@ -734,9 +747,11 @@ Fatal error detected. Restarting.
                             {
                             },
                             */
+                            /*
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, AlgorithmType.PyrinHash, "FishHashPyrinHash")
                             {
                             }
+                            */
 
                         }
             },
@@ -778,6 +793,10 @@ Fatal error detected. Restarting.
                     },
                     */
                     new Algorithm(MinerBaseType.Rigel, AlgorithmType.PyrinHash, "PyrinHash")
+                    {
+                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
+                    },
+                    new Algorithm(MinerBaseType.Rigel, AlgorithmType.XelisHashV2, "XelisHashV2")
                     {
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
@@ -842,13 +861,6 @@ Fatal error detected. Restarting.
                     /*
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.DaggerHashimoto, AlgorithmType.KarlsenHash,
                         "DaggerKarlsenHash")
-                    {
-                        ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
-                    },
-                    */
-                    /*
-                    new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.FishHash, AlgorithmType.KarlsenHash,
-                        "FishHashKarlsenHash")
                     {
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },

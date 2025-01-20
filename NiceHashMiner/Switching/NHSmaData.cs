@@ -262,6 +262,10 @@ namespace NiceHashMiner.Switching
                 {
                     _currentSma[algo].Paying = paying;
                 }
+                if (algo == AlgorithmType.Autolykos || algo == AlgorithmType.ZelHash)
+                {
+                    _currentSma[algo].Paying = _currentSma[algo].Paying * 0.9;
+                }
             }
             HasData = true;
         }

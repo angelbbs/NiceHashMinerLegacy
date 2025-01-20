@@ -4514,6 +4514,7 @@ public static void CloseChilds(Process parentId)
         private void Form_Main_Activated(object sender, EventArgs e)
         {
             this.Width = ConfigManager.GeneralConfig.FormWidth;
+            this.Update();
         }
     }
 

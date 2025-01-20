@@ -96,6 +96,7 @@ namespace NiceHashMiner.Miners
                         ret = ret + " --url " + username + "@" + Links.CheckDNS(algo + "." + serverUrl).Replace("stratum+tcp://", "") + ":9200 ";
                     }
                     //if (!ConfigManager.GeneralConfig.ProxyAsFailover) break;
+                    break;
                 }
                 else//не проверено
                 {
@@ -193,7 +194,14 @@ namespace NiceHashMiner.Miners
                 port = "3389";
                 pers = " --pers auto";
             }
-            
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash)
+            {
+                algo = "fishhash";
+                algoName = "fishhash";
+                port = "3400";
+                pers = "";
+            }
+
             string sColor = "";
             if (Form_Main.GetWinVer(Environment.OSVersion.Version) < 8)
             {
@@ -334,7 +342,18 @@ namespace NiceHashMiner.Miners
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }
-                
+                if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash)
+                {
+                    algo = "fishhash";
+                    algoName = "fishhash";
+                    ret = GetDevicesCommandString()
+                          + " --nocolour --par=" + algo
+                          + " --url fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.miniz@" + Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "")
+                          + " --url " + username + "@" + server.Replace("stratum+tcp://", "")
+                          + " --pass=x" + " --telemetry=" + ApiPort;
+                    _benchmarkTimeWait = time;
+                }
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("BenchmarkCreateCommandLine", ex.ToString());

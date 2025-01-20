@@ -123,7 +123,8 @@
         KarlsenHash_UNUSED = 65,
         Alephium_UNUSED = 66,
         FishHash = 67,
-        PyrinHash = 68
+        PyrinHash = 68,
+        XelisHashV2 = 69
         #endregion // NiceHashAPI
     }
 }

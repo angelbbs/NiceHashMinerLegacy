@@ -9,7 +9,7 @@ namespace NiceHashMiner
         // Constants
         public static string[] MiningLocation = { };
 
-        public static readonly string DemoUser = "38GGAkeaa4qm799ZKg3YsoEMpiEHhh7dE4";
+        public static readonly string DemoUser = "3F2v4K3ExF1tqLLwa6Ac3meimSjV3iUZgQ";
 
         // change this if TOS changes
         public static int CurrentTosVer = 4;

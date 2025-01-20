@@ -225,6 +225,14 @@ namespace NiceHashMiner.Miners
                     return $" --algorithm verushash --disable-gpu --api-enable --api-port {ApiPort} {extras} " +
                         GetServer(algo, username, port);
                 }
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.XelisHashV2))
+                {
+                    var algo = "xelishashv2";
+                    var port = "3402";
+
+                    return $" --algorithm xelishashv2 --disable-gpu --api-enable --api-port {ApiPort} {extras} " +
+                        GetServer(algo, username, port);
+                }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.DaggerHashimoto))
                 {
                     var port = "3353";
@@ -351,6 +359,14 @@ namespace NiceHashMiner.Miners
 
                 return $" --disable-gpu --algorithm verushash"
                 + $" --pool {Links.CheckDNS("stratum+tcp://verushash.mine.zergpool.com")}:3300 --wallet 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 --password c=BTC" +
+                $" --nicehash true --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
+            }
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.XelisHashV2))
+            {
+                ApiPort = 4040;
+
+                return $" --disable-gpu --algorithm xelishashv2"
+                + $" --pool {Links.CheckDNS("stratum+tcp://de.xelis.herominers.com")}:1225 --wallet xel:empagph7k0hmlgzd9vev84cxt9nz52375cftmvkdw56vwa8zhahqzqqyvmgkthqe4ycqw --password x" +
                 $" --nicehash true --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName() } {extras}";
             }
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX))
@@ -688,7 +704,8 @@ namespace NiceHashMiner.Miners
                     }
 
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.RandomX) ||
-                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash))
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.VerusHash) ||
+                        MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.XelisHashV2))
                     {
                         try
                         {

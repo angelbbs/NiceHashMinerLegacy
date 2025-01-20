@@ -504,6 +504,7 @@ namespace NiceHashMiner.Forms
             checkBoxEnableProxy.Text = International.GetText("FormSettings_Tab_Advanced_checkBoxEnableProxy");
             //checkBoxProxyAsFailover.Text = International.GetText("FormSettings_Tab_Advanced_ProxyAsFailover");
             //checkBoxStale.Text = International.GetText("FormSettings_Tab_Advanced_StaleProxy");
+            groupBoxConnection.Visible = false;
             if (Globals.MiningLocation.Length > 1)
             {
                 checkBoxEnableProxy.Enabled = true;

@@ -384,6 +384,11 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
                     ConfigManager.GeneralConfig.ForkFixVersion = 66;
                 }
+                if (Configs.ConfigManager.GeneralConfig.ForkFixVersion < 67)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Previous version: " + Configs.ConfigManager.GeneralConfig.ForkFixVersion.ToString());
+                    ConfigManager.GeneralConfig.ForkFixVersion = 67;
+                }
 
                 ConfigManager.GeneralConfig.ZIL_Mining_Enable = false;
                 ConfigManager.GeneralConfig.ZIL_mining_state = 0;
