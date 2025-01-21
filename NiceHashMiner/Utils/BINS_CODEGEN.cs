@@ -9,13 +9,12 @@ namespace NiceHashMiner.Utils
             @"/Nanominer/nanominer.exe",
             @"/phoenix/PhoenixMiner.exe",
             @"/SRBMiner/SRBMiner-MULTI.exe",
-            @"/t-rex/t-rex.exe",
             @"/teamredminer/teamredminer.exe",
             @"/gminer/miner.exe",
             @"/lolMiner/lolMiner.exe",
             @"/miniZ/miniZ.exe",
             @"/Rigel/rigel.exe",
-            @"/Fork_Fix_67.txt"
+            @"/Fork_Fix_68.txt"
         };
     }
 }

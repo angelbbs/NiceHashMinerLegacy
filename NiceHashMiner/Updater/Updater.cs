@@ -414,8 +414,8 @@ namespace NiceHashMiner.Updater
                             ret = ret + betweenStrings(gitbody, "RUS:", "Обсуждение тут");
                         } else
                         {
-                            Helpers.ConsolePrint("----gitbody:", gitbody);
-                            Helpers.ConsolePrint("****gitbody:", betweenStrings(gitbody, "EN:", "Russian discussion forum"));
+                            //Helpers.ConsolePrint("----gitbody:", gitbody);
+                            //Helpers.ConsolePrint("****gitbody:", betweenStrings(gitbody, "EN:", "Russian discussion forum"));
                             ret = ret + betweenStrings(gitbody, "EN:", "Russian discussion forum");
                         }
                     }

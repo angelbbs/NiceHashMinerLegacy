@@ -463,21 +463,6 @@ Fatal error detected. Restarting.
                             }
             },
             {
-                 MinerBaseType.NBMiner,
-                 new List<Algorithm>
-                 {
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW")
-                            {
-                                ExtraLaunchParameters = "--mt 1 "
-                            },
-
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos")
-                            {
-                                ExtraLaunchParameters = "--mt 1 "
-                            }
-                 }
-            },
-            {
                 MinerBaseType.Nanominer,
                 new List<Algorithm>()
                 {
@@ -508,69 +493,18 @@ Fatal error detected. Restarting.
 
         public static Dictionary<MinerBaseType, List<Algorithm>> Nvidia => new Dictionary<MinerBaseType, List<Algorithm>>
         {
-            /*
             {
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Alephium, "Alephium")
-                            {
-                            },
-                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.Alephium, "AutolykosAlephium")
-                            {
-                            },
-                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Alephium, "DaggerAlephium")
-                            {
-                            },
-                            new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, AlgorithmType.Alephium, "ETCHashAlephium")
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                             }
                         }
             },
-            */
             { MinerBaseType.CryptoDredge,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.NeoScrypt, "NeoScrypt")
                             //new Algorithm(MinerBaseType.CryptoDredge, AlgorithmType.KAWPOW, "KAWPOW")
-                        }
-            },
-            { MinerBaseType.trex,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.Octopus, "Octopus"),
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.KAWPOW, "KAWPOW")
-                            {
-                                ExtraLaunchParameters = ""
-                            },
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
-                            {
-                                ExtraLaunchParameters = "--mt 1"
-                            },
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.ETCHash, "ETCHash")
-                            {
-                                ExtraLaunchParameters = "--mt 1"
-                            },
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.X16RV2, "X16RV2")
-                            {
-                                ExtraLaunchParameters = ""
-                            },
-                            /*
-                            new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Autolykos, "DaggerAutolykos")
-                            {
-                                ExtraLaunchParameters = "--mt 1"
-                            },
-                            new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.KAWPOW, "DaggerKAWPOW")
-                            {
-                                ExtraLaunchParameters = "--mt 1"
-                            },
-                            new DualAlgorithm(MinerBaseType.trex, AlgorithmType.DaggerHashimoto, AlgorithmType.Octopus, "DaggerOctopus")
-
-                            {
-                                ExtraLaunchParameters = "--mt 1"
-                            },
-                            */
-                            new Algorithm(MinerBaseType.trex, AlgorithmType.Autolykos, "Autolykos")
-                            {
-                                ExtraLaunchParameters = "--mt 1"
-                            }
                         }
             },
             
@@ -599,14 +533,6 @@ Fatal error detected. Restarting.
                             {
                             }
                             */
-                        }
-            },
-            { MinerBaseType.NBMiner,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Octopus, "Octopus"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.KAWPOW, "KAWPOW"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.BeamV3, "BeamV3"),
-                            new Algorithm(MinerBaseType.NBMiner, AlgorithmType.Autolykos, "Autolykos"),
                         }
             },
             {
@@ -707,36 +633,29 @@ Fatal error detected. Restarting.
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.ZHash, "ZHash")
-                            {
-                                ExtraLaunchParameters = ""
-                            },
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.NexaPow, "NexaPow")
                             {
                                 ExtraLaunchParameters = "--keepfree 1024"
                             },
-                            /*
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Alephium, "Alephium")
+                            
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.CuckooCycle, "CuckooCycle")
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            */
-                            /*
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.KarlsenHash, "KarlsenHash")
-                            {
-                                ExtraLaunchParameters = ""
-                            },
-                            */
                             new Algorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, "FishHash")
                             {
                                 ExtraLaunchParameters = ""
-                            }
-                            /*
-                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.PyrinHash, "PyrinHash")
+                            },
+                            
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.BeamV3, "BeamV3")
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            */
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.Octopus, "Octopus")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
+                            
                             /*
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, AlgorithmType.Alephium, "FishHashAlephium")
                             {

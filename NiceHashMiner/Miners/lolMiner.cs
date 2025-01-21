@@ -206,13 +206,6 @@ namespace NiceHashMiner.Miners
                     apiBind + " " + param +
                               " --devices ";
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                LastCommandLine = "--algo C32" +
-                GetServer("grincuckatoo32", username, null, "3383") +
-                    apiBind + " " + param +
-                              " --devices ";
-            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 LastCommandLine = "--algo ETHASH --ethstratum=ETHV1" + 
@@ -347,13 +340,6 @@ namespace NiceHashMiner.Miners
                 CommandLine = "--algo C29AE " +
                 " --pool " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.lolMiner --pass x" +
                 " --pool " + Links.CheckDNS("stratum+tcp://cuckoocycle.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
-                              param +
-                " --devices ";
-            }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                CommandLine = "--algo C32 " +
-                " --pool " + Links.CheckDNS("stratum+tcp://grin.2miners.com:3030").Replace("stratum+tcp://", "") + " --user grin16ek8qgx29ssku0q2cxez7830gh9ndw3ek5yzxe26x34s09528d2sldl6td.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -650,10 +636,6 @@ namespace NiceHashMiner.Miners
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
                 }
-                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-                {
-                    _benchmarkTimeWait = _benchmarkTimeWait + 15;
-                }
                 if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.NexaPow))
                 {
                     _benchmarkTimeWait = _benchmarkTimeWait + 15;
@@ -793,11 +775,6 @@ namespace NiceHashMiner.Miners
                     }
                     
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.CuckooCycle))
-                    {
-                        delay_before_calc_hashrate = 40;
-                        MinerStartDelay = 5;
-                    }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
                     {
                         delay_before_calc_hashrate = 40;
                         MinerStartDelay = 5;

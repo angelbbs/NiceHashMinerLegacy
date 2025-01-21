@@ -162,22 +162,10 @@ namespace NiceHashMiner.Forms
                 minerdata = MinerVersion.Get_miniZ();
                 MinerVersion.MinerDataList.Add(minerdata);
 
-                progressBarUnzipping.Value = 43;
+                progressBarUnzipping.Value = 50;
                 UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "Nanominer";
                 UnzippingText.Update();
                 minerdata = MinerVersion.Get_nanominer();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                progressBarUnzipping.Value = 50;
-                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner.39.5";
-                UnzippingText.Update();
-                minerdata = MinerVersion.Get_NBMiner39_5();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                progressBarUnzipping.Value = 57;
-                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner";
-                UnzippingText.Update();
-                minerdata = MinerVersion.Get_NBMiner();
                 MinerVersion.MinerDataList.Add(minerdata);
 
                 progressBarUnzipping.Value = 63;

@@ -307,9 +307,6 @@ namespace NiceHashMiner.Stats
                                         unit = "Sol/s";
                                         break;
                                     case AlgorithmType.CuckooCycle:
-                                    case AlgorithmType.GrinCuckatoo32:
-                                        unit = "G/s";
-                                        break;
                                     default:
                                         unit = "H/s";
                                         break;
@@ -325,9 +322,6 @@ namespace NiceHashMiner.Stats
                                         unit2 = "Sol/s";
                                         break;
                                     case AlgorithmType.CuckooCycle:
-                                    case AlgorithmType.GrinCuckatoo32:
-                                        unit2 = "G/s";
-                                        break;
                                     default:
                                         unit2 = "H/s";
                                         break;

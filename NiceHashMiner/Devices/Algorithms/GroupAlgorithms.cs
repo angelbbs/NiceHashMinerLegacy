@@ -213,20 +213,6 @@ namespace NiceHashMiner.Devices.Algorithms
                 });
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.NVIDIA && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.4))
-            {
-                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
-                    {
-                        AlgorithmType.GrinCuckatoo32
-                    });
-            }
-            if (algoSettings.ContainsKey(MinerBaseType.lolMiner) && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 7.4))
-            {
-                algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
-                    {
-                        AlgorithmType.GrinCuckatoo32
-                    });
-            }
             if (algoSettings.ContainsKey(MinerBaseType.GMiner) && device.DeviceType == DeviceType.AMD && device.GpuRam < (ulong)(1024 * 1024 * 1024 * 4.4))
             {
                 algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
@@ -458,20 +444,6 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
 
-            if (algoSettings.ContainsKey(MinerBaseType.GMiner)) 
-            {
-                foreach (var algo in algoSettings[MinerBaseType.GMiner])
-                {
-                    if (algo.DualNiceHashID == AlgorithmType.GrinCuckatoo32 && device.DeviceType == DeviceType.NVIDIA &&
-                        device.Name.Contains("RTX 4060") && device.Name.Contains("Laptop") &&
-                        device.GpuRam < (ulong)(1024 * 1024 * 1024 * 11.4))
-                    {
-                        algo.Enabled = false;
-                        algo.Hidden = true;
-                    }
-                }
-            }
-
             if (algoSettings.ContainsKey(MinerBaseType.NBMiner)) //not supported
             {
                 foreach (var algo in algoSettings[MinerBaseType.NBMiner])
@@ -639,11 +611,6 @@ namespace NiceHashMiner.Devices.Algorithms
 
             if (!ConfigManager.GeneralConfig.ShowHiddenAlgos)
             {
-                    algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
-                    {
-                        AlgorithmType.X16RV2
-                    });
-
                 //нет шар
                 if (algoSettings.ContainsKey(MinerBaseType.lolMiner))
                 {

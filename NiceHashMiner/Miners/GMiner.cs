@@ -189,15 +189,6 @@ namespace NiceHashMiner.Miners
                 port = "3385";
             }
 
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                algo = "grin32";
-                algoName = "grincuckatoo32";
-                ssl = " --ssl 0";
-                nicehashstratum = " --pec ";
-                port = "3383";
-            }
-
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
             {
                 algo = "autolykos2";
@@ -505,12 +496,6 @@ namespace NiceHashMiner.Miners
                 " --server " + Links.CheckDNS("stratum+tcp://kawpow.mine.zergpool.com:3638").Replace("stratum+tcp://", "") + " --user LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.GMiner --pass c=LTC,mc=XNA/CLORE/SATOX/GPN/PAPRY/MEWC/FREN/AIPG " +
                 GetDevicesCommandString();
             }
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.GrinCuckatoo32)
-            {
-                ret = " --color 0 --pec --algo grin32" +
-                " --server " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
-                GetDevicesCommandString();
-            }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
                 ret = " --color 0 --pec --algo octopus" +
@@ -649,12 +634,6 @@ namespace NiceHashMiner.Miners
                         MinerStartDelay = 10;
                         delay_before_calc_hashrate = 5;
                     }
-                    if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-                    {
-                        MinerStartDelay = 10;
-                        delay_before_calc_hashrate = 5;
-                    }
-
                     if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.BeamV3))
                     {
                         MinerStartDelay = 10;

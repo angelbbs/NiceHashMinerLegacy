@@ -45,8 +45,6 @@ namespace NiceHashMiner.Miners
                 {
                      case AlgorithmType.CuckooCycle:
                         return "cuckoo_ae";
-                    case AlgorithmType.GrinCuckatoo32:
-                        return "cuckatoo32";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
                     case AlgorithmType.ETCHash:
@@ -115,12 +113,6 @@ namespace NiceHashMiner.Miners
                 if (n >= 3) break;
             }
 
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-            {
-                ret = " -o" + n.ToString() + " " + Links.CheckDNS("grincuckatoo32.auto.nicehash.com").Replace("stratum+tcp://", "") + ":9200 -u" +
-                                        n.ToString() + " " + username + " -p" + n.ToString() + " " + psw + " ";
-            }
-
             return ret.Replace(" -o0", " -o").Replace(" -u0", " -u").Replace(" -p0", " -p");
         }
         private string GetStartCommand(string url, string btcAddress, string worker)
@@ -170,13 +162,6 @@ namespace NiceHashMiner.Miners
             {
                 cmd = $"-a {AlgoName}" +
                     GetServer("cuckoocycle", username, "3376") +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-            {
-                cmd = $"-a {AlgoName}" +
-                    GetServer("cuckatoo32", username, "3382????") +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
 
@@ -266,12 +251,6 @@ namespace NiceHashMiner.Miners
                 cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040") + " -u ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.nbminer" +
                     $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
             }
-            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.GrinCuckatoo32))
-            {
-                cmd = $"-a cuckatoo32 -o " + Links.CheckDNS("stratum+tcp://grincuckatoo32.auto.nicehash.com:9200") + " -u " + Globals.DemoUser +
-                    $" --api 127.0.0.1:{ApiPort} -d {devs} -RUN " + platform;
-            }
-
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
             {
                 cmd = $"-a {AlgoName} -o " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.nbminer " +

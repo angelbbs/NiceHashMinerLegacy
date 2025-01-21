@@ -169,49 +169,54 @@ namespace NiceHashMiner.Switching
         {
             var updated = false;
             var cTicks = "min";
-
-            foreach (var algo in history.Keys)
+            try
             {
-                NHSmaData.TryGetPaying(algo, out var paying);
-
-                if (algo == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
+                foreach (var algo in history.Keys)
                 {
-                    paying = 0;
-                }
+                    NHSmaData.TryGetPaying(algo, out var paying);
 
-                if (!algo.ToString().Contains("UNUSED"))
-                {
-                    history[algo].Add(paying);
-                    var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
-                    double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
-                    
-                    if (paying > _lastLegitPaying[algo])
+                    if (algo == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
                     {
-                        updated = true;
-                        
-                        if (i >= ticks)
+                        paying = 0;
+                    }
+
+                    if (!algo.ToString().Contains("UNUSED"))
+                    {
+                        history[algo].Add(paying);
+                        var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
+                        double p1 = 100 - (_lastLegitPaying[algo] / paying) * 100;
+
+                        if (paying > _lastLegitPaying[algo])
                         {
-                            _lastLegitPaying[algo] = paying;
-                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} {p1:f2}% after {i}/{ticks} {cTicks} for {algo}");
+                            updated = true;
+
+                            if (i >= ticks)
+                            {
+                                _lastLegitPaying[algo] = paying;
+                                sb.AppendLine($"\tTAKEN: new profit {paying:e5} {p1:f2}% after {i}/{ticks} {cTicks} for {algo}");
+                            }
+                            else
+                            {
+                                sb.AppendLine(
+                                    $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5}) {p1:f2}%," +
+                                    $" higher for {i}/{ticks} {cTicks} for {algo}"
+                                );
+                            }
                         }
                         else
                         {
-                            sb.AppendLine(
-                                $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5}) {p1:f2}%," +
-                                $" higher for {i}/{ticks} {cTicks} for {algo}"
-                            );
+                            // Profit has gone down
+                            updated = true;
+
+                            sb.AppendLine($"\tProfit has gone down: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5}) {p1:f2}%," +
+                                $" less for {i}/{ticks} {cTicks} for {algo}");
+                            _lastLegitPaying[algo] = paying;
                         }
                     }
-                    else
-                    {
-                        // Profit has gone down
-                        updated = true;
-                        
-                        sb.AppendLine($"\tProfit has gone down: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5}) {p1:f2}%," +
-                            $" less for {i}/{ticks} {cTicks} for {algo}");
-                        _lastLegitPaying[algo] = paying;
-                    }
                 }
+            } catch (Exception ex)
+            {
+                Helpers.ConsolePrint("UpdateProfits", ex.ToString());
             }
 
             return updated;

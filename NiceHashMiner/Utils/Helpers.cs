@@ -237,7 +237,6 @@ namespace NiceHashMiner
                     unit = "Sol/s ";
                     break;
                 case AlgorithmType.CuckooCycle:
-                case AlgorithmType.GrinCuckatoo32:
                     unit = "G/s ";
                     break;
                 default:
@@ -266,18 +265,18 @@ namespace NiceHashMiner
 
             if (algo != AlgorithmType.NONE && algo2 == AlgorithmType.NONE && algo3 == AlgorithmType.NONE)
             {
-                ret = FormatSpeedOutput(primarySpeed, " ", format) + GetAlgorithmSpeedUnit(algo); 
+                ret = FormatSpeedOutput(primarySpeed, " ", format) + GetAlgorithmSpeedUnit(algo);
             } else
             {
                 first = FormatSpeedOutput(primarySpeed, " ", format);
                 second = FormatSpeedOutput(secondarySpeed, " ", format);
                 third = FormatSpeedOutput(thirdSpeed, " ", format);
-                
+
                 if (algo == AlgorithmType.NONE && algo2 != AlgorithmType.NONE)
                 {
                     ret = second + GetAlgorithmSpeedUnit(algo2);
-                } 
-                
+                }
+
                 if (algo != AlgorithmType.NONE && algo2 != AlgorithmType.NONE)
                 {
                     ret = first + GetAlgorithmSpeedUnit(algo) + "/ " + second + GetAlgorithmSpeedUnit(algo2);
@@ -298,7 +297,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        
+
         public static string GetMotherboardID()
         {
             var mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");
@@ -473,8 +472,8 @@ namespace NiceHashMiner
             }
         }
 
-        
-        
+
+
         public static void WriteAllTextWithBackup(string FilePath, string contents)
         {
             string path = FilePath;

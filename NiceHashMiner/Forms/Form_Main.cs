@@ -1564,14 +1564,6 @@ namespace NiceHashMiner
                     minerdata = MinerVersion.Get_nanominer();
                     MinerVersion.MinerDataList.Add(minerdata);
 
-                    _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner.39.5");
-                    minerdata = MinerVersion.Get_NBMiner39_5();
-                    MinerVersion.MinerDataList.Add(minerdata);
-
-                    _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "NBMiner");
-                    minerdata = MinerVersion.Get_NBMiner();
-                    MinerVersion.MinerDataList.Add(minerdata);
-
                     _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner");
                     minerdata = MinerVersion.Get_Phoenix();
                     MinerVersion.MinerDataList.Add(minerdata);
