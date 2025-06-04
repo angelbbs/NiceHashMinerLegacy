@@ -290,8 +290,7 @@ namespace NiceHashMiner.Miners
                     algoName = "zhash";
                     ret = GetDevicesCommandString()
                           + " --nocolour --pers auto --par=" + algo
-                          + " --url GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.miniz@" + Links.CheckDNS("stratum+tcp://btg.2miners.com:4040").Replace("stratum+tcp://", "") + " -p x"
-                          + " --url " + username + "@" + Globals.MiningLocation[0].Replace("stratum+tcp://", "")
+                          + " --url ssl://GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.miniz@" + Links.CheckDNS("btg.2miners.com:14040").Replace("stratum+tcp://", "") + " -p x"
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }
@@ -302,8 +301,7 @@ namespace NiceHashMiner.Miners
                     algoName = "zelhash";
                     ret = GetDevicesCommandString()
                           + " --nocolour --smart-pers --par=" + algo
-                          + " --url t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.miniz@" + Links.CheckDNS("stratum+tcp://flux.2miners.com:9090").Replace("stratum+tcp://", "") + " -p x"
-                          + " --url " + username + "@" + server.Replace("stratum+tcp://", "") 
+                          + " --url ssl://t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.miniz@" + Links.CheckDNS("flux.2miners.com:19090").Replace("stratum+tcp://", "") + " -p x"
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }
@@ -315,8 +313,7 @@ namespace NiceHashMiner.Miners
                     stratumPort = "3387";
                     ret = GetDevicesCommandString()
                           + " --nocolour --pers auto --par=" + algo
-                          + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@" + Links.CheckDNS("stratum+tcp://beam.2miners.com:5252").Replace("stratum+tcp://", "")
-                          + " --url " + username + "@" + server.Replace("stratum+tcp://", "") 
+                          + " --url ssl://2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.miniz@" + Links.CheckDNS("beam.2miners.com:5252").Replace("stratum+tcp://", "")
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }
@@ -326,8 +323,7 @@ namespace NiceHashMiner.Miners
                     algoName = "daggerhashimoto";
                     ret = GetDevicesCommandString()
                           + " --nocolour --par=" + algo
-                          + " --url 0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "")
-                          + " --url " + username + "@" + server.Replace("stratum+tcp://", "")
+                          + " --url ssl://0x266b27bd794d1A65ab76842ED85B067B415CD505.miniz@" + Links.CheckDNS("ethw.2miners.com:12020").Replace("stratum+tcp://", "")
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }
@@ -337,8 +333,7 @@ namespace NiceHashMiner.Miners
                     algoName = "octopus";
                     ret = GetDevicesCommandString()
                           + " --nocolour --par=" + algo
-                          + " --url cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.miniz@" + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3094").Replace("stratum+tcp://", "")
-                          + " --url " + username + "@" + server.Replace("stratum+tcp://", "") 
+                          + " --url ssl://cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.miniz@" + Links.CheckDNS("pool.woolypooly.com:3094").Replace("stratum+tcp://", "")
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }
@@ -348,8 +343,7 @@ namespace NiceHashMiner.Miners
                     algoName = "fishhash";
                     ret = GetDevicesCommandString()
                           + " --nocolour --par=" + algo
-                          + " --url fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.miniz@" + Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "")
-                          + " --url " + username + "@" + server.Replace("stratum+tcp://", "")
+                          + " --url ssl://055c53f9c928b4b314d63c75cb2d00a9cfcbb34366967fbcd787443efcd0c49e.miniz@" + Links.CheckDNS("iron.kryptex.network:8888").Replace("stratum+tcp://", "")
                           + " --pass=x" + " --telemetry=" + ApiPort;
                     _benchmarkTimeWait = time;
                 }

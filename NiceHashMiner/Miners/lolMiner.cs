@@ -316,7 +316,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.BeamV3)
             {
                 CommandLine = "--algo BEAM-III " +
-                " --pool " + Links.CheckDNS("stratum+tcp://beam.2miners.com:5252").Replace("stratum+tcp://", "") + " --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://beam.2miners.com:5252").Replace("stratum+tcp://", "") + " --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.lolMiner --pass x" +
                 param +
                 " --devices ";
             }
@@ -324,44 +324,42 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 CommandLine = "--algo EQUI144_5 --pers BgoldPoW" +
-                " --pool " + Links.CheckDNS("stratum+tcp://btg.2miners.com:4040").Replace("stratum+tcp://", "") + " --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.lol --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://btg.2miners.com:14040").Replace("stratum+tcp://", "") + " --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.lol --pass x" +
                                               param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
             {
                 CommandLine = "--coin ZEL" +
-                " --pool " + Links.CheckDNS("stratum+tcp://flux.2miners.com:9090").Replace("stratum+tcp://", "") + " --user t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.lol --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://flux.2miners.com:19090").Replace("stratum+tcp://", "") + " --user t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.lol --pass x" +
                                               param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 CommandLine = "--algo C29AE " +
-                " --pool " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.lolMiner --pass x" +
-                " --pool " + Links.CheckDNS("stratum+tcp://cuckoocycle.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://ae.2miners.com:14040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 CommandLine = "--algo ETHASH " +
-                " --pool " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.lolMiner --pass x" +
-                " --pool " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + username + " --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://ethw.2miners.com:12020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
             {
                 CommandLine = "--algo ETCHASH " +
-                " --pool " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://etc.2miners.com:11010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Autolykos)
             {
                 CommandLine = "--algo AUTOLYKOS2 " +
-                " --pool " + Links.CheckDNS("stratum+tcp://pool.woolypooly.com:3100").Replace("stratum+tcp://", "") + " --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://pool.woolypooly.com:3100").Replace("stratum+tcp://", "") + " --user 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -369,7 +367,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.NexaPow)
             {
                 CommandLine = "--algo NEXA " +
-                " --pool " + Links.CheckDNS("stratum-eu.rplant.xyz:7092").Replace("stratum+tcp://", "") + " --user nexa:nqtsq5g55l2jhuazhre8zfzfnyxle543wjlapt4huup3x9gy.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://pool.woolypooly.com:3124").Replace("stratum+tcp://", "") + " --user nexa:nqtsq5g5hs6sqrm7v6ydx3vqvh0ee3tgdrme5sn8h93gxugr.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -377,7 +375,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)
             {
                 CommandLine = "--algo OCTOPUS " +
-                " --pool " + Links.CheckDNS("pool.woolypooly.com:3094").Replace("stratum+tcp://", "") + " --user cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://cfx-eu1.nanopool.org:10543").Replace("stratum+tcp://", "") + " --user cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -385,7 +383,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash)
             {
                 CommandLine = "--algo FISHHASH " +
-                " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("stratum+ssl://iron.kryptex.network:8888").Replace("stratum+tcp://", "") + " --user 055c53f9c928b4b314d63c75cb2d00a9cfcbb34366967fbcd787443efcd0c49e.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -393,7 +391,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.PyrinHash)
             {
                 CommandLine = "--algo PYRIN " +
-                " --pool " + Links.CheckDNS("pyi.2miners.com:2121").Replace("stratum+tcp://", "") + " --user pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.lolMiner --pass x" +
+                " --pool " + Links.CheckDNS("nushypool.com:40010").Replace("stratum+tcp://", "") + " --user cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.lolMiner --pass x" +
                               param +
                 " --devices ";
             }
@@ -402,8 +400,8 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.FishHash && MiningSetup.CurrentSecondaryAlgorithmType == AlgorithmType.PyrinHash)
             {
                 CommandLine = "--algo FISHHASH " +
-                                " --pool " + Links.CheckDNS("ru.ironfish.herominers.com:1145").Replace("stratum+tcp://", "") + " --user fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.lolMiner --pass x" +
-                                " --dualmode PYRINDUAL --dualpool " + Links.CheckDNS("pyi.2miners.com:2121").Replace("stratum + tcp://", "") + " --dualuser pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.lolMiner --dualpass x" +
+                                " --pool " + Links.CheckDNS("stratum+ssl://iron.kryptex.network:8888").Replace("stratum+tcp://", "") + " --user 055c53f9c928b4b314d63c75cb2d00a9cfcbb34366967fbcd787443efcd0c49e.lolMiner --pass x" +
+                                " --dualmode PYRINDUAL --dualpool " + Links.CheckDNS("nushypool.com:40010").Replace("stratum + tcp://", "") + " --dualuser cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.lolMiner --dualpass x" +
                                               param +
                                 " --devices ";
             }

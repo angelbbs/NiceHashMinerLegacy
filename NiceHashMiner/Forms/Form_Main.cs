@@ -27,7 +27,7 @@ namespace NiceHashMiner
     using Newtonsoft.Json;
     using NiceHashMiner.Devices.Querying;
     using NiceHashMiner.Miners.Grouping;
-    using NiceHashMinerLegacy.Divert;
+    using NiceHashMinerLegacy.OverClock;
     //using OpenHardwareMonitor.Hardware;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -1417,7 +1417,7 @@ namespace NiceHashMiner
 
             if (Form_Main.KawpowLite)
             {
-                if (Divert.CheckWinDivert() > 0)
+                if (NativeOverclock.CheckWinDivert() > 0)
                 {
                     Form_Main.DivertAvailable = true;
                 }
@@ -1429,7 +1429,7 @@ namespace NiceHashMiner
 
             if (Form_Main.KawpowLite && Form_Main.DivertAvailable)
             {
-                Divert.checkConnectionKawpowLite = true;
+                NativeOverclock.checkConnectionKawpowLite = true;
                 new Task(() => KawpowClient.CheckConnectionToPool()).Start();
             }
 
@@ -1564,27 +1564,23 @@ namespace NiceHashMiner
                     minerdata = MinerVersion.Get_nanominer();
                     MinerVersion.MinerDataList.Add(minerdata);
 
-                    _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner");
-                    minerdata = MinerVersion.Get_Phoenix();
-                    MinerVersion.MinerDataList.Add(minerdata);
-
-                    _loadingScreen.SetValueAndMsg(84, International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner");
+                    _loadingScreen.SetValueAndMsg(82, International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner");
                     minerdata = MinerVersion.Get_SRBMiner();
                     MinerVersion.MinerDataList.Add(minerdata);
 
-                    _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex");
+                    _loadingScreen.SetValueAndMsg(83, International.GetText("Form_Main_loadtext_GetMinerVersion") + "T-Rex");
                     minerdata = MinerVersion.Get_TRex();
                     MinerVersion.MinerDataList.Add(minerdata);
 
-                    _loadingScreen.SetValueAndMsg(86, International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner");
+                    _loadingScreen.SetValueAndMsg(84, International.GetText("Form_Main_loadtext_GetMinerVersion") + "TeamRedMiner");
                     minerdata = MinerVersion.Get_TeamRedMiner();
                     MinerVersion.MinerDataList.Add(minerdata);
 
-                    _loadingScreen.SetValueAndMsg(87, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
+                    _loadingScreen.SetValueAndMsg(85, International.GetText("Form_Main_loadtext_GetMinerVersion") + "XMRig");
                     minerdata = MinerVersion.Get_XMRig();
                     MinerVersion.MinerDataList.Add(minerdata);
 
-                    _loadingScreen.SetValueAndMsg(88, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Rigel");
+                    _loadingScreen.SetValueAndMsg(86, International.GetText("Form_Main_loadtext_GetMinerVersion") + "Rigel");
                     minerdata = MinerVersion.Get_Rigel();
                     MinerVersion.MinerDataList.Add(minerdata);
                 }
@@ -2696,7 +2692,7 @@ public static void CloseChilds(Process parentId)
                 if (_flowLayoutPanelRatesIndex >= groupCount) return;
                 // flowLayoutPanelRatesIndex may be OOB, so catch
                 ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
-                    .UpdateProfitStats(groupName, deviceStringInfo, speedString, StartMinerTime, rateBtcString, rateCurrencyString, processTag);
+                    .UpdateProfitStats(algoName, groupName, deviceStringInfo, speedString, StartMinerTime, rateBtcString, rateCurrencyString, processTag);
 
             }
             catch (Exception ex)

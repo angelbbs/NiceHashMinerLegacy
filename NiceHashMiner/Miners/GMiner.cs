@@ -439,17 +439,14 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
                 ret = " --color 0 --pec --pers auto --algo 144_5" +
-                " --server " + Links.CheckDNS("stratum+tcp://btg.2miners.com").Replace("stratum+tcp://", "") + " --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.gminer --pass x --port 4040 " +
-                " --server " + Links.CheckDNS("stratum+tcp://equihash144.eu.mine.zpool.ca").Replace("stratum+tcp://", "") + " --user 1JqFnUR3nDFCbNUmWiQ4jX6HRugGzX55L2 --pass c=BTC --port 2144 " +
-                " --server " + Links.CheckDNS("stratum+tcp://zhash.auto.nicehash.com").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x --port 9200" +
-                GetDevicesCommandString();
+                " --server " + Links.CheckDNS("stratum+ssl://btg.2miners.com:14040").Replace("stratum+tcp://", "") + " --user GeKYDPRcemA3z9okSUhe9DdLQ7CRhsDBgX.gminer --pass x " +
+                      GetDevicesCommandString();
             }
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZelHash)
             {
                 ret = " --color 0 --pec --pers auto --algo 125_4" +
-                " --server " + Links.CheckDNS("stratum+tcp://flux.2miners.com").Replace("stratum+tcp://", "") + " --user t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.gminer --pass x --port 9090 " +
-                " --server " + Links.CheckDNS("stratum+tcp://zelhash.auto.nicehash.com").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x --port 9200" +
+                " --server " + Links.CheckDNS("stratum+ssl://flux.2miners.com:19090").Replace("stratum+tcp://", "") + " --user t1RyEzV5eAo95LbQiLZfzmGZGK9vTkdeBDd.gminer --pass x " +
                 GetDevicesCommandString();
             }
 
@@ -457,7 +454,6 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --color 0 --pec --algo BeamHashIII" +
                 " --server " + Links.CheckDNS("stratum+ssl://beam.2miners.com:5252") + " --user 2c20485d95e81037ec2d0312b000b922f444c650496d600d64b256bdafa362bafc9.gminer --pass x " +
-                " --server " + Links.CheckDNS("stratum+tcp://beamv3.auto.nicehash.com:9200") + " --user " + Globals.DemoUser + " --pass x" +
                 GetDevicesCommandString();
             }
 
@@ -465,35 +461,31 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CuckooCycle)
             {
                 ret = " --color 0 --pec --algo aeternity" +
-                " --server " + Links.CheckDNS("stratum+tcp://ae.2miners.com:4040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.gminer --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://cuckoocycle.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+ssl://ae.2miners.com:14040").Replace("stratum+tcp://", "") + " --user ak_25J5KBhdHcsemmgmnaU4QpcRQ9xgKS5ChBwCaZcEUc85qkgcXE.gminer --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 ret = " --color 0 --pec --algo ethash" +
-                " --server " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+tcp://ethash.mine.zergpool.com:9999").Replace("stratum+tcp://", "") + " --user LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH --pass c=LTC" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
             {
                 ret = " --color 0 --pec --algo etchash" +
-                " --server " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x" +
-                " --server " + Links.CheckDNS("stratum+tcp://etchash.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+ssl://etc.2miners.com:11010").Replace("stratum+tcp://", "") + " --user 0x266b27bd794d1A65ab76842ED85B067B415CD505.GMiner --pass x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
                 ret = " --color 0 --pec --algo kawpow" +
-                " --server " + Links.CheckDNS("stratum+tcp://rvn.2miners.com:6060").Replace("stratum+tcp://", "") + " --user RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.GMiner --pass x " +
-                " --server " + Links.CheckDNS("stratum+tcp://kawpow.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " --user " + Globals.DemoUser + " --pass x" +
+                " --server " + Links.CheckDNS("stratum+ssl://rvn.2miners.com:16060").Replace("stratum+tcp://", "") + " --user RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.GMiner --pass x " +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOWLite)
             {
                 ret = " --color 0 --pec --algo kawpow" +
-                " --server " + Links.CheckDNS("stratum+tcp://kawpow.mine.zergpool.com:3638").Replace("stratum+tcp://", "") + " --user LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.GMiner --pass c=LTC,mc=XNA/CLORE/SATOX/GPN/PAPRY/MEWC/FREN/AIPG " +
+                " --server " + Links.CheckDNS("stratum+tcp://kawpow.mine.zergpool.com:3638").Replace("stratum+tcp://", "") + " --user LPeihdgf7JRQUNq5cwZbBQQgEmh1m7DSgH.GMiner --pass c=LTC " +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.Octopus)

@@ -9,7 +9,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Stats.V4;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
+using NiceHashMinerLegacy.OverClock;
 using NiceHashMinerLegacy.UUID;
 using System;
 using System.Collections.Generic;
@@ -1424,7 +1424,12 @@ namespace NiceHashMiner.Stats
                             paying = 0;
                         }
 
-                        if (algoKey == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
+                        if (algoKey == AlgorithmType.ZHash)
+                        {
+                            paying = paying * 0.5;
+                        }
+
+                        if (algoKey == AlgorithmType.KAWPOWLite && !NativeOverclock.KawpowLiteGoodEpoch)
                         {
                             paying = 0;
                             Helpers.ConsolePrint("SetAlgorithmRates", "KawpowLiteGoodEpoch false. Set paying to 0");

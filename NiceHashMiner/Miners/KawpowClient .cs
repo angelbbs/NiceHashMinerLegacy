@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
+using NiceHashMinerLegacy.OverClock;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -37,7 +37,7 @@ namespace NiceHashMiner.Miners
             {
                 try
                 {
-                    if (!Divert.checkConnectionKawpowLite) break;
+                    if (!NativeOverclock.checkConnectionKawpowLite) break;
 
                     if (tcpClient == null)
                     {
@@ -52,9 +52,9 @@ namespace NiceHashMiner.Miners
                             //Helpers.ConsolePrint("KawpowLiteMonitor", "serverStream Connected");
                         }
                     }
-                    if (tcpClient is object && tcpClient.Connected && Divert.KawpowLiteMonitorNeedReconnect && serverStream is object)
+                    if (tcpClient is object && tcpClient.Connected && NativeOverclock.KawpowLiteMonitorNeedReconnect && serverStream is object)
                     {
-                        Divert.KawpowLiteMonitorNeedReconnect = false;
+                        NativeOverclock.KawpowLiteMonitorNeedReconnect = false;
                         Helpers.ConsolePrint("KawpowLiteMonitor", "Need reconnect due divert detect bad epoch");
                         if (tcpClient.Client.Connected)
                         {
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
                 Thread.Sleep(5000);
-                if (Divert.KawpowLiteForceStop)
+                if (NativeOverclock.KawpowLiteForceStop)
                 {
                     NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, 0.0d);
                     NiceHashMiner.Switching.AlgorithmSwitchingManager.SmaCheckNow();
@@ -111,7 +111,7 @@ namespace NiceHashMiner.Miners
         }
         public static void StopConnection()
         {
-            Divert.checkConnectionKawpowLite = false;
+            NativeOverclock.checkConnectionKawpowLite = false;
             Helpers.ConsolePrint("KawpowLiteMonitor", "StopConnection");
             try
             {
@@ -251,7 +251,7 @@ namespace NiceHashMiner.Miners
                     messagePool[i] = 0;
                 }
 
-                while (Divert.checkConnectionKawpowLite && checkserverStream)
+                while (NativeOverclock.checkConnectionKawpowLite && checkserverStream)
                 {
                     Thread.Sleep(100);
                     int serverBytes;
@@ -321,7 +321,7 @@ namespace NiceHashMiner.Miners
                                             NHSmaData.TryGetPaying(AlgorithmType.KAWPOW, out var paying);
                                             NHSmaData.UpdatePayingForAlgo(AlgorithmType.KAWPOWLite, paying);
                                             //Divert.KawpowLiteForceStop = false;//это должен устанавливать divert
-                                            Divert.KawpowLiteGoodEpoch = true;
+                                            NativeOverclock.KawpowLiteGoodEpoch = true;
                                         }
                                         else
                                         {

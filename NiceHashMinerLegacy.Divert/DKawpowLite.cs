@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WinDivertSharp;
 
-namespace NiceHashMinerLegacy.Divert
+namespace NiceHashMinerLegacy.OverClock
 {
     public class DKawpowLite
     {
@@ -51,7 +51,7 @@ namespace NiceHashMinerLegacy.Divert
         [HandleProcessCorruptedStateExceptions]
         public static IntPtr KawpowLiteDivertStart(int processId, int CurrentAlgorithmType, string MinerName, string strPlatform, int MaxEpoch)
         {
-            Divert.KawpowLitedivert_running = true;
+            NativeOverclock.KawpowLitedivert_running = true;
             KawpowLiteEpochCount = 0;
 
             filter = "(!loopback && outbound ? (tcp.DstPort == 13385 || tcp.DstPort == 9200)" +
@@ -59,7 +59,7 @@ namespace NiceHashMinerLegacy.Divert
                 "(tcp.SrcPort == 13385 || tcp.SrcPort == 9200)" +
                 ")";
 
-            DivertHandle = Divert.OpenWinDivert(filter);
+            DivertHandle = NativeOverclock.OpenWinDivert(filter);
             if (DivertHandle == IntPtr.Zero || DivertHandle == new IntPtr(-1))
             {
                 Helpers.ConsolePrint("KawpowLiteDivert", "OpenWinDivert ERROR");
@@ -102,7 +102,7 @@ namespace NiceHashMinerLegacy.Divert
                 try
                 {
                     nextCycle:
-                    if (Divert.KawpowLitedivert_running)
+                    if (NativeOverclock.KawpowLitedivert_running)
                     {
                         readLen = 0;
                         PacketPayloadData = null;
@@ -117,13 +117,13 @@ namespace NiceHashMinerLegacy.Divert
                         {
                             {
 
-                                Divert.KawpowLitedivert_running = false;
+                                NativeOverclock.KawpowLitedivert_running = false;
                                 Helpers.ConsolePrint("KawpowLiteDivert", "WinDivertRecv error.");
                                 continue;
                             }
                         }
 
-                        if (Divert.KawpowLitedivert_running == false)
+                        if (NativeOverclock.KawpowLitedivert_running == false)
                         {
                             break;
                         }
@@ -132,11 +132,11 @@ namespace NiceHashMinerLegacy.Divert
 
                         if (addr.Direction == WinDivertDirection.Outbound && parse_result != null && processId > 0)
                         {
-                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
+                            OwnerPID = NativeOverclock.CheckParityConnections(processIdList, parse_result.TcpHeader->SrcPort, addr.Direction, _oldPorts);
                         }
                         else
                         {
-                            OwnerPID = Divert.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
+                            OwnerPID = NativeOverclock.CheckParityConnections(processIdList, parse_result.TcpHeader->DstPort, addr.Direction, _oldPorts);
                         }
                         
                         if (addr.Direction == WinDivertDirection.Inbound && !OwnerPID.Equals("-1"))
@@ -146,7 +146,7 @@ namespace NiceHashMinerLegacy.Divert
                             //******************************
                             if (parse_result.PacketPayloadLength > 20)
                             {
-                                PacketPayloadData = Divert.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
+                                PacketPayloadData = NativeOverclock.PacketPayloadToString(parse_result.PacketPayload, parse_result.PacketPayloadLength);
                                 PacketPayloadData = PacketPayloadData.Replace("}{", "}" + (char)10 + "{");
                                 //Helpers.ConsolePrint("KawpowLiteDivert", "<- " + PacketPayloadData);
 
@@ -177,8 +177,8 @@ namespace NiceHashMinerLegacy.Divert
                                             {
                                                 Helpers.ConsolePrint("KawpowLiteDivert", "Good epoch: " + epoch.ToString());
                                                 KawpowLiteEpochCount = 0;
-                                                Divert.KawpowLiteForceStop = false;
-                                                Divert.KawpowLiteGoodEpoch = true;
+                                                NativeOverclock.KawpowLiteForceStop = false;
+                                                NativeOverclock.KawpowLiteGoodEpoch = true;
                                             }
                                             else
                                             {
@@ -194,9 +194,9 @@ namespace NiceHashMinerLegacy.Divert
 
                                                 if (KawpowLiteEpochCount >= 3)
                                                 {
-                                                    Divert.KawpowLiteForceStop = true;
-                                                    Divert.KawpowLiteGoodEpoch = false;
-                                                    Divert.KawpowLiteMonitorNeedReconnect = true;
+                                                    NativeOverclock.KawpowLiteForceStop = true;
+                                                    NativeOverclock.KawpowLiteGoodEpoch = false;
+                                                    NativeOverclock.KawpowLiteMonitorNeedReconnect = true;
                                                     break;
                                                 }
                                                 goto nextCycle;
@@ -244,7 +244,7 @@ namespace NiceHashMinerLegacy.Divert
                 }
                 Thread.Sleep(1);
             }
-            while (Divert.KawpowLitedivert_running);
+            while (NativeOverclock.KawpowLitedivert_running);
             Helpers.ConsolePrint("KawpowLiteDivert", "WinDivertClose: " + handle.ToInt32().ToString()); 
             //WinDivert.WinDivertClose(DivertHandle);
             WinDivert.WinDivertClose(handle);

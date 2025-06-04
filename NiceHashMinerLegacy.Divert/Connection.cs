@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 
-namespace NiceHashMinerLegacy.Divert
+namespace NiceHashMinerLegacy.OverClock
 {
     public enum ConnectType
     {

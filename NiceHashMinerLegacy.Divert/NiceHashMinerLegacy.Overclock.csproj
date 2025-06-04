@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="Connection.cs" />
     <Compile Include="DKawpowLite.cs" />
-    <Compile Include="Divert.cs" />
+    <Compile Include="NativeOverclock.cs" />
     <Compile Include="Ethash\ArrayExtensions.cs" />
     <Compile Include="Ethash\Converters.cs" />
     <Compile Include="Ethash\Hash.cs" />

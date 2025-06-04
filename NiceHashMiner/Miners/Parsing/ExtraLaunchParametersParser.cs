@@ -295,8 +295,6 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.CryptoDredge;
                 case MinerBaseType.trex:
                     return MinerType.trex;
-                case MinerBaseType.Phoenix:
-                    return MinerType.Phoenix;
                 case MinerBaseType.teamredminer:
                     return MinerType.teamredminer;
                 case MinerBaseType.GMiner:

@@ -315,19 +315,19 @@ namespace NiceHashMiner.Forms.Components
                     }
                     if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
                     {
-                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                     }
                     else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("kawpow"))
                     {
-                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                     }
                     else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("ergo"))
                     {
-                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                        miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                     }
                     else
                     {
-                        miner = miner + MinerVersion.GetMinerVersion(miner);
+                        miner = miner + MinerVersion.GetMinerVersion(miner, name.ToLower());
                     }
                     if (_computeDevice.DeviceType == DeviceType.NVIDIA)
                     {

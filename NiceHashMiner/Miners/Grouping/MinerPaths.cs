@@ -73,7 +73,6 @@ namespace NiceHashMiner.Miners.Grouping
             public const string lyclMiner = minersBins + @"\lyclMiner\lyclMiner.exe";
 
             public const string teamredminer = minersBins + @"\teamredminer\teamredminer.exe";
-            public const string Phoenix = minersBins + @"\Phoenix\PhoenixMiner.exe";
             public const string Nanominer = minersBins + @"\Nanominer\nanominer.exe";
             public const string Rigel = minersBins + @"\Rigel\rigel.exe";
             public const string lolMiner = minersBins + @"\lolMiner\lolMiner.exe";
@@ -153,8 +152,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return NvidiaGroups.trex(algoType, devGroupType);
                 case MinerBaseType.teamredminer:
                     return Data.teamredminer;
-                case MinerBaseType.Phoenix:
-                    return Data.Phoenix;
                 case MinerBaseType.GMiner:
                     return Data.GMiner;
                 case MinerBaseType.lolMiner:

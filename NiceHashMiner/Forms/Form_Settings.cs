@@ -7,7 +7,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
+using NiceHashMinerLegacy.OverClock;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -3346,7 +3346,7 @@ namespace NiceHashMiner.Forms
 
         private void button_Lite_Algo_Click(object sender, EventArgs e)
         {
-            int dh = Divert.CheckWinDivert();
+            int dh = NativeOverclock.CheckWinDivert();
             if (dh <= 0)
             {
                 MessageBox.Show(International.GetText("Form_Settings_WinDivertError") + ". Error: " + dh.ToString(),
@@ -3624,7 +3624,6 @@ namespace NiceHashMiner.Forms
                 _selected = true;
                 _currentlySelectedAlgorithm = algorithm;
                 _currentlySelectedLvi = lvi;
-                Enabled = lvi.Checked;
 
                 groupBoxSelectedAlgorithmSettings.Text = string.Format(
                     International.GetText("AlgorithmsListView_GroupBox"),
@@ -3722,13 +3721,7 @@ namespace NiceHashMiner.Forms
             }
             UpdateSpeedText();
         }
-        public void HandleCheck(ListViewItem lvi)
-        {
-            if (ReferenceEquals(_currentlySelectedLvi, lvi))
-            {
-                Enabled = lvi.Checked;
-            }
-        }
+
         private void UpdateSpeedText()
         {
             var speed = _currentlySelectedAlgorithm.BenchmarkSpeed;

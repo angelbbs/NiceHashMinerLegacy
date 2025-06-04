@@ -9,7 +9,7 @@ using System.Globalization;
 //using NiceHashMinerLegacy.Common.Enums;
 using System.Security.Principal;
 
-namespace NiceHashMinerLegacy.Divert
+namespace NiceHashMinerLegacy.OverClock
 {
     internal class Helpers
     //internal class Helpers : PInvokeHelpers
@@ -27,7 +27,7 @@ namespace NiceHashMinerLegacy.Divert
 
         public static void ConsolePrint(string grp, string text)
         {
-            if (!Divert.logging) return;
+            if (!NativeOverclock.logging) return;
             // try will prevent an error if something tries to print an invalid character
             try
             {
@@ -47,25 +47,25 @@ namespace NiceHashMinerLegacy.Divert
 
         public static void ConsolePrint(string grp, string text, params object[] arg)
         {
-            if (!Divert.logging) return;
+            if (!NativeOverclock.logging) return;
             ConsolePrint(grp, string.Format(text, arg));
         }
 
         public static void ConsolePrint(string grp, string text, object arg0)
         {
-            if (!Divert.logging) return;
+            if (!NativeOverclock.logging) return;
             ConsolePrint(grp, string.Format(text, arg0));
         }
 
         public static void ConsolePrint(string grp, string text, object arg0, object arg1)
         {
-            if (!Divert.logging) return;
+            if (!NativeOverclock.logging) return;
             ConsolePrint(grp, string.Format(text, arg0, arg1));
         }
 
         public static void ConsolePrint(string grp, string text, object arg0, object arg1, object arg2)
         {
-            if (!Divert.logging) return;
+            if (!NativeOverclock.logging) return;
             ConsolePrint(grp, string.Format(text, arg0, arg1, arg2));
         }
         /*
@@ -168,7 +168,7 @@ namespace NiceHashMinerLegacy.Divert
 
         public static void SetDefaultEnvironmentVariables()
         {
-            if (!Divert.logging) return;
+            if (!NativeOverclock.logging) return;
             ConsolePrint("NICEHASH", "Setting environment variables");
 
             var envNameValues = new Dictionary<string, string>()

@@ -168,13 +168,7 @@ namespace NiceHashMiner.Forms
                 minerdata = MinerVersion.Get_nanominer();
                 MinerVersion.MinerDataList.Add(minerdata);
 
-                progressBarUnzipping.Value = 63;
-                UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "PhoenixMiner";
-                UnzippingText.Update();
-                minerdata = MinerVersion.Get_Phoenix();
-                MinerVersion.MinerDataList.Add(minerdata);
-
-                progressBarUnzipping.Value = 70;
+                progressBarUnzipping.Value = 65;
                 UnzippingText.Text = International.GetText("Form_Main_loadtext_GetMinerVersion") + "SRBMiner";
                 UnzippingText.Update();
                 minerdata = MinerVersion.Get_SRBMiner();

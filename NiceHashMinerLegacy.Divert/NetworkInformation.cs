@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
-namespace NiceHashMinerLegacy.Divert
+namespace NiceHashMinerLegacy.OverClock
 {
     public enum IpVersion : uint
     {

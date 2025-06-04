@@ -281,6 +281,16 @@ namespace NiceHashMiner.Miners
                    " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
                 }
 
+                if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+                {
+                    var port = "3385";
+                    var algo = "kawpow";
+
+                    return " --retry-time 0 " + disablePlatform + $" --algorithm kawpow --api-enable --api-port {ApiPort} " +
+                    GetServer(algo, username, port) + ZilMining +
+                   " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+                }
+
             } catch (Exception ex)
             {
                 Helpers.ConsolePrint("GetStartCommand", ex.ToString());
@@ -335,8 +345,8 @@ namespace NiceHashMiner.Miners
                     $" --pool {Links.CheckDNS("stratum+tcp://pool.woolypooly.com")}:3100" +
                     $" --wallet 9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.SRBMiner" +
                     " --algorithm pyrinhash" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://pyi.2miners.com")}:2121" +
-                    $" --wallet pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.SRBMiner" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://nushypool.com")}:40010" +
+                    $" --wallet cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
@@ -347,8 +357,8 @@ namespace NiceHashMiner.Miners
                     $" --pool {Links.CheckDNS("stratum+tcp://ru.ironfish.herominers.com")}:1145" +
                     $" --wallet fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.SRBMiner" +
                     " --algorithm pyrinhash" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://pyi.2miners.com")}:2121" +
-                    $" --wallet pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.SRBMiner" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://nushypool.com")}:40010" +
+                    $" --wallet cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }
@@ -415,8 +425,17 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.PyrinHash))
             {
                 return $" " + disablePlatform + " --algorithm pyrinhash" +
-                    $" --pool {Links.CheckDNS("stratum+tcp://pyi.2miners.com")}:2121" +
-                    $" --wallet pyrin:qzhy95jlwufjp7q8exs5vwzzzru74xgl6sedz2c57t7q2w9lvac0u9es2rt5y.SRBMiner" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://nushypool.com")}:40010" +
+                    $" --wallet cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.SRBMiner" +
+                    $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
+                " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
+            }
+
+            if (MiningSetup.CurrentAlgorithmType.Equals(AlgorithmType.KAWPOW))
+            {
+                return $" " + disablePlatform + " --algorithm kawpow" +
+                    $" --pool {Links.CheckDNS("stratum+tcp://rvn.2miners.com")}:6060" +
+                    $" --wallet RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.SRBMiner" +
                     $" --api-enable --api-port {ApiPort} --extended-log --log-file {GetLogFileName()}" +
                 " --gpu-id " + GetDevicesCommandString().Trim() + " " + extras;
             }

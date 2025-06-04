@@ -43,30 +43,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     }
                     */
                 }
-            },
-            
-            {
-                MinerBaseType.Phoenix,
-                new List<Algorithm>()
-                {
-                    /*
-GPU1: Allocating DAG (5.77) GB; good for epoch up to #610
-GPU1: Generating DAG for epoch #608
-GPU1: Unable to generate DAG for epoch #608; please upgrade to the latest version of PhoenixMiner
-GPU1 initMiner error: Unable to initialize CUDA miner
-Fatal error detected. Restarting.
-                    /*
-                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
-                    {
-    //                    ExtraLaunchParameters = "-rvram -1 "
-                    },
-                    */
-                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.ETCHash, "ETCHash")
-                    {
-    //                    ExtraLaunchParameters = "-rvram -1 "
-                    }
-                }
-            },
+            }
         };
 
         #endregion
@@ -112,9 +89,12 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
+                            //unsupported stratum version
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, "ETCHash")
                             {
                             },
+                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                             },
@@ -134,6 +114,9 @@ Fatal error detected. Restarting.
                             },
                             */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.FishHash, "FishHash")
+                            {
+                            },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KAWPOW, "KAWPOW")
                             {
                             },
                             /*
@@ -250,13 +233,19 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
+                            //unsupported stratum version
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, "ETCHash")
                             {
                             },
+                            */
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
                             {
                                 //ExtraLaunchParameters = "--gpu-boost 3 --gpu-autolykos2-preload 1"
                             },
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KAWPOW, "KAWPOW")
+                            {
+                            }
                             /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Alephium, "Alephium")
                             {
@@ -272,9 +261,12 @@ Fatal error detected. Restarting.
                             {
                             },
                             */
+                            //no extranonce
+                            /*
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.FishHash, "FishHash")
                             {
                             },
+                            */
                             /*
                             new DualAlgorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, AlgorithmType.KarlsenHash, "AutolykosKarlsenHash")
                             {
@@ -479,10 +471,12 @@ Fatal error detected. Restarting.
                             },
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZelHash, "ZelHash")
                             {
-                            },
+                            }
+                            /*
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
+                            */
                         }
             },
         }.ConcatDictList(All, Gpu);
@@ -497,6 +491,21 @@ Fatal error detected. Restarting.
                 MinerBaseType.SRBMiner,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.Autolykos, "Autolykos")
+                            {
+                            },
+                            //no extranonce
+                            /*
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.FishHash, "FishHash")
+                            {
+                            }
+                            */
+                            /*
+                            //unsupported stratum version
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.ETCHash, "ETCHash")
+                            {
+                            }
+                            */
+                            new Algorithm(MinerBaseType.SRBMiner, AlgorithmType.KAWPOW, "KAWPOW")
                             {
                             }
                         }
@@ -521,9 +530,11 @@ Fatal error detected. Restarting.
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.ZelHash, "ZelHash")
                             {
                             },
+                            /*
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.DaggerHashimoto, "DaggerHashimoto")
                             {
                             },
+                            */
                             new Algorithm(MinerBaseType.miniZ, AlgorithmType.Octopus, "Octopus")
                             {
                             }
@@ -655,7 +666,12 @@ Fatal error detected. Restarting.
                             {
                                 ExtraLaunchParameters = ""
                             },
-                            
+                            /*
+                            new Algorithm(MinerBaseType.lolMiner, AlgorithmType.PyrinHash, "PyrinHash")
+                            {
+                                ExtraLaunchParameters = ""
+                            },
+                            */
                             /*
                             new DualAlgorithm(MinerBaseType.lolMiner, AlgorithmType.FishHash, AlgorithmType.Alephium, "FishHashAlephium")
                             {
@@ -746,11 +762,13 @@ Fatal error detected. Restarting.
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
                     */
+                    /*
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, AlgorithmType.PyrinHash,
                         "OctopusPyrinHash")
                     {
                         ExtraLaunchParameters = "--no-tui --dag-reset-mclock off"
                     },
+                    */
                     /*
                     new DualAlgorithm(MinerBaseType.Rigel, AlgorithmType.Octopus, AlgorithmType.Alephium,
                         "OctopusAlephium")

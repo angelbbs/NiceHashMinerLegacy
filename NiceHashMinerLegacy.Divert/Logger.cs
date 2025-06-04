@@ -5,7 +5,7 @@ using log4net.Layout;
 using log4net.Repository.Hierarchy;
 using System.IO;
 
-namespace NiceHashMinerLegacy.Divert
+namespace NiceHashMinerLegacy.OverClock
 {
     public class Logger
     {

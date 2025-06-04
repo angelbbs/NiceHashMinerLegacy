@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
+using NiceHashMinerLegacy.OverClock;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -162,7 +162,7 @@ namespace NiceHashMiner.Switching
                         }
                         if (_currentSma.ContainsKey(algo))
                         {
-                            if (_currentSma[algo].Paying > 0 && newSma[algo] > _currentSma[algo].Paying * 100)
+                            if (_currentSma[algo].Paying > 0 && newSma[algo] > _currentSma[algo].Paying * 1000)
                             {
                                 Helpers.ConsolePrint("UpdateSmaPaying", "NH API bug. " + algo.ToString() + ": " +
                                     "old value: " + _currentSma[algo].Paying.ToString() + " new value: " + newSma[algo]);
@@ -242,7 +242,7 @@ namespace NiceHashMiner.Switching
 
                 if (paying != 0)
                 {
-                    if (_currentSma[algo].Paying > 0 && paying > _currentSma[algo].Paying * 100)
+                    if (_currentSma[algo].Paying > 0 && paying > _currentSma[algo].Paying * 1000)
                     {
                         Helpers.ConsolePrint("UpdatePayingForAlgo", "NH API bug. " + algo.ToString() + ": " +
                             "old value: " + _currentSma[algo].Paying.ToString() + " new value: " + paying);
@@ -398,7 +398,7 @@ namespace NiceHashMiner.Switching
             if (TryGetSma(algo, out NiceHashSma sma))
             {
                 paying = sma.Paying;
-                if (algo == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
+                if (algo == AlgorithmType.KAWPOWLite && !NativeOverclock.KawpowLiteGoodEpoch)
                 {
                     paying = 0.0d;
                 }

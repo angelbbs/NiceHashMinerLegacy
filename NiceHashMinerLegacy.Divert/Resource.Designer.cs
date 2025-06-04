@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NiceHashMinerLegacy.Divert {
+namespace NiceHashMinerLegacy.OverClock {
     using System;
     
     

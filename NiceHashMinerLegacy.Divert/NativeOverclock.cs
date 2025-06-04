@@ -1,31 +1,26 @@
-﻿/*
-* This is an open source non-commercial project. Dear PVS-Studio, please check it.
-* PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-*/
-
+﻿﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
-using WinDivertSharp;
-using WinDivertSharp.WinAPI;
-using System.Runtime.InteropServices;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
-using System.Threading.Tasks;
-using System.Threading;
-using Newtonsoft.Json;
-using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Security.Principal;
+using System.IO;
+using System.Linq;
 using System.Management;
-using System.Runtime.ExceptionServices;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
-using System.ComponentModel;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using WinDivertSharp;
+using SystemTimer = System.Timers.Timer;
 
-
-namespace NiceHashMinerLegacy.Divert
+namespace NiceHashMinerLegacy.OverClock
 {
-    public class Divert
+    public class NativeOverclock
     {
         public static bool logging;
         public static volatile bool KawpowLitedivert_running = true;
@@ -67,7 +62,7 @@ namespace NiceHashMinerLegacy.Divert
 
                 string ret = "unknown";
                 string miner = "";
-                Port = Divert.SwapOrder(Port);
+                Port = NativeOverclock.SwapOrder(Port);
 
                 List<Connection> _allConnections = new List<Connection>();
                 _allConnections.Clear();
@@ -126,7 +121,7 @@ namespace NiceHashMinerLegacy.Divert
 
         public static int CheckWinDivert()
         {
-            var DivertHandle = Divert.OpenWinDivert("!loopback && outbound && tcp.DstPort == 9876");
+            var DivertHandle = NativeOverclock.OpenWinDivert("!loopback && outbound && tcp.DstPort == 9876");
             int ret = (int)DivertHandle;
 
             if (ret <= 0)
@@ -196,7 +191,7 @@ namespace NiceHashMinerLegacy.Divert
                 " SecondaryAlgorithmType: " + SecondaryAlgorithmType.ToString());
             //********************************************************************************************
 
-            
+
 
         }
     }

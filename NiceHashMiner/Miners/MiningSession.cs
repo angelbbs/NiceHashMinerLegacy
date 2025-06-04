@@ -9,7 +9,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
+using NiceHashMinerLegacy.OverClock;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -583,7 +583,7 @@ namespace NiceHashMiner.Miners
                         $"{"Total rig profit"}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold * 100}%");
                     //CheckForceSwitch(percDiff);
                     // RESTORE OLD PROFITS STATE
-                    if (!Divert.KawpowLiteForceStop)
+                    if (!NativeOverclock.KawpowLiteForceStop)
                     {
                         foreach (var device in _miningDevices)
                         {
@@ -593,7 +593,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    if (!Divert.KawpowLiteForceStop)
+                    if (!NativeOverclock.KawpowLiteForceStop)
                     {
                         if ((Form_Main.ZilCount == 96 || Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
                         {
@@ -636,7 +636,7 @@ namespace NiceHashMiner.Miners
                     {
                         if (prev_percDiff > percDiff + percDiff * 0.2)
                         {
-                            if (!Divert.KawpowLiteForceStop)
+                            if (!NativeOverclock.KawpowLiteForceStop)
                             {
                                 _ticks[0] = _ticks[0] - 1;
                                 needSwitch = false;
@@ -675,7 +675,7 @@ namespace NiceHashMiner.Miners
                             _ticks[0].ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
                         //CheckForceSwitch(percDiff);
                         // RESTORE OLD PROFITS STATE
-                        if (!Divert.KawpowLiteForceStop)
+                        if (!NativeOverclock.KawpowLiteForceStop)
                         {
                             foreach (var device in _miningDevices)
                             {
@@ -723,14 +723,14 @@ namespace NiceHashMiner.Miners
                         //CheckForceSwitch(percDiff);
                         // RESTORE OLD PROFITS STATE
                         //foreach (var device in _miningDevices)
-                        if (!Divert.KawpowLiteForceStop)
+                        if (!NativeOverclock.KawpowLiteForceStop)
                         {
                             device.RestoreOldProfitsState();
                         }
                     }
                     else
                     {
-                        if (!Divert.KawpowLiteForceStop)
+                        if (!NativeOverclock.KawpowLiteForceStop)
                         {
                             if ((Form_Main.ZilCount == 96 || Form_Main.ZilCount == 97 || Form_Main.ZilCount == 98) && !Form_Main._NeedMiningStart)
                             {
@@ -760,7 +760,7 @@ namespace NiceHashMiner.Miners
                         {
                             if (prev_percDiff > percDiff + percDiff * 0.2)
                             {
-                                if (!Divert.KawpowLiteForceStop)
+                                if (!NativeOverclock.KawpowLiteForceStop)
                                 {
                                     _ticks[device.Device.Index] = _ticks[device.Device.Index] - 1;
                                     needSwitch = false;
@@ -789,7 +789,7 @@ namespace NiceHashMiner.Miners
                         {
                             _ticks[device.Device.Index]++;
                             needSwitch = false;
-                            if (!Divert.KawpowLiteForceStop)
+                            if (!NativeOverclock.KawpowLiteForceStop)
                             {
                                 Helpers.ConsolePrint(Tag, $"{device.Device.GetFullName()}: Will NOT SWITCH profit diff is {Math.Round(percDiff * 100, 2):f2}%. Switching period has not been exceeded: " +
                                 _ticks[device.Device.Index].ToString() + "/" + AlgorithmSwitchingManager._ticksForStable.ToString() + " min");
@@ -823,10 +823,10 @@ namespace NiceHashMiner.Miners
             prev_percDiff = percDiff;
             Form_Main._NeedMiningStart = false;
 
-            if (Divert.KawpowLiteForceStop && Form_Main.KawpowLiteEnabled)
+            if (NativeOverclock.KawpowLiteForceStop && Form_Main.KawpowLiteEnabled)
             {
                 Helpers.ConsolePrint(Tag, "Force switch from KawpowLite mining");
-                Divert.KawpowLiteForceStop = false;
+                NativeOverclock.KawpowLiteForceStop = false;
                 needSwitch = true;
                 //Divert.KawpowLitedivert_running = false;
             }

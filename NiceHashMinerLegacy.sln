@@ -42,7 +42,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLegacy.UUID", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomTabControl", "CustomTabControl\CustomTabControl.csproj", "{4DBFE2CF-45E4-4594-8E6A-5EBC2EEF85AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLegacy.Divert", "NiceHashMinerLegacy.Divert\NiceHashMinerLegacy.Divert.csproj", "{575688D5-A9C8-4AD0-BC3E-9FAFEFF60227}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLegacy.Overclock", "NiceHashMinerLegacy.Divert\NiceHashMinerLegacy.Overclock.csproj", "{575688D5-A9C8-4AD0-BC3E-9FAFEFF60227}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerLegacyForkFixMonitor", "MinerLegacyForkFixMonitor\MinerLegacyForkFixMonitor.csproj", "{FC168AAB-C2AB-4158-A73A-ABDD1DB17EFE}"
 EndProject

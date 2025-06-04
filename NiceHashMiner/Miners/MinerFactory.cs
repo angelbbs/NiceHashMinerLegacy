@@ -35,8 +35,6 @@ namespace NiceHashMiner.Miners
                     return new trex();
                 case MinerBaseType.teamredminer:
                     return new teamredminer();
-                case MinerBaseType.Phoenix:
-                    return new Phoenix();
                 case MinerBaseType.GMiner:
                     return new GMiner(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.lolMiner:

@@ -487,22 +487,20 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.DaggerHashimoto)
             {
                 ret = " --no-colour -a ethash" +
-                " -o " + Links.CheckDNS("stratum+tcp://ethw.2miners.com:2020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505.Rigel -p x" +
-                " -o " + Links.CheckDNS("stratum+tcp://daggerhashimoto.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " -u " + Globals.DemoUser + " -p x" +
+                " -o " + Links.CheckDNS("stratum+ssl://ethw.2miners.com:12020") + " -u 0x266b27bd794d1A65ab76842ED85B067B415CD505.Rigel -p x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ETCHash)
             {
                 ret = " --no-colour -a etchash" +
-                " -o " + Links.CheckDNS("stratum+tcp://etc.2miners.com:1010") + " -uer 0x266b27bd794d1A65ab76842ED85B067B415CD505.Rigel -p x" +
-                " -o " + Links.CheckDNS("stratum+tcp://etchash.auto.nicehash.com:9200").Replace("stratum+tcp://", "") + " -u " + Globals.DemoUser + " -p x" +
+                " -o " + Links.CheckDNS("stratum+ssl://etc.2miners.com:11010") + " -uer 0x266b27bd794d1A65ab76842ED85B067B415CD505.Rigel -p x" +
                 GetDevicesCommandString();
             }
             
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.KAWPOW)
             {
                 ret = " --no-colour -a kawpow" +
-                " -o " + Links.CheckDNS("rvn.2miners.com:6060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.Rigel -p x" +
+                " -o " + Links.CheckDNS("stratum+ssl://rvn.2miners.com:16060") + " -u RHzovwc8c2mYvEC3MVwLX3pWfGcgWFjicX.Rigel -p x" +
                 GetDevicesCommandString();
             }
 
@@ -537,7 +535,7 @@ namespace NiceHashMiner.Miners
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.PyrinHash)
             {
                 ret = " --no-colour -a pyrinhash" +
-                " -o " + Links.CheckDNS("eu.mining4people.com:3416") + " -u pugdag:qp6tdt33a3zfsdf2349p8a5au6ksh6xzncqcjv8492yt3va3uh7ggsf7xkhca.Rigel -p x" +
+                " -o " + Links.CheckDNS("stratum+tcp://nushypool.com:40010") + " -u cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.Rigel -p x" +
                 GetDevicesCommandString();
             }
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.XelisHashV2)
@@ -553,7 +551,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --no-colour -a autolykos2+pyrinhash" +
                 " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3100") + " -u [1]9gnVDaLeFa4ETwtrceHepPe9JeaCBGV1PxV5tdNGAvqEmjWF2Lt.Rigel" +
-                " -o [2]" + Links.CheckDNS("eu.mining4people.com:3416") + " -u [2]pugdag:qp6tdt33a3zfsdf2349p8a5au6ksh6xzncqcjv8492yt3va3uh7ggsf7xkhca.Rigel " +
+                " -o [2]" + Links.CheckDNS("stratum+tcp://nushypool.com:40010") + " -u [2]cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.Rigel " +
                 GetDevicesCommandString();
                 //addTime = 30;
             }
@@ -562,7 +560,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --no-colour -a octopus+pyrinhash" +
                 " -o [1]" + Links.CheckDNS("pool.woolypooly.com:3094") + " -u [1]cfx:aakuw91bx9mfhn808n0tczpwt6z1habut6zjrjapsd.Rigel" +
-                " -o [2]" + Links.CheckDNS("eu.mining4people.com:3416") + " -u [2]pugdag:qp6tdt33a3zfsdf2349p8a5au6ksh6xzncqcjv8492yt3va3uh7ggsf7xkhca.Rigel " +
+                " -o [2]" + Links.CheckDNS("stratum+tcp://nushypool.com:40010") + " -u [2]cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.Rigel " +
                 GetDevicesCommandString();
                 //addTime = 30;
             }
@@ -571,7 +569,7 @@ namespace NiceHashMiner.Miners
             {
                 ret = " --no-colour -a fishhash+pyrinhash" +
                 " -o [1]" + Links.CheckDNS("ru.ironfish.herominers.com:1145") + " -u [1]fb8aaaf8594143a4007c9fe0e0056bd3ca55848d0f5247f7eee8918ca8345521.Rigel" +
-                " -o [2]" + Links.CheckDNS("eu.mining4people.com:3416") + " -u [2]pugdag:qp6tdt33a3zfsdf2349p8a5au6ksh6xzncqcjv8492yt3va3uh7ggsf7xkhca.Rigel " +
+                " -o [2]" + Links.CheckDNS("stratum+tcp://nushypool.com:40010") + " -u [2]cas:qp4slh4r7tk0nxtcl4dmwyuzzdxs88qjaeelc4mx9psglmv79dcfkw4w3692c.Rigel " +
                 GetDevicesCommandString();
                 //addTime = 45;
             }

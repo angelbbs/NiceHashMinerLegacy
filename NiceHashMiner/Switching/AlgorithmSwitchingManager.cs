@@ -2,7 +2,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
+using NiceHashMinerLegacy.OverClock;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -175,7 +175,7 @@ namespace NiceHashMiner.Switching
                 {
                     NHSmaData.TryGetPaying(algo, out var paying);
 
-                    if (algo == AlgorithmType.KAWPOWLite && !Divert.KawpowLiteGoodEpoch)
+                    if (algo == AlgorithmType.KAWPOWLite && !NativeOverclock.KawpowLiteGoodEpoch)
                     {
                         paying = 0;
                     }

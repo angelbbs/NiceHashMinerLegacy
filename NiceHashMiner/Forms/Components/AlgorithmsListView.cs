@@ -330,19 +330,19 @@ namespace NiceHashMiner.Forms.Components
                 }
                 if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
                 {
-                    miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                    miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                 }
                 else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("kawpow"))
                 {
-                    miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                    miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                 }
                 else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("ergo"))
                 {
-                    miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                    miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                 }
                 else
                 {
-                    miner = miner + MinerVersion.GetMinerVersion(miner);
+                    miner = miner + MinerVersion.GetMinerVersion(miner, name.ToLower());
                 }
 
                 if (!alg.Hidden)
@@ -1321,19 +1321,19 @@ namespace NiceHashMiner.Forms.Components
                             string name = algorithm.AlgorithmName;
                             if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("beam"))
                             {
-                                miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                                miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                             }
                             else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("kawpow"))
                             {
-                                miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                                miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                             }
                             else if (miner.ToLower().Contains("nbminer") && name.ToLower().Contains("ergo"))
                             {
-                                miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5");
+                                miner = miner + MinerVersion.GetMinerVersion("nbminer.39.5", name.ToLower());
                             }
                             else
                             {
-                                miner = miner + MinerVersion.GetMinerVersion(miner);
+                                miner = miner + MinerVersion.GetMinerVersion(miner, name.ToLower());
                             }
 
                             MessageBox.Show(string.Format(International.GetText("Form_Benchmark_listView_NeedBenchmark"),

@@ -826,89 +826,6 @@ namespace NiceHashMiner.Miners
             }
             return ret;
         }
-        public static MinerData Get_Phoenix()
-        {
-            List<MinerData> _MinerDataList = new List<MinerData>();
-            string path = MinerPaths.Data.Phoenix;
-            long filesize = 0l;
-            string version = "";
-            MinerData ret = new MinerData();
-            ret.MinerName = "Phoenix";
-            try
-            {
-                if (!File.Exists(path)) return ret;
-                if (File.Exists("Configs\\MinersData.json"))
-                {
-                    string json = File.ReadAllText("Configs\\MinersData.json");
-                    dynamic md = JsonConvert.DeserializeObject<List<MinerData>>(json);
-                    if (md != null)
-                    {
-                        foreach (var m in md)
-                        {
-                            string _path = m.MinerPath;
-                            if (!string.IsNullOrEmpty(_path) && _path.Equals(path))
-                            {
-                                filesize = m.MinerSize;
-                                version = m.MinerVersion;
-                                ret.MinerPath = path;
-                                ret.MinerSize = filesize;
-                                ret.MinerVersion = version.Trim(' ');
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
-            }
-            if (filesize != new System.IO.FileInfo(path).Length)
-            {
-                try
-                {
-                    var P = new Process
-                    {
-                        StartInfo =
-                            {
-                                FileName = path,
-                                Arguments = "-vs",
-                                UseShellExecute = false,
-                                RedirectStandardOutput = true,
-                                RedirectStandardError = true,
-                                CreateNoWindow = true
-                            }
-                    };
-                    P.Start();
-                    P.WaitForExit(2 * 1000);
-
-                    var stdOut = P.StandardOutput.ReadToEnd();
-                    var stdErr = P.StandardError.ReadToEnd();
-
-                    using (var reader = new StringReader(stdOut))
-                    {
-                        var line = string.Empty;
-                        line = reader.ReadLine();
-                        if (line != null)
-                        {
-                            ret.MinerPath = path;
-                            ret.MinerSize = new System.IO.FileInfo(path).Length;
-                            ret.MinerVersion = line.Replace(System.Environment.NewLine, string.Empty).Trim();
-                            P.Close();
-                            return ret;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //Helpers.ConsolePrint("GetMinerVersion", ex.ToString());
-                    ret.MinerPath = path;
-                    ret.MinerSize = new System.IO.FileInfo(path).Length;
-                    ret.MinerVersion = "";
-                    return ret;
-                }
-            }
-            return ret;
-        }
         
         public static MinerData Get_SRBMiner()
         {
@@ -1281,9 +1198,17 @@ namespace NiceHashMiner.Miners
             return ret;
         }
 
-        public static string GetMinerVersion(string minerName)
+        public static string GetMinerVersion(string minerName, string algo)
         {
             if (!ConfigManager.GeneralConfig.ShowMinersVersions) return "";
+            if (minerName.ToLower().Contains("miniz") && (algo.ToLower().Contains("beam")))
+            {
+                return " 2.2c";
+            }
+            if (minerName.ToLower().Contains("rigel") && (algo.ToLower().Contains("pyrinhash")))
+            {
+                return " 1.21.2";
+            }
             try
             {
                 lock (MinerVersion.MinerDataList)

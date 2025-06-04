@@ -71,7 +71,7 @@ namespace NiceHashMiner.Stats.V4
             var devData = ComputeDeviceManager.Available.Devices.FirstOrDefault(dev => dev.DevUuid == UUID);
             if (devData == null) return "";
 
-            return devData.MinerName.Trim() + " " + MinerVersion.GetMinerVersion(devData.MinerName).Trim();
+            return devData.MinerName.Trim() + " " + MinerVersion.GetMinerVersion(devData.MinerName, devData.AlgorithmID.ToString()).Trim();
         }
 
         private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin = false)
@@ -880,7 +880,7 @@ namespace NiceHashMiner.Stats.V4
             var minersObject = new MinerAlgoState();
             var containers = d.GetAlgorithmSettings();   
             if (containers == null) return String.Empty;
-            var grouped = containers.GroupBy(c => c.MinerBaseTypeName + MinerVersion.GetMinerVersion(c.MinerBaseTypeName)).ToList();
+            var grouped = containers.GroupBy(c => c.MinerBaseTypeName + MinerVersion.GetMinerVersion(c.MinerBaseTypeName, c.AlgorithmNameCustom)).ToList();
             if (grouped == null) return String.Empty;
             foreach (var group in grouped)
             {
@@ -912,7 +912,7 @@ namespace NiceHashMiner.Stats.V4
             var minersObject = new MinerAlgoSpeed();
             var containers = d.GetAlgorithmSettings();
             if (containers == null) return string.Empty;
-            var grouped = containers.GroupBy(c => c.MinerBaseTypeName + MinerVersion.GetMinerVersion(c.MinerBaseTypeName)).ToList();
+            var grouped = containers.GroupBy(c => c.MinerBaseTypeName + MinerVersion.GetMinerVersion(c.MinerBaseTypeName, c.AlgorithmNameCustom)).ToList();
             if (grouped == null) return string.Empty;
             foreach (var group in grouped)
             {
@@ -1003,11 +1003,11 @@ namespace NiceHashMiner.Stats.V4
             //return String.Empty;
 
             MinersStatic miners = new MinersStatic();
-            var uniquePlugins = d.GetAlgorithmSettings()?.Select(item => item.MinerBaseTypeName + MinerVersion.GetMinerVersion(item.MinerBaseTypeName))?.Distinct()?.Where(item => !string.IsNullOrEmpty(item));
+            var uniquePlugins = d.GetAlgorithmSettings()?.Select(item => item.MinerBaseTypeName + MinerVersion.GetMinerVersion(item.MinerBaseTypeName, item.AlgorithmNameCustom))?.Distinct()?.Where(item => !string.IsNullOrEmpty(item));
             if (uniquePlugins == null) return String.Empty;
             foreach (var plugin in uniquePlugins)
             {
-                var uniqueAlgos = d.GetAlgorithmSettings()?.Where(item => item.MinerBaseTypeName + MinerVersion.GetMinerVersion(item.MinerBaseTypeName) == plugin)?.Select(item => item.AlgorithmName)?.Distinct();
+                var uniqueAlgos = d.GetAlgorithmSettings()?.Where(item => item.MinerBaseTypeName + MinerVersion.GetMinerVersion(item.MinerBaseTypeName, item.AlgorithmNameCustom) == plugin)?.Select(item => item.AlgorithmName)?.Distinct();
                 if (uniqueAlgos == null) uniqueAlgos = new List<string>();
                 miners.Miners.Add(new MinerStatic() { Id = plugin, AlgoList = uniqueAlgos.ToList() });
             }

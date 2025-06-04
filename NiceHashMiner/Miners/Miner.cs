@@ -9,7 +9,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Divert;
+using NiceHashMinerLegacy.OverClock;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -452,7 +452,7 @@ namespace NiceHashMiner
                         {
                             if (Form_Main.DivertAvailable)
                             {
-                                Divert.DivertStop(pidData.DivertHandle, pidData.Pid, algo,
+                                NativeOverclock.DivertStop(pidData.DivertHandle, pidData.Pid, algo,
                                     (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun,
                                     MinerDeviceName, strPlatform);
                             }
@@ -608,11 +608,11 @@ namespace NiceHashMiner
                     {
                         if (Form_Main.KawpowLite && Form_Main.DivertAvailable)
                         {
-                            Divert.checkConnectionKawpowLite = true;
+                            NativeOverclock.checkConnectionKawpowLite = true;
                             new Task(() => KawpowClient.CheckConnectionToPool()).Start();
                         }
 
-                        Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
+                        NativeOverclock.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
                             (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
@@ -767,6 +767,23 @@ namespace NiceHashMiner
             if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("nbminer") && (commandLine.ToLower().Contains("ergo")))
             {
                 benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("nbminer.exe", "nbminer.39.5.exe");
+            }
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("miniz") &&
+                (commandLine.ToLower().Contains("beam")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miniZ.exe", "miniZ.22c.exe");
+            }
+
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("miniz") &&
+                (commandLine.ToLower().Contains("beam")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("miniZ.exe", "miniZ.22c.exe");
+            }
+
+            if (benchmarkHandle.StartInfo.FileName.ToLower().Contains("rigel") &&
+                (commandLine.ToLower().Contains("pyrinhash")))
+            {
+                benchmarkHandle.StartInfo.FileName = benchmarkHandle.StartInfo.FileName.Replace("rigel.exe", "rigel1212.exe");
             }
 
             BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
@@ -1262,6 +1279,17 @@ namespace NiceHashMiner
             {
                 Path = MiningSetup.MinerPath.Replace("nbminer.exe", "nbminer.39.5.exe");
             }
+            if (MiningSetup.MinerPath.ToLower().Contains("miniz") &&
+                (LastCommandLine.ToLower().Contains("beam")))
+            {
+                Path = MiningSetup.MinerPath.Replace("miniZ.exe", "miniZ.22c.exe");
+            }
+
+            if (MiningSetup.MinerPath.ToLower().Contains("rigel") &&
+                (LastCommandLine.ToLower().Contains("pyrinhash")))
+            {
+                Path = MiningSetup.MinerPath.Replace("rigel.exe", "rigel1212.exe");
+            }
 
             P.StartInfo.FileName = Path;
 
@@ -1314,13 +1342,10 @@ namespace NiceHashMiner
                 }
                 
                 GC.Collect();
-                
-                P.DivertHandle = Divert.DivertStart(P.Id, -1, -1, Path,
-                            strPlatform, "", false,
-                            false,
-                            false, ConfigManager.GeneralConfig.DivertRun,
-                            100);
-                
+
+                NativeOverclock.OverclockStart(P.Id, -1, -1, Path,
+                            strPlatform, "", false, "");
+
                 MinerDelayStart(Path);
 
                 if (P.Start())
@@ -1354,11 +1379,8 @@ namespace NiceHashMiner
                             new Task(() => KawpowClient.StopConnection()).Start();
                         }
 
-                        P.DivertHandle = Divert.DivertStart(P.Id, algo, algo2, Path,
-                            strPlatform, w, false,
-                            false,
-                            false, ConfigManager.GeneralConfig.DivertRun,
-                            MaxEpoch);
+                        NativeOverclock.OverclockStart(P.Id, algo, algo2, Path,
+                        strPlatform, "", false, P.StartInfo.Arguments);
                     }
                     new Task(() => StartCoolDownTimerChecker()).Start();
                     //StartCoolDownTimerChecker();
@@ -1459,7 +1481,7 @@ namespace NiceHashMiner
                 {
                     try
                     {
-                        Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
+                        NativeOverclock.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
                             (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
@@ -1522,7 +1544,7 @@ namespace NiceHashMiner
                 {
                     try
                     {
-                        Divert.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
+                        NativeOverclock.DivertStop(ProcessHandle.DivertHandle, ProcessHandle.Id, algo,
                             (int)MiningSetup.CurrentSecondaryAlgorithmType, ConfigManager.GeneralConfig.DivertRun, MinerDeviceName, strPlatform);
                     }
                     catch (Exception e)
