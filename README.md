@@ -27,4 +27,4 @@ The development has been underway since 2017.
 - Built-in watchdog.
 - Remote desktop viewer via browser;
 - REST API.
-- ......and many other options and features.
+- ...and many other options and features.
